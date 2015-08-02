@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title></title>
+<script type="text/javascript" src="csound.js"></script>
+<script type="text/javascript">
+function blacks(){
+var c=document.getElementById("cnvs_db");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#000000";
+ctx.fillRect(0,0,8,50);
+var c=document.getElementById("cnvs_eb");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#000000";
+ctx.fillRect(0,0,8,50);
+var c=document.getElementById("cnvs_gb");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#000000";
+ctx.fillRect(0,0,8,50);
+var c=document.getElementById("cnvs_ab");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#000000";
+ctx.fillRect(0,0,8,50);
+var c=document.getElementById("cnvs_bb");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#000000";
+ctx.fillRect(0,0,8,50);
+}
+
+function moduleDidLoad() {
+  csound.Play();
+  csound.CompileOrc(
+  "massign 1,1 \n" +
+  "instr 1 \n" +
+  "kfr cpsmidib 1 \n" +
+  "iamp ampmidi 1 \n" +
+  "kcf = kfr*5\n" +
+  "ka linenr (400-iamp)/400,.01,0.1,0.01 \n" +
+  "a1 vco2   ka,kfr \n" +
+  "a2 moogvcf a1, kcf*(1+ka), 0.8 \n" +
+   "outs a2,a2 \n"  +
+  "endin");
+ }
+ function attachListeners() {
+}
+count = 0;
+function handleMessage(message) {
+        var element = document.getElementById('console');
+        element.value += message.data;
+        element.scrollTop = 99999; // focus on bottom
+        count += 1;
+        if(count == 1000) {
+           element.value = ' ';
+           count = 0;
+        }
+  }
+
+</script>
+
+</head>
+<body onload="blacks()">
+<p>
+<div style="position:absolute; top:10; left:10;">
+<canvas class="cnvs_c" id="cnvs_c" width="20" height="80"
+  style="border:1px solid#000000;" onmousedown="csound.NoteOn(1,60,
+  100)" onmouseup="csound.NoteOff(1,60,
+  100)"
+  onmouseleave="csound.NoteOff(1,60,100)">
+</div>
+<div style="position:absolute; top:10; left:31;">
+<canvas class="cnvs_d" id="cnvs_d" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,62,100)"
+  onmouseup="csound.NoteOff(1,62,100)"
+  onmouseleave="csound.NoteOff(1,62,100)">
+</div>
+<div style="position:absolute; top:10; left:26;">
+<canvas class="cnvs_db" id="cnvs_db" width="8" height="50"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,61,100)"
+  onmouseup="csound.NoteOff(1,61,100)"
+  onmouseleave="csound.NoteOff(1,61,100)">
+</div>
+<div style="position:absolute; top:10; left:52;">
+<canvas class="cnvs_e" id="cnvs_e" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,64,100)"
+  onmouseup="csound.NoteOff(1,64,100)"
+  onmouseleave="csound.NoteOff(1,64,100)">
+</div>
+<div style="position:absolute; top:10; left:47;">
+<canvas class="cnvs_eb" id="cnvs_eb" width="8" height="50"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,63,100)"
+  onmouseup="csound.NoteOff(1,63,100)"
+  onmouseleave="csound.NoteOff(1,63,100)">
+</div>
+<div style="position:absolute; top:10; left:73;">
+<canvas class="cnvs_f" id="cnvs_f" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,65,100)"
+  onmouseup="csound.NoteOff(1,65,100)"
+  onmouseleave="csound.NoteOff(1,65,100)">
+</div>
+<div style="position:absolute; top:10; left:94;">
+<canvas class="cnvs_g" id="cnvs_g" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,67,100)"
+  onmouseup="csound.NoteOff(1,67,100)"
+  onmouseleave="csound.NoteOff(1,67,100)">
+</div>
+<div style="position:absolute; top:10; left:90;">
+<canvas class="cnvs_gb" id="cnvs_gb" width="8" height="50"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,66,100)"
+  onmouseup="csound.NoteOff(1,66,100)"
+  onmouseleave="csound.NoteOff(1,66,100)">
+</div>
+<div style="position:absolute; top:10; left:115;">
+<canvas class="cnvs_a" id="cnvs_a" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,69,100)"
+  onmouseup="csound.NoteOff(1,69,100)"
+  onmouseleave="csound.NoteOff(1,69,100)">
+</div>
+<div style="position:absolute; top:10; left:111;">
+<canvas class="cnvs_ab" id="cnvs_ab" width="8" height="50"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,68,100)"
+  onmouseup="csound.NoteOff(1,68,100)"
+  onmouseleave="csound.NoteOff(1,68,100)">
+</div>
+<div style="position:absolute; top:10; left:136;">
+<canvas class="cnvs_b" id="cnvs_b" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,71,100)"
+  onmouseup="csound.NoteOff(1,71,100)"
+  onmouseleave="csound.NoteOff(1,71,100)">
+</div>
+<div style="position:absolute; top:10; left:132;">
+<canvas class="cnvs_bb" id="cnvs_bb" width="8" height="50"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,70,100)"
+  onmouseup="csound.NoteOff(1,70,100)" onmouseleave="csound.NoteOff(1,70,100)">
+</div>
+<div style="position:absolute; top:10; left:157">
+<canvas class="cnvs_cc" id="cnvs_cc" width="20" height="80"
+  style="border:1px solid#000000;"
+  onmousedown="csound.NoteOn(1,72,100)"
+  onmouseup="csound.NoteOff(1,72,100)"
+  onmouseleave="csound.NoteOff(1,73,100)">
+</div>
+</p>
+<div style="position:absolute; top:110; left:10;">
+<textarea class="console" cols="55" rows="13" id="console"
+  value="">Csound: not loaded</textarea>
+</div>
+  <!--pNaCl csound module-->
+<div id="engine"></div>
+</p>
+</body>
+</html>
