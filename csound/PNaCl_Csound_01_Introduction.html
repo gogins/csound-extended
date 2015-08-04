@@ -264,7 +264,16 @@ e
 <p>Actually running Csound involves a number of considerations. Usually, you will want a button to stop Csound 
 and another button to stop it. Then you will probably want an element on the page that will display Csound's 
 messages, warnings, and errors.</p>
-<input type="button" onclick="onclick_start()">Start</input>
+<script>
+var onclick_start = function() {
+    csound.Play();
+}
+</script>
+<input type="button" onclick="onclick_start()">Start playing</input>
+<script>
+var onclick_start = function() {
+    csound.Stop();
+}
 <input type="button" onclick="onclick_stop()">Stop playing</input>
 <H3>Debugging</H3>
 <p>Chrome comes with a complete system for debugging JavaScript and HTML, called the "Developer Tools." You 
