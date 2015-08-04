@@ -21,13 +21,13 @@ element.</p>
 <p>You can run this file online by going to https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html.</p>
 <H2>Editing</H2>
 <p>You can edit this file online. You will need a GitHub account and also a GitHub "io" repository, which will 
-set upa Web site for your account. If you do not have an account, go to http://github.org 
+set up a Web site for your account. If you do not have an account, go to http://github.org 
 and register. Go to your branch of this file at 
 https://github.com/YourName/YourName.github.io/blob/master/csound/PNaCl_Csound_01_Introduction.html and click 
 on the pencil icon on the file's toolbar. 
 <H2>Writing a Csound Piece for PNaCl</H2>
 <P>The basic idea is to embed the Csound orchestra and score into the Web page, then use the JavaScript "csound" 
-object, which enables JavaScript in the Web page to call some of the important functions in the Csound API, 
+object, which enables JavaScript in the Web page, to call some of the important functions in the Csound API, 
 to run Csound.</P>
 <H3>Orc</H3>
 <p>There are several ways to embed Csound code into a Web page. The simplest way is to simply paste it into the 
@@ -269,30 +269,14 @@ var onclick_start = function() {
     csound.Play();
 }
 </script>
-<input type="button" onclick="onclick_start()">Start playing</input>
+<input type="button" value="Start playing" onclick="onclick_start()">
 <script>
 var onclick_start = function() {
     csound.Stop();
 }
-<input type="button" onclick="onclick_stop()">Stop playing</input>
+<input type="button" value="Stop playing" onclick="onclick_stop()">
 <H3>Debugging</H3>
 <p>Chrome comes with a complete system for debugging JavaScript and HTML, called the "Developer Tools." You 
 can open the debugger by pressing [Ctrl][Shift][I] or by using the Chrome menu button.</p>
-<script>
-console.log('Here is the orc:' + document.getElementById('orc').innerHTML + '\n');
-console.log('Here is the sco:' + document.getElementById('sco').innerHTML + '\n');
-document.write('<p>csound => ' + csound);
-document.write('<p>csound.hello() => ' + csound.hello());
-document.write('<p>csound.getVersion() => ' + csound.getVersion());
-document.write('<p>csound.compileOrc(xanadu) => ' + csound.compileOrc(document.getElementById('orc').innerHTML));
-csound.setOption('--logfile=\\csound.log');
-csound.setOption('-m3');
-csound.setOption('-odac');
-csound.message('This is a test of csound.message() from the HTML code.\n');
-document.write('<p>csound.readScore(xanadu) => ' + csound.readScore(document.getElementById('sco').innerHTML));
-// Crashes: csound.setOption('-j4');
-document.write('<p>csound.perform() => ' + csound.perform());
-csound.message('"Done now." from the HTML code.\n');
-</script>
 </body>
 </html>
