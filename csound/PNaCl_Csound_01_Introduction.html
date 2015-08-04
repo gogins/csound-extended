@@ -8,23 +8,27 @@ portable executable files (.pexe) that execute in a virtual machine built into r
 versions of Google's Chrome browser. PNaCl is built into all current desktop versions of 
 Chrome. It is not currently available for Android versions of Chrome or WebKit.</p>
 <P>In other words, PNaCl allows one to compile C or C++ programs that will execute in Google's Chrome browser. 
-It is not necessary to download such programs, the browser does that for you. PNaCl programs run in the browser's security sandbox. But, they run almost as fast as regular compiled C or C++ programs.</P>
+It is not necessary to download such programs, the browser does that for you. PNaCl programs run in the browser's 
+security sandbox. But, they run almost as fast as regular compiled C or C++ programs.</P>
 <p>Csound has been compiled for PNaCl, and this Web page demonstrates how to run Csound in PNaCl.</p>
 <H2>Installation</H2>
 <p>There is no installation.</p>
 <H2>Running</H2>
 <p>You can run this file online by going to https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html.</p>
 <H2>Editing</H2>
-<p>You can edit this file online. You will need a GitHub account and also a GitHub "io" repository, which will set up
-a Web site for your account. If you do not have an account, go to http://github.org 
+<p>You can edit this file online. You will need a GitHub account and also a GitHub "io" repository, which will 
+set upa Web site for your account. If you do not have an account, go to http://github.org 
 and register. Go to your branch of this file at 
 https://github.com/YourName/YourName.github.io/blob/master/csound/PNaCl_Csound_01_Introduction.html and click 
 on the pencil icon on the file's toolbar. 
 <H2>Writing a Csound Piece for PNaCl</H2>
-<P>The basic idea is to embed the Csound orchestra and score into the Web page, then use the JavaScript "csound" object, 
-which enables JavaScript in the Web page to call some of the important functions in the Csound API, to run Csound.</P>
+<P>The basic idea is to embed the Csound orchestra and score into the Web page, then use the JavaScript "csound" 
+object, which enables JavaScript in the Web page to call some of the important functions in the Csound API, 
+to run Csound.</P>
 <H3>Orc</H3>
-<p>There are several ways to embed Csound code into a Web page. The simplest way is to simply paste it into the text of a "pre" element, as shown below. Give the orchestra an HTML ID so that you can write JavaScript to get the orchestra out of the Web page and pass it into to Csound to run it.</p>
+<p>There are several ways to embed Csound code into a Web page. The simplest way is to simply paste it into the 
+text of a "pre" element, as shown below. Give the orchestra an HTML ID so that you can write JavaScript to get 
+the orchestra out of the Web page and pass it into to Csound to run it.</p>
 <pre id="orc">
 sr          =           44100
 ksmps       =           100
@@ -96,8 +100,8 @@ aoutr       oscil       1000*kadsr*a4, ao2+cpsoct(ioct-ishift), 1 ;fnl outright
             endin
 </pre>
 <H3>Sco</H3>
-Another way of embedding Csound code into HTML is to place it in a text edit box (a "xx") element. In this case, you will need to use a JavaScript string literal so that the line endings are not changed.
-<textarea id="sco">
+Another way of embedding Csound code into HTML is to place it in a "textarea" element. In this case, you will need to use a JavaScript string literal so that the line endings are not changed.
+<textarea id="sco" rows="4" cols="80">
 ;       Score for final project in Digital Audio Processing
 ;       ---------------------------------------------------
 
