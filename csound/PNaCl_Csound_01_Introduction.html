@@ -8,8 +8,9 @@ portable executable files (.pexe) that execute in a virtual machine built into r
 versions of Google's Chrome browser. PNaCl is built into all current desktop versions of 
 Chrome. It is not currently available for Android versions of Chrome or WebKit.</p>
 <P>In other words, PNaCl allows one to compile C or C++ programs that will execute in Google's Chrome browser. 
-It is not necessary to download such programs, the browser does that for you. PNaCl programs run in the browser's 
-security sandbox. But, they run almost as fast as regular compiled C or C++ programs.</P>
+It is not necessary to manually download and install such programs, the browser does that for you automatically.</p> 
+<p>PNaCl programs run in the browser's security sandbox. But, they run almost as fast as regular compiled C or C++ 
+programs.</P>
 <p>Csound has been compiled for PNaCl, and this Web page demonstrates how to run Csound in PNaCl.</p>
 <H2>Installation</H2>
 <p>You need to copy the Csound PNaCl files into your Web site. If you fork this site, that will happen 
@@ -29,13 +30,14 @@ https://github.com/YourName/YourName.github.io/blob/master/csound/PNaCl_Csound_0
 on the pencil icon on the file's toolbar. 
 <H2>Writing a Csound Piece for PNaCl</H2>
 <P>The basic idea is to embed the Csound orchestra and score into the Web page, then use the JavaScript "csound" 
-object, which enables JavaScript in the Web page, to call some of the important functions in the Csound API, 
-to run Csound.</P>
+object, which enables JavaScript in the Web page, to run Csound by calling the Csound API.</P>
 <H3>Orc</H3>
 <p>There are several ways to embed Csound code into a Web page. The simplest way is to simply paste it into the 
-text of a "pre" element, as shown below. Give the orchestra an HTML ID so that you can write JavaScript to get 
+text of a "pre" element. Give the orchestra an HTML ID so that you can write JavaScript to get 
 the orchestra out of the Web page and pass it into to Csound to run it.</p>
-<pre id="orc">
+<p>However, it is better to use a "textarea" element, as that will enable the user to edit the code right on 
+the page, and the textarea can be smaller than the actual text it contains, but with scrollbars.</p>
+<textarea name="orc" rows=24 cols=80>
 sr          =           44100
 ksmps       =           100
 nchnls      =           2
@@ -104,11 +106,8 @@ aoutl       oscil       1000*kadsr*a4, ao2+cpsoct(ioct+ishift), 1 ;fnl outleft
 aoutr       oscil       1000*kadsr*a4, ao2+cpsoct(ioct-ishift), 1 ;fnl outright
             outs        aoutl, aoutr
             endin
-</pre>
+</textarea>
 <H3>Sco</H3>
-<p>Another way of embedding Csound code into HTML is to place it in a "textarea" element. The advantage of this 
-method is that the user can edit the code in the textarea right on the Web page.</p>
-<br>
 <textarea id="sco" rows="24" cols="80">
 ;       Score for final project in Digital Audio Processing
 ;       ---------------------------------------------------
