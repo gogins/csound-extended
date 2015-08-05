@@ -12,23 +12,23 @@
     <textarea id="csound_messages" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
-var start_onclick = function() {
-      csound.PlayCsd("http/stria.csd");
-}
- // called by csound.js
- function moduleDidLoad() {
-  //csound.PlayCsd("http/stria.csd");
- }
- function attachListeners() {}
- function handleMessage(message) {
-   var messages_textarea = document.getElementById("csound_messages");
-   var existing = messages_textarea.value;
-   messages_textarea.value = existing + message.data;
-   scrollTo(0, messages_textarea.scrollHeight);
- }
- </script>
-  <!--pNaCl csound module-->
-  <div id="engine"></div>
+    var start_onclick = function() {
+        csound.PlayCsd("http/stria.csd");
+    }
+    // called by csound.js
+    function moduleDidLoad() {
+        //csound.PlayCsd("http/stria.csd");
+    }
+    function attachListeners() {}
+    function handleMessage(message) {
+        var messages_textarea = document.getElementById("csound_messages");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + message.data;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;
+    }
+    </script>
+    <!--pNaCl csound module-->
+    <div id="engine"></div>
 </body>
 </html>
 
