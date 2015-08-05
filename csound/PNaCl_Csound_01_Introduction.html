@@ -1,6 +1,33 @@
 <html>
 <head>
 <script type="text/javascript" src="csound.js"></script>
+<script>
+var moduleDidLoad = function() {
+ console.log('module did load\n')
+}
+var attachListeners = function() {
+}
+var handleMessage = function(message) {
+        var element = document.getElementById('console');
+        if (typeof element === 'undefined') {
+                    return;
+        }
+        element.value += message.data;
+        element.scrollTop = 99999; // focus on bottom
+        count += 1;
+        if(count == 1000) {
+           element.value = ' ';
+           count = 0;
+        }
+  }
+var onclick_start = function() {
+    csound.Play();
+    var orc = document.getElementById("orc").innerHTML;
+    csound.CompileOrc(orc);
+    var sco = document.getElementById("sco").innerHTML;
+    csound.ReadScore(sco);
+}            
+</script>
 </head>
 <body>
 <H1>Csound for PNaCl ("Portable Native Client")</H1>
@@ -270,32 +297,7 @@ messages, warnings, and errors.</p>
 <H3>Performance</H3>
 <p>Actually running Csound involves a number of considerations. Usually, you will want a button to start Csound 
 and another button to stop it. </p>
-<script>
-var moduleDidLoad = function() {
-}
-var attachListeners = function() {
-}
-var handleMessage = function(message) {
-        var element = document.getElementById('console');
-        if (typeof element === 'undefined') {
-                    return;
-        }
-        element.value += message.data;
-        element.scrollTop = 99999; // focus on bottom
-        count += 1;
-        if(count == 1000) {
-           element.value = ' ';
-           count = 0;
-        }
-  }
-var onclick_start = function() {
-    csound.Play();
-    var orc = document.getElementById("orc").innerHTML;
-    csound.CompileOrc(orc);
-    var sco = document.getElementById("sco").innerHTML;
-    csound.ReadScore(sco);
-}
-</script>
+
 <input type="button" value="Start playing" onclick="onclick_start()">
 <script>
 var onclick_stop = function() {
