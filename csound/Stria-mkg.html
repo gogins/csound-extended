@@ -21,9 +21,9 @@ var start_onclick = function() {
  }
  function attachListeners() {}
  function handleMessage(message) {
-   var mess = message.data;
-   var messField = document.getElementById("mess")
-   messField.innerText += mess;
+   var messages_textarea = document.getElementById("mess");
+   var existing = messages_textarea.value;
+   messages_textarea.value = existing + '\n' + message.data;
    //scrollTo(0, messField.scrollHeight);
  }
  </script>
