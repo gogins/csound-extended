@@ -4,21 +4,21 @@
 <script>
 var moduleDidLoad = function() {
     console.log('moduleDidLoad was called.\n');
-}
+};
 var attachListeners = function() {
-}
+};
 var handleMessage = function(message) {
     var element = document.getElementById('console');
     element.value += message.data;
     element.scrollTop = 99999; // focus on bottom
-}
+};
 var start_onclick = function() {
     csound.Play();
     var orc = document.getElementById("orc").innerHTML;
     csound.CompileOrc(orc);
     var sco = document.getElementById("sco").innerHTML;
     csound.ReadScore(sco);
-}            
+};   
 </script>
 </head>
 <body>
