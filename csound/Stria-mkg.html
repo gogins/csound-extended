@@ -3,6 +3,18 @@
 <html>
 <head>
  <title>Stria Example</title>
+</head>
+<body>
+  <div id="console"></div>
+  <h3 id="tit"><b>Stria</b>, John Chowning</h3>
+  <h4 id="stit">Reconstruction by K. Dahan</h4> 
+<script>
+var start_onclick = function() {
+      csound.PlayCsd("http/stria.csd");
+}
+<input type="button" value="Start playing" onclick="start_onclick()">
+  <div id="mess">
+  </div>
  <script type="text/javascript" src="csound.js"></script>
  <script type="text/javascript">
  // called by csound.js
@@ -17,19 +29,6 @@
    scrollTo(0, messField.scrollHeight);
  }
  </script>
-</head>
-<body>
-  <div id="console"></div>
-  <h3 id="tit"><b>Stria</b>, John Chowning</h3>
-  <h4 id="stit">Reconstruction by K. Dahan</h4> 
-  <script>
-var start_onclick = function() {
-      csound.PlayCsd("http/stria.csd");
-}
-</script>
-<input type="button" value="Start playing" onclick="start_onclick()">
-  <div id="mess">
-  </div>
   <!--pNaCl csound module-->
   <div id="engine"></div>
 </body>
