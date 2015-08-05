@@ -7,18 +7,6 @@ var moduleDidLoad = function() {
 };
 var attachListeners = function() {
 };
-var handleMessage = function(message) {
-    var element = document.getElementById('console');
-    element.value += message.data;
-    element.scrollTop = 99999; // focus on bottom
-};
-var start_onclick = function() {
-    csound.Play();
-    var orc = document.getElementById("orc").innerHTML;
-    csound.CompileOrc(orc);
-    var sco = document.getElementById("sco").innerHTML;
-    csound.ReadScore(sco);
-};   
 </script>
 </head>
 <body>
@@ -288,7 +276,20 @@ messages, warnings, and errors.</p>
 <H3>Performance</H3>
 <p>Actually running Csound involves a number of considerations. Usually, you will want a button to start Csound 
 and another button to stop it. </p>
-
+<script>
+var handleMessage = function(message) {
+    var element = document.getElementById('console');
+    element.value += message.data;
+    element.scrollTop = 99999; // focus on bottom
+};
+var start_onclick = function() {
+    csound.Play();
+    var orc = document.getElementById("orc").innerHTML;
+    csound.CompileOrc(orc);
+    var sco = document.getElementById("sco").innerHTML;
+    csound.ReadScore(sco);
+};   
+</script>
 <input type="button" value="Start playing" onclick="start_onclick()">
 <script>
 var stop_onclick = function() {
