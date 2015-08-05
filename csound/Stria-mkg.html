@@ -11,7 +11,7 @@
  <script type="text/javascript">
  // called by csound.js
  function moduleDidLoad() {
-  csound.PlayCsd("http/stria.csd");
+  //csound.PlayCsd("http/stria.csd");
  }
  function attachListeners() {}
  function handleMessage(message) {
@@ -26,6 +26,12 @@
   <div id="console"></div>
   <h3 id="tit"><b>Stria</b>, John Chowning</h3>
   <h4 id="stit">Reconstruction by K. Dahan</h4> 
+  <script>
+var start_onclick = function(event) {
+      csound.PlayCsd("http/stria.csd");
+}
+</script>
+<input type="button" value="Start playing" onclick="start_onclick()">
   <div id="mess">
   </div>
   <!--pNaCl csound module-->
