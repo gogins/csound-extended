@@ -11,7 +11,8 @@ Chrome. It is not currently available for Android versions of Chrome or WebKit.<
 It is not necessary to manually download and install such programs, the browser does that for you automatically.</p> 
 <p>PNaCl programs run in the browser's security sandbox. But, they run almost as fast as regular compiled C or C++ 
 programs. For computer music, this is a huge advantage.</P>
-<p>Csound has been compiled for PNaCl, and this Web page demonstrates how to run Csound in PNaCl.</p>
+<p>Csound has been compiled for PNaCl, and this Web page demonstrates how to run Csound in PNaCl. For tutorial 
+purposes, the "Xanadu" example piece by Joseph Kung, from the Csound Git repository, is used.</p>
 <H2>Installation</H2>
 <p>You need to copy the Csound PNaCl files into your Web site. If you fork this site, that will happen 
 automatically.</p>
@@ -288,7 +289,7 @@ var onclick_start = function() {
 <input type="button" value="Start playing" onclick="onclick_start()">
 <script>
 var onclick_start = function() {
-    csound.Stop();
+    csound.Pause();
 }
 </script>
 <input type="button" value="Stop playing" onclick="onclick_stop()">
