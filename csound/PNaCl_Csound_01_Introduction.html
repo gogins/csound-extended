@@ -3,7 +3,7 @@
 <script type="text/javascript" src="csound.js"></script>
 <script>
 var moduleDidLoad = function() {
-    console.log('module did load\n')
+    console.log('moduleDidLoad was called.\n')
 }
 var attachListeners = function() {
 }
@@ -12,7 +12,7 @@ var handleMessage = function(message) {
     element.value += message.data;
     element.scrollTop = 99999; // focus on bottom
 }
-var onclick_start = function() {
+var start_onclick = function() {
     csound.Play();
     var orc = document.getElementById("orc").innerHTML;
     csound.CompileOrc(orc);
@@ -289,13 +289,13 @@ messages, warnings, and errors.</p>
 <p>Actually running Csound involves a number of considerations. Usually, you will want a button to start Csound 
 and another button to stop it. </p>
 
-<input type="button" value="Start playing" onclick="onclick_start()">
+<input type="button" value="Start playing" onclick="start_onclick()">
 <script>
-var onclick_stop = function() {
+var stop_onclick = function() {
     csound.Pause();
 }
 </script>
-<input type="button" value="Stop playing" onclick="onclick_stop()">
+<input type="button" value="Stop playing" onclick="stop_onclick()">
 <H3>Debugging</H3>
 <p>Chrome comes with a complete system for debugging JavaScript and HTML, called the "Developer Tools." You 
 can open the debugger by pressing [Ctrl][Shift][I] or by using the Chrome menu button.</p>
