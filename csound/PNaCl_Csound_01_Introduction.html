@@ -3,23 +3,15 @@
 <script type="text/javascript" src="csound.js"></script>
 <script>
 var moduleDidLoad = function() {
- console.log('module did load\n')
+    console.log('module did load\n')
 }
 var attachListeners = function() {
 }
 var handleMessage = function(message) {
-        var element = document.getElementById('console');
-        if (typeof element === 'undefined') {
-                    return;
-        }
-        element.value += message.data;
-        element.scrollTop = 99999; // focus on bottom
-        count += 1;
-        if(count == 1000) {
-           element.value = ' ';
-           count = 0;
-        }
-  }
+    var element = document.getElementById('console');
+    element.value += message.data;
+    element.scrollTop = 99999; // focus on bottom
+}
 var onclick_start = function() {
     csound.Play();
     var orc = document.getElementById("orc").innerHTML;
