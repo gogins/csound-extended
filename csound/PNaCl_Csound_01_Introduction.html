@@ -277,6 +277,9 @@ var attachListeners = function() {
 }
 var handleMessage = function(message) {
         var element = document.getElementById('console');
+        if (typeof element === 'undefined') {
+                    return;
+        }
         element.value += message.data;
         element.scrollTop = 99999; // focus on bottom
         count += 1;
