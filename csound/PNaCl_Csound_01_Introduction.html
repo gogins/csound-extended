@@ -33,9 +33,9 @@ on the pencil icon on the file's toolbar.
 object, which enables JavaScript in the Web page, to run Csound by calling the Csound API.</P>
 <H3>Orc</H3>
 <p>There are several ways to embed Csound code into a Web page. The simplest way is to simply paste it into the 
-text of a "pre" element. Give the orchestra an HTML ID so that you can write JavaScript to get 
-the orchestra out of the Web page and pass it into to Csound to run it.</p>
-<p>However, it is better to use a "textarea" element, as that will enable the user to edit the code right on 
+text of a "pre" element (so that line breaks are preserved). Give the orchestra an HTML ID so that you can write 
+JavaScript to get the orchestra out of the Web page and pass it into to Csound to run it.</p>
+<p>However, it is better to use a "textarea" element, as that enables the user to edit the code right on 
 the page, and the textarea can be smaller than the actual text it contains, but with scrollbars.</p>
 <textarea name="orc" rows=24 cols=80>
 sr          =           44100
@@ -262,12 +262,25 @@ i1 45.5 . . 11.04   ;E
 e
 </textarea>
 <H3>Performance</H3>
-<p>Actually running Csound involves a number of considerations. Usually, you will want a button to stop Csound 
-and another button to stop it. Then you will probably want an element on the page that will display Csound's 
-messages, warnings, and errors.</p>
+<p>Actually running Csound involves a number of considerations. Usually, you will want a button to start Csound 
+and another button to stop it. </p>
 <script>
+var handleMessage = function(message) {
+        var element = document.getElementById('console');
+        element.value += message.data;
+        element.scrollTop = 99999; // focus on bottom
+        count += 1;
+        if(count == 1000) {
+           element.value = ' ';
+           count = 0;
+        }
+  }
 var onclick_start = function() {
     csound.Play();
+    var orc = document.getElementById("orc").innerHTML;
+    csound.CompileOrc(orc);
+    var sco = document.getElementById("sco").innerHTML;
+    csound.ReadScore(sco);
 }
 </script>
 <input type="button" value="Start playing" onclick="onclick_start()">
@@ -277,6 +290,9 @@ var onclick_start = function() {
 }
 </script>
 <input type="button" value="Stop playing" onclick="onclick_stop()">
+<p>Then you will probably want an element on the page that will display Csound's 
+messages, warnings, and errors.</p>
+<textarea name="console" rows=24 cols=80></textarea>
 <H3>Debugging</H3>
 <p>Chrome comes with a complete system for debugging JavaScript and HTML, called the "Developer Tools." You 
 can open the debugger by pressing [Ctrl][Shift][I] or by using the Chrome menu button.</p>
