@@ -12,8 +12,6 @@
  // called by csound.js
  function moduleDidLoad() {
   csound.PlayCsd("http/stria.csd");
-  document.getElementById("tit").innerHTML = "Stria (J. Chowning)";
-  document.getElementById("stit").innerHTML = "reconstruction by K. Dahan";
  }
  function attachListeners() {}
  function handleMessage(message) {
@@ -26,8 +24,8 @@
 </head>
 <body>
   <div id="console"></div>
-  <h3 id="tit"></h3>
-  <h4 id="stit"></h4> 
+  <h3 id="tit"><b>Stria</b>, John Chowning</h3>
+  <h4 id="stit">Reconstruction by K. Dahan</h4> 
   <div id="mess">
   </div>
   <!--pNaCl csound module-->
