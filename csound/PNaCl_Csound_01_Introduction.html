@@ -2,7 +2,7 @@
 <head>
 </head>
 <body>
-<H1>Csound in PNaCl ("Portable Native Client")</H1>
+<H1>Csound for PNaCl ("Portable Native Client")</H1>
 <p>Portable Native Client is Google's technology for compiling C or C++ source code into 
 portable executable files (.pexe) that execute in a virtual machine built into recent 
 versions of Google's Chrome browser. PNaCl is built into all current desktop versions of 
@@ -10,7 +10,7 @@ Chrome. It is not currently available for Android versions of Chrome or WebKit.<
 <P>In other words, PNaCl allows one to compile C or C++ programs that will execute in Google's Chrome browser. 
 It is not necessary to manually download and install such programs, the browser does that for you automatically.</p> 
 <p>PNaCl programs run in the browser's security sandbox. But, they run almost as fast as regular compiled C or C++ 
-programs.</P>
+programs. For computer music, this is a huge advantage.</P>
 <p>Csound has been compiled for PNaCl, and this Web page demonstrates how to run Csound in PNaCl.</p>
 <H2>Installation</H2>
 <p>You need to copy the Csound PNaCl files into your Web site. If you fork this site, that will happen 
@@ -18,6 +18,8 @@ automatically.</p>
 <p>To set up the JavaScript interface to csound.pexe, you need to include the "csound.js" script using a "script" 
 element.</p>
 <script type="text/javascript" src="csound.js"></script>
+<p>And, you need a "div" element on your Web page named "engine".</p>
+<div id="engine"></div>
 <H2>Running</H2>
 <p>You can run this file online by going to https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html.</p>
 <p>In order to view the code beneath this page, e.g. to see how some function being discussed has been implemented,
