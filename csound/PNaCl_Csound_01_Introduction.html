@@ -264,6 +264,9 @@ i1 45.4 . . 10.11   ;B
 i1 45.5 . . 11.04   ;E
 e
 </textarea>
+<p>Then you will probably want an element on the page that will display Csound's 
+messages, warnings, and errors.</p>
+<textarea name="console" rows=24 cols=80></textarea>
 <H3>Performance</H3>
 <p>Actually running Csound involves a number of considerations. Usually, you will want a button to start Csound 
 and another button to stop it. </p>
@@ -292,14 +295,11 @@ var onclick_start = function() {
 </script>
 <input type="button" value="Start playing" onclick="onclick_start()">
 <script>
-var onclick_start = function() {
+var onclick_stop = function() {
     csound.Pause();
 }
 </script>
 <input type="button" value="Stop playing" onclick="onclick_stop()">
-<p>Then you will probably want an element on the page that will display Csound's 
-messages, warnings, and errors.</p>
-<textarea name="console" rows=24 cols=80></textarea>
 <H3>Debugging</H3>
 <p>Chrome comes with a complete system for debugging JavaScript and HTML, called the "Developer Tools." You 
 can open the debugger by pressing [Ctrl][Shift][I] or by using the Chrome menu button.</p>
