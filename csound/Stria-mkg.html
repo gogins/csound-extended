@@ -5,32 +5,43 @@
     <title>Stria Example</title>
 </head>
 <body>
-    <h3><emph>Stria</emph>, John Chowning</h3>
+    <h3><it>Stria</it>, John Chowning</h3>
     <h4>Reconstruction by K. Dahan</h4> 
     <h4>Web page by Michael Gogins</h4> 
     <h4>Original version by Victor Lazzarini</h4> 
     <p>This Web page provides an example of the simplest possible Web page that plays a Csound 
-    piece using the PNaCl build of Csound. All extraneous function calls and elements have 
-    been omitted. To see the code behind this page, right-click on the page and select 
-    "view page source."</p>
+    piece, embedded in the page and editable, using the PNaCl build of Csound. All unnecessary 
+    HTML elements and JavaScript function calls have been omitted. To see the code behind this page, 
+    right-click on the page and select "view page source".</p>
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
+    <br>
     <br>
     <textarea id="console" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
+    // Please note, it is best practice to place all JavaScript at the end of the "body" element 
+    // so that all other HTML elements have been initialized before any JavaScript code tries to 
+    // access them.
     var start_onclick = function() {
         csound.PlayCsd("http/stria.csd");
     }
+    // It is necessary to refresh the page to stop Csound, because the PNaCl build of Csound 
+    // does not provide a "stop" function. However, this works fine.
     var stop_onclick = function() {
         location.reload();
     }
+    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
+    // "console" text area.
     function handleMessage(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + message.data;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     }
+    // However, the "engine" element should be the very last HTML element in the body,
+    // and must come after all "script" elements. This is because the "csound.js" wrapper uses 
+    // the "engine" element to embed the PNaCl Csound module in this Web page.
     </script>
     <!--pNaCl csound module-->
     <div id="engine"></div>
