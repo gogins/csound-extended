@@ -12,7 +12,7 @@
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
     //<div id="console"></div>
-    <textarea id="csound_messages" rows=10 cols=80></textarea>
+    <textarea id="console" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
     // called by csound.js
@@ -27,7 +27,7 @@
     }
     //function attachListeners() {}
     function handleMessage(message) {
-        var messages_textarea = document.getElementById("csound_messages");
+        var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + message.data;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
