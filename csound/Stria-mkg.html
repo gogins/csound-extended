@@ -15,7 +15,7 @@
     All unnecessary HTML elements and JavaScript function calls have been omitted.</p>
     <p>As we proceed through the tutorials, more and more features of HTML5 will be integrated with 
     Csound, adding features to this piece.</p>
-    <p>Comments on the page or in the the page source explain what each element is for and why it is 
+    <p>Comments on this page or in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
     <h3>Embedding Csound</h3>
@@ -28,7 +28,9 @@
         http://gogins.github.io.</li>
         <li>PNaCl applications are compiled twice by Google's toolchain, first to compile a .pexe file for 
         the browser to load, and then to compile and cache a .nexe file that is a true machine language program 
-        for the browser's CPU.</li>
+        for the browser's CPU. Because the application runs as machine language, it runs only about 5 or 10% 
+        slower than a regular compiled C or C++ program for that CPU. For audio programming, this is a huge 
+        advantage.</li>
         <li>The browser knows how to load the application by reading an "embed" tag that points to the 
         .pexe file and to the manifest, a .nmf file.</li>
         <li>The application runs in a security sandbox in a separate process, and communicates with the 
@@ -37,12 +39,19 @@
     <p>To embed Csound for PNaCl in a Web page, simply include the "csound.js" script. This contains JavaScript 
     that dynamically creates the "embed" tag, and also manages sending and receiving messages from the Csound 
     process. To the Web page, Csound is just a JavaScript object named "csound", with its own functions and 
-    callbacks.</p>
-    <p>It is good practice to place all "script" elements at the very end of the HTML "body" element, and that 
-    is what I have done here.</p>
+    callbacks, which represent important parts of the Csound API.</p>
+    <p>It is good practice to place all "script" elements at the very end of the HTML "body" element, so that the 
+    other elements have already been created before any scripts try to access them, and that is what I have 
+    done here.</p>
     <p>Finally, the very last element in the body must be named "engine". The "csound.js" script uses this element 
     to hook up its callbacks to the Web page.</p>
     <h3>Embedding the Csound Score and Orchestra</h3>
+    <p>There are many to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
+    score editable, they must appear in "textarea" elements on the Web page. These can be smaller than the text 
+    they contain, but have scrollbars for accessing all of the text. These textareas must be named so that we 
+    can use JavaScript code to retrieve the orchestra and score, and pass them to Csound.</p>
+    <p>This textarea is named "orc" and contains the Csound orchestra.</p>
+    <p>This textarea is named "sco" and contains the Csound score.</p>
     <h3>Starting and Stopping Csound</h3>
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
