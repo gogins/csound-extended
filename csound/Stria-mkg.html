@@ -40,9 +40,8 @@
         messages_textarea.value = existing + message.data;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     }
-    // However, the "engine" element should be the very last HTML element in the body,
-    // and must come after all "script" elements. That is because the "csound.js" wrapper uses 
-    // the "engine" element to embed the PNaCl Csound module in this Web page.
+    // The "engine" element should be the very last HTML element in the body. That is because 
+    // the "csound.js" wrapper uses the "engine" element to embed the PNaCl Csound module in this Web page.
     </script>
     <!--pNaCl csound module-->
     <div id="engine"></div>
