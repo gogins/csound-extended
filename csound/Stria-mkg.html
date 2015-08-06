@@ -7,17 +7,23 @@
 <body>
     <h3><b>Stria</b>, John Chowning</h3>
     <h4>Reconstruction by K. Dahan</h4> 
+    <h4>Web page by Michael Gogins</h4> 
+    <h4>Original version by Victor Lazzarini</h4> 
     <input type="button" value="Start playing" onclick="start_onclick()"/>
+    <input type="button" value="Stop playing" onclick="stop_onclick()"/>
     <div id="console"></div>
     <textarea id="csound_messages" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
-    var start_onclick = function() {
-        csound.PlayCsd("http/stria.csd");
-    }
     // called by csound.js
     function moduleDidLoad() {
         //csound.PlayCsd("http/stria.csd");
+    }
+    var start_onclick = function() {
+        csound.PlayCsd("http/stria.csd");
+    }
+    var stop_onclick = function() {
+        csound.Pause();
     }
     function attachListeners() {}
     function handleMessage(message) {
