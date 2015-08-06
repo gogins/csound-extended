@@ -24,14 +24,14 @@
     <textarea id="console" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
-    // Please note, it is best practice to place all JavaScript at the end of the "body" element 
+    // It is best practice to place all JavaScript elements at the end of the "body" element 
     // so that all other HTML elements have been initialized before any JavaScript code tries to 
     // access them.
     var start_onclick = function() {
         csound.PlayCsd("http/stria.csd");
     }
     // It is necessary to refresh the page to stop Csound, because the PNaCl build of Csound 
-    // does not provide a "stop" function. However, this works fine.
+    // does not provide a "stop" function. However, this workaround seems to work well.
     var stop_onclick = function() {
         location.reload();
     }
