@@ -26,17 +26,22 @@
     <ul>
         <li>PNaCl applications must be loaded from a Web server. In this case, that is GitHub, the host for 
         http://gogins.github.io.</li>
-        <li>PNaCl applications are compiled twice by Google's toolchain, first to produce a .pexe file for 
-        the browser to load, and then to produce an .nexe file that is a true machine language program for the 
-        browser's CPU.</li>
+        <li>PNaCl applications are compiled twice by Google's toolchain, first to compile a .pexe file for 
+        the browser to load, and then to compile and cache a .nexe file that is a true machine language program 
+        for the browser's CPU.</li>
         <li>The browser knows how to load the application by reading an "embed" tag that points to the 
         .pexe file and to the manifest, a .nmf file.</li>
         <li>The application runs in a security sandbox in a separate process, and communicates with the 
         browser by means of messages sent via Google's Pepper API.</li>
     </ul>
     <p>To embed Csound for PNaCl in a Web page, simply include the "csound.js" script. This contains JavaScript 
-    to dynamically create the "embed" tag, and also manages sending and receiving messages from the Csound process. 
-    To the Web page, Csound is just a JavaScript object named "csound", with its own functions and callbacks.</p>
+    that dynamically creates the "embed" tag, and also manages sending and receiving messages from the Csound 
+    process. To the Web page, Csound is just a JavaScript object named "csound", with its own functions and 
+    callbacks.</p>
+    <p>It is good practice to place all "script" elements at the very end of the HTML "body" element, and that 
+    is what I have done here.</p>
+    <p>Finally, the very last element in the body must be named "engine". The "csound.js" script uses this element 
+    to hook up its callbacks to the Web page.</p>
     <h3>Embedding the Csound Score and Orchestra</h3>
     <h3>Starting and Stopping Csound</h3>
     <input type="button" value="Start playing" onclick="start_onclick()"/>
