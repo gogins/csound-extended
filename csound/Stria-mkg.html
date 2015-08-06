@@ -11,21 +11,15 @@
     <h4>Original version by Victor Lazzarini</h4> 
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
-    //<div id="console"></div>
     <textarea id="console" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
-    // called by csound.js
-    //function moduleDidLoad() {
-    //    //csound.PlayCsd("http/stria.csd");
-    //}
     var start_onclick = function() {
         csound.PlayCsd("http/stria.csd");
     }
     var stop_onclick = function() {
         location.reload();
     }
-    //function attachListeners() {}
     function handleMessage(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
