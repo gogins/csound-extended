@@ -756,8 +756,8 @@ e
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
-    <p>Csound will send all of its runtime messages to a JavaScript function in the Web page called 
-    "handleMessage". This callback is automatically set up by the "csound.js" script. Anything could be done 
+    <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
+    "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
     with these messages, including discarding them. Here, we append them to another textarea element named 
     "console".</p>
     <textarea id="console" rows=10 cols=80></textarea>
