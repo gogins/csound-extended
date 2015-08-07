@@ -3,7 +3,8 @@
 <html>
 <head>
     <title>Stria Example</title>
-</head>
+    <meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1"></head>
 <body>
     <h1>Stria</h2>
     <h4>By John Chowning</h3>
@@ -45,7 +46,8 @@
     other elements have already been created before any scripts try to access them, and that is what I have 
     done here.</p>
     <p>Finally, the very last element in the body must be named "engine". The "csound.js" script obtains this 
-    element, attaches the "embed" element to it, and then attaches Csound's callbacks to it.</p>
+    element from the JavaScript document object for the page, attaches the "embed" element to it, and then 
+    attaches Csound's callbacks to it.</p>
     <h3>Embedding the Csound Score and Orchestra</h3>
     <p>There are many to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
     score editable, they must appear in "textarea" elements on the Web page. These can be smaller than the text 
@@ -764,9 +766,9 @@ e
     <script type="text/javascript" src="csound.js"></script>
     <script>
     var start_onclick = function() {
+        csound.Play();
         var orc = document.getElementById('orc').value;
         csound.CompileOrc(orc);
-        csound.Play();
         var sco = document.getElementById('sco').value;
         csound.ReadScore(sco);
     }
