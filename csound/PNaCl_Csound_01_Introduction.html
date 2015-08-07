@@ -24,24 +24,24 @@
     <h3>Embedding Csound</h3>
     <p>PNaCl (Portable Native Client, pronounced "pinnacle") is Google's technology for <i>safely</i> 
     running C and C++ code in all desktop versions of Google's Chrome browser. For more information on PNaCl, 
-    go to <a href='https://developer.chrome.com/native-client'>here</a>. I will not discuss the internals of PNaCl 
-    or of the Csound build here, except to note that:
+    go to <a href='https://developer.chrome.com/native-client'>here</a>. Very briefly:
     <ul>
         <li>PNaCl applications must be loaded from a Web server. In this case, that is GitHub, the host for 
         <a href='http://gogins.github.io/csound/'>http://gogins.github.io</a>.</li>
-        <li>PNaCl applications are compiled twice by Google's toolchain: first by the developer to compile a 
+        <li>PNaCl applications are compiled twice using Google's toolchain: first by the developer to compile a 
         .pexe file for the browser to load, and then by the browser itself to compile and cache a .nexe file 
         that is a true machine language program for the browser's CPU. Because the application runs as 
         machine language, it runs only about 5% or 10% slower than a regular compiled C or C++ program. For audio
         applications, this is a <i>huge</i> advantage.</li>
         <li>The browser knows how to load the application by reading an "embed" tag that points to the 
-        .pexe file and to the manifest, a .nmf file.</li>
+        .pexe file and to the manifest, a .nmf file that tells the browser how to load the .pexe file.</li>
         <li>The application runs in a security sandbox in a separate process, and communicates with the 
         browser only by means of messages sent via Google's Pepper API.</li>
     </ul>
     <p>To embed Csound for PNaCl in a Web page, simply load the "csound.js" script using a "script" element. 
     This contains JavaScript that dynamically creates the "embed" tag, and also manages sending and receiving 
-    messages from the Csound process. To the Web page, Csound is just a JavaScript object named "csound", with 
+    messages from the Csound process. As far as any JavaScript code on the Web page is concerned, 
+    Csound is just an already existing JavaScript object named "csound", with 
     its own functions and callbacks, which represent important parts of the Csound API.</p>
     <p>It is good practice to place all "script" elements at the very end of the HTML "body" element, so that the 
     other elements have already been created before any scripts try to access them, and that is what I have 
@@ -57,7 +57,7 @@
     <p>This textarea is named "orc" and contains the Csound orchestra.</p>
     <p>Please note, Csound system constants are set by "csound.js" and cannot be set in the orchestra header, 
     so they are commented out here. Because "csound.js" sets 0dbfs to 1, but this piece assumes a 0dbfs level 
-    of 32768, we have to edit the orchestra to divide the output signal by 32768.</p>
+    of 32768, we have edited the orchestra to divide the output signal by 32768.</p>
     <textarea id="orc" rows=24 cols=80>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stria
@@ -303,7 +303,7 @@ endin
     <p>Please note, Csound for PNaCl can perform scores using either csound.CompileOrc(orc_text) followed by 
     csound.ReadScore(sco_text), or by simply calling csound.PlayCsd(filename). If ReadScore is used, the 
     score must not contain any "t", "s", or "e" statements, and all score times must be absolute times in 
-    seconds from the beginning of the performance. If PlayCsd is used, any valid score statements may be used.</p>
+    seconds from the beginning of the performance. If PlayCsd is used, all standard score statements may be used.</p>
     <textarea id="sco" rows=24 cols=80>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stria
@@ -757,16 +757,16 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <h3>Starting and Stopping Csound</h3>
     <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
-    Csound, send the orchestra, and send the score to perform the piece. For stopping Csound, it is necessary 
-    to destroy and recreate the Csound module, because the Csound object lacks a "Stop" function.</p>
+    Csound, send the orchestra to Csound, and send the score, in order to perform the piece. For stopping Csound, 
+    it is necessary to destroy and recreate the Csound module, because the Csound object lacks a "Stop" function.</p>
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
     <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
     "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
     with these messages, including discarding them. Here, we append them to another textarea element named 
-    "console". The "csound.js" script also sends its messages to the "console" element, prefaced "Csound:", 
-    so this one textarea can capture all messages from Csound for PNaCl.</p>
+    "console". The "csound.js" script also sends its messages, prefaced "Csound:", to the "console" element; 
+    therefore, this one textarea captures all messages from Csound for PNaCl.</p>
     <textarea id="console" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
