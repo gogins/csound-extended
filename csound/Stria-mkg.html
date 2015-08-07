@@ -54,6 +54,9 @@
     they contain, but have scrollbars for accessing all of the text. These textareas must be named so that we 
     can use JavaScript code to retrieve the orchestra and score, and pass them to Csound.</p>
     <p>This textarea is named "orc" and contains the Csound orchestra.</p>
+    <p>Please note, Csound system constants are set by "csound.js" and cannot be set in the orchestra header, 
+    so they are commented out here. Because "csound.js" sets 0dbfs to 1, but this piece assumes a 0dbfs level 
+    of 32768, we have to edit the orchestra to divide the output signal by 32768.</p>
     <textarea id="orc" rows=24 cols=80>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stria
@@ -70,12 +73,10 @@
 ;;; - 08/2010: orc modifications (butlp filters)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
   ;sr        =           48000
   ;kr        =           4800
   ;ksmps     =           10
   ;nchnls    =           2
-  0dbfs = 32768
 
   gaudio    init        0
   ga1       init        0
@@ -272,7 +273,7 @@ instr 999                           ;  global amplitude shaping envelope
 
   kpointer  linseg      0, 427, 0.1, 77, 0.35, 1, 0.45, 33, 0.45, 1, 0.35, 4, 0.45, 9, 0.5, 15, 0.5, 26, 0.8, 43, 0.8, 27, 0.9, 1, 0.8, 294, 0.95
   kv        tablei      kpointer, 2, 1
-  kenv      =           1+(kv*18)               
+  kenv      =           (1+(kv*18)) / 32768              
 
   ga1       =           ga1*kenv
   ga2       =           ga2*kenv
