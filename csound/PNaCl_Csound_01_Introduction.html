@@ -17,10 +17,13 @@
     All unnecessary HTML elements and JavaScript function calls have been omitted.</p>
     <p>As we proceed through the tutorials, more and more features of HTML5 will be integrated with 
     Csound, adding features to this piece. We will add control sliders, more attractive styling of the user 
-    interface, user-controllable score generation, and a visual display.</p>
+    interface, user-controllable score generation, and an interactive visual display.</p>
     <p>Comments on this page or in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
+    <p>Although the API for Csound for PNaCl differs slightly from the APIs for Csound for Emscripten, Csound 
+    for Android, HTML in CsoundQt, or csound.node, all of which support the use of HTML5 with Csound, the actual 
+    HTML features used here also will work in all of those environments.</p>
     <h3>Embedding Csound</h3>
     <p>PNaCl (Portable Native Client, pronounced "pinnacle") is Google's technology for <i>safely</i> 
     running C and C++ code in all desktop versions of Google's Chrome browser. For more information on PNaCl, 
@@ -29,16 +32,16 @@
         <li>PNaCl applications must be loaded from a Web server. In this case, that is GitHub, the host for 
         <a href='http://gogins.github.io/csound/'>http://gogins.github.io</a>.</li>
         <li>PNaCl applications are compiled twice using Google's toolchain: first by the developer to compile a 
-        .pexe file for the browser to load, and then by the browser itself to compile and cache a .nexe file 
-        that is a true machine language program for the browser's CPU. Because the application runs as 
-        machine language, it runs only about 5% or 10% slower than a regular compiled C or C++ program. For audio
-        applications, this is a <i>huge</i> advantage.</li>
-        <li>The browser knows how to load the application by reading an "embed" tag that points to the 
-        .pexe file and to the manifest, a .nmf file that tells the browser how to load the .pexe file.</li>
+        .pexe file for the browser to load, and then by the browser itself to compile the .pexe file into 
+        a machine language .nexe file for the browser's CPU and cache the .nexe file for re-use.
+        Because the application runs as true machine language, it runs only about 5% or 10% slower than a regular 
+        compiled C or C++ program. For audio applications, this is a <i>huge</i> advantage.</li>
+        <li>The browser knows how to load the application by reading an &lt;embed&gt; tag that points to the 
+        .pexe file and to a .nmf manifest file that tells the browser how to compile the .pexe file.</li>
         <li>The application runs in a security sandbox in a separate process, and communicates with the 
         browser only by means of messages sent via Google's Pepper API.</li>
     </ul>
-    <p>To embed Csound for PNaCl in a Web page, simply load the "csound.js" script using a "script" element. 
+    <p>To embed Csound for PNaCl in a Web page, simply load the "csound.js" script using a &lt;script&gt; element. 
     This contains JavaScript that dynamically creates the "embed" tag, and also manages sending and receiving 
     messages from the Csound process. As far as any JavaScript code on the Web page is concerned, 
     Csound is just an already existing JavaScript object named "csound", with 
