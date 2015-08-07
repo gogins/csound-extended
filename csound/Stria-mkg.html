@@ -783,8 +783,7 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     // It is necessary to refresh the page to stop Csound, because the PNaCl build of Csound 
     // does not provide a "stop" function. However, this workaround seems to work well.
     var stop_onclick = function() {
-        //location.reload();
-        csound.ReadScore('e 0\n')
+        location.reload();
     }
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
