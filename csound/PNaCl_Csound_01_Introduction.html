@@ -758,8 +758,7 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
     Csound, send the orchestra, and send the score to perform the piece. For stopping Csound, it is necessary 
-    to reload the entire page, but this can also be done with a button. Unfortunately, this has the effect of 
-    wiping out any edits to the orchestra and score in the textareas.</p>
+    to destroy and recreate the Csound module, because the Csound object lacks a "Stop" function.</p>
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
@@ -778,9 +777,9 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
         var sco = document.getElementById('sco').value;
         csound.ReadScore(sco);
     }
-    // It is necessary to refresh the page to stop Csound, because the PNaCl build of Csound 
-    // does not provide a "stop" function. This workaround seems to work well enough, except that 
-    // edits in the textareas are lost.
+    // Because the PNaCl build of Csound does not provide a "stop" function, it is necessary to destroy and 
+    // re-create the Csound module in order to stop the performance without losing edits in the textareas.
+    // To permanently save those edits, of course, you have to save them somewhere else before you unload the page.
     var stop_onclick = function() {
         csound.destroyModule();
         csound.createModule();
