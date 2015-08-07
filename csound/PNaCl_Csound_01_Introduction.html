@@ -28,7 +28,7 @@
     or of the Csound build here, except to note that:
     <ul>
         <li>PNaCl applications must be loaded from a Web server. In this case, that is GitHub, the host for 
-        <a href='http://gogins.github.io'>http://gogins.github.io</a>.</li>
+        <a href='http://gogins.github.io/'>http://gogins.github.io</a>.</li>
         <li>PNaCl applications are compiled twice by Google's toolchain: first by the developer to compile a 
         .pexe file for the browser to load, and then by the browser itself to compile and cache a .nexe file 
         that is a true machine language program for the browser's CPU. Because the application runs as 
@@ -766,7 +766,8 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
     "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
     with these messages, including discarding them. Here, we append them to another textarea element named 
-    "console".</p>
+    "console". The "csound.js" script also sends its messages to the "console" element, prefaced "Csound:", 
+    so this one textarea can capture all messages from Csound for PNaCl.</p>
     <textarea id="console" rows=10 cols=80></textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
@@ -781,7 +782,8 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     // does not provide a "stop" function. This workaround seems to work well enough, except that 
     // edits in the textareas are lost.
     var stop_onclick = function() {
-        location.reload();
+        csound.destroyModule();
+        csound.createModule();
     }
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
