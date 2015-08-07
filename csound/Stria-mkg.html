@@ -766,16 +766,14 @@ e
     var start_onclick = function() {
         var orc = document.getElementById('orc').value;
         csound.CompileOrc(orc);
+        csound.Play();
         var sco = document.getElementById('sco').value;
         csound.ReadScore(sco);
-        csound.Play();
     }
     // It is necessary to refresh the page to stop Csound, because the PNaCl build of Csound 
     // does not provide a "stop" function. However, this workaround seems to work well.
     var stop_onclick = function() {
-        //location.reload();
-        csound.Play();
-        //location.reload();
+        location.reload();
     }
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
