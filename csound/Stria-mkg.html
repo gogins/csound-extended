@@ -768,8 +768,12 @@ e
     var start_onclick = function() {
         csound.Play();
         var orc = document.getElementById('orc').value;
+        console.log('orc:\n');
+        console.log(orc);
         csound.CompileOrc(orc);
         var sco = document.getElementById('sco').value;
+        console.log('sco:\n');
+        console.log(sco);
         csound.ReadScore(sco);
     }
     // It is necessary to refresh the page to stop Csound, because the PNaCl build of Csound 
