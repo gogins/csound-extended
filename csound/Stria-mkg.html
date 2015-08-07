@@ -14,7 +14,8 @@
     music into a Web page, so that it is editable, and play it, using the PNaCl build of Csound. 
     All unnecessary HTML elements and JavaScript function calls have been omitted.</p>
     <p>As we proceed through the tutorials, more and more features of HTML5 will be integrated with 
-    Csound, adding features to this piece.</p>
+    Csound, adding features to this piece. We will add control sliders, score generation, and a visual 
+    display.</p>
     <p>Comments on this page or in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
@@ -773,7 +774,8 @@ e
     // does not provide a "stop" function. However, this workaround seems to work well.
     var stop_onclick = function() {
         //location.reload();
-        csound.Play();
+        //csound.Play();
+        location.reload();
     }
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
