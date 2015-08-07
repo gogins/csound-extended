@@ -42,19 +42,19 @@
         browser only by means of messages sent via Google's Pepper API.</li>
     </ul>
     <p>To embed Csound for PNaCl in a Web page, simply load the "csound.js" script using a &lt;script&gt; element. 
-    This contains JavaScript that dynamically creates the "embed" tag, and also manages sending and receiving 
-    messages from the Csound process. As far as any JavaScript code on the Web page is concerned, 
+    This contains JavaScript that dynamically creates the &lt;embed&gt; element, and also manages sending and 
+    receiving messages from the Csound process. As far as any JavaScript code on the Web page is concerned, 
     Csound is just an already existing JavaScript object named "csound", with 
     its own functions and callbacks, which represent important parts of the Csound API.</p>
-    <p>It is good practice to place all "script" elements at the very end of the HTML "body" element, so that the 
-    other elements have already been created before any scripts try to access them, and that is what I have 
-    done here.</p>
+    <p>It is good practice to place all &lt;script&gt; elements at the very end of the HTML &lt;body&gt; element, 
+    so that the other elements have already been created before any scripts try to access them, and that is what 
+    I have done here.</p>
     <p>Finally, the very last element in the body must be named "engine". The "csound.js" script obtains this 
-    element from the JavaScript document object for the page, attaches the "embed" element to it, and then 
+    element from the JavaScript document object for the page, attaches the &lt;embed&gt; element to it, and then 
     attaches Csound's callbacks to it.</p>
     <h3>Embedding the Csound Score and Orchestra</h3>
     <p>There are many to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
-    score editable, they must appear in "textarea" elements on the Web page. These can be smaller than the text 
+    score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than the text 
     they contain, yet have scrollbars for accessing all of the text. These textareas must be named so that we 
     can use JavaScript code to retrieve the orchestra and score, and pass them to Csound.</p>
     <p>This textarea is named "orc" and contains the Csound orchestra.</p>
@@ -303,10 +303,11 @@ instr 999                           ;  global amplitude shaping envelope
 endin
     </textarea>
     <p>This textarea is named "sco" and contains the Csound score.</p>
-    <p>Please note, Csound for PNaCl can perform scores using either csound.CompileOrc(orc_text) followed by 
-    csound.ReadScore(sco_text), or by simply calling csound.PlayCsd(filename). If ReadScore is used, the 
-    score must not contain any "t", "s", or "e" statements, and all score times must be absolute times in 
-    seconds from the beginning of the performance. If PlayCsd is used, all standard score statements may be used.</p>
+    <p>Please note, Csound for PNaCl can perform scores using either <code>csound.CompileOrc(orc_text)</code> 
+    followed by <code>csound.ReadScore(sco_text)</code>, or by simply calling 
+    <code>csound.PlayCsd(filename)</code>. If <code>ReadScore</code> is used, the score must not contain any 
+    "t", "s", or "e" statements, and all score times must be absolute times in seconds from the beginning of 
+    the performance. If <code>PlayCsd</code> is used, any and all standard score statements may be used.</p>
     <textarea id="sco" rows=24 cols=80>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stria
