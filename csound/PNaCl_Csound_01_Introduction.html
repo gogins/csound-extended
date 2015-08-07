@@ -28,12 +28,12 @@
     or of the Csound build here, except to note that:
     <ul>
         <li>PNaCl applications must be loaded from a Web server. In this case, that is GitHub, the host for 
-        <a href='http://gogins.github.io/'>http://gogins.github.io</a>.</li>
+        <a href='http://gogins.github.io/csound/'>http://gogins.github.io</a>.</li>
         <li>PNaCl applications are compiled twice by Google's toolchain: first by the developer to compile a 
         .pexe file for the browser to load, and then by the browser itself to compile and cache a .nexe file 
         that is a true machine language program for the browser's CPU. Because the application runs as 
         machine language, it runs only about 5% or 10% slower than a regular compiled C or C++ program. For audio
-        applications, this is a huge advantage.</li>
+        applications, this is a <i>huge</i> advantage.</li>
         <li>The browser knows how to load the application by reading an "embed" tag that points to the 
         .pexe file and to the manifest, a .nmf file.</li>
         <li>The application runs in a security sandbox in a separate process, and communicates with the 
