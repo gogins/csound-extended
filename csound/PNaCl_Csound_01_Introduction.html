@@ -758,7 +758,6 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than the text 
     they contain, yet have scrollbars for accessing all of the text. These textareas must be named so that we 
     can use JavaScript code to retrieve the orchestra and score, and pass them to Csound.</p>
-    <p>This textarea is named "orc" and contains the Csound orchestra.</p>
     <p>The code for a textarea containing a Csound orchestra looks like this:</p>
     <xmp>
 	    <textarea id="sco" rows=24 cols=80>
@@ -768,28 +767,55 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
 	;;; Kevin Dahan 2007-2010
 	;;; kevin.dahan@wanadoo.fr
 	(...remainder of orchestra...)
-	   </textarea>    	
+	    </textarea>    	
     </xmp>
     <p>Please note, Csound system constants are set by "csound.js" and cannot be set in the orchestra header, 
     so they are commented out here. Because "csound.js" sets 0dbfs to 1, but this piece assumes a 0dbfs level 
     of 32768, we have edited the orchestra to divide the output signal by 32768.</p>
-    <p>This textarea is named "sco" and contains the Csound score.</p>
+    <p>The code for a textarea containing a Csound score works the same way.</p>
     <p>Please note, Csound for PNaCl can perform scores using either <code>csound.CompileOrc(orc_text)</code> 
-    followed by <code>csound.ReadScore(sco_text)</code>, or by simply calling 
-    <code>csound.PlayCsd(filename)</code>. If <code>ReadScore</code> is used, the score must not contain any 
+    followed by <code>csound.readScore(sco_text)</code>, or by simply calling 
+    <code>csound.playCsd(filename)</code>. If <code>readScore</code> is used, the score must not contain any 
     "t", "s", or "e" statements, and all score times must be absolute times in seconds from the beginning of 
-    the performance. If <code>PlayCsd</code> is used, any and all standard score statements may be used.</p>
+    the performance. If <code>playCsd</code> is used, any and all standard score statements may be used.</p>
     <h3>Starting and Stopping Csound</h3>
     <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
     Csound, send the orchestra to Csound, and send the score, in order to perform the piece. For stopping Csound, 
     it is necessary to destroy and recreate the Csound module, because the Csound object lacks a "Stop" function.</p>
+    <p>The code for the Play and Stop buttons above looks like this:</p>
+    <xmp>
+    var start_onclick = function() {
+        csound.perform();
+        var orc = document.getElementById('orc').value;
+        csound.compileOrc(orc);
+        var sco = document.getElementById('sco').value;
+        csound.readScore(sco);
+    }
+    // The "csound.js" stop() function destroys the "csound" module and re-creates it;
+    // edits in the orchestra and score textareas are preserved.
+    // To permanently save those edits, of course, you have to save them somewhere else before you unload the page.
+    var stop_onclick = function() {
+        csound.stop();
+    }
+    </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
     <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
     "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
     with these messages, including discarding them. Here, we append them to another textarea element named 
     "console". The "csound.js" script also sends its messages, prefaced "Csound:", to the "console" element; 
     therefore, this one textarea captures all messages from Csound for PNaCl.</p>
+    <p>The code for handling messages from Csound looks like this:</p>
+    <xmp>
+    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
+    // "console" text area.
+    function handleMessage(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + message.data;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+    }
+    </xmp>
     <h3>Next Steps</h3>
     <p>As we proceed through subsequent tutorials, more and more features of HTML5 will be integrated with 
     Csound, adding features to this piece. We will add control sliders, more attractive styling of the user 
