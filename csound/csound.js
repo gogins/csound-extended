@@ -505,13 +505,14 @@ var csound = (function() {
     ProgramChange : ProgramChange,
     Aftertouch : Aftertouch,
     PitchBend : PitchBend,
-    // Common JavaScript API:
+    // Common Csound JavaScript API:
     // Should be the same signatures in csound.node, Csound for PNaCl, Csound for Android, CsoundQt.
     compileOrc: CompileOrc,
     message: message,
     perform: Play,
     readScore: ReadScore,
     setControlChannel: SetChannel,
+    setStringChannel: SetStringChannel,
     stop: stop
   };
 
