@@ -775,18 +775,17 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <script type="text/javascript" src="csound.js"></script>
     <script>
     var start_onclick = function() {
-        csound.Play();
+        csound.perform();
         var orc = document.getElementById('orc').value;
-        csound.CompileOrc(orc);
+        csound.compileOrc(orc);
         var sco = document.getElementById('sco').value;
-        csound.ReadScore(sco);
+        csound.readScore(sco);
     }
     // Because the PNaCl build of Csound does not provide a "stop" function, it is necessary to destroy and 
     // re-create the Csound module in order to stop the performance without losing edits in the textareas.
     // To permanently save those edits, of course, you have to save them somewhere else before you unload the page.
     var stop_onclick = function() {
-        csound.destroyModule();
-        csound.createModule();
+        csound.stop();
     }
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
