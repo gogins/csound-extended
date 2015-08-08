@@ -716,8 +716,7 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <h2>How It Is Done</h4>
     <p>This tutorial is a simple example. All unnecessary HTML elements and JavaScript function calls have been omitted. 
     This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures 
-    in csound.node, Csound for Android, CsoundQt, and Csound for PNaCl. Any piece, such as this one, that uses only 
-    these functions will run without change in any of these environments.</p>
+    in csound.node, Csound for Android, CsoundQt, and Csound for PNaCl.</p>
     <p>Comments on this page or in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
@@ -749,6 +748,11 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <p>Finally, the very last element in the body must be named "engine". The "csound.js" script obtains this 
     element from the JavaScript document object for the page, attaches the &lt;embed&gt; element to it, and then 
     attaches Csound's callbacks to it.</p>
+    <p>The code for embedding Csound for PNaCl in a Web page looks like this:</p>
+    <code>
+    <script type="text/javascript" src="csound.js"></script>
+    <div id="engine"></div>
+    </code>
     <h3>Embedding the Csound Score and Orchestra</h3>
     <p>There are many to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
     score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than the text 
