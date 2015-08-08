@@ -509,7 +509,7 @@ var csound = (function() {
     // Should be the same signatures in csound.node, Csound for PNaCl, Csound for Android, CsoundQt.
     compileOrc: CompileOrc,
     message: message,
-    perform: Start,
+    perform: Play,
     readScore: ReadScore,
     setControlChannel: SetChannel,
     stop: stop
@@ -518,7 +518,6 @@ var csound = (function() {
 }());
 
 document.addEventListener('DOMContentLoaded', function() {
-
      csound.updateStatus('page loaded');
      if (!(navigator.mimeTypes['application/x-pnacl'] !== undefined)) {
         csound.updateStatus('No support for pNaCl (maybe disabled?)');
