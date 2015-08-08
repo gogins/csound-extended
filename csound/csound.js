@@ -191,7 +191,7 @@ var csound = (function() {
   /**
    * Stops rendering and resets Csound.
    */
-  function stop() {
+  function Stop() {
       destroyModule();
       createModule();
   }
@@ -513,7 +513,7 @@ var csound = (function() {
     readScore: ReadScore,
     setControlChannel: SetChannel,
     setStringChannel: SetStringChannel,
-    stop: stop
+    stop: Stop
   };
 
 }());
