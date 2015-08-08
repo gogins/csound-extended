@@ -17,7 +17,9 @@
     A thorough explanation of the steps required to create this Web page using the PNaCl build of Csound follows.</p>
     <input type="button" value="Start playing" onclick="start_onclick()"/>
     <input type="button" value="Stop playing" onclick="stop_onclick()"/>
+    <h4>Csound Errors, Warnings, and Messages</h4>
     <textarea id="console" rows=10 cols=80></textarea>
+    <h4>Csound Orchestra</h4>
     <textarea id="orc" rows=24 cols=80>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stria
@@ -259,6 +261,7 @@ instr 999                           ;  global amplitude shaping envelope
 
 endin
     </textarea>
+    <h4>Csound Score</h4>
     <textarea id="sco" rows=24 cols=80>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stria
@@ -709,14 +712,14 @@ i1 904.9151 25.8188515226264 226.175784861801 1617.877032 4235.47911112157 0.1 0
 i1 911.6167 31.9184211024106 200.086373453748 1899.35006251845 4972.35411306854 0.1 0.398161580787621 725.517647769166 0.0 0.898161580787621 10.6394737008035 6.38368422048212 0.02 0.0715993349974727 0.1 0.0 0.0 0.0 0.0 0.0 0.885188571198883 0.465232407962817 0.0 0.0 0.0 0.0 2 6 5 4 
 i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.342334022188705 851.740869295313 0.0 0.842334022188705 10.2272333333333 6.13634 0.02 0.0658116828611607 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.532808724475686 0.84623570187188 0.0 0.0 0.0 2 6 5 4 
     </textarea>
-    
+    <h2>How It Is Done</h4>
     <p>This tutorial is a simple example. All unnecessary HTML elements and JavaScript function calls have been omitted. 
     As we proceed through subsequent tutorials, more and more features of HTML5 will be integrated with 
     Csound, adding features to this piece. We will add control sliders, more attractive styling of the user 
     interface, user-controllable score generation, and an interactive visual display.</p>
-    <p>Although the API for Csound for PNaCl differs slightly from the APIs for Csound for Emscripten, Csound 
-    for Android, HTML in CsoundQt, or csound.node, all of which support the use of HTML5 with Csound, the actual 
-    HTML features used here also will work in all of those environments.</p>
+    <p>This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures 
+    in csound.node, Csound for Android, CsoundQt, and Csound for PNaCl. Any piece, such as this one, that uses only 
+    these functions will run without change in any of these environments.</p>
     <p>Comments on this page or in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
