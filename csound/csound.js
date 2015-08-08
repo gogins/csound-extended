@@ -187,6 +187,14 @@ var csound = (function() {
   function Pause() {
    csound.module.postMessage('pauseCsound');
   }
+  
+  /**
+   * Stops rendering and resets Csound.
+   */
+  function stop() {
+      destroyModule();
+      createModule();
+  }
 
   /**
    * Sends code to be compiled by Csound
@@ -450,7 +458,10 @@ var csound = (function() {
    }
 
    function input_fail(e) {
-    csound.logMessage("Input audio error: " + e);
+        csound.logMessage("Input audio error: " + e);
+   }
+   function message(text) {
+       csound.logMessage(text);
    }
 
   /**
@@ -493,7 +504,15 @@ var csound = (function() {
     ControlChange : ControlChange,
     ProgramChange : ProgramChange,
     Aftertouch : Aftertouch,
-    PitchBend : PitchBend   
+    PitchBend : PitchBend,
+    // Common JavaScript API:
+    // Should be the same in csound.node, Csound for PNaCl, Csound for Android, CsoundQt.
+    compileOrc: CompileOrc,
+    message: message,
+    perform: Start
+    readScore: ReadScore,
+    setControlChannel: SetChannel,
+    stop: stop,
   };
 
 }());
