@@ -506,13 +506,13 @@ var csound = (function() {
     Aftertouch : Aftertouch,
     PitchBend : PitchBend,
     // Common JavaScript API:
-    // Should be the same in csound.node, Csound for PNaCl, Csound for Android, CsoundQt.
+    // Should be the same signatures in csound.node, Csound for PNaCl, Csound for Android, CsoundQt.
     compileOrc: CompileOrc,
     message: message,
-    perform: Start
+    perform: Start,
     readScore: ReadScore,
     setControlChannel: SetChannel,
-    stop: stop,
+    stop: stop
   };
 
 }());
