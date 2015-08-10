@@ -27,70 +27,11 @@ gkslider2 init 0
 gkslider3 init 0
 gkslider4 init 0
 gkslider5 init 0
-gkbutt1 init 0
-gkbutt2 init 0
-gkbutt3 init 0
-gkbutt4 init 0
-gkbutt5 init 0
-gktrackpadx init 0
-gktrackpady init 0
-gkaccelerometerx init 0
-gkaccelerometery init 0
-gkaccelerometerz init 0
+ga_reverb_in_left init 0
+ga_reverb_in_right init 0
+ga_out_left init 0
+ga_out_right init 0
 
-#ifdef FLTK
-FLpanel "Csound 6", 510, 580, 150, 150
-gkslider1, ihslider1 FLslider "slider1", 0, 1, 0, 23, -1, 500, 20, 5, 5
-FLsetVal_i .1, ihslider1
-gkslider2, ihslider2 FLslider "slider2", 0, 1, 0, 23, -1, 500, 20, 5, 55
-FLsetVal_i 0.5, ihslider2
-gkslider3, ihslider3 FLslider "slider3", 0, 1, 0, 23, -1, 500, 20, 5, 105
-FLsetVal_i .5, ihslider3
-gkslider4, ihslider4 FLslider "slider4", 0, 1, 0, 23, -1, 500, 20, 5, 155
-FLsetVal_i 0, ihslider4
-gkslider5, ihslider5 FLslider "slider5", 0, 1, 0, 23, -1, 500, 20, 5, 205
-FLsetVal_i 0, ihslider5
-gktrackpadx, gktrackpady, ihtrackpadx, ihtrackpady FLjoy "trackpad.x/trackpad.y", 0, 1, 0, 1, 0, 0, -1, -1, 500, 250, 5, 250
-FLsetVal_i 0.5, ihtrackpadx
-FLsetVal_i .2, ihtrackpady
-gkbutt1, ihbutt1 FLbutton "butt1", 1, 0, 21, 100, 40, 5, 530 , -1
-gkbutt2, ihbutt2 FLbutton "butt2", 1, 0, 21, 100, 40, 105, 530 , -1
-gkbutt3, ihbutt3 FLbutton "butt3", 1, 0, 21, 100, 40, 205, 530 , -1
-gkbutt4, ihbutt4 FLbutton "butt4", 1, 0, 21, 100, 40, 305, 530 , -1
-gkbutt5, ihbutt5 FLbutton "butt5", 1, 0, 21, 100, 40, 405, 530 , -1
-FLrun
-#endif
-
-
-connect "Bower", "outleft", "ReverbLeft", "inleft"
-connect "Bower", "outright", "ReverbRight", "inright"
-connect "Phaser", "outleft", "ReverbLeft", "inleft"
-connect "Phaser", "outright", "ReverbRight", "inright"
-connect "Droner", "outleft", "ReverbLeft", "inleft"
-connect "Droner", "outright", "ReverbRight", "inright"
-connect "Sweeper", "outleft", "ReverbLeft", "inleft"
-connect "Sweeper", "outright", "ReverbRight", "inright"
-connect "Buzzer", "outleft", "ReverbLeft", "inleft"
-connect "Buzzer", "outright", "ReverbRight", "inright"
-connect "Blower", "outleft", "ReverbLeft", "inleft"
-connect "Blower", "outright", "ReverbRight", "inright"
-connect "Shiner", "outleft", "ReverbLeft", "inleft"
-connect "Shiner", "outright", "ReverbRight", "inright"
-; connect "ReverbLeft", "outleft", "ParametricEQ", "inleft"
-; connect "ReverbRight", "outright", "ParametricEQ", "inright"
-; connect "ParametricEQ", "outleft", "MasterOutput", "inleft"
-; connect "ParametricEQ", "outright", "MasterOutput", "inright"
-connect "ReverbLeft", "outleft", "MasterOutput", "inleft"
-connect "ReverbRight", "outright", "MasterOutput", "inright"
-
-#ifndef FLTK
-alwayson "Controls"
-#endif
-alwayson "VariablesForControls"
-alwayson "ReverbLeft"
-alwayson "ReverbRight"
-alwayson "ParametricEQ"
-alwayson "MasterOutput"
 
 opcode hertz2midinn, i, i
 ihertz xin
@@ -480,227 +421,6 @@ endin
 gkReverbFeedback init 0.975
 gkDelayModulation init 0.875
 
-#ifdef CSOUNDQT
-
-instr ReverbLeft
-; p4 = gain of reverb. Adjust empirically
-; for desired reverb time. .6 gives
-; a good small "live" room sound, .8
-; a small hall, .9 a large hall,
-; .99 an enormous stone cavern.
-
-; p5 = amount of random pitch modulation
-; for the delay lines. 1 is the "normal"
-; amount, but this may be too high for
-; held pitches such as piano tones.
-; Adjust to taste.
-
-; p6 = cutoff frequency of lowpass filters
-; in feedback loops of delay lines,
-; in Hz. Lower cutoff frequencies results
-; in a sound with more high-frequency
-; damping.
-
-; 8 delay line FDN reverb, with feedback matrix based upon
-; physical modeling scattering junction of 8 lossless waveguides
-; of equal characteristic impedance. Based on Julius O. Smith III,
-; "A New Approach to Digital Reverberation using Closed Waveguide
-; Networks," Proceedings of the International Computer Music
-; Conference 1985, p. 47-53 (also available as a seperate
-; publication from CCRMA), as well as some more recent papers by
-; Smith and others.
-; Coded by Sean Costello, October 1999
-itone = 16000
-asignal inleta "inleft"
-afilt1 init 0
-afilt2 init 0
-afilt3 init 0
-afilt4 init 0
-afilt5 init 0
-afilt6 init 0
-afilt7 init 0
-afilt8 init 0
-idel1 = (2473.000/sr)
-idel2 = (2767.000/sr)
-idel3 = (3217.000/sr)
-idel4 = (3557.000/sr)
-idel5 = (3907.000/sr)
-idel6 = (4127.000/sr)
-idel7 = (2143.000/sr)
-idel8 = (1933.000/sr)
-; k1-k8 are used to add random pitch modulation to the
-; delay lines. Helps eliminate metallic overtones
-; in the reverb sound.
-k1 randi .001, 3.1, .06
-k2 randi .0011, 3.5, .9
-k3 randi .0017, 1.11, .7
-k4 randi .0006, 3.973, .3
-k5 randi .001, 2.341, .63
-k6 randi .0011, 1.897, .7
-k7 randi .0017, 0.891, .9
-k8 randi .0006, 3.221, .44
-; apj is used to calculate "resultant junction pressure" for
-; the scattering junction of 8 lossless waveguides
-.; of equal characteristic impedance. If you wish to
-; add more delay lines, simply add them to the following
-; equation, and replace the .25 by 2/N, where N is the
-; number of delay lines.
-apj = .25 * (afilt1 + afilt2 + afilt3 + afilt4 + afilt5 + afilt6 + afilt7 + afilt8)
-adum1 delayr 1
-adel1 deltapi idel1 + k1 * gkDelayModulation
- delayw asignal + apj - afilt1
-adum2 delayr 1
-adel2 deltapi idel2 + k2 * gkDelayModulation
- delayw asignal + apj - afilt2
-adum3 delayr 1
-adel3 deltapi idel3 + k3 * gkDelayModulation
- delayw asignal + apj - afilt3
-adum4 delayr 1
-adel4 deltapi idel4 + k4 * gkDelayModulation
- delayw asignal + apj - afilt4
-adum5 delayr 1
-adel5 deltapi idel5 + k5 * gkDelayModulation
- delayw asignal + apj - afilt5
-adum6 delayr 1
-adel6 deltapi idel6 + k6 * gkDelayModulation
- delayw asignal + apj - afilt6
-adum7 delayr 1
-adel7 deltapi idel7 + k7 * gkDelayModulation
- delayw asignal + apj - afilt7
-adum8 delayr 1
-adel8 deltapi idel8 + k8 * gkDelayModulation
- delayw asignal + apj - afilt8
-; 1st order lowpass filters in feedback
-; loops of delay lines.
-afilt1 tone adel1 * gkReverbFeedback, itone
-afilt2 tone adel2 * gkReverbFeedback, itone
-afilt3 tone adel3 * gkReverbFeedback, itone
-afilt4 tone adel4 * gkReverbFeedback, itone
-afilt5 tone adel5 * gkReverbFeedback, itone
-afilt6 tone adel6 * gkReverbFeedback, itone
-afilt7 tone adel7 * gkReverbFeedback, itone
-afilt8 tone adel8 * gkReverbFeedback, itone
-; The outputs of the delay lines are summed
-; and sent to the stereo outputs. This could
-; easily be modified for a 4 or 8-channel
-; sound system.
-aout1 = (afilt1 + afilt3 + afilt5 + afilt7)
-aout2 = (afilt2 + afilt4 + afilt6 + afilt8)
-aleft = aout1 + aout2
-; To the master output.
-outleta "outleft", aleft
-endin
-
-instr ReverbRight
-; p4 = gain of reverb. Adjust empirically
-; for desired reverb time. .6 gives
-; a good small "live" room sound, .8
-; a small hall, .9 a large hall,
-; .99 an enormous stone cavern.
-
-; p5 = amount of random pitch modulation
-; for the delay lines. 1 is the "normal"
-; amount, but this may be too high for
-; held pitches such as piano tones.
-; Adjust to taste.
-
-; p6 = cutoff frequency of lowpass filters
-; in feedback loops of delay lines,
-; in Hz. Lower cutoff frequencies results
-; in a sound with more high-frequency
-; damping.
-
-; 8 delay line FDN reverb, with feedback matrix based upon
-; physical modeling scattering junction of 8 lossless waveguides
-; of equal characteristic impedance. Based on Julius O. Smith III,
-; "A New Approach to Digital Reverberation using Closed Waveguide
-; Networks," Proceedings of the International Computer Music
-; Conference 1985, p. 47-53 (also available as a seperate
-; publication from CCRMA), as well as some more recent papers by
-; Smith and others.
-; Coded by Sean Costello, October 1999
-itone = 16000
-asignal inleta "inright"
-afilt1 init 0
-afilt2 init 0
-afilt3 init 0
-afilt4 init 0
-afilt5 init 0
-afilt6 init 0
-afilt7 init 0
-afilt8 init 0
-idel1 = (2473.000/sr)
-idel2 = (2767.000/sr)
-idel3 = (3217.000/sr)
-idel4 = (3557.000/sr)
-idel5 = (3907.000/sr)
-idel6 = (4127.000/sr)
-idel7 = (2143.000/sr)
-idel8 = (1933.000/sr)
-; k1-k8 are used to add random pitch modulation to the
-; delay lines. Helps eliminate metallic overtones
-; in the reverb sound.
-k1 randi .001, 3.1, .06
-k2 randi .0011, 3.5, .9
-k3 randi .0017, 1.11, .7
-k4 randi .0006, 3.973, .3
-k5 randi .001, 2.341, .63
-k6 randi .0011, 1.897, .7
-k7 randi .0017, 0.891, .9
-k8 randi .0006, 3.221, .44
-; apj is used to calculate "resultant junction pressure" for
-; the scattering junction of 8 lossless waveguides
-.; of equal characteristic impedance. If you wish to
-; add more delay lines, simply add them to the following
-; equation, and replace the .25 by 2/N, where N is the
-; number of delay lines.
-apj = .25 * (afilt1 + afilt2 + afilt3 + afilt4 + afilt5 + afilt6 + afilt7 + afilt8)
-adum1 delayr 1
-adel1 deltapi idel1 + k1 * gkDelayModulation
- delayw asignal + apj - afilt1
-adum2 delayr 1
-adel2 deltapi idel2 + k2 * gkDelayModulation
- delayw asignal + apj - afilt2
-adum3 delayr 1
-adel3 deltapi idel3 + k3 * gkDelayModulation
- delayw asignal + apj - afilt3
-adum4 delayr 1
-adel4 deltapi idel4 + k4 * gkDelayModulation
- delayw asignal + apj - afilt4
-adum5 delayr 1
-adel5 deltapi idel5 + k5 * gkDelayModulation
- delayw asignal + apj - afilt5
-adum6 delayr 1
-adel6 deltapi idel6 + k6 * gkDelayModulation
- delayw asignal + apj - afilt6
-adum7 delayr 1
-adel7 deltapi idel7 + k7 * gkDelayModulation
- delayw asignal + apj - afilt7
-adum8 delayr 1
-adel8 deltapi idel8 + k8 * gkDelayModulation
- delayw asignal + apj - afilt8
-; 1st order lowpass filters in feedback
-; loops of delay lines.
-afilt1 tone adel1 * gkReverbFeedback, itone
-afilt2 tone adel2 * gkReverbFeedback, itone
-afilt3 tone adel3 * gkReverbFeedback, itone
-afilt4 tone adel4 * gkReverbFeedback, itone
-afilt5 tone adel5 * gkReverbFeedback, itone
-afilt6 tone adel6 * gkReverbFeedback, itone
-afilt7 tone adel7 * gkReverbFeedback, itone
-afilt8 tone adel8 * gkReverbFeedback, itone
-; The outputs of the delay lines are summed
-; and sent to the stereo outputs. This could
-; easily be modified for a 4 or 8-channel
-; sound system.
-aout1 = (afilt1 + afilt3 + afilt5 + afilt7)
-aout2 = (afilt2 + afilt4 + afilt6 + afilt8)
-aright = aout1 + aout2
-outleta "outright", aright
-endin
-
-#else
-
 instr ReverbLeft
 aleft init 0
 azero init 0
@@ -716,8 +436,6 @@ aright inleta "inright"
 aleft, aright reverbsc azero, aright, gkReverbFeedback, 15000.0
 outleta "outright", aright
 endin
-
-#endif
 
 gkCenterHz init 200
 gkGain init 1
@@ -745,39 +463,11 @@ fout Sfilename, 16, aleft, aright
 endin
 
 instr Controls
-#ifdef CSOUNDQT
-gkslider1 invalue "slider1"
-gkslider2 invalue "slider2"
-gkslider3 invalue "slider3"
-gkslider4 invalue "slider4"
-gkslider5 invalue "slider5"
-gkbutt1 invalue "butt1"
-gkbutt2 invalue "butt2"
-gkbutt3 invalue "butt3"
-gkbutt4 invalue "butt4"
-gkbutt5 invalue "butt5"
-gktrackpadx invalue "trackpad.x"
-gktrackpady invalue "trackpad.y"
-gkaccelerometerx invalue "accelerometerX"
-gkaccelerometery invalue "accelerometerY"
-gkaccelerometerz invalue "accelerometerZ"
-#else
 gkslider1 chnget "slider1"
 gkslider2 chnget "slider2"
 gkslider3 chnget "slider3"
 gkslider4 chnget "slider4"
 gkslider5 chnget "slider5"
-gkbutt1 chnget "butt1"
-gkbutt2 chnget "butt2"
-gkbutt3 chnget "butt3"
-gkbutt4 chnget "butt4"
-gkbutt5 chnget "butt5"
-gktrackpadx chnget "trackpad.x"
-gktrackpady chnget "trackpad.y"
-gkaccelerometerx chnget "accelerometerX"
-gkaccelerometery chnget "accelerometerY"
-gkaccelerometerz chnget "accelerometerZ"
-#endif
 endin
 
 instr VariablesForControls
