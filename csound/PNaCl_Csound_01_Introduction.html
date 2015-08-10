@@ -32,7 +32,6 @@ ga_reverb_in_right init 0
 ga_out_left init 0
 ga_out_right init 0
 
-
 opcode hertz2midinn, i, i
 ihertz xin
 print ihertz
@@ -123,7 +122,7 @@ p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-isine ftgenonce 0, 0, 65536, 10, 1, 0, .02
+isine ftgen 0, 0, 65536, 10, 1, 0, .02
 if kwaveform == 0 then
 asignal poscil3 1, ihertz, isine
 endif
@@ -175,8 +174,6 @@ aleft, aright pan2 aSig / 7, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-outleta "outleft", aleft
-outleta "outright", aright
 endin
 
 gkratio1 init 1
@@ -199,7 +196,7 @@ p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-isine ftgenonce 0,0,65536,10,1
+isine ftgen 0,0,65536,10,1
 khertz = ihertz
 ifunction1 = isine
 ifunction2 = isine
@@ -208,8 +205,6 @@ aleft, aright pan2 a1+a2, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft * kenvelope
 aright = adamping * aright * kenvelope
-outleta "outleft", aleft
-outleta "outright", aright
 endin
 
 gkbritel init 0
@@ -226,8 +221,8 @@ iphase = p6
 ipan = p7
 print insno, istart, iduration, ikey, ivelocity, iphase, ipan
 iamp = ampdb(ivelocity)
-gisine ftgenonce 0, 0, 65536, 10, 1
-gioctfn ftgenonce 0, 0, 65536, -19, 1, 0.5, 270, 0.5
+gisine ftgen 0, 0, 65536, 10, 1
+gioctfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
 iattack = gioverlap
 idecay = gioverlap
 isustain = p3 - gioverlap
@@ -266,8 +261,6 @@ aright = a2*kenv*.02
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-outleta "outleft", aleft
-outleta "outright", aright
 endin
 
 instr Buzzer
@@ -287,7 +280,7 @@ kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp
 ihertz = cpsmidinn(ikey)
 print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
 ;asignal gbuzz kenvelope, ihertz, 3, gkFirstHarmonic, gkDistortFactor, gisine
-isine ftgenonce 0, 0, 65536, 10, 1
+isine ftgen 0, 0, 65536, 10, 1
 gkHarmonics = gkslider1 * 20
 asignal buzz kenvelope, ihertz, gkHarmonics, isine
 asignal = asignal * 3
@@ -298,8 +291,6 @@ aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-outleta "outleft", aleft
-outleta "outright", aright
 endin
 
 instr Shiner
@@ -329,8 +320,6 @@ aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-outleta "outleft", aleft
-outleta "outright", aright
 endin
 
 gkgrainDensity init 150
@@ -374,8 +363,8 @@ iamplitude = ampdb(i_midivelocity) / 200
  ; i1 26.5 13.5 1100 6.09 . 4 .121 150 1.5
  ; i1 30.7 9.3 900 8.05 . 4 .014 150 2.5
  ; i1 34.2 8.8 700 10.02 . 4 .14 150 1.6
-igrtab ftgenonce 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
-iwintab ftgenonce 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
+igrtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+iwintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
 iHz = ifrequency
 ihertz = iHz
 ip4 = iamplitude
@@ -413,8 +402,6 @@ aright = aoutr * kamp * iamplitude
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-outleta "outleft", aleft
-outleta "outright", aright
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
@@ -424,35 +411,25 @@ gkDelayModulation init 0.875
 instr ReverbLeft
 aleft init 0
 azero init 0
-aleft inleta "inleft"
 aleft, aright reverbsc aleft, azero, gkReverbFeedback, 15000.
-outleta "outleft", aleft
 endin
 
 instr ReverbRight
 aleft init 0
 azero init 0
-aright inleta "inright"
 aleft, aright reverbsc azero, aright, gkReverbFeedback, 15000.0
-outleta "outright", aright
 endin
 
 gkCenterHz init 200
 gkGain init 1
 gkQ init 0.7071067 ; sqrt(.5)
 instr ParametricEQ
-aleft inleta "inleft"
-aright inleta "inright"
 aleft pareq aleft, gkCenterHz, ampdb(gkGain), gkQ, 0
 aright pareq aright, gkCenterHz, ampdb(gkGain), gkQ, 0
-outleta "outleft", aleft
-outleta "outright", aright
 endin
 
 gkMasterLevel init 4
 instr MasterOutput
-aleft inleta "inleft"
-aright inleta "inright"
 aleft *= gkMasterLevel
 aright *= gkMasterLevel
 outs aleft, aright
@@ -460,56 +437,6 @@ idate date
 Sfilename sprintf "Drone-IV-%d.wav", idate
 prints sprintf("Filename: %s\n", Sfilename)
 fout Sfilename, 16, aleft, aright
-endin
-
-instr Controls
-gkslider1 chnget "slider1"
-gkslider2 chnget "slider2"
-gkslider3 chnget "slider3"
-gkslider4 chnget "slider4"
-gkslider5 chnget "slider5"
-endin
-
-instr VariablesForControls
-if gkslider1 > 0 then
- 	gkFirstHarmonic = gkslider1 * 2
-	gkgrainDensity = gkslider1 * 400
-	gkratio2 = gkslider1 ;1/3
-endif
-if gkslider2 > 0 then
- 	gkDistortFactor = gkslider2 * 2
-	gkgrainDuration = 0.005 + gkslider2 / 2
-	gkindex1 = gkslider2 * 4
-endif
-if gkslider3 > 0 then
- 	gkVolume = gkslider3 * 5
-	gkgrainAmplitudeRange = gkslider3 * 300
-	gkindex2 = gkslider3 ;0.0125
-endif
-if gkslider4 > 0 then
-	gkgrainFrequencyRange = gkslider4 / 10
-endif
-if gktrackpady > 0 then
- 	gkDelayModulation = gktrackpady * 2
- 	; gkGain = gktrackpady * 2 - 1
-endif
-if gktrackpadx > 0 then
- 	gkReverbFeedback = (3/4) + (gktrackpadx / 4)
- 	; gkCenterHz = 100 + gktrackpadx * 3000
-endif
-kbutt1 trigger gkbutt1, .5, 0
-if kbutt1 > 0 then
- 	gkbritels = gkbritels / 1.5
- 	gkbritehs = gkbritehs / 1.5
- 	; gkQ = gkQ / 2
-endif
-kbutt2 trigger gkbutt2, .5, 0
-if kbutt2 > 0 then
- 	gkbritels = gkbritels * 1.5
- 	gkbritehs = gkbritehs * 1.5
- 	; gkQ = gkQ * 2
-endif
-
 endin
     </textarea>
     <h4>Csound Score</h4>
