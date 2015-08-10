@@ -8,7 +8,7 @@
 <body>
     <h1>Csound HTML Tutorial 01</h1>
     <h2>Introduction</h3>
-    <p>The purpose of this tutorial is to show you how to embed a Csound piece into a Web page, where you can play the 
+    <p>The purpose of this tutorial is to show you how to embed a Csound piece into a Web page. You can play the 
     piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. You may find this 
     piece immediately below. Go ahead and try it -- it will play on version 31 or later of Google's Chrome browser 
     for desktops. A thorough explanation of the steps required to create this Web page using the PNaCl build of 
@@ -756,7 +756,7 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
 	<div id="engine"></div>
     </xmp>
     <h3>Embedding the Csound Score and Orchestra</h3>
-    <p>There are many to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
+    <p>There are many ways to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
     score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than the text 
     they contain, yet have scrollbars for accessing all of the text. These textareas must be named so that we 
     can use JavaScript code to retrieve the orchestra and score, and pass them to Csound.</p>
@@ -769,7 +769,7 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
 ;;; Reconstruction - ORChestra csound code
 ;;; Kevin Dahan 2007-2010
 ;;; kevin.dahan@wanadoo.fr
-	(...remainder of orchestra...)
+    (...remainder of orchestra...)
     </textarea>    	
     </xmp>
     <p>Please note, Csound system constants are set by "csound.js" and cannot be set in the orchestra header, 
@@ -784,10 +784,12 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     <h3>Starting and Stopping Csound</h3>
     <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
-    Csound, send the orchestra to Csound, and send the score, in order to perform the piece. For stopping Csound, 
-    it is necessary to destroy and recreate the Csound module, because the Csound object lacks a "Stop" function.</p>
-    <p>The code for the Play and Stop buttons above looks like this:</p>
+    Csound, send the orchestra to Csound, and send the score, in order to perform the piece.</p>
+    <p>The buttons and code for the Play and Stop buttons above look like this:</p>
     <xmp>
+    <input type="button" value="Play" onclick="start_onclick()"/>
+    <input type="button" value="Stop" onclick="stop_onclick()"/>
+    <script>
     var start_onclick = function() {
         csound.perform();
         var orc = document.getElementById('orc').value;
@@ -801,11 +803,12 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     var stop_onclick = function() {
         csound.stop();
     }
+    </script>    
     </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
     <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
     "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
-    with these messages, including discarding them. Here, we append them to another textarea element named 
+    with these messages, including discarding them. Here, we append them to an initially empty textarea element named 
     "console". The "csound.js" script also sends its messages, prefaced "Csound:", to the "console" element; 
     therefore, this one textarea captures all messages from Csound for PNaCl.</p>
     <p>The code for handling messages from Csound looks like this:</p>
