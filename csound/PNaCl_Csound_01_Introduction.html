@@ -88,8 +88,8 @@ endin
 
 gioverlap init 20
 
-gkDistortFactor init 0.4
-gkFirstHarmonic init 0.4
+gk_MasterLevel_gainDroner_distort_factor init 0.4
+gk_Droner_first_harmonic init 0.4
 instr Droner
 insno = p1
 istart = p2
@@ -279,14 +279,14 @@ p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-;asignal gbuzz kenvelope, ihertz, 3, gkFirstHarmonic, gkDistortFactor, gisine
+;asignal gbuzz kenvelope, ihertz, 3, gk_Droner_first_harmonic, gk_Droner_distort_factor, gisine
 isine ftgen 0, 0, 65536, 10, 1
 gkHarmonics = gkslider1 * 20
 asignal buzz kenvelope, ihertz, gkHarmonics, isine
 asignal = asignal * 3
 ;asignal vco2 kenvelope, ihertz, 12
 ;asignal poscil3 kenvelope, ihertz, giharmonics
-;asignal distort asignal, gkDistortFactor * .4, giwaveshaping
+;asignal distort asignal, gk_Droner_distort_factor * .4, giwaveshaping
 aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
@@ -309,13 +309,13 @@ p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-;asignal gbuzz kenvelope, ihertz, 3, gkFirstHarmonic, gkDistortFactor, gisine
+;asignal gbuzz kenvelope, ihertz, 3, gk_Droner_first_harmonic, gk_Droner_distort_factor, gisine
 gkHarmonics = gkslider1 * 20
 ;asignal buzz kenvelope, ihertz, gkHarmonics, gisine
 ;asignal = asignal
 asignal vco2 kenvelope * 4, ihertz, 12
 ;asignal poscil3 kenvelope, ihertz, giharmonics
-;asignal distort asignal, gkDistortFactor * .4, giwaveshaping
+;asignal distort asignal, gk_Droner_distort_factor * .4, giwaveshaping
 aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
@@ -411,7 +411,7 @@ gkDelayModulation init 0.875
 instr ReverbLeft
 aleft init 0
 azero init 0
-aleft, aright reverbsc aleft, azero, gkReverbFeedback, 15000.
+aleft, aright reverbsc aleft, azero, gkReverbFeedback, 15000.0
 endin
 
 instr ReverbRight
@@ -420,23 +420,27 @@ azero init 0
 aleft, aright reverbsc azero, aright, gkReverbFeedback, 15000.0
 endin
 
-gkCenterHz init 200
-gkGain init 1
-gkQ init 0.7071067 ; sqrt(.5)
-instr ParametricEQ
-aleft pareq aleft, gkCenterHz, ampdb(gkGain), gkQ, 0
-aright pareq aright, gkCenterHz, ampdb(gkGain), gkQ, 0
+gk_MasterLevel_gain init 4
+instr MasterOutput
+aleft *= gk_MasterLevel_gain
+aright *= gk_MasterLevel_gain
+outs aleft, aright
 endin
 
-gkMasterLevel init 4
-instr MasterOutput
-aleft *= gkMasterLevel
-aright *= gkMasterLevel
-outs aleft, aright
-idate date
-Sfilename sprintf "Drone-IV-%d.wav", idate
-prints sprintf("Filename: %s\n", Sfilename)
-fout Sfilename, 16, aleft, aright
+instr Mixer
+	; Mix signals.
+	ga_ReverbLeft_in_left += ga_Droner_out_left
+	ga_ReverbRight_in_right += ga_Droner_out_right
+	ga_MasterOutput_in_left += ga_ReverbLeft_out_left
+	ga_MasterOutput_in_right += ga_ReverbRight_out_right
+	; Reset busses to 0 for next kperiod.
+	ga_ReverbLeft_in_left = 0
+	ga_ReverbLeft_in_right = 0
+	ga_ReverbLeft_out_left = 0
+	ga_ReverbRight_in_left = 0
+	ga_ReverbRight_in_right = 0
+	ga_ReverbRight_out_left = 0
+	ga_ReverbRight_out_right = 0
 endin
     </textarea>
     <h4>Csound Score</h4>
