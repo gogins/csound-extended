@@ -714,11 +714,11 @@ i1 911.6167 31.9184211024106 200.086373453748 1899.35006251845 4972.35411306854 
 i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.342334022188705 851.740869295313 0.0 0.842334022188705 10.2272333333333 6.13634 0.02 0.0658116828611607 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.532808724475686 0.84623570187188 0.0 0.0 0.0 2 6 5 4 
     </textarea>
     <h2>How It Is Done</h4>
-    <p>This tutorial is a simple example. All unnecessary HTML elements and JavaScript function calls have been omitted. 
-    This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures 
+    <p>This tutorial is a simple example. All unnecessary HTML elements and JavaScript function calls have been 
+    omitted. This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures 
     in csound.node, Csound for Android, CsoundQt, and Csound for PNaCl. This piece will not run without modification
-    in these other environments, although that is a goal for the Csound developers. But the changes required are simple, 
-    and I explain them in an Appendix to this chapter, "Interoperable HTML5 for Csound".</p>
+    in these other environments, although that is a goal for the Csound developers. But the changes required are 
+    simple, and I explain them in an Appendix to this chapter, "Interoperable HTML5 for Csound".</p>
     <p>Comments on this page or in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
@@ -737,7 +737,7 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
         <li>The browser knows how to load the application by reading an &lt;embed&gt; tag that points to the 
         .pexe file and to a .nmf manifest file that tells the browser how to compile the .pexe file.</li>
         <li>The application runs in a security sandbox in a separate process, and communicates with the 
-        browser only by means of messages sent via Google's Pepper API.</li>
+        browser only by means of asynchronous messages sent via Google's Pepper API.</li>
     </ul>
     <p>To embed Csound for PNaCl in a Web page, simply load the "csound.js" script using a &lt;script&gt; element. 
     This contains JavaScript that dynamically creates the &lt;embed&gt; element, and also manages sending and 
@@ -748,18 +748,18 @@ i1 918.3183 30.6817 175.176041266161 2229.79286350906 5837.4282524091 0.1 0.3423
     so that the other elements have already been created before any scripts try to access them, and that is what 
     I have done here.</p>
     <p>Finally, the very last element in the body must be named "engine". The "csound.js" script obtains this 
-    element from the JavaScript document object for the page, attaches the &lt;embed&gt; element to it, and then 
-    attaches Csound's callbacks to it.</p>
+    element from the JavaScript document object for the page, and attaches to it the &lt;embed&gt; element and 
+    Csound's callbacks.</p>
     <p>The code for embedding Csound for PNaCl in a Web page looks like this:</p>
     <xmp>
 	<script type="text/javascript" src="csound.js"></script>
 	<div id="engine"></div>
     </xmp>
     <h3>Embedding the Csound Score and Orchestra</h3>
-    <p>There are many ways to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra and 
-    score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than the text 
-    they contain, yet have scrollbars for accessing all of the text. These textareas must be named so that we 
-    can use JavaScript code to retrieve the orchestra and score, and pass them to Csound.</p>
+    <p>There are many ways to get a Csound piece into Csound for PNaCl. But in order to make the Csound orchestra 
+    and score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than 
+    the text they contain, yet have scrollbars for accessing all of the text. These textareas must be named, 
+    so that we can use JavaScript to retrieve the orchestra and score and pass them to Csound.</p>
     <p>The code for a textarea containing a Csound orchestra looks like this:</p>
     <xmp>
     <textarea id="orc" rows=24 cols=80>
