@@ -79,11 +79,11 @@ endin
 gi_Droner_overlap init 20
 gk_Droner_distort_factor init 0.4
 gk_Droner_first_harmonic init 0.4
-gk_Droner_slider1 init 0
-gk_Droner_slider2 init 0
-gk_Droner_slider3 init 0
-gk_Droner_slider4 init 0
-gk_Droner_slider5 init 0
+gk_Droner_slider1 init .05
+gk_Droner_slider2 init .1
+gk_Droner_slider3 init .04
+gk_Droner_slider4 init .2
+gk_Droner_slider5 init .02
 gi_Droner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
 instr Droner
 insno = p1
@@ -421,7 +421,7 @@ chnmix aout_right, "reverb_out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gk_MasterOutput_gain init .1
+gk_MasterOutput_gain init .000003
 instr MasterOutput
 ain_left chnget "reverb_out_left"
 ain_right chnget "reverb_out_right"
