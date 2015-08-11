@@ -22,16 +22,6 @@
     <textarea id="console" rows=10 cols=80></textarea>
     <h4>Csound Orchestra</h4>
     <textarea id="orc" rows=24 cols=80>
-gkslider1 init 0
-gkslider2 init 0
-gkslider3 init 0
-gkslider4 init 0
-gkslider5 init 0
-ga_reverb_in_left init 0
-ga_reverb_in_right init 0
-ga_out_left init 0
-ga_out_right init 0
-
 opcode hertz2midinn, i, i
 ihertz xin
 print ihertz
@@ -86,10 +76,15 @@ ikey hertz2midinn ihertz
 event_i "i", "Blower", 0, iduration, ikey, ivelocity, 0, ipan
 endin
 
-gioverlap init 20
-
-gk_MasterLevel_gainDroner_distort_factor init 0.4
+gi_Droner_overlap init 20
+gk_Droner_distort_factor init 0.4
 gk_Droner_first_harmonic init 0.4
+gk_Droner_slider1 init 0
+gk_Droner_slider2 init 0
+gk_Droner_slider3 init 0
+gk_Droner_slider4 init 0
+gk_Droner_slider5 init 0
+gi_Droner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
 instr Droner
 insno = p1
 istart = p2
@@ -108,23 +103,21 @@ k7 init .1
 k8 init 0
 k9 init 0
 k10 init 0
-k3 = gkslider1
-k4 = gkslider2
-k5 = gkslider3
-k6 = gkslider4
-k7 = gkslider5
+k3 = gk_Droner_slider1
+k4 = gk_Droner_slider2
+k5 = gk_Droner_slider3
+k6 = gk_Droner_slider4
+k7 = gk_Droner_slider5
 kwaveform init 0
 iamp = ampdb(ivelocity)
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Droner_overlap
+idecay = gi_Droner_overlap
+isustain = p3 - gi_Droner_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
-print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-isine ftgen 0, 0, 65536, 10, 1, 0, .02
 if kwaveform == 0 then
-asignal poscil3 1, ihertz, isine
+asignal poscil3 1, ihertz, gi_Droner_sine
 endif
 if kwaveform == 1 then
 asignal vco2 1, ihertz, 8 ; integrated saw
@@ -138,10 +131,13 @@ aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-outleta "outleft", aleft
-outleta "outright", aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
+gi_Bower_overlap init 20
+gi_Bower_sine ftgen 0,0,65536,10,1
 instr Bower
 insno = p1
 istart = p2
@@ -151,13 +147,12 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity) * 200
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Bower_overlap
+idecay = gi_Bower_overlap
+isustain = p3 - gi_Bower_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
-print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
 kamp = kenvelope
 kfreq = ihertz
 kpres = 0.25
@@ -166,20 +161,22 @@ krat rspline 0.006,0.988,1,4
 kvibf = 4.5
 kvibamp = 0
 iminfreq = 20
-isine ftgenonce 0,0,65536,10,1
-aSig wgbow kamp,kfreq,kpres,krat,kvibf,kvibamp,isine,iminfreq
+aSig wgbow kamp,kfreq,kpres,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
 ;aSig butlp aSig,2000
 ;aSig pareq aSig,80,6,0.707
 aleft, aright pan2 aSig / 7, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gkratio1 init 1
-gkratio2 init 1/3
-gkindex1 init 1
-gkindex2 init 0.0125
+gi_Phaser_overlap init 20
+gk_Phaser_ratio1 init 1
+gk_Phaser_ratio2 init 1/3
+gk_Phaser_index1 init 1
+gk_Phaser_index2 init 0.0125
+gi_Phaser_sine ftgen 0,0,65536,10,1
 instr Phaser
 insno = p1
 istart = p2
@@ -189,28 +186,32 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity) * 8
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Phaser_overlap
+idecay = gi_Phaser_overlap
+isustain = p3 - gi_Phaser_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
-print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-isine ftgen 0,0,65536,10,1
 khertz = ihertz
-ifunction1 = isine
-ifunction2 = isine
-a1,a2 crosspm gkratio1, gkratio2, gkindex1, gkindex2, khertz, ifunction1, ifunction2
+ifunction1 = gi_Phaser_sine
+ifunction2 = gi_Phaser_sine
+a1,a2 crosspm gk_Phaser_ratio1, gk_Phaser_ratio2, gk_Phaser_index1, gk_Phaser_index2, khertz, ifunction1, ifunction2
 aleft, aright pan2 a1+a2, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft * kenvelope
 aright = adamping * aright * kenvelope
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gkbritel init 0
-gkbriteh init 2.9
-gkbritels init .2 / 3
-gkbritehs init 2.5 / 2
+gi_Sweeper_overlap init 20
+gk_Sweeper_britel init 0
+gk_Sweeper_briteh init 2.9
+gk_Sweeper_britels init .2 / 3
+gk_Sweeper_britehs init 2.5 / 2
+gi_Sweeper_sine ftgen 0, 0, 65536, 10, 1
+gi_Sweeper_octfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
 instr Sweeper
 insno = p1
 istart = p2
@@ -219,29 +220,25 @@ ikey = p4
 ivelocity = p5
 iphase = p6
 ipan = p7
-print insno, istart, iduration, ikey, ivelocity, iphase, ipan
 iamp = ampdb(ivelocity)
-gisine ftgen 0, 0, 65536, 10, 1
-gioctfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Sweeper_overlap
+idecay = gi_Sweeper_overlap
+isustain = p3 - gi_Sweeper_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
-print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
 icps = ihertz
 kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
 ktonemoddep jspline 0.01,0.05,0.2
 ktonemodrte jspline 6,0.1,0.2
-ktone poscil3 ktonemoddep, ktonemodrte, gisine
-kbrite rspline gkbritel, gkbriteh, gkbritels, gkbritehs
+ktone poscil3 ktonemoddep, ktonemodrte, gi_Sweeper_sine
+kbrite rspline gk_Sweeper_britel, gk_Sweeper_briteh, gk_Sweeper_britels, gk_Sweeper_britehs
 ibasfreq init icps
 ioctcnt init 3
 iphs init 0
-;a1 hsboscil kamp, ktone, kbrite, ibasfreq, gisine, gioctfn, ioctcnt, iphs
-a1 hsboscil kenvelope, ktone, kbrite, ibasfreq, gisine, gioctfn, ioctcnt, iphs
-amod poscil3 0.25, ibasfreq*(1/3), gisine
+;a1 hsboscil kamp, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gioctfn, ioctcnt, iphs
+a1 hsboscil kenvelope, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gi_Sweeper_octfn, ioctcnt, iphs
+amod poscil3 0.25, ibasfreq*(1/3), gi_Sweeper_sine
 arm = a1*amod
 kmix expseg 0.001, 0.01, rnd(1), rnd(3)+0.3, 0.001
 kmix=.25
@@ -250,7 +247,7 @@ a1 ntrpol a1, arm, kmix
 ;a1 tone a1, 500
 kpanrte jspline 5, 0.05, 0.1
 kpandep jspline 0.9, 0.2, 0.4
-kpan poscil3 kpandep, kpanrte, gisine
+kpan poscil3 kpandep, kpanrte, gi_Sweeper_sine
 a1,a2 pan2 a1, kpan
 a1 delay a1, rnd(0.1)
 a2 delay a2, rnd(0.11)
@@ -261,8 +258,16 @@ aright = a2*kenv*.02
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
+gi_Buzzer_overlap init 20
+gk_Buzzer_harmonics init 2
+gk_Buzzer_distort_factor init 0.4
+gk_Buzzer_first_harmonic init 0.4
+gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
 instr Buzzer
 insno = p1
 istart = p2
@@ -272,27 +277,29 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity) * 4
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Buzzer_overlap
+idecay = gi_Buzzer_overlap
+isustain = p3 - gi_Buzzer_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
-print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-;asignal gbuzz kenvelope, ihertz, 3, gk_Droner_first_harmonic, gk_Droner_distort_factor, gisine
-isine ftgen 0, 0, 65536, 10, 1
-gkHarmonics = gkslider1 * 20
-asignal buzz kenvelope, ihertz, gkHarmonics, isine
+asignal buzz kenvelope, ihertz, gk_Buzzer_harmonics, gi_Buzzer_sine
 asignal = asignal * 3
-;asignal vco2 kenvelope, ihertz, 12
-;asignal poscil3 kenvelope, ihertz, giharmonics
-;asignal distort asignal, gk_Droner_distort_factor * .4, giwaveshaping
 aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
+gi_Shiner_overlap init 20
+gk_Shiner_harmonics init 5
+gk_Shiner_harmonics init 2
+gk_Shiner_distort_factor init 0.4
+gk_Shiner_first_harmonic init 0.4
+gi_Shiner_sine ftgen 0, 0, 65536, 10, 1
 instr Shiner
 insno = p1
 istart = p2
@@ -302,36 +309,30 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity) * 4
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Shiner_overlap
+idecay = gi_Shiner_overlap
+isustain = p3 - gi_Shiner_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
-print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan
-;asignal gbuzz kenvelope, ihertz, 3, gk_Droner_first_harmonic, gk_Droner_distort_factor, gisine
-gkHarmonics = gkslider1 * 20
-;asignal buzz kenvelope, ihertz, gkHarmonics, gisine
-;asignal = asignal
 asignal vco2 kenvelope * 4, ihertz, 12
-;asignal poscil3 kenvelope, ihertz, giharmonics
-;asignal distort asignal, gk_Droner_distort_factor * .4, giwaveshaping
 aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gkgrainDensity init 150
-gkgrainDuration init 0.2
-gkgrainAmplitudeRange init 100
-gkgrainFrequencyRange init .033
+gi_Blower_overlap init 20
+gk_Blower_grainDensity init 150
+gk_Blower_grainDuration init 0.2
+gk_Blower_grainAmplitudeRange init 100
+gk_Blower_grainFrequencyRange init .033
+gi_Blower_grtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
 instr Blower
- //////////////////////////////////////////////
- // Original by Hans Mikelson.
- // Adapted by Michael Gogins.
- //////////////////////////////////////////////
- pset 0, 0, 3600
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -363,14 +364,12 @@ iamplitude = ampdb(i_midivelocity) / 200
  ; i1 26.5 13.5 1100 6.09 . 4 .121 150 1.5
  ; i1 30.7 9.3 900 8.05 . 4 .014 150 2.5
  ; i1 34.2 8.8 700 10.02 . 4 .14 150 1.6
-igrtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
-iwintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
 iHz = ifrequency
 ihertz = iHz
 ip4 = iamplitude
 ip5 = iHz
-ip6 = igrtab
-ip7 = iwintab
+ip6 = gi_Blower_grtab
+ip7 = gi_Blower_wintab
 ip8 = 0.033
 ip8 = .002
 ip9 = 150
@@ -379,7 +378,6 @@ ip10 = 1.6
 ip10 = 3
 idur = p3
 iamp = iamplitude ; p4
-print i_instrument, i_time, i_duration, i_midikey, ihertz, i_midivelocity, iamp, i_phase, i_pan
 ifqc = iHz ; cpspch(p5)
 igrtab = ip6
 iwintab = ip7
@@ -387,61 +385,62 @@ ifrng = ip8
 idens = ip9
 ifade = ip10
 igdur = 0.2
-iattack = gioverlap
-idecay = gioverlap
-isustain = p3 - gioverlap
+iattack = gi_Blower_overlap
+idecay = gi_Blower_overlap
+isustain = p3 - gi_Blower_overlap
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
 kamp = kenvelope
 ; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
-aoutl grain ip4, ifqc, gkgrainDensity, gkgrainAmplitudeRange, ifqc * gkgrainFrequencyRange, gkgrainDuration, igrtab, iwintab, 5
-aoutr grain ip4, ifqc, gkgrainDensity, gkgrainAmplitudeRange, ifqc * gkgrainFrequencyRange, gkgrainDuration, igrtab, iwintab, 5
+aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, ifqc * gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, gi_Blower_grtab, gi_Blower_wintab, 5
+aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, ifqc * gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, gi_Blower_grtab, gi_Blower_wintab, 5
 aleft = aoutl * kamp * iamplitude
 aright = aoutr * kamp * iamplitude
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gkReverbFeedback init 0.975
-gkDelayModulation init 0.875
-
-instr ReverbLeft
+gk_Reverb_Feedback init 0.975
+gk_Reverb_DelayModulation init 0.875
+instr Reverb
+ain_left chnget "out_left"
+ain_right chnget "out_right"
+azero init 0
+aout_left init 0
+aout_left, aright reverbsc ain_left, azero, gk_Reverb_Feedback, 15000.0
 aleft init 0
 azero init 0
-aleft, aright reverbsc aleft, azero, gkReverbFeedback, 15000.0
+aleft, aout_right reverbsc azero, ain_right, gk_Reverb_Feedback, 15000.0
+chnmix aout_left, "reverb_out_left"
+chnmix aout_right, "reverb_out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-instr ReverbRight
-aleft init 0
-azero init 0
-aleft, aright reverbsc azero, aright, gkReverbFeedback, 15000.0
-endin
-
-gk_MasterLevel_gain init 4
+gk_MasterOutput_gain init .1
 instr MasterOutput
-aleft *= gk_MasterLevel_gain
-aright *= gk_MasterLevel_gain
-outs aleft, aright
+ain_left chnget "reverb_out_left"
+ain_right chnget "reverb_out_right"
+aout_left = ain_left * gk_MasterOutput_gain
+aout_right = ain_right * gk_MasterOutput_gain
+outs aout_left, aout_right
+prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-instr Mixer
-	; Mix signals.
-	ga_ReverbLeft_in_left += ga_Droner_out_left
-	ga_ReverbRight_in_right += ga_Droner_out_right
-	ga_MasterOutput_in_left += ga_ReverbLeft_out_left
-	ga_MasterOutput_in_right += ga_ReverbRight_out_right
-	; Reset busses to 0 for next kperiod.
-	ga_ReverbLeft_in_left = 0
-	ga_ReverbLeft_in_right = 0
-	ga_ReverbLeft_out_left = 0
-	ga_ReverbRight_in_left = 0
-	ga_ReverbRight_in_right = 0
-	ga_ReverbRight_out_left = 0
-	ga_ReverbRight_out_right = 0
+instr Clear
+chnclear "out_left"
+chnclear "out_right"
+chnclear "reverb_out_left"
+chnclear "reverb_out_right"
 endin
+
+scoreline_i "i \"Reverb\" 0 -1"
+scoreline_i "i \"MasterOutput\" 0 -1"
+scoreline_i "i \"Clear\" 0 -1"
     </textarea>
     <h4>Csound Score</h4>
     <textarea id="sco" rows=24 cols=80>
