@@ -539,11 +539,12 @@ ipan = p6
 ikey hertz2midinn ihertz
 event_i "i", "Droner", 0, iduration, ikey, ivelocity, 0, ipan
 endin
+(...remainder of orchestra...)
     </textarea>    	
     </xmp>
     <p>Please note, Csound system constants are set by "csound.js" and cannot be set in the orchestra header, 
-    so they are commented out here. Because "csound.js" sets 0dbfs to 1, but this piece assumes a 0dbfs level 
-    of 32768, we have edited the orchestra to divide the output signal by 32768.</p>
+    so they are omitted here. Because "csound.js" sets 0dbfs to 1, but this piece assumes a 0dbfs level 
+    of 32768, we have edited the orchestra drastically reduce the output level.</p>
     <p>The code for a textarea containing a Csound score works the same way.</p>
     <p>Also note, Csound for PNaCl can perform scores using either <code>csound.compileOrc(orc_text)</code> 
     followed by <code>csound.readScore(sco_text)</code>, or by simply calling 
