@@ -519,13 +519,26 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     <p>The code for a textarea containing a Csound orchestra looks like this:</p>
     <xmp>
     <textarea id="orc" rows=24 cols=80>
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Stria
-;;; by John Chowning
-;;; Reconstruction - ORChestra csound code
-;;; Kevin Dahan 2007-2010
-;;; kevin.dahan@wanadoo.fr
-    (...remainder of orchestra...)
+opcode hertz2midinn, i, i
+ihertz xin
+print ihertz
+; m = 12*log2(fm/440 Hz) + 69
+ilog2 = log(2)
+imidinn = 12 * (log(ihertz / 440) / ilog2) + 69
+print imidinn
+xout imidinn
+endop
+
+instr 101
+insno = p1
+istart = p2
+iduration = p3
+ihertz = p4
+ivelocity = p5
+ipan = p6
+ikey hertz2midinn ihertz
+event_i "i", "Droner", 0, iduration, ikey, ivelocity, 0, ipan
+endin
     </textarea>    	
     </xmp>
     <p>Please note, Csound system constants are set by "csound.js" and cannot be set in the orchestra header, 
