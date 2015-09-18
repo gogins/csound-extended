@@ -715,7 +715,7 @@ endin
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    $(document).ready(function() {
+    //$(document).ready(function() {
     	$.getScript('csound.js');
         $('#play').on('click', function() {      	
             csound.setOption('-odac')
@@ -746,10 +746,10 @@ endin
                 $(output_selector).val(this.value);
             });
         });
-        $(window).load(function() {
-            $('#restore').trigger('click');
-        });
-    });
+        //$(window).load(function() {
+        //    $('#restore').trigger('click');
+        //});
+    //});
     </script>
     </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
