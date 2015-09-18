@@ -17,6 +17,155 @@
     <h2>Dunes v 2</h2>
     <h4>By Michael Gogins</h3>
     <h4>2015</h4> 
+    
+        <form id='persist'>
+
+    <table>
+    <col width="2*">
+    <col width="5*">
+    <col width="100px">
+
+    <th colspan=3 align='left'>Droner</th>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider1>gk_Droner_slider1</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.25 id=gk_Droner_slider1 step=.001>
+    <td>
+    <output for=gk_Droner_slider1 id=gk_Droner_slider1_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider2>gk_Droner_slider2</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.5 id=gk_Droner_slider2 step=.001>
+    <td>
+    <output for=gk_Droner_slider2 id=gk_Droner_slider2_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider3>gk_Droner_slider3</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.75 id=gk_Droner_slider3 step=.001>
+    <td>
+    <output for=gk_Droner_slider3 id=gk_Droner_slider3_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider4>gk_Droner_slider4</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.5 id=gk_Droner_slider4 step=.001>
+    <td>
+    <output for=gk_Droner_slider4 id=gk_Droner_slider4_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider5>gk_Droner_slider5</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.125 id=gk_Droner_slider5 step=.001>
+    <td>
+    <output for=gk_Droner_slider5 id=gk_Droner_slider5_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Buzzer</th>
+    <tr>
+    <td>
+    <label for=gk_Buzzer_harmonics>gk_Buzzer_harmonics</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.25 id=gk_Buzzer_harmonics step=.001>
+    <td>
+    <output for=gk_Buzzer_harmonics id=gk_Buzzer_harmonics_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Sweeper</th>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_britel>gk_Sweeper_britel</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_britel step=.001>
+    <td>
+    <output for=gk_Sweeper_britel id=gk_Sweeper_britel_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_briteh>gk_Sweeper_briteh</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_briteh step=.001>
+    <td>
+    <output for=gk_Sweeper_briteh id=gk_Sweeper_briteh_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_britels>gk_Sweeper_britels</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_britels step=.001>
+    <td>
+    <output for=gk_Sweeper_britels id=gk_Sweeper_britels_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_britehs>gk_Sweeper_britel</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_britehs step=.001>
+    <td>
+    <output for=gk_Sweeper_britehs id=gk_Sweeper_britehs_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Blower</th>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainDensity>gk_Blower_grainDensity</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=500 value=150 id=gk_Blower_grainDensity step=.001>
+    <td>
+    <output for=gk_Blower_grainDensity id=gk_Blower_grainDensity_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainDuration>gk_Blower_grainDuration</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=2 value=.25 id=gk_Blower_grainDuration step=.001>
+    <td>
+    <output for=gk_Blower_grainDuration id=gk_Blower_grainDuration_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainAmplitudeRange>gk_Blower_grainAmplitudeRange</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=500 value=100 id=gk_Blower_grainAmplitudeRange step=.001>
+    <td>
+    <output for=gk_Blower_grainAmplitudeRange id=gk_Blower_grainAmplitudeRange_output>100</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainFrequencyRange>gk_Blower_grainFrequencyRange</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=2 value=.033 id=gk_Blower_grainFrequencyRange step=.001>
+    <td>
+    <output for=gk_Blower_grainFrequencyRange id=gk_Blower_grainFrequencyRange_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Master</th>
+    <tr>
+    <td>
+    <label for=gk_Reverb_Feedback>gk_Reverb_Feedback</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 id=gk_Reverb_Feedback step=.001>
+    <td>
+    <output for=gk_Reverb_Feedback id=gk_Reverb_Feedback_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_MasterOutput_gain>gk_MasterOutput_gain</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 id=gk_MasterOutput_gain step=.001>
+    <td>
+    <output for=gk_MasterOutput_gain id=gk_MasterOutput_gain_output>.5</output>
+    </tr>
+
+    </table>
+
+    
     <input type="button" value="Play" onclick="start_onclick()"/>
     <input type="button" value="Stop" onclick="stop_onclick()"/>
     <h4>Csound Errors, Warnings, and Messages</h4>
