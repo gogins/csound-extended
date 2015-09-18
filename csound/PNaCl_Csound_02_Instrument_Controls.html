@@ -778,6 +778,12 @@ endin
     	<li>User-controllable score generation in JavaScript.</li>
     	<li>An interactive 3-dimensional visual display.</li>
     </ul>
+    <script type="text/javascript" src="csound.js"></script>
+    <!--The PNaCl csound module must be the very last element in the body, 
+        except for the jQuery stuff,
+        because the "csound.js" script attaches the Csound module and its 
+        callbacks to that element. -->
+    <div id="engine"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
@@ -822,11 +828,6 @@ endin
         
     //});
     </script>
-    <script type="text/javascript" src="csound.js"></script>
-    <!--The PNaCl csound module must be the very last element in the body, 
-        because the "csound.js" script attaches the Csound module and its 
-        callbacks to that element. -->
-    <div id="engine"></div>
 </body>
 </html>
 
