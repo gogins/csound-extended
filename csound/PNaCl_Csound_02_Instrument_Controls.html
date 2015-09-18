@@ -816,10 +816,6 @@ endin
                 $(output_selector).val(this.value);
             });
         });
-        $(window).load(function() {
-    	    $.getScript('csound.js');
-        });
-    $('#restore').trigger('click');
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
     function handleMessage(message) {
