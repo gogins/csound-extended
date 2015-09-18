@@ -788,10 +788,10 @@ endin
     <script>    
     //$(document).ready(function() {
         $('#play').on('click', function() {      	
+            csound.perform();
+            $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
             csound.readScore(document.getElementById('sco').value);
-            $('#restore').trigger('click');
-            csound.perform();
         });
         $('#stop').on('click', function() {      	
             csound.stop();
