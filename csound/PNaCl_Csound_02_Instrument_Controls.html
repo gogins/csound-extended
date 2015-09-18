@@ -5,7 +5,6 @@
     <title>Csound HTML Tutorial 02</title>
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1"></head>
-    <script type="text/javascript" src="csound.js"></script>
 <body>
     <h1>Csound HTML Tutorial 02</h1>
     <h2>Introduction</h3>
@@ -717,6 +716,7 @@ endin
     </script>
     <script>    
     $(document).ready(function() {
+    	$.getScript('csound.js');
         $('#play').on('click', function() {      	
             csound.setOption('-odac')
             csound.compileOrc(document.getElementById('orc').value);
