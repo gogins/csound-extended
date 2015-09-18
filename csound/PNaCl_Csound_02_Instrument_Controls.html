@@ -20,11 +20,6 @@
     
     <form id='persist'>
     
-    <input type="button" id='play' value="Play" />
-    <input type="button" id='stop' value="Stop" />
-    <input type="button" id='save' value="Save" />
-    <input type="button" id='restore' value="Restore" />
-
     <table>
     <col width="2*">
     <col width="5*">
@@ -169,6 +164,11 @@
     </tr>
 
     </table>
+
+    <input type="button" id='play' value="Play" />
+    <input type="button" id='stop' value="Stop" />
+    <input type="button" id='save' value="Save" />
+    <input type="button" id='restore' value="Restore" />
 
     </form>
     <h4>Csound Errors, Warnings, and Messages</h4>
@@ -778,15 +778,10 @@ endin
     	<li>User-controllable score generation in JavaScript.</li>
     	<li>An interactive 3-dimensional visual display.</li>
     </ul>
-    <script type="text/javascript" src="csound.js"></script>
-    <!--The PNaCl csound module must be the very last element in the body, 
-        because the "csound.js" script attaches the Csound module and its 
-        callbacks to that element. -->
-    <div id="engine"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    //$(document).ready(function() {
+    $(document).ready(function() {
         $('#play').on('click', function() {      	
             csound.setOption('-odac')
             csound.compileOrc(document.getElementById('orc').value);
@@ -825,8 +820,13 @@ endin
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     };
         
-    //});
+    });
     </script>
+    <script type="text/javascript" src="csound.js"></script>
+    <!--The PNaCl csound module must be the very last element in the body, 
+        because the "csound.js" script attaches the Csound module and its 
+        callbacks to that element. -->
+    <div id="engine"></div>
 </body>
 </html>
 
