@@ -718,10 +718,10 @@ endin
     //$(document).ready(function() {
     	$.getScript('csound.js');
         $('#play').on('click', function() {      	
-            csound.compileOrc(document.getElementById('orc').value);
-            csound.readScore(document.getElementById('sco').value);
             $('#restore').trigger('click');
             csound.perform();
+            csound.compileOrc(document.getElementById('orc').value);
+            csound.readScore(document.getElementById('sco').value);
         });
         $('#stop').on('click', function() {      	
             csound.stop();
