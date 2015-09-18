@@ -709,21 +709,44 @@ endin
     <xmp>
     <input type="button" value="Play" onclick="start_onclick()"/>
     <input type="button" value="Stop" onclick="stop_onclick()"/>
-    <script>
-    var start_onclick = function() {
-        csound.perform();
-        var orc = document.getElementById('orc').value;
-        csound.compileOrc(orc);
-        var sco = document.getElementById('sco').value;
-        csound.readScore(sco);
-    }
-    // The "csound.js" stop() function destroys the "csound" module and re-creates it;
-    // edits in the orchestra and score textareas are preserved.
-    // To permanently save those edits, of course, you have to save them somewhere else before you unload the page.
-    var stop_onclick = function() {
-        csound.stop();
-    }
-    </script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+    </script>
+    <script>    
+    $(document).ready(function() {
+        $('#play').on('click', function() {      	
+            csound.setOption('-odac')
+            csound.compileOrc(document.getElementById('orc').value);
+            csound.readScore(document.getElementById('sco').value);
+            $('#restore').trigger('click');
+            csound.perform();
+        });
+        $('#stop').on('click', function() {      	
+            csound.stop();
+        });
+        $('input').on('input', function(event) {
+            var slider_value = parseFloat(event.target.value);
+            csound.setControlChannel(event.target.id, slider_value);
+            var output_selector = '#' + event.target.id + '_output';
+            $(output_selector).val(slider_value);
+        });
+        $('#save').on('click', function() {
+            $('.persistent-element').each(function() {
+                localStorage.setItem(this.id, this.value);
+            });
+        });
+        $('#restore').on('click', function() {
+            $('.persistent-element').each(function() {
+                this.value = localStorage.getItem(this.id);
+                csound.setControlChannel(this.id, this.value);
+                var output_selector = '#' + this.id + '_output';
+                $(output_selector).val(this.value);
+            });
+        });
+        $(window).load(function() {
+            $('#restore').trigger('click');
+        });
+    });
+    </script>
     </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
     <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
@@ -753,27 +776,43 @@ endin
     </ul>
     <script type="text/javascript" src="csound.js"></script>
     <script>
-    var start_onclick = function() {
-        csound.perform();
-        var orc = document.getElementById('orc').value;
-        csound.compileOrc(orc);
-        var sco = document.getElementById('sco').value;
-        csound.readScore(sco);
-    }
-    // The "csound.js" stop() function destroys the "csound" module and re-creates it;
-    // edits in the orchestra and score textareas are preserved.
-    // To permanently save those edits, of course, you have to save them somewhere else before you unload the page.
-    var stop_onclick = function() {
-        csound.stop();
-    }
-    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
-    // "console" text area.
-    function handleMessage(message) {
-        var messages_textarea = document.getElementById("console");
-        var existing = messages_textarea.value;
-        messages_textarea.value = existing + message.data;
-        messages_textarea.scrollTop = messages_textarea.scrollHeight;    
-    }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+    </script>
+    <script>    
+    $(document).ready(function() {
+        $('#play').on('click', function() {      	
+            csound.setOption('-odac')
+            csound.compileOrc(document.getElementById('orc').value);
+            csound.readScore(document.getElementById('sco').value);
+            $('#restore').trigger('click');
+            csound.perform();
+        });
+        $('#stop').on('click', function() {      	
+            csound.stop();
+        });
+        $('input').on('input', function(event) {
+            var slider_value = parseFloat(event.target.value);
+            csound.setControlChannel(event.target.id, slider_value);
+            var output_selector = '#' + event.target.id + '_output';
+            $(output_selector).val(slider_value);
+        });
+        $('#save').on('click', function() {
+            $('.persistent-element').each(function() {
+                localStorage.setItem(this.id, this.value);
+            });
+        });
+        $('#restore').on('click', function() {
+            $('.persistent-element').each(function() {
+                this.value = localStorage.getItem(this.id);
+                csound.setControlChannel(this.id, this.value);
+                var output_selector = '#' + this.id + '_output';
+                $(output_selector).val(this.value);
+            });
+        });
+        $(window).load(function() {
+            $('#restore').trigger('click');
+        });
+    });
     </script>
     <!--The PNaCl csound module must be the very last element in the body, 
         because the "csound.js" script attaches the Csound module and its 
