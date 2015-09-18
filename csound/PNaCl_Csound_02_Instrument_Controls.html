@@ -779,14 +779,10 @@ endin
     	<li>An interactive 3-dimensional visual display.</li>
     </ul>
     <script type="text/javascript" src="csound.js"></script>
-    <!--The PNaCl csound module must be the very last element in the body, 
-        because the "csound.js" script attaches the Csound module and its 
-        callbacks to that element. -->
-    <div id="engine"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    $(document).ready(function() {
+    //$(document).ready(function() {
         $('#play').on('click', function() {      	
             csound.setOption('-odac')
             csound.compileOrc(document.getElementById('orc').value);
@@ -825,8 +821,12 @@ endin
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     };
         
-    });
+    //});
     </script>
+    <!--The PNaCl csound module must be the very last element in the body, 
+        because the "csound.js" script attaches the Csound module and its 
+        callbacks to that element. -->
+    <div id="engine"></div>
 </body>
 </html>
 
