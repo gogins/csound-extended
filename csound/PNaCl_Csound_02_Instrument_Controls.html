@@ -797,7 +797,7 @@ endin
             csound.stop();
         });
         $('input').on('input', function(event) {
-            var slider_value = parseFloat(event.target.value);
+            var slider_value = event.target.value;
             csound.setControlChannel(event.target.id, slider_value);
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value);
