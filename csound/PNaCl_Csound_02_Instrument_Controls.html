@@ -789,7 +789,6 @@ endin
     <script>    
     //$(document).ready(function() {
         $('#play').on('click', function() {      	
-            csound.setOption('-odac')
             csound.compileOrc(document.getElementById('orc').value);
             csound.readScore(document.getElementById('sco').value);
             $('#restore').trigger('click');
