@@ -18,7 +18,7 @@
     <h4>By Michael Gogins</h3>
     <h4>2015</h4> 
     
-        <form id='persist'>
+    <form id='persist'>
 
     <table>
     <col width="2*">
@@ -166,8 +166,11 @@
     </table>
 
     
-    <input type="button" value="Play" onclick="start_onclick()"/>
-    <input type="button" value="Stop" onclick="stop_onclick()"/>
+    <input type="button" id='play' value="Play" />
+    <input type="button" id='stop' value="Stop" />
+    <input type="button" id='save' value="Save" />
+    <input type="button" id='restore' value="Restore" />
+    </form>
     <h4>Csound Errors, Warnings, and Messages</h4>
     <textarea id="console" rows=10 cols=80></textarea>
     <h4>Csound Orchestra</h4>
