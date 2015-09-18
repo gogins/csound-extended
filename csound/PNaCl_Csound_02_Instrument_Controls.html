@@ -781,7 +781,7 @@ endin
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    $(document).ready(function() {
+    //$(document).ready(function() {
         $('#play').on('click', function() {      	
             csound.setOption('-odac')
             csound.compileOrc(document.getElementById('orc').value);
@@ -820,7 +820,7 @@ endin
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     };
         
-    });
+    //});
     </script>
     <script type="text/javascript" src="csound.js"></script>
     <!--The PNaCl csound module must be the very last element in the body, 
