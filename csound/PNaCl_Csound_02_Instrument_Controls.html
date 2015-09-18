@@ -782,6 +782,7 @@ endin
     </script>
     <script>    
     $(document).ready(function() {
+    	$.getScript('csound.js');
         $('#play').on('click', function() {      	
             csound.setOption('-odac')
             csound.compileOrc(document.getElementById('orc').value);
