@@ -787,8 +787,9 @@ endin
     <p>In this piece, I have used a naming convention to simplify not only the HTML and JavaScript code, but 
     also the Csound orchestra. Each instrument's interactive controls are based on global variables that are
     declared just above the <code>instr</code> definition. Each name starts with <code>gk</code> to identify 
-    the variable as a global, control-rate variable. Then comes a name for the function of the variable. These 
-    parts are separated by underscores. For example:</p>
+    the variable as a global, control-rate variable. Then comes the literal name of the instrument. 
+    Then comes a name for the musical function of the variable. These 
+    parts are separated by underscores. Each variable is initialized with a suitable default value. For example:</p>
     <xmp>
 gk_Blower_grainDensity init 150
 gk_Blower_grainDuration init 0.2
