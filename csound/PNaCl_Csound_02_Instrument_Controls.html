@@ -727,18 +727,26 @@ endin
     <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
     Csound, send the orchestra to Csound, and send the score, in order to perform the piece.</p>
-    <p>The buttons and code for the Play and Stop buttons above look like this:</p>
+    <p>Here we use the very convenient library, jQuery, to automate the construction of the handlers 
+    for the buttons and the sliders in this piece. jQuery has an abbreviated syntax that accepts generic 
+    and individual element IDs, we can use functional programming techniques to further simplify the 
+    code, automatically manufacturing the handlers according to their HTML element names.</p>
+    <p>Finally, jQuery knows how to store the values of HTML elements with the "class" attribute "persistent-element" 
+    in HTML local storage, and retrieve it again. Some facility such as this is not only very convenient for 
+    remembering control settings between performances of a piece, but well-nigh required for any practical 
+    work on a real composition.</p>
+    <p>The code for all the buttons and sliders above then looks like this:</p>
     <xmp>
-    <input type="button" value="Play" onclick="start_onclick()"/>
-    <input type="button" value="Stop" onclick="stop_onclick()"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    $(document).ready(function() {
-    	$.getScript('csound.js');
+    // The usual pattern of creating all jQuery handlers in the document's on ready handler,
+    // when the DOM has been constructed, does not work here because of the way Csound is 
+    // initialized by the csound.js script, and so is commented out here.
+    // $(document).ready(function() {
         $('#play').on('click', function() {      	
-            $('#restore').trigger('click');
             csound.perform();
+            $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
             csound.readScore(document.getElementById('sco').value);
         });
@@ -746,7 +754,7 @@ endin
             csound.stop();
         });
         $('input').on('input', function(event) {
-            var slider_value = parseFloat(event.target.value);
+            var slider_value = event.target.value;
             csound.setControlChannel(event.target.id, slider_value);
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value);
@@ -764,8 +772,16 @@ endin
                 $(output_selector).val(this.value);
             });
         });
-	$('#restore').trigger('click');    
-    // });
+	// Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
+	// "console" text area.
+	function handleMessage(message) {
+	    var messages_textarea = document.getElementById("console");
+	    var existing = messages_textarea.value;
+	    messages_textarea.value = existing + message.data;
+	    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+	};
+
+    //  });
     </script>
     </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
@@ -789,7 +805,6 @@ endin
     <p>As we proceed through subsequent tutorials, more and more features of HTML5 will be integrated with 
     Csound, adding features to this piece:
     <ul>
-    	<li>Control sliders for instruments.</li>
     	<li>More attractive styling of the user interface.</li>
     	<li>User-controllable score generation in JavaScript.</li>
     	<li>An interactive 3-dimensional visual display.</li>
@@ -837,7 +852,7 @@ endin
 	    messages_textarea.value = existing + message.data;
 	    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
 	};
-        $('#restore').trigger('click');   
+
     //  });
     </script>
     <script type="text/javascript" src="csound.js"></script>
