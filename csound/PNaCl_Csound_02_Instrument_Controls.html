@@ -572,6 +572,7 @@ gk_Blower_grainAmplitudeRange chnget "gk_Blower_grainDuration"
 gk_Blower_grainFrequencyRange chnget "gk_Blower_grainFrequencyRange"
 gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
 gk_MasterOutput_gain chnget "gk_MasterOutput_gain"
+prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
 gk_Reverb_Feedback init 0.975
@@ -605,6 +606,7 @@ chnclear "out_left"
 chnclear "out_right"
 chnclear "reverb_out_left"
 chnclear "reverb_out_right"
+prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
 scoreline_i "i \"Controls\" 0 -1"
@@ -762,10 +764,8 @@ endin
                 $(output_selector).val(this.value);
             });
         });
-        //$(window).load(function() {
-        //    $('#restore').trigger('click');
-        //});
-    //});
+	$('#restore').trigger('click');    
+    // });
     </script>
     </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
