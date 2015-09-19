@@ -164,7 +164,8 @@
     </tr>
 
     </table>
-
+ 
+    <br>
     <input type="button" id='play' value="Play" />
     <input type="button" id='stop' value="Stop" />
     <input type="button" id='save' value="Save" />
@@ -558,6 +559,20 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
+instr Controls
+gk_Droner_slider1 chnget "gk_Droner_slider1"
+gk_Droner_slider2 chnget "gk_Droner_slider2"
+gk_Droner_slider3 chnget "gk_Droner_slider3"
+gk_Droner_slider4 chnget "gk_Droner_slider4"
+gk_Droner_slider5 chnget "gk_Droner_slider5"
+gk_Buzzer_harmonics chnget "gk_Buzzer_harmonics"
+gk_Blower_grainDensity chnget "gk_Blower_grainDensity"
+gk_Blower_grainDuration chnget "gk_Blower_grainDuration"
+gk_Blower_grainAmplitudeRange chnget "gk_Blower_grainDuration"
+gk_Blower_grainFrequencyRange chnget "gk_Blower_grainFrequencyRange"
+gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
+endin
+
 gk_Reverb_Feedback init 0.975
 gk_Reverb_DelayModulation init 0.875
 instr Reverb
@@ -591,6 +606,7 @@ chnclear "reverb_out_left"
 chnclear "reverb_out_right"
 endin
 
+scoreline_i "i \"Controls\" 0 -1"
 scoreline_i "i \"Reverb\" 0 -1"
 scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
