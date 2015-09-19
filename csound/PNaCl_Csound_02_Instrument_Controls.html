@@ -594,8 +594,8 @@ gk_MasterOutput_gain init .000003
 instr MasterOutput
 ain_left chnget "reverb_out_left"
 ain_right chnget "reverb_out_right"
-aout_left = ain_left * gk_MasterOutput_gain * .00002
-aout_right = ain_right * gk_MasterOutput_gain * .00002
+aout_left = ain_left * gk_MasterOutput_gain * .000001
+aout_right = ain_right * gk_MasterOutput_gain * .000001
 outs aout_left, aout_right
 prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
@@ -732,7 +732,7 @@ endin
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    //$(document).ready(function() {
+    $(document).ready(function() {
     	$.getScript('csound.js');
         $('#play').on('click', function() {      	
             $('#restore').trigger('click');
@@ -835,7 +835,7 @@ endin
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     };
         
-    //});
+    });
     </script>
     <script type="text/javascript" src="csound.js"></script>
     <!--The PNaCl csound module must be the very last element in the body, 
