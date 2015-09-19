@@ -638,7 +638,7 @@ i 102  90 30 [ 4 / 3 * 60 * 3] 60 [-1 + 2 / 2]
 ; C E B
 i 103 120 60 [ 1 /  1 * 60 * 1] 60 [-1 + 1 / 2]
 i 103 120 60 [ 5 /  4 * 60 * 2] 60 [-1 + 3 / 2]
-i 103 120 30 [28 / 15 * 60 * 2] 60 [-1 + 2 / 2]
+i 104 120 30 [28 / 15 * 60 * 2] 60 [-1 + 2 / 2]
 i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     </textarea>
     <h2>How It Is Done</h4>
@@ -678,7 +678,7 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     <p>Finally, the very last element in the body must be named "engine". The "csound.js" script obtains this 
     element from the JavaScript document object for the page, and attaches to it the &lt;embed&gt; element and 
     Csound's callbacks.</p>
-    <p>The code for embedding Csound for PNaCl in a Web page looks like this:</p>
+    <p>So, the code for embedding Csound for PNaCl in a Web page looks like this:</p>
     <xmp>
 	<script type="text/javascript" src="csound.js"></script>
 	<div id="engine"></div>
@@ -837,7 +837,7 @@ endin
 	    messages_textarea.value = existing + message.data;
 	    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
 	};
-        
+    $('#restore').on('click').trigger();    
     //  });
     </script>
     <script type="text/javascript" src="csound.js"></script>
