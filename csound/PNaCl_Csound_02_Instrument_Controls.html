@@ -72,7 +72,7 @@
     <td>
     <label for=gk_Buzzer_harmonics>gk_Buzzer_harmonics</label>
     <td>
-    <input class=persistent-element type=range min=0 max=1 value=.25 id=gk_Buzzer_harmonics step=.001>
+    <input class=persistent-element type=range min=0 max=20 value=3 id=gk_Buzzer_harmonics step=.001>
     <td>
     <output for=gk_Buzzer_harmonics id=gk_Buzzer_harmonics_output>.5</output>
     </tr>
@@ -571,6 +571,7 @@ gk_Blower_grainDuration chnget "gk_Blower_grainDuration"
 gk_Blower_grainAmplitudeRange chnget "gk_Blower_grainDuration"
 gk_Blower_grainFrequencyRange chnget "gk_Blower_grainFrequencyRange"
 gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
+gk_MasterOutput_gain chnget "gk_MasterOutput_gain"
 endin
 
 gk_Reverb_Feedback init 0.975
@@ -838,7 +839,6 @@ endin
     </script>
     <script type="text/javascript" src="csound.js"></script>
     <!--The PNaCl csound module must be the very last element in the body, 
-        except for the jQuery stuff,
         because the "csound.js" script attaches the Csound module and its 
         callbacks to that element. -->
     <div id="engine"></div>
