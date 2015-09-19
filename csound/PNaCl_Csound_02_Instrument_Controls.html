@@ -797,7 +797,10 @@ endin
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script>    
-    $(document).ready(function() {
+    // The usual pattern of creating all jQuery handlers in the document's on ready handler,
+    // when the DOM has been constructed, does not work here because of the way Csound is 
+    // initialized by the csound.js script, and so is commented out here.
+    // $(document).ready(function() {
         $('#play').on('click', function() {      	
             csound.perform();
             $('#restore').trigger('click');
@@ -826,16 +829,16 @@ endin
                 $(output_selector).val(this.value);
             });
         });
-    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
-    // "console" text area.
-    function handleMessage(message) {
-        var messages_textarea = document.getElementById("console");
-        var existing = messages_textarea.value;
-        messages_textarea.value = existing + message.data;
-        messages_textarea.scrollTop = messages_textarea.scrollHeight;    
-    };
+	// Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
+	// "console" text area.
+	function handleMessage(message) {
+	    var messages_textarea = document.getElementById("console");
+	    var existing = messages_textarea.value;
+	    messages_textarea.value = existing + message.data;
+	    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+	};
         
-    });
+    //  });
     </script>
     <script type="text/javascript" src="csound.js"></script>
     <!--The PNaCl csound module must be the very last element in the body, 
