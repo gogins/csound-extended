@@ -732,9 +732,12 @@ endin
     and individual element IDs, and we can use functional programming techniques to further simplify the 
     code, automatically manufacturing the handlers according to their HTML element types and names.</p>
     <p>Finally, jQuery knows how to store the values of HTML elements with the "class" attribute "persistent-element" 
-    in HTML local storage, and retrieve it again. Some facility such as this is not only very convenient for 
+    in HTML local storage, and retrieve it again. The "Save" button stores the values of all the persistent elements, not only 
+    the sliders but also any edits to the orchestra and score, to local storage. The "Restore" button replaces 
+    the current values of these elements with the stored values. The "Restore" funtion is automatically invoked 
+    at the start of each Csound performance, as well. Some facility such as this is not only very convenient for 
     remembering control settings between performances of a piece, but well-nigh required for any practical 
-    work on a real composition.</p>
+    work on a real composition. </p>
     <p>The code for all the buttons and sliders above then looks like this:</p>
     <xmp>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
