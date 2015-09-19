@@ -728,9 +728,9 @@ endin
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
     Csound, send the orchestra to Csound, and send the score, in order to perform the piece.</p>
     <p>Here we use the very convenient library, jQuery, to automate the construction of the handlers 
-    for the buttons and the sliders in this piece. jQuery has an abbreviated syntax that accepts generic 
-    and individual element IDs, we can use functional programming techniques to further simplify the 
-    code, automatically manufacturing the handlers according to their HTML element names.</p>
+    for all of the buttons and the sliders in this piece. jQuery has an abbreviated syntax that accepts generic 
+    and individual element IDs, and we can use functional programming techniques to further simplify the 
+    code, automatically manufacturing the handlers according to their HTML element types and names.</p>
     <p>Finally, jQuery knows how to store the values of HTML elements with the "class" attribute "persistent-element" 
     in HTML local storage, and retrieve it again. Some facility such as this is not only very convenient for 
     remembering control settings between performances of a piece, but well-nigh required for any practical 
@@ -784,6 +784,54 @@ endin
     //  });
     </script>
     </xmp>
+    <p>In this piece, I have used a naming convention to simplify not only the HTML and JavaScript code, but 
+    also the Csound orchestra code. Each instrument's interactive controls are based on global variables that are
+    declared just above the <code>instr</code> definition. Each name starts with <code>gk</code> to identify 
+    the variable as a global, control-rate variable. Then comes a name for the function of the variable. These 
+    parts are separated by underscores. For example:</p><
+    <xmp>
+gk_Blower_grainDensity init 150
+gk_Blower_grainDuration init 0.2
+gk_Blower_grainAmplitudeRange init 100
+gk_Blower_grainFrequencyRange init .033
+gi_Blower_grtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
+instr Blower
+i_instrument = p1
+i_time = p2
+i_duration = p3
+(...remainder of instrument...)
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+endin
+    </xmp>
+    <p>Note that function tables used the instrument are also declared and initialized just above 
+    the <code>instr</code> definition. The instruments do not send audio directly to the 
+    output, but rather to a named output channel using the <code>chnmix</code> opcode. 
+    This means that each instrument definition, along with its 
+    associated control variables and function tables, can be treated as a single, encapsulated block 
+    of code that can be cut and pasted, moved around in the orchestra, or copied into another 
+    orchestra without breaking.</p>
+    <p>Each control slider in the user interface has exactly the same name as the corresponding control 
+    variable, and the control channel itself also uses this name. Then, in the Csound orchestra, there 
+    is one, always-on Control instrument that simply reads in all the control channel values and 
+    assigns them to the global control channels:</p>
+    <xmp>
+instr Controls
+gk_Droner_slider1 chnget "gk_Droner_slider1"
+gk_Droner_slider2 chnget "gk_Droner_slider2"
+gk_Droner_slider3 chnget "gk_Droner_slider3"
+gk_Droner_slider4 chnget "gk_Droner_slider4"
+gk_Droner_slider5 chnget "gk_Droner_slider5"
+gk_Buzzer_harmonics chnget "gk_Buzzer_harmonics"
+gk_Blower_grainDensity chnget "gk_Blower_grainDensity"
+gk_Blower_grainDuration chnget "gk_Blower_grainDuration"
+gk_Blower_grainAmplitudeRange chnget "gk_Blower_grainDuration"
+gk_Blower_grainFrequencyRange chnget "gk_Blower_grainFrequencyRange"
+gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
+gk_MasterOutput_gain chnget "gk_MasterOutput_gain"
+endin
+    </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
     <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
     "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
@@ -802,8 +850,8 @@ endin
     }
     </xmp>
     <h3>Next Steps</h3>
-    <p>As we proceed through subsequent tutorials, more and more features of HTML5 will be integrated with 
-    Csound, adding features to this piece:
+    <p>As we proceed through subsequent tutorials,more features of HTML5 will be integrated with 
+    Csound, building on this piece:
     <ul>
     	<li>More attractive styling of the user interface.</li>
     	<li>User-controllable score generation in JavaScript.</li>
