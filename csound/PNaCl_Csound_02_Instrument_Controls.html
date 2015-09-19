@@ -785,10 +785,10 @@ endin
     </script>
     </xmp>
     <p>In this piece, I have used a naming convention to simplify not only the HTML and JavaScript code, but 
-    also the Csound orchestra code. Each instrument's interactive controls are based on global variables that are
+    also the Csound orchestra. Each instrument's interactive controls are based on global variables that are
     declared just above the <code>instr</code> definition. Each name starts with <code>gk</code> to identify 
     the variable as a global, control-rate variable. Then comes a name for the function of the variable. These 
-    parts are separated by underscores. For example:</p><
+    parts are separated by underscores. For example:</p>
     <xmp>
 gk_Blower_grainDensity init 150
 gk_Blower_grainDuration init 0.2
@@ -814,7 +814,7 @@ endin
     orchestra without breaking.</p>
     <p>Each control slider in the user interface has exactly the same name as the corresponding control 
     variable, and the control channel itself also uses this name. Then, in the Csound orchestra, there 
-    is one, always-on Control instrument that simply reads in all the control channel values and 
+    is one, always-on <code>Controls</code> instrument that simply reads in all the control channel values and 
     assigns them to the global control channels:</p>
     <xmp>
 instr Controls
@@ -833,7 +833,7 @@ gk_MasterOutput_gain chnget "gk_MasterOutput_gain"
 endin
     </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
-    <p>Csound will send all of its runtime messages to a JavaScript function in the Web page named 
+    <p>Csound for PNaCl will send all of its runtime messages to a JavaScript function in the Web page named 
     "handleMessage". This callback is automatically invoked by the "csound.js" script. Anything could be done 
     with these messages, including discarding them. Here, we append them to an initially empty textarea element named 
     "console". The "csound.js" script also sends its messages, prefaced "Csound:", to the "console" element; 
