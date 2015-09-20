@@ -2,14 +2,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Csound HTML Tutorial 02</title>
+    <title>Csound HTML Tutorial 03</title>
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1"></head>
 <body>
-    <h1>Csound HTML Tutorial 02</h1>
+   <style type="text/css">
+    input[type='range'] {
+        -webkit-appearance: none;
+        border-radius: 5px;
+        box-shadow: inset 0 0 5px #333;
+        background-color: #999;
+        height: 10px;
+        width: 100%;
+        vertical-align: middle;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: yellow;
+        margin-top: -4px;
+        border-radius: 10px;
+    }
+    table td {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:yellow;
+        background-color: teal;
+        font-family: sans-serif
+    }
+    table th {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:white;
+        background-color:teal;
+         font-family: sans-serif
+   }
+    textarea {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:green;
+        background-color:black;
+        font-family: 'Courier', sans-serif
+    }
+    h1 {
+	margin: 1em 0 0.5em 0;
+	color: #343434;
+	font-weight: normal;
+	font-family: 'Ultra', sans-serif;   
+	font-size: 36px;
+	line-height: 42px;
+	text-transform: uppercase;
+    }
+    h2 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size: 30px;
+        line-height: 40px;
+        font-family: 'Orienta', sans-serif;
+    }    
+        h3 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size:24px;
+        line-height: 30px;
+        font-family: 'Orienta', sans-serif;
+    }    
+    </style>
+    <h1>Csound HTML Tutorial 03</h1>
     <h2>Introduction</h3>
-    <p>The purpose of this tutorial is to show you how to enable users to interactively control the instruments playing in 
-    a Csound piece that has been embedded into a Web page. You can play the piece, stop it from playing, use the sliders 
+    <p>The purpose of this tutorial is to show you how to improve the visual appearance of a piece by using a 
+    cascading style sheet. You can play the piece, stop it from playing, use the sliders 
     to control the sounds of the instruments as they play, view and edit the Csound code, and see Csound's diagnostic 
     messages. You may find this piece immediately below. Go ahead and try it -- it will play on version 31 or later of 
     Google's Chrome browser for OS X, Windows, or Linux. A thorough explanation of the steps required to create this 
