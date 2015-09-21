@@ -935,7 +935,106 @@ endin
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     }
     </xmp>
-    <h3>Next Steps</h3>
+    <h2>Custom Styles</h2>
+    <p>In HTML cascading style sheets (CSS) are declared or inluded at the top of a document in order to change the 
+    default appearance of the HTML elements. This is a deep topic and I can provide only a glimpse of the possibilities 
+    here, but essentially professional-level typography and graphic design can be implemented in Web pages using CSS.</p>
+    <p>CSS styles begin with a "selector" that determines to which elements (or even single element) the style will be 
+    applied. In the following CSS for this piece, most of the styles apply generically to all elements of a given type, 
+    so the selector is simply the HTML element name, e.g. <code>h1</code>. For the sliders, the style is written to apply 
+    only to <code>input</code> elements of type <code>range</code>, i.e. sliders. However, there are two types of 
+    <code>textarea</code> in this piece: the one that displays Csound's runtime messages, warnings, and errors, and the 
+    ones that contain the orchestra and score code. Therefore, the style name begins with the element type, then comes 
+    a period followed immediately by a class name. The style is then applied to the <code>textareas</code> using just 
+    the class attribute and class name.</p>
+    <xmp>
+   <style type="text/css">
+    input[type='range'] {
+        -webkit-appearance: none;
+        border-radius: 5px;
+        box-shadow: inset 0 0 5px #333;
+        background-color: #999;
+        height: 10px;
+        width: 100%;
+        vertical-align: middle;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: yellow;
+        margin-top: -4px;
+        border-radius: 10px;
+    }
+    table td {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:yellow;
+        background-color: teal;
+        font-family: sans-serif
+    }
+    table th {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:white;
+        background-color:teal;
+         font-family: sans-serif
+   }
+    textarea.console {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: gray;
+        color:green;
+        background-color:black;
+        font-family: 'Courier', sans-serif
+    }
+    textarea.code {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: gray;
+        color:black;
+        background-color:white;
+        font-family: 'Courier', sans-serif
+    }
+    h1 {
+	margin: 1em 0 0.5em 0;
+	color: #343434;
+	font-weight: normal;
+	font-family: 'Ultra', sans-serif;   
+	font-size: 36px;
+	line-height: 42px;
+	text-transform: uppercase;
+    }
+    h2 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size: 30px;
+        line-height: 40px;
+        font-family: 'Orienta', sans-serif;
+    }    
+        h3 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size:24px;
+        line-height: 30px;
+        font-family: 'Orienta', sans-serif;
+    }    
+ </style>
+    </xmp>
+    <p>Please be aware that there are many, many different style properties that are not mentioned in the 
+    above styles; in such cases the default value of the property, specified in the HTML standard, is applied. 
+    It is helpful that in HTML5 most style properties can be applied to any type of element.</p>
+    <h2>Next Steps</h3>
     <p>As we proceed through subsequent tutorials,more features of HTML5 will be integrated with 
     Csound, building on this piece:
     <ul>
