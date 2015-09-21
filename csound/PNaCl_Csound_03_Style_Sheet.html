@@ -44,13 +44,22 @@
         background-color:teal;
          font-family: sans-serif
    }
-    textarea {
+    textarea-console {
         border-width: 2px;
         padding: 8px;
         border-style: solid;
         border-color: transparent;
         color:green;
         background-color:black;
+        font-family: 'Courier', sans-serif
+    }
+    textarea-code {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:black;
+        background-color:white;
         font-family: 'Courier', sans-serif
     }
     h1 {
@@ -87,7 +96,7 @@
     messages. You may find this piece immediately below. Go ahead and try it -- it will play on version 31 or later of 
     Google's Chrome browser for OS X, Windows, or Linux. A thorough explanation of the steps required to create this 
     Web page using the PNaCl build of Csound follows.</p>
-    <h2>Dunes v 2</h2>
+    <h2>Dunes v 3</h2>
     <h4>By Michael Gogins</h3>
     <h4>2015</h4> 
     
@@ -246,9 +255,9 @@
 
     </form>
     <h4>Csound Errors, Warnings, and Messages</h4>
-    <textarea id="console" rows=10 cols=80></textarea>
+    <textarea class=textarea-console id="console" rows=10 cols=80></textarea>
     <h4>Csound Orchestra</h4>
-    <textarea id="orc" rows=24 cols=80>
+    <textarea class=textarea-code id="orc" rows=24 cols=80>
 opcode hertz2midinn, i, i
 ihertz xin
 print ihertz
@@ -688,7 +697,7 @@ scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
     </textarea>
     <h4>Csound Score</h4>
-    <textarea id="sco" rows=24 cols=80>
+    <textarea class=textarea-code id="sco" rows=24 cols=80>
 ; Change the tempo, if you like.
 t 0 27
 
