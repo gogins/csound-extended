@@ -44,7 +44,7 @@
         background-color:teal;
          font-family: sans-serif
    }
-    textarea-console {
+    textarea.console {
         border-width: 2px;
         padding: 8px;
         border-style: solid;
@@ -53,7 +53,7 @@
         background-color:black;
         font-family: 'Courier', sans-serif
     }
-    textarea-code {
+    textarea.code {
         border-width: 2px;
         padding: 8px;
         border-style: solid;
@@ -255,9 +255,9 @@
 
     </form>
     <h4>Csound Errors, Warnings, and Messages</h4>
-    <textarea class=textarea-console id="console" rows=10 cols=80></textarea>
+    <textarea class="console" id="console" rows=10 cols=80></textarea>
     <h4>Csound Orchestra</h4>
-    <textarea class=textarea-code id="orc" rows=24 cols=80>
+    <textarea class="code" id="orc" rows=24 cols=80>
 opcode hertz2midinn, i, i
 ihertz xin
 print ihertz
@@ -697,7 +697,7 @@ scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
     </textarea>
     <h4>Csound Score</h4>
-    <textarea class=textarea-code id="sco" rows=24 cols=80>
+    <textarea class="code" id="sco" rows=24 cols=80>
 ; Change the tempo, if you like.
 t 0 27
 
