@@ -944,9 +944,9 @@ endin
     so the selector is simply the HTML element name, e.g. <code>h1</code>. For the sliders, the style is written to apply 
     only to <code>input</code> elements of type <code>range</code>, i.e. sliders. However, there are two types of 
     <code>textarea</code> in this piece: the one that displays Csound's runtime messages, warnings, and errors, and the 
-    ones that contain the orchestra and score code. Therefore, the style name begins with the element type, then comes 
-    a period followed immediately by a class name, e.g. <code>textarea.console</code> The style is then applied to the <code>textareas</code> using just 
-    the class attribute and class name, e.g. </p>
+    ones that contain the orchestra and score code. Therefore, the selector begins with the element type, then comes 
+    a period followed immediately by a class name, e.g. <code>textarea.console</code>. The style is then applied to the 
+    <code>textareas</code> using just the class attribute and selector, see below for the example.</p>
     <xmp>
    <style type="text/css">
     input[type='range'] {
