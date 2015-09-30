@@ -1,0 +1,853 @@
+<html>
+<head>
+    <title>Csound HTML5 Demonstration 02</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1"></head>
+<body>
+    <h1>Csound HTML5 Demonstration 02</h1>
+    <h2>Introduction</h3>
+    <p>The purpose of this demonstration is to show how to embed a Csound piece into a Web page. This demonstration
+    builds on the previous one by adding a slider to control each global channel in the
+    Csound orchestra, and using jQuery to simplify setting up event handling for the sliders. The instruments in this piece
+    are sensitive to control, and playing with the sliders during performance can change the character of the
+    sounds and of the piece to a significant degree.
+	You can play the
+    piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. This piece will play on csound.node.
+    A thorough explanation of the steps required to create this piece follows.</p>
+    <h2>Dunes</h2>
+    <h4>By Michael Gogins</h3>
+    <h4>2015</h4>
+
+    <form id='persist'>
+
+    <table>
+    <col width="2*">
+    <col width="5*">
+    <col width="100px">
+
+    <th colspan=3 align='left'>Droner</th>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider1>gk_Droner_slider1</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.25 id=gk_Droner_slider1 step=.001>
+    <td>
+    <output for=gk_Droner_slider1 id=gk_Droner_slider1_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider2>gk_Droner_slider2</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.5 id=gk_Droner_slider2 step=.001>
+    <td>
+    <output for=gk_Droner_slider2 id=gk_Droner_slider2_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider3>gk_Droner_slider3</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.75 id=gk_Droner_slider3 step=.001>
+    <td>
+    <output for=gk_Droner_slider3 id=gk_Droner_slider3_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider4>gk_Droner_slider4</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.5 id=gk_Droner_slider4 step=.001>
+    <td>
+    <output for=gk_Droner_slider4 id=gk_Droner_slider4_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Droner_slider5>gk_Droner_slider5</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.125 id=gk_Droner_slider5 step=.001>
+    <td>
+    <output for=gk_Droner_slider5 id=gk_Droner_slider5_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Buzzer</th>
+    <tr>
+    <td>
+    <label for=gk_Buzzer_harmonics>gk_Buzzer_harmonics</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.25 id=gk_Buzzer_harmonics step=.001>
+    <td>
+    <output for=gk_Buzzer_harmonics id=gk_Buzzer_harmonics_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Sweeper</th>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_britel>gk_Sweeper_britel</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_britel step=.001>
+    <td>
+    <output for=gk_Sweeper_britel id=gk_Sweeper_britel_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_briteh>gk_Sweeper_briteh</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_briteh step=.001>
+    <td>
+    <output for=gk_Sweeper_briteh id=gk_Sweeper_briteh_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_britels>gk_Sweeper_britels</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_britels step=.001>
+    <td>
+    <output for=gk_Sweeper_britels id=gk_Sweeper_britels_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Sweeper_britehs>gk_Sweeper_britel</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 value=.25 id=gk_Sweeper_britehs step=.001>
+    <td>
+    <output for=gk_Sweeper_britehs id=gk_Sweeper_britehs_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Blower</th>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainDensity>gk_Blower_grainDensity</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=500 value=150 id=gk_Blower_grainDensity step=.001>
+    <td>
+    <output for=gk_Blower_grainDensity id=gk_Blower_grainDensity_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainDuration>gk_Blower_grainDuration</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=2 value=.25 id=gk_Blower_grainDuration step=.001>
+    <td>
+    <output for=gk_Blower_grainDuration id=gk_Blower_grainDuration_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainAmplitudeRange>gk_Blower_grainAmplitudeRange</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=500 value=100 id=gk_Blower_grainAmplitudeRange step=.001>
+    <td>
+    <output for=gk_Blower_grainAmplitudeRange id=gk_Blower_grainAmplitudeRange_output>100</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_Blower_grainFrequencyRange>gk_Blower_grainFrequencyRange</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=2 value=.033 id=gk_Blower_grainFrequencyRange step=.001>
+    <td>
+    <output for=gk_Blower_grainFrequencyRange id=gk_Blower_grainFrequencyRange_output>.5</output>
+    </tr>
+
+    <th colspan=3 align='left'>Master</th>
+    <tr>
+    <td>
+    <label for=gk_Reverb_Feedback>gk_Reverb_Feedback</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 id=gk_Reverb_Feedback step=.001>
+    <td>
+    <output for=gk_Reverb_Feedback id=gk_Reverb_Feedback_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_MasterOutput_gain>gk_MasterOutput_gain</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=5 id=gk_MasterOutput_gain step=.001>
+    <td>
+    <output for=gk_MasterOutput_gain id=gk_MasterOutput_gain_output>.5</output>
+    </tr>
+
+    </table>
+
+    <input type="button" id='play' value="Play" />
+    <input type="button" id='stop' value="Stop" />
+    <input type="button" id='save' value="Save" />
+    <input type="button" id='restore' value="Restore" />
+    </form>
+    <h4>Csound Orchestra</h4>
+    <textarea id="orc" rows=24 cols=80>
+sr = 48000
+ksmps = 100
+nchnls = 2
+0dbfs = 100000
+
+opcode hertz2midinn, i, i
+ihertz xin
+ilog2 = log(2)
+imidinn = 12 * (log(ihertz / 440) / ilog2) + 69
+xout imidinn
+endop
+
+instr 101
+insno = p1
+istart = p2
+iduration = p3
+ihertz = p4
+ivelocity = p5
+ipan = p6
+ikey hertz2midinn ihertz
+event_i "i", "Droner", 0, iduration, ikey, ivelocity, 0, ipan
+endin
+
+instr 102
+insno = p1
+istart = p2
+iduration = p3
+ihertz = p4
+ivelocity = p5
+ipan = p6
+ikey hertz2midinn ihertz
+event_i "i", "Buzzer", 0, iduration, ikey, ivelocity, 0, ipan
+endin
+
+instr 103
+insno = p1
+istart = p2
+iduration = p3
+ihertz = p4
+ivelocity = p5
+ipan = p6
+ikey hertz2midinn ihertz
+event_i "i", "Sweeper", 0, iduration, ikey, ivelocity, 0, ipan
+endin
+
+instr 104
+insno = p1
+istart = p2
+iduration = p3
+ihertz = p4
+ivelocity = p5
+ipan = p6
+ikey hertz2midinn ihertz
+event_i "i", "Blower", 0, iduration, ikey, ivelocity, 0, ipan
+endin
+
+gi_Droner_overlap init 20
+gk_Droner_distort_factor init 0.4
+gk_Droner_first_harmonic init 0.4
+gk_Droner_slider1 init .05
+gk_Droner_slider2 init .1
+gk_Droner_slider3 init .04
+gk_Droner_slider4 init .2
+gk_Droner_slider5 init .02
+gi_Droner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
+instr Droner
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+k1 init .5
+k2 init .05
+k3 init .1
+k4 init .2
+k5 init .1
+k6 init .05
+k7 init .1
+k8 init 0
+k9 init 0
+k10 init 0
+k3 = gk_Droner_slider1
+k4 = gk_Droner_slider2
+k5 = gk_Droner_slider3
+k6 = gk_Droner_slider4
+k7 = gk_Droner_slider5
+kwaveform init 0
+iamp = ampdb(ivelocity)
+iattack = gi_Droner_overlap
+idecay = gi_Droner_overlap
+isustain = p3 - gi_Droner_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+if kwaveform == 0 then
+asignal poscil3 1, ihertz, gi_Droner_sine
+endif
+if kwaveform == 1 then
+asignal vco2 1, ihertz, 8 ; integrated saw
+endif
+if kwaveform == 2 then
+asignal vco2 1, ihertz, 12 ; triangle
+endif
+asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
+asignal = asignal * kenvelope * 10
+aleft, aright pan2 asignal, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Bower_overlap init 20
+gi_Bower_sine ftgen 0,0,65536,10,1
+instr Bower
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 200
+iattack = gi_Bower_overlap
+idecay = gi_Bower_overlap
+isustain = p3 - gi_Bower_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+kamp = kenvelope
+kfreq = ihertz
+kpres = 0.25
+; krat rspline 0.006,0.988,0.1,0.4
+krat rspline 0.006,0.988,1,4
+kvibf = 4.5
+kvibamp = 0
+iminfreq = 20
+aSig wgbow kamp,kfreq,kpres,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+;aSig butlp aSig,2000
+;aSig pareq aSig,80,6,0.707
+aleft, aright pan2 aSig / 7, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Phaser_overlap init 20
+gk_Phaser_ratio1 init 1
+gk_Phaser_ratio2 init 1/3
+gk_Phaser_index1 init 1
+gk_Phaser_index2 init 0.0125
+gi_Phaser_sine ftgen 0,0,65536,10,1
+instr Phaser
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 8
+iattack = gi_Phaser_overlap
+idecay = gi_Phaser_overlap
+isustain = p3 - gi_Phaser_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+khertz = ihertz
+ifunction1 = gi_Phaser_sine
+ifunction2 = gi_Phaser_sine
+a1,a2 crosspm gk_Phaser_ratio1, gk_Phaser_ratio2, gk_Phaser_index1, gk_Phaser_index2, khertz, ifunction1, ifunction2
+aleft, aright pan2 a1+a2, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft * kenvelope
+aright = adamping * aright * kenvelope
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Sweeper_overlap init 20
+gk_Sweeper_britel init 0
+gk_Sweeper_briteh init 2.9
+gk_Sweeper_britels init .2 / 3
+gk_Sweeper_britehs init 2.5 / 2
+gi_Sweeper_sine ftgen 0, 0, 65536, 10, 1
+gi_Sweeper_octfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
+instr Sweeper
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity)
+iattack = gi_Sweeper_overlap
+idecay = gi_Sweeper_overlap
+isustain = p3 - gi_Sweeper_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+icps = ihertz
+kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
+ktonemoddep jspline 0.01,0.05,0.2
+ktonemodrte jspline 6,0.1,0.2
+ktone poscil3 ktonemoddep, ktonemodrte, gi_Sweeper_sine
+kbrite rspline gk_Sweeper_britel, gk_Sweeper_briteh, gk_Sweeper_britels, gk_Sweeper_britehs
+ibasfreq init icps
+ioctcnt init 3
+iphs init 0
+;a1 hsboscil kamp, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gioctfn, ioctcnt, iphs
+a1 hsboscil kenvelope, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gi_Sweeper_octfn, ioctcnt, iphs
+amod poscil3 0.25, ibasfreq*(1/3), gi_Sweeper_sine
+arm = a1*amod
+kmix expseg 0.001, 0.01, rnd(1), rnd(3)+0.3, 0.001
+kmix=.25
+a1 ntrpol a1, arm, kmix
+;a1 pareq a1/10, 400, 15, .707
+;a1 tone a1, 500
+kpanrte jspline 5, 0.05, 0.1
+kpandep jspline 0.9, 0.2, 0.4
+kpan poscil3 kpandep, kpanrte, gi_Sweeper_sine
+a1,a2 pan2 a1, kpan
+a1 delay a1, rnd(0.1)
+a2 delay a2, rnd(0.11)
+kenv linsegr 1, 1, 0
+kenv = kenvelope
+aleft = a1*kenv*.02
+aright = a2*kenv*.02
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Buzzer_overlap init 20
+gk_Buzzer_harmonics init 2
+gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
+instr Buzzer
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 4
+iattack = gi_Buzzer_overlap
+idecay = gi_Buzzer_overlap
+isustain = p3 - gi_Buzzer_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+asignal buzz kenvelope, ihertz, gk_Buzzer_harmonics, gi_Buzzer_sine
+asignal = asignal * 3
+aleft, aright pan2 asignal, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Shiner_overlap init 20
+gk_Shiner_harmonics init 5
+gk_Shiner_harmonics init 2
+gk_Shiner_distort_factor init 0.4
+gk_Shiner_first_harmonic init 0.4
+gi_Shiner_sine ftgen 0, 0, 65536, 10, 1
+instr Shiner
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 4
+iattack = gi_Shiner_overlap
+idecay = gi_Shiner_overlap
+isustain = p3 - gi_Shiner_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+asignal vco2 kenvelope * 4, ihertz, 12
+aleft, aright pan2 asignal, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Blower_overlap init 20
+gk_Blower_grainDensity init 150
+gk_Blower_grainDuration init 0.2
+gk_Blower_grainAmplitudeRange init 100
+gk_Blower_grainFrequencyRange init .033
+gi_Blower_grtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
+instr Blower
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midikey = p4
+i_midivelocity = p5
+i_phase = p6
+i_pan = p6
+i_depth = p8
+i_height = p9
+i_pitchclassset = p10
+i_homogeneity = p11
+ifrequency = cpsmidinn(i_midikey)
+iamplitude = ampdb(i_midivelocity) / 200
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ; f1 0 65536 1 "hahaha.aif" 0 4 0
+ ; f2 0 1024 7 0 224 1 800 0
+ ; f3 0 8192 7 1 8192 -1
+ ; f4 0 1024 7 0 512 1 512 0
+ ; f5 0 1024 10 1 .3 .1 0 .2 .02 0 .1 .04
+ ; f6 0 1024 10 1 0 .5 0 .33 0 .25 0 .2 0 .167
+ ; a0 14 50
+ ; p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+ ; Start Dur Amp Freq GrTab WinTab FqcRng Dens Fade
+ ; i1 0.0 6.5 700 9.00 5 4 .210 200 1.8
+ ; i1 3.2 3.5 800 7.08 . 4 .042 100 0.8
+ ; i1 5.1 5.2 600 7.10 . 4 .0320 100 0.9
+ ; i1 7.2 6.6 900 8.03 . 4 .021 150 1.6
+ ; i1 21.3 4.5 1000 9.00 . 4 .031 150 1.2
+ ; i1 26.5 13.5 1100 6.09 . 4 .121 150 1.5
+ ; i1 30.7 9.3 900 8.05 . 4 .014 150 2.5
+ ; i1 34.2 8.8 700 10.02 . 4 .14 150 1.6
+iHz = ifrequency
+ihertz = iHz
+ip4 = iamplitude
+ip5 = iHz
+ip6 = gi_Blower_grtab
+ip7 = gi_Blower_wintab
+ip8 = 0.033
+ip8 = .002
+ip9 = 150
+ip9 = 100
+ip10 = 1.6
+ip10 = 3
+idur = p3
+iamp = iamplitude ; p4
+ifqc = iHz ; cpspch(p5)
+igrtab = ip6
+iwintab = ip7
+ifrng = ip8
+idens = ip9
+ifade = ip10
+igdur = 0.2
+iattack = gi_Blower_overlap
+idecay = gi_Blower_overlap
+isustain = p3 - gi_Blower_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
+kamp = kenvelope
+; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
+aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, ifqc * gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, gi_Blower_grtab, gi_Blower_wintab, 5
+aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, ifqc * gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, gi_Blower_grtab, gi_Blower_wintab, 5
+aleft = aoutl * kamp * iamplitude
+aright = aoutr * kamp * iamplitude
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gk_Reverb_Feedback init 0.975
+gk_Reverb_DelayModulation init 0.875
+instr Reverb
+ain_left chnget "out_left"
+ain_right chnget "out_right"
+azero init 0
+aout_left init 0
+aout_left, aright reverbsc ain_left, azero, gk_Reverb_Feedback, 15000.0
+aleft init 0
+azero init 0
+aleft, aout_right reverbsc azero, ain_right, gk_Reverb_Feedback, 15000.0
+chnmix aout_left, "reverb_out_left"
+chnmix aout_right, "reverb_out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gk_MasterOutput_gain init 1
+instr MasterOutput
+ain_left chnget "reverb_out_left"
+ain_right chnget "reverb_out_right"
+aout_left = ain_left * gk_MasterOutput_gain
+aout_right = ain_right * gk_MasterOutput_gain
+outs aout_left, aout_right
+prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr Controls
+gk_Droner_slider1 chnget "gk_Droner_slider1"
+gk_Droner_slider2 chnget "gk_Droner_slider2"
+gk_Droner_slider3 chnget "gk_Droner_slider3"
+gk_Droner_slider4 chnget "gk_Droner_slider4"
+gk_Droner_slider5 chnget "gk_Droner_slider5"
+gk_Sweeper_britel chnget "gk_Sweeper_britel"
+gk_Sweeper_briteh chnget "gk_Sweeper_briteh"
+gk_Sweeper_britels chnget "gk_Sweeper_britels"
+gk_Sweeper_britehs chnget "gk_Sweeper_britels"
+gk_Buzzer_harmonics chnget "gk_Buzzer_harmonics"
+gk_Blower_grainDensity chnget "gk_Blower_grainDensity"
+gk_Blower_grainDuration chnget "gk_Blower_grainDuration"
+gk_Blower_grainAmplitudeRange chnget "gk_Blower_grainAmplitudeRange"
+gk_Blower_grainFrequencyRange chnget "gk_Blower_grainFrequencyRange"
+gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
+gk_MasterOutput_gain chnget "gk_MasterOutput_gain"
+endin
+
+instr Clear
+chnclear "out_left"
+chnclear "out_right"
+chnclear "reverb_out_left"
+chnclear "reverb_out_right"
+endin
+
+scoreline_i "i \"Reverb\" 0 -1"
+scoreline_i "i \"MasterOutput\" 0 -1"
+scoreline_i "i \"Controls\" 0 -1"
+scoreline_i "i \"Clear\" 0 -1"
+    </textarea>
+    <h4>Csound Score</h4>
+    <textarea id="sco" rows=24 cols=80>
+; Change the tempo, if you like.
+t 0 27
+
+; p1 p2 p3 p4 p5 p6 p7 p8
+; insno onset duration fundamental numerator denominator velocity pan
+
+; C E B
+; [numerator/denominator*fundamental*octave]
+i 101   0 60 [ 1 /  1 * 60 * 1] 60 [-1 + 3 / 2]
+i 101   0 60 [ 5 /  4 * 60 * 2] 60 [-1 + 2 / 2]
+i 102   0 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
+; C Ab E B
+i 104  30 30 [ 8 /  5 * 60 * 1] 60 [-1 + 2 / 2]
+; G F# B
+i 102  60 60 [ 3 /  2 * 60 * 1] 60 [-1 + 3 / 2]
+i 102  60 60 [45 / 32 * 60 * 2] 60 [-1 + 2 / 2]
+i 103  60 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
+; G F B
+i 102  90 30 [ 4 / 3 * 60 * 3] 60 [-1 + 2 / 2]
+; C E B
+i 103 120 60 [ 1 /  1 * 60 * 1] 60 [-1 + 1 / 2]
+i 103 120 60 [ 5 /  4 * 60 * 2] 60 [-1 + 3 / 2]
+i 104 120 30 [28 / 15 * 60 * 2] 60 [-1 + 2 / 2]
+i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
+    </textarea>
+    <h2>How It Is Done</h4>
+    <p>This demonstration is simplified. All unnecessary HTML elements and JavaScript function calls have been
+    omitted. This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures
+    in csound.node, Csound for Android, and CsoundQt.</p>
+    <p>Comments on this page or in the page source explain what each element is for and why it is
+    written the way it is. You can view the code and comments by right-clicking on this page and selecting
+    "View page source".</p>
+    <h3>Embedding Csound</h3>
+    With Csound for Android and CsoundQt, the front end has already embedded its running instance of Csound into the Javascript context of the Web page.
+    With <code>csound.node</code>, as here, you can use node's <code>require</code> module system to include csound, and you also need to set the output option
+    (see below on <i><b>Starting and Stopping Csound</b></i> for the code). As far as any JavaScript code on the Web page is concerned,
+    Csound is just an already existing JavaScript object named "csound", with
+    its own functions and callbacks, which represent important parts of the Csound API.</p>
+    <p>It is good practice to place all &lt;script&gt; elements at the very end of the HTML &lt;body&gt; element,
+    so that the other elements have already been created before any scripts try to access them, and that is what
+    I have done here.</p>
+     <h3>Embedding the Csound Score and Orchestra</h3>
+    <p>There are many ways to get a Csound piece into Csound. But in order to make the Csound orchestra
+    and score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than
+    the text they contain, yet have scrollbars for accessing all of the text. These textareas must be named,
+    so that we can use JavaScript to retrieve the orchestra and score and pass them to Csound. The code for a  &lt;textarea&gt; 
+    containing a Csound orchestra looks like this:</p>
+    <xmp>
+    <textarea id="orc" rows=24 cols=80>
+opcode hertz2midinn, i, i
+ihertz xin
+print ihertz
+; m = 12*log2(fm/440 Hz) + 69
+ilog2 = log(2)
+imidinn = 12 * (log(ihertz / 440) / ilog2) + 69
+print imidinn
+xout imidinn
+endop
+
+instr 101
+insno = p1
+istart = p2
+iduration = p3
+ihertz = p4
+ivelocity = p5
+ipan = p6
+ikey hertz2midinn ihertz
+event_i "i", "Droner", 0, iduration, ikey, ivelocity, 0, ipan
+endin
+(...remainder of orchestra...)
+    </textarea>
+    </xmp>
+    <p>The code for a  &lt;textarea&gt; containing a Csound score works the same way.</p>
+    <p>Also note, Csound can perform scores using either <code>csound.compileOrc(orc_text)</code>
+    followed by <code>csound.readScore(sco_text)</code>, or by simply calling
+    <code>csound.playCsd(filename)</code>. If <code>readScore</code> is used, the score must not contain any
+    "t", "s", or "e" statements, and all score times must be absolute times in seconds from the beginning of
+    the performance. If <code>playCsd</code> is used, any and all standard score statements may be used.</p>
+    <h3>Starting and Stopping Csound</h3>
+    <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start
+    playing the moment the page is loaded. The JavaScript code for handling the button clicks must start
+    Csound, send the orchestra to Csound, and send the score, in order to perform the piece. The buttons and code 
+    for the Play and Stop buttons have been modified from the first demonstration to use jQuery, see below.</p>
+    <h3>Using Sliders to Control Csound</h3>
+    <p>The HTML <code>&lt;input&gt;</code> element has a variety of types, and the <code>range</code> type creates a slider control.
+    We use an HTML table to lay out the sliders, labels, and numeric display fields in a
+    grid. We use a number of strategies to simplify, as far as possible, the use of such sliders to control Csound
+    instruments. </p>
+    <p>First, we adopt the principle that the Csound instruments themselves are encapsulated into independent modules
+    that can be mixed, matched, and re-arranged. There is not space here to discuss this in detail, but
+    in essence, each instrument is contained in a self-sufficient block of code. All real-time controls are global
+    variables, initialized just above the actual "instr" block. All function tables, also, are initialized just above
+    the "instr" block. A consistent naming pattern is used to avoid name clashes, e.g.,
+    "gk_" + instrument name + "_" + control name, to control the amount of delay in the
+    global reverberation effect. Instruments do not send sound directly
+    to the output, but use audio channels to communicate with effects, which in turn send sound to the output. The result is
+    that it is easy to re-order the instruments, or to include instruments from other orchestras, simply by cutting and
+    pasting, or with <code>#include</code> statements in the orchestra. Here is the code from one instrument:</p>
+    <xmp>
+gi_Buzzer_overlap init 20
+gk_Buzzer_harmonics init 2
+gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
+instr Buzzer
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 4
+iattack = gi_Buzzer_overlap
+idecay = gi_Buzzer_overlap
+isustain = p3 - gi_Buzzer_overlap
+p3 = iattack + isustain + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+asignal buzz kenvelope, ihertz, gk_Buzzer_harmonics, gi_Buzzer_sine
+asignal = asignal * 3
+aleft, aright pan2 asignal, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+    </xmp>
+    <p>The "effects" instruments, as well as a global "Controls" instrument, are "always on" and they are scheduled
+    in the orchestra code, not from the score. This makes it much easier to generate scores programmatically, and
+    comes in handy later.</p>
+    <xmp>
+scoreline_i "i \"Reverb\" 0 -1"
+scoreline_i "i \"MasterOutput\" 0 -1"
+scoreline_i "i \"Controls\" 0 -1"
+scoreline_i "i \"Clear\" 0 -1"
+    </xmp>
+    <p>The "Controls" instrument simply has a <code>chnget</code> opcode for each control channel. This is much more
+    efficient than putting <code>chnget</code> into each instrument. I have added buttons for saving and restoring the values of all 
+    controls; saved values persist between sessions. Something like this is essential for actual composing or performance.</p>
+    <p>Second, the jQuery JavaScript utility library is used to simplify the event handling, and to get the values
+    of the sliders into Csound. "Event bubbling" is used to send events from all sliders to one event handler. We make
+    sure that the HTML identifiers of all the sliders are exactly the same as the corresponding Csound control channels,
+    and use a naming pattern to link output fields to sliders, also. This makes writing a single event handler for all
+    sliders very easy. Similarly, jQuery simplifies saving and restoring slider values to and from local storage. In jQuery,
+    <code>$('#name')</code> returns the DOM element with id <code>'name'</code>, and <code>$('element')</code>
+    returns <i>all</i> elements of type <code>'element'</code>.  The entire event handling code is:
+    <xmp>
+    <script>
+    var csound = require('csound');
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+    </script>
+    <script>    
+    <script>    
+    $(document).ready(function() {
+        $('#play').on('click', function() {      	
+            csound.setOption('-odac')
+            csound.compileOrc(document.getElementById('orc').value);
+            csound.readScore(document.getElementById('sco').value);
+            $('#restore').trigger('click');
+            csound.perform();
+        });
+        $('#stop').on('click', function() {      	
+            csound.stop();
+        });
+        $('input').on('input', function(event) {
+            var slider_value = parseFloat(event.target.value);
+            csound.setControlChannel(event.target.id, slider_value);
+            var output_selector = '#' + event.target.id + '_output';
+            $(output_selector).val(slider_value);
+        });
+        $('#save').on('click', function() {
+            $('.persistent-element').each(function() {
+                localStorage.setItem(this.id, this.value);
+            });
+        });
+        $('#restore').on('click', function() {
+            $('.persistent-element').each(function() {
+                this.value = localStorage.getItem(this.id);
+                csound.setControlChannel(this.id, this.value);
+                var output_selector = '#' + this.id + '_output';
+                $(output_selector).val(this.value);
+            });
+        });
+        $(window).load(function() {
+            $('#restore').trigger('click');
+        });
+    });
+    </script>
+    </xmp>
+    <h3>Handling Csound's Errors, Warnings, and Messages</h3>
+    <p>On csound.node, Csound sends all of its runtime messages to the JavaScript console.</p>
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+    var csound = require('csound');
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+    </script>
+    <script>    
+    $(document).ready(function() {
+        $('#play').on('click', function() {      	
+            csound.setOption('-odac')
+            csound.compileOrc(document.getElementById('orc').value);
+            csound.readScore(document.getElementById('sco').value);
+            $('#restore').trigger('click');
+            csound.perform();
+        });
+        $('#stop').on('click', function() {      	
+            csound.stop();
+        });
+        $('input').on('input', function(event) {
+            var slider_value = parseFloat(event.target.value);
+            csound.setControlChannel(event.target.id, slider_value);
+            var output_selector = '#' + event.target.id + '_output';
+            $(output_selector).val(slider_value);
+        });
+        $('#save').on('click', function() {
+            $('.persistent-element').each(function() {
+                localStorage.setItem(this.id, this.value);
+            });
+        });
+        $('#restore').on('click', function() {
+            $('.persistent-element').each(function() {
+                this.value = localStorage.getItem(this.id);
+                csound.setControlChannel(this.id, this.value);
+                var output_selector = '#' + this.id + '_output';
+                $(output_selector).val(this.value);
+            });
+        });
+        $(window).load(function() {
+            $('#restore').trigger('click');
+        });
+    });
+    </script>
+</body>
+</html>
