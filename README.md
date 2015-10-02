@@ -8,3 +8,5 @@ https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html
 https://gogins.github.io/csound/PNaCl_Csound_02_Instrument_Controls.html
 
 https://gogins.github.io/csound/PNaCl_Csound_03_Style_Sheet.html
+
+https://gogins.github.io/csound/PNaCl_Csound_04_RealTime3DScoreGenerator.html
