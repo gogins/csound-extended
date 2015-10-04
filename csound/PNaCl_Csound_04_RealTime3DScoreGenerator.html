@@ -1233,15 +1233,15 @@ endin
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 100 + index[0];
-                            score += ('i ' + insno + ' 0 4 ' + index[2] + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' 0 4 ' + index[1] + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
                     console.log(score);
                     if (typeof csound != 'undefined') {
-                    	//if (csound.isPlaying() == true) {
+                    	if (csound !== null) {
                     	    csound.readScore(score);
-                    	//}
+                    	}
                     }
                }
             }
