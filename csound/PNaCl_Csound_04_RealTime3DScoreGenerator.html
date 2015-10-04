@@ -98,8 +98,8 @@
     </style>
     <h1>Csound HTML Tutorial 04</h1>
     <h2>Introduction</h3>
-    <p>The purpose of this tutorial is to demonstrate an interactive composition in WebGL and GLSL shaders generate
-    an animated, three-dimensional fractal that also generates a Csound score in real time. As the fractal moves
+    <p>The purpose of this tutorial is to demonstrate an interactive composition in WebGL that generates
+    an animated, three-dimensional fractal that also plays a Csound score in real time. As the fractal moves
     towards the viewer, it passes through an invisible plane in the view frustum. As certain vertexes pass through
     this plane, they generate Csound notes, flashing as they do so. Attributes of a vertex control the instrument
     choice, loudness, and stereo position of the note. Attributes of the scene as a whole control transformations
@@ -1229,13 +1229,16 @@ endin
                             note_array.set([instrument, key], value + 1);
                         }
                     };
+                    var score = '';
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
-                            console.log('instrument:', index[0], 'key:', index[1], 'velocity:', velocity);
                             var insno = 100 + instrument;
-                            csound.readScore('i ' + insno + ' 0 4 ' + key + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' 0 4 ' + key + ' 60 ' + Math.random()  + '\n');
                         }
                     });
+                    console.log('score:');
+                    console.log(score);
+                    csound.readScore(score);
                }
             }
          }
