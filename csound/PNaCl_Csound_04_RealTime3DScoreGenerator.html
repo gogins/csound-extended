@@ -1238,7 +1238,11 @@ endin
                     });
                     console.log('score:');
                     console.log(score);
-                    csound.readScore(score);
+                    if (typeof csound != 'undefined') {
+                    	if (csound.isPlaying() == true) {
+                    	    csound.readScore(score);
+                    	}
+                    }
                }
             }
          }
