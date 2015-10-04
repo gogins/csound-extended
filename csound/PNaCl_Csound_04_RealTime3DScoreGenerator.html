@@ -1219,12 +1219,12 @@ endin
                 var scene_object = scene.objects[i];
                 if (scene_object.position.z >= note_depth && scene_object.position.z <= (note_depth + speed)) {
                     console.log('object on:  ' + i + '  depth: ' + scene_object.position.z);
-                    var note_array = math.zeros(10, 60);
+                    var note_array = math.zeros(5, 60);
                     for (var j = 0; j < scene_object.geometry.vertices.length; ++j) {
                         vertex = scene_object.geometry.vertices[j];
                         var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * 60.0) + 36.);
                         var instrument = Math.floor((((vertex.position.x / (note_plane[0])) + .5) * 4.) + 1.);
-                        if ((key >= 0 && key < 60) && (instrument > 1 && instrument < 5)) {
+                        if ((key >= 0 && key < 60) && (instrument >= 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]);
                             note_array.set([instrument, key], value + 1);
                         }
@@ -1232,8 +1232,8 @@ endin
                     var score = '';
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
-                            var insno = 100 + instrument;
-                            score += ('i ' + insno + ' 0 4 ' + key + ' 60 ' + Math.random()  + '\n');
+                            var insno = 100 + index[0];
+                            score += ('i ' + insno + ' 0 4 ' + index[2] + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
