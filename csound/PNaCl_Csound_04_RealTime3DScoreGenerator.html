@@ -1223,8 +1223,8 @@ endin
                     for (var j = 0; j < scene_object.geometry.vertices.length; ++j) {
                         vertex = scene_object.geometry.vertices[j];
                         var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * 60.0) + 36.);
-                        var instrument = Math.floor((((vertex.position.x / (note_plane[0])) + .5) * 10.) + 1.);
-                        if ((key >= 0 && key < 60) && (instrument > 1 && instrument < 10)) {
+                        var instrument = Math.floor((((vertex.position.x / (note_plane[0])) + .5) * 4.) + 1.);
+                        if ((key >= 0 && key < 60) && (instrument > 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]);
                             note_array.set([instrument, key], value + 1);
                         }
@@ -1232,7 +1232,8 @@ endin
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             console.log('instrument:', index[0], 'key:', index[1], 'velocity:', velocity);
-                            csound.readScore('i ' + instrument + ' 0 4 ' + key + ' 60 ' + Math.random()  + '\n');
+                            var insno = 100 + instrument;
+                            csound.readScore('i ' + insno + ' 0 4 ' + key + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                }
