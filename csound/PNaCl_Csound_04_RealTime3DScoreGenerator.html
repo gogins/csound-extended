@@ -1239,7 +1239,7 @@ endin
                     console.log('score:');
                     console.log(score);
                     if (typeof csound != 'undefined') {
-                    	if (csound !== null) {
+                    	if (csound.module !== null) {
                     	    csound.readScore(score);
                     	}
                     }
