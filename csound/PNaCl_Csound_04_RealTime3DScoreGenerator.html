@@ -1095,7 +1095,7 @@ endin
         //
         // THis can be used perhaps to detect intersection: https://stemkoski.github.io/Three.js/Collision-Detection.html
         var container = document.getElementById('webgl_cell');
-        var velocity_cutoff = 100.;
+        var velocity_cutoff = 150.;
         var VISUALS_VISIBLE = true;
         var SCALE_FACTOR = 1500;
         var CAMERA_BOUND = 200;
@@ -1240,7 +1240,9 @@ endin
                     console.log(score);
                     if (typeof csound != 'undefined') {
                     	if (csound.module !== null) {
-                    	    //csound.readScore(score);
+                    	    if (csound.is_playing === true) {
+                    	    	csound.readScore(score);
+                    	    }
                     	}
                     }
                }
@@ -1402,9 +1404,11 @@ endin
             $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
             csound.readScore(document.getElementById('sco').value);
+            csound.is_playing = true;
         });
         $('#stop').on('click', function() {
             csound.stop();
+            csound.is_playing = false;
         });
         $('input').on('input', function(event) {
             var slider_value = event.target.value;
@@ -1439,6 +1443,7 @@ endin
     <!--The PNaCl csound module must be the very last element in the body,
         because the "csound.js" script attaches the Csound module and its
         callbacks to that element. -->
+    <script>csound.is_playing = false;</script>
     <div id="engine"></div>
 </body>
 </html>
