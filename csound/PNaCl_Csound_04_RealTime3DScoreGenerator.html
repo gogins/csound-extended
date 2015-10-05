@@ -729,22 +729,22 @@ t 0 27
 
 ; C E B
 ; [numerator/denominator*fundamental*octave]
-i 101   0 60 [ 1 /  1 * 60 * 1] 60 [-1 + 3 / 2]
-i 101   0 60 [ 5 /  4 * 60 * 2] 60 [-1 + 2 / 2]
-i 101   0 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
+;i 101   0 60 [ 1 /  1 * 60 * 1] 60 [-1 + 3 / 2]
+;i 101   0 60 [ 5 /  4 * 60 * 2] 60 [-1 + 2 / 2]
+;i 101   0 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
 ; C Ab E B
-i 104  30 30 [ 8 /  5 * 60 * 1] 60 [-1 + 2 / 2]
+;i 104  30 30 [ 8 /  5 * 60 * 1] 60 [-1 + 2 / 2]
 ; G F# B
-i 102  60 60 [ 3 /  2 * 60 * 1] 60 [-1 + 3 / 2]
-i 102  60 60 [45 / 32 * 60 * 2] 60 [-1 + 2 / 2]
-i 102  60 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
+;i 102  60 60 [ 3 /  2 * 60 * 1] 60 [-1 + 3 / 2]
+;i 102  60 60 [45 / 32 * 60 * 2] 60 [-1 + 2 / 2]
+;i 102  60 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
 ; G F B
-i 102  90 30 [ 4 / 3 * 60 * 3] 60 [-1 + 2 / 2]
+;i 102  90 30 [ 4 / 3 * 60 * 3] 60 [-1 + 2 / 2]
 ; C E B
-i 103 120 60 [ 1 /  1 * 60 * 1] 60 [-1 + 1 / 2]
-i 103 120 60 [ 5 /  4 * 60 * 2] 60 [-1 + 3 / 2]
-i 104 120 30 [28 / 15 * 60 * 2] 60 [-1 + 2 / 2]
-i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
+;i 103 120 60 [ 1 /  1 * 60 * 1] 60 [-1 + 1 / 2]
+;i 103 120 60 [ 5 /  4 * 60 * 2] 60 [-1 + 3 / 2]
+;i 104 120 30 [28 / 15 * 60 * 2] 60 [-1 + 2 / 2]
+;i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     </textarea>
     <h2>How It Is Done</h4>
     <p>This tutorial is a simple example. All unnecessary HTML elements and JavaScript function calls have been
@@ -1212,14 +1212,15 @@ endin
             return [note_x, note_y];
         }
         var note_depth = LEVEL_DEPTH;
+        var note_array = null;
         console.log('note_depth:' + note_depth);
         function createNotes(scene) {
             var note_plane  = get_note_plane(camera, note_depth);
+            var note_array = math.zeros(5, 60);
             for ( i = 0; i < scene.objects.length; i++ ) {
                 var scene_object = scene.objects[i];
                 if (scene_object.position.z >= note_depth && scene_object.position.z <= (note_depth + speed)) {
                     console.log('object on:  ' + i + '  depth: ' + scene_object.position.z);
-                    var note_array = math.zeros(5, 60);
                     for (var j = 0; j < scene_object.geometry.vertices.length; ++j) {
                         vertex = scene_object.geometry.vertices[j];
                         var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * 60.0) + 36.);
@@ -1233,7 +1234,7 @@ endin
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 100 + index[0];
-                            score += ('i ' + insno + ' 0 4 ' + index[1] + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' 0 1 ' + index[1] + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
