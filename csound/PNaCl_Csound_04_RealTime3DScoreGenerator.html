@@ -1229,7 +1229,7 @@ endin
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
                             if (value === velocity_cutoff && csound.is_playing === true) {
-				var geometry = new THREE.SphereGeometry( 1, 1, 10 );
+				var geometry = new THREE.BoxGeometry( 1, 1, 10 );
 				var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 				var box = new THREE.Mesh( geometry, material );
 				scene.add( box );         
