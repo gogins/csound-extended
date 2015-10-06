@@ -1228,7 +1228,7 @@ endin
                         if ((key >= 0 && key < 60) && (instrument >= 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
-                            if (value === velocity_cutoff && csound.is_playing === true) {
+                            if (value >= velocity_cutoff && csound.is_playing === true) {
 				scene_object.geometry.colors[j] = new THREE.Color( 0xffffff );
                             }
                         }
