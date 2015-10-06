@@ -1228,13 +1228,14 @@ endin
                         if ((key >= 0 && key < 60) && (instrument >= 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
-                            if (value == velocity_cutoff) {
+                            if (value === velocity_cutoff) {
 				var geometry = new THREE.SphereGeometry( 5, 6, 6 );
 				var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 				var sphere = new THREE.Mesh( geometry, material );
 				scene.add( sphere );         
 				sphere.position.copy(vertex.position);
                             }
+                        }
                     };
                     var score = '';
                     note_array.forEach(function (velocity, index, matrix) {
