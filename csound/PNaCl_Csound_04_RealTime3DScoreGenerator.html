@@ -96,24 +96,6 @@
         font-family: 'Orienta', sans-serif;
     }
     </style>
-    <h1>Csound HTML Tutorial 04</h1>
-    <h2>Introduction</h3>
-    <p>The purpose of this tutorial is to demonstrate an interactive composition in WebGL that generates
-    an animated, three-dimensional fractal that also plays a Csound score in real time. As the fractal moves
-    towards the viewer, it passes through an invisible plane in the view frustum. As certain vertexes pass through
-    this plane, they generate Csound notes, flashing as they do so. Attributes of a vertex control the instrument
-    choice, loudness, and stereo position of the note. Attributes of the scene as a whole control transformations
-    that are applied to a chord to which the notes are conformed. The evolution of the fractal is controlled by a
-    few sliders, which thus control the evolution of the music as well.</p>
-    </p>You can play the piece, stop it from playing, use the sliders
-    to control the sounds of the instruments as they play, view and edit the Csound code, and see Csound's diagnostic
-    messages. You may find this piece immediately below. Go ahead and try it -- it will play on version 31 or later of
-    Google's Chrome browser for OS X, Windows, or Linux. A thorough explanation of the steps required to create this
-    Web page using the PNaCl build of Csound follows.</p>
-    <h2>Dunes v 4</h2>
-    <h4>By Michael Gogins</h3>
-    <h4>2015</h4>
-
     <form id='persist'>
 
     <table>
@@ -160,7 +142,6 @@
     </tr>
     <tr>
     <td>Harmony 
-    <tr>
     <td colspan=2>
     <input class=persistent-element type=button id=harmony_K value="K">
     <input class=persistent-element type=button id=harmony_Q1 value="Q1">
@@ -324,6 +305,24 @@
     <input type="button" id='restore' value="Restore" />
 
     </form>
+    <h1>Csound HTML Tutorial 04</h1>
+    <h2>Introduction</h3>
+    <p>The purpose of this tutorial is to demonstrate an interactive composition in WebGL that generates
+    an animated, three-dimensional fractal that also plays a Csound score in real time. As the fractal moves
+    towards the viewer, it passes through an invisible plane in the view frustum. As certain vertexes pass through
+    this plane, they generate Csound notes, flashing as they do so. Attributes of a vertex control the instrument
+    choice, loudness, and stereo position of the note. Attributes of the scene as a whole control transformations
+    that are applied to a chord to which the notes are conformed. The evolution of the fractal is controlled by a
+    few sliders, which thus control the evolution of the music as well.</p>
+    </p>You can play the piece, stop it from playing, use the sliders
+    to control the sounds of the instruments as they play, view and edit the Csound code, and see Csound's diagnostic
+    messages. You may find this piece immediately below. Go ahead and try it -- it will play on version 31 or later of
+    Google's Chrome browser for OS X, Windows, or Linux. A thorough explanation of the steps required to create this
+    Web page using the PNaCl build of Csound follows.</p>
+    <h2>Dunes v 4</h2>
+    <h4>By Michael Gogins</h3>
+    <h4>2015</h4>
+
     <h4>Csound Errors, Warnings, and Messages</h4>
     <textarea class="console" id="console" rows=10 cols=80></textarea>
 
