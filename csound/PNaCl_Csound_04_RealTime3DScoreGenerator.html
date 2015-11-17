@@ -112,7 +112,7 @@
     <td>
     <label for=Camera_X>Camera X</label>
     <td>
-    <input class=persistent-element type=range min=0 max=1 value=.25 id=Camera_X step=.001>
+    <input class=persistent-element type=range min=-100 max=100 value=0  id=Camera_X step=.001>
     <td>
     <output for=Camera_X id=Camera_X>.5</output>
     </tr>
@@ -120,7 +120,7 @@
     <td>
     <label for=Camera_Y>Camera Y</label>
     <td>
-    <input class=persistent-element type=range min=0 max=1 value=.25 id=Camera_Y step=.001>
+    <input class=persistent-element type=range min=-100 max=100 value=0 id=Camera_Y step=.1>
     <td>
     <output for=Camera_Y id=Camera_Y>.5</output>
     </tr>
@@ -128,7 +128,7 @@
     <td>
     <label for=Scene_speed>Scene speed</label>
     <td>
-    <input class=persistent-element type=range min=0 max=1 value=.25 id=Scene_speed step=.001>
+    <input class=persistent-element type=range min=0 max=10 value=.25 id=Scene_speed step=.01>
     <td>
     <output for=Scene_speed id=Scene_speed>.5</output>
     </tr>
@@ -136,7 +136,7 @@
     <td>
     <label for=Scene_rotation>Scene rotation</label>
     <td>
-    <input class=persistent-element type=range min=0 max=1 value=.25 id=Scene_rotation step=.001>
+    <input class=persistent-element type=range min=-2 max=2 value=0 id=Scene_rotation step=.01>
     <td>
     <output for=Scene_speed id=Scene_rotation>.5</output>
     </tr>
@@ -913,7 +913,17 @@ endin
         });
         $('input').on('input', function(event) {
             var slider_value = event.target.value;
-            csound.setControlChannel(event.target.id, slider_value);
+            if (event.target.id.startsWith('gk_')) {
+            	csound.setControlChannel(event.target.id, slider_value);
+            } else if (event.target.id == 'Scene_speed') {
+            	
+            } else if (event.target.id == 'Scene_rotation') {
+            	
+            } else if (event.target.id == 'Scene_X') {
+            	
+            } else if (event.taret.id == 'Scene_Y') {
+            	
+            }
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value);
         });
