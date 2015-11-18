@@ -1491,7 +1491,17 @@ endin
         });
         $('input').on('input', function(event) {
             var slider_value = event.target.value;
-            csound.setControlChannel(event.target.id, slider_value);
+            if (event.target.id.startsWith('gk_')) {
+            	csound.setControlChannel(event.target.id, slider_value);
+            } else if (event.target.id == 'Scene_speed') {
+            	speed = slider_value;
+            } else if (event.target.id == 'Scene_rotation') {
+            	rotation = slider_value;
+            } else if (event.target.id == 'Scene_X') {
+            	mouseX = slider.value;
+            } else if (event.taret.id == 'Scene_Y') {
+            	mouseY = sider.value;	
+            }
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value);
         });
