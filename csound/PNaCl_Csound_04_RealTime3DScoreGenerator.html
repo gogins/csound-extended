@@ -25,7 +25,7 @@
         margin-top: -4px;
         border-radius: 10px;
     }
-    table { 
+    table {
         border-width: 10px;
         width: 100%;
     }
@@ -141,7 +141,7 @@
     <output for=Scene_speed id=Scene_rotation_output>0</output>
     </tr>
     <tr>
-    <td>Harmony 
+    <td>Harmony
     <td colspan=2>
     <input class=persistent-element type=button id=harmony_K  value="K">
     <input class=persistent-element type=button id=harmony_Q1 value="Q1">
@@ -305,7 +305,7 @@
     <td id='webgl_cell' width='100%' class='canvas'>
     </td>
     </tr>
-    
+
  </table>
     </form>
     <h1>Csound HTML Tutorial 04</h1>
@@ -922,7 +922,7 @@ endin
             } else if (event.target.id == 'Scene_X') {
             	mouseX = slider.value;
             } else if (event.taret.id == 'Scene_Y') {
-            	mouseY = sider.value;	
+            	mouseY = sider.value;
             }
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value);
@@ -1504,7 +1504,7 @@ endin
             } else if (event.target.id === 'Camera_X') {
             	mouseX = slider_value;
             } else if (event.target.id === 'Camera_Y') {
-            	mouseY = slider_value;	
+            	mouseY = slider_value;
             }
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value.toString());
@@ -1524,35 +1524,35 @@ endin
         });
         $('#harmony_K').on('click', function() {
             chord = chord.K();
-            csound.message('K' + chord.informatiion());
+            csound.message('K():' + chord.information());
         });
         $('#harmony_Q1').on('click', function() {
-            chord = chord.Q(modality, 1);
-            csound.message('Q1' + chord.informatiion());
+            chord = chord.Q(1);
+            csound.message('Q(1, modality):' + chord.information());
         });
         $('#harmony_Q2').on('click', function() {
-            chord = chord.Q(modality, 2);
-            csound.message('Q2' + chord.informatiion());
+            chord = chord.Q(2, modality);
+            csound.message('Q2' + chord.information());
         });
         $('#harmony_Q3').on('click', function() {
-            chord = chord.Q(modality, 3);
-            csound.message('Q3' + chord.informatiion());
+            chord = chord.Q(3, modality);
+            csound.message('Q(3):' + chord.information());
         });
         $('#harmony_J1').on('click', function() {
-            chord = chord.J(2, 1);            
-            csound.message('J2,1' + chord.informatiion());
+            chord = chord.J(2, 1);
+            csound.message('J(2,1):' + chord.information());
         });
         $('#harmony_J2').on('click', function() {
-            chord = chord.J(2, 2);            
-            csound.message('j2,2' + chord.informatiion());
+            chord = chord.J(2, 2);
+            csound.message('j(2,2):' + chord.information());
         });
         $('#harmony_J3').on('click', function() {
-            chord = chord.J(2, 3);            
-            csound.message('J2,3' + chord.informatiion());
+            chord = chord.J(2, 3);
+            csound.message('J(2,3)' + chord.information());
         });
         $('#harmony_D').on('click', function() {
-            chord = chord.T(5);            
-            csound.message('D' + chord.informatiion());
+            chord = chord.T(5);
+            csound.message('D()' + chord.information());
         });
 	// Messages both from the "csound.js" wrapper and from Csound itself are combined in the
 	// "console" text area.
