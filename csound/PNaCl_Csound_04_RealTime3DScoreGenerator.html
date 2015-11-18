@@ -120,7 +120,7 @@
     <td>
     <label for=Camera_Y>Camera Y</label>
     <td>
-    <input class=persistent-element type=range min=-100 max=100 value=0 id=Camera_Y step=.1>
+    <input class=persistent-element type=range min=-100 max=100 value=0 id=Camera_Y step=.001>
     <td>
     <output for=Camera_Y id=Camera_Y>.5</output>
     </tr>
@@ -128,7 +128,7 @@
     <td>
     <label for=Scene_speed>Scene speed</label>
     <td>
-    <input class=persistent-element type=range min=0 max=2 value=.25 id=Scene_speed step=.5>
+    <input class=persistent-element type=range min=0 max=2 value=.25 id=Scene_speed step=.001>
     <td>
     <output for=Scene_speed id=Scene_speed>.5</output>
     </tr>
@@ -1498,9 +1498,9 @@ endin
             } else if (event.target.id === 'Scene_rotation') {
             	rotationSpeed = slider_value;
             } else if (event.target.id === 'Camera_X') {
-            	mouseX = slider.value;
+            	mouseX = slider_value;
             } else if (event.target.id === 'Camera_Y') {
-            	mouseY = sider.value;	
+            	mouseY = slider_value;	
             }
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value);
