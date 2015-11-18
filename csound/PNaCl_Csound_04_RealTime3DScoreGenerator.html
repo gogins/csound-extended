@@ -128,7 +128,7 @@
     <td>
     <label for=Scene_speed>Scene speed</label>
     <td>
-    <input class=persistent-element type=range min=0 max=20 value=5 id=Scene_speed step=.1>
+    <input class=persistent-element type=range min=0 max=20 value=.25 id=Scene_speed step=.5>
     <td>
     <output for=Scene_speed id=Scene_speed>.5</output>
     </tr>
@@ -136,7 +136,7 @@
     <td>
     <label for=Scene_rotation>Scene rotation</label>
     <td>
-    <input class=persistent-element type=range min=-2 max=2 value=0 id=Scene_rotation step=.01>
+    <input class=persistent-element type=range min=-2 max=2 value=0 id=Scene_rotation step=.001>
     <td>
     <output for=Scene_speed id=Scene_rotation>.5</output>
     </tr>
@@ -1490,7 +1490,7 @@ endin
             csound.is_playing = false;
         });
         $('input').on('input', function(event) {
-            var slider_value = event.target.value;
+            var slider_value = parseFloat(event.target.value);
             if (event.target.id.startsWith('gk_')) {
             	csound.setControlChannel(event.target.id, slider_value);
             } else if (event.target.id === 'Scene_speed') {
