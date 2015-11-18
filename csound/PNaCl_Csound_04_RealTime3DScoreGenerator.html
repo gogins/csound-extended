@@ -112,15 +112,15 @@
     <td>
     <label for=Camera_X>Camera X</label>
     <td>
-    <input class=persistent-element type=range min=-100 max=100 value=0  id=Camera_X step=.001>
+    <input class=persistent-element type=range min=-500 max=500 value=0  id=Camera_X step=.001>
     <td>
-    <output for=Camera_X id=Camera_X>.5</output>
+    <output for=Camera_X id=Camera_X_output>.5</output>
     </tr>
     <tr>
     <td>
     <label for=Camera_Y>Camera Y</label>
     <td>
-    <input class=persistent-element type=range min=-100 max=100 value=0 id=Camera_Y step=.001>
+    <input class=persistent-element type=range min=-500 max=500 value=0 id=Camera_Y step=.001>
     <td>
     <output for=Camera_Y id=Camera_Y>.5</output>
     </tr>
@@ -130,7 +130,7 @@
     <td>
     <input class=persistent-element type=range min=0 max=5 value=.25 id=Scene_speed step=.001>
     <td>
-    <output for=Scene_speed id=Scene_speed>.5</output>
+    <output for=Scene_speed id=Scene_speed_output>.5</output>
     </tr>
     <tr>
     <td>
@@ -138,12 +138,12 @@
     <td>
     <input class=persistent-element type=range min=-.5 max=.5 value=0 id=Scene_rotation step=.001>
     <td>
-    <output for=Scene_speed id=Scene_rotation>0</output>
+    <output for=Scene_speed id=Scene_rotation_output>0</output>
     </tr>
     <tr>
     <td>Harmony 
     <td colspan=2>
-    <input class=persistent-element type=button id=harmony_K value="K">
+    <input class=persistent-element type=button id=harmony_K  value="K">
     <input class=persistent-element type=button id=harmony_Q1 value="Q1">
     <input class=persistent-element type=button id=harmony_Q2 value="Q2">
     <input class=persistent-element type=button id=harmony_Q3 value="Q3">
@@ -1154,6 +1154,8 @@ endin
         // 9 instruments across, and 2 or 3 notes per instrument.
         //
         // THis can be used perhaps to detect intersection: https://stemkoski.github.io/Three.js/Collision-Detection.html
+        var chord = ChordSpace.chordForName('GM9');
+        var modality = chord.clone();
         var container = document.getElementById('webgl_cell');
         var velocity_cutoff = 150.;
         var VISUALS_VISIBLE = true;
@@ -1517,6 +1519,38 @@ endin
                 var output_selector = '#' + this.id + '_output';
                 $(output_selector).val(this.value);
             });
+        });
+        $('#harmony_K').on('click', function() {
+            chord = chord.K();
+            csound.message('K' + chord.informatiion());
+        });
+        $('#harmony_Q1').on('click', function() {
+            chord = chord.Q(modality, 1);
+            csound.message('Q1' + chord.informatiion());
+        });
+        $('#harmony_Q2').on('click', function() {
+            chord = chord.Q(modality, 2);
+            csound.message('Q2' + chord.informatiion());
+        });
+        $('#harmony_Q3').on('click', function() {
+            chord = chord.Q(modality, 3);
+            csound.message('Q3' + chord.informatiion());
+        });
+        $('#harmony_J1').on('click', function() {
+            chord = chord.J(2, 1);            
+            csound.message('J2,1' + chord.informatiion());
+        });
+        $('#harmony_J2').on('click', function() {
+            chord = chord.J(2, 2);            
+            csound.message('j2,2' + chord.informatiion());
+        });
+        $('#harmony_J3').on('click', function() {
+            chord = chord.J(2, 3);            
+            csound.message('J2,3' + chord.informatiion());
+        });
+        $('#harmony_D').on('click', function() {
+            chord = chord.T(5);            
+            csound.message('D' + chord.informatiion());
         });
 	// Messages both from the "csound.js" wrapper and from Csound itself are combined in the
 	// "console" text area.
