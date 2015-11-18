@@ -1493,13 +1493,13 @@ endin
             var slider_value = event.target.value;
             if (event.target.id.startsWith('gk_')) {
             	csound.setControlChannel(event.target.id, slider_value);
-            } else if (event.target.id == 'Scene_speed') {
+            } else if (event.target.id === 'Scene_speed') {
             	speed = slider_value;
-            } else if (event.target.id == 'Scene_rotation') {
-            	rotation = slider_value;
-            } else if (event.target.id == 'Scene_X') {
+            } else if (event.target.id === 'Scene_rotation') {
+            	rotationSpeed = slider_value;
+            } else if (event.target.id === 'Scene_X') {
             	mouseX = slider.value;
-            } else if (event.target.id == 'Scene_Y') {
+            } else if (event.target.id === 'Scene_Y') {
             	mouseY = sider.value;	
             }
             var output_selector = '#' + event.target.id + '_output';
