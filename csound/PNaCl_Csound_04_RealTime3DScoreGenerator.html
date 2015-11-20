@@ -931,8 +931,8 @@ t 0 27
         // when objects go past some z deeper than the camera z,
         // create notes. The points will be "thinned" into an array of notes, which will be scheduled.
         // The notes will persist for some fixed duration.
-        function get_note_plane(camera, z) {
-            var note_z = z;
+        function get_note_plane(camera, z_) {
+            var note_z = z_;
             var note_y = Math.tan(camera.fov * Math.PI / 180 * 0.5) * note_z * 2 ;
             var note_x = note_y * camera.aspect;
             return [note_x, note_y];
@@ -941,7 +941,7 @@ t 0 27
         var note_array = null;
         console.log('note_depth:' + note_depth);
         function createNotes(scene) {
-            var note_plane  = get_note_plane(camera, note_depth);
+            var note_plane = get_note_plane(camera, LEVEL_DEPTH);
             var note_array = math.zeros(5, 60);
             for ( i = 0; i < scene.objects.length; i++ ) {
                 var scene_object = scene.objects[i];
