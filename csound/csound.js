@@ -37,7 +37,7 @@ var csound = (function() {
     var csoundhook = document.getElementById('engine');
     csoundhook.appendChild(model);
   }
-  
+
   /**
    * Attaches handlers for events
    */
@@ -128,7 +128,7 @@ var csound = (function() {
   /**
    * handles messages by passing them to the window handler
    *
-   * @param {Event} event A message event. 
+   * @param {Event} event A message event.
    *                message_event.data contains
    *                the data sent from the csound module.
    */
@@ -144,7 +144,7 @@ var csound = (function() {
           csoundhook.removeEventListener('message', handleMessage, true);
           csoundhook.addEventListener('message', handleTableMessage, true);
 	}
-       else 
+       else
        window.handleMessage(event);
       return;
     }
@@ -165,7 +165,7 @@ var csound = (function() {
         if(fieldType == 'div') {
         statusText += " <br>";
         if(!keep) statusField.innerHTML = statusText ;
-            else 
+            else
              statusField.innerHTML += statusText;
 	} else {
 	if(!keep) statusField.value = statusText;
@@ -179,7 +179,7 @@ var csound = (function() {
    */
   function Play() {
     csound.module.postMessage('playCsound');
-  } 
+  }
 
   /**
    * Pauses audio playback
@@ -187,7 +187,7 @@ var csound = (function() {
   function Pause() {
    csound.module.postMessage('pauseCsound');
   }
-  
+
   /**
    * Stops rendering and resets Csound.
    */
@@ -270,14 +270,14 @@ var csound = (function() {
 	var mess3 = ':' + byte3;
         csound.module.postMessage(mess1+mess2+mess3);
     }
-    
+
    /**
    * Sends in a MIDI NOTEOFF message to Csound MIDI system
    *
    * @param {number} channel MIDI channel (1-16)
    * @param {number} number MIDI note (0-127)
    * @param {number} velocity MIDI velocity (0-127)
-   */ 
+   */
     function NoteOff(channel,number,velocity){
        if(channel > 0 && channel < 17)
 	csound.MIDIin(127+channel,number,velocity);
@@ -301,45 +301,45 @@ var csound = (function() {
    * @param {number} channel MIDI channel (1-16)
    * @param {number} number MIDI note (0-127)
    * @param {number} aftertouch MIDI aftertouch (0-127)
-   */ 
+   */
     function PolyAftertouch(channel,number,aftertouch){
        if(channel > 0 && channel < 17)
 	csound.MIDIin(160+channel,number,aftertouch);
     }
-   
+
    /**
    * Sends in a MIDI CONTROLCHANGE message to Csound MIDI system
    *
    * @param {number} channel MIDI channel (1-16)
    * @param {number} control MIDI cc number (0-127)
    * @param {number} amount  cc amount change (0-127)
-   */ 
+   */
     function ControlChange(channel,control,amount){
        if(channel > 0 && channel < 17)
 	  csound.MIDIin(176+channel,control,amount);
     }
-    
+
    /**
    * Sends in a MIDI PROGRAMCHANGE message to Csound MIDI system
    *
    * @param {number} channel MIDI channel (1-16)
    * @param {number} number MIDI pgm number (0-127)
-   */ 
+   */
     function ProgramChange(channel,control){
        if(channel > 0 && channel < 17)
 	  csound.MIDIin(192+channel,control,0);
     }
-    
+
    /**
    * Sends in a MIDI MONOAFT message to Csound MIDI system
    *
    * @param {number} channel MIDI channel (1-16)
    * @param {number} amount  aftertouch amount (0-127)
-   */ 
+   */
     function Aftertouch(channel,amount){
        if(channel > 0 && channel < 17)
 	  csound.MIDIin(208+channel,amount,0);
-    }    
+    }
 
    /**
    * Sends in a MIDI PITCHBEND message to Csound MIDI system
@@ -347,13 +347,13 @@ var csound = (function() {
    * @param {number} channel MIDI channel (1-16)
    * @param {number} fine fine PB amount (LSB) (0-127)
    * @param {number} coarse coarse PB amount (MSB) (0-127)
-   */ 
+   */
     function PitchBend(channel,fine,coarse){
        if(channel > 0 && channel < 17)
 	   csound.MIDIin(224+channel,fine,coarse);
     }
 
-    
+
   /**
    * Sets the value of a table position
    *
@@ -404,7 +404,7 @@ var csound = (function() {
     var ident = 'copyToLocal:' + src + '#';
      csound.module.postMessage(ident + dest);
    }
- 
+
   /**
    * Copies a URL file to local/. (not persistent)
    *
@@ -461,7 +461,7 @@ var csound = (function() {
         csound.logMessage("Input audio error: " + e);
    }
    function message(text) {
-       csound.logMessage(text);
+       updateStatus(text);
    }
 
   /**
@@ -469,7 +469,7 @@ var csound = (function() {
    *
    */
     function StartInputAudio() {
-     var constraints = {audio:  { mandatory: { echoCancellation: false }}}	
+     var constraints = {audio:  { mandatory: { echoCancellation: false }}}
      navigator.webkitGetUserMedia(constraints,input_ok,input_fail);
    }
 
