@@ -429,7 +429,7 @@ iamp = ampdb(ivelocity)
 iattack = 1
 idecay = 2
 isustain = p3 - 3
-p3 = iattack + isustain + idecay
+; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 if kwaveform == 0 then
@@ -466,7 +466,7 @@ iamp = ampdb(ivelocity) * 200
 iattack = gi_Bower_overlap
 idecay = gi_Bower_overlap
 isustain = p3 - gi_Bower_overlap
-p3 = iattack + isustain + idecay
+; ; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 kamp = kenvelope
@@ -505,7 +505,7 @@ iamp = ampdb(ivelocity) * 8
 iattack = gi_Phaser_overlap
 idecay = gi_Phaser_overlap
 isustain = p3 - gi_Phaser_overlap
-p3 = iattack + isustain + idecay
+; ; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 khertz = ihertz
@@ -540,7 +540,7 @@ iamp = ampdb(ivelocity)
 iattack = 1
 idecay = 1
 isustain = p3
-p3 = iattack + isustain + idecay
+; ; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 icps = ihertz
@@ -596,7 +596,7 @@ iamp = ampdb(ivelocity) * 4
 iattack = .6
 idecay = .7
 isustain = p3
-p3 = iattack + isustain + idecay
+; ; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 asignal buzz kenvelope, ihertz, gk_Buzzer_harmonics, gi_Buzzer_sine
@@ -628,7 +628,7 @@ iamp = ampdb(ivelocity) * 4
 iattack = gi_Shiner_overlap
 idecay = gi_Shiner_overlap
 isustain = p3 - gi_Shiner_overlap
-p3 = iattack + isustain + idecay
+; ; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 asignal vco2 kenvelope * 4, ihertz, 12
@@ -704,7 +704,7 @@ igdur = 0.2
 iattack = .8
 idecay = 1.5
 isustain = p3
-p3 = iattack + isustain + idecay
+; p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
 kamp = kenvelope
