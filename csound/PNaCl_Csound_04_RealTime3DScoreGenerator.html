@@ -1167,16 +1167,25 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.message('Q(3):' + chord.information());
         });
         $('#harmony_J1').on('click', function() {
-            chord = chord.J(2, 1);
-            csound.message('J(2,1):' + chord.information());
-        });
+            var chords = chord.J(2);
+            if (chords.size > 0) {
+            	chord = chords[0];
+            	csound.message('J(2,1):' + chord.information());
+           }
+         });
         $('#harmony_J2').on('click', function() {
-            chord = chord.J(2, 2);
-            csound.message('j(2,2):' + chord.information());
+            var chords = chord.J(2);
+            if (chords.size > 1) {
+            	chord = chords[1];
+            	csound.message('J(2,1):' + chord.information());
+           }
         });
         $('#harmony_J3').on('click', function() {
-            chord = chord.J(2, 3);
-            csound.message('J(2,3)' + chord.information());
+            var chords = chord.J(2);
+            if (chords.size > 2) {
+            	chord = chords[2];
+            	csound.message('J(2,1):' + chord.information());
+           }
         });
         $('#harmony_D').on('click', function() {
             chord = chord.T(5);
