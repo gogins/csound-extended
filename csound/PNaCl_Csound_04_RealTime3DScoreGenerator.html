@@ -753,12 +753,12 @@ chnmix aout_right, "reverb_out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gk_MasterOutput_gain init .00003
+gk_MasterOutput_gain init .000005
 instr MasterOutput
 ain_left chnget "reverb_out_left"
 ain_right chnget "reverb_out_right"
-aout_left = ain_left * gk_MasterOutput_gain * .00001
-aout_right = ain_right * gk_MasterOutput_gain * .00001
+aout_left = ain_left * gk_MasterOutput_gain * .000001
+aout_right = ain_right * gk_MasterOutput_gain * .000001
 outs aout_left, aout_right
 prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
@@ -1168,23 +1168,23 @@ scoreline_i "i \"Clear\" 0 -1"
         });
         $('#harmony_J1').on('click', function() {
             var chords = chord.J(2);
-            if (chords.size > 0) {
+            if (chords.length > 0) {
             	chord = chords[0];
             	csound.message('J(2,1):' + chord.information());
            }
          });
         $('#harmony_J2').on('click', function() {
             var chords = chord.J(2);
-            if (chords.size > 1) {
+            if (chords.length > 1) {
             	chord = chords[1];
-            	csound.message('J(2,1):' + chord.information());
+            	csound.message('J(2,2):' + chord.information());
            }
         });
         $('#harmony_J3').on('click', function() {
             var chords = chord.J(2);
-            if (chords.size > 2) {
+            if (chords.length > 2) {
             	chord = chords[2];
-            	csound.message('J(2,1):' + chord.information());
+            	csound.message('J(2,3):' + chord.information());
            }
         });
         $('#harmony_D').on('click', function() {
