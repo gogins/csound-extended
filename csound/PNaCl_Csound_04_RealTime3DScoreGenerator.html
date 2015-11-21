@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!--
+    TODO:
+
+    Note durations must match tempo of evolution.
+    Need some more percussive instruments.
+    Get rid of initial score.
+    -->
     <title>Csound HTML Tutorial 04</title>
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1"></head>
@@ -764,30 +771,6 @@ scoreline_i "i \"Clear\" 0 -1"
     </textarea>
     <h4>Csound Score</h4>
     <textarea class="code" id="sco" rows=24 cols=80>
-; Change the tempo, if you like.
-t 0 27
-
-; p1 p2 p3 p4 p5 p6 p7 p8
-; insno onset duration fundamental numerator denominator velocity pan
-
-; C E B
-; [numerator/denominator*fundamental*octave]
-;i 101   0 60 [ 1 /  1 * 60 * 1] 60 [-1 + 3 / 2]
-;i 101   0 60 [ 5 /  4 * 60 * 2] 60 [-1 + 2 / 2]
-;i 101   0 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
-; C Ab E B
-;i 104  30 30 [ 8 /  5 * 60 * 1] 60 [-1 + 2 / 2]
-; G F# B
-;i 102  60 60 [ 3 /  2 * 60 * 1] 60 [-1 + 3 / 2]
-;i 102  60 60 [45 / 32 * 60 * 2] 60 [-1 + 2 / 2]
-;i 102  60 30 [28 / 15 * 60 * 3] 60 [-1 + 1 / 2]
-; G F B
-;i 102  90 30 [ 4 / 3 * 60 * 3] 60 [-1 + 2 / 2]
-; C E B
-;i 103 120 60 [ 1 /  1 * 60 * 1] 60 [-1 + 1 / 2]
-;i 103 120 60 [ 5 /  4 * 60 * 2] 60 [-1 + 3 / 2]
-;i 104 120 30 [28 / 15 * 60 * 2] 60 [-1 + 2 / 2]
-;i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     </textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script type="text/javascript" src="js/sprintf.js"></script>
@@ -915,7 +898,7 @@ t 0 27
             renderer = new THREE.WebGLRenderer( { clearColor: 0x000000, clearAlpha: 1, antialias: false } );
             renderer.setSize( container.clientWidth, container.clientHeight );
             container.appendChild( renderer.domElement );
-             window.addEventListener( 'resize', onWindowResize, false );
+            window.addEventListener( 'resize', onWindowResize, false );
             // Schedule orbit regeneration
             setInterval(updateOrbit, 7000);
         }
@@ -952,17 +935,21 @@ t 0 27
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
                             if (value >= velocity_cutoff && csound.is_playing === true) {
-				scene_object.geometry.colors[j] = new THREE.Color( 0xffffff );
+                                scene_object.geometry.colors[j] = new THREE.Color( 0xffffff );
                             }
                         }
                     };
-                    var score = '';
+                    var score = ''
+                    score += 'turnoff2 101 0\n';
+                    score += 'turnoff2 102 0\n';
+                    score += 'turnoff2 103 0\n';
+                    score += 'turnoff2 104 0\n';
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 100 + index[0];
                             var keyno = index[1];
                             keyno = ChordSpace.conformPitchToChord(keyno, chord, false);
-                            score += ('i ' + insno + ' 0 1 ' + keyno + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' 0 -1 ' + keyno + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
