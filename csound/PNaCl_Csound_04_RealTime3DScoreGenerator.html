@@ -385,11 +385,11 @@ ipan = p6
 event_i "i", "Blower", 0, iduration, ikey, ivelocity, 0, ipan
 endin
 
-instr 500
-turnoff2 101 0
-turnoff2 102 0
-turnoff2 103 0
-turnoff2 104 0
+instr 150
+turnoff2 101 0 1
+turnoff2 102 0 1
+turnoff2 103 0 1
+turnoff2 104 0 1
 endin
 
 gi_Droner_overlap init 20
@@ -947,7 +947,7 @@ scoreline_i "i \"Clear\" 0 -1"
                         }
                     };
                     var score = ''
-                    score += 'i 500 0 .1\n';
+                    score += 'i 150 0 .1\n';
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 100 + index[0];
