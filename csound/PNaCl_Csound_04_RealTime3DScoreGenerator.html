@@ -143,7 +143,7 @@
     <td>
     <label for=Scene_rotation>Scene rotation</label>
     <td>
-    <input class=persistent-element type=range min=-1 max=1 value=0 id=Scene_rotation step=.001>
+    <input class=persistent-element type=range min=-.1 max=.1 value=0 id=Scene_rotation step=.001>
     <td>
     <output for=Scene_rotation id=Scene_rotation_output>0</output>
     </tr>
@@ -430,7 +430,7 @@ iattack = 1
 idecay = 2
 isustain = p3 - 3
 ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 if kwaveform == 0 then
 asignal poscil3 1, ihertz, gi_Droner_sine
@@ -467,7 +467,7 @@ iattack = gi_Bower_overlap
 idecay = gi_Bower_overlap
 isustain = p3 - gi_Bower_overlap
 ; ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 kamp = kenvelope
 kfreq = ihertz
@@ -506,7 +506,7 @@ iattack = gi_Phaser_overlap
 idecay = gi_Phaser_overlap
 isustain = p3 - gi_Phaser_overlap
 ; ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 khertz = ihertz
 ifunction1 = gi_Phaser_sine
@@ -541,7 +541,7 @@ iattack = 1
 idecay = 1
 isustain = p3
 ; ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 icps = ihertz
 kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
@@ -597,7 +597,7 @@ iattack = .6
 idecay = .7
 isustain = p3
 ; ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 asignal buzz kenvelope, ihertz, gk_Buzzer_harmonics, gi_Buzzer_sine
 asignal = asignal * 3
@@ -629,7 +629,7 @@ iattack = gi_Shiner_overlap
 idecay = gi_Shiner_overlap
 isustain = p3 - gi_Shiner_overlap
 ; ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 asignal vco2 kenvelope * 4, ihertz, 12
 aleft, aright pan2 asignal, ipan
@@ -705,7 +705,7 @@ iattack = .8
 idecay = 1.5
 isustain = p3
 ; p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
 kamp = kenvelope
 ; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
