@@ -392,7 +392,7 @@ turnoff2 "Sweeper", 0, 1
 turnoff2 "Blower", 0, 1
 endin
 
-gi_Droner_overlap init 20
+gi_Droner_overlap init .01
 gk_Droner_distort_factor init 0.4
 gk_Droner_first_harmonic init 0.4
 gk_Droner_slider1 init .05
@@ -452,7 +452,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Bower_overlap init 20
+gi_Bower_overlap init .01
 gi_Bower_sine ftgen 0,0,65536,10,1
 instr Bower
 insno = p1
@@ -487,7 +487,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Phaser_overlap init 20
+gi_Phaser_overlap init .01
 gk_Phaser_ratio1 init 1
 gk_Phaser_ratio2 init 1/3
 gk_Phaser_index1 init 1
@@ -521,7 +521,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Sweeper_overlap init 20
+gi_Sweeper_overlap init .01
 gk_Sweeper_britel init 0
 gk_Sweeper_briteh init 2.9
 gk_Sweeper_britels init .2 / 3
@@ -579,7 +579,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Buzzer_overlap init 20
+gi_Buzzer_overlap init .01
 gk_Buzzer_harmonics init 2
 gk_Buzzer_distort_factor init 0.4
 gk_Buzzer_first_harmonic init 0.4
@@ -610,7 +610,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Shiner_overlap init 20
+gi_Shiner_overlap init .01
 gk_Shiner_harmonics init 5
 gk_Shiner_harmonics init 2
 gk_Shiner_distort_factor init 0.4
@@ -641,7 +641,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Blower_overlap init 20
+gi_Blower_overlap init .01
 gk_Blower_grainDensity init 150
 gk_Blower_grainDuration init 0.2
 gk_Blower_grainAmplitudeRange init 100
