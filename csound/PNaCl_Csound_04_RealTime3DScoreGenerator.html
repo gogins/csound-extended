@@ -387,7 +387,7 @@ endin
 
 instr 150
 turnoff2 "Droner", 0, 1
-turnoff2 "Blower", 0, 1
+turnoff2 "Buzzer", 0, 1
 turnoff2 "Sweeper", 0, 1
 turnoff2 "Blower", 0, 1
 endin
@@ -426,9 +426,9 @@ k6 = gk_Droner_slider4
 k7 = gk_Droner_slider5
 kwaveform init 0
 iamp = ampdb(ivelocity)
-iattack = gi_Droner_overlap
-idecay = gi_Droner_overlap
-isustain = p3 - gi_Droner_overlap
+iattack = 1
+idecay = 2
+isustain = p3 - 3
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
@@ -537,9 +537,9 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity)
-iattack = gi_Sweeper_overlap
-idecay = gi_Sweeper_overlap
-isustain = p3 - gi_Sweeper_overlap
+iattack = 1
+idecay = 1
+isustain = p3
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
@@ -593,9 +593,9 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity) * 4
-iattack = gi_Buzzer_overlap
-idecay = gi_Buzzer_overlap
-isustain = p3 - gi_Buzzer_overlap
+iattack = .6
+idecay = .7
+isustain = p3
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
@@ -701,9 +701,9 @@ ifrng = ip8
 idens = ip9
 ifade = ip10
 igdur = 0.2
-iattack = gi_Blower_overlap
-idecay = gi_Blower_overlap
-isustain = p3 - gi_Blower_overlap
+iattack = .8
+idecay = 1.5
+isustain = p3
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
