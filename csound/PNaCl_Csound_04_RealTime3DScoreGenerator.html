@@ -105,7 +105,7 @@
 <body>
     <form id='persist'>
 
-    <table style="width="100%;">
+    <table style="width=100%;">
     <col width="25%">
     <col width="75%">
     <tr>
@@ -119,7 +119,7 @@
     <td>
     <label for=Camera_X>Camera X</label>
     <td>
-    <input class=persistent-element type=range min=-500 max=500 value=0  id=Camera_X step=.001>
+    <input class=persistent-element type=range min=-500 max=500 value=0  id=Camera_X step=1>
     <td>
     <output for=Camera_X id=Camera_X_output>.5</output>
     </tr>
@@ -127,7 +127,7 @@
     <td>
     <label for=Camera_Y>Camera Y</label>
     <td>
-    <input class=persistent-element type=range min=-500 max=500 value=0 id=Camera_Y step=.001>
+    <input class=persistent-element type=range min=-500 max=500 value=0 id=Camera_Y step=1>
     <td>
     <output for=Camera_Y id=Camera_Y_output>.5</output>
     </tr>
@@ -135,7 +135,7 @@
     <td>
     <label for=Scene_speed>Scene speed</label>
     <td>
-    <input class=persistent-element type=range min=0 max=1 value=.25 id=Scene_speed step=.001>
+    <input class=persistent-element type=range min=0 max=100 value=25 id=Scene_speed step=1>
     <td>
     <output for=Scene_speed id=Scene_speed_output>.5</output>
     </tr>
@@ -143,7 +143,7 @@
     <td>
     <label for=Scene_rotation>Scene rotation</label>
     <td>
-    <input class=persistent-element type=range min=-1 max=1 value=0 id=Scene_rotation step=.001>
+    <input class=persistent-element type=range min=-100 max=100 value=0 id=Scene_rotation step=1>
     <td>
     <output for=Scene_rotation id=Scene_rotation_output>0</output>
     </tr>
@@ -1125,9 +1125,9 @@ scoreline_i "i \"Clear\" 0 -1"
             if (event.target.id.startsWith('gk_')) {
             	csound.setControlChannel(event.target.id, slider_value);
             } else if (event.target.id === 'Scene_speed') {
-            	speed = slider_value;
+            	speed = slider_value * .001;
             } else if (event.target.id === 'Scene_rotation') {
-            	rotationSpeed = slider_value;
+            	rotationSpeed = slider_value * .001;
             } else if (event.target.id === 'Camera_X') {
             	mouseX = slider_value;
             } else if (event.target.id === 'Camera_Y') {
