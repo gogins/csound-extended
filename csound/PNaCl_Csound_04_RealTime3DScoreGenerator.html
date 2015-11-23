@@ -110,7 +110,7 @@
     <col style="width=75%;">
     <tr>
     <td>
-    <table width="100%">
+    <table style="width=100%;">
     <col style="width=25%;">
     <col style="width=50%;">
     <col style="width=25%;">
@@ -2363,50 +2363,3 @@ scoreline_i "i \"Clear\" 0 -1"
 </body>
 </html>
 
-            csound.message('Q(1, modality):' + chord.information());
-        });
-        $('#harmony_Q2').on('click', function() {
-            chord = chord.Q(2, modality);
-            csound.message('Q2' + chord.information());
-        });
-        $('#harmony_Q3').on('click', function() {
-            chord = chord.Q(3, modality);
-            csound.message('Q(3):' + chord.information());
-        });
-        $('#harmony_J1').on('click', function() {
-            var chords = chord.J(2);
-            if (chords.length > 0) {
-            	chord = chords[0];
-            	csound.message('J(2,1):' + chord.information());
-           }
-         });
-        $('#harmony_J2').on('click', function() {
-            var chords = chord.J(2);
-            if (chords.length > 1) {
-            	chord = chords[1];
-            	csound.message('J(2,2):' + chord.information());
-           }
-        });
-        $('#harmony_J3').on('click', function() {
-            var chords = chord.J(2);
-            if (chords.length > 2) {
-            	chord = chords[2];
-            	csound.message('J(2,3):' + chord.information());
-           }
-        });
-        $('#harmony_D').on('click', function() {
-            chord = chord.T(5);
-            csound.message('D()' + chord.information());
-        });
-	// Messages both from the "csound.js" wrapper and from Csound itself are combined in the
-	// "console" text area.
-	function handleMessage(message) {
-	    var messages_textarea = document.getElementById("console");
-	    var existing = messages_textarea.value;
-	    messages_textarea.value = existing + message.data;
-	    messages_textarea.scrollTop = messages_textarea.scrollHeight;
-	};
-    //  });
-    </script>
-</body>
-</html>
