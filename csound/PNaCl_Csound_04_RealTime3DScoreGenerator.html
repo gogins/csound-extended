@@ -379,9 +379,13 @@
     <td id='webgl_cell' class='canvas'>
     </td>
     </tr>
+    <tr>
+    	<td style="span:2;">
+    	<textarea class="console" id="console" rows=10 style="width:100%;"></textarea>
+    	</td>
+    </tr>
  </table>
     </form>
-    <textarea class="console" id="console" rows=10 style="width:100%;"></textarea>
     <h1>Csound HTML Tutorial 04</h1>
     <h2>Dunes v 4</h2>
     <h3>By Michael Gogins</h3>
@@ -1178,7 +1182,6 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.perform();
             $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
-            csound.readScore(document.getElementById('sco').value);
             csound.is_playing = true;
         });
         $('#stop').on('click', function() {
