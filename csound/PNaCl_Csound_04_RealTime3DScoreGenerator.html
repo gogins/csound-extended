@@ -142,7 +142,7 @@
     <label for=Scene_speed>Scene speed</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=0 max=1000 value=25 id=Scene_speed step=1>
+    <input class=persistent-element type=range min=0 max=10 value=25 id=Scene_speed step=0.01>
     <td>
     <output for=Scene_speed id=Scene_speed_output>.5</output>
     </td>
@@ -152,7 +152,7 @@
     <label for=Scene_rotation>Scene rotation</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=-100 max=1000 value=0 id=Scene_rotation step=1>
+    <input class=persistent-element type=range min=-1 max=1 value=0 id=Scene_rotation step=0.01>
     <td>
     <output for=Scene_rotation id=Scene_rotation_output>0</output>
     </td>
@@ -180,7 +180,7 @@
     <label for=gk_Droner_slider1>gk_Droner_slider1</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=0 max=100 value=25 id=gk_Droner_slider1 step=1>
+    <input class=persistent-element type=range min=0 max=1 value=0.5 id=gk_Droner_slider1 step=0.01>
     <td>
     <output for=gk_Droner_slider1 id=gk_Droner_slider1_output>50</output>
     </tr>
@@ -189,7 +189,7 @@
     <label for=gk_Droner_slider2>gk_Droner_slider2</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=0 max=100 value=50 id=gk_Droner_slider2 step=1>
+    <input class=persistent-element type=range min=0 max=1 value=0.5 id=gk_Droner_slider2 step=0.01>
     </td>
     <td>
     <output for=gk_Droner_slider2 id=gk_Droner_slider2_output>50</output>
@@ -200,7 +200,7 @@
     <label for=gk_Droner_slider3>gk_Droner_slider3</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=0 max=100 value=75 id=gk_Droner_slider3 step=1>
+    <input class=persistent-element type=range min=0 max=1 value=0.5 id=gk_Droner_slider3 step=0.01>
     </td>
     <td>
     <output for=gk_Droner_slider3 id=gk_Droner_slider3_output>50</output>
@@ -210,7 +210,7 @@
     <label for=gk_Droner_slider4>gk_Droner_slider4</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=0 max=100 value=50 id=gk_Droner_slider4 step=1>
+    <input class=persistent-element type=range min=0 max=1 value=0.5 id=gk_Droner_slider4 step=0.01>
     </td>
     <td>
     <output for=gk_Droner_slider4 id=gk_Droner_slider4_output>.5</output>
@@ -221,7 +221,7 @@
     <label for=gk_Droner_slider5>gk_Droner_slider5</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=0 max=100 value=12 id=gk_Droner_slider5 step=1>
+    <input class=persistent-element type=range min=0 max=1 value=0.5 id=gk_Droner_slider5 step=0.01>
     </td>
     <td>
     <output for=gk_Droner_slider5 id=gk_Droner_slider5_output>.5</output>
@@ -1190,9 +1190,9 @@ scoreline_i "i \"Clear\" 0 -1"
             if (event.target.id.startsWith('gk_')) {
             	csound.setControlChannel(event.target.id, slider_value);
             } else if (event.target.id === 'Scene_speed') {
-            	speed = slider_value * .001;
+            	speed = slider_value;
             } else if (event.target.id === 'Scene_rotation') {
-            	rotationSpeed = slider_value * .001;
+            	rotationSpeed = slider_value;
             } else if (event.target.id === 'Camera_X') {
             	mouseX = slider_value;
             } else if (event.target.id === 'Camera_Y') {
