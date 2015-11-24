@@ -1186,7 +1186,7 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.is_playing = false;
         });
         $('input').on('input', function(event) {
-            var slider_value = parseFloat(event.target.value) * .01;
+            var slider_value = parseFloat(event.target.value);
             if (event.target.id.startsWith('gk_')) {
             	csound.setControlChannel(event.target.id, slider_value);
             } else if (event.target.id === 'Scene_speed') {
