@@ -161,14 +161,14 @@
     <th style="span:3;text-align:left;">Harmony</th>
     </tr>
     <td style="span:3;">
-    <input type=button id=harmony_K  value=" K  ">
-    <input type=button id=harmony_Q1 value=" Q1 ">
-    <input type=button id=harmony_Q2 value=" Q2 ">
-    <input type=button id=harmony_Q3 value=" Q3 ">
-    <input type=button id=harmony_J1 value=" J1 ">
-    <input type=button id=harmony_J2 value=" J2 ">
-    <input type=button id=harmony_J3 value=" J3 ">
-    <input  type=button id=harmony_D value=" D  ">
+    <input type=button id=harmony_K  value="K ">
+    <input type=button id=harmony_Q1 value="Q1">
+    <input type=button id=harmony_Q2 value="Q2">
+    <input type=button id=harmony_Q3 value="Q3">
+    <input type=button id=harmony_J1 value="J1">
+    <input type=button id=harmony_J2 value="J2">
+    <input type=button id=harmony_J3 value="J3">
+    <input  type=button id=harmony_D value="D ">
     </td>
     </tr>
 
@@ -381,10 +381,10 @@
     </tr>
  </table>
  <table style="width:100%;">
-    <col style="width:auto;">
+    <col style="width:100%;">
     <tr>
     	<td>
-    	<textarea class="console" id="console" rows=10 style="width:auto;"></textarea>
+    	<textarea class="console" id="console" rows=10 style="width:inherit;"></textarea>
     	</td>
     </tr>
  </table>
@@ -1185,6 +1185,7 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.perform();
             $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
+            csound.compileSco('i z');
             csound.is_playing = true;
         });
         $('#stop').on('click', function() {
