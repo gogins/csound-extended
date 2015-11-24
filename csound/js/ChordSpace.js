@@ -1522,11 +1522,11 @@ Chord.prototype.K = function(range) {
 // Returns whether the chord is a transpositional form of Y with interval size g.
 // Only works in equal temperament.
 // FIXME: Check this in Lua and C++.
-Chord.prototype.Tform = function(Y, g) {
+Chord.prototype.Tform = function(Y_, g) {
     var eopx = this.eOP();
     var i = 0;
     while (i < ChordSpace.OCTAVE) {
-        var ty = Y.T(i);
+        var ty = Y_.T(i);
         var eopty = ty.eOP();
         if (eopx.eq_epsilon(eopty) === true) {
             return true;
