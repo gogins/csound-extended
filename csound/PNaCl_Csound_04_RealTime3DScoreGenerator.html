@@ -1185,7 +1185,7 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.perform();
             $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
-            csound.compileSco('i z');
+            csound.compileSco('f 0 600\n');
             csound.is_playing = true;
         });
         $('#stop').on('click', function() {
