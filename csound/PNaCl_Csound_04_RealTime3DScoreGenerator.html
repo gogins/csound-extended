@@ -105,15 +105,15 @@
 <body>
     <form id='persist'>
 
-    <table style="width=100%;layout='fixed'">
-    <col style="width=25%;">
-    <col style="width=75%;">
+    <table style="width=100%;">
+    <col>
+    <col>
     <tr>
     <td>
     <table>
-    <col style="width=25%;">
-    <col style="width=50%;">
-    <col style="width=25%;">
+    <col>
+    <col>
+    <col>
     <tr>
     <th colspan=3 style="align='left';">Scene</th>
     </tr>
@@ -844,9 +844,6 @@ scoreline_i "i \"Reverb\" 0 -1"
 scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
     </textarea>
-    <h4>Csound Score</h4>
-    <textarea class="code" id="sco" rows=24 cols=80>
-    </textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script type="text/javascript" src="js/sprintf.js"></script>
     <script type="text/javascript" src="js/Silencio.js"></script>
@@ -1268,7 +1265,6 @@ scoreline_i "i \"Clear\" 0 -1"
 	};
     //  });
     </script>
-    <script type="text/javascript" src="csound.js"></script>
     <!--The PNaCl csound module must be the very last element in the body,
         because the "csound.js" script attaches the Csound module and its
         callbacks to that element. -->
