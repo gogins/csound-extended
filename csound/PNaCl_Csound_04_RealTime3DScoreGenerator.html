@@ -421,10 +421,11 @@ endop
 
 
 instr 1
-turnoff2 "Droner", 0, 1
-turnoff2 "Buzzer", 0, 1
-turnoff2 "Sweeper", 0, 1
-turnoff2 "Blower", 0, 1
+turnoff2 2, 0, 1
+turnoff2 3, 0, 1
+turnoff2 4, 0, 1
+turnoff2 5, 0, 1
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
 gi_Droner_overlap init .01
