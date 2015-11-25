@@ -4,7 +4,7 @@
     <!--
     TODO:
 
-    Note durations must match tempo of evolution.
+    Make score generation more efficient, thinner texture.
     Need some more percussive instruments.
     -->
     <title>Csound HTML Tutorial 04</title>
@@ -847,6 +847,7 @@ scoreline_i "i \"Clear\" 0 -1"
         var modality = chord.clone();
         var RANGE = 72;
         var BASS = 30;
+        var INSTRUMENTS = 4;
         var container = document.getElementById('webgl_cell');
         var velocity_cutoff = 150.;
         var VISUALS_VISIBLE = true;
@@ -962,6 +963,9 @@ scoreline_i "i \"Clear\" 0 -1"
         var note_depth = LEVEL_DEPTH;
         var note_array = null;
         console.log('note_depth:' + note_depth);
+        function generateNotes() {
+            
+        }
         function createNotes(scene) {
             var note_plane = get_note_plane(camera, LEVEL_DEPTH);
             var note_array = math.zeros(5, RANGE);
@@ -1091,7 +1095,14 @@ scoreline_i "i \"Clear\" 0 -1"
             orbit.scaleX = scaleX;
             orbit.scaleY = scaleY;
             // Normalize and update vertex data.
+            // Generate a more interesting score here. Start with scaling.
             console.log('Normalizing and updating vertices.')
+            var translateKey = - yMin;
+            var scaleKey = RANGE / (yMax - yMin);
+            var translateInstrument = - xMin;
+            var scaleInstrument = INSTRUMENTS / (xMax - xMin);
+            console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
+            console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = subsets[s];
                 for (var i = 0; i < num_points_subset_l; i++){
