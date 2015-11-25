@@ -983,9 +983,9 @@ scoreline_i "i \"Clear\" 0 -1"
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 1 + index[0];
-                            var 24.0 + keyno = index[1];
+                            var keyno = 24.0 + index[1];
                             keyno = ChordSpace.conformPitchToChord(keyno, chord, false);
-                            score += ('i ' + insno + ' 0 40 ' + keyno + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' 0.1 40 ' + keyno + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
