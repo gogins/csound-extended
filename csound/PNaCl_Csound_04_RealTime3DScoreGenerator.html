@@ -1059,9 +1059,9 @@ scoreline_i "i \"Clear\" 0 -1"
             var velocity = 60.0;
             var pan = 0.0;
             // There are far too many points, the notes must be thinned out somehow
-            // that makes sense.
+            // that makes musical and dramatic sense.
             for (var s = 0; s < NUM_SUBSETS; s++){
-                var curSubset = subsets[s];
+                var curSubset = orbit.subsets[s];
                 for (var i = 0; i < NUM_POINTS_SUBSET; i++){
                     time = time + timestep;
                     instrument = Math.floor(scaleInstrument * curSubset[i].x + translateInstrument);
