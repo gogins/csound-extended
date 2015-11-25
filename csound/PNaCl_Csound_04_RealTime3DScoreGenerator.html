@@ -1019,13 +1019,13 @@ scoreline_i "i \"Clear\" 0 -1"
                         }
                     };
                     var score = ''
-                    score += 'i 150 0 .1\n';
+                    score += 'i 150 0 0\n';
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 100 + index[0];
                             var keyno = index[1];
                             keyno = ChordSpace.conformPitchToChord(keyno, chord, false);
-                            score += ('i ' + insno + ' .1 100 ' + keyno + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' .25 100 ' + keyno + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
