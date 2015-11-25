@@ -1014,7 +1014,7 @@ scoreline_i "i \"Clear\" 0 -1"
                 if (camera.position.y >  CAMERA_BOUND) camera.position.y = CAMERA_BOUND;
             }
             camera.lookAt( scene.position );
-            createNotes(scene);
+            //createNotes(scene);
             for( i = 0; i < scene.objects.length; i++ ) {
                 scene.objects[i].position.z +=  speed;
                 scene.objects[i].rotation.z += rotationSpeed * .1;
@@ -1053,7 +1053,7 @@ scoreline_i "i \"Clear\" 0 -1"
             var instrument = 0.0;
             var time = 0.0;
             var timestep = 1.0 / 32.0;
-            // TODO: Make this some factor of speed.
+            // TODO: Make this some function of speed.
             var duration = 4.0;
             var key = 0.0;
             var velocity = 60.0;
