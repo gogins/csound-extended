@@ -844,6 +844,8 @@ scoreline_i "i \"Clear\" 0 -1"
         // THis can be used perhaps to detect intersection: https://stemkoski.github.io/Three.js/Collision-Detection.html
         var chord = ChordSpace.chordForName('GM9');
         var modality = chord.clone();
+        var RANGE = 72;
+        var BASS = 30;
         var container = document.getElementById('webgl_cell');
         var velocity_cutoff = 150.;
         var VISUALS_VISIBLE = true;
@@ -961,16 +963,16 @@ scoreline_i "i \"Clear\" 0 -1"
         console.log('note_depth:' + note_depth);
         function createNotes(scene) {
             var note_plane = get_note_plane(camera, LEVEL_DEPTH);
-            var note_array = math.zeros(5, 60);
+            var note_array = math.zeros(5, RANGE);
             for ( i = 0; i < scene.objects.length; i++ ) {
                 var scene_object = scene.objects[i];
                 if (scene_object.position.z >= note_depth && scene_object.position.z <= (note_depth + speed)) {
                     console.log('object on:  ' + i + '  depth: ' + scene_object.position.z);
                     for (var j = 0; j < scene_object.geometry.vertices.length; ++j) {
                         vertex = scene_object.geometry.vertices[j];
-                        var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * 88.0));
+                        var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * RANGE));
                         var instrument = Math.floor((((vertex.position.x / (note_plane[0])) + .5) * 4.) + 1.);
-                        if ((key >= 0 && key < 88) && (instrument >= 1 && instrument < 5)) {
+                        if ((key >= 0 && key < RANGE) && (instrument >= 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
                             if (value >= velocity_cutoff && csound.is_playing === true) {
@@ -983,7 +985,7 @@ scoreline_i "i \"Clear\" 0 -1"
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
                             var insno = 1 + index[0];
-                            var keyno = 24.0 + index[1];
+                            var keyno = BASS + index[1];
                             keyno = ChordSpace.conformPitchToChord(keyno, chord, false);
                             score += ('i ' + insno + ' 0.1 40 ' + keyno + ' 60 ' + Math.random()  + '\n');
                         }
