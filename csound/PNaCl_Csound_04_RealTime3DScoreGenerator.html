@@ -963,9 +963,6 @@ scoreline_i "i \"Clear\" 0 -1"
         var note_depth = LEVEL_DEPTH;
         var note_array = null;
         console.log('note_depth:' + note_depth);
-        function generateNotes() {
-            
-        }
         function createNotes(scene) {
             var note_plane = get_note_plane(camera, LEVEL_DEPTH);
             var note_array = math.zeros(5, RANGE);
@@ -980,9 +977,6 @@ scoreline_i "i \"Clear\" 0 -1"
                         if ((key >= 0 && key < RANGE) && (instrument >= 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
-                            if (value >= velocity_cutoff && csound.is_playing === true) {
-                                scene_object.geometry.colors[j] = new THREE.Color( 0xffffff );
-                            }
                         }
                     };
                     var score = ''
@@ -1049,6 +1043,33 @@ scoreline_i "i \"Clear\" 0 -1"
                 scene.objects[i].needsUpdate = 1;
             }
         }
+        function generateNotes(orbit) {
+            var translateKey = - orbit.yMin;
+            var scaleKey = RANGE / (orbit.yMax - orbit.yMin);
+            var translateInstrument = - orbit.xMin;
+            var scaleInstrument = INSTRUMENTS / (orbit.xMax - orbit.xMin);
+            console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
+            console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
+            var instrument = 0.0;
+            var time = 0.0;
+            var timestep = 1.0 / 32.0;
+            // TODO: Make this some factor of speed.
+            var duration = 4.0;
+            var key = 0.0;
+            var velocity = 60.0;
+            var pan = 0.0;
+            // There are far too many points, the notes must be thinned out somehow
+            // that makes sense.
+            for (var s = 0; s < NUM_SUBSETS; s++){
+                var curSubset = subsets[s];
+                for (var i = 0; i < NUM_POINTS_SUBSET; i++){
+                    time = time + timestep;
+                    instrument = Math.floor(scaleInstrument * curSubset[i].x + translateInstrument);
+                    key = Math.floor(scaleKey * curSubset[i].y + translateKey);
+                    pan = Math.random();
+                }
+            }
+        }
         function generateOrbit(){
             var x, y, z, x1;
             var idx = 0;
@@ -1095,14 +1116,8 @@ scoreline_i "i \"Clear\" 0 -1"
             orbit.scaleX = scaleX;
             orbit.scaleY = scaleY;
             // Normalize and update vertex data.
-            // Generate a more interesting score here. Start with scaling.
             console.log('Normalizing and updating vertices.')
-            var translateKey = - yMin;
-            var scaleKey = RANGE / (yMax - yMin);
-            var translateInstrument = - xMin;
-            var scaleInstrument = INSTRUMENTS / (xMax - xMin);
-            console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
-            console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
+            generateNotes(orbit);
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = subsets[s];
                 for (var i = 0; i < num_points_subset_l; i++){
