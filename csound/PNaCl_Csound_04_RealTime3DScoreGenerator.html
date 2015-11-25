@@ -419,48 +419,8 @@ print imidinn
 xout imidinn
 endop
 
-instr 101
-insno = p1
-istart = p2
-iduration = p3
-ihertz = p4
-ivelocity = p5
-ipan = p6
-ikey hertz2midinn ihertz
-event_i "i", "Droner", 0, iduration, ikey, ivelocity, 0, ipan
-endin
 
-instr 102
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-ipan = p6
-event_i "i", "Buzzer", 0, iduration, ikey, ivelocity, 0, ipan
-endin
-
-instr 103
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-ipan = p6
-event_i "i", "Sweeper", 0, iduration, ikey, ivelocity, 0, ipan
-endin
-
-instr 104
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-ipan = p6
-event_i "i", "Blower", 0, iduration, ikey, ivelocity, 0, ipan
-endin
-
-instr 150
+instr Turnoff
 turnoff2 "Droner", 0, 1
 turnoff2 "Buzzer", 0, 1
 turnoff2 "Sweeper", 0, 1
@@ -522,75 +482,6 @@ aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-gi_Bower_overlap init .01
-gi_Bower_sine ftgen 0,0,65536,10,1
-instr Bower
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = p7
-iamp = ampdb(ivelocity) * 200
-iattack = gi_Bower_overlap
-idecay = gi_Bower_overlap
-isustain = p3 - gi_Bower_overlap
-p3 = iattack + isustain + idecay
-kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-kamp = kenvelope
-kfreq = ihertz
-kpres = 0.25
-; krat rspline 0.006,0.988,0.1,0.4
-krat rspline 0.006,0.988,1,4
-kvibf = 4.5
-kvibamp = 0
-iminfreq = 20
-aSig wgbow kamp,kfreq,kpres,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
-;aSig butlp aSig,2000
-;aSig pareq aSig,80,6,0.707
-aleft, aright pan2 aSig / 7, ipan
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-gi_Phaser_overlap init .01
-gk_Phaser_ratio1 init 1
-gk_Phaser_ratio2 init 1/3
-gk_Phaser_index1 init 1
-gk_Phaser_index2 init 0.0125
-gi_Phaser_sine ftgen 0,0,65536,10,1
-instr Phaser
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = p7
-iamp = ampdb(ivelocity) * 8
-iattack = gi_Phaser_overlap
-idecay = gi_Phaser_overlap
-isustain = p3 - gi_Phaser_overlap
-p3 = iattack + isustain + idecay
-kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-khertz = ihertz
-ifunction1 = gi_Phaser_sine
-ifunction2 = gi_Phaser_sine
-a1,a2 crosspm gk_Phaser_ratio1, gk_Phaser_ratio2, gk_Phaser_index1, gk_Phaser_index2, khertz, ifunction1, ifunction2
-aleft, aright pan2 a1+a2, ipan
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft * kenvelope
-aright = adamping * aright * kenvelope
 chnmix aleft, "out_left"
 chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
@@ -685,37 +576,6 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gi_Shiner_overlap init .01
-gk_Shiner_harmonics init 5
-gk_Shiner_harmonics init 2
-gk_Shiner_distort_factor init 0.4
-gk_Shiner_first_harmonic init 0.4
-gi_Shiner_sine ftgen 0, 0, 65536, 10, 1
-instr Shiner
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = p7
-iamp = ampdb(ivelocity) * 4
-iattack = gi_Shiner_overlap
-idecay = gi_Shiner_overlap
-isustain = p3 - gi_Shiner_overlap
-p3 = iattack + isustain + idecay
-kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-asignal vco2 kenvelope * 4, ihertz, 12
-aleft, aright pan2 asignal, ipan
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
 gi_Blower_overlap init .01
 gk_Blower_grainDensity init 150
 gk_Blower_grainDuration init 0.2
@@ -788,6 +648,106 @@ aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, if
 aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, ifqc * gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, gi_Blower_grtab, gi_Blower_wintab, 5
 aleft = aoutl * kamp * iamplitude
 aright = aoutr * kamp * iamplitude
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft
+aright = adamping * aright
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Bower_overlap init .01
+gi_Bower_sine ftgen 0,0,65536,10,1
+instr Bower
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 200
+iattack = gi_Bower_overlap
+idecay = gi_Bower_overlap
+isustain = p3 - gi_Bower_overlap
+p3 = iattack + isustain + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+kamp = kenvelope
+kfreq = ihertz
+kpres = 0.25
+; krat rspline 0.006,0.988,0.1,0.4
+krat rspline 0.006,0.988,1,4
+kvibf = 4.5
+kvibamp = 0
+iminfreq = 20
+aSig wgbow kamp,kfreq,kpres,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+;aSig butlp aSig,2000
+;aSig pareq aSig,80,6,0.707
+aleft, aright pan2 aSig / 7, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Phaser_overlap init .01
+gk_Phaser_ratio1 init 1
+gk_Phaser_ratio2 init 1/3
+gk_Phaser_index1 init 1
+gk_Phaser_index2 init 0.0125
+gi_Phaser_sine ftgen 0,0,65536,10,1
+instr Phaser
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 8
+iattack = gi_Phaser_overlap
+idecay = gi_Phaser_overlap
+isustain = p3 - gi_Phaser_overlap
+p3 = iattack + isustain + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+khertz = ihertz
+ifunction1 = gi_Phaser_sine
+ifunction2 = gi_Phaser_sine
+a1,a2 crosspm gk_Phaser_ratio1, gk_Phaser_ratio2, gk_Phaser_index1, gk_Phaser_index2, khertz, ifunction1, ifunction2
+aleft, aright pan2 a1+a2, ipan
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+aleft = adamping * aleft * kenvelope
+aright = adamping * aright * kenvelope
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gi_Shiner_overlap init .01
+gk_Shiner_harmonics init 5
+gk_Shiner_harmonics init 2
+gk_Shiner_distort_factor init 0.4
+gk_Shiner_first_harmonic init 0.4
+gi_Shiner_sine ftgen 0, 0, 65536, 10, 1
+instr Shiner
+insno = p1
+istart = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+iamp = ampdb(ivelocity) * 4
+iattack = gi_Shiner_overlap
+idecay = gi_Shiner_overlap
+isustain = p3 - gi_Shiner_overlap
+p3 = iattack + isustain + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(ikey)
+asignal vco2 kenvelope * 4, ihertz, 12
+aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
@@ -1008,9 +968,9 @@ scoreline_i "i \"Clear\" 0 -1"
                     console.log('object on:  ' + i + '  depth: ' + scene_object.position.z);
                     for (var j = 0; j < scene_object.geometry.vertices.length; ++j) {
                         vertex = scene_object.geometry.vertices[j];
-                        var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * 60.0) + 36.);
+                        var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * 88.0));
                         var instrument = Math.floor((((vertex.position.x / (note_plane[0])) + .5) * 4.) + 1.);
-                        if ((key >= 0 && key < 60) && (instrument >= 1 && instrument < 5)) {
+                        if ((key >= 0 && key < 88) && (instrument >= 1 && instrument < 5)) {
                             var value = note_array.get([instrument, key]) + 1;
                             note_array.set([instrument, key], value);
                             if (value >= velocity_cutoff && csound.is_playing === true) {
@@ -1019,13 +979,13 @@ scoreline_i "i \"Clear\" 0 -1"
                         }
                     };
                     var score = ''
-                    //score += 'i 150 0 0\n';
+                    score += 'i 1 0 0\n';
                     note_array.forEach(function (velocity, index, matrix) {
                         if (velocity > velocity_cutoff) {
-                            var insno = 100 + index[0];
-                            var keyno = index[1];
+                            var insno = 1 + index[0];
+                            var 24.0 + keyno = index[1];
                             keyno = ChordSpace.conformPitchToChord(keyno, chord, false);
-                            score += ('i ' + insno + ' 0 4 ' + keyno + ' 60 ' + Math.random()  + '\n');
+                            score += ('i ' + insno + ' 0 40 ' + keyno + ' 60 ' + Math.random()  + '\n');
                         }
                     });
                     console.log('score:');
