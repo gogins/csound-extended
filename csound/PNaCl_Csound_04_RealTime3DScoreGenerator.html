@@ -949,58 +949,6 @@ scoreline_i "i \"Clear\" 0 -1"
             requestAnimationFrame( animate );
             render();
         }
-        // The objects here are planes each containing one particle system
-        // of hopalong orbits. As with the objects going past the camera z,
-        // when objects go past some z deeper than the camera z,
-        // create notes. The points will be "thinned" into an array of notes, which will be scheduled.
-        // The notes will persist for some fixed duration.
-        function get_note_plane(camera, z_) {
-            var note_z = z_;
-            var note_y = Math.tan(camera.fov * Math.PI / 180 * 0.5) * note_z * 2 ;
-            var note_x = note_y * camera.aspect;
-            return [note_x, note_y];
-        }
-        var note_depth = LEVEL_DEPTH;
-        var note_array = null;
-        console.log('note_depth:' + note_depth);
-        function createNotes(scene) {
-            var note_plane = get_note_plane(camera, LEVEL_DEPTH);
-            var note_array = math.zeros(5, RANGE);
-            for ( i = 0; i < scene.objects.length; i++ ) {
-                var scene_object = scene.objects[i];
-                if (scene_object.position.z >= note_depth && scene_object.position.z <= (note_depth + speed)) {
-                    console.log('object on:  ' + i + '  depth: ' + scene_object.position.z);
-                    for (var j = 0; j < scene_object.geometry.vertices.length; ++j) {
-                        vertex = scene_object.geometry.vertices[j];
-                        var key = Math.floor((((vertex.position.y / (note_plane[1])) + .5) * RANGE));
-                        var instrument = Math.floor((((vertex.position.x / (note_plane[0])) + .5) * 4.) + 1.);
-                        if ((key >= 0 && key < RANGE) && (instrument >= 1 && instrument < 5)) {
-                            var value = note_array.get([instrument, key]) + 1;
-                            note_array.set([instrument, key], value);
-                        }
-                    };
-                    var score = ''
-                    score += 'i 1 0 0.01\n';
-                    note_array.forEach(function (velocity, index, matrix) {
-                        if (velocity > velocity_cutoff) {
-                            var insno = 1 + index[0];
-                            var keyno = BASS + index[1];
-                            keyno = ChordSpace.conformPitchToChord(keyno, chord, false);
-                            score += ('i ' + insno + ' 0.1 40 ' + keyno + ' 60 ' + Math.random()  + '\n');
-                        }
-                    });
-                    console.log('score:');
-                    console.log(score);
-                    if (typeof csound != 'undefined') {
-                    	if (csound.module !== null) {
-                    	    if (csound.is_playing === true) {
-                    	    	csound.readScore(score);
-                    	    }
-                    	}
-                    }
-               }
-            }
-         }
         function render() {
             //console.log('render()...')
             if (camera.position.x >= - CAMERA_BOUND && camera.position.x <= CAMERA_BOUND){
@@ -1051,7 +999,6 @@ scoreline_i "i \"Clear\" 0 -1"
             console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
             console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
             var instrument = 0.0;
-            var time = 0.0;
             var timestep = 1.0 / 32.0;
             // TODO: Make this some function of speed.
             var duration = 4.0;
@@ -1063,10 +1010,11 @@ scoreline_i "i \"Clear\" 0 -1"
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
                 var score = ''
+            	var time = 0.0;
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += 500){
                     time = time + timestep;
-                    instrument = Math.floor(scaleInstrument * curSubset[i].x + translateInstrument);
-                    key = Math.floor(scaleKey * curSubset[i].y + translateKey);
+                    instrument = Math.floor(curSubset[i].x / scaleInstrument + translateInstrument);
+                    key = Math.floor(curSubset[i].y / scaleKey + translateKey);
                     pan = Math.random();
                     key = ChordSpace.conformPitchToChord(key, chord, false);
                     score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
