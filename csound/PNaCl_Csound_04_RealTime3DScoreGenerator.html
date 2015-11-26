@@ -1016,12 +1016,12 @@ scoreline_i "i \"Clear\" 0 -1"
                     instrument -= translateInstrument;
                     instrument *= scaleInstrument;
                     instrument += translateInstrument;
-                    instrument = Math.floor(instrument);
+                    instrument = Math.floor(instrument + 1);
                     key = curSubset[i].y;
                     key -= translateKey;
                     key *= scaleKey;
                     key += translateKey;
-                    key = Math.floor(key);
+                    key = Math.floor(key + BASS);
                     pan = Math.random();
                     key = ChordSpace.conformPitchToChord(key, chord, false);
                     score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
