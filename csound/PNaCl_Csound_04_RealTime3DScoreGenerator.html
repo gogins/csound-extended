@@ -992,9 +992,9 @@ scoreline_i "i \"Clear\" 0 -1"
             }
         }
         function generateNotes(orbit) {
-            var translateKey = - orbit.yMin;
+            var translateKey = orbit.yMin;
             var scaleKey = RANGE / (orbit.yMax - orbit.yMin);
-            var translateInstrument = - orbit.xMin;
+            var translateInstrument = orbit.xMin;
             var scaleInstrument = INSTRUMENTS / (orbit.xMax - orbit.xMin);
             console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
             console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
@@ -1005,16 +1005,23 @@ scoreline_i "i \"Clear\" 0 -1"
             var key = 0.0;
             var velocity = 60.0;
             var pan = 0.0;
-            // There are far too many points, the notes must be thinned out somehow
-            // that makes musical and dramatic sense.
+            // There are far too many points, the notes must be thinned out.
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
                 var score = ''
             	var time = 0.0;
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += 500){
                     time = time + timestep;
-                    instrument = Math.floor(curSubset[i].x / scaleInstrument + translateInstrument);
-                    key = Math.floor(curSubset[i].y / scaleKey + translateKey);
+                    instrument = curSubset[i].x;
+                    instrument -= translateInstrument;
+                    instrument *= scaleInstrument;
+                    instrument += translateInstrument;
+                    instrument = Math.floor(instrument);
+                    key = curSubset[i].y;
+                    key -= translateKey;
+                    key *= scaleKey;
+                    key += translateKey;
+                    key = Math.floor(key);
                     pan = Math.random();
                     key = ChordSpace.conformPitchToChord(key, chord, false);
                     score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
