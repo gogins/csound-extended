@@ -1013,9 +1013,8 @@ scoreline_i "i \"Clear\" 0 -1"
             // There are far too many points, the notes must be thinned out.
             var notes_per_subset = 7;
             var stride = NUM_POINTS_SUBSET / notes_per_subset;
-            var s = 0;
-            var score = ''
-            for ( ; s < NUM_SUBSETS; s++){
+            var score = '';
+            for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
             	var time = 0.0;
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += stride){
