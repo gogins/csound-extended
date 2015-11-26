@@ -992,6 +992,7 @@ scoreline_i "i \"Clear\" 0 -1"
             }
         }
         function generateNotes(orbit) {
+            console.log('Generating notes for this orbit.')
             var xRange = (orbit.xMax - orbit.xMin);
             var yRange = (orbit.yMax - orbit.yMin);
             console.log('Rescale x:' + orbit.xMin + ', ' + xRange);
@@ -1012,7 +1013,8 @@ scoreline_i "i \"Clear\" 0 -1"
             // There are far too many points, the notes must be thinned out.
             var notes_per_subset = 16;
             var stride = NUM_POINTS_SUBSET / notes_per_subset;
-            for (var s = 0; s < NUM_SUBSETS; s++){
+            var s = 0;
+            for ( ; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
                 var score = ''
             	var time = 0.0;
@@ -1030,7 +1032,7 @@ scoreline_i "i \"Clear\" 0 -1"
                     key = ChordSpace.conformPitchToChord(key, chord, false);
                     score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
                 }
-                console.log('score:');
+                console.log('subset: ' + s);
                 console.log(score);
                 if (typeof csound != 'undefined') {
                 	if (csound.module !== null) {
@@ -1088,7 +1090,6 @@ scoreline_i "i \"Clear\" 0 -1"
             orbit.scaleY = scaleY;
             // Normalize and update vertex data.
             console.log('Normalizing and updating vertices.')
-            generateNotes(orbit);
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = subsets[s];
                 for (var i = 0; i < num_points_subset_l; i++){
@@ -1096,6 +1097,7 @@ scoreline_i "i \"Clear\" 0 -1"
                     curSubset[i].vertex.position.y = scaleY * (curSubset[i].y - yMin) - scale_factor_l;
                 }
             }
+            generateNotes(orbit);
         }
         function prepareOrbit(){
             console.log('prepareOrbit()...')
