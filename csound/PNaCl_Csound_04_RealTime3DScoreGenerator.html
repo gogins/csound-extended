@@ -1062,11 +1062,23 @@ scoreline_i "i \"Clear\" 0 -1"
             // that makes musical and dramatic sense.
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
-                for (var i = 0; i < NUM_POINTS_SUBSET; i++){
+                var score = ''
+                for (var i = 0; i < NUM_POINTS_SUBSET; i += 500){
                     time = time + timestep;
                     instrument = Math.floor(scaleInstrument * curSubset[i].x + translateInstrument);
                     key = Math.floor(scaleKey * curSubset[i].y + translateKey);
                     pan = Math.random();
+                    key = ChordSpace.conformPitchToChord(keyno, chord, false);
+                    score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
+                }
+                console.log('score:');
+                console.log(score);
+                if (typeof csound != 'undefined') {
+                	if (csound.module !== null) {
+                	    if (csound.is_playing === true) {
+                	    	csound.readScore(score);
+                	    }
+                	}
                 }
             }
         }
