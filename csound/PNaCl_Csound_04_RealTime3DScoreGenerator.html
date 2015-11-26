@@ -1014,9 +1014,9 @@ scoreline_i "i \"Clear\" 0 -1"
             var notes_per_subset = 7;
             var stride = math.floor(NUM_POINTS_SUBSET / notes_per_subset);
             var score = '';
+            var time = 0.0;
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
-            	var time = 0.0;
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += stride){
                     time = time + timestep;
                     instrument = curSubset[i].x;
