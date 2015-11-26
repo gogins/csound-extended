@@ -992,10 +992,14 @@ scoreline_i "i \"Clear\" 0 -1"
             }
         }
         function generateNotes(orbit) {
+            var xRange = (orbit.xMax - orbit.xMin);
+            var yRange = (orbit.yMax - orbit.yMin);
+            console.log('Rescale x:' + orbit.xMin + ', ' + xRange);
+            console.log('Rescale y:' + orbit.yMin + ', ' + yRange);
             var translateKey = orbit.yMin;
-            var scaleKey = RANGE / (orbit.yMax - orbit.yMin);
+            var scaleKey = RANGE / yRange;
             var translateInstrument = orbit.xMin;
-            var scaleInstrument = INSTRUMENTS / (orbit.xMax - orbit.xMin);
+            var scaleInstrument = INSTRUMENTS / xRange;
             console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
             console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
             var instrument = 0.0;
@@ -1015,12 +1019,10 @@ scoreline_i "i \"Clear\" 0 -1"
                     instrument = curSubset[i].x;
                     instrument -= translateInstrument;
                     instrument *= scaleInstrument;
-                    instrument += translateInstrument;
                     instrument = Math.floor(instrument + 1);
                     key = curSubset[i].y;
                     key -= translateKey;
                     key *= scaleKey;
-                    key += translateKey;
                     key = Math.floor(key + BASS);
                     pan = Math.random();
                     key = ChordSpace.conformPitchToChord(key, chord, false);
