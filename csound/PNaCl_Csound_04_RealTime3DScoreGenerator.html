@@ -1004,19 +1004,19 @@ scoreline_i "i \"Clear\" 0 -1"
             console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
             console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
             var instrument = 0.0;
-            var timestep = 1.0 / 32.0;
+            var timestep = 1.0 / 16.0;
             // TODO: Make this some function of speed.
-            var duration = 4.0;
+            var duration = 3.0;
             var key = 0.0;
             var velocity = 60.0;
             var pan = 0.0;
             // There are far too many points, the notes must be thinned out.
-            var notes_per_subset = 16;
+            var notes_per_subset = 7;
             var stride = NUM_POINTS_SUBSET / notes_per_subset;
             var s = 0;
+            var score = ''
             for ( ; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
-                var score = ''
             	var time = 0.0;
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += stride){
                     time = time + timestep;
@@ -1032,15 +1032,14 @@ scoreline_i "i \"Clear\" 0 -1"
                     key = ChordSpace.conformPitchToChord(key, chord, false);
                     score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
                 }
-                console.log('subset: ' + s);
-                console.log(score);
-                if (typeof csound != 'undefined') {
-                	if (csound.module !== null) {
-                	    if (csound.is_playing === true) {
-                	    	csound.readScore(score);
-                	    }
-                	}
-                }
+            }
+            console.log(score);
+            if (typeof csound != 'undefined') {
+            	if (csound.module !== null) {
+            	    if (csound.is_playing === true) {
+            	    	csound.readScore(score);
+            	    }
+            	}
             }
         }
         function generateOrbit(){
