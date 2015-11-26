@@ -1068,7 +1068,7 @@ scoreline_i "i \"Clear\" 0 -1"
                     instrument = Math.floor(scaleInstrument * curSubset[i].x + translateInstrument);
                     key = Math.floor(scaleKey * curSubset[i].y + translateKey);
                     pan = Math.random();
-                    key = ChordSpace.conformPitchToChord(keyno, chord, false);
+                    key = ChordSpace.conformPitchToChord(key, chord, false);
                     score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + '\n');
                 }
                 console.log('score:');
