@@ -34,8 +34,8 @@
         padding: 8px;
         border-style: solid;
         border-color: transparent;
-        color:yellow;
-        background-color: teal;
+        color:green;
+        background-color: black;
         font-family: sans-serif
     }
     table td.console {
@@ -52,8 +52,7 @@
         padding: 8px;
         border-style: solid;
         border-color: transparent;
-        color:white;
-        background-color:teal;
+        color:yellow;
         font-family: sans-serif
    }
     textarea.console {
@@ -121,8 +120,8 @@
     <!-- HTML tables within tables are used to create a flexible layout. -->
     <table style="width:100%;">
     <col style="width:20%;">
-    <col style="width:60%;">
-    <col style="width:20%;">
+    <col style="width:55%;">
+    <col style="width:25%;">
     <tr>
     <td>
     <table style="width:100%;">
@@ -414,6 +413,18 @@ xout imidinn
 endop
 
 instr 1
+; Consume unused pfields.
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 turnoff2 2, 0, 1
 turnoff2 3, 0, 1
 turnoff2 4, 0, 1
@@ -438,12 +449,16 @@ gk_Droner_level init 0
 gi_Droner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
 instr Droner
 insno = p1
-istart = p2
+itime = p2
 iduration = p3
 ikey = p4
 ivelocity = p5
-iphase = p6
-ipan = p7
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 k1 init .5
 k2 init .05
 k3 init .1
@@ -498,10 +513,10 @@ instr Harpsichord
 // Original by James Kelley.
 // Adapted by Michael Gogins.
 //////////////////////////////////////////////
-insno 		 = p1
-itime 		 = p2
-iduration 		 = p3
-ikey 		 = p4
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
 ivelocity = p5
 iphase = p7
 ipan = p6
@@ -540,12 +555,16 @@ gi_Sweeper_sine ftgen 0, 0, 65536, 10, 1
 gi_Sweeper_octfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
 instr Sweeper
 insno = p1
-istart = p2
+itime = p2
 iduration = p3
 ikey = p4
 ivelocity = p5
-iphase = p6
-ipan = p7
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 iamp = ampdb(ivelocity)
 iattack = gi_Sweeper_overlap
 idecay = gi_Sweeper_overlap
@@ -599,12 +618,16 @@ gk_Buzzer_first_harmonic init 0.4
 gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
 instr Buzzer
 insno = p1
-istart = p2
+itime = p2
 iduration = p3
 ikey = p4
 ivelocity = p5
-iphase = p6
-ipan = p7
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 iamp = ampdb(ivelocity) * 4
 iattack = gi_Buzzer_overlap
 idecay = gi_Buzzer_overlap
@@ -628,6 +651,17 @@ endin
 ; the channel need be read only once per kperiod for greater efficiency.
 
 instr Controls
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 gk_Droner_slider1 chnget "gk_Droner_slider1"
 gk_Droner_slider2 chnget "gk_Droner_slider2"
 gk_Droner_slider3 chnget "gk_Droner_slider3"
@@ -649,6 +683,17 @@ endin
 gk_Reverb_Feedback init 0.975
 gk_Reverb_DelayModulation init 0.875
 instr Reverb
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 ain_left chnget "out_left"
 ain_right chnget "out_right"
 azero init 0
@@ -664,6 +709,18 @@ endin
 
 gk_MasterOutput_level init 0
 instr MasterOutput
+; Consume unused pfields.
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 ain_left chnget "reverb_out_left"
 ain_right chnget "reverb_out_right"
 kgain = ampdb(gk_MasterOutput_level)
@@ -676,6 +733,17 @@ endin
 ; This instrument clears the global output busses of audio for the next kperiod.
 
 instr Clear
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
 chnclear "out_left"
 chnclear "out_right"
 chnclear "reverb_out_left"
@@ -691,8 +759,8 @@ scoreline_i "i \"Reverb\" 0 -1"
 scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
     </textarea>
-    <-- JavaScript for this piece comes from the file system.
-        Other JavaScript modules come from oneline Content Distribution Networks (CDNs).
+    <!-- JavaScript for this piece comes from the file system.
+         Other JavaScript modules come from online Content Distribution Networks (CDNs).
         -->
     <script type="text/javascript" src="csound.js"></script>
     <script type="text/javascript" src="js/sprintf.js"></script>
