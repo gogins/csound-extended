@@ -106,10 +106,10 @@
     <h4>2015</h4>
     <p>This tutorial demonstrates an interactive composition that uses WebGL to generate
     an animated, three-dimensional fractal that also plays a Csound score in real time.
-    <p>Load this Web page. You may need to experiment with different levels of zoom to obtain the 
+    <p>Load this Web page. You may need to experiment with different levels of zoom to obtain the
     best appearance. Look at the Csound messages and wait for Csound to finish loading.
-    Click on the "Play" button, then click on the ""Play chord" buttons. Each button applies a chord 
-    trasformation and plays the result. The == button repeats the existing chord. You should normally 
+    Click on the "Play" button, then click on the ""Play chord" buttons. Each button applies a chord
+    trasformation and plays the result. The == button repeats the existing chord. You should normally
     wait for the sequence to finish playing before clicking again.</p>
     <p>You can play the piece, stop it from playing, use the sliders
     to control the sounds of the instruments as they play, and see Csound's diagnostic
@@ -191,7 +191,7 @@
     </tr>
     <tr>
     <td>
-    <!-- A naming pattern is used to simplify the code. The HTML element id is the 
+    <!-- A naming pattern is used to simplify the code. The HTML element id is the
          same as the Csound channel name is the same as a global Csound control variable. -->
     <label for=gk_Droner_slider1>gk_Droner_slider1</label>
     </td>
@@ -254,7 +254,7 @@
     <output for=gk_Droner_level id=gk_Droner_level_output>.5</output>
     </td>
     </tr>
-  
+
     <tr>
     <th style="span:3; text-align:left;">Buzzer</th>
     </tr>
@@ -339,7 +339,7 @@
     <output for=gk_Sweeper_level id=gk_Sweeper_level_output>.5</output>
     </td>
     </tr>
-    
+
     <tr>
     <th style="span:3; text-align:left;">Harpsichord</th>
     </tr>
@@ -380,7 +380,12 @@
     <output for=gk_MasterOutput_level id=gk_MasterOutput_level_output>.5</output>
     </td>
     </tr>
-    
+
+    <tr>
+    <td>Score time</td>
+    <td colspan=2 id=score_time></td>
+    </tr>
+
     <tr>
     <th style="text-align:left;">Performance</th>
     <td colspan=2>
@@ -396,7 +401,7 @@
     <td class="console">
     <textarea class="console" id="console" style="width:99%;height:100%;"></textarea>
     </td>
-    </tr>      
+    </tr>
   </table>
     </form>
     <h4>Csound Orchestra</h4>
@@ -412,29 +417,9 @@ print imidinn
 xout imidinn
 endop
 
-instr 1
-; Consume unused pfields.
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-turnoff2 2, 0, 1
-turnoff2 3, 0, 1
-turnoff2 4, 0, 1
-turnoff2 5, 0, 1
-prints "instr %4d t %9.4f d %9.4f\n", p1, p2, p3
-endin
-
 ; Each Csound instrument uses global variables
 ; and function tables declared in the global area of the orchestra
-; just above the instrument definition itself. A naming pattern is 
+; just above the instrument definition itself. A naming pattern is
 ; used to avoid name collisions and keep everything straight.
 
 gi_Droner_overlap init .1
@@ -530,7 +515,7 @@ irelease = .3
 p3 = iattack + isustain + irelease
 iHz = cpsmidinn(ikey)
 kHz = k(iHz)
-iamplitude = ampdb(ivelocity) 
+iamplitude = ampdb(ivelocity)
 aenvelope 	 transeg 1.0, 20.0, -10.0, 0.05
 apluck 	 pluck 1, kHz, iHz, 0, 1
 aharp 	 poscil 1, kHz, gi_Harptable
@@ -647,7 +632,7 @@ chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-; All control channels come into this always-on instrument so that 
+; All control channels come into this always-on instrument so that
 ; the channel need be read only once per kperiod for greater efficiency.
 
 instr Controls
@@ -751,7 +736,7 @@ chnclear "reverb_out_right"
 prints "instr %4d t %12.4f d %12.4f\n", p1, p2, p3
 endin
 
-; Finally the orchestra itself turns on the effects instruments and the 
+; Finally the orchestra itself turns on the effects instruments and the
 ; other always-on instruments.
 
 scoreline_i "i \"Controls\" 0 -1"
@@ -803,7 +788,10 @@ scoreline_i "i \"Clear\" 0 -1"
         var D_MAX = 10;
         var E_MIN = 0;
         var E_MAX = 12;
-        // Orbit parameters
+        var current_time_seconds = new Date().getTime() / 1000.0;
+        var start_time_seconds = current_time_seconds;
+        var prior_time_seconds = current_time_seconds;
+         // Orbit parameters
         var a, b, c, d, e;
         // Orbit data
         var orbit = {
@@ -874,11 +862,31 @@ scoreline_i "i \"Clear\" 0 -1"
             container.appendChild( renderer.domElement );
             window.addEventListener( 'resize', onWindowResize, false );
             // Schedule orbit regeneration
-            setInterval(updateOrbit, 7000);
+            setTimeout(updateOrbit, 10000 / speed);
         }
         function animate() {
             requestAnimationFrame( animate );
             render();
+        }
+        /**
+         * The score is generated by points in the fractal that pass through a reticule,
+         * whose height and width are mapped to key and instrument. The reticule can be
+         * moved and rotated such that notes can form chords or arpeggiations. The duration
+         * of the notes is a factor of the speed of the scene.
+         */
+        function intersected() {
+            var originPoint = MovingCube.position.clone();
+            for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
+            {
+                var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
+                var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
+                var directionVector = globalVertex.sub( MovingCube.position );
+
+                var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+                var collisionResults = ray.intersectObjects( collidableMeshList );
+                if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() )
+                    console.log('hit');
+            }
         }
         function render() {
             if (camera.position.x >= - CAMERA_BOUND && camera.position.x <= CAMERA_BOUND){
@@ -907,9 +915,14 @@ scoreline_i "i \"Clear\" 0 -1"
                 }
             }
             renderer.render(scene, camera);
+            score_time_cell = document.getElementById('score_time');
+            current_time_seconds = new Date().getTime() / 1000.0;
+            var score_time = current_time_seconds - start_time_seconds;
+            score_time_cell.innerHTML = sprintf('%9.3f', score_time);
         }
+
         function generateNotes() {
-            console.log('Generating notes for this orbit.')
+            console.log('Generating notes for this orbit...')
             var xRange = (orbit.xMax - orbit.xMin);
             var yRange = (orbit.yMax - orbit.yMin);
             console.log('Rescale x:' + orbit.xMin + ', ' + xRange);
@@ -920,24 +933,29 @@ scoreline_i "i \"Clear\" 0 -1"
             var scaleInstrument = (INSTRUMENTS + 0.99) / xRange;
             console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
             console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
+            var note_count = 32;
+            // Find out how long it is between the generation of each orbit,
+            // and fit so many notes into that time.
+            var interval_seconds = current_time_seconds - prior_time_seconds;
+            prior_time_seconds = current_time_seconds;
+            var timestep = interval_seconds / note_count;
+            var duration = 4 * timestep;
             var instrument = 0.0;
-            var duration = 1.0 / speed;
-            var timestep = duration / 4;
             var key = 0.0;
             var velocity = 60.0;
             var pan = 0.0;
             // There are far too many points, the notes must be thinned out.
-            var notes_per_subset = 16;
-            var stride = math.floor(NUM_POINTS_SUBSET / notes_per_subset);
+            var stride = math.floor((NUM_POINTS_SUBSET / note_count) * NUM_SUBSETS);
+            console.log('stride: ' + stride + ' NUM_POINTS_SUBSET: ' + NUM_POINTS_SUBSET);
             var score = '';
-            var time = 0.0;
-            for (var s = 0; s < NUM_SUBSETS; s++){
+            var score_time = 0.0;
+             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += stride){
                     instrument = curSubset[i].x;
                     instrument -= translateInstrument;
                     instrument *= scaleInstrument;
-                    instrument = Math.floor(instrument + 1);
+                    instrument = Math.floor(instrument);
                     //instrument = 5;
                     key = curSubset[i].y;
                     key -= translateKey;
@@ -945,12 +963,13 @@ scoreline_i "i \"Clear\" 0 -1"
                     key = Math.floor(key + BASS);
                     pan = Math.random();
                     key = ChordSpace.conformPitchToChord(key, chord, false);
-                    score += ('i ' + instrument + ' ' + time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + ' 0 0 0 0 0\n');
-                    time = time + timestep;
+                    score += ('i ' + instrument + ' ' + score_time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + ' 0 0 0 0 0\n');
+                    score_time = score_time + timestep;
                 }
-                time = time + timestep * 4;
             }
+            console.log('time: ' + score_time + ' interval: ' + interval_seconds + ' speed: ' + speed);
             console.log(score);
+            // Protect against trying to call an undefined Csound.
             if (typeof csound != 'undefined') {
             	if (csound.module !== null) {
             	    if (csound.is_playing === true) {
@@ -970,6 +989,8 @@ scoreline_i "i \"Clear\" 0 -1"
             for( i = 0; i < scene.objects.length; i++ ) {
                 scene.objects[i].needsUpdate = 1;
             }
+            // Speed up or slow down the interval between generations.
+            setTimeout(updateOrbit, 10000 / speed);
         }
         function generateOrbit(){
             var x, y, z, x1;
@@ -1016,7 +1037,6 @@ scoreline_i "i \"Clear\" 0 -1"
             orbit.yMax = yMax;
             orbit.scaleX = scaleX;
             orbit.scaleY = scaleY;
-            // Normalize and update vertex data.
             console.log('Normalizing and updating vertices.')
             for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = subsets[s];
@@ -1024,8 +1044,9 @@ scoreline_i "i \"Clear\" 0 -1"
                     curSubset[i].vertex.position.x = scaleX * (curSubset[i].x - xMin) - scale_factor_l;
                     curSubset[i].vertex.position.y = scaleY * (curSubset[i].y - yMin) - scale_factor_l;
                 }
-            }
-        }
+           }
+           generateNotes();
+         }
         function prepareOrbit(){
             console.log('prepareOrbit()...')
             shuffleParams();
@@ -1076,7 +1097,7 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.compileOrc(document.getElementById('orc').value);
             //csound.readScore('f 0 600\n');
             csound.is_playing = true;
-        });
+         });
         $('#stop').on('click', function() {
             csound.stop();
             csound.is_playing = false;
@@ -1112,27 +1133,22 @@ scoreline_i "i \"Clear\" 0 -1"
         });
         $('#harmony_E').on('click', function() {
             csound.message('Identity:\n' + chord.information());
-            generateNotes();
         });
         $('#harmony_K').on('click', function() {
             chord = chord.K();
             csound.message('K():\n' + chord.information());
-            generateNotes();
         });
         $('#harmony_Q1').on('click', function() {
             chord = chord.Q(1, modality);
             csound.message('Q(1, modality):\n' + chord.information());
-            generateNotes();
         });
         $('#harmony_Q2').on('click', function() {
             chord = chord.Q(2, modality);
             csound.message('Q2():\n' + chord.information());
-            generateNotes();
         });
         $('#harmony_Q3').on('click', function() {
             chord = chord.Q(3, modality);
             csound.message('Q(3):\n' + chord.information());
-            generateNotes();
         });
         $('#harmony_J1').on('click', function() {
             var chords = chord.J(2);
@@ -1140,7 +1156,6 @@ scoreline_i "i \"Clear\" 0 -1"
             	chord = chords[0];
             	csound.message('J(2,1):\n' + chord.information());
            }
-            generateNotes();
          });
         $('#harmony_J2').on('click', function() {
             var chords = chord.J(2);
@@ -1148,7 +1163,6 @@ scoreline_i "i \"Clear\" 0 -1"
             	chord = chords[1];
             	csound.message('J(2,2):\n' + chord.information());
             }
-            generateNotes();
         });
         $('#harmony_J3').on('click', function() {
             var chords = chord.J(2);
@@ -1156,12 +1170,10 @@ scoreline_i "i \"Clear\" 0 -1"
             	chord = chords[2];
             	csound.message('J(2,3):\n' + chord.information());
             }
-            generateNotes();
         });
         $('#harmony_D').on('click', function() {
             chord = chord.T(5);
             csound.message('D():\n' + chord.information());
-            generateNotes();
         });
 	// Messages both from the "csound.js" wrapper and from Csound itself are combined in the
 	// "console" text area.
