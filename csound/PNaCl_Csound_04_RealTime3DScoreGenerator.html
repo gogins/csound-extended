@@ -129,6 +129,78 @@
     <col style="width:75%;">
     <col style="width:25%;">
     <tr>
+    <tr>
+    <th style="text-align:left;">Performance</th>
+    <td colspan=2>
+    <input type="button" id='play' value="Play" />
+    <input type="button" id='stop' value="Stop" />
+    <input type="button" id='save' value="Save" />
+    <input type="button" id='restore' value="Restore" />
+    </td>
+    </tr>
+
+    <th style="span:3; text-align:left;">Fractal</th>
+    </tr>
+    <tr>
+    <td>
+    <label for=A>A</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=-30 max=30 value=0  id=A step=.001>
+    </td>
+    <td>
+    <output for=A id=A_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=B>B</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=0.2 max=1.8 value=0 id=B step=.001>
+    </td>
+    <td>
+    <output for=B id=B_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=C>C</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=5 max=17 value=0 id=C step=.001>
+    </td>
+    <td>
+    <output for=C id=C_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=D>D</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=0 max=10 value=0 id=D step=.001>
+    </td>
+    <td>
+    <output for=D id=D_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=E>E</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=5 max=12 value=0 id=E step=.001>
+    </td>
+    <td>
+    <output for=E id=E_output>.5</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=starting_point>starting_point</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min0 max=11 value=0 id=starting_point step=.001>
+    </td>
+    <td>
+    <output for=starting_point id=starting_point_output>.5</output>
+    </tr>
     <th style="span:3; text-align:left;">Scene</th>
     </tr>
     <tr>
@@ -163,26 +235,52 @@
     </tr>
     <tr>
     <td>
-    <label for=Scene_rotation>Scene rotation</label>
+    <label for=Scene_randomization>Scene randomization</label>
     </td>
     <td>
-    <input class=persistent-element type=range min=-1 max=1 value=0 id=Scene_rotation step=0.01>
+    <input class=persistent-element type=range min=0 max=1 value=0 id=Scene_randomization step=0.001>
     <td>
-    <output for=Scene_rotation id=Scene_rotation_output>0</output>
+    <output for=Scene_randomization id=Scene_randomization_output>0</output>
     </td>
     </tr>
     <tr>
     <th style=;text-align:left;">Play chords</th>
     <td style="span:2;">
-    <input type=button id=harmony_E  value="==">
-    <input type=button id=harmony_K  value="K ">
-    <input type=button id=harmony_Q1 value="Q1">
-    <input type=button id=harmony_Q2 value="Q2">
-    <input type=button id=harmony_Q3 value="Q3">
-    <input type=button id=harmony_J1 value="J1">
-    <input type=button id=harmony_J2 value="J2">
-    <input type=button id=harmony_J3 value="J3">
-    <input  type=button id=harmony_D value="D ">
+    <input type=button id=harmony_E  value="GM9">
+    <input type=button id=harmony_K  value=" K ">
+    <input type=button id=harmony_Q1 value=" Q1">
+    <input type=button id=harmony_Q2 value=" Q2">
+    <input type=button id=harmony_Q3 value=" Q3">
+    <input type=button id=harmony_J1 value=" J1">
+    <input type=button id=harmony_J2 value=" J2">
+    <input type=button id=harmony_J3 value=" J3">
+    <input  type=button id=harmony_D value=" D ">
+    </td>
+    </tr>
+
+    <tr>
+    <th style="span:3; text-align:left;">FM Clang</th>
+    </tr>
+    <tr>
+    <td>
+    <!-- A naming pattern is used to simplify the code. The HTML element id is the
+         same as the Csound channel name is the same as a global Csound control variable. -->
+    <label for=gk_FM_Clang_preset>gk_FM_Clang_preset</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=0 max=13 value=1 id=gk_FM_Clang_preset step=1>
+    <td>
+    <output for=gk_FM_Clang_preset id=gk_FM_Clang_preset_output>1</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=gk_FM_Clang_level>gk_FM_Clang_level</label>
+    </td>
+    <td>
+    <input class=persistent-element type=range min=-20 max=20 value=0 id=gk_FM_Clang_level step=0.01>
+    </td>
+    <td>
+    <output for=gk_FM_Clang_level id=gk_FM_Clang_level_output>0</output>
     </td>
     </tr>
 
@@ -191,8 +289,6 @@
     </tr>
     <tr>
     <td>
-    <!-- A naming pattern is used to simplify the code. The HTML element id is the
-         same as the Csound channel name is the same as a global Csound control variable. -->
     <label for=gk_Droner_slider1>gk_Droner_slider1</label>
     </td>
     <td>
@@ -386,15 +482,6 @@
     <td colspan=2 id=score_time></td>
     </tr>
 
-    <tr>
-    <th style="text-align:left;">Performance</th>
-    <td colspan=2>
-    <input type="button" id='play' value="Play" />
-    <input type="button" id='stop' value="Stop" />
-    <input type="button" id='save' value="Save" />
-    <input type="button" id='restore' value="Restore" />
-    </td>
-    </tr>
     </table>
     <td id='webgl_cell' class='canvas'>
     </td>
@@ -421,6 +508,51 @@ endop
 ; and function tables declared in the global area of the orchestra
 ; just above the instrument definition itself. A naming pattern is
 ; used to avoid name collisions and keep everything straight.
+
+gaSendM,gaSendL,gaSendR init 0
+gi_FM_Clang_sine ftgen 0,0,4096,10,1 ;A SINE WAVE. USED BY THE LFOs.
+gi_FM_Clang_detuning ftgen 0,0,128,21,1,1 ; random array used for fixing unique detune values for each note
+gi_FM_Clang_DryMap ftgen 0,0,4096,7,1,2048,1,2048,0 ; dry mixer control mapping
+gi_FM_Clang_WetMap ftgen 0,0,4096,7,0,2048,1,2048,1 ; wet mixer control mapping
+gaSendL,gaSendR init 0 ; initialise variable used for sending audio between instruments
+gi_FM_Clang_Imp ftgen 0,0,4097,9,0.5,1,0 ; shape for the hammer inpulse
+gi_FM_Clang_stereo ftgen 0,0,256,21,1,1 ; random array used for fixing unique stereo values for each note
+gi_FM_Clang_detune ftgen 0,0,256,21,1,1 ; random array used for fixing unique detune values for each note
+gi_FM_Clang_scale ftgen 0,0,128,-7,-1,128,1
+
+instr FM_Clang_controls ; Read in widgets
+iporttime = 0.05
+gk_FM_Clang_mod chnget "mod"
+gk_FM_Clang_mod port gk_FM_Clang_mod,iporttime
+gk_FM_Clang_NdxVel chnget "NdxVel"
+gk_FM_Clang_Dur chnget "Dur"
+gk_FM_Clang_FiltFund chnget "FiltFund"
+gk_FM_Clang_NdxCurve chnget "NdxCurve"
+gk_FM_Clang_LPF chnget "LPF"
+gk_FM_Clang_ModDep chnget "ModDep"
+gk_FM_Clang_ModRte chnget "ModRte"
+gk_FM_Clang_ModRteKyb chnget "ModRteKyb"
+gk_FM_Clang_ModMix chnget "ModMix"
+gk_FM_Clang_Sustain chnget "Sustain"
+gk_FM_Clang_CarKyb chnget "CarKyb"
+gk_FM_Clang_StWidth chnget "StWidth"
+gk_FM_Clang_StWidth init 0.01
+gk_FM_Clang_StMix chnget "StMix"
+gk_FM_Clang_DryWet chnget "RvbDryWet"
+gk_FM_Clang_Dry table gk_FM_Clang_DryWet,gi_FM_Clang_DryMap,1 ; map dry/wet control
+gk_FM_Clang_Wet table gk_FM_Clang_DryWet,gi_FM_Clang_WetMap,1 ;
+gk_FM_Clang_RvbSize chnget "RvbSize"
+gk_FM_Clang_Detune chnget "Detune"
+gk_FM_Clang_DtnMix chnget "DtnMix"
+gk_FM_Clang_Amp chnget "Amp"
+gk_FM_Clang_level chnget "gk_FM_Clang_level"
+gk_FM_Clang_Amp port gk_FM_Clang_Amp,iporttime
+gk_FM_Clang_AttTim chnget "AttTim"
+gk_FM_Clang_AttVel chnget "AttVel"
+gk_FM_Clang_NseAmp chnget "NseAmp"
+gk_FM_Clang_NseBW chnget "NseBW"
+gk_FM_Clang_NseFllw chnget "NseFllw"
+endin
 
 gi_Droner_overlap init .1
 gk_Droner_distort_factor init 0.4
@@ -485,6 +617,125 @@ aleft = adamping * aleft * kgain
 aright = adamping * aright * kgain
 ; Each instrument sends its audio to a global audio output bus,
 ; where effects can be applied.
+chnmix aleft, "out_left"
+chnmix aright, "out_right"
+prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+opcode FM_Clang_veloc, i, iii
+; *p->r = *p->ilo + csound->curip->m_veloc*(*p->ihi - *p->ilo) * dv127;
+ivel, ilow, ihigh xin
+xout ilow + ivel * (ihigh - ilow) * 0.007874
+endop
+
+instr FM_Clang ; Sound producing instrument. Triggered by MIDI notes or score notes.
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p7
+ipan = p6
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
+icps = cpsmidinn(ikey)
+inum = ikey
+iamplitude = ampdb(ivelocity)
+; icps cpsmidi
+; inum notnum
+iKybdScl table inum,gi_FM_Clang_scale ; Keyboard scaling value. Note '0' maps to a value of -1, note 64 maps to a value of zero and note 127 maps to a value of 1.
+; Amplitude Envelope
+idur = i(gk_FM_Clang_Dur)
+iAmpCurve = -8
+iRelTim = (i(gk_FM_Clang_Sustain)==1?idur:0.1)
+;iAttVel veloc i(gk_FM_Clang_AttVel)*0.05,0
+iAttVel FM_Clang_veloc ivelocity, i(gk_FM_Clang_AttVel)*0.05,0
+iAttTim = iAttVel + i(gk_FM_Clang_AttTim)
+if iAttTim==0 then
+aAEnv transegr 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
+else
+aAEnv transegr 0,iAttTim,iAmpCurve, 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
+endif
+; Key velocity to amplitude
+;iAVel veloc 0,0.1
+iAVel FM_Clang_veloc ivelocity, 0, 0.1
+; FM index
+iNdx veloc 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
+iNdx FM_Clang_veloc ivelocity, 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
+kIEnv transeg iNdx*octave(-iKybdScl*4),idur,-i(gk_FM_Clang_NdxCurve),0 ; Index envelope. Amplitude influenced by 'Index' widget control and keyboard scaling (index reduced for higher notes, increased for lower notes)
+; Carrier frequency keyboard scaling
+icar = 1 * octave(iKybdScl*i(gk_FM_Clang_CarKyb))
+; Carrier ratio modulation
+iModRte table inum,gi_FM_Clang_scale
+iModRte = octave(iModRte*i(gk_FM_Clang_ModRteKyb))
+kDepEnv transeg 1,idur,-4,0
+amod lfo gk_FM_Clang_ModDep*0.1*kDepEnv, gk_FM_Clang_ModRte * iModRte, 0
+; Noise bandpass filter cutoff as it respond to the 'Carrier Follow' switch
+kcf = gk_FM_Clang_NseFllw==1?icps*gk_FM_Clang_mod:icps
+; Noise amplitude keyboard following
+kNseAmp = octave(iKybdScl*-4)*gk_FM_Clang_NseAmp
+; Main FM algorithm
+if gk_FM_Clang_NseAmp>0 then ; If noise amplitude is greater than zero...
+aNse gauss kNseAmp ; ... generate some gaussian noise
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; bandpass filter the noise
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; and again
+else
+aNse = 0 ; Otherwise no noise signal!
+endif
+idetune table inum,gi_FM_Clang_detune ; Read a detuning value from a random table
+asig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair
+aModSig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair with modulation
+asig = asig + (aModSig * gk_FM_Clang_ModMix) ; Mix the two FM pairs.
+; Auxilliary FM algorithm (used for detuning)
+if gk_FM_Clang_DtnMix>0&&gk_FM_Clang_Detune>0 then
+if gk_FM_Clang_NseAmp>0 then
+aNse gauss kNseAmp
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
+else
+aNse = 0
+endif
+idetune table inum+128,gi_FM_Clang_detune ; Read a detuning value from a random table
+asig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; Detuning applied to fundemental
+aModSig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine
+asig2 = asig2 + (aModSig2 * gk_FM_Clang_ModMix)
+asig = asig + asig2*gk_FM_Clang_DtnMix
+endif
+; Filter Fundemental
+if i(gk_FM_Clang_FiltFund)==1 then ; If filter fundemental switch is active
+asig butbr asig,icps*icar,icps*icar*0.3 ; Filter out fundemental
+asig butbr asig,icps*icar,icps*icar*0.3 ; and again to make sure it is all gone
+endif
+; Lowpass Filter
+if i(gk_FM_Clang_LPF)<32 then ; If lowpass filter is less than maximum...
+kCF limit icps*gk_FM_Clang_LPF,20,20000 ; ...create the cutoff value in CPS based on fundemental and LPF ratio control. Limit to prevent out of range values.
+asig clfilt asig,kCF,0,2 ; Butterworth lowpass filter
+endif
+; Amplitude Envelope
+kgain = ampdb(gk_FM_Clang_level)
+asig = asig * aAEnv * gk_FM_Clang_Amp * kgain; Apply amplitude envelope
+; Stereo Effect
+iDlyTimL table inum,gi_FM_Clang_stereo ; Read a delay time value from a random table based on note played
+iDlyTimR table inum+128,gi_FM_Clang_stereo ; Read a different delay time value from a random table based on note played
+if gk_FM_Clang_StWidth>0&&gk_FM_Clang_StMix>0 then ; If 'width' is above zero and 'mix' is above zero...
+aL vdelay asig, iDlyTimL*gk_FM_Clang_StWidth*1000, 0.2*1000 ; ...left channel delay
+aR vdelay asig, iDlyTimR*gk_FM_Clang_StWidth*1000, 0.2*1000 ; right channel delay
+aL ntrpol asig, aL, gk_FM_Clang_StMix ; Mix delayed and dry signal
+aR ntrpol asig, aR, gk_FM_Clang_StMix ;
+aleft = aL;*gk_FM_Clang_Dry
+aright = aR;*gk_FM_Clang_Dry
+gaSendL = gaSendL + aL ; Send to reverb
+gaSendR = gaSendR + aR
+else
+aleft = asig;*gk_FM_Clang_Dry
+aright = asig;*gk_FM_Clang_Dry
+gaSendL = gaSendL + asig ; Send to reverb
+gaSendR = gaSendR + asig
+endif
+aleft = aleft * ampdb(ivelocity)
+aright = aleft * ampdb(ivelocity)
 chnmix aleft, "out_left"
 chnmix aright, "out_right"
 prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
@@ -662,6 +913,60 @@ gk_MasterOutput_level chnget "gk_MasterOutput_level"
 prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
+gk_FM_Clang_preset init 1
+instr FM_Clang_preset
+gk_FM_Clang_preset chnget "gk_FM_Clang_preset"
+ktrig changed gk_FM_Clang_preset
+#define SET_PRESET(N'Amp'AttTim'AttVel'Dur'Sustain'mod'NdxVel'NdxCurve'CarKyb'DtnMix'Detune'LPF'FiltFund'NseAmp'NseBW'NseFllw'ModMix'ModDep'ModRte'ModRteKyb'StMix'StWidth'RvbDryWet'RvbSize)
+#
+if i(gk_FM_Clang_preset)==$N then
+printks2 "setting preset %d\n", $N
+chnset $Amp ,"Amp"
+chnset $AttTim ,"AttTim"
+chnset $AttVel ,"AttVel"
+chnset $Dur ,"Dur"
+chnset $Sustain ,"Sustain"
+chnset $mod ,"mod"
+chnset $NdxVel ,"NdxVel"
+chnset $NdxCurve ,"NdxCurve"
+chnset $CarKyb ,"CarKyb"
+chnset $DtnMix ,"DtnMix"
+chnset $Detune ,"Detune"
+chnset $LPF ,"LPF"
+chnset $FiltFund ,"FiltFund"
+chnset $NseAmp ,"NseAmp"
+chnset $NseBW ,"NseBW"
+chnset $NseFllw ,"NseFllw"
+chnset $ModMix ,"ModMix"
+chnset $ModDep ,"ModDep"
+chnset $ModRte ,"ModRte"
+chnset $ModRteKyb,"ModRteKyb"
+chnset $StMix ,"StMix"
+chnset $StWidth ,"StWidth"
+chnset $RvbDryWet,"RvbDryWet"
+chnset $RvbSize ,"RvbSize"
+endif
+#
+if ktrig==1 then
+reinit SEND_PRESET
+endif
+SEND_PRESET:
+; N'Amp'AttTim'AttVel'Dur'Sustain'mod 'NdxVel'NdxCurve'CarKyb'DtnMix'Detune'LPF'FiltFund'NseAmp'NseBW'NseFllw'ModMix'ModDep'ModRte'ModRteKyb'StMix'StWidth'RvbDryWet'RvbSize)
+$SET_PRESET(1'0.5'0 '0 '12 '1 '2.29'1 '16 '0 '1 '1.5 '16 '1 '1000 '0.001'0 '1 '0.1 '3 '0 '0.5 '0.01 '0.3 '0.55 )
+$SET_PRESET(2'0.8'0 '0 '1.7'1 '5.04'0.55 '100 '0 '0 '0 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.1 '0.55 )
+$SET_PRESET(3'0.5'0.1 '0.5 '3.8'1 '1.00'2 '28 '0 '1 '15 '16 '0 '500 '0.0077'1 '1 '0.1 '3 '0 '0.5 '0.01 '0.3 '0.55 )
+$SET_PRESET(4'0.5'0 '0.006 '24 '1 '3.19'1 '15 '0 '0.47 '2.5 '16 '1 '0 '0.001'0 '1 '0.1 '0.33 '1.7 '0.5 '0.01 '0.3 '0.55 )
+$SET_PRESET(5'0.8'0 '1 '6.6'0 '1.12'1 '13 '-2.68 '1 '25 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '1 '0.02 '0.172 '0.21 )
+$SET_PRESET(6'3.25'0.1 '1 '1.28'0 '2.55'0.55 '35 '-2.3 '0 '1.5 '16 '1 '2000 '0.0025'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.68 '0.93 )
+$SET_PRESET(7'4 '0.1 '1 '2.39'1 '2.55'0.55 '35 '-2.3 '0 '1.5 '16 '1 '16 '0.1262'0 '0 '0.1 '3 '0 '0 '0.01 '1.00 '0 )
+$SET_PRESET(8'1 '0 '0 '14.25'1 '6.97'0.55 '35 '-2.3 '0.13 '1.5 '4.78'1 '16 '0.0326'0 '1 '0.1 '3 '0 '0 '0.01 '0.6 '0 )
+$SET_PRESET(9'1.65'0 '0 '1.7'1 '1.20'0.55 '100 '0 '0 '0 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.1 '0.55 )
+$SET_PRESET(10'2' 0 '0 '1 '1 '2.15'0.55 '100 '0 '0.21 '12 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.35 '0.37 )
+$SET_PRESET(11'2 '0.1 '1 '3.44'1 '3.75'0.55 '100 '0 '0.21 '25 '16 '0 '0 '0.001'1 '0 '0.1 '3 '0 '0.5 '0.05 '0 '0.37 )
+$SET_PRESET(12'2 '0.1 '1 '1.45'1 '2.66'1.00 '16 '0 '0.21 '25 '16 '0 '0 '0.001'1 '0 '0.1 '3 '0 '0.5 '0.05 '0.6 '0.37 )
+$SET_PRESET(13'1.9'0 '0 '24 '1 '2.29'1.00 '23.25 '-4 '1 '1.5 '16 '1 '151 '0.0178'1 '1 '0.1 '3 '0 '0.5 '0.01 '0.3 '0.55 )
+endin
+
 ; The global effects receive audio from the global audio output bus,
 ; and send it on to their own global output busses.
 
@@ -740,6 +1045,8 @@ endin
 ; other always-on instruments.
 
 scoreline_i "i \"Controls\" 0 -1"
+scoreline_i "i \"FM_Clang_controls\" 0 -1"
+scoreline_i "i \"FM_Clang_preset\" 0 -1"
 scoreline_i "i \"Reverb\" 0 -1"
 scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
@@ -759,11 +1066,12 @@ scoreline_i "i \"Clear\" 0 -1"
          * Based on Barry Martin's formula for the hopalong fractal.
          * Adapted for music generation by Michael Gogins.
          */
-        var chord = ChordSpace.chordForName('GM9');
+        var GM9 = ChordSpace.chordForName('GM9');
+        var chord = GM9.clone();
         var modality = chord.clone();
         var RANGE = 60;
         var BASS = 36;
-        var INSTRUMENTS = 4;
+        var INSTRUMENTS = 6;
         var container = document.getElementById('webgl_cell');
         var velocity_cutoff = 150.;
         var VISUALS_VISIBLE = true;
@@ -791,6 +1099,8 @@ scoreline_i "i \"Clear\" 0 -1"
         var current_time_seconds = new Date().getTime() / 1000.0;
         var start_time_seconds = current_time_seconds;
         var prior_time_seconds = current_time_seconds;
+        var shuffled = false;
+        var starting_point = 0.5;
          // Orbit parameters
         var a, b, c, d, e;
         // Orbit data
@@ -820,7 +1130,8 @@ scoreline_i "i \"Clear\" 0 -1"
         var windowHalfX = container.clientWidth / 2;
         var windowHalfY = container.clientHeight / 2;
         var speed =1.2;
-        var rotationSpeed = 0.001;
+        var rotationSpeed = 0;
+        var randomization = 0;
         init();
         animate();
         function init() {
@@ -933,7 +1244,7 @@ scoreline_i "i \"Clear\" 0 -1"
             var scaleInstrument = (INSTRUMENTS + 0.99) / xRange;
             console.log('Rescale key:   ' + translateKey + ', ' + scaleKey)
             console.log('Rescale insno: ' + translateInstrument + ', ' + scaleInstrument)
-            var note_count = 32;
+            var note_count = 16;
             // Find out how long it is between the generation of each orbit,
             // and fit so many notes into that time.
             var interval_seconds = current_time_seconds - prior_time_seconds;
@@ -947,15 +1258,15 @@ scoreline_i "i \"Clear\" 0 -1"
             // There are far too many points, the notes must be thinned out.
             var stride = math.floor((NUM_POINTS_SUBSET / note_count) * NUM_SUBSETS);
             console.log('stride: ' + stride + ' NUM_POINTS_SUBSET: ' + NUM_POINTS_SUBSET);
-            var score = '';
+            var score = new Silencio.Score();
             var score_time = 0.0;
-             for (var s = 0; s < NUM_SUBSETS; s++){
+            for (var s = 0; s < NUM_SUBSETS; s++){
                 var curSubset = orbit.subsets[s];
                 for (var i = 0; i < NUM_POINTS_SUBSET; i += stride){
                     instrument = curSubset[i].x;
                     instrument -= translateInstrument;
                     instrument *= scaleInstrument;
-                    instrument = Math.floor(instrument);
+                    instrument = Math.floor(instrument + 1);
                     //instrument = 5;
                     key = curSubset[i].y;
                     key -= translateKey;
@@ -963,17 +1274,21 @@ scoreline_i "i \"Clear\" 0 -1"
                     key = Math.floor(key + BASS);
                     pan = Math.random();
                     key = ChordSpace.conformPitchToChord(key, chord, false);
-                    score += ('i ' + instrument + ' ' + score_time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + ' 0 0 0 0 0\n');
+                    pan = Math.random();
+                    //score += ('i ' + instrument + ' ' + score_time + ' ' + duration + ' ' + key + ' 60 ' + Math.random()  + ' 0 0 0 0 0\n');
+                    score.add(score_time, duration, 144, instrument, key, 60, pan);
                     score_time = score_time + timestep;
                 }
             }
             console.log('time: ' + score_time + ' interval: ' + interval_seconds + ' speed: ' + speed);
-            console.log(score);
+            console.log(score.toString());
             // Protect against trying to call an undefined Csound.
             if (typeof csound != 'undefined') {
             	if (csound.module !== null) {
             	    if (csound.is_playing === true) {
-            	    	csound.readScore(score);
+            	    	//csound.readScore(score);
+                        score.tieOverlaps();
+                        score.sendToCsound(csound);
             	    }
             	}
             }
@@ -1009,8 +1324,8 @@ scoreline_i "i \"Clear\" 0 -1"
             var xMin = 0, xMax = 0, yMin = 0, yMax = 0;
             for (var s = 0; s < NUM_SUBSETS; s++){
                 // Use a different starting point for each orbit subset
-                x = s * .005 * (0.5-Math.random());
-                y = s * .005 * (0.5-Math.random());
+                x = s * .005 * (0.5 - randomization * Math.random());
+                y = s * .005 * (0.5 - randomization * Math.random());
                 var curSubset = subsets[s];
                 for (var i = 0; i < num_points_subset_l; i++){
                     // Iteration formula (generalization of the Barry Martin's original one)
@@ -1049,7 +1364,10 @@ scoreline_i "i \"Clear\" 0 -1"
          }
         function prepareOrbit(){
             console.log('prepareOrbit()...')
-            shuffleParams();
+            if (shuffled == false) {
+                shuffleParams();
+                shuffled = true;
+            }
             orbit.xMin = 0;
             orbit.xMax = 0;
             orbit.yMin = 0;
@@ -1108,12 +1426,24 @@ scoreline_i "i \"Clear\" 0 -1"
             	csound.setControlChannel(event.target.id, slider_value);
             } else if (event.target.id === 'Scene_speed') {
             	speed = slider_value;
-            } else if (event.target.id === 'Scene_rotation') {
-            	rotationSpeed = slider_value;
+            } else if (event.target.id === 'Scene_randomization') {
+            	randomization = slider_value;
             } else if (event.target.id === 'Camera_X') {
             	mouseX = slider_value;
             } else if (event.target.id === 'Camera_Y') {
             	mouseY = slider_value;
+            } else if (event.target.id === 'A') {
+            	a = slider_value;
+            } else if (event.target.id === 'B') {
+            	b = slider_value;
+            } else if (event.target.id === 'C') {
+            	c = slider_value;
+            } else if (event.target.id === 'D') {
+            	d = slider_value;
+            } else if (event.target.id === 'E') {
+            	e = slider_value;
+            } else if (event.target.id === 'starting_point') {
+            	starting_point = slider_value;
             }
             var output_selector = '#' + event.target.id + '_output';
             $(output_selector).val(slider_value.toString());
@@ -1132,7 +1462,8 @@ scoreline_i "i \"Clear\" 0 -1"
             });
         });
         $('#harmony_E').on('click', function() {
-            csound.message('Identity:\n' + chord.information());
+            chord = GM9.clone();
+            csound.message('GM9:\n' + chord.information());
         });
         $('#harmony_K').on('click', function() {
             chord = chord.K();
