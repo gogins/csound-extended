@@ -100,22 +100,6 @@
     }
     </style>
 <body>
-    <h1>Csound HTML Tutorial 04</h1>
-    <h2>Dunes v 4</h2>
-    <h3>By Michael Gogins</h3>
-    <h4>2015</h4>
-    <p>This tutorial demonstrates an interactive composition that uses WebGL to generate
-    an animated, three-dimensional fractal that also plays a Csound score in real time.
-    <p>Load this Web page. You may need to experiment with different levels of zoom to obtain the
-    best appearance. Look at the Csound messages and wait for Csound to finish loading.
-    Click on the "Play" button, then click on the ""Play chord" buttons. Each button applies a chord
-    trasformation and plays the result. The == button repeats the existing chord. You should normally
-    wait for the sequence to finish playing before clicking again.</p>
-    <p>You can play the piece, stop it from playing, use the sliders
-    to control the sounds of the instruments as they play, and see Csound's diagnostic
-    messages. You may find this piece immediately below. Go ahead and try it -- it will play on version 31 or later of
-    Google's Chrome browser for OS X, Windows, or Linux. Examine the source code to see how the piece works.
-    There are a few comments to explain what is going on.</p>
     <form id='persist'>
     <!-- HTML tables within tables are used to create a flexible layout. -->
     <table style="width:100%;">
@@ -491,6 +475,22 @@
     </tr>
   </table>
     </form>
+    <h1>Csound HTML Tutorial 04</h1>
+    <h2>Dunes v 4</h2>
+    <h3>By Michael Gogins</h3>
+    <h4>2015</h4>
+    <p>This tutorial demonstrates an interactive composition that uses WebGL to generate
+    an animated, three-dimensional fractal that also plays a Csound score in real time.
+    <p>Load this Web page. You may need to experiment with different levels of zoom to obtain the
+    best appearance. Look at the Csound messages and wait for Csound to finish loading.
+    Click on the "Play" button, then click on the ""Play chord" buttons. Each button applies a chord
+    trasformation and plays the result. The == button repeats the existing chord. You should normally
+    wait for the sequence to finish playing before clicking again.</p>
+    <p>You can play the piece, stop it from playing, use the sliders
+    to control the sounds of the instruments as they play, and see Csound's diagnostic
+    messages. You may find this piece immediately below. Go ahead and try it -- it will play on version 31 or later of
+    Google's Chrome browser for OS X, Windows, or Linux. Examine the source code to see how the piece works.
+    There are a few comments to explain what is going on.</p>
     <h4>Csound Orchestra</h4>
     <p>The entire Csound orchestra is contained in this HTML text area.</p>
     <textarea class="code" id="orc" rows=24 cols=80>
@@ -1100,7 +1100,7 @@ scoreline_i "i \"Clear\" 0 -1"
         var start_time_seconds = current_time_seconds;
         var prior_time_seconds = current_time_seconds;
         var shuffled = false;
-        var starting_point = 0.5;
+        var starting_point = parseFloat(document.getElementById('starting_point').value);
          // Orbit parameters
         var a, b, c, d, e;
         // Orbit data
@@ -1129,7 +1129,7 @@ scoreline_i "i \"Clear\" 0 -1"
         var mouseX = 0, mouseY = 0;
         var windowHalfX = container.clientWidth / 2;
         var windowHalfY = container.clientHeight / 2;
-        var speed =1.2;
+        var Scene_speed = parseFloat(document.getElementById('Scene_speed').value);
         var rotationSpeed = 0;
         var randomization = 0;
         init();
@@ -1173,7 +1173,7 @@ scoreline_i "i \"Clear\" 0 -1"
             container.appendChild( renderer.domElement );
             window.addEventListener( 'resize', onWindowResize, false );
             // Schedule orbit regeneration
-            setTimeout(updateOrbit, 10000 / speed);
+            setTimeout(updateOrbit, 10000 / Scene_speed);
         }
         function animate() {
             requestAnimationFrame( animate );
@@ -1212,7 +1212,7 @@ scoreline_i "i \"Clear\" 0 -1"
             }
             camera.lookAt( scene.position );
             for( i = 0; i < scene.objects.length; i++ ) {
-                scene.objects[i].position.z +=  speed;
+                scene.objects[i].position.z +=  Scene_speed;
                 scene.objects[i].rotation.z += rotationSpeed * .1;
                 if (scene.objects[i].position.z > camera.position.z){
                     scene.objects[i].position.z = - (NUM_LEVELS -1) * LEVEL_DEPTH;
@@ -1280,13 +1280,12 @@ scoreline_i "i \"Clear\" 0 -1"
                     score_time = score_time + timestep;
                 }
             }
-            console.log('time: ' + score_time + ' interval: ' + interval_seconds + ' speed: ' + speed);
-            console.log(score.toString());
             // Protect against trying to call an undefined Csound.
             if (typeof csound != 'undefined') {
             	if (csound.module !== null) {
             	    if (csound.is_playing === true) {
-            	    	//csound.readScore(score);
+                      console.log('time: ' + score_time + ' interval: ' + interval_seconds + ' Scene_speed: ' + Scene_speed);
+                      console.log(score.toString());
                         score.tieOverlaps();
                         score.sendToCsound(csound);
             	    }
@@ -1305,7 +1304,7 @@ scoreline_i "i \"Clear\" 0 -1"
                 scene.objects[i].needsUpdate = 1;
             }
             // Speed up or slow down the interval between generations.
-            setTimeout(updateOrbit, 10000 / speed);
+            setTimeout(updateOrbit, 10000 / Scene_speed);
         }
         function generateOrbit(){
             var x, y, z, x1;
@@ -1413,7 +1412,6 @@ scoreline_i "i \"Clear\" 0 -1"
             csound.perform();
             $('#restore').trigger('click');
             csound.compileOrc(document.getElementById('orc').value);
-            //csound.readScore('f 0 600\n');
             csound.is_playing = true;
          });
         $('#stop').on('click', function() {
@@ -1425,7 +1423,7 @@ scoreline_i "i \"Clear\" 0 -1"
             if (event.target.id.startsWith('gk_')) {
             	csound.setControlChannel(event.target.id, slider_value);
             } else if (event.target.id === 'Scene_speed') {
-            	speed = slider_value;
+            	Scene_speed = slider_value;
             } else if (event.target.id === 'Scene_randomization') {
             	randomization = slider_value;
             } else if (event.target.id === 'Camera_X') {
@@ -1456,9 +1454,13 @@ scoreline_i "i \"Clear\" 0 -1"
         $('#restore').on('click', function() {
             $('.persistent-element').each(function() {
                 this.value = localStorage.getItem(this.id);
+                console.log('#restore: ' + this.id + ' = ' + this.value);
                 var output_selector = '#' + this.id + '_output';
-                $(output_selector).val(this.value);
-                csound.setControlChannel(this.id, this.value);
+                $('#' + this.id).trigger('input');
+                //$(output_selector).val(this.value);
+                if (this.id.startsWith('gk_')) {
+                    csound.setControlChannel(this.id, this.value);
+                }
             });
         });
         $('#harmony_E').on('click', function() {
