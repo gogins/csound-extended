@@ -75,7 +75,7 @@ var csound = (function() {
    */
   function handleCrash(event) {
     if (csound.module.exitStatus == -1) {
-      updateStatus('Ops, something went wrong... please refresh page',1);
+      updateStatus('Oops, Csound has crashed... please refresh page',1);
     } else {
 	updateStatus('Csound has exited [' + csound.module.exitStatus + ']', 1);
     }

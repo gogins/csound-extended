@@ -224,9 +224,9 @@ function Score() {
 }
 Score.prototype.add = function(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) {
   var event = new Event();
-  for (var i = 0; i < event.length; i++) {
-    if (arguments[i] !== undefined) {
-      event[i] = arguments[i];
+  for (var i = 0; i < event.data.length; i++) {
+    if (typeof arguments[i] !== 'undefined') {
+      event.data[i] = arguments[i];
      }
   }
   this.data.push(event);
@@ -295,10 +295,14 @@ Score.prototype.setDuration = function (duration) {
 }
 
 Score.prototype.sendToCsound = function(csound, extra) {
-  extra = extra || 5.0;
-  this.sort();
-  var duration = this.getDuration() + extra;
-  jscore = 'f 0 ' + duration + ' 0\n';
+    if (typeof extra === 'undefined') {
+        jscore = '';
+    } else {
+        extra = 5.0;
+        this.sort();
+        var duration = this.getDuration() + extra;
+        jscore = 'f 0 ' + duration + ' 0\n';
+    }
   for (var i = 0; i < this.data.length; i++) {
     jscore += this.data[i].toIStatement() + '\n';
   }
@@ -366,7 +370,9 @@ Score.prototype.sort = function() {
 
 Score.prototype.tieOverlaps = function(tieExact) {
   csound.message("Before tieing: " + this.data.length + "\n");
-  tieExact = tieExact || false;
+  if (typeof tieExact === 'undefined') {
+      tieExact = false;
+  }
   this.sort();
   for (var laterI = this.data.length - 1; laterI >= 0; laterI--) {
     var laterEvent = this.data[laterI];
