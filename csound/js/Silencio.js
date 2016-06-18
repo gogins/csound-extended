@@ -3,7 +3,7 @@ S I L E N C I O
 
 Copyright (C) 2014 by Michael Gogins
 
-This software is licensed under the terms of the 
+This software is licensed under the terms of the
 GNU Lesser General Public License
 
 Part of Silencio, an algorithmic music composition library for Csound.
@@ -12,23 +12,23 @@ DEVELOPMENT LOG
 
 2015-07-15
 
-Silencio.js was relatively easy, ChordSpace.js is going to be harder. The main 
-problems are that JavaScript does not permit operator overloading, and it does 
+Silencio.js was relatively easy, ChordSpace.js is going to be harder. The main
+problems are that JavaScript does not permit operator overloading, and it does
 not implement deep clones or deep value comparisons out of the box.
 
- I will omit the chord space group stuff because it will not always be 
- possible to save the chord space group files, which are necessarily for 
+ I will omit the chord space group stuff because it will not always be
+ possible to save the chord space group files, which are necessarily for
  efficient use with chords of more than 3 or 4 voices.
 
-It is now clear that Lua (and especially LuaJIT) is a rather superior 
+It is now clear that Lua (and especially LuaJIT) is a rather superior
 language; and yet, JavaScript provides everything that I need.
 
-TO DO 
+TO DO
 
 --  Implement various scales found in 20th and 21st century harmony
     along with 'splitting' and 'merging' operations.
 
---  Implement tendency masks. 
+--  Implement tendency masks.
 
 --  Implement Xenakis sieves.
 
@@ -53,8 +53,123 @@ An Event is a homogeneous vector with the following dimensions:
 11 Homogeneity, normally always 1.
 
 NOTE: ECMASCRIPT 5 doesn't support inheritance from Array
-in a clean and complete way, so we don't even try. 
+in a clean and complete way, so we don't even try.
 */
+
+/**
+ * Deserialize the file, which must contain JSON, and return either
+ * the JSON or the parsed object.
+ * If the pathname is undefined, then use the location + ".json".
+ * Returns the object for success, or null for failure.
+ */
+var restoreFromLocalFile = function(toObject, filepath) {
+    try {
+        if (typeof filepath === 'undefined') {
+            filepath = window.location.pathname.slice(1);
+            filepath = fs.realpathSync(filepath);
+            filepath = filepath + '.json';
+        }
+        console.log('loading from filepath: ' + filepath);
+        var json = fs.readFileSync(filepath);
+        console.log('json: ' + json);
+        if (toObject === true) {
+            var parsed_object = JSON.parse(json);
+            console.log('parsed object: ' + parsed_object);
+            return parsed_object;
+        }
+        return json;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+/**
+ * Translate the object to JSON and save it on the local filesystem.
+ * If the object is already a JSON string, do not translate it.
+ * If the filepath is undefined, then use the location + ".json";
+ * in this case, obviously, the location must be indeed be a local
+ * filepath. Returns true for success, and false for failure.
+ */
+var saveToLocalFile = function(fromObject, object, filepath) {
+    try {
+        if (fromObject) {
+            var json = JSON.stringify(object);
+        } else {
+            var json = object;
+        }
+        if (typeof json === 'undefined') {
+            throw "saveToLocalFile: json is undefined.";
+        }
+        if (json === null || json === 'null') {
+            throw "saveToLocalFile: json is null.";
+        }
+        if (typeof filepath === 'undefined') {
+            filepath = window.location.pathname.slice(1);
+            filepath = fs.realpathSync(filepath);
+            filepath = filepath + '.json';
+        }
+        console.log('json: ' + json);
+        console.log('saving to filepath: ' + filepath);
+        fs.writeFileSync(filepath, json);
+        return true;
+    } catch (err) {
+        console.log(err.message);
+        return false;
+    }
+}
+
+/**
+ * Restore dat.gui parameters as JSON from:
+ * Local storage, if it exists (this happens in dat.gui itself); otherwise,
+ * from the local file system, if the file exists; otherwise,
+ * using the default parameters in JSON form.
+ * NOTE: 'load' element for dat.gui constructor is a JSON _object_,
+ * not a string.
+ */
+var restoreDatGuiJson = function(default_parameters_json) {
+    var parameters_filesystem_json = Silencio.restoreFromLocalFile(false);
+    if (parameters_filesystem_json != null && parameters_filesystem_json != 'null') {
+        console.log('Restored dat.gui parameters from local filesystem: ' + parameters_filesystem_json);
+        return JSON.parse(parameters_filesystem_json);
+    } else {
+        console.log('Restored dat.gui parameters from default: ' + parameters_default_json);
+        return parameters_default_json;
+    }
+}
+
+/**
+ * Save the parameters object for dat.gui as JSON to the local file system.
+ * Returns true for success, and false for failure.
+ */
+var saveDatGuiJson = function(gui) {
+    try {
+        var json = gui.getSaveObject();
+        console.log('typeof json:' + (typeof json));
+        saveToLocalFile(true, json);
+        return true;
+    } catch (err) {
+        console.log(err.message);
+        return false;
+    }
+}
+
+/**
+ * Parse the Csound orchestra for hints to create a user interface using
+ * nw.gui sliders; create that user interface in the HTML window; and create
+ * and compile a "Controls" instrument ro receive values from that user
+ * interface.
+ *
+ * The hints are in the form of special comments following global variable
+ * declarations associated with an instrument definition:
+ * g<x>_<instrname>_<variablename> init <default_value> ;|Instrument Name|Control Name|Minimum Valuie|Maximum Value|Increment|
+ */
+var createNwSlider = function(line, window, nwfolder) {
+
+}
+
+var createNwUi = function(orc, csound, window) {
+     var channels = [];
+}
 
 function eq_epsilon(a, b) {
   var epsilon_factor = 100 * Number.EPSILON;
@@ -116,8 +231,8 @@ function Event() {
     set: function(value) { this.data[1] = value; }
   });
   Object.defineProperty(this,"end",{
-    get: function() { 
-      return this.data[0] + this.data[1]; 
+    get: function() {
+      return this.data[0] + this.data[1];
     },
     set: function(end_) {
         var duration_ = end_ - this.data[0];
@@ -182,7 +297,7 @@ Event.COUNT = 11;
 Event.prototype.toString = function() {
   var text = '';
   for (var i = 0; i < this.data.length; i++) {
-    text = text.concat(' ', this.data[i].toFixed(6)); 
+    text = text.concat(' ', this.data[i].toFixed(6));
   }
   text = text.concat('\n');
   return text;
@@ -199,11 +314,14 @@ Event.prototype.toIStatement = function() {
   text = text.concat(' ', this.data[7].toFixed(6));
   text = text.concat(' ', this.data[8].toFixed(6));
   text = text.concat(' ', this.data[9].toFixed(6));
+  text = text.concat('\n');
   return text;
 }
 
 Event.prototype.temper = function(tonesPerOctave) {
-  tonesPerOctave = tonesPerOctave || 12;
+  if (typeof tonesPerOctave === 'undefined') {
+      tonesPerOctave = 12;
+  }
   var octave = this.key / 12;
   var tone = Math.floor((octave * tonesPerOctave) + 0.5);
   octave = tone / tonesPerOctave;
@@ -221,6 +339,7 @@ function Score() {
   this.minima = new Event();
   this.maxima = new Event();
   this.ranges = new Event();
+  this.context = null;
 }
 Score.prototype.add = function(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) {
   var event = new Event();
@@ -245,7 +364,7 @@ Score.prototype.clear = function () {
 Score.prototype.getDuration = function () {
   this.sort();
   this.findScale(0);
-  var duration = 0; 
+  var duration = 0;
   for (var i = 0; i < this.data.length; i++) {
     var event = this.data[i];
     if (i == 0) {
@@ -261,7 +380,7 @@ Score.prototype.getDuration = function () {
 }
 
 Score.prototype.log = function (what) {
-  if (what === undefined) {
+  if (typeof what === 'undefined') {
     what = '';
   } else {
     what = what + ': ';
@@ -272,12 +391,26 @@ Score.prototype.log = function (what) {
   }
 }
 
+Score.prototype.getEnd = function () {
+  for (var i = 0; i < this.data.length; i++) {
+    var event = this.data[i];
+    if (i === 0) {
+        var end = event.end;
+    } else {
+        if (end < event.end) {
+            end = event.end;
+        }
+    }
+  }
+  return end;
+}
+
 Score.prototype.setDuration = function (duration) {
   this.sort();
   var start = this.data[0].time;
   for (var i = 0; i < this.data.length; i++) {
     var event = this.data[i];
-    event.data[0] = event.data[0] - start;  
+    event.data[0] = event.data[0] - start;
   }
   var currentDuration = this.data[0].end;
   for (var i = 0; i < this.data.length; i++) {
@@ -289,8 +422,8 @@ Score.prototype.setDuration = function (duration) {
   var factor = Math.abs(duration / currentDuration);
   for (var i = 0; i < this.data.length; i++) {
     var event = this.data[i];
-    event.data[0] = event.data[0] * factor; 
-    event.data[1] = event.data[1] * factor; 
+    event.data[0] = event.data[0] * factor;
+    event.data[1] = event.data[1] * factor;
   }
 }
 
@@ -303,8 +436,22 @@ Score.prototype.sendToCsound = function(csound, extra) {
         var duration = this.getDuration() + extra;
         jscore = 'f 0 ' + duration + ' 0\n';
     }
+    //for (var i = 0; i < this.data.length; i++) {
+    //    var event = this.data[i];
+    //    var pfields = [];
+    //    pfields.push(event.data[3]);
+    //    pfields.push(event.data[0]);
+    //    pfields.push(event.data[1]);
+    //    pfields.push(event.data[4]);
+    //    pfields.push(event.data[5]);
+    //    pfields.push(event.data[6]);
+    //    pfields.push(event.data[7]);
+    //    pfields.push(event.data[8]);
+    //    pfields.push(event.data[9]);
+    //    csound.scoreEvent('i', pfields);
+    //}
   for (var i = 0; i < this.data.length; i++) {
-    jscore += this.data[i].toIStatement() + '\n';
+    jscore += this.data[i].toIStatement();
   }
   csound.readScore(jscore);
 }
@@ -321,14 +468,14 @@ Score.prototype.findScale = function(dimension) {
   for (var i = 0; i < this.data.length; i++) {
     var value = this.data[i].data[dimension];
     if (i === 0) {
-      min = value; 
-      max = value; 
+      min = value;
+      max = value;
     } else {
       if (value < min) {
-        min = value; 
+        min = value;
       }
       if (value > max) {
-        max = value; 
+        max = value;
       }
     }
   }
@@ -345,7 +492,7 @@ Score.prototype.setScale = function(dimension, minimum, range) {
     currentRange = 1;
   }
   var rescale = range / currentRange;
-  if (range === undefined) {
+  if (typeof range === 'undefined') {
     rescale = 1;
   }
   var translate = minimum;
@@ -353,8 +500,8 @@ Score.prototype.setScale = function(dimension, minimum, range) {
     var value = this.data[i].data[dimension];
     value -= toOrigin;
     value *= rescale;
-    value += translate; 
-    this.data[i].data[dimension] = value; 
+    value += translate;
+    this.data[i].data[dimension] = value;
   }
 }
 
@@ -390,12 +537,12 @@ Score.prototype.tieOverlaps = function(tieExact) {
             if ((Math.floor(earlierEvent.channel) === Math.floor(laterEvent.channel)) &&
                 (Math.round(earlierEvent.key) === Math.round(laterEvent.key)))
           {
-              console.log('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
-              console.log('    to: ' + laterI + ' ' + laterEvent.toString());
-            earlierEvent.end = laterEvent.end;
+              //console.log('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
+              //console.log('    to: ' + laterI + ' ' + laterEvent.toString());
+              earlierEvent.end = laterEvent.end;
               laterEvent.duration = 0;
               laterEvent.velocity = 0;
-              console.log('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
+              //console.log('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
               break;
           }
         }
@@ -415,19 +562,30 @@ Score.prototype.tieOverlaps = function(tieExact) {
   csound.message("After tieing: " + this.data.length + "\n");
 }
 
+Score.prototype.progress = function(score_time) {
+    if (context !== null) {
+        context.fillStyle = "LawnGreen";
+        context.fillRect(0, 60, score_time, .01);
+    }
+}
+
 Score.prototype.draw = function(canvas, W, H) {
   this.findScales();
+  // Draw the score in the central 90% of the canvas.
   csound.message("minima:  " + this.minima + "\n");
   csound.message("ranges:  " + this.ranges + "\n");
   var xsize = this.getDuration();
   var ysize = this.ranges.key;
-  var xscale = Math.abs(W / xsize);
-  var yscale = Math.abs(H / ysize);
-  var xmove = - this.minima.time;
-  var ymove = - this.minima.key;
-  var context = canvas.getContext("2d");
-  context.scale(xscale, yscale);
-  context.translate(xmove, ymove);
+  var inner_scale = .9
+  // Create a border.
+  var xscale = Math.abs(W * inner_scale / xsize);
+  var yscale = Math.abs(H * inner_scale / ysize);
+  var xmove = this.minima.time;
+  var ymove = this.minima.key;
+  context = canvas.getContext("2d");
+  context.scale(xscale, -yscale);
+  //context.translate(-xmove, -ymove - ysize);
+  context.translate(-xmove + (xsize * (1 - inner_scale)/2), (-ymove - ysize) - (ysize * (1 - inner_scale)/2));
   csound.message("score:  " + xsize + ", " + ysize + "\n");
   csound.message("canvas: " + W + ", " + H + "\n");
   csound.message("scale:  " + xscale + ", " + yscale + "\n");
@@ -445,7 +603,7 @@ Score.prototype.draw = function(canvas, W, H) {
     var x2 = this.data[i].end;
     var y = this.data[i].key;
     var hue = this.data[i].channel - this.minima.channel;
-    hue = hue / channelRange;
+    hue = 100 * (hue / channelRange);
     var value = this.data[i].velocity - this.minima.velocity;
     value = value / velocityRange;
     value = .5 + value / 2;
@@ -457,8 +615,9 @@ Score.prototype.draw = function(canvas, W, H) {
     context.moveTo(x1, y);
     context.lineTo(x2, y);
     context.stroke();
-    //csound.message("note " + i + ": " + x1 + ", " + x2 + ", " + y + "\n");
+    //console.log(this.data[i].toString() + ' x1: ' + x1 + ' x2: ' + x2 + ' y: ' + y + ' hsv: ' + hsv + '.');
   }
+  return context;
 }
 
 Score.prototype.toString = function() {
@@ -467,6 +626,18 @@ Score.prototype.toString = function() {
         var event = this.data[i];
         result = result.concat(event.toString());
     };
+    return result;
+};
+
+Score.prototype.toCsoundScore = function(extra) {
+    var result = '';
+    for (var i = 0; i < this.data.length; i++) {
+        var event = this.data[i];
+        result = result.concat(event.toIStatement());
+    };
+    if (typeof extra !== 'undefined') {
+        result.concat('e ' + extra);
+    }
     return result;
 };
 
@@ -481,15 +652,23 @@ Score.prototype.get = function(index) {
 // Returns the sub-score containing events
 // starting at or later than the begin time,
 // and up to but not including the end time.
-// The events in the slice are references.
-Score.prototype.slice = function(begin, end_) {
+// The events in the slice are values unless
+// by_reference is true.
+Score.prototype.slice = function(begin, end_, by_reference) {
+      if (typeof by_reference === 'undefined') {
+      by_reference = false;
+    }
     this.sort();
     var s = new Silencio.Score();
     for (var index = 0; index < this.size(); index++) {
         var event = this.data [index];
         var time_ = event.time;
         if (time_ >= begin && time_ < end_) {
-            s.append(event.clone ());
+            if (by_reference === true) {
+                s.append(event);
+            } else {
+                s.append(event.clone());
+            }
         };
     };
     return s;
@@ -603,14 +782,14 @@ LSys.prototype.generate = function(n) {
 LSys.prototype.draw = function(t, context, W, H) {
   context.fillStyle = 'black';
   context.fillRect(0, 0, W, H);
-  // Draw for size. 
+  // Draw for size.
   t.reset();
   var size = [t.p.x, t.p.y, t.p.x, t.p.y];
   for (var i=0; this.sentence.length > i; i++) {
     var c = this.sentence[i];
     this.interpret(c, t, context, size);
   }
-  // Draw to show. 
+  // Draw to show.
   var xsize = size[2] - size[0];
   var ysize = size[3] - size[1];
   var xscale = Math.abs(W / xsize);
@@ -658,7 +837,7 @@ Turtle.prototype.endNote = function(score) {
 LSys.prototype.interpret = function(c, t, context, size) {
   //csound.message('c:' + c + '\n');
   if (c === 'F') {
-    if (size === undefined) {
+    if (typeof size === 'undefined') {
       t.startNote();
       t.go(context);
     } else {
@@ -676,7 +855,7 @@ LSys.prototype.interpret = function(c, t, context, size) {
   else if (c === 'v') t.downVelocity();
   else if (c === 'T') t.upTempo();
   else if (c === 't') t.downTempo();
-  if (size === undefined) {
+  if (typeof size === 'undefined') {
     if (c === 'F') {
       t.endNote(this.score);
     }
@@ -784,7 +963,11 @@ var Silencio = {
   Turtle: Turtle,
   LSys: LSys,
   RecurrentResult: RecurrentResult,
-  Recurrent: Recurrent
+  Recurrent: Recurrent,
+  saveToLocalFile: saveToLocalFile,
+  restoreFromLocalFile: restoreFromLocalFile,
+  saveDatGuiJson: saveDatGuiJson,
+  restoreDatGuiJson: restoreDatGuiJson
 };
 // Node: Export function
 if (typeof module !== "undefined" && module.exports) {
