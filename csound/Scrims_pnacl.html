@@ -13,15 +13,14 @@
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
         <script>
-            var csound = require('csound.node');
-            var nwgui = require('nw.gui');
-            if (typeof sprintfjs.sprintf !== 'undefined') {
-                var sprintf = sprintfjs.sprintf;
-            }
+            try {
             var nw_window = nwgui.Window.get();
             nw_window.on('close', function() {
                 console.log('Closing down...');
                 //process.exit(0);
+            } catch(err) {
+                console.log(err.message);
+            }
             });
         </script>
     </head>
