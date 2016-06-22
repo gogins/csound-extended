@@ -1504,6 +1504,7 @@ endin
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
     function handleMessage(message) {
+        console.log(message);
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + message.data;
