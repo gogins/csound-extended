@@ -1482,7 +1482,9 @@ endin
             slider.onChange(on_parameter_change);
             return slider;
         };
-        csound.is_playing = false;
+        if (typeof csound !== 'undefined') {
+            csound.is_playing = false;
+        }
        </script>
     <script type="text/javascript" src="csound.js"></script>
     <script>
