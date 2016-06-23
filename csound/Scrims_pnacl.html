@@ -1444,9 +1444,11 @@ endin
             gui.revert();
         }
         function gk_update(name, value) {
-          var numberValue = parseFloat(value);
-          csound.setControlChannel(name, numberValue);
-          csound.message(name + ': ' + numberValue + '\n');
+            if (typeof csound !== 'undefined') {            
+                var numberValue = parseFloat(value);
+                csound.setControlChannel(name, numberValue);
+                csound.message(name + ': ' + numberValue + '\n');
+            }
         }
         function add_slider(gui_folder, token, minimum, maximum) {
             var on_parameter_change = function(value) {
