@@ -250,7 +250,9 @@ var csound = (function() {
    */
   function SetChannel(name, value){
     var channel = 'channel:' + name + ':';
-    csound.module.postMessage(channel + value);
+    if (typeof csound.modue !== 'undefined') {
+    	csound.module.postMessage(channel + value);
+    }
    }
 
 
