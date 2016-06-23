@@ -474,6 +474,10 @@ var csound = (function() {
      var constraints = {audio:  { mandatory: { echoCancellation: false }}}
      navigator.webkitGetUserMedia(constraints,input_ok,input_fail);
    }
+   
+   function SetOption(option_string) {
+   	console.log('Dummy SetOption(' + option_string + ')');
+   }
 
    return {
     module: null,
@@ -514,6 +518,7 @@ var csound = (function() {
     perform: Play,
     readScore: ReadScore,
     setControlChannel: SetChannel,
+    setOption: SetOption,
     setStringChannel: SetStringChannel,
     stop: Stop
   };
