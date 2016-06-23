@@ -1295,6 +1295,9 @@ endin
             Notes_per_second: 8,
             Stride: 100,
             Play_Stop: function() {
+                if (typeof csound.is_playing === 'undefined') {
+                    csound.is_playig = false;
+                }
                 if (csound.is_playing === false) {
                     csound.compileOrc(document.getElementById('orc').value);
                     csound.setOption('-m0');
