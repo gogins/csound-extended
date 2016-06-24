@@ -1221,8 +1221,8 @@ endin
             score.temper();
             ChordSpace.conformScoreToChord(score, chord, false);
             var score_text = score.toString();
-            var message = sprintf('createNote: subset: %2d point: %5d x: %9.4f y: %9.4f  %s', subset_index, subset_point_index, point.x, point.y, score_text);
-            console.log(message);
+            //var message = sprintf('createNote: subset: %2d point: %5d x: %9.4f y: %9.4f  %s', subset_index, subset_point_index, point.x, point.y, score_text);
+            //console.log(message);
             // Protect against trying to call an undefined Csound.
             if (typeof csound != 'undefined') {
                 if (csound.module !== null) {
