@@ -1064,7 +1064,8 @@ endin
             if (typeof csound !== 'undefined') {
                 if (csound.is_playing === true) {
                     score_time_cell = document.getElementById('Time_cell');
-                    var score_time = csound.getScoreTime();
+                    current_time_seconds = new Date().getTime() / 1000.0;
+                    var score_time = current_time_seconds - start_time_seconds;
                     score_time_cell.innerHTML = score_time.toFixed(3);
                  }
             }
