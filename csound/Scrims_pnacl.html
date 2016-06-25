@@ -36,7 +36,7 @@
         </style>
         <div id = 'webgl_cell' class='canvas' style="width:82vw;height:98vh;"/div>
         <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
-            <col >
+            <col width=80px>
             <col width=80px>
             <tr style="color:gold;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
@@ -1021,14 +1021,11 @@ scoreline_i "i \"Clear\" 0 -1"
                     csound.perform();
                     gui.revert();
                     csound.compileOrc(document.getElementById('orc').value);
-                    //csound.setOption('-m0');
-                    //csound.setOption('-odac');
                     start_time_seconds = new Date().getTime() / 1000.0;
                     csound.is_playing = true;
                 } else {
                     csound.is_playing = false;
                     csound.stop();
-                    //location.reload();
                 }
             },
             FM9: function() {
