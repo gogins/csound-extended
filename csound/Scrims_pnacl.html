@@ -40,7 +40,7 @@
             <col width=80px>
             <tr style="color:gold;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
-            <td style="font-weight:bold;">Scrims</td><td style="color:gold;text-align:right;">Michael Gogins</td>
+            <td style="font-weight:bold;">Scrims (PNaCl version for Chrome)</td><td style="color:gold;text-align:right;">Michael Gogins</td>
             </tr>
             <tr>
                 <td>Time: </td><td id="Time_cell" style="color:SkyBlue;text-align:right;"></td>
@@ -589,8 +589,8 @@ ihomogeneity = p11
 ain_left chnget "reverb_out_left"
 ain_right chnget "reverb_out_right"
 kgain = ampdb(gk_MasterOutput_level)
-aout_left = ain_left * gk_MasterOutput_level * kgain * 0.00001
-aout_right = ain_right * gk_MasterOutput_level * kgain * 0.00001
+aout_left = ain_left * gk_MasterOutput_level * kgain * 0.00000001
+aout_right = ain_right * gk_MasterOutput_level * kgain * 0.00000001
 outs aout_left, aout_right
 prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
@@ -1019,6 +1019,7 @@ scoreline_i "i \"Clear\" 0 -1"
                 }
                 if (csound.is_playing === false) {
                     csound.perform();
+                    gui.revert();
                     csound.compileOrc(document.getElementById('orc').value);
                     csound.setOption('-m0');
                     csound.setOption('-odac');
@@ -1027,7 +1028,7 @@ scoreline_i "i \"Clear\" 0 -1"
                 } else {
                     csound.is_playing = false;
                     csound.stop();
-                    location.reload();
+                    //location.reload();
                 }
             },
             FM9: function() {
@@ -1078,9 +1079,6 @@ scoreline_i "i \"Clear\" 0 -1"
             T5: function() {
                 chord = chord.T(5);
                 csound.message('D():\n' + chord.information());
-            },
-            Developer_tools: function() {
-                nwgui.Window.get().showDevTools();
             },
         };
 
@@ -1162,7 +1160,6 @@ scoreline_i "i \"Clear\" 0 -1"
             add_slider(Generate, 'Camera_X', -500, 500).name('Camera X');
             add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
             gui.add(parameters, 'Play_Stop').name('Play/Stop');
-            gui.add(parameters, 'Developer_tools').name('Developer tools');
             gui.revert();
         }
         function gk_update(name, value) {
