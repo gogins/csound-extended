@@ -1021,8 +1021,8 @@ scoreline_i "i \"Clear\" 0 -1"
                     csound.perform();
                     gui.revert();
                     csound.compileOrc(document.getElementById('orc').value);
-                    csound.setOption('-m0');
-                    csound.setOption('-odac');
+                    //csound.setOption('-m0');
+                    //csound.setOption('-odac');
                     start_time_seconds = new Date().getTime() / 1000.0;
                     csound.is_playing = true;
                 } else {
