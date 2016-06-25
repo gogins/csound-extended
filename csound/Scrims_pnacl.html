@@ -1082,9 +1082,10 @@ scoreline_i "i \"Clear\" 0 -1"
             },
         };
 
+        var gui = null;
         window.onload = function() {
             csound.message('platform: ' + navigator.platform + '\n');
-            var gui = new dat.GUI({width: 300});
+            gui = new dat.GUI({width: 300});
             gui.remember(parameters);
             var intruments = gui.addFolder('Csound instruments');
             var fmclang = intruments.addFolder('FM Clang');
