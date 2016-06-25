@@ -53,8 +53,11 @@
             <tr>
                 <td>Notes: </td><td id="Notes_cell" style="color:SkyBlue;text-align:right;"></td>
             </tr>
+           <tr>
+            <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
+                <td colspan=2><textarea id="console" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
+            </tr>
         </table>
-        <textarea class="code" id="console"></textarea>
         <textarea class="code" id="orc" hidden rows=24 cols=80>
 
 sr = 88200
@@ -1180,13 +1183,6 @@ endin
             camera.updateProjectionMatrix();
             renderer.setSize( container.clientWidth, container.clientHeight );
         }
-    	function handleMessage(message) {
-    	    var messages_textarea = document.getElementById("console");
-    	    var existing = messages_textarea.value;
-    	    messages_textarea.value = existing + message.data;
-    	    messages_textarea.scrollTop = messages_textarea.scrollHeight;
-            console.log(message.data);
-        }
         var mediaQueryList = window.matchMedia('print');
         mediaQueryList.addListener(function(mql) {
            console.log('mql: ' + mql.media);
@@ -1499,27 +1495,14 @@ endin
        </script>
     <script type="text/javascript" src="csound.js"></script>
     <script>
-    var start_onclick = function() {
-        csound.perform();
-        var orc = document.getElementById('orc').value;
-        csound.compileOrc(orc);
-        var sco = document.getElementById('sco').value;
-        csound.readScore(sco);
-    }
-    // The "csound.js" stop() function destroys the "csound" module and re-creates it;
-    // edits in the orchestra and score textareas are preserved.
-    // To permanently save those edits, of course, you have to save them somewhere else before you unload the page.
-    var stop_onclick = function() {
-        csound.stop();
-    }
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
     // "console" text area.
     function handleMessage(message) {
         console.log(message);
-        //var messages_textarea = document.getElementById("console");
-        //var existing = messages_textarea.value;
-        //messages_textarea.value = existing + message.data;
-        //messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + message.data;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     }
     </script>
     <!--The PNaCl csound module must be the very last element in the body, 
