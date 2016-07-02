@@ -5,13 +5,12 @@
     <meta http-equiv="Expires" content="-1"></head>
 <body>
     <h1>CompileCsdText</h1>
+    <h4>By Michael Gogins</h3>
+    <h4>2016</h4> 
     <h2>Introduction</h3>
     <p>The purpose of this demonstration is to show how to embed a Csound piece into a Web page. You can play the 
     piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. This piece will play on csound.node. 
-    A thorough explanation of the steps required to create this piece follows.</p>
-    <h2>Dunes</h2>
-    <h4>By Michael Gogins</h3>
-    <h4>2015</h4> 
+    </p>
     <input type="button" value="Play" onclick="start_onclick()"/>
     <input type="button" value="Stop" onclick="stop_onclick()"/>
     <h4>Csound Orchestra</h4>
@@ -487,23 +486,8 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     <p>Comments in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
-    <h3>Starting and Stopping Csound</h3>
-    <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
-    playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
-    Csound, send the orchestra to Csound, and send the score, in order to perform the piece.</p>
-    <p>The buttons and code for the Play and Stop buttons above look like the following, which in fact 
-    includes <i>all</i> of the code required to embed Csound in a Web page for node.csound:</p>
-    <h3>Handling Csound's Errors, Warnings, and Messages</h3>
-    <p>On csound.node, Csound sends all of its runtime messages to the JavaScript console.</p> 
-    <h3>Next Steps</h3>
-    <p>As we proceed through subsequent demonstrations, more and more features of HTML5 will be integrated with 
-    Csound, adding features to this piece:
-    <ul>
-    	<li>Control sliders for instruments.</li>
-    	<li>More attractive styling of the user interface.</li>
-    	<li>User-controllable score generation in JavaScript.</li>
-    	<li>A visual display of the piece.</li>
-    </ul>
+    <textarea id="consol" rows=24 cols=80>
+    </textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
