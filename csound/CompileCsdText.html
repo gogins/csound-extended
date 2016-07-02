@@ -572,20 +572,21 @@ ivelocity = p5(...remainder of orchestra...)
     	<li>User-controllable score generation in JavaScript.</li>
     	<li>A visual display of the piece.</li>
     </ul>
+    <script type="text/javascript" src="csound.js"></script>
     <script>
-    var csound = require('csound');
-    var start_onclick = function() {
-      	csound.setOption('-odac')
-        var orc = document.getElementById('orc').value;
-        csound.compileOrc(orc);
-        var sco = document.getElementById('sco').value;
-        csound.readScore(sco);
-        csound.perform();
-
-    }
-    var stop_onclick = function() {
-        csound.stop();
+    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
+    // "console" text area.
+    function handleMessage(message) {
+        console.log(message);
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + message.data;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     }
     </script>
+    <!--The PNaCl csound module must be the very last element in the body, 
+        because the "csound.js" script attaches the Csound module and its 
+        callbacks to that element. -->
+    <div id="engine"></div>
 </body>
 </html>
