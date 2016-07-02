@@ -500,9 +500,9 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
         messages_textarea.scrollTop = messages_textarea.scrollHeight;    
     }
     var start_onclick = function() {
-        csound.perform();
+        //csound.perform();
         var csd = document.getElementById('csd').value;
-        csound.compileCsdText(csd);
+        csound.PlayCsd(csd);
     }
     var stop_onclick = function() {
         csound.stop();
