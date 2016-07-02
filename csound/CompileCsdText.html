@@ -27,7 +27,7 @@ piece, stop it from playing, view and edit its Csound code, and see Csound's dia
 A thorough explanation of the steps required to create this piece follows.
 </CsLicense>
 <CsOptions>
--m3 -fo jak_stretch.wav
+-m3 -odac
 </CsOptions>
 <CsInstruments>
 sr = 48000
@@ -484,83 +484,15 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     <p>This demonstration is simplified. All unnecessary HTML elements and JavaScript function calls have been 
     omitted. This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures 
     in csound.node, Csound for Android, and CsoundQt.</p>
-    <p>Comments on this page or in the page source explain what each element is for and why it is 
+    <p>Comments in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
-    <h3>Embedding Csound</h3>
-    With Csound for Android and CsoundQt, the front end has already embedded its running instance of Csound into the Javascript context of the Web page.  
-    With <code>csound.node</code>, as here, you can use node's <code>require</code> module system to include csound, and you also need to set the output option
-    (see below on <i><b>Starting and Stopping Csound</b></i> for the code). As far as any JavaScript code on the Web page is concerned, 
-    Csound is just an already existing JavaScript object named "csound", with 
-    its own functions and callbacks, which represent important parts of the Csound API.</p>
-    <p>It is good practice to place all &lt;script&gt; elements at the very end of the HTML &lt;body&gt; element, 
-    so that the other elements have already been created before any scripts try to access them, and that is what 
-    I have done here.</p>
-     <h3>Embedding the Csound Score and Orchestra</h3>
-    <p>There are many ways to get a Csound piece into Csound. But in order to make the Csound orchestra 
-    and score editable, they must appear in &lt;textarea&gt; elements on the Web page. These can be smaller than 
-    the text they contain, yet have scrollbars for accessing all of the text. These textareas must be named, 
-    so that we can use JavaScript to retrieve the orchestra and score and pass them to Csound.</p>
-    <p>The code for a textarea containing a Csound orchestra looks like this:</p>
-    <xmp>
-    <textarea id="csd" rows=24 cols=80>
-<CsoundSynthesizer>
-<CsLicense>
-CompileCsdText
-Michael Gogins
-2016
-
-The purpose of this demonstration is to show how to embed a Csound piece into a Web page. You can play the 
-piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. This piece will play on csound.node. 
-A thorough explanation of the steps required to create this piece follows.
-</CsLicense>
-<CsOptions>
--m3 -fo jak_stretch.wav
-</CsOptions>
-<CsInstruments>
-sr = 48000
-ksmps = 100
-nchnls = 2
-0dbfs = 100000
-      
-opcode hertz2midinn, i, i
-ihertz xin
-ilog2 = log(2)
-imidinn = 12 * (log(ihertz / 440) / ilog2) + 69
-xout imidinn
-endop
-
-instr 101
-insno = p1
-istart = p2
-iduration = p3
-ihertz = p4
-ivelocity = p5(...remainder of orchestra...)
-    </textarea>    	
-    </xmp>
     <h3>Starting and Stopping Csound</h3>
     <p>It is convenient to provide buttons for starting and stopping Csound, rather than simply having it start 
     playing the moment the page is loaded. The JavaScript code for handling the button clicks must start 
     Csound, send the orchestra to Csound, and send the score, in order to perform the piece.</p>
     <p>The buttons and code for the Play and Stop buttons above look like the following, which in fact 
     includes <i>all</i> of the code required to embed Csound in a Web page for node.csound:</p>
-    <xmp>
-    <input type="button" value="Play" onclick="start_onclick()"/>
-    <input type="button" value="Stop" onclick="stop_onclick()"/>
-    <script>
-    var csound = require('csound');
-    var start_onclick = function() {
-      	csound.setOption('-odac')
-        var csd = document.getElementById('csd').value;
-        csound.compileCsdText(csd);
-        csound.perform();
-
-    }
-    var stop_onclick = function() {
-        csound.stop();
-    }
-    </script>
-    </xmp>
     <h3>Handling Csound's Errors, Warnings, and Messages</h3>
     <p>On csound.node, Csound sends all of its runtime messages to the JavaScript console.</p> 
     <h3>Next Steps</h3>
