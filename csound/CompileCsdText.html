@@ -8,23 +8,16 @@
     <h4>By Michael Gogins</h3>
     <h4>2016</h4> 
     <h2>Introduction</h3>
-    <p>The purpose of this demonstration is to show how to embed a Csound piece into a Web page. You can play the 
-    piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. This piece will play on csound.node. 
+    <p>The purpose of this demonstration is to show how to embed a Csound piece in the form of a CSD file into a Web page. You can play the 
+    piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. This piece will play on Csound for PNaCl. 
     </p>
     <input type="button" value="Play" onclick="start_onclick()"/>
     <input type="button" value="Stop" onclick="stop_onclick()"/>
     <h4>Csound Orchestra</h4>
+    <textarea id="console" rows=24 cols=80>
+    </textarea>
     <textarea id="csd" rows=24 cols=80>
 <CsoundSynthesizer>
-<CsLicense>
-CompileCsdText
-Michael Gogins
-2016
-
-The purpose of this demonstration is to show how to embed a Csound piece into a Web page. You can play the 
-piece, stop it from playing, view and edit its Csound code, and see Csound's diagnostic messages. This piece will play on csound.node. 
-A thorough explanation of the steps required to create this piece follows.
-</CsLicense>
 <CsInstruments>
 sr = 48000
 ksmps = 100
@@ -447,7 +440,7 @@ endin
 scoreline_i "i \"Reverb\" 0 -1"
 scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
-</CsIstruments>
+</CsInstruments>
 <CsScore>
 ; Change the tempo, if you like.
 t 0 27
@@ -478,13 +471,10 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
 </textarea>
     <h2>How It Is Done</h4>
     <p>This demonstration is simplified. All unnecessary HTML elements and JavaScript function calls have been 
-    omitted. This Web page uses only a subset of the Csound API that has the same funtions, names, and signatures 
-    in csound.node, Csound for Android, and CsoundQt.</p>
+    omitted. </p>
     <p>Comments in the page source explain what each element is for and why it is 
     written the way it is. You can view the code and comments by right-clicking on this page and selecting 
     "View page source".</p>
-    <textarea id="console" rows=24 cols=80>
-    </textarea>
     <script type="text/javascript" src="csound.js"></script>
     <script>
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
@@ -498,8 +488,7 @@ i 103 150 30 [ 1 /  1 * 60 * 5] 60 [-1 + 2 / 2]
     }
     var start_onclick = function() {
         var csd = document.getElementById('csd').value;
-        csound.perform();
-        csound.compileCsdText(csd);
+         csound.compileCsdText(csd);
     }
     var stop_onclick = function() {
         csound.stop();
