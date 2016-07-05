@@ -1,5 +1,13 @@
 # HTML5 Empowering Csound
 
+## Playable version of the Csound Reference Manual
+
+The following link will take you to an online version of the Csound Reference Manual. It contains examples that will play right in your browser. You can even edit the examples and play them again hear the results of your changes. Currently this is supported only in desktop versions of Google's Chrome browser.
+
+https://gogins.github.io/csound/html/indexframes.html
+
+## Sample Pieces
+
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of 
 Google's Chrome browser for OS X, Windows, or Linux. Click on the links below to play the examples.
 
