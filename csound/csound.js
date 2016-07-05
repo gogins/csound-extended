@@ -27,8 +27,8 @@ var csound = (function() {
     var model = document.createElement('embed');
     model.setAttribute('name', 'csound_module');
     model.setAttribute('id', 'csound_module');
-    model.setAttribute('path', '/pnacl/Release');
-    model.setAttribute('src', '/pnacl/Release/csound.nmf');
+    model.setAttribute('path', '/csound/pnacl/Release');
+    model.setAttribute('src', '/csound/pnacl/Release/csound.nmf');
     var mimetype = 'application/x-pnacl';
     model.setAttribute('type', mimetype);
     var csoundhook = document.getElementById('engine');
