@@ -6,6 +6,8 @@ The following link will take you to an online version of the Csound Reference Ma
 
 https://gogins.github.io/csound/html/indexframes.html
 
+Not all examples are playable at this time. Only csd based examples (not orc based) that output stereo audio, and do not use file-based resources (such as sample soundfiles) or network-based resources (e.g. OSC does not work), are currently working.
+
 ## Sample Pieces
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of 
