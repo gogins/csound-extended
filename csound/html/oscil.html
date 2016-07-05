@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>oscil</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="oscil3.html" title="oscil3" />
+    <link rel="next" href="oscili.html" title="oscili" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">oscil</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="oscil3.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="oscili.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="oscil"></a>
+      <div class="titlepage"></div>
+      <a id="IndexOscil" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">oscil</span>
+        </h2>
+        <p>oscil — 
+      A simple oscillator.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp119721520"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>oscil</em></span> reads table <span class="emphasis"><em>ifn</em></span> sequentially and repeatedly at a frequency <span class="emphasis"><em>xcps</em></span>. The amplitude is scaled by <span class="emphasis"><em>xamp</em></span>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp119790880"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ares <span class="command"><strong>oscil</strong></span> xamp, xcps [, ifn, iphs]</pre>
+        <pre class="synopsis">kres <span class="command"><strong>oscil</strong></span> kamp, kcps [, ifn, iphs]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp119794528"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>ifn</em></span> -- (optional) function table
+      number. Requires a wrap-around guard point. The table number
+      defaults to -1 which indicates a sinewave.
+    </p>
+        <p>
+      <span class="emphasis"><em>iphs</em></span> (optional, default=0) -- initial phase of sampling, expressed as a fraction of a cycle (0 to 1). A negative value will cause phase initialization to be skipped. The default value is 0.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp119797264"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>kamp, xamp</em></span> -- amplitude
+    </p>
+        <p>
+      <span class="emphasis"><em>kcps, xcps</em></span> -- frequency in cycles per second.
+    </p>
+        <p>
+      The <span class="emphasis"><em>oscil</em></span> opcode generates periodic control (or audio) signals consisting of the value of <span class="emphasis"><em>kamp</em></span> (<span class="emphasis"><em>xamp</em></span>) times the value returned from control rate (audio rate) sampling of a stored function table. The internal phase is simultaneously advanced in accordance with the <span class="emphasis"><em>kcps</em></span> or <span class="emphasis"><em>xcps</em></span> input value.
+    </p>
+        <p>
+      Table <span class="emphasis"><em>ifn</em></span> is incrementally sampled modulo the table length and the value obtained is multiplied by <span class="emphasis"><em>amp</em></span>.
+    </p>
+        <p>
+      If you need to change the oscillator table with a k-rate signal, you can use <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp119805360"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the oscil opcode. It uses the file <a class="ulink" href="examples/oscil.csd" target="_top"><em class="citetitle">oscil.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp119807136"></a>
+          <p class="title">
+            <strong>Example 590. Example of the oscil opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp255558864"></a>
+              <a class="ulink" href="examples/oscil.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o oscil.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+kamp <span class="op">=</span> .6
+kcps <span class="op">=</span> 440
+ifn  <span class="op">=</span> p4
+
+asig <span class="opc">oscil</span> kamp, kcps, ifn
+     <span class="opc">outs</span> asig,asig
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span>1 0 16384 10 1                                          <span class="comment">; Sine</span>
+<span class="stamnt">f</span>2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   <span class="comment">; Sawtooth</span>
+<span class="stamnt">f</span>3 0 16384 10 1 0   0.3 0    0.2 0     0.14 0     .111   <span class="comment">; Square</span>
+<span class="stamnt">f</span>4 0 16384 10 1 1   1   1    0.7 0.5   0.3  0.1          <span class="comment">; Pulse</span>
+
+<span class="stamnt">i</span> 1 0 2 1
+<span class="stamnt">i</span> 1 3 2 2
+<span class="stamnt">i</span> 1 6 2 3
+<span class="stamnt">i</span> 1 9 2 4
+
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp119811424"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="oscili.html" title="oscili"><em class="citetitle">oscili</em></a>,
+      <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a>,
+      <a class="link" href="oscil3.html" title="oscil3"><em class="citetitle">oscil3</em></a>,
+      <a class="link" href="poscil.html" title="poscil"><em class="citetitle">poscil</em></a>,
+      <a class="link" href="poscil3.html" title="poscil3"><em class="citetitle">poscil3</em></a>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="oscil3.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="oscili.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">oscil3 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> oscili</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

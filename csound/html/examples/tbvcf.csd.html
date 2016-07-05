@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/tbvcf.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac           -iadc     -d     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o tbvcf.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+;---------------------------------------------------------
+; TBVCF Test
+; Coded by Hans Mikelson December, 2000
+;---------------------------------------------------------
+  sr =  44100   ; Sample rate
+  ksmps =  10   ; Samples/Kontrol period
+  nchnls =  2        ; Normal stereo
+  0dbfs = 1
+
+
+          instr 10
+
+  idur	=	p3			; Duration
+  iamp	=	p4			; Amplitude
+  ifqc	=	cpspch(p5)		; Pitch to frequency
+  ipanl	=	sqrt(p6)		; Pan left
+  ipanr	=	sqrt(1-p6)		; Pan right
+  iq	=	p7
+  idist	=	p8
+  iasym =	p9
+
+kdclck		linseg	0, .002, 1, idur-.004, 1, .002, 0	; Declick envelope
+kfco		expseg	10000, idur, 1000			; Frequency envelope
+ax		vco		1, ifqc, 2, 0.5			; Square wave
+ay		tbvcf		ax, kfco, iq, idist, iasym		; TB-VCF
+ay		buthp	ay/1, 100				; Hi-pass
+
+		outs		ay*iamp*ipanl*kdclck, ay*iamp*ipanr*kdclck
+          endin
+
+
+</CsInstruments>
+<CsScore>
+
+f1 0 65536 10 1
+
+; TeeBee Test
+;   Sta  Dur  Amp    Pitch Pan  Q    Dist1 Asym
+i10 0    0.2  0.5    7.00  .5   0.0  2.0   0.0
+i10 0.3  0.2  0.5    7.00  .5   0.8  2.0   0.0
+i10 0.6  0.2  0.5    7.00  .5   1.6  2.0   0.0
+i10 0.9  0.2  0.5    7.00  .5   2.4  2.0   0.0
+i10 1.2  0.2  0.5    7.00  .5   3.2  2.0   0.0
+;i10 1.5  0.2  0.5    7.00  .5   4.0  2.0   0.0
+i10 1.8  0.2  0.5    7.00  .5   0.0  2.0   0.25
+i10 2.1  0.2  0.5    7.00  .5   0.8  2.0   0.25
+i10 2.4  0.2  0.5    7.00  .5   1.6  2.0   0.25
+i10 2.7  0.2  0.5    7.00  .5   2.4  2.0   0.25
+i10 3.0  0.2  0.5    7.00  .5   3.2  2.0   0.25
+i10 3.3  0.2  0.5    7.00  .5   4.0  2.0   0.25
+i10 3.6  0.2  0.5    7.00  .5   0.0  2.0   0.5
+i10 3.9  0.2  0.5    7.00  .5   0.8  2.0   0.5
+i10 4.2  0.2  0.5    7.00  .5   1.6  2.0   0.5
+i10 4.5  0.2  0.5    7.00  .5   2.4  2.0   0.5
+i10 4.8  0.2  0.5    7.00  .5   3.2  2.0   0.5
+i10 5.1  0.2  0.5    7.00  .5   4.0  2.0   0.5
+i10 5.4  0.2  0.5    7.00  .5   0.0  2.0   0.75
+i10 5.7  0.2  0.5    7.00  .5   0.8  2.0   0.75
+i10 6.0  0.2  0.5    7.00  .5   1.6  2.0   0.75
+i10 6.3  0.2  0.5    7.00  .5   2.4  2.0   0.75
+i10 6.6  0.2  0.5    7.00  .5   3.2  2.0   0.75
+i10 6.9  0.2  0.5    7.00  .5   4.0  2.0   0.75
+i10 7.2  0.2  0.5    7.00  .5   0.0  2.0   1.0
+i10 7.5  0.2  0.5    7.00  .5   0.8  2.0   1.0
+i10 7.8  0.2  0.5    7.00  .5   1.6  2.0   1.0
+i10 8.1  0.2  0.5    7.00  .5   2.4  2.0   1.0
+i10 8.4  0.2  0.5    7.00  .5   3.2  2.0   1.0
+i10 8.7  0.2  0.5    7.00  .5   4.0  2.0   1.0
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

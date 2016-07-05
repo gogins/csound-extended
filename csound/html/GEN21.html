@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>GEN21</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
+    <link rel="prev" href="GEN20.html" title="GEN20" />
+    <link rel="next" href="GEN23.html" title="GEN23" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">GEN21</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="GEN20.html">Prev</a> </td>
+          <th width="60%" align="center">Score Statements and GEN Routines</th>
+          <td width="20%" align="right"> <a accesskey="n" href="GEN23.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="GEN21"></a>
+      <div class="titlepage"></div>
+      <a id="IndexGEN21" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">GEN21</span>
+        </h2>
+        <p>GEN21 — 
+      Generates tables of different random distributions.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp206592560"></a>
+        <h2>Description</h2>
+        <p>
+      This generates tables of different random distributions. (See also <a class="link" href="betarand.html" title="betarand"><em class="citetitle">betarand</em></a>, <a class="link" href="bexprnd.html" title="bexprnd"><em class="citetitle">bexprnd</em></a>, <a class="link" href="cauchy.html" title="cauchy"><em class="citetitle">cauchy</em></a>, <a class="link" href="exprand.html" title="exprand"><em class="citetitle">exprand</em></a>, <a class="link" href="gauss.html" title="gauss"><em class="citetitle">gauss</em></a>, <a class="link" href="linrand.html" title="linrand"><em class="citetitle">linrand</em></a>, <a class="link" href="pcauchy.html" title="pcauchy"><em class="citetitle">pcauchy</em></a>, <a class="link" href="poisson.html" title="poisson"><em class="citetitle">poisson</em></a>, <a class="link" href="trirand.html" title="trirand"><em class="citetitle">trirand</em></a>, <a class="link" href="unirand.html" title="unirand"><em class="citetitle">unirand</em></a>, and <a class="link" href="weibull.html" title="weibull"><em class="citetitle">weibull</em></a>)
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp206649248"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 21 type level [arg1  [arg2]]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp206651296"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>time</em></span> and <span class="emphasis"><em>size</em></span> are the usual GEN function arguments. <span class="emphasis"><em>level</em></span> defines the amplitude. Note that GEN21 is not self-normalizing as are most other GEN functions. <span class="emphasis"><em>type</em></span> defines the distribution to be used as follow:
+
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p>1 = Uniform (positive numbers only)</p>
+            </li>
+            <li class="listitem">
+              <p>2 = Linear (positive numbers only)</p>
+            </li>
+            <li class="listitem">
+              <p>3 = Triangular (positive and negative numbers)</p>
+            </li>
+            <li class="listitem">
+              <p>4 = Exponential (positive numbers only)</p>
+            </li>
+            <li class="listitem">
+              <p>5 = Biexponential (positive and negative numbers)</p>
+            </li>
+            <li class="listitem">
+              <p>6 = Gaussian (positive and negative numbers)</p>
+            </li>
+            <li class="listitem">
+              <p>7 = Cauchy (positive and negative numbers)</p>
+            </li>
+            <li class="listitem">
+              <p>8 = Positive Cauchy (positive numbers only)</p>
+            </li>
+            <li class="listitem">
+              <p>9 = Beta (positive numbers only)</p>
+            </li>
+            <li class="listitem">
+              <p>10 = Weibull (positive numbers only)</p>
+            </li>
+            <li class="listitem">
+              <p>11 = Poisson (positive numbers only)</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+
+      Of all these cases only 9 (Beta) and 10 (Weibull) need extra arguments. Beta needs two arguments and Weibull one.
+    </p>
+        <p>
+      If <span class="emphasis"><em>type</em></span> = 6, the random numbers in the ftable follow a normal distribution centered
+      around 0.0 (mu = 0.0) with a variance (sigma) of <span class="emphasis"><em>level</em></span> / 3.83. Thus more than 99.99%
+      of the random values generated are in the range -<span class="emphasis"><em>level</em></span> to +<span class="emphasis"><em>level</em></span>.
+      The default value for <span class="emphasis"><em>level</em></span> is 1 (sigma = 0.261).
+      If a mean value different of 0.0 is desired, this mean value has to be added to the generated numbers.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp206666960"></a>
+        <h2>Examples</h2>
+        <p>
+      </p>
+        <div class="informalexample">
+          <pre class="programlisting">
+<span class="stamnt">f</span>1 0 1024 21 1       <span class="comment">; Uniform (white noise)</span>
+<span class="stamnt">f</span>1 0 1024 21 6       <span class="comment">; Gaussian (mu=0.0, sigma=1/3.83=0.261)</span>
+<span class="stamnt">f</span>1 0 1024 21 6 5.745 <span class="comment">; Gaussian (mu=0.0, sigma=5.745/3.83=1.5)</span>
+<span class="stamnt">f</span>1 0 1024 21 9 1 1 2 <span class="comment">; Beta (note that level precedes arguments)</span>
+<span class="stamnt">f</span>1 0 1024 21 10 1 2  <span class="comment">; Weibull</span></pre>
+        </div>
+        <p>
+
+      All of the above additions were designed by the author between May and December 1994, under the supervision of Dr. Richard Boulanger.
+    </p>
+        <p>
+      Here is a complete example of the GEN21 routine. It uses the file <a class="ulink" href="examples/gen21.csd" target="_top"><em class="citetitle">gen21.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp206677248"></a>
+          <p class="title">
+            <strong>Example 1145. Example of the GEN21 routine.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp276366848"></a>
+              <a class="ulink" href="examples/gen21.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac  <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o gen21.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+ifn    <span class="op">=</span> p4
+isize  <span class="op">=</span> <span class="opc">ftlen</span>(ifn) 
+<span class="opc">prints</span> "TABLE NUMBER<span class="op">:</span> <span class="op">%</span>d\n", ifn   
+<span class="opc">prints</span> "Index\tValue\n"
+    
+iindex <span class="op">=</span> 0				<span class="comment">;start loop</span>
+<span class="olabel">begin_loop</span><span class="op">:</span>
+     ivalue <span class="opc">tab_i</span> iindex, ifn
+     <span class="opc">prints</span> "<span class="op">%</span>d<span class="op">:</span>\t<span class="op">%</span>f\n", iindex, ivalue
+     iindex <span class="op">=</span> iindex <span class="op">+</span> 1
+  <span class="octrl">if</span> (iindex <span class="op">&lt;</span> isize) <span class="octrl">igoto</span> <span class="olabel">begin_loop</span>
+  
+<span class="comment">;produce sound - and repeat it 10 times so you can hear the patterns:   </span>
+aphase <span class="opc">phasor</span> 10<span class="op">/</span>10			<span class="comment">;play all 32 values 10x over 10 seconds</span>
+aphase <span class="op">=</span> aphase<span class="op">*</span>isize			<span class="comment">;step through table</span>
+afrq   <span class="opc">table</span> aphase, p4			<span class="comment">;read table number</span>
+asig   <span class="opc">poscil</span> .5, (afrq<span class="op">*</span>500)<span class="op">+</span>1000,10	<span class="comment">;scale values of table 500 times, add 1000 Hz</span>
+       <span class="opc">outs</span> asig , asig			<span class="comment">;so we can distinguish the different tables </span>
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span>1 0 32 21 1		<span class="comment">;Uniform (white noise)</span>
+<span class="stamnt">f</span>2 0 32 21 6		<span class="comment">;Gaussian (mu=0.0, sigma=1/3.83=0.261)</span>
+<span class="stamnt">f</span>3 0 32 21 6 5.745	<span class="comment">;Gaussian (mu=0.0, sigma=5.745/3.83=1.5)</span>
+<span class="stamnt">f</span>4 0 32 21 9 1 1 2	<span class="comment">;Beta (note that level precedes arguments)</span>
+<span class="stamnt">f</span>5 0 32 21 10 1 2	<span class="comment">;Weibull</span>
+<span class="stamnt">f</span>10 0 8192 10 1		<span class="comment">;Sine wave</span>
+
+<span class="stamnt">i</span> 1  0 10 1
+<span class="stamnt">i</span> 1 11 10 2
+<span class="stamnt">i</span> 1 22 10 3
+<span class="stamnt">i</span> 1 33 10 4
+<span class="stamnt">i</span> 1 44 10 5
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+        <span class="phrase">These are the diagrams of the waveforms of the GEN21 routines, as used in the example:</span>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen21_1.png" alt="f 1 0 32 21 1 - positive numbers only" />
+          <div class="caption">
+            <p>f 1 0 32 21 1 - positive numbers only</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen21_2.png" alt="f 2 0 32 21 6" />
+          <div class="caption">
+            <p>f 2 0 32 21 6</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen21_3.png" alt="f 3 0 32 21 6 5.745" />
+          <div class="caption">
+            <p>f 3 0 32 21 6 5.745</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen21_4.png" alt="f 4 0 32 21 9 1 1 2 - positive numbers only" />
+          <div class="caption">
+            <p>f 4 0 32 21 9 1 1 2 - positive numbers only</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen21_5.png" alt="f 5 0 32 21 10 1 2 - positive numbers only" />
+          <div class="caption">
+            <p>f 5 0 32 21 10 1 2 - positive numbers only</p>
+          </div>
+        </div>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp206698176"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Paris Smaragdis</td>
+          </tr>
+          <tr>
+            <td>MIT, Cambridge</td>
+          </tr>
+          <tr>
+            <td>1995</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: John ffitch</td>
+          </tr>
+          <tr>
+            <td>University of Bath/Codemist Ltd.</td>
+          </tr>
+          <tr>
+            <td>Bath, UK</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>Precisions about mu and sigma added by François Pinot after a discussion with
+    Joachim Heintz on the Csound List, December 2010.</p>
+        <p>New in Csound version 3.2</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="GEN20.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="ScoregensTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="GEN23.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">GEN20 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> GEN23</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

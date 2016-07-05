@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/nsamp.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-odac     ;;;realtime audio out
+;-iadc    ;;;uncomment -iadc if realtime audio input is needed too
+; For Non-realtime ouput leave only the line below:
+; -o nsamp.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+; slightly adapted example from Jonathan Murphy Dec 2006
+
+sr = 44100
+ksmps = 32
+nchnls = 2
+0dbfs  = 1
+
+instr 1
+
+ifn   =  p4	; table number
+ilen  =  nsamp(ifn)
+prints "actual numbers of samples = %d\n", ilen
+itrns =  1	; no transposition
+ilps  =  0	; loop starts at index 0
+ilpe  =  ilen	; ends at value returned by nsamp above
+imode =  1	; loops forward
+istrt =  0	; commence playback at index 0 samples
+; lphasor provides index into f1 
+alphs lphasor itrns, ilps, ilpe, imode, istrt
+atab  tablei  alphs, ifn
+      outs atab, atab
+
+endin
+</CsInstruments>
+<CsScore>
+f 1 0 262144 1 "kickroll.wav" 0 4 1	;stereo file in table, with lots of zeroes
+f 2 0 262144 1 "fox.wav" 0 4 1		;mono file in table, with lots of zeroes
+
+i1 0 10 1
+i1 + 10 2
+e
+
+</CsScore>
+</CsoundSynthesizer></textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

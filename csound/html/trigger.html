@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>trigger</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="trhighest.html" title="trhighest" />
+    <link rel="next" href="trigseq.html" title="trigseq" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">trigger</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="trhighest.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="trigseq.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="trigger"></a>
+      <div class="titlepage"></div>
+      <a id="IndexTrigger" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">trigger</span>
+        </h2>
+        <p>trigger — 
+      Informs when a krate signal crosses a threshold.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp150215312"></a>
+        <h2>Description</h2>
+        <p>
+      Informs when a krate signal crosses a threshold.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp150216672"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">kout <span class="command"><strong>trigger</strong></span> ksig, kthreshold, kmode</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp150280448"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>ksig</em></span> -- input signal
+    </p>
+        <p>
+      <span class="emphasis"><em>kthreshold</em></span> -- trigger threshold
+    </p>
+        <p>
+      <span class="emphasis"><em>kmode</em></span> -- can be 0 , 1 or 2
+    </p>
+        <p>
+      Normally <span class="emphasis"><em>trigger</em></span> outputs zeroes: only each time <span class="emphasis"><em>ksig</em></span> crosses <span class="emphasis"><em>kthreshold</em></span> <span class="emphasis"><em>trigger</em></span> outputs a 1. There are three modes of using <span class="emphasis"><em>ktrig</em></span>:
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p><span class="emphasis"><em>kmode</em></span> = 0 - (down-up) <span class="emphasis"><em>ktrig</em></span> outputs a 1 when current value of <span class="emphasis"><em>ksig</em></span> is higher than <span class="emphasis"><em>kthreshold,</em></span> while old value of <span class="emphasis"><em>ksig</em></span> was equal to or lower than <span class="emphasis"><em>kthreshold</em></span>.</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>kmode</em></span> = 1 - (up-down) <span class="emphasis"><em>ktrig</em></span> outputs a 1 when current value of <span class="emphasis"><em>ksig</em></span> is lower than <span class="emphasis"><em>kthreshold</em></span> while old value of <span class="emphasis"><em>ksig</em></span> was equal or higher than <span class="emphasis"><em>kthreshold</em></span>.</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>kmode</em></span> = 2  - (both) <span class="emphasis"><em>ktrig</em></span> outputs a 1 in both the two previous cases.</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp150294416"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the trigger opcode. It uses the file <a class="ulink" href="examples/trigger.csd" target="_top"><em class="citetitle">trigger.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp150296192"></a>
+          <p class="title">
+            <strong>Example 977. Example of the trigger opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp268779104"></a>
+              <a class="ulink" href="examples/trigger.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o trigger.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+kmtr <span class="opc">lfo</span> 1, 1, 1			<span class="comment">;triangle wave</span>
+kmode <span class="op">=</span> p4
+ktr  <span class="opc">trigger</span> kmtr, .5, kmode
+     <span class="opc">printk2</span>  ktr
+     <span class="opc">schedkwhen</span> ktr, 0, 3, 2, 0, .3
+
+
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 2                                            
+
+aenv <span class="opc">linseg</span> 0,p3<span class="op">*</span>.1,1,p3<span class="op">*</span>.3,1,p3<span class="op">*</span>.6,0	<span class="comment">;envelope</span>
+a1   <span class="opc">poscil</span> .3<span class="op">*</span>aenv, 1000, 1
+     <span class="opc">outs</span> a1, a1
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 1 0 16384 10 1	<span class="comment">;sine </span>
+
+<span class="stamnt">i</span> 1 0 3 0		<span class="comment">;down-up</span>
+<span class="stamnt">i</span> 1 4 3 2		<span class="comment">;down-up &amp; up=down</span>
+
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp150300480"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Gabriel Maldonado</td>
+          </tr>
+          <tr>
+            <td>Italy</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 3.49</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="trhighest.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="trigseq.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">trhighest </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> trigseq</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

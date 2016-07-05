@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>cross2</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="cpuprc.html" title="cpuprc" />
+    <link rel="next" href="crossfm.html" title="crossfm" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">cross2</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="cpuprc.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="crossfm.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="cross2"></a>
+      <div class="titlepage"></div>
+      <a id="IndexCross2" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">cross2</span>
+        </h2>
+        <p>cross2 — 
+      Cross synthesis using FFT's.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp86562672"></a>
+        <h2>Description</h2>
+        <p>
+      This is an implementation of cross synthesis using FFT's.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp86637904"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ares <span class="command"><strong>cross2</strong></span> ain1, ain2, isize, ioverlap, iwin, kbias</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp86640048"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>isize</em></span> --  This is the size of the FFT to be performed.  The larger the size the better the frequency response but a sloppy time response.
+    </p>
+        <p>
+      <span class="emphasis"><em>ioverlap</em></span> --  This is the overlap factor of the FFT's, must be a power of two.  The best settings are 2 and 4.  A  big overlap takes a long time to compile.
+    </p>
+        <p>
+      <span class="emphasis"><em>iwin</em></span> --  This is the function table that contains the window to be used in the analysis. One can use the <a class="link" href="GEN20.html" title="GEN20"><em class="citetitle">GEN20</em></a> routine to create this window.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp86645040"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>ain1</em></span> --  The stimulus sound.  Must have high frequencies for best results.
+    </p>
+        <p>
+      <span class="emphasis"><em>ain2</em></span> --  The modulating sound.  Must have a moving frequency response (like speech) for best results.
+    </p>
+        <p>
+      <span class="emphasis"><em>kbias</em></span> --  The amount of cross synthesis.  1 is the normal, 0 is no cross synthesis.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp86648896"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the cross2 opcode. It uses the file <a class="ulink" href="examples/cross2.csd" target="_top"><em class="citetitle">cross2.csd</em></a> and <a class="ulink" href="examples/fox.wav" target="_top"><em class="citetitle">fox.wav</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp86651520"></a>
+          <p class="title">
+            <strong>Example 168. Example of the cross2 opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp238788368"></a>
+              <a class="ulink" href="examples/cross2.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;RT audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o cross2.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="comment">; after example from Kevin Conder</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1	<span class="comment">;play audio file</span>
+
+aout <span class="opc">soundin</span> "fox.wav"
+     <span class="opc">outs</span> aout, aout
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 2	<span class="comment">;cross-synthesize</span>
+
+icps <span class="op">=</span> p4
+ifn  <span class="op">=</span> p5		<span class="comment">; Use the "ahhc.aiff" sound and "eeec.aiff"</span>
+ain1 <span class="opc">oscil</span> 0.6, p4, ifn
+ain2 <span class="opc">soundin</span> "fox.wav"	<span class="comment">; Use the "fox.wav" as modulator</span>
+
+  isize <span class="op">=</span> 4096
+  ioverlap <span class="op">=</span> 2
+  iwin <span class="op">=</span> 3
+  kbias <span class="opc">init</span> 1
+
+aout <span class="opc">cross2</span> ain1, ain2, isize, ioverlap, iwin, kbias
+     <span class="opc">outs</span> aout, aout
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="comment">;audio files</span>
+<span class="stamnt">f</span> 1 0 128 1 "ahhc.ai<span class="stamnt">f</span><span class="stamnt">f</span>" 0 4 0
+<span class="stamnt">f</span> 2 0 128 1 "eeec.ai<span class="stamnt">f</span><span class="stamnt">f</span>" 0 4 0
+
+<span class="stamnt">f</span> 3 0 2048 20 2	<span class="comment">;windowing function</span>
+ 
+<span class="stamnt">i</span> 1 0 3
+
+<span class="stamnt">i</span> 2 3 3  50	1 <span class="comment">;"eeec.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  50	2 <span class="comment">;"ahhc.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  100	1 <span class="comment">;"eeec.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  100	2 <span class="comment">;"ahhc.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  250	1 <span class="comment">;"eeec.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  250	2 <span class="comment">;"ahhc.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  20	1 <span class="comment">;"eeec.aiff"</span>
+<span class="stamnt">i</span> 2 + 3  20	2 <span class="comment">;"ahhc.aiff"</span>
+<span class="stamnt">e</span>
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp86655808"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Paris Smaragdis</td>
+          </tr>
+          <tr>
+            <td>MIT, Cambridge</td>
+          </tr>
+          <tr>
+            <td>1997</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="cpuprc.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="crossfm.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">cpuprc </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> crossfm</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

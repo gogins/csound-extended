@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>strcpyk</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="strcpy.html" title="strcpy" />
+    <link rel="next" href="strcat.html" title="strcat" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">strcpyk</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="strcpy.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="strcat.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="strcpyk"></a>
+      <div class="titlepage"></div>
+      <a id="Indexstrcpyk" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">strcpyk</span>
+        </h2>
+        <p>strcpyk — 
+      Assign value to a string variable (k-rate)
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp144041696"></a>
+        <h2>Description</h2>
+        <p>
+      Assign to a string variable by copying the source which may be a constant or another string variable. <span class="emphasis"><em>strcpyk</em></span> does the assignment both at initialization and performance time.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp144094064"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">Sdst <span class="command"><strong>strcpyk</strong></span> Ssrc</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp144096240"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the strcpyk opcode. It uses the file <a class="ulink" href="examples/strcpyk.csd" target="_top"><em class="citetitle">strcpyk.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp144098096"></a>
+          <p class="title">
+            <strong>Example 902. Example of the strcpyk opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp266677872"></a>
+              <a class="ulink" href="examples/strcpyk.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o strcpyk.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="ohdr">seed</span> 0
+
+<span class="oblock">instr</span> 1 
+<span class="comment">;get one element of the input string whenever the metro</span>
+<span class="comment">;triggers, and call a subinstrument to play the file</span>
+
+Smember   <span class="opc">strget</span>    p4
+istrlen   <span class="opc">strlen</span>    Smember
+kprint    <span class="opc">init</span>      0
+ktrig     <span class="opc">metro</span>     .6 
+
+ <span class="comment">;whenever the trigger gives signal</span>
+ <span class="octrl">if</span> ktrig <span class="op">==</span> 1 then
+  <span class="comment">;choose a random element (0, 1 or 2)</span>
+kel       <span class="opc">random</span>    0, 3.9999
+kel       <span class="op">=</span>         <span class="opc">int</span>(kel)
+ <span class="comment">;make a copy for leaving Smember intact</span>
+Scopy     <span class="opc">strcpyk</span>   Smember 
+ <span class="comment">;set the initial index for reading substrings</span>
+kndx      <span class="op">=</span>         0 
+ <span class="comment">;set counter for searching the element</span>
+kcount    <span class="op">=</span>         0
+ <span class="comment">;start looping over the elements in Smember</span>
+<span class="olabel">loop</span><span class="op">:</span>
+kdelim    <span class="opc">strindexk</span> Scopy, "<span class="op">:</span>"
+  <span class="comment">;as long as ":" occurs in Scopy, do:</span>
+  <span class="octrl">if</span> kdelim <span class="op">&gt;</span> 0 then
+   <span class="comment">;if this is the element to get</span>
+   <span class="octrl">if</span> kel <span class="op">==</span> kcount then
+    <span class="comment">;read it as substring</span>
+Sfile     <span class="opc">strsubk</span>   Scopy, kndx, kdelim
+kprint <span class="op">=</span> kprint<span class="op">+</span>1
+    <span class="comment">;and jump out</span>
+          <span class="octrl">kgoto</span>     <span class="olabel">call</span>
+   <span class="comment">;if not</span>
+   <span class="octrl">else</span>
+    <span class="comment">;cut off this element from Scopy</span>
+Scopy     <span class="opc">strsubk</span>   Scopy, kdelim<span class="op">+</span>1, istrlen
+   <span class="octrl">endif</span>
+   <span class="comment">;if no element has been found,go back to loop </span>
+   <span class="comment">;and look for the next element</span>
+kcount    <span class="op">=</span>         kcount<span class="op">+</span>1
+          <span class="octrl">kgoto</span>     <span class="olabel">loop</span>
+  <span class="comment">;if there is no delimiter left, the rest is the searched element</span>
+  <span class="octrl">else</span>
+Sfile     <span class="opc">strcpyk</span>   Scopy
+  <span class="octrl">endif</span>
+<span class="olabel">call</span><span class="op">:</span>
+ <span class="comment">;print the result, call the subinstrument and play the file</span>
+          <span class="opc">printf</span>    "kel <span class="op">=</span> <span class="op">%</span>d, file <span class="op">=</span> '<span class="op">%</span>s'\n", ktrig<span class="op">+</span>kprint, kel, Sfile
+S_call    <span class="opc">sprintfk</span>  {{i 2 0 1 "<span class="op">%</span>s"}}, Sfile
+          <span class="opc">scoreline</span> S_call, ktrig
+ <span class="octrl">endif</span>
+
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 2 <span class="comment">;play</span>
+Sfile     <span class="opc">strget</span>    p4
+ilen      <span class="opc">filelen</span>   Sfile
+p3        <span class="op">=</span>         ilen
+asig      <span class="opc">soundin</span>   Sfile
+          <span class="opc">outs</span>      asig, asig
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">i</span> 1 0 30 "mary.wav:fox.wav:beats.wav:flute.a<span class="stamnt">i</span>ff"
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp144102384"></a>
+        <h2>See also</h2>
+        <p>
+          <a class="link" href="strcpy.html" title="strcpy">
+            <em class="citetitle">strcpy</em>
+          </a>
+        </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp144104176"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Istvan Varga</td>
+          </tr>
+          <tr>
+            <td>2005</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="strcpy.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="strcat.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">strcpy </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> strcat</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

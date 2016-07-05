@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>getcfg</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="gendyx.html" title="gendyx" />
+    <link rel="next" href="getrow.html" title="getrow" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">getcfg</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="gendyx.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="getrow.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="getcfg"></a>
+      <div class="titlepage"></div>
+      <a id="Indexgetcfg" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">getcfg</span>
+        </h2>
+        <p>getcfg — 
+      Return Csound settings.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103000032"></a>
+        <h2>Description</h2>
+        <p>
+      Return various configuration settings in Svalue as a string at init time.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103044080"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">Svalue <span class="command"><strong>getcfg</strong></span> iopt</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp103046224"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>iopt</em></span>
+      -- The parameter to be returned, can be one of:
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p>1: the maximum length of string variables in
+          characters; this is at least the value of the -+max_str_len
+          command line option - 1.  </p>
+              <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+                <table border="0" summary="Note">
+                  <tr>
+                    <td rowspan="2" align="center" valign="top" width="25">
+                      <img alt="[Note]" src="images/note.png" />
+                    </td>
+                    <th align="left">Note</th>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top">In Csound6 there is no
+          maximum string length so the returned value is meaningless</td>
+                  </tr>
+                </table>
+              </div>
+            </li>
+            <li class="listitem">
+              <p>2: the input sound file name (-i), or empty if there is no input file</p>
+            </li>
+            <li class="listitem">
+              <p>3: the output sound file name (-o), or empty if there is no output file</p>
+            </li>
+            <li class="listitem">
+              <p>4: return "1" if real time audio input or output is being used, and "0" otherwise</p>
+            </li>
+            <li class="listitem">
+              <p>5: return "1" if running in beat mode (-t command line option), and "0" otherwise</p>
+            </li>
+            <li class="listitem">
+              <p>6: the host operating system name</p>
+            </li>
+            <li class="listitem">
+              <p>7: return "1" if a callback function for the chnrecv and chnsend opcodes has been set, and "0" otherwise (which means these opcodes do nothing)</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103054672"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the getcfg opcode. It uses the file <a class="ulink" href="examples/getcfg.csd" target="_top"><em class="citetitle">getcfg.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp103056528"></a>
+          <p class="title">
+            <strong>Example 372. Example of the getcfg opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp246441680"></a>
+              <a class="ulink" href="examples/getcfg.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+ 
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+-iadc    <span class="comment">;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+ 
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+S1 <span class="opc">getcfg</span> 1	<span class="comment">; -+max_str_len </span>
+S2 <span class="opc">getcfg</span> 2	<span class="comment">; -i </span>
+S3 <span class="opc">getcfg</span> 3	<span class="comment">; -o </span>
+S4 <span class="opc">getcfg</span> 4	<span class="comment">; RTaudio </span>
+S5 <span class="opc">getcfg</span> 5	<span class="comment">; -t </span>
+S6 <span class="opc">getcfg</span> 6	<span class="comment">; os system host </span>
+S7 <span class="opc">getcfg</span> 7	<span class="comment">; callback </span>
+
+<span class="opc">prints</span> "<span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span>" 
+<span class="opc">prints</span> "\nMax string len <span class="op">:</span> " 
+<span class="opc">prints</span>	S1 
+<span class="opc">prints</span> "\nInput file name (<span class="op">-</span>i) <span class="op">:</span> " 
+<span class="opc">prints</span>	S2 
+<span class="opc">prints</span> "\nOutput file name (<span class="op">-</span>o) <span class="op">:</span> " 
+<span class="opc">prints</span>	S3 
+<span class="opc">prints</span> "\nRTaudio (<span class="op">-</span>odac) <span class="op">:</span> " 
+<span class="opc">prints</span>	S4 
+<span class="opc">prints</span> "\nBeat <span class="opc">mode</span> (<span class="op">-</span>t)<span class="op">?</span> <span class="op">:</span> " 
+<span class="opc">prints</span>	S5 
+<span class="opc">prints</span> "\nHost Op. Sys. <span class="op">:</span> " 
+<span class="opc">prints</span>	S6 
+<span class="opc">prints</span> "\nCallback <span class="op">?</span> <span class="op">:</span> " 
+<span class="opc">prints</span>	S7 
+<span class="opc">prints</span> "\n" 
+<span class="opc">prints</span> "<span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span>\n" 
+
+<span class="oblock">endin</span> 
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+ 
+<span class="stamnt">i</span> 1 0 0 
+<span class="stamnt">e</span> 
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+
+      The output should include lines like these:
+      </p>
+        <pre class="screen">
+------------------------------
+Max string len : 255
+Input file name (-i) : adc
+Output file name (-o) : dac
+RTaudio (-odac) : 1
+Beat mode (-t)? : 0
+Host Op. Sys. : Linux
+Callback ? : 0
+------------------------------
+      </pre>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103061760"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Istvan Varga</td>
+          </tr>
+          <tr>
+            <td>2006</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in version 5.02</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="gendyx.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="getrow.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">gendyx </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> getrow</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

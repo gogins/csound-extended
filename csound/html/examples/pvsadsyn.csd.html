@@ -1,0 +1,104 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/pvsadsyn.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac    ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o pvsadsyn.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 16
+nchnls = 1
+0dbfs = 1
+
+;; example written by joachim heintz 2009
+
+opcode FileToPvsBuf, iik, Siiii
+;;writes an audio file at the first k-cycle to a fft-buffer (via pvsbuffer)
+Sfile, ifftsize, ioverlap, iwinsize, iwinshape xin
+ktimek		timeinstk
+if ktimek == 1 then
+ilen		filelen	Sfile
+kcycles	=		ilen * kr; number of k-cycles to write the fft-buffer
+kcount		init		0
+loop:
+ain		soundin	Sfile
+fftin		pvsanal	ain, ifftsize, ioverlap, iwinsize, iwinshape
+ibuf, ktim	pvsbuffer	fftin, ilen + (ifftsize / sr)
+		loop_lt	kcount, 1, kcycles, loop
+		xout		ibuf, ilen, ktim
+endif
+endop
+
+
+instr 1
+istretch	=		p4; time stretching factor
+ifftsize	=		1024
+ioverlap	=		ifftsize / 4
+iwinsize	=		ifftsize
+iwinshape	=		1; von-Hann window
+ibuffer, ilen, k0		FileToPvsBuf	"fox.wav", ifftsize, ioverlap, iwinsize, iwinshape
+p3		=		istretch * ilen; set p3 to the correct value
+ktmpnt		linseg		0, p3, ilen; time pointer
+fread 		pvsbufread  	ktmpnt, ibuffer; read the buffer
+aout		pvsadsyn	fread, 10, 1; resynthesis with the first 10 bins
+		out		aout
+endin
+
+</CsInstruments>
+<CsScore>
+i 1 0 1 20
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

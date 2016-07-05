@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>int</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="instr.html" title="instr" />
+    <link rel="next" href="integ.html" title="integ" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">int</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="instr.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="integ.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="int"></a>
+      <div class="titlepage"></div>
+      <a id="IndexInt" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">int</span>
+        </h2>
+        <p>int — 
+      Extracts an integer from a decimal number.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp107021728"></a>
+        <h2>Description</h2>
+        <p>
+      Returns the integer part of <span class="emphasis"><em>x</em></span>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp107023408"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>int</strong></span>(x)  (init-rate or control-rate; also works at audio rate in Csound5)</pre>
+        <p>
+      where the argument within the parentheses may be an expression. Value converters perform arithmetic translation from units of one kind to units of another. The result can then be a term in a further expression.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp107082608"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the int opcode. It uses the file <a class="ulink" href="examples/int.csd" target="_top"><em class="citetitle">int.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp107084144"></a>
+          <p class="title">
+            <strong>Example 422. Example of the int opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp248912464"></a>
+              <a class="ulink" href="examples/int.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac   <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o int.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+icount <span class="opc">init</span> 0
+<span class="olabel">loop</span><span class="op">:</span>
+  inum <span class="op">=</span> icount <span class="op">/</span> 3
+  inm  <span class="op">=</span> <span class="opc">int</span>(inum)
+  <span class="opc">prints</span> "integer (<span class="op">%</span>f<span class="op">/</span>3) <span class="op">=</span> <span class="op">%</span>f\\n", icount, inm
+<span class="octrl">loop_lt</span> icount, 1, 10, <span class="olabel">loop</span>
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">i</span> 1 0 0
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+      Its output should include lines like these:
+      </p>
+        <pre class="screen">
+integer (0.000000/3) = 0.000000
+integer (1.000000/3) = 0.000000
+integer (2.000000/3) = 0.000000
+integer (3.000000/3) = 1.000000
+integer (4.000000/3) = 1.000000
+integer (5.000000/3) = 1.000000
+integer (6.000000/3) = 2.000000
+integer (7.000000/3) = 2.000000
+integer (8.000000/3) = 2.000000
+integer (9.000000/3) = 3.000000
+      </pre>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp107089856"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="abs.html" title="abs"><em class="citetitle">abs</em></a>,
+      <a class="link" href="exp.html" title="exp"><em class="citetitle">exp</em></a>,
+      <a class="link" href="frac.html" title="frac"><em class="citetitle">frac</em></a>,
+      <a class="link" href="log.html" title="log"><em class="citetitle">log</em></a>,
+      <a class="link" href="log10.html" title="log10"><em class="citetitle">log10</em></a>,
+      <a class="link" href="opi.html" title="i"><em class="citetitle">i</em></a>,
+      <a class="link" href="sqrt.html" title="sqrt"><em class="citetitle">sqrt</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp107097504"></a>
+        <h2>Credits</h2>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="instr.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="integ.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">instr </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> integ</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

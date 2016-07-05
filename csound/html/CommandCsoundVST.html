@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>CsoundVST</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OviewFrontEnds.html" title="Front Ends" />
+    <link rel="prev" href="OviewFrontEnds.html" title="Front Ends" />
+    <link rel="next" href="BuildingCsound.html" title="Building Csound" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">CsoundVST</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="OviewFrontEnds.html">Prev</a> </td>
+          <th width="60%" align="center">Front Ends</th>
+          <td width="20%" align="right"> <a accesskey="n" href="BuildingCsound.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="section">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="CommandCsoundVST"></a>CsoundVST</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+      CsoundVST is a multi-function front end for Csound, based on the
+      Csound API. CsoundVST runs as a stand-alone graphical user interface
+      to Csound, and it also runs as a VST instrument or effect plugin in VST 
+      hosts such as Cubase with the same user interface. CsoundVST is part 
+      of the main csound source tree, but is not included in standard distributions, 
+      due to licensing limitations of Steinberg's VST SDK.
+    </p>
+      <h3><a id="idp68539520"></a>Standalone</h3>
+      <p>To run CsoundVST as a stand-alone front end to Csound, execute
+      <span class="application">CsoundVST</span>. When the program has loaded, you
+      will see a graphical user interface with a row of buttons along the
+      top. Click on the <span class="emphasis"><em>Open...</em></span> button to load a
+      <code class="filename">.csd</code> file. You can also click on the
+      <span class="emphasis"><em>Open...</em></span> button and load a
+      <code class="filename">.orc</code> file, then click on the
+      <span class="emphasis"><em>Import...</em></span> button to add a
+      <code class="filename">.sco</code> file. You can edit the Csound command, the
+      orchestra file, or the score file in the respective tabs of the user
+      interface. When all is satisfactory, click on the
+      <span class="emphasis"><em>Perform</em></span> button to run Csound. You can stop a
+      performance at any time by clicking on the <span class="emphasis"><em>Stop</em></span>
+      button.</p>
+      <h3><a id="idp68545920"></a>VST Plugin</h3>
+      <p>The following instructions are for Cubase 4.0. You would follow
+      roughly similar procedures in other hosts.</p>
+      <p>Use the <span class="emphasis"><em>Devices</em></span> menu, <span class="emphasis"><em>Plug-In
+        Information</em></span> dialog, <span class="emphasis"><em>VST Plug-Ins</em></span> tab,
+      <span class="emphasis"><em>VST 2.x Plug-in Paths</em></span> dialog, <span class="emphasis"><em>Add</em></span> button to add your
+      <code class="filename">csound/bin</code> directory to Cubase's plugin path. You
+      can have multiple directories separated by semicolons. Then select the CsoundVST path and 
+      click on the <span class="emphasis"><em>Set as Shared Folder</em></span> button. </p>
+      <p>Quit Cubase, and start it again.</p>
+      <p>Use the <span class="emphasis"><em>File</em></span> menu, <span class="emphasis"><em>New
+        Project</em></span> dialog to create a new song.</p>
+      <p>Use the <span class="emphasis"><em>Project</em></span> menu, <span class="emphasis"><em>Add
+          Track</em></span> submenu, to add a new MIDI track.</p>
+      <p>Use the pencil tool to draw a <span class="emphasis"><em>Part</em></span> on the
+      track a few measures long. Write some music in the
+      <span class="emphasis"><em>Part</em></span> using the <span class="emphasis"><em>Event</em></span> editor
+      or the <span class="emphasis"><em>Score</em></span> editor.</p>
+      <p>Use the <span class="emphasis"><em>Devices</em></span> menu (or the F11 key) to
+      open the <span class="emphasis"><em>VST Instruments</em></span> dialog. </p>
+      <p>Click on one of the <span class="emphasis"><em>No VST Instrument</em></span>
+      labels, and select <span class="emphasis"><em>CsoundVST</em></span> from the list that
+      pops up.</p>
+      <p>Click on the <span class="emphasis"><em>e</em></span> (for edit) button to open
+      the <span class="emphasis"><em>CsoundVST</em></span> dialog. </p>
+      <p>On the Settings page, check the <span class="emphasis"><em>Instrument</em></span> box in the VST Plugin group,
+      and the <span class="emphasis"><em>Classic</em></span> box in the <span class="emphasis"><em>Csound performance mode</em></span> group.
+      Then click on the <span class="emphasis"><em>Apply</em></span> button.</p>
+      <p>Click on the <span class="emphasis"><em>Open</em></span> button to bring up the
+      file selector dialog. Navigate to a directory containing a Csound csd
+      file suitable for MIDI performance, such as
+      <code class="filename">csound/examples/CsoundVST.csd</code>. Click on the OK button to
+      load the file. You can also open and import a suitable <code class="filename">.orc</code>
+      and <code class="filename">.sco</code> file as described above. </p>
+      <p>In any event, the command line in the <span class="emphasis"><em>Classic Csound command line</em></span> text box must specify
+      <code class="literal">-+rtmidi=null -M0</code>, and should read something like this:</p>
+      <pre class="programlisting">
+      <span class="command"><strong>csound</strong></span> -f -h -+rtmidi=null -M0 -d -n -m7 --midi-key-oct=4 --midi-velocity=5 temp.orc temp.sco</pre>
+      <p>Click on the <span class="emphasis"><em>VST Instruments</em></span> dialog's
+      on/off button to turn it on. This should compile the Csound
+      orchestra.</p>
+      <p>In the <span class="emphasis"><em>Cubase Track Inspector</em></span>, click on the
+      <span class="emphasis"><em>out: Not Assigned</em></span> label and select
+      <span class="emphasis"><em>CsoundVST</em></span> from the list that pops up.</p>
+      <p>On the ruler at the top of the <span class="emphasis"><em>Arrangement</em></span>
+      window, select the loop end point and drag it to the end of your part,
+      then click on the loop button to enable looping. </p>
+      <p>Click on the <span class="emphasis"><em>play</em></span> button on the
+      <span class="emphasis"><em>Transport</em></span> bar. You should hear your music played
+      by CsoundVST. </p>
+      <p>Try assigning your track to different channels; a different
+      Csound instrument will perform each channel. </p>
+      <p>When you save your song, your Csound orchestra will be saved as
+      part of the song and re-loaded when you re-load the song. </p>
+      <p>You can click on the <span class="emphasis"><em>Orchestra</em></span> tab and edit
+      your Csound instruments while CsoundVST is playing. To hear your
+      changes, just click on the CsoundVST <span class="emphasis"><em>Perform</em></span>
+      button to recompile the orchestra. </p>
+      <p>You can assign up to 16 channels to a single CsoundVST
+      plugin.</p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="OviewFrontEnds.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OviewFrontEnds.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="BuildingCsound.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Front Ends </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Building Csound</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

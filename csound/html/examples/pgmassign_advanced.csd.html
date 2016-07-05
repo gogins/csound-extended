@@ -1,0 +1,123 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/pgmassign_advanced.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-odac   -F   pgmassign_advanced.mid  ;;;realtime audio out with midifile in
+;-iadc    ;;;uncomment -iadc if real audio input is needed too
+; For Non-realtime ouput leave only the line below:
+; -o pgmassign_advanced.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2
+0dbfs  = 1
+
+	massign 1, 1	; channels 1 to 4 use instr 1 by default
+	massign 2, 1
+	massign 3, 1
+	massign 4, 1
+
+; pgmassign_advanced.mid can be found in /manual/examples
+; pgmassign.mid has 4 notes with these parameters:
+;
+;	    Start time	Channel	Program
+;
+; note 1	0.5	   1	  10
+; note 2	1.5	   2	  11
+; note 3	2.5	   3	  12
+; note 4	3.5	   4	  13
+
+	pgmassign 0, 0		; disable program changes
+	pgmassign 11, 3		; program 11 uses instr 3
+	pgmassign 12, 2		; program 12 uses instr 2
+
+; waveforms for instruments
+itmp	ftgen 1, 0, 1024, 10, 1
+itmp	ftgen 2, 0, 1024, 10, 1, 0.5, 0.3333, 0.25, 0.2, 0.1667, 0.1429, 0.125
+itmp	ftgen 3, 0, 1024, 10, 1, 0, 0.3333, 0, 0.2, 0, 0.1429, 0, 0.10101
+
+	instr 1		/* sine */
+
+kcps	cpsmidib 2	; note frequency
+asnd	oscili .6, kcps, 1
+	outs asnd, asnd
+
+	endin
+
+	instr 2		/* band-limited sawtooth */
+
+kcps	cpsmidib 2	; note frequency
+asnd	oscili .6, kcps, 2
+	outs asnd, asnd
+
+	endin
+
+	instr 3		/* band-limited square */
+
+kcps	cpsmidib 2	; note frequency
+asnd	oscili .6, kcps, 3
+	outs asnd, asnd
+
+	endin
+
+
+</CsInstruments>
+<CsScore>
+
+t 0 120
+f 0 8.5 2 -2 0
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

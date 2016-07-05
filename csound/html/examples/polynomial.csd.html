@@ -1,0 +1,157 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/polynomial.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-odac  ;;;realtime audio
+;-iadc    ;;;uncomment -iadc if realtime audio input is needed too
+; For Non-realtime ouput leave only the line below:
+; -o polynomial.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2
+0dbfs  = 1
+
+; The polynomial y=x^n where n is odd always produces a curve
+; that traverses the range [-1, 1] when the input is within
+; the same range.  Therefore, we can use one of these curves
+; to make a nonlinear phasor that repeatedly reads a table 
+; from beginning to end like a linear phasor (maintaining 
+; continuity) but that distorts the waveform in the table.
+
+instr 4	; This instrument demonstrates phase distortion with x^3
+
+idur   = p3
+iamp   = p4
+ifreq  = p5
+itable = p6
+	
+aenv linseg 0, .001, 1.0, idur - .051, 1.0, .05, 0	; declicking envelope
+aosc phasor ifreq					; create a linear phasor
+apd  polynomial aosc, 0, 0, 0, 1			; distort the phasor with x^3
+aout tablei apd, itable, 1				; read a sine table with the nonlinear phasor
+     outs aenv*aout*iamp, aenv*aout*iamp
+		
+endin
+
+instr 5	; This instrument demonstrates phase distortion with x^11
+
+idur   = p3
+iamp   = p4
+ifreq  = p5
+itable = p6
+
+aenv linseg 0, .001, 1.0, idur - .051, 1.0, .05, 0	; declicking envelope
+aosc phasor ifreq					; create a linear phasor
+apd  polynomial aosc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ; distort the phasor with x^11
+aout tablei apd, itable, 1				; read a sine table with the nonlinear phasor
+     outs aenv*aout*iamp, aenv*aout*iamp
+		
+endin
+
+instr 6 ; This instrument crossfades between a pure sine and one distorted with x^11
+
+idur   = p3
+iamp   = p4
+ifreq  = p5
+itable = p6
+	
+aenv	linseg	0, .001, 1.0, idur - .051, 1.0, .05, 0	; declicking envelope
+aosc	phasor	ifreq					; create a linear phasor
+aout3	tablei	aosc, itable, 1				; read a sine table without the linear phasor
+apd11	polynomial aosc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ; distort the phasor with x^11
+aout11	tablei	apd11, itable, 1			; read a sine table with the nonlinear phasor
+kamount	linseg	1.0, 0.05, 0.9, 1.0, 0.0		; crossfade between two outputs
+aout	= aout3*kamount + aout11*(1.0 - kamount)
+        outs aenv*aout*iamp, aenv*aout*iamp	
+	
+endin
+</CsInstruments>
+<CsScore>
+f1 0 16385 10 1	; sine wave
+
+; descending "just blues" scale
+
+t 0 100
+i4 0 .333 .7 512     1
+i. + .    .  448
+i. + .    .  384
+i. + .    .  360
+i. + .    .  341.33
+i. + .    .  298.67
+i. + 2    .  256
+s
+
+t 0 100
+i5 0 .333 .7 512     1
+i. + .    .  448
+i. + .    .  384
+i. + .    .  360
+i. + .    .  341.33
+i. + .    .  298.67
+i. + 2    .  256
+s
+
+t 0 100
+i6 0 .333 .7 512     1
+i. + .    .  448
+i. + .    .  384
+i. + .    .  360
+i. + .    .  341.33
+i. + .    .  298.67
+i. + 2    .  256
+
+e
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>FLexecButton</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="FLcount.html" title="FLcount" />
+    <link rel="next" href="FLgetsnap.html" title="FLgetsnap" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">FLexecButton</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="FLcount.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="FLgetsnap.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="FLexecButton"></a>
+      <div class="titlepage"></div>
+      <a id="IndexFLexecButton" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">FLexecButton</span>
+        </h2>
+        <p>FLexecButton — 
+      A FLTK widget opcode that creates a button that executes a command.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp94112560"></a>
+        <h2>Description</h2>
+        <p>
+      A FLTK widget opcode that creates a button that executes a command. Useful
+      for opening up HTML documentation as About text or to start a separate
+      program from an FLTK widget interface.
+    </p>
+        <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Warning: Warning">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Warning]" src="images/warning.png" />
+              </td>
+              <th align="left">Warning</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+        Because any command can be executed, the user is advised to be very
+        careful when using this opcode and when running orchestras by others
+        using this opcode.
+      </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idp94158224"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ihandle <span class="command"><strong>FLexecButton</strong></span> "command", iwidth, iheight, ix, iy</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp94160512"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>ihandle</em></span>
+      -- a handle value (an integer number) that unequivocally references a
+      corresponding widget. This is used by other opcodes that modify a widget's
+      properties (see
+      <a class="link" href="ControlFltkAppearance.html" title="Modifying FLTK Widget Appearance"><em class="citetitle">Modifying FLTK Widget Appearance</em></a>). It is automatically output by <span class="emphasis"><em>FLexecButton</em></span>.
+    </p>
+        <p>
+      <span class="emphasis"><em><span class="quote">“<span class="quote">command</span>”</span></em></span> -- a double-quoted string containing a command to execute.
+    </p>
+        <p>
+      Notice that with <span class="emphasis"><em>FLexecButton</em></span>, the default text for the button is "About" and it is necessary to call the <a class="link" href="FLsetText.html" title="FLsetText"><em class="citetitle">FLsetText</em></a>
+ opcode to change the text of the button.
+    </p>
+        <p>
+      <span class="emphasis"><em>iwidth</em></span> -- width of widget.
+    </p>
+        <p>
+      <span class="emphasis"><em>iheight</em></span> -- height of widget.
+    </p>
+        <p>
+      <span class="emphasis"><em>ix</em></span> -- horizontal position of upper left corner of the valuator, relative to the upper left corner of corresponding window (expressed in pixels).
+    </p>
+        <p>
+      <span class="emphasis"><em>iy</em></span> -- vertical position of upper left corner of the valuator, relative to the upper left corner of corresponding window (expressed in pixels).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp94170176"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the FLexecButton opcode. It uses the file <a class="ulink" href="examples/FLexecButton.csd" target="_top"><em class="citetitle">FLexecButton.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp94172048"></a>
+          <p class="title">
+            <strong>Example 282. Example of the FLexecButton opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp242433872"></a>
+              <a class="ulink" href="examples/FLexecButton.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No display</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+  <span class="ohdr">sr</span>	    <span class="op">=</span>  44100
+  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  10
+  <span class="ohdr">nchnls</span>    <span class="op">=</span>  1
+
+<span class="comment">; Example by Jonathan Murphy 2007</span>
+
+<span class="comment">;;; reset amplitude range</span>
+  <span class="ohdr">0dbfs</span>	    <span class="op">=</span>  1
+
+<span class="comment">;;; set the base colour for the panel</span>
+	    <span class="opc">FLcolor</span>   100, 0, 200
+<span class="comment">;;; define the panel</span>
+	    <span class="opc">FLpanel</span>   "FLexecButton", 250, 100, 0, 0
+<span class="comment">;;; sliders to control time stretch and pitch</span>
+  gkstr, gistretch    <span class="opc">FLslider</span>			  "Time", 0.5, 1.5, 0, 6, <span class="op">-</span>1, 10, 60, 150, 20
+  gkpch, gipitch      <span class="opc">FLslider</span>			  "Pitch", 0.5, 1.5, 0, 6, <span class="op">-</span>1, 10, 60, 200, 20
+<span class="comment">;;; set FLexecButton colour</span>
+	    <span class="opc">FLcolor</span>   255, 255, 0
+<span class="comment">;;; when this button is pressed, fourier analysis is performed on the file</span>
+<span class="comment">;;; "beats.wav", producing the analysis file "beats.pvx"</span>
+  gipvoc    <span class="opc">FLexecButton</span>  "csound <span class="op">-</span>U pvanal beats.wav beats.pvx", 60, 20, 20, 20
+<span class="comment">;;; set FLexecButton text</span>
+	    <span class="opc">FLsetText</span>	"PVOC", gipvoc
+<span class="comment">;;; when this button is pressed, instr 10000 is called, exiting</span>
+<span class="comment">;;; Csound immediately</span>
+
+<span class="comment">;;; cancel previous  colour</span>
+	    <span class="opc">FLcolor</span>   <span class="op">-</span>1
+<span class="comment">;;; set colour for kill button</span>
+	    <span class="opc">FLcolor</span>   255, 0, 0
+  gkkill, gikill      <span class="opc">FLbutton</span>			  "X", 1, 1, 1, 20, 20, 100, 20, 0, 10000, 0, 0.1
+<span class="comment">;;; cancel previous colour</span>
+	    <span class="opc">FLcolor</span>   <span class="op">-</span>1
+<span class="comment">;;; set colour for play/stop and pause buttons</span>
+	    <span class="opc">FLcolor</span>   0, 200, 0
+<span class="comment">;;; pause and play/stop buttons</span>
+  gkpause, gipause    <span class="opc">FLbutton</span>			  "@<span class="op">||</span>", 1, 0, 2, 40, 20, 20, 60, <span class="op">-</span>1
+  gkplay, giplay      <span class="opc">FLbutton</span>			  "@<span class="op">|</span><span class="op">&gt;</span>", 1, 0, 2, 40, 20, 80, 60, <span class="op">-</span>1
+<span class="comment">;;; end the panel</span>
+	    <span class="opc">FLpanelEnd</span>
+<span class="comment">;;; set initial values for time stretch and pitch</span>
+	    <span class="opc">FLsetVal_i</span>	1, gistretch
+	    <span class="opc">FLsetVal_i</span>	1, gipitch
+<span class="comment">;;; run the panel</span>
+	    <span class="opc">FLrun</span>
+    
+	
+    <span class="oblock">instr</span> 1					  <span class="comment">; trigger play/stop</span>
+<span class="comment">;;; is the play/stop button on or off?</span>
+<span class="comment">;;; either way we need to trigger something,</span>
+<span class="comment">;;; so we can't just use the value of gkplay</span>
+  kon	    <span class="opc">trigger</span>   gkplay, 0, 0
+  koff	    <span class="opc">trigger</span>   gkplay, 1, 1
+<span class="comment">;;; if on, start instr 2</span>
+	    <span class="opc">schedkwhen</span>	kon, <span class="op">-</span>1, <span class="op">-</span>1, 2, 0, <span class="op">-</span>1
+<span class="comment">;;; if off, stop instr 2</span>
+	    <span class="opc">schedkwhen</span>	koff, <span class="op">-</span>1, <span class="op">-</span>1, <span class="op">-</span>2, 0, <span class="op">-</span>1
+
+    <span class="oblock">endin</span>
+
+    <span class="oblock">instr</span> 2
+
+<span class="comment">;;; paused or playing?</span>
+<span class="octrl">if</span> (gkpause <span class="op">==</span> 1) <span class="octrl">kgoto</span> <span class="olabel">pause</span>
+	    <span class="octrl">kgoto</span>     <span class="olabel">start</span>
+<span class="olabel">pause</span><span class="op">:</span>
+<span class="comment">;;; if the pause button is on, skip sound production</span>
+	    <span class="octrl">kgoto</span>     <span class="olabel">end</span>
+<span class="olabel">start</span><span class="op">:</span>
+<span class="comment">;;; get the length of the analysis file in seconds</span>
+  ilen	    <span class="opc">filelen</span>   "beats.pvx"
+<span class="comment">;;; determine base frequency of playback</span>
+  icps	    <span class="op">=</span>  1<span class="op">/</span>ilen
+<span class="comment">;;; create a table over the length of the file</span>
+  itpt	    <span class="ohdr">ftgen</span>     0, 0, 513, <span class="op">-</span>7, 0, 512, ilen
+<span class="comment">;;; phasor for time control</span>
+  kphs	    <span class="opc">phasor</span>    icps <span class="op">*</span> gkstr
+<span class="comment">;;; use phasor as index into table</span>
+  kndx	    <span class="op">=</span>  kphs <span class="op">*</span> 512
+<span class="comment">;;; read table </span>
+  ktpt	    <span class="opc">tablei</span>    kndx, itpt 
+<span class="comment">;;; use value from table as time pointer into file</span>
+  fsig1	    <span class="opc">pvsfread</span>  ktpt, "beats.pvx"
+<span class="comment">;;; change playback pitch</span>
+  fsig2	    <span class="opc">pvscale</span>   fsig1, gkpch
+<span class="comment">;;; resynthesize</span>
+  aout	    <span class="opc">pvsynth</span>   fsig2
+<span class="comment">;;; envelope to avoid clicks and clipping</span>
+  aenv	    <span class="opc">linsegr</span>   0, 0.3, 0.75, 0.1, 0
+  aout	    <span class="op">=</span>  aout <span class="op">*</span> aenv
+	    <span class="opc">out</span>	      aout
+<span class="olabel">end</span><span class="op">:</span>
+
+    <span class="oblock">endin</span>
+
+
+    <span class="oblock">instr</span> 10000					  <span class="comment">; kill</span>
+
+	    <span class="opc">exitnow</span>
+  
+    <span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span>1 0 10000
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp94176336"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="FLbutton.html" title="FLbutton"><em class="citetitle">FLbutton</em></a>,
+      <a class="link" href="FLbox.html" title="FLbox"><em class="citetitle">FLbox</em></a>,
+      <a class="link" href="FLbutBank.html" title="FLbutBank"><em class="citetitle">FLbutBank</em></a>,
+      <a class="link" href="FLprintk.html" title="FLprintk"><em class="citetitle">FLprintk</em></a>,
+      <a class="link" href="FLprintk2.html" title="FLprintk2"><em class="citetitle">FLprintk2</em></a>,
+      <a class="link" href="FLvalue.html" title="FLvalue"><em class="citetitle">FLvalue</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp94183184"></a>
+        <h2>Credits</h2>
+        <p>Author: Steven Yi</p>
+        <p>Example by: Jonathan Murphy</p>
+        <p>New in version 5.05</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="FLcount.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="FLgetsnap.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">FLcount </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> FLgetsnap</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/inq.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-odac  -idac ;;;realtime audio I/O
+; For Non-realtime ouput leave only the line below:
+; inq.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr   = 44100
+ksmps   = 32
+nchnls   = 2	;2 channels out
+0dbfs    = 1
+nchnls_i = 4	;4 channels in
+
+instr 1 ;4 channels in, two channels out
+
+ain1, ain2, ain3, ain4 inq		;grab your mics and sing
+
+adel   linseg 0, p3*.5, 0.02, p3*.5, 0	  ;max delay time = 20ms
+adel2  linseg 0.02, p3*.5, 0, p3*.5, 0.02 ;max delay time = 20ms	
+aoutl  flanger ain1, adel, .7
+aoutr  flanger ain2, adel*2, .8
+aoutla flanger ain3, adel2, .9
+aoutra flanger ain4, adel2*2, .5
+;write to quad file, 16 bits with header
+       fout "in_4.wav", 14, aoutl, aoutr, aoutla, aoutra	
+       outs (aoutl+aoutla)*.5, (aoutr+aoutra)*.5 ;stereo out
+
+endin
+</CsInstruments>
+<CsScore>
+
+i 1 0 10
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

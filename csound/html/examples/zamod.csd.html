@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/zamod.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac           -iadc     -d     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o zamod.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+; Initialize the global variables.
+sr = 44100
+kr = 4410
+ksmps = 10
+nchnls = 1
+
+; Initialize the ZAK space.
+; Create 2 a-rate variables and 2 k-rate variables.
+zakinit 2, 2
+
+; Instrument #1 -- a simple waveform.
+instr 1
+  ; Vary an a-rate signal linearly from 20,000 to 0.
+  asig line 20000, p3, 0
+
+  ; Send the signal to za variable #1.
+  zaw asig, 1
+endin
+
+; Instrument #2 -- generates audio output.
+instr 2
+  ; Generate a simple sine wave.
+  asin oscil 1, 440, 1
+  
+  ; Modify the sine wave, multiply its amplitude by 
+  ; za variable #1.
+  a1 zamod asin, -1
+
+  ; Generate the audio output.
+  out a1
+
+  ; Clear the za variables, prepare them for 
+  ; another pass.
+  zacl 0, 2
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; Table #1, a sine wave.
+f 1 0 16384 10 1
+
+; Play Instrument #1 for 2 seconds.
+i 1 0 2
+; Play Instrument #2 for 2 seconds.
+i 2 0 2
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

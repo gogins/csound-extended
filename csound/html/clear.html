@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>clear</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="ckgoto.html" title="ckgoto" />
+    <link rel="next" href="clfilt.html" title="clfilt" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">clear</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="ckgoto.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="clfilt.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="clear"></a>
+      <div class="titlepage"></div>
+      <a id="IndexClear" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">clear</span>
+        </h2>
+        <p>clear — 
+      Zeroes a list of audio signals.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84024608"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>clear</em></span> zeroes a list of audio signals.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84029136"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>clear</strong></span> avar1 [, avar2] [, avar3] [...]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp84031200"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>avar1, avar2, avar3,</em></span> ... -- signals to be zeroed
+    </p>
+        <p>
+      <span class="emphasis"><em>clear</em></span> sets every sample of each of the given audio signals to zero when it is performed.  This is equivalent to writing <span class="emphasis"><em>avarN = 0</em></span> in the orchestra for each of the specified variables.  Typically, <span class="emphasis"><em>clear</em></span> is used with global variables that combine multiple signals from different sources and change with each k-pass (performance loop) through all of the active instrument instances.  After the final usage of such a variable and before the next k-pass, it is necessary to clear the variable so that it does not add the next cycle's signals to the previous result.  <span class="emphasis"><em>clear</em></span> is especially useful in combination with <a class="link" href="vincr.html" title="vincr"><em class="citetitle">vincr</em></a> (variable increment) and they are intended to be used together with file output opcodes such as <a class="link" href="fout.html" title="fout"><em class="citetitle">fout</em></a>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84095440"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the clear opcode. It uses the file <a class="ulink" href="examples/clear.csd" target="_top"><em class="citetitle">clear.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp84097088"></a>
+          <p class="title">
+            <strong>Example 126. Example of the clear opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp237003408"></a>
+              <a class="ulink" href="examples/clear.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o clear.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+gaReverb <span class="opc">init</span> 0
+
+<span class="oblock">instr</span> 1
+    
+idur	<span class="op">=</span>	p3
+kpitch	<span class="op">=</span>	p4
+a1	<span class="opc">diskin2</span>	"fox.wav", kpitch
+a1	<span class="op">=</span>	a1<span class="op">*</span>.5			<span class="comment">;reduce volume</span>
+	<span class="opc">vincr</span>	gaReverb, a1
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 99 <span class="comment">; global reverb		</span>
+al, ar	<span class="opc">reverbsc</span> gaReverb, gaReverb, .8, 10000
+	<span class="opc">outs</span>	gaReverb<span class="op">+</span>al, gaReverb<span class="op">+</span>ar
+	
+<span class="opc">clear</span>	gaReverb
+
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">i</span>1  0 3 1
+<span class="stamnt">i</span>99 0 5
+<span class="stamnt">e</span>
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      See the <a class="link" href="fout.html" title="fout"><em class="citetitle">fout</em></a> opcode for another example.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84099744"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="vincr.html" title="vincr"><em class="citetitle">vincr</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84101648"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Gabriel Maldonado</td>
+          </tr>
+          <tr>
+            <td>Italy</td>
+          </tr>
+          <tr>
+            <td>1999</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 3.56</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="ckgoto.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="clfilt.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">ckgoto </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> clfilt</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

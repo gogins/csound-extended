@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ampmidid</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="ampmidi.html" title="ampmidi" />
+    <link rel="next" href="areson.html" title="areson" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">ampmidid</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="ampmidi.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="areson.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="ampmidid"></a>
+      <div class="titlepage"></div>
+      <a id="IndexAmpmidid" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">ampmidid</span>
+        </h2>
+        <p>ampmidid — 
+        Musically map MIDI velocity to peak amplitude within a specified dynamic range in decibels.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp79198960"></a>
+        <h2>Description</h2>
+        <p>
+        Musically map MIDI velocity to peak amplitude within a specified dynamic range in decibels.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp79200400"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">iamplitude <span class="command"><strong>ampmidid</strong></span> ivelocity, idecibels</pre>
+        <pre class="synopsis">kamplitude <span class="command"><strong>ampmidid</strong></span> kvelocity, idecibels</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp79272304"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>iamplitude</em></span> -- Amplitude.
+    </p>
+        <p>
+      <span class="emphasis"><em>ivelocity</em></span> -- MIDI velocity number, ranging from 0 through 127.
+    </p>
+        <p>
+      <span class="emphasis"><em>idecibels</em></span> -- Desired dynamic range in decibels.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp79275872"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>kamplitude</em></span> -- Amplitude.
+    </p>
+        <p>
+      <span class="emphasis"><em>kvelocity</em></span> -- MIDI velocity number, ranging from 0 through 127.
+    </p>
+        <p>
+Musically map MIDI velocity to peak amplitude
+within a specified dynamic range in decibels:
+a = (m * v + b) ^ 2,
+where a = amplitude,
+v = MIDI velocity,
+r = 10 ^ (R / 20),
+b = 127 / (126 * sqrt( r )) - 1 / 126,
+m = (1 - b) / 127,
+and R = specified dynamic range in decibels.
+See Roger Dannenberg, "The Interpretation of MIDI Velocity,"
+in Georg Essl and Ichiro Fujinaga (Eds.), Proceedings of the
+2006 International Computer Music Conference,
+November 6-11, 2006 (San Francisco:
+The International Computer Music Association), pp. 193-196.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp79279920"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the ampmidid opcode. It uses the file <a class="ulink" href="examples/ampmidid.csd" target="_top"><em class="citetitle">ampmidid.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp79281696"></a>
+          <p class="title">
+            <strong>Example 54. Example of the ampmidid opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp234484608"></a>
+              <a class="ulink" href="examples/ampmidid.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">;;;RT audio out, note=p4 and velocity=p5</span>
+-odac --midi-key=4 --midi-velocity-amp=5
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o ampmidid.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+<span class="ohdr">massign</span> 0, 1	<span class="comment">;assign all midi to instr. 1</span>
+
+<span class="oblock">instr</span> 1
+
+isine <span class="opc">ftgenonce</span> 0, 0, 4096, 10, 1 <span class="comment">;sine wave</span>
+
+  ihz <span class="op">=</span> <span class="opc">cpsmidinn</span>(p4)
+  ivelocity <span class="op">=</span> p5
+  idb <span class="opc">ampmidid</span> ivelocity, 20	<span class="comment">;map to dynamic range of 20 dB.</span>
+  idb <span class="op">=</span> idb <span class="op">+</span> 60		<span class="comment">;limit range to 60 to 80 decibels</span>
+  iamplitude <span class="op">=</span> <span class="opc">ampdb</span>(idb)	<span class="comment">;loudness in dB to signal amplitude</span>
+
+a1   <span class="opc">oscili</span> iamplitude, ihz, isine
+aenv <span class="opc">madsr</span> 0.05, 0.1, 0.5, 0.2
+asig <span class="op">=</span> a1 <span class="op">*</span> aenv
+     <span class="opc">outs</span> asig, asig
+
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="comment">;       note velocity</span>
+<span class="stamnt">i</span> 1 0 2  61  100
+<span class="stamnt">i</span> 1 + 2  65  10
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp79285984"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
+      <a class="link" href="cpsmidi.html" title="cpsmidi"><em class="citetitle">cpsmidi</em></a>,
+      <a class="link" href="cpsmidib.html" title="cpsmidib"><em class="citetitle">cpsmidib</em></a>,
+      <a class="link" href="midictrl.html" title="midictrl"><em class="citetitle">midictrl</em></a>,
+      <a class="link" href="notnum.html" title="notnum"><em class="citetitle">notnum</em></a>,
+      <a class="link" href="octmidi.html" title="octmidi"><em class="citetitle">octmidi</em></a>,
+      <a class="link" href="octmidib.html" title="octmidib"><em class="citetitle">octmidib</em></a>,
+      <a class="link" href="pchbend.html" title="pchbend"><em class="citetitle">pchbend</em></a>,
+      <a class="link" href="pchmidi.html" title="pchmidi"><em class="citetitle">pchmidi</em></a>,
+      <a class="link" href="pchmidib.html" title="pchmidib"><em class="citetitle">pchmidib</em></a>,
+      <a class="link" href="veloc.html" title="veloc"><em class="citetitle">veloc</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp79297696"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Michael Gogins</td>
+          </tr>
+          <tr>
+            <td>2006</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="ampmidi.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="areson.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">ampmidi </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> areson</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

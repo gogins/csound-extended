@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>babo</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="ATSsinnoi.html" title="ATSsinnoi" />
+    <link rel="next" href="balance.html" title="balance" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">babo</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="ATSsinnoi.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="balance.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="babo"></a>
+      <div class="titlepage"></div>
+      <a id="IndexBabo" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">babo</span>
+        </h2>
+        <p>babo — 
+      A physical model reverberator.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp80686928"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>babo</em></span>  stands  for  <span class="emphasis"><em>ba</em></span>ll-within-the-<span class="emphasis"><em>bo</em></span>x.   It is a physical model reverberator based on the paper by Davide  Rocchesso "The  Ball  within  the Box: a sound-processing metaphor", Computer Music Journal,  Vol  19,  N.4,  pp.45-47,  Winter 1995.
+    </p>
+        <p>
+      The resonator geometry can be defined, along with some response characteristics, the position of the listener within the resonator, and the position of the sound source.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp80690720"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">a1, a2 <span class="command"><strong>babo</strong></span> asig, ksrcx, ksrcy, ksrcz, irx, iry, irz [, idiff] [, ifno]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp80692928"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>irx, iry, irz</em></span> -- the  coordinates of the geometry of the resonator (length of the edges in meters)
+    </p>
+        <p>
+      <span class="emphasis"><em>idiff</em></span> -- is  the  coefficient  of  diffusion  at  the walls,  which regulates the amount of diffusion (0-1, where 0 = no diffusion, 1 = maximum diffusion - default: 1)
+    </p>
+        <p>
+      <span class="emphasis"><em>ifno</em></span> -- expert  values  function:  a function number that holds all the additional parameters  of the resonator. This is typically a GEN2--type function used in non-rescaling mode. They are as follows:
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p><span class="emphasis"><em>decay</em></span> -- main decay of the resonator (default: 0.99)</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>hydecay</em></span> -- high frequency decay of the resonator (default: 0.1)</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>rcvx, rcvy, rcvz</em></span> -- the coordinates of the position of the receiver (the listener) (in  meters;  0,0,0 is the resonator center)</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>rdistance</em></span> -- the  distance in meters between the two pickups (your ears,  for  example  - default: 0.3)</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>direct</em></span> -- the attenuation of the direct signal (0-1, default: 0.5)</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>early_diff</em></span> -- the attenuation coefficient of the  early reflections (0-1, default: 0.8)</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp80702944"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>asig</em></span> -- the input signal
+    </p>
+        <p>
+      <span class="emphasis"><em>ksrcx, ksrcy, ksrcz</em></span> -- the virtual coordinates of the source of sound (the input signal). These are allowed to move at k-rate and provide all the necessary variations in terms of response of the resonator.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp80705872"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is a simple example of the babo opcode. It uses the file <a class="ulink" href="examples/babo.csd" target="_top"><em class="citetitle">babo.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp80708576"></a>
+          <p class="title">
+            <strong>Example 75. A simple example of the babo opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp235189040"></a>
+              <a class="ulink" href="examples/babo.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;RT audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o babo.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="op">/</span><span class="op">*</span> Written by Nicola Bernardini <span class="op">*</span><span class="op">/</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+<span class="comment">; minimal babo instrument</span>
+<span class="comment">;</span>
+<span class="oblock">instr</span> 1
+       ix     <span class="op">=</span> p4  <span class="comment">; x position of source</span>
+       iy     <span class="op">=</span> p5  <span class="comment">; y position of source</span>
+       iz     <span class="op">=</span> p6  <span class="comment">; z position of source</span>
+       ixsize <span class="op">=</span> p7  <span class="comment">; width  of the resonator</span>
+       iysize <span class="op">=</span> p8  <span class="comment">; depth  of the resonator</span>
+       izsize <span class="op">=</span> p9  <span class="comment">; height of the resonator</span>
+
+ainput <span class="opc">soundin</span> "beats.wav"
+
+al,ar  <span class="opc">babo</span>    ainput<span class="op">*</span>0.7, ix, iy, iz, ixsize, iysize, izsize
+
+       <span class="opc">outs</span>    al,ar
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+/* Written by Nicola Bernardini */
+<span class="comment">; simple babo usage:</span>
+<span class="comment">;</span>
+<span class="comment">;p4     : x position of source</span>
+<span class="comment">;p5     : y position of source</span>
+<span class="comment">;p6     : z position of source</span>
+<span class="comment">;p7     : width  of the resonator</span>
+<span class="comment">;p8     : depth  of the resonator</span>
+<span class="comment">;p9     : height of the resonator</span>
+<span class="comment">;</span>
+<span class="stamnt">i</span>  1  0  20 6  4  3    14.39 11.86 10
+<span class="comment">;           ^^^^^^^    ^^^^^^^^^^^^^^</span>
+<span class="comment">;           |||||||    ++++++++++++++: optimal room dims according to</span>
+<span class="comment">;           |||||||                    Milner and Bernard JASA 85(2), 1989</span>
+<span class="comment">;           +++++++++: source position</span>
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      Here is an advanced example of the babo opcode. It uses the file <a class="ulink" href="examples/babo_expert.csd" target="_top"><em class="citetitle">babo_expert.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp80714768"></a>
+          <p class="title">
+            <strong>Example 76. An advanced example of the babo opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp234810400"></a>
+              <a class="ulink" href="examples/babo_expert.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;RT audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o babo_expert.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="op">/</span><span class="op">*</span> Written by Nicola Bernardini <span class="op">*</span><span class="op">/</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+<span class="comment">; full blown babo instrument with movement</span>
+<span class="comment">;</span>
+<span class="oblock">instr</span> 2
+  ixstart <span class="op">=</span> p4   <span class="comment">; start x position of source (left-right)</span>
+  ixend   <span class="op">=</span> p7   <span class="comment">; end   x position of source</span>
+  iystart <span class="op">=</span> p5   <span class="comment">; start y position of source (front-back)</span>
+  iyend   <span class="op">=</span> p8   <span class="comment">; end   y position of source</span>
+  izstart <span class="op">=</span> p6   <span class="comment">; start z position of source (up-down)</span>
+  izend   <span class="op">=</span> p9  <span class="comment">; end   z position of source</span>
+  ixsize  <span class="op">=</span> p10  <span class="comment">; width  of the resonator</span>
+  iysize  <span class="op">=</span> p11  <span class="comment">; depth  of the resonator</span>
+  izsize  <span class="op">=</span> p12  <span class="comment">; height of the resonator</span>
+  idiff   <span class="op">=</span> p13  <span class="comment">; diffusion coefficient</span>
+  iexpert <span class="op">=</span> p14  <span class="comment">; power user values stored in this function</span>
+
+ainput    <span class="opc">soundin</span> "beats.wav"
+ksource_x <span class="opc">line</span>    ixstart, p3, ixend
+ksource_y <span class="opc">line</span>    iystart, p3, iyend
+ksource_z <span class="opc">line</span>    izstart, p3, izend
+
+al,ar     <span class="opc">babo</span>    ainput<span class="op">*</span>0.7, ksource_x, ksource_y, ksource_z, ixsize, iysize, izsize, idiff, iexpert
+
+          <span class="opc">outs</span>    al,ar
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+/* Written by Nicola Bernardini */
+<span class="comment">; full blown instrument</span>
+<span class="comment">;p4         : start x position of source (left-right)</span>
+<span class="comment">;p5         : end   x position of source</span>
+<span class="comment">;p6         : start y position of source (front-back)</span>
+<span class="comment">;p7         : end   y position of source</span>
+<span class="comment">;p8         : start z position of source (up-down)</span>
+<span class="comment">;p9         : end   z position of source</span>
+<span class="comment">;p10        : width  of the resonator</span>
+<span class="comment">;p11        : depth  of the resonator</span>
+<span class="comment">;p12        : height of the resonator</span>
+<span class="comment">;p13        : diffusion coefficient</span>
+<span class="comment">;p14        : power user values stored in this function</span>
+
+<span class="comment">;         decay  hidecay rx ry rz rdistance direct early_diff</span>
+<span class="stamnt">f</span>1  0 8 -2  0.95   0.95   0  0  0    0.3     0.5      0.8  <span class="comment">; brighter</span>
+<span class="stamnt">f</span>2  0 8 -2  0.95   0.5    0  0  0    0.3     0.5      0.8  <span class="comment">; default (to be set as)</span>
+<span class="stamnt">f</span>3  0 8 -2  0.95   0.01   0  0  0    0.3     0.5      0.8  <span class="comment">; darker</span>
+<span class="stamnt">f</span>4  0 8 -2  0.95   0.7    0  0  0    0.3     0.1      0.4  <span class="comment">; to hear the effect of diffusion</span>
+<span class="stamnt">f</span>5  0 8 -2  0.9    0.5    0  0  0    0.3     2.0      0.98 <span class="comment">; to hear the movement</span>
+<span class="stamnt">f</span>6  0 8 -2  0.99   0.1    0  0  0    0.3     0.5      0.8  <span class="comment">; default vals</span>
+<span class="comment">;        ^</span>
+<span class="comment">;         ----- gen. number: negative to avoid rescaling</span>
+
+
+<span class="stamnt">i</span>2 0 10  6  4  3   6   4  3  14.39  11.86  10    1  6 <span class="comment">; defaults</span>
+<span class="stamnt">i</span>2 +  4  6  4  3   6   4  3  14.39  11.86  10    1  1 <span class="comment">; hear brightness 1</span>
+<span class="stamnt">i</span>2 +  4  6  4  3  -6  -4  3  14.39  11.86  10    1  2 <span class="comment">; hear brightness 2</span>
+<span class="stamnt">i</span>2 +  4  6  4  3  -6  -4  3  14.39  11.86  10    1  3 <span class="comment">; hear brightness 3</span>
+<span class="stamnt">i</span>2 +  3 .6 .4 .3 -.6 -.4 .3  1.439  1.186  1.0 0.0  4 <span class="comment">; hear diffusion 1</span>
+<span class="stamnt">i</span>2 +  3 .6 .4 .3 -.6 -.4 .3  1.439  1.186  1.0 1.0  4 <span class="comment">; hear diffusion 2</span>
+<span class="stamnt">i</span>2 +  4 12  4  3 -12  -4 -3  24.39  21.86  20    1  5 <span class="comment">; hear movement</span>
+<span class="comment">;</span>
+<span class="stamnt">i</span>2 +  4  6  4  3   6   4  3  14.39  11.86   10   1  1 <span class="comment">; hear brightness 1</span>
+<span class="stamnt">i</span>2 +  4  6  4  3  -6  -4  3  14.39  11.86   10   1  2 <span class="comment">; hear brightness 2</span>
+<span class="stamnt">i</span>2 +  4  6  4  3  -6  -4  3  14.39  11.86   10   1  3 <span class="comment">; hear brightness 3</span>
+<span class="stamnt">i</span>2 +  3 .6 .4 .3 -.6 -.4 .3  1.439  1.186  1.0 0.0  4 <span class="comment">; hear diffusion 1</span>
+<span class="stamnt">i</span>2 +  3 .6 .4 .3 -.6 -.4 .3  1.439  1.186  1.0 1.0  4 <span class="comment">; hear diffusion 2</span>
+<span class="stamnt">i</span>2 +  4 12  4  3 -12  -4 -3  24.39  21.86   20   1  5 <span class="comment">; hear movement</span>
+<span class="comment">;       ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^   ^  ^</span>
+<span class="comment">;       |||||||||||||||||||  |||||||||||||||||   |   --: expert values function</span>
+<span class="comment">;       |||||||||||||||||||  |||||||||||||||||   +--: diffusion</span>
+<span class="comment">;       |||||||||||||||||||  ----------------: optimal room dims according to Milner and Bernard JASA 85(2), 1989</span>
+<span class="comment">;       |||||||||||||||||||</span>
+<span class="comment">;       --------------------: source position start and end</span>
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp80716720"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Paolo Filippi</td>
+          </tr>
+          <tr>
+            <td>Padova, Italy</td>
+          </tr>
+          <tr>
+            <td>1999</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Nicola Bernardini</td>
+          </tr>
+          <tr>
+            <td>Rome, Italy</td>
+          </tr>
+          <tr>
+            <td>2000</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 4.09</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="ATSsinnoi.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="balance.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">ATSsinnoi </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> balance</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/luaopcode.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+
+<CsInstruments>
+lua_opdef "luatest", {{
+local ffi = require("ffi")
+local string = require("string")
+local csoundLibrary = ffi.load('csound64.dll.5.2')
+ffi.cdef[[
+    int csoundGetKsmps(void *);
+    double csoundGetSr(void *);
+    struct luatest_arguments {double *out; double *stringout; char *stringin; double *in1; double *in2; double sr; int ksmps; };
+]]
+function luatest_init(csound, opcode, carguments)
+    local arguments = ffi.cast("struct luatest_arguments *", carguments)
+    arguments.sr = csoundLibrary.csoundGetSr(csound)
+    print(string.format('stringin: %s', ffi.string(arguments.stringin)))
+    print(string.format('sr: %f', arguments.sr))
+    arguments.ksmps = csoundLibrary.csoundGetKsmps(csound)
+    print(string.format('ksmps: %d', arguments.ksmps))
+    arguments.out[0] = arguments.in1[0] * arguments.in2[0]
+    ffi.copy(arguments.stringout, 'Hello, world!')
+    return 0
+end
+function luatest_kontrol(csound, opcode, carguments)
+    local arguments = ffi.cast("struct luatest_arguments *", carguments)
+    arguments.out[0] = arguments.in1[0] * arguments.in2[0]
+    return 0
+end
+function luatest_noteoff(csound, opcode, carguments)
+    local arguments = ffi.cast("struct luatest_arguments *", carguments)
+    arguments.out[0] = arguments.in1[0] * arguments.in2[0]
+    print('off')
+    return 0
+end
+}}
+
+instr 1
+    iresult = 0
+    Stringin = "stringin"
+    Stringout = "stringout"
+    lua_iopcall "luatest", iresult, Stringout, Stringin, p2, p3
+    prints Stringout
+endin
+instr 2
+    iresult = 0
+    Stringin = "stringin"
+    Stringout = "initial value"
+    lua_iopcall_off "luatest", iresult, Stringout, Stringin, p2, p3
+    print iresult
+    prints Stringout
+endin
+</CsInstruments>
+
+<CsScore>
+i 1 1 2
+i 2 2 2
+i 1 3 2
+e
+</CsScore>
+
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

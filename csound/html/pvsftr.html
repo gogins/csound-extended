@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>pvsftr</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="pvsfreeze.html" title="pvsfreeze" />
+    <link rel="next" href="pvsftw.html" title="pvsftw" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">pvsftr</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="pvsfreeze.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="pvsftw.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="pvsftr"></a>
+      <div class="titlepage"></div>
+      <a id="IndexPvsftr" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">pvsftr</span>
+        </h2>
+        <p>pvsftr — 
+      Reads amplitude and/or frequency data from function tables.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129461232"></a>
+        <h2>Description</h2>
+        <p>
+      Reads amplitude and/or frequency data from function tables.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129503696"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>pvsftr</strong></span> fsrc, ifna [, ifnf]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp129505712"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>ifna</em></span> -- A table, at least inbins in size, that stores amplitude data. Ignored if ifna  = 0
+    </p>
+        <p>
+      <span class="emphasis"><em>ifnf</em></span> (optional) -- A table, at least inbins in size, that stores frequency data. Ignored if ifnf = 0
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129508336"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>fsrc</em></span> -- a PVOC-EX formatted source.
+    </p>
+        <p>
+      Enables the contents of <span class="emphasis"><em>fsrc</em></span> to be exchanged with function tables for custom processing. Except when the frame overlap equals <span class="emphasis"><em>ksmps</em></span> (which will generally not be the case), the frame data is not updated each control period. The data in <span class="emphasis"><em>ifna</em></span>, <span class="emphasis"><em>ifnf</em></span> should only be processed when <span class="emphasis"><em>kflag</em></span> is set to 1. To process only frequency data, set <span class="emphasis"><em>ifna</em></span> to zero.
+    </p>
+        <p>
+      As the function tables are required only to store data from <span class="emphasis"><em>fsrc</em></span>, there is no advantage in defining then in the score, and they should generally be created in the instrument, using <a class="link" href="ftgen.html" title="ftgen"><em class="citetitle">ftgen</em></a>.
+    </p>
+        <p>
+      By exporting amplitude data, say, from one fsig and importing it into another, basic cross-synthesis (as in <a class="link" href="pvscross.html" title="pvscross"><em class="citetitle">pvscross</em></a>) can be performed, with the option to modify the data beforehand using the table manipulation opodes.
+    </p>
+        <p>
+      Note that the format data in the source fsig is not written to the tables. This therefore offers a means of transferring amplitude and frequency data between non-identical fsigs. Used this way, these opcodes become potentially pathological, and can be relied upon to produce unexpected  results. In such cases, resynthesis using <a class="link" href="pvsadsyn.html" title="pvsadsyn"><em class="citetitle">pvsadsyn</em></a> would almost certainly be required.
+    </p>
+        <p>
+      To perform a straight copy from one fsig to another one of identical format, the conventional assignment syntax can be used:
+
+      </p>
+        <div class="literallayout">
+          <p> <br />
+fsig1 = fsig2<br />
+      </p>
+        </div>
+        <p> 
+ 
+      It is not necessary to use function tables in this case.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129520144"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the pvsftr opcode. It uses the file <a class="ulink" href="examples/pvsftr.csd" target="_top"><em class="citetitle">pvsftr.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp129522000"></a>
+          <p class="title">
+            <strong>Example 722. Example of the pvsftr opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp260559520"></a>
+              <a class="ulink" href="examples/pvsftr.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac  <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o pvsftr.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+gifil <span class="ohdr">ftgen</span> 0, 0, 0, <span class="op">-</span>1, "fox.wav", 0, 0, 1
+
+<span class="oblock">instr</span> 1
+
+ifftsize <span class="op">=</span> 1024				<span class="comment">;fft size</span>
+ioverlap <span class="op">=</span> 256				<span class="comment">;overlap</span>
+knewamp  <span class="op">=</span> 0				<span class="comment">;new value for amplitudes</span>
+
+<span class="comment">;create fsig stream from function table</span>
+fsrc	<span class="opc">pvstanal</span> 1, 1, 1, gifil, 0, 0, 0, ifftsize, ioverlap, 0
+ifn	<span class="ohdr">ftgen</span>	0, 0, ifftsize<span class="op">/</span>2, 2, 0	<span class="comment">;create empty function table</span>
+kflag	<span class="opc">pvsftw</span>	fsrc,ifn		<span class="comment">;export amps to table	</span>
+<span class="comment">;overwrite the first 10 bins each time the table has been filled new</span>
+<span class="octrl">if</span> kflag <span class="op">==</span> 1 then
+kndx <span class="op">=</span> 0
+kmaxbin <span class="op">=</span> 10
+<span class="olabel">loop</span><span class="op">:</span>
+<span class="opc">tablew</span> knewamp, kndx, ifn
+<span class="octrl">loop_le</span> kndx, 1, kmaxbin, <span class="olabel">loop</span>
+<span class="octrl">endif</span>
+	<span class="opc">pvsftr</span>	fsrc,ifn		<span class="comment">;read modified data back to fsrc</span>
+aout	<span class="opc">pvsynth</span>	fsrc			<span class="comment">;and resynth</span>
+	<span class="opc">outs</span>	aout, aout
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span> 1 0 4
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129526288"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="pvsftw.html" title="pvsftw"><em class="citetitle">pvsftw</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129528336"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Richard Dobson</td>
+          </tr>
+          <tr>
+            <td>August 2001 </td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in version 4.13</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="pvsfreeze.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="pvsftw.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">pvsfreeze </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> pvsftw</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

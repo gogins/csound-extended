@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>GEN02</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
+    <link rel="prev" href="GEN01.html" title="GEN01" />
+    <link rel="next" href="GEN03.html" title="GEN03" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">GEN02</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="GEN01.html">Prev</a> </td>
+          <th width="60%" align="center">Score Statements and GEN Routines</th>
+          <td width="20%" align="right"> <a accesskey="n" href="GEN03.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="GEN02"></a>
+      <div class="titlepage"></div>
+      <a id="IndexGEN02" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">GEN02</span>
+        </h2>
+        <p>GEN02 — 
+      Transfers data from immediate pfields into a function table.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp205016912"></a>
+        <h2>Description</h2>
+        <p>
+      This subroutine transfers data from immediate pfields into a function table.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp205061392"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 2 v1 v2 v3 ...</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp205063424"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>). The maximum tablesize is 16777216 (2<sup>24</sup>) points.
+    </p>
+        <p>
+      <span class="emphasis"><em>v1, v2, v3,</em></span> etc. -- values to be copied directly into the table space. The number of values is limited by the compile-time variable <span class="emphasis"><em>PMAX</em></span>, which controls the maximum pfields (currently 1000). The values copied may include the table guard point; any table locations not filled will contain zeros.
+    </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note: Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+        If p4 (the GEN routine number is positive, the table will be
+        post-normalized (rescaled to a maximum absolute value of 1 after
+        generation). A negative p4 will cause rescaling to be skipped. You will
+        usually want to use -2 with this GEN function, so that your values are
+        not normalized.
+      </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idp205070224"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the GEN02 routine. It uses the files <a class="ulink" href="examples/gen02.csd" target="_top"><em class="citetitle">gen02.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp205072000"></a>
+          <p class="title">
+            <strong>Example 1126. Example of the GEN02 routine.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp275431904"></a>
+              <a class="ulink" href="examples/gen02.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac      <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o gen02.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100 
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2 
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
+
+<span class="oblock">instr</span> 1
+
+ifn  <span class="op">=</span> p4				<span class="comment">;choose different tables of GEN02</span>
+kcps <span class="opc">init</span> 1<span class="op">/</span>p3				<span class="comment">;index over the length of entire note</span>
+kndx <span class="opc">phasor</span> kcps
+ixmode <span class="op">=</span> 1				<span class="comment">;normalize index data</span>
+kamp <span class="opc">tablei</span> kndx, ifn, ixmode
+asig <span class="opc">poscil</span> kamp, 440, 1		<span class="comment">;use GEN02 as envelope for amplitude</span>
+     <span class="opc">outs</span> asig, asig
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 1 0 8192 10 1	<span class="comment">;sine wave</span>
+<span class="stamnt">f</span> 2 0 5 2 0 2 0
+<span class="stamnt">f</span> 3 0 5 2 0 2 10 0
+<span class="stamnt">f</span> 4 0 9 2 0 2 10 100 0
+
+<span class="stamnt">i</span> 1 0 2 2
+<span class="stamnt">i</span> 1 3 2 3
+<span class="stamnt">i</span> 1 6 2 4
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+
+        <span class="phrase">These are the diagrams of the waveforms of the GEN02 routines, as used in the example:</span>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen02_1.png" alt="f 2 0 5 2 0 2 0" />
+          <div class="caption">
+            <p>f 2 0 5 2 0 2 0</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen02_2.png" alt="f 3 0 5 2 0 2 10 0" />
+          <div class="caption">
+            <p>f 3 0 5 2 0 2 10 0</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen02_3.png" alt="f 4 0 9 2 0 2 10 100 0" />
+          <div class="caption">
+            <p>f 4 0 9 2 0 2 10 100 0</p>
+          </div>
+        </div>
+        <p>
+
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp205086880"></a>
+        <h2>See Also</h2>
+        <p>
+       <a class="link" href="GEN17.html" title="GEN17"><em class="citetitle">GEN17</em></a>
+     </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp205089024"></a>
+        <h2>Credits</h2>
+        <p>December 2002. Thanks to Rasmus Ekman, corrected the limit of the <span class="emphasis"><em>PMAX</em></span> variable.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="GEN01.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="ScoregensTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="GEN03.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">GEN01 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> GEN03</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

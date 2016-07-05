@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>GENpadsynth</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
+    <link rel="prev" href="GENwave.html" title="GENwave" />
+    <link rel="next" href="ExperimentalTop.html" title="Experimental Orchestra Opcodes and GEN Routines" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">GENpadsynth</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="GENwave.html">Prev</a> </td>
+          <th width="60%" align="center">Score Statements and GEN Routines</th>
+          <td width="20%" align="right"> <a accesskey="n" href="ExperimentalTop.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="GENpadsynth"></a>
+      <div class="titlepage"></div>
+      <a id="IndexGENpadsynth" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">GENpadsynth</span>
+        </h2>
+        <p>"padsynth" — 
+      Generate a sample table using the padsynth algorithm.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp208124800"></a>
+        <h2>Description</h2>
+        <p>
+Paul Octavian Nasca's "padsynth algorithm" adds bandwidth to each partial of a
+periodic weaveform. This bandwidth is heard as color, movement, and additional
+richness of sound.
+   </p>
+        <p>
+First, the waveform is defined by the user as a series of harmonic partials.
+Then, bandwidth is added by independently spreading each partial of the
+original waveform from a single frequency across neighboring frequencies,
+according to a "profile" function: a Gaussian curve, a square, or a rising
+and then falling expontential.
+   </p>
+        <p>
+The partials of the original waveform may be considered to be samples in a
+discrete Fourier transform of the waveform. Normally there is not an exact
+one-to-one correspondence between the frequencies of the samples (frequency
+bins) of the discrete Fourier transform with the frequencies of the partials
+of the original waveform, because any frequency in the inverse of the discrete
+Fourier transform might be synthesized by interference between any number of
+bins. However, the padsynth algorithm uses a simple trick to create this
+correspondence. The discrete Fourier transform is simply made so large that
+the frequency of any partial of the original waveform will be very close to
+the frequency of the corresponding bin in the Fourier transform. Once this
+correspondence has been created, the bandwidth profile can be applied by
+centering it over the frequency bin of the original partial, scaling the
+profile by the bandwidth, and simply multiplying the original partial by each
+sample of the profile and adding the product to the corresponding bin of the
+Fourier transform.
+   </p>
+        <p>
+As the frequencies of the partials increase, their bandwidth may optionally
+become wider or (less often) narrower.
+   </p>
+        <p>
+Once each partial has been spread out in this way, the discrete Fourier
+transform may be given random phases, and is then simply inverted to
+synthesize the desired waveform, which may be used as the wavetable for
+a digital oscillator.
+   </p>
+        <p>
+N.B.: The size of the function table does NOT necessarily reflect one periodic
+cycle of the waveform that it contains. The fundamental frequency must be used
+to generate the desired pitch from an oscillator using the function table, e.g.
+   </p>
+        <code class="code">
+    oscillator_hz = desired_hz * (sr / padsynth_size / fundamental_hz)
+    </code>
+      </div>
+      <div class="refsect1">
+        <a id="idp208201936"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>f</strong></span> # score_time table_size "padsynth" fundamental_frequency
+    partial_bandwidth partial_scale harmonic_stretch profile_shape profile_shape_parameter
+    partial1_amplitude [partial2_amplitude ...]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp208204032"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>table_size</em></span> -- Function table size. Should be large,
+            e.g. 2^18 == 262144. Must be a power of 2 or power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>).
+    </p>
+        <p>
+      <span class="emphasis"><em>fundamental_frequency</em></span> -- Fundamental frequency for
+      the generated table.
+    </p>
+        <p>
+      <span class="emphasis"><em>partial_bandwidth</em></span> -- Bandwidth of each partial in cents.
+    </p>
+        <p>
+      <span class="emphasis"><em>partial_scale</em></span> -- Scaling factor for bandwidth of each partial (log of increase/decrease
+            with partial frequency, 0 is no stretch or shrink).
+    </p>
+        <p>
+      <span class="emphasis"><em>harmonic_stretch</em></span> -- Harmonic stretch/shrink for all partials (1 is harmonic).
+    </p>
+        <p>
+      <span class="emphasis"><em>profile_shape</em></span> -- Number specifying the shape of the bandwidth profile:
+      1 = Gaussian, 2 = square, and 3 = exponential
+    </p>
+        <p>
+      <span class="emphasis"><em>profile_shape_parameter</em></span> -- Parameter passed to the function generating the profile shape, e.g. exponent.
+    </p>
+        <p>
+      <span class="emphasis"><em>partial1_amplitude, partial2_amplitude, ...</em></span> -- Amplitudes for each partial (may be zero).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp208213008"></a>
+        <h2>Examples</h2>
+        <p>
+	    Here is an example of the GENpadsynth routine. It uses the files <a class="ulink" href="examples/padsynth_gen.csd" target="_top"><em class="citetitle">padsynth_gen.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp208214880"></a>
+          <p class="title">
+            <strong>Example 1167. An example of the GENpadsynth routine.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp275910320"></a>
+              <a class="ulink" href="examples/padsynth_gen.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="ohdr">sr</span><span class="op">=</span>44100
+<span class="ohdr">ksmps</span><span class="op">=</span>1
+<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="ohdr">0dbfs</span><span class="op">=</span>2000
+
+	gispec_len <span class="opc">init</span> 2^18
+
+	<span class="oblock">instr</span> 1
+    <span class="opc">prints</span> "Plain sine for frequency<span class="op">/</span>amplitude<span class="op">/</span>distortion comparison.\n"
+	gi_padsynth_1 <span class="opc">ftgenonce</span> 0, 0, gispec_len, 10, 1
+    iattack <span class="op">=</span> 0.08
+    idecay <span class="op">=</span> 0.1
+    isustain <span class="op">=</span> 0.25
+    irelease <span class="op">=</span> 0.2
+    aenv <span class="opc">madsr</span> iattack, idecay, isustain, irelease
+    ifreq <span class="opc">cpsmidinn</span> p4
+    iamp <span class="opc">ampdb</span> p5
+    ibasefreq <span class="op">=</span> 440 <span class="comment">; can be lower or higher frequency; close to played frequency is said to be best</span>
+    ibw_cents <span class="op">=</span> 56.96943 <span class="comment">; width of the peaks, 100 is semitone</span>
+	asig <span class="opc">poscil</span> iamp, ifreq, gi_padsynth_1
+    asig <span class="op">=</span> aenv <span class="op">*</span> asig
+	aleft, aright <span class="opc">pan2</span> asig, 0.5
+	<span class="opc">outs</span> aleft, aright
+	<span class="oblock">endin</span>
+
+	<span class="oblock">instr</span> 2
+    <span class="opc">prints</span> "PadSynth with sine tone.\n"
+    ibasehz <span class="op">=</span> 261.625565
+    <span class="comment">;                       p1 p2 p3          p4           p5       p6  p7    p8 p9  p10  p11</span>
+	gi_padsynth_1 <span class="opc">ftgenonce</span> 0, 0, gispec_len, "padsynth", ibasehz, p6, 0.0,  1, 1,  1.0, 1
+    iattack <span class="op">=</span> 0.08
+    idecay <span class="op">=</span> 0.1
+    isustain <span class="op">=</span> 0.25
+    irelease <span class="op">=</span> 0.2
+    aenv <span class="opc">madsr</span> iattack, idecay, isustain, irelease
+    ifreq <span class="opc">cpsmidinn</span> p4
+    iamp <span class="opc">ampdb</span> p5
+	asig <span class="opc">poscil</span> iamp, ifreq<span class="op">*</span>(<span class="ohdr">sr</span><span class="op">/</span>gispec_len<span class="op">/</span>ibasehz), gi_padsynth_1
+    asig <span class="op">=</span> aenv <span class="op">*</span> asig
+	aleft, aright <span class="opc">pan2</span> asig, 0.5
+	<span class="opc">outs</span> aleft, aright
+	<span class="oblock">endin</span>
+
+	<span class="oblock">instr</span> 3
+    <span class="opc">prints</span> "PadSynth with harmonics.\n"
+    ibasehz <span class="op">=</span> 261.625565
+    <span class="comment">;                       p1 p2 p3          p4           p5       p6  p7 p8 p9  p10  p11</span>
+	gi_padsynth_1 <span class="opc">ftgenonce</span> 0, 0, gispec_len, "padsynth", ibasehz, p6, 1, 1, 1,  1, 0.7600046992, 0.6199994683, 0.9399998784, 0.4400023818, 0.0600003302, 0.8499968648, 0.0899999291, 0.8199964762, 0.3199984133, 0.9400014281, 0.3000001907, 0.120003365, 0.1799997687, 0.5200006366, 0.9300042987
+    iattack <span class="op">=</span> 0.08
+    idecay <span class="op">=</span> 0.1
+    isustain <span class="op">=</span> 0.25
+    irelease <span class="op">=</span> 0.2
+    aenv <span class="opc">madsr</span> iattack, idecay, isustain, irelease
+    ifreq <span class="opc">cpsmidinn</span> p4
+    iamp <span class="opc">ampdb</span> p5
+	asig <span class="opc">poscil</span> iamp, ifreq<span class="op">*</span>(<span class="ohdr">sr</span><span class="op">/</span>gispec_len<span class="op">/</span>ibasehz), gi_padsynth_1
+    asig <span class="op">=</span> aenv <span class="op">*</span> asig
+	aleft, aright <span class="opc">pan2</span> asig, 0.5
+	<span class="opc">outs</span> aleft, aright
+	<span class="oblock">endin</span>
+
+	<span class="oblock">instr</span> 4
+    <span class="opc">prints</span> "PadSynth with inharmonic partials.\n"
+    ibasehz <span class="op">=</span> 261.625565
+    <span class="comment">;                       p1 p2 p3          p4           p5       p6  p7 p8 p9  p10  p11</span>
+	gi_padsynth_1 <span class="opc">ftgenonce</span> 0, 0, gispec_len, "padsynth", ibasehz, p6, 1, 2, 3,  1, 0.7600046992, 0.6199994683, 0.9399998784, 0.4400023818, 0.0600003302, 0.8499968648, 0.0899999291, 0.8199964762, 0.3199984133, 0.9400014281, 0.3000001907, 0.120003365, 0.1799997687, 0.5200006366, 0.9300042987
+    iattack <span class="op">=</span> 0.08
+    idecay <span class="op">=</span> 0.1
+    isustain <span class="op">=</span> 0.25
+    irelease <span class="op">=</span> 0.2
+    aenv <span class="opc">madsr</span> iattack, idecay, isustain, irelease
+    ifreq <span class="opc">cpsmidinn</span> p4
+    iamp <span class="opc">ampdb</span> p5
+	asig <span class="opc">poscil</span> iamp, ifreq<span class="op">*</span>(<span class="ohdr">sr</span><span class="op">/</span>gispec_len<span class="op">/</span>ibasehz), gi_padsynth_1
+    asig <span class="op">=</span> aenv <span class="op">*</span> asig
+	aleft, aright <span class="opc">pan2</span> asig, 0.5
+	<span class="opc">outs</span> aleft, aright
+	<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+
+
+<span class="stamnt">i</span>1  0 2 60.00 60
+<span class="stamnt">i</span>1  + 2 72.00 60
+<span class="stamnt">i</span>1  + 2 84.00 60
+
+<span class="stamnt">i</span>2  7 2 60.00 60 0.3
+<span class="stamnt">i</span>2  + 2 72.00 60 0.3
+<span class="stamnt">i</span>2  + 2 84.00 60 0.3
+<span class="stamnt">i</span>2  + 2 60.00 60 25
+<span class="stamnt">i</span>2  + 2 72.00 60 25
+<span class="stamnt">i</span>2  + 2 84.00 60 25
+<span class="stamnt">i</span>2  + 2 60.00 60 55
+<span class="stamnt">i</span>2  + 2 72.00 60 55
+<span class="stamnt">i</span>2  + 2 84.00 60 55
+
+<span class="stamnt">i</span>3 26 2 60.00 60 0.3
+<span class="stamnt">i</span>3  + 2 72.00 60 0.3
+<span class="stamnt">i</span>3  + 2 84.00 60 0.3
+<span class="stamnt">i</span>3  + 2 60.00 60 25
+<span class="stamnt">i</span>3  + 2 72.00 60 25
+<span class="stamnt">i</span>3  + 2 84.00 60 25
+<span class="stamnt">i</span>3  + 2 60.00 60 55
+<span class="stamnt">i</span>3  + 2 72.00 60 55
+<span class="stamnt">i</span>3  + 2 84.00 60 55
+
+<span class="stamnt">i</span>4 45 2 60.00 60 0.3
+<span class="stamnt">i</span>4  + 2 72.00 60 0.3
+<span class="stamnt">i</span>4  + 2 84.00 60 0.3
+<span class="stamnt">i</span>4  + 2 60.00 60 25
+<span class="stamnt">i</span>4  + 2 72.00 60 25
+<span class="stamnt">i</span>4  + 2 84.00 60 25
+<span class="stamnt">i</span>4  + 2 60.00 60 55
+<span class="stamnt">i</span>4  + 2 72.00 60 55
+<span class="stamnt">i</span>4  + 2 84.00 60 55
+
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp208216800"></a>
+        <h2>See Also</h2>
+        <p> More information on Padsynth: <a class="ulink" href="www.paulnasca.com/algorithms-created-by-me" target="_top"><em class="citetitle">www.paulnasca.com/algorithms-created-by-me</em></a></p>
+      </div>
+      <div class="refsect1">
+        <a id="idp208218752"></a>
+        <h2>Credits</h2>
+        <p>Written by Michael Gogins</p>
+        <p>New in version 6.05</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="GENwave.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="ScoregensTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="ExperimentalTop.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">GENwave </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Experimental Orchestra Opcodes and GEN Routines</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

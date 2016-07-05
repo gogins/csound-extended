@@ -1,0 +1,117 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/toot10.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-odac
+</CsOptions>
+<CsInstruments>
+
+nchnls    =         2
+
+garvbsig init       0
+
+
+          instr 10
+
+iattack   =         .01
+irelease  =         .2
+iwhite    =         22050
+idur      =         p3
+iamp      =         p4
+iswpstart =         p5
+isweepend =         p6
+ibndwidth =         p7
+ibalance  =         p8                  ; 1 = left, .5 = center, 0 = right
+irvbgain  =         p9
+
+kamp      linen     iamp, iattack, idur, irelease
+ksweep    line      iswpstart, idur, isweepend
+asig      rand      iwhite
+afilt     reson     asig, ksweep, ibndwidth
+arampsig  =         kamp * afilt
+
+          outs      arampsig * ibalance, arampsig * (1 - ibalance)
+
+garvbsig  =         garvbsig + arampsig * p9
+
+          endin
+
+          instr     100
+
+irvbtime  =         p4
+asig      reverb    garvbsig,  irvbtime
+          outs      asig, asig
+garvbsig  =         0
+
+          endin
+
+
+</CsInstruments>
+<CsScore>
+
+;ins strt dur  rvbtime
+i100 0    15   1.1
+i100 15   10   5
+
+;ins strt dur  amp   stsw   ndsw   bdw  bal(0-1)  rvsnd
+i10  0    2    .01   5000   500    20   .15        .1
+i10  3    1    .01   1500   5000   30   .95        .1
+i10  5    2    .01   850    1100   40   .45        .1
+i10  8    2    .01   1100   8000   50   .05        .1
+i10  8    .5   .01   5000   1000   30   .35        .2
+i10  9    .5   .01   1000   8000   40   .75        .1
+i10  11   .5   .01   500    2100   50   .14        .2
+i10  12   .5   .01   2100   1220   75   .96        .1
+i10  13   .5   .01   1700   3500   100  .45        .2
+i10  15   5    .005  8000   800    60   .85        .1
+
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

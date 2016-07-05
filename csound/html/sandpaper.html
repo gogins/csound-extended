@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>sandpaper</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="samphold.html" title="samphold" />
+    <link rel="next" href="scale.html" title="scale" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">sandpaper</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="samphold.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="scale.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="sandpaper"></a>
+      <div class="titlepage"></div>
+      <a id="IndexSandpaper" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">sandpaper</span>
+        </h2>
+        <p>sandpaper — 
+      Semi-physical model of a sandpaper sound.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp134612288"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>sandpaper</em></span> is a semi-physical model of a sandpaper sound. It is one of the PhISEM percussion opcodes. PhISEM (Physically Informed Stochastic Event Modeling) is an algorithmic approach for simulating collisions of multiple independent sound producing objects.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp134614352"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ares <span class="command"><strong>sandpaper</strong></span> iamp, idettack [, inum] [, idamp] [, imaxshake]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp134616592"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>iamp</em></span> -- Amplitude of output.  Note: As these instruments are stochastic, this is only a approximation.
+    </p>
+        <p>
+      <span class="emphasis"><em>idettack</em></span> -- period of time over which all sound is stopped
+    </p>
+        <p>
+      <span class="emphasis"><em>inum</em></span> (optional) -- The number of beads, teeth, bells, timbrels, etc.  If zero, the default value is 128.
+    </p>
+        <p>
+      <span class="emphasis"><em>idamp</em></span> (optional) -- the damping factor, as part of this equation:
+      </p>
+        <div class="literallayout">
+          <p>damping_amount = 0.998 + (idamp * 0.002)</p>
+        </div>
+        <p>
+    </p>
+        <p>
+      The default <span class="emphasis"><em>damping_amount</em></span> is 0.999 which means that the default value of <span class="emphasis"><em>idamp</em></span> is 0.5. The maximum <span class="emphasis"><em>damping_amount</em></span> is 1.0 (no damping). This means the maximum value for <span class="emphasis"><em>idamp</em></span> is 1.0.
+    </p>
+        <p>
+      The recommended range for <span class="emphasis"><em>idamp</em></span> is usually below 75% of the maximum value.
+    </p>
+        <p>
+      <span class="emphasis"><em>imaxshake</em></span> (optional) -- amount of energy to add back into the system. The value should be in range 0 to 1.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp134626800"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the sandpaper opcode. It uses the file <a class="ulink" href="examples/sandpaper.csd" target="_top"><em class="citetitle">sandpaper.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp134628576"></a>
+          <p class="title">
+            <strong>Example 808. Example of the sandpaper opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp262840864"></a>
+              <a class="ulink" href="examples/sandpaper.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac      <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o sandpaper.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+idmp <span class="op">=</span> p4
+a1   <span class="opc">line</span> 2, p3, 2			<span class="comment">;preset amplitude increase</span>
+a2   <span class="opc">sandpaper</span> 1, 0.01, 128, idmp	<span class="comment">;sandpaper needs a little amp help at these settings</span>
+asig <span class="opc">product</span> a1, a2			<span class="comment">;increase amplitude</span>
+     <span class="opc">outs</span> asig, asig
+          
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span>1 0 1 0.5
+<span class="stamnt">i</span>1 + 1 0.95
+
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp134632896"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="cabasa.html" title="cabasa"><em class="citetitle">cabasa</em></a>,
+      <a class="link" href="crunch.html" title="crunch"><em class="citetitle">crunch</em></a>,
+      <a class="link" href="sekere.html" title="sekere"><em class="citetitle">sekere</em></a>,
+      <a class="link" href="stix.html" title="stix"><em class="citetitle">stix</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp134637888"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Perry Cook, part of the PhOLIES (Physically-Oriented Library of Imitated Environmental Sounds)</td>
+          </tr>
+          <tr>
+            <td>Adapted by John ffitch</td>
+          </tr>
+          <tr>
+            <td>University of Bath, Codemist Ltd.</td>
+          </tr>
+          <tr>
+            <td>Bath, UK</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 4.07</p>
+        <p>Added notes by Rasmus Ekman on May 2002.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="samphold.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="scale.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">samphold </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> scale</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

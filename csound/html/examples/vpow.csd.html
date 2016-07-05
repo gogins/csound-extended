@@ -1,0 +1,104 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/vpow.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o cigoto.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr=44100
+ksmps=128
+nchnls=2
+
+	instr 1
+ifn1 = p4
+ival = p5
+ielements = p6
+idstoffset = p7
+kval init 25
+vpow ifn1, ival, ielements, idstoffset, 1
+	endin
+
+	instr 2	;Printtable
+itable = p4
+isize = ftlen(itable)
+kcount init 0
+kval table kcount, itable
+printk2 kval
+
+if (kcount == isize) then
+  turnoff
+endif
+
+kcount = kcount + 1 
+	endin
+
+
+</CsInstruments>
+
+<CsScore>
+
+f 1 0 16 -7 1 16 17
+
+i2	0.0	0.2	1
+i1	0.4	0.01	1	2	3	4
+i2	0.8	0.2	1
+i1	1.0	0.01	1	0.5	5	-3
+i2	1.2	0.2	1
+i1	1.4	0.01	1	1.5	10	12
+i2	1.6	0.2	1
+e
+
+</CsScore>
+
+</CsoundSynthesizer></textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

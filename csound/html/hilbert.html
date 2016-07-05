@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>hilbert</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="hdf5write.html" title="hdf5write" />
+    <link rel="next" href="hrtfearly.html" title="hrtfearly" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">hilbert</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="hdf5write.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="hrtfearly.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="hilbert"></a>
+      <div class="titlepage"></div>
+      <a id="IndexHilbert" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">hilbert</span>
+        </h2>
+        <p>hilbert — 
+      A Hilbert transformer.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp104069552"></a>
+        <h2>Description</h2>
+        <p>
+      An IIR implementation of a Hilbert transformer.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp104070736"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ar1, ar2 <span class="command"><strong>hilbert</strong></span> asig</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp104135632"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>asig</em></span> -- input signal
+    </p>
+        <p>
+      <span class="emphasis"><em>ar1</em></span> -- sine output of <span class="emphasis"><em>asig</em></span>
+    </p>
+        <p>
+      <span class="emphasis"><em>ar2</em></span> -- cosine output of <span class="emphasis"><em>asig</em></span>
+    </p>
+        <p>
+      <span class="emphasis"><em>hilbert</em></span> is an IIR filter based implementation of a broad-band 90 degree phase difference network. The input to <span class="emphasis"><em>hilbert</em></span> is an audio signal, with a frequency range from 15 Hz to 15 kHz. The outputs of <span class="emphasis"><em>hilbert</em></span> have an identical frequency response to the input (i.e. they sound the same), but the two outputs have a constant phase difference of 90 degrees, plus or minus some small amount of error, throughout the entire frequency range. The outputs are in quadrature.
+    </p>
+        <p>
+      <span class="emphasis"><em>hilbert</em></span> is useful in the implementation of many digital signal processing techniques that require a signal in phase quadrature. <span class="emphasis"><em>ar1</em></span> corresponds to the cosine output of <span class="emphasis"><em>hilbert</em></span>, while <span class="emphasis"><em>ar2</em></span> corresponds to the sine output. The two outputs have a constant phase difference throughout the audio range that corresponds to the phase relationship between cosine and sine waves.
+    </p>
+        <p>
+      Internally, <span class="emphasis"><em>hilbert</em></span> is based on two parallel 6th-order allpass filters. Each allpass filter implements a phase lag that increases with frequency; the difference between the phase lags of the parallel allpass filters at any given point is approximately 90 degrees.
+    </p>
+        <p>
+      Unlike an FIR-based Hilbert transformer, the output of <span class="emphasis"><em>hilbert</em></span> does not have a linear phase response. However, the IIR structure used in <span class="emphasis"><em>hilbert</em></span> is far more efficient to compute, and the nonlinear phase response can be used in the creation of interesting audio effects, as in the second example below.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp104146960"></a>
+        <h2>Examples</h2>
+        <p>
+      The first example implements frequency shifting, or single sideband amplitude modulation. Frequency shifting is similar to ring modulation, except the upper and lower sidebands are separated into individual outputs. By using only one of the outputs, the input signal can be "detuned," where the harmonic components of the signal are shifted out of harmonic alignment with each other, e.g. a signal with harmonics at 100, 200, 300, 400 and 500 Hz, shifted up by 50 Hz, will have harmonics at 150, 250, 350, 450, and 550 Hz.
+    </p>
+        <p>
+      Here is the first example of the hilbert opcode. It uses the file <a class="ulink" href="examples/hilbert.csd" target="_top"><em class="citetitle">hilbert.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp104150640"></a>
+          <p class="title">
+            <strong>Example 386. Example of the hilbert opcode implementing frequency shifting.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp247195968"></a>
+              <a class="ulink" href="examples/hilbert.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o hilbert.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+  
+<span class="oblock">instr</span> 1
+  idur <span class="op">=</span> p3
+  <span class="comment">; Initial amount of frequency shift.</span>
+  <span class="comment">; It can be positive or negative.</span>
+  ibegshift <span class="op">=</span> p4 
+  <span class="comment">; Final amount of frequency shift.</span>
+  <span class="comment">; It can be positive or negative.</span>
+  iendshift <span class="op">=</span> p5 
+  
+  <span class="comment">; A simple envelope for determining the </span>
+  <span class="comment">; amount of frequency shift.</span>
+  kfreq <span class="opc">linseg</span> ibegshift, idur, iendshift
+ 
+  <span class="comment">; Use the sound of your choice.</span>
+  ain <span class="opc">diskin2</span> "beats.wav", 1, 0, 1
+ 
+  <span class="comment">; Phase quadrature output derived from input signal.</span>
+  areal, aimag <span class="opc">hilbert</span> ain
+ 
+  <span class="comment">; Quadrature oscillator.</span>
+  asin <span class="opc">oscili</span> 1, kfreq, 1
+  acos <span class="opc">oscili</span> 1, kfreq, 1, .25
+ 
+  <span class="comment">; Use a trigonometric identity. </span>
+  <span class="comment">; See the references for further details.</span>
+  amod1 <span class="op">=</span> areal <span class="op">*</span> acos
+  amod2 <span class="op">=</span> aimag <span class="op">*</span> asin
+
+  <span class="comment">; Both sum and difference frequencies can be </span>
+  <span class="comment">; output at once.</span>
+  <span class="comment">; aupshift corresponds to the sum frequencies.</span>
+  aupshift <span class="op">=</span> (amod1 <span class="op">-</span> amod2) <span class="op">*</span> 0.7
+  <span class="comment">; adownshift corresponds to the difference frequencies. </span>
+  adownshift <span class="op">=</span> (amod1 <span class="op">+</span> amod2) <span class="op">*</span> 0.7
+
+  <span class="comment">; Notice that the adding of the two together is</span>
+  <span class="comment">; identical to the output of ring modulation.</span>
+
+  <span class="opc">outs</span> aupshift, aupshift
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Sine table for quadrature oscillator.</span>
+<span class="stamnt">f</span> 1 0 16384 10 1
+
+<span class="comment">; Starting with no shift, ending with all</span>
+<span class="comment">; frequencies shifted up by 2000 Hz.</span>
+<span class="stamnt">i</span> 1 0 6 0 2000
+
+<span class="comment">; Starting with no shift, ending with all</span>
+<span class="comment">; frequencies shifted down by 250 Hz.</span>
+<span class="stamnt">i</span> 1 7 6 0 -250
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      The second example is a variation of the first, but with the output being fed back into the input. With very small shift amounts (i.e. between 0 and +-6 Hz), the result is a sound that has been described as a <span class="quote">“<span class="quote">barberpole phaser</span>”</span> or <span class="quote">“<span class="quote">Shepard tone phase shifter.</span>”</span> Several notches appear in the spectrum, and are constantly swept in the direction opposite that of the shift, producing a filtering effect that is reminiscent of Risset's <span class="quote">“<span class="quote">endless glissando</span>”</span>.
+    </p>
+        <p>
+      Here is the second example of the hilbert opcode. It uses the file <a class="ulink" href="examples/hilbert_barberpole.csd" target="_top"><em class="citetitle">hilbert_barberpole.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp104158128"></a>
+          <p class="title">
+            <strong>Example 387. Example of the hilbert opcode sounding like a <span class="quote">“<span class="quote">barberpole phaser</span>”</span>.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp247034128"></a>
+              <a class="ulink" href="examples/hilbert_barberpole.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o hilbert_barberpole.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">; Initialize the global variables.</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="comment">; kr must equal sr for the barberpole effect to work.</span>
+<span class="ohdr">kr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 1
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+<span class="comment">; Instrument #1</span>
+<span class="oblock">instr</span> 1
+  idur <span class="op">=</span> p3
+  ibegshift <span class="op">=</span> p4
+  iendshift <span class="op">=</span> p5
+
+  <span class="comment">; sawtooth wave, not bandlimited</span>
+  asaw   <span class="opc">phasor</span> 100
+  <span class="comment">; add offset to center phasor amplitude between -.5 and .5</span>
+  asaw <span class="op">=</span> asaw <span class="op">-</span> .5
+  <span class="comment">; sawtooth wave, with amplitude of 10000</span>
+  ain <span class="op">=</span> asaw <span class="op">*</span> 20000
+  
+  <span class="comment">; The envelope of the frequency shift.</span>
+  kfreq <span class="opc">linseg</span> ibegshift, idur, iendshift
+
+  <span class="comment">; Phase quadrature output derived from input signal.</span>
+  areal, aimag <span class="opc">hilbert</span> ain
+
+  <span class="comment">; The quadrature oscillator.</span>
+  asin <span class="opc">oscili</span> 1, kfreq, 1
+  acos <span class="opc">oscili</span> 1, kfreq, 1, .25
+
+  <span class="comment">; Based on trignometric identities.</span>
+  amod1 <span class="op">=</span> areal <span class="op">*</span> acos
+  amod2 <span class="op">=</span> aimag <span class="op">*</span> asin
+
+  <span class="comment">; Calculate the up-shift and down-shift.</span>
+  aupshift <span class="op">=</span> (amod1 <span class="op">+</span> amod2) <span class="op">*</span> 0.7
+  adownshift <span class="op">=</span> (amod1 <span class="op">-</span> amod2) <span class="op">*</span> 0.7
+
+  <span class="comment">; Mix in the original signal to achieve the barberpole effect.</span>
+  amix1 <span class="op">=</span> aupshift <span class="op">+</span> ain
+  amix2 <span class="op">=</span> aupshift <span class="op">+</span> ain
+  
+  <span class="comment">; Make sure the output doesn't get louder than the original signal.</span>
+  aout1 <span class="opc">balance</span> amix1, ain
+  aout2 <span class="opc">balance</span> amix2, ain
+
+  <span class="opc">outs</span> aout1, aout2
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Table 1: A sine wave for the quadrature oscillator.</span>
+<span class="stamnt">f</span> 1 0 16384 10 1
+
+<span class="comment">; The score.</span>
+<span class="comment">; p4 = frequency shifter, starting frequency.</span>
+<span class="comment">; p5 = frequency shifter, ending frequency.</span>
+<span class="stamnt">i</span> 1 0 6 -10 10
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp104162848"></a>
+        <h2>Technical History</h2>
+        <p>
+      The use of phase-difference networks in frequency shifters was pioneered by Harald Bode<sup>1</sup>. Bode and Bob Moog provide an excellent description of the implementation and use of a frequency shifter in the analog realm in <sup>2</sup>; this would be an excellent first source for those that wish to explore the possibilities of single sideband modulation. Bernie Hutchins provides more applications of the frequency shifter, as well as a detailed technical analysis<sup>3</sup>. A recent paper by Scott Wardle<sup>4</sup> describes a digital implementation of a frequency shifter, as well as some unique applications.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp104166192"></a>
+        <h2>References</h2>
+        <p>
+      </p>
+        <div class="orderedlist">
+          <ol class="orderedlist" type="1">
+            <li class="listitem">
+              <p>
+            H. Bode, "Solid State Audio Frequency Spectrum Shifter." AES Preprint No. 395 (1965).
+          </p>
+            </li>
+            <li class="listitem">
+              <p>
+            H. Bode and R.A. Moog, "A High-Accuracy Frequency Shfiter for Professional Audio Applications." <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, July/August 1972, vol. 20, no. 6, p. 453.
+          </p>
+            </li>
+            <li class="listitem">
+              <p>
+            B. Hutchins. <span class="emphasis"><em>Musical Engineer's Handbook</em></span> (Ithaca, NY: Electronotes, 1975), ch. 6a.
+          </p>
+            </li>
+            <li class="listitem">
+              <p>
+            S. Wardle, "A Hilbert-Transformer Frequency Shifter for Audio." Available online at <a class="ulink" href="http://www.iua.upf.es/dafx98/papers/" target="_top"><em class="citetitle">http://www.iua.upf.es/dafx98/papers/</em></a>.
+          </p>
+            </li>
+          </ol>
+        </div>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp104174016"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Sean Costello</td>
+          </tr>
+          <tr>
+            <td>Seattle, Washington</td>
+          </tr>
+          <tr>
+            <td>1999</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 3.55</p>
+        <p>The examples were updated April 2002. Thanks go to Sean Costello for fixing the barberpole example.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="hdf5write.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="hrtfearly.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">hdf5write </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> hrtfearly</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

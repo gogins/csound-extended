@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/vbap8move.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc    ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o vbap4move.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 48000
+ksmps = 10
+nchnls = 8
+
+;Example by Hector Centeno 2007
+
+vbaplsinit    2, 8, 15, 65, 115, 165, 195, 245, 295, 345
+
+    instr 1
+ifldnum = 9
+ispread = 30
+idur = p3
+
+;; Generate a sound source
+kenv loopseg 10, 0, 0, 0, 0.5, 1, 10, 0
+a1 pinkish 3000*kenv
+
+;; Move circling around once all the speakers
+aout1, aout2, aout3, aout4, aout5, aout6, aout7, aout8 vbap8move a1, idur, ispread, ifldnum, 15, 65, 115, 165, 195, 245, 295, 345, 15
+
+;; Speaker mapping
+aFL = aout8 ; Front Left
+aFR = aout1 ; Front Right
+aMFL = aout7 ; Mid Front Left
+aMFR = aout2 ; Mid Front Right
+aMBL = aout6 ; Mid Back Left
+aMBR = aout3 ; Mid Back Right
+aBL = aout5 ; Back Left
+aBR = aout4 ; Back Right
+
+outo aFL, aFR, aMFL, aMFR, aMBL, aMBR, aBL, aBR
+
+    endin
+
+</CsInstruments>
+<CsScore>
+i1 0 30
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

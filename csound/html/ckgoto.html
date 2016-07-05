@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ckgoto</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="cigoto.html" title="cigoto" />
+    <link rel="next" href="clear.html" title="clear" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">ckgoto</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="cigoto.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="clear.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="ckgoto"></a>
+      <div class="titlepage"></div>
+      <a id="IndexCkgoto" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">ckgoto</span>
+        </h2>
+        <p>ckgoto — 
+      Conditionally transfer control during the p-time passes.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp83963264"></a>
+        <h2>Description</h2>
+        <p>
+      During the p-time passes only, conditionally transfer control to the statement labeled by <span class="emphasis"><em>label</em></span>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp83964976"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>ckgoto</strong></span> condition, label</pre>
+        <p>
+      where <span class="emphasis"><em>label</em></span> is in the same instrument block and is not an expression, and where <span class="emphasis"><em>condition</em></span> uses one of the Relational operators (<span class="emphasis"><em>&lt;</em></span>,<span class="emphasis"><em> =</em></span>, <span class="emphasis"><em>&lt;=</em></span>, <span class="emphasis"><em>==</em></span>, <span class="emphasis"><em>!=</em></span>) (and <span class="emphasis"><em>=</em></span> for convenience, see also under <a class="link" href="ControlConditional.html" title="Conditional Values"><em class="citetitle">Conditional Values</em></a>).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84036416"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the ckgoto opcode. It uses the file <a class="ulink" href="examples/ckgoto.csd" target="_top"><em class="citetitle">ckgoto.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp84038064"></a>
+          <p class="title">
+            <strong>Example 125. Example of the ckgoto opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp237265088"></a>
+              <a class="ulink" href="examples/ckgoto.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o ckgoto.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">; Initialize the global variables.</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 4410
+<span class="ohdr">ksmps</span> <span class="op">=</span> 10
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="comment">; Instrument #1.</span>
+<span class="oblock">instr</span> 1
+  <span class="comment">; Change kval linearly from 0 to 2 over</span>
+  <span class="comment">; the period set by the third p-field.</span>
+  kval <span class="opc">line</span> 0, p3, 2
+
+  <span class="comment">; If kval is greater than or equal to 1 then play the high note.</span>
+  <span class="comment">; If not then play the low note.</span>
+  <span class="octrl">ckgoto</span> (kval <span class="op">&gt;=</span> 1), <span class="olabel">highnote</span>
+    <span class="octrl">kgoto</span> <span class="olabel">lownote</span>
+
+<span class="olabel">highnote</span><span class="op">:</span>
+  kfreq <span class="op">=</span> 880
+  <span class="octrl">goto</span> <span class="olabel">playit</span>
+
+<span class="olabel">lownote</span><span class="op">:</span>
+  kfreq <span class="op">=</span> 440
+  <span class="octrl">goto</span> <span class="olabel">playit</span>
+
+<span class="olabel">playit</span><span class="op">:</span>
+  <span class="comment">; Print the values of kval and kfreq.</span>
+  <span class="opc">printks</span> "kval <span class="op">=</span> <span class="op">%</span>f, kfreq <span class="op">=</span> <span class="op">%</span>f\\n", 1, kval, kfreq
+
+  a1 <span class="opc">oscil</span> 10000, kfreq, 1
+  <span class="opc">out</span> a1
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Table: a simple sine wave.</span>
+<span class="stamnt">f</span> 1 0 32768 10 1
+
+<span class="comment">; Play Instrument #1 for two seconds.</span>
+<span class="stamnt">i</span> 1 0 2
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+
+      Its output should include lines like:
+      </p>
+        <pre class="screen">
+kval = 0.000000, kfreq = 440.000000
+kval = 0.999732, kfreq = 440.000000
+kval = 1.999639, kfreq = 880.000000</pre>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84042320"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="cggoto.html" title="cggoto"><em class="citetitle">cggoto</em></a>,
+      <a class="link" href="cigoto.html" title="cigoto"><em class="citetitle">cigoto</em></a>,
+      <a class="link" href="cngoto.html" title="cngoto"><em class="citetitle">cngoto</em></a>,
+      <a class="link" href="goto.html" title="goto"><em class="citetitle">goto</em></a>,
+      <a class="link" href="if.html" title="if"><em class="citetitle">if</em></a>,
+      <a class="link" href="igoto.html" title="igoto"><em class="citetitle">igoto</em></a>,
+      <a class="link" href="tigoto.html" title="tigoto"><em class="citetitle">tigoto</em></a>,
+      <a class="link" href="timout.html" title="timout"><em class="citetitle">timout</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp84049488"></a>
+        <h2>Credits</h2>
+        <p>Example written by Kevin Conder.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="cigoto.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="clear.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">cigoto </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> clear</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>maxabsaccum</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="maxabs.html" title="maxabs" />
+    <link rel="next" href="maxaccum.html" title="maxaccum" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">maxabsaccum</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="maxabs.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="maxaccum.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="maxabsaccum"></a>
+      <div class="titlepage"></div>
+      <a id="IndexMaxabsaccum" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">maxabsaccum</span>
+        </h2>
+        <p>maxabsaccum — 
+      Accumulates the maximum of the absolute values of audio signals.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp112985840"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>maxabsaccum</em></span> compares two audio-rate variables and stores the maximum of their absolute values into the first.  
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp112987568"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>maxabsaccum</strong></span> aAccumulator, aInput</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp113061584"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>aAccumulator</em></span> -- audio variable to store the maximum value
+    </p>
+        <p>
+      <span class="emphasis"><em>aInput</em></span> -- signal that aAccumulator is compared to
+    </p>
+        <p>
+      The <span class="emphasis"><em>maxabsaccum</em></span> opcode is designed to accumulate the maximum value from among many audio signals that may be in different note instances, different channels, or otherwise cannot all be compared at once using the <span class="emphasis"><em>maxabs</em></span> opcode.  <span class="emphasis"><em>maxabsaccum</em></span> is identical to <span class="emphasis"><em>maxaccum</em></span> except that it takes the absolute value of aInput before the comparison.  Its semantics are similar to <span class="emphasis"><em>vincr</em></span> since <span class="emphasis"><em>aAccumulator</em></span> is used as both an input and an output variable, except that <span class="emphasis"><em>maxabsaccum</em></span> keeps the maximum absolute value instead of adding the signals together.  <span class="emphasis"><em>maxabsaccum</em></span> performs the following operation on each pair of samples:
+    </p>
+        <p>
+      </p>
+        <div class="literallayout">
+          <p><br />
+            if  (abs(aInput) &gt; aAccumulator)  aAccumulator = abs(aInput)<br />
+      </p>
+        </div>
+        <p>
+    </p>
+        <p>
+      <span class="emphasis"><em>aAccumulator</em></span> will usually be a global audio variable.  At the end of any given computation cycle (k-period), after its value is read and used in some way, the accumulator variable should usually be reset to zero  (perhaps by using the <span class="emphasis"><em>clear</em></span> opcode).  Clearing to zero is sufficient for <span class="emphasis"><em>maxabsaccum</em></span>, unlike the <span class="emphasis"><em>maxaccum</em></span> opcode.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp113072288"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the maxabsaccum opcode. It uses the file <a class="ulink" href="examples/maxabsaccum.csd" target="_top"><em class="citetitle">maxabsaccum.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp113074160"></a>
+          <p class="title">
+            <strong>Example 496. Example of the maxabsaccum opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp251684784"></a>
+              <a class="ulink" href="examples/maxabsaccum.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac   <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o maxabsaccum.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1	<span class="comment">;saw</span>
+
+asig  <span class="opc">vco2</span> .2, p4		
+      <span class="opc">outs</span>  asig, asig				
+gasaw <span class="op">=</span> asig
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 2	<span class="comment">;sine</span>
+
+aout  <span class="opc">poscil</span> .3, p4, 1		
+      <span class="opc">outs</span>  aout, aout				
+gasin <span class="op">=</span> aout
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 10	
+
+accum <span class="opc">init</span> 0	
+      <span class="opc">maxabsaccum</span>  accum, gasaw <span class="op">+</span> gasin		<span class="comment">;saw and sine accumulated	</span>
+accum <span class="opc">dcblock2</span> accum				<span class="comment">;get rid of DC</span>
+      <span class="opc">outs</span> accum, accum	
+     		
+<span class="opc">clear</span> accum
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 1 0 4096 10 1	<span class="comment">;sine wave	</span>
+
+<span class="stamnt">i</span> 1 0 7 330
+<span class="stamnt">i</span> 2 3 3 440
+
+<span class="stamnt">i</span> 1 10 7 330	<span class="comment">;same notes but without maxabsaccum, for comparison</span>
+<span class="stamnt">i</span> 2 13 3 440
+
+<span class="stamnt">i</span> 10 0 6	<span class="comment">;accumulation note stops after 6 seconds</span>
+
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp113078448"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="minabsaccum.html" title="minabsaccum"><em class="citetitle">minabsaccum</em></a>, 
+      <a class="link" href="maxaccum.html" title="maxaccum"><em class="citetitle">maxaccum</em></a>, 
+      <a class="link" href="minaccum.html" title="minaccum"><em class="citetitle">minaccum</em></a>, 
+      <a class="link" href="max.html" title="max"><em class="citetitle">max</em></a>, 
+      <a class="link" href="min.html" title="min"><em class="citetitle">min</em></a>, 
+      <a class="link" href="maxabs.html" title="maxabs"><em class="citetitle">maxabs</em></a>, 
+      <a class="link" href="minabs.html" title="minabs"><em class="citetitle">minabs</em></a>, 
+      <a class="link" href="vincr.html" title="vincr"><em class="citetitle">vincr</em></a>,
+      <a class="link" href="clear.html" title="clear"><em class="citetitle">clear</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp113088048"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Anthony Kozar</td>
+          </tr>
+          <tr>
+            <td>March 2006</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 5.01</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="maxabs.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="maxaccum.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">maxabs </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> maxaccum</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

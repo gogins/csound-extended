@@ -1,0 +1,144 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/OSCmidircv.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+; network_recv.csd
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc    ;;;RT audio I/O
+</CsOptions>
+<CsInstruments>
+
+  sr	    =  44100
+  ksmps	    =  128
+  nchnls    =  1
+
+; Example by Jonathan Murphy and Andres Cabrera 2007
+; Use file OSCmidisend.csd to generate OSC events for this file
+
+  0dbfs	    =  1
+
+  gilisten  OSCinit   47120
+
+  gisin	    ftgen     1, 0, 16384, 10, 1
+  givel	    ftgen     2, 0, 128, -2, 0
+  gicc	    ftgen     3, 0, 128, -7, 100, 128, 100  ;Default all controllers to 100
+ 
+;Define scale tuning
+  giji_12   ftgen     202, 0, 32, -2, 12, 2, 256, 60, 1, 16/15, 9/8, 6/5, 5/4, 4/3, 7/5, \
+                               3/2, 8/5, 5/3, 9/5, 15/8, 2
+
+#define DEST #"/midi"#
+; Use controller number 7 for volume
+#define VOL #7#
+
+turnon 1000
+
+
+    instr   1000
+
+  kst	    init      0
+  kch	    init      0
+  kd1	    init      0
+  kd2	    init      0
+
+next:
+
+  kk	    OSClisten	gilisten, $DEST, "iiii", kst, kch, kd1, kd2
+
+if (kk == 0) goto done
+
+printks "kst = %i, kch = %i, kd1 = %i, kd2 = %i\\n", \
+         0, kst, kch, kd1, kd2
+
+if (kst == 176) then
+;Store controller information in a table
+	    tablew    kd2, kd1, gicc
+endif  
+
+if (kst == 144) then
+;Process noteon and noteoff messages.
+  kkey	    =  kd1
+  kvel	    =  kd2
+  kcps	    cpstun    kvel, kkey, giji_12
+  kamp	    =  kvel/127
+
+if (kvel == 0) then
+	    turnoff2  1001, 4, 1
+elseif (kvel > 0) then
+	    event     "i", 1001, 0, -1, kcps, kamp
+endif
+endif
+
+	kgoto	next  ;Process all events in queue
+
+done:
+    endin
+
+
+
+    instr 1001   ;Simple instrument
+
+  icps	    init      p4
+  kvol	    table     $VOL, gicc  ;Read MIDI volume from controller table
+  kvol	    =  kvol/127
+
+  aenv     linsegr    0, .003, p5, 0.03, p5 * 0.5, 0.3, 0
+  aosc	    oscil     aenv, icps, gisin
+
+	    out	      aosc * kvol
+    endin
+
+
+</CsInstruments>
+<CsScore>
+f 0 3600  ;Dummy f-table
+e
+</CsScore>
+</CsoundSynthesizer></textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

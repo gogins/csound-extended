@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>GEN04</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
+    <link rel="prev" href="GEN03.html" title="GEN03" />
+    <link rel="next" href="GEN05.html" title="GEN05" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">GEN04</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="GEN03.html">Prev</a> </td>
+          <th width="60%" align="center">Score Statements and GEN Routines</th>
+          <td width="20%" align="right"> <a accesskey="n" href="GEN05.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="GEN04"></a>
+      <div class="titlepage"></div>
+      <a id="IndexGEN04" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">GEN04</span>
+        </h2>
+        <p>GEN04 — 
+      Generates a normalizing function.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp205198688"></a>
+        <h2>Description</h2>
+        <p>
+      This subroutine generates a normalizing function by examining the contents of an existing table.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp205243168"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>f</strong></span>  #  time  size  4  source#  sourcemode</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp205245168"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>size</em></span> -- number of points in the table. Should be power-of-2 plus 1. Must not exceed (except by 1) the size of the source table being examined; limited to just half that size if the sourcemode is of type offset (see below).
+    </p>
+        <p>
+      <span class="emphasis"><em>source #</em></span> -- table number of stored function to be examined.
+    </p>
+        <p>
+      <span class="emphasis"><em>sourcemode</em></span> -- a coded value, specifying how the source table is to be scanned to obtain the normalizing function. Zero indicates that the source is to be scanned from left to right. Non-zero indicates that the source has a bipolar structure; scanning will begin at the mid-point and progress outwards, looking at pairs of points equidistant from the center.
+    </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note: Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+        </p>
+                <div class="itemizedlist">
+                  <ul class="itemizedlist" style="list-style-type: disc; ">
+                    <li class="listitem">
+                      <p>
+              The normalizing function derives from the progressive absolute maxima of the source table being scanned. The new table is created left-to-right, with stored values equal to 1/(absolute maximum so far scanned). Stored values will thus begin with 1/(first value scanned), then get progressively smaller as new maxima are encountered. For a source table which is normalized (values &lt;= 1), the derived values will range from 1/(first value scanned) down to 1. If the first value scanned is zero, that inverse will be set to 1.
+            </p>
+                    </li>
+                    <li class="listitem">
+                      <p>
+              The normalizing function from <span class="emphasis"><em>GEN04</em></span> is not itself normalized.
+            </p>
+                    </li>
+                    <li class="listitem">
+                      <p>
+              <span class="emphasis"><em>GEN04</em></span> is useful for scaling a table-derived signal so that it has a consistent peak amplitude. A particular application occurs in waveshaping when the carrier (or indexing) signal is less than full amplitude.
+            </p>
+                    </li>
+                  </ul>
+                </div>
+                <p>
+      </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idp205254832"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is a simple example of the GEN04 routine. It uses the files <a class="ulink" href="examples/gen04.csd" target="_top"><em class="citetitle">gen04.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp205256704"></a>
+          <p class="title">
+            <strong>Example 1128. An example of the GEN04 routine.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp275119824"></a>
+              <a class="ulink" href="examples/gen04.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac  <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o gen04.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100 
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2 
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
+
+gisine   <span class="ohdr">ftgen</span> 0, 0, 16384, 10, 1						<span class="comment">;sine wave</span>
+
+<span class="oblock">instr</span>   1
+
+ihertz <span class="op">=</span> <span class="opc">cpspch</span>(p4)
+ipkamp <span class="op">=</span> p5
+iwsfn  <span class="op">=</span> p6									<span class="comment">;waveshaping function	</span>
+inmfn  <span class="op">=</span> p7									<span class="comment">;normalization function 								</span>
+agate   <span class="opc">linen</span>   1, .01, p3, .1            					<span class="comment">;overall amp envelope</span>
+kctrl   <span class="opc">linen</span>  	.9, 2, p3, 2							<span class="comment">;waveshaping index control</span>
+aindex  <span class="opc">poscil</span>  kctrl<span class="op">/</span>2, ihertz, gisine						<span class="comment">;sine wave to be distorted</span>
+asignal <span class="opc">tablei</span>  .5<span class="op">+</span>aindex, iwsfn, 1						<span class="comment">;waveshaping</span>
+knormal <span class="opc">tablei</span>  1<span class="op">/</span>kctrl, inmfn , 1						<span class="comment">;amplitude normalization</span>
+        <span class="opc">outs</span>    asignal<span class="op">*</span>knormal<span class="op">*</span>ipkamp<span class="op">*</span>agate, asignal<span class="op">*</span>knormal<span class="op">*</span>ipkamp<span class="op">*</span>agate
+           
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span>1 0 64 21 6	<span class="comment">;Gaussian (random) distribution</span>
+<span class="stamnt">f</span>2 0 33 4 1 1	<span class="comment">;normalizing function with midpoint bipolar offset</span>
+
+<span class="stamnt">s</span>
+<span class="comment">;	st	dur	pch	amp   wsfn inmfn</span>
+<span class="stamnt">i</span>1      0       4      6.00    .7      1     2
+<span class="stamnt">i</span>1      4       .      7.00    .
+<span class="stamnt">i</span>1      8       .      8.00    .
+<span class="comment">;-------------------------------------------------------------------------------------</span>
+<span class="stamnt">f</span>3 0 1025 13 1 1 0 5 0 5 0 10	<span class="comment">;Chebyshev algorithm</span>
+<span class="stamnt">f</span>4 0 513 4 3 1			<span class="comment">;normalizing function with midpoint bipolar offset</span>
+<span class="stamnt">s</span>
+<span class="comment">;	st	dur	pch	amp   wsfn inmfn</span>
+<span class="stamnt">i</span>1      0       4      6.00    .9      3     4
+<span class="stamnt">i</span>1      4       .      7.00    .
+<span class="stamnt">i</span>1      8       .      8.00    .
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+
+        <span class="phrase">These are the diagrams of the waveforms of the GEN04 routines, as used in the example:</span>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen04_1.png" alt="f1 0 64 21 6 - Gaussian (random) distribution" />
+          <div class="caption">
+            <p>f1 0 64 21 6 - Gaussian (random) distribution</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen04_2.png" alt="f2 0 33 4 1 1 - AND its normalizing function with midpoint bipolar offset" />
+          <div class="caption">
+            <p>f2 0 33 4 1 1 - AND its normalizing function with midpoint bipolar offset</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen04_3.png" alt="f3 0 1025 13 1 1 0 5 0 5 0 10 - Chebyshev algorithm" />
+          <div class="caption">
+            <p>f3 0 1025 13 1 1 0 5 0 5 0 10 - Chebyshev algorithm</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/gen04_4.png" alt="f4 0 513 4 3 1 - AND its normalizing function with midpoint bipolar offset" />
+          <div class="caption">
+            <p>f4 0 513 4 3 1 - AND its normalizing function with midpoint bipolar offset</p>
+          </div>
+        </div>
+        <p>
+
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="GEN03.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="ScoregensTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="GEN05.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">GEN03 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> GEN05</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

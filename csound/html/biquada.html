@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>biquada</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="biquad.html" title="biquad" />
+    <link rel="next" href="birnd.html" title="birnd" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">biquada</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="biquad.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="birnd.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="biquada"></a>
+      <div class="titlepage"></div>
+      <a id="IndexBiquada" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">biquada</span>
+        </h2>
+        <p>biquada — 
+      A sweepable general purpose biquadratic digital filter with a-rate parameters.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp81615888"></a>
+        <h2>Description</h2>
+        <p>
+      A sweepable general purpose biquadratic digital filter.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp81617072"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ares <span class="command"><strong>biquada</strong></span> asig, ab0, ab1, ab2, aa0, aa1, aa2 [, iskip]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp81619312"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- if non-zero, intialization will be skipped. Default value 0. (New in Csound version 3.50)
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp81707248"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>asig</em></span> -- input signal
+    </p>
+        <p>
+      <span class="emphasis"><em>biquada</em></span> is a general purpose biquadratic digital filter of the form:
+      </p>
+        <div class="literallayout">
+          <p><br />
+  a0*y(n) + a1*y[n-1] + a2*y[n-2] = b0*x[n] + b1*x[n-1] + b2*x[n-2]<br />
+      </p>
+        </div>
+        <p>
+    </p>
+        <p>
+      This filter has the following frequency response:
+      </p>
+        <div class="literallayout">
+          <p><br />
+         B(Z)   b0 + b1*Z<sup>-1</sup>  + b2*Z<sup>-2</sup><br />
+  H(Z) = ---- = ------------------<br />
+         A(Z)   a0 + a1*Z<sup>-1</sup>  + a2*Z<sup>-2</sup><br />
+      </p>
+        </div>
+        <p>
+    </p>
+        <p>
+      This type of filter is often encountered in digital signal processing literature. It allows six user-defined a-rate coefficients.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp81714448"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the biquada opcode. It uses the file
+      <a class="ulink" href="examples/biquada.csd" target="_top"><em class="citetitle">biquad.csd</em></a>. 
+      </p>
+        <div class="example">
+          <a id="idp81716320"></a>
+          <p class="title">
+            <strong>Example 93. Example of the biquada opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp235851776"></a>
+              <a class="ulink" href="examples/biquada.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o biquad.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">; Initialize the global variables.</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 4410
+<span class="ohdr">ksmps</span> <span class="op">=</span> 10
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+<span class="comment">; Instrument #1.</span>
+<span class="oblock">instr</span> 1
+  <span class="comment">; Get the values from the score.</span>
+  idur <span class="op">=</span> p3
+  iamp <span class="op">=</span> p4
+  icps <span class="op">=</span> <span class="opc">cpspch</span>(p5)
+  afco   <span class="opc">expon</span>  100, p3, 2000
+  arez   <span class="opc">line</span>  0.8, p3, 0.99
+
+  <span class="comment">; Calculate the biquadratic filter's coefficients </span>
+  afcon <span class="op">=</span> 2<span class="op">*</span>3.14159265<span class="op">*</span>afco<span class="op">/</span><span class="ohdr">sr</span>
+  aalpha <span class="op">=</span> 1<span class="op">-</span>2<span class="op">*</span>arez<span class="op">*</span><span class="opc">cos</span>(afcon)<span class="op">*</span><span class="opc">cos</span>(afcon)<span class="op">+</span>arez<span class="op">*</span>arez<span class="op">*</span><span class="opc">cos</span>(2<span class="op">*</span>afcon)
+  abeta <span class="op">=</span> arez<span class="op">*</span>arez<span class="op">*</span><span class="opc">sin</span>(2<span class="op">*</span>afcon)<span class="op">-</span>2<span class="op">*</span>arez<span class="op">*</span><span class="opc">cos</span>(afcon)<span class="op">*</span><span class="opc">sin</span>(afcon)
+  agama <span class="op">=</span> 1<span class="op">+</span><span class="opc">cos</span>(afcon)
+  am1 <span class="op">=</span> aalpha<span class="op">*</span>agama<span class="op">+</span>abeta<span class="op">*</span><span class="opc">sin</span>(afcon)
+  am2 <span class="op">=</span> aalpha<span class="op">*</span>agama<span class="op">-</span>abeta<span class="op">*</span><span class="opc">sin</span>(afcon)
+  aden <span class="op">=</span> <span class="opc">sqrt</span>(am1<span class="op">*</span>am1<span class="op">+</span>am2<span class="op">*</span>am2)
+  ab0 <span class="op">=</span> 1.5<span class="op">*</span>(aalpha<span class="op">*</span>aalpha<span class="op">+</span>abeta<span class="op">*</span>abeta)<span class="op">/</span>aden
+  ab1 <span class="op">=</span> ab0
+  ab2 <span class="op">=</span> 0
+  aa0 <span class="op">=</span> 1
+  aa1 <span class="op">=</span> <span class="op">-</span>2<span class="op">*</span>arez<span class="op">*</span><span class="opc">cos</span>(afcon)
+  aa2 <span class="op">=</span> arez<span class="op">*</span>arez
+  
+  <span class="comment">; Generate an input signal.</span>
+  axn <span class="opc">vco</span> 1, icps, 1
+
+  <span class="comment">; Filter the input signal.</span>
+  ayn <span class="opc">biquada</span> axn, ab0, ab1, ab2, aa0, aa1, aa2
+  <span class="opc">outs</span> ayn<span class="op">*</span>iamp<span class="op">/</span>2, ayn<span class="op">*</span>iamp<span class="op">/</span>2
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Table #1, a sine wave.</span>
+<span class="stamnt">f</span> 1 0 16384 10 1
+
+<span class="comment">;    Sta  Dur  Amp    Pitch</span>
+<span class="stamnt">i</span> 1  0.0  5.0  20000  6.00 
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp81720608"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="biquad.html" title="biquad"><em class="citetitle">biquad</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp81722656"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: John ffitch after Hans Mikelson</td>
+          </tr>
+          <tr>
+            <td>August 2001</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 4.13</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="biquad.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="birnd.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">biquad </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> birnd</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

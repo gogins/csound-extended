@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>out</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="out32.html" title="out32" />
+    <link rel="next" href="outc.html" title="outc" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">out</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="out32.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="outc.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="out"></a>
+      <div class="titlepage"></div>
+      <a id="IndexOut" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">out</span>
+        </h2>
+        <p>out — 
+      Writes audio data to an external device or stream.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp120458224"></a>
+        <h2>Description</h2>
+        <p>
+      Writes audio data to an external device or stream, either from
+      audio variables or from an audio array.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp120511744"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>out</strong></span> asig1[, asig2,....]</pre>
+        <pre class="synopsis"><span class="command"><strong>out</strong></span> aarray</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp120514880"></a>
+        <h2>Performance</h2>
+        <p>
+      Sends audio samples to an accumulating output buffer
+      (created at the beginning of performance) which serves to
+      collect the output of all active instruments before the sound is
+      written to disk. There can be any number of these output units
+      in an instrument. 
+    </p>
+        <p>
+      The type (mono, stereo, quad, hex, or oct) should agree
+      with <a class="link" href="nchnls.html" title="nchnls"><em class="citetitle">nchnls</em></a>. But
+      as of version 3.50, Csound will attempt to change an incorrect
+      opcode to agree with <span class="emphasis"><em>nchnls</em></span> statement. 
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp120518336"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the out opcode. It uses the file <a class="ulink" href="examples/out.csd" target="_top"><em class="citetitle">out.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp120520192"></a>
+          <p class="title">
+            <strong>Example 598. Example of the out opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp255602368"></a>
+              <a class="ulink" href="examples/out.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o out.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+kamp <span class="op">=</span> .6
+kcps <span class="op">=</span> 440
+ifn  <span class="op">=</span> p4
+
+asig <span class="opc">oscil</span> kamp, kcps, ifn
+     <span class="opc">out</span> asig	<span class="comment">;one channel</span>
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span>1 0 16384 10 1                                          <span class="comment">; Sine</span>
+<span class="stamnt">f</span>2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   <span class="comment">; Sawtooth</span>
+
+<span class="stamnt">i</span> 1 0 2 1
+<span class="stamnt">i</span> 1 3 2 2
+
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp120524528"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="outh.html" title="outh"><em class="citetitle">outh</em></a>,
+      <a class="link" href="outo.html" title="outo"><em class="citetitle">outo</em></a>,
+      <a class="link" href="outq.html" title="outq"><em class="citetitle">outq</em></a>,
+      <a class="link" href="outq1.html" title="outq1"><em class="citetitle">outq1</em></a>,
+      <a class="link" href="outq2.html" title="outq2"><em class="citetitle">outq2</em></a>,
+      <a class="link" href="outq3.html" title="outq3"><em class="citetitle">outq3</em></a>,
+      <a class="link" href="outq4.html" title="outq4"><em class="citetitle">outq4</em></a>,
+      <a class="link" href="outs.html" title="outs"><em class="citetitle">outs</em></a>,
+      <a class="link" href="outs1.html" title="outs1"><em class="citetitle">outs1</em></a>,
+      <a class="link" href="outs2.html" title="outs2"><em class="citetitle">outs2</em></a>,
+      <a class="link" href="soundout.html" title="soundout"><em class="citetitle">soundout</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp120536176"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Barry L. Vercoe, Matt Ingalls/Mike Berry</td>
+          </tr>
+          <tr>
+            <td>MIT, Mills College</td>
+          </tr>
+          <tr>
+            <td>1993-1997</td>
+          </tr>
+          <tr>
+            <td>Author: John ffitch</td>
+          </tr>
+          <tr>
+            <td>NUIM, 2013</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>Original in Csound v1</p>
+        <p>Aray version in 6.01</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="out32.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="outc.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">out32 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> outc</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

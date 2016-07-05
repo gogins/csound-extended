@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>grain3</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="grain2.html" title="grain2" />
+    <link rel="next" href="granule.html" title="granule" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">grain3</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="grain2.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="granule.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="grain3"></a>
+      <div class="titlepage"></div>
+      <a id="IndexGrain3" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">grain3</span>
+        </h2>
+        <p>grain3 — 
+      Generate granular synthesis textures with more user control.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103495936"></a>
+        <h2>Description</h2>
+        <p>
+      Generate granular synthesis textures. <a class="link" href="grain2.html" title="grain2"><em class="citetitle">grain2</em></a> is simpler to use but <span class="emphasis"><em>grain3</em></span> offers more control.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103498624"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ares <span class="command"><strong>grain3</strong></span> kcps, kphs, kfmd, kpmd, kgdur, kdens, imaxovr, kfn, iwfn, \
+      kfrpow, kprpow [, iseed] [, imode]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp103501056"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>imaxovr</em></span> -- maximum number of overlapping grains. The number of overlaps can be calculated by (<span class="emphasis"><em>kdens</em></span> * <span class="emphasis"><em>kgdur</em></span>); however, it can be overestimated at no cost in rendering time, and a single overlap uses (depending on system) 16 to 32 bytes of memory.
+    </p>
+        <p>
+      <span class="emphasis"><em>iwfn</em></span> -- function table containing window waveform (Use <a class="link" href="GEN20.html" title="GEN20">GEN20</a> to calculate <span class="emphasis"><em>iwfn</em></span>).
+    </p>
+        <p>
+      <span class="emphasis"><em>iseed</em></span> (optional, default=0) -- seed value for random number generator (positive integer in the range 1 to 2147483646 (2<sup>31</sup> - 2)). Zero or negative value seeds from current time (this is also the default).
+    </p>
+        <p>
+      <span class="emphasis"><em>imode</em></span> (optional, default=0) -- sum of the following values:
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p><span class="emphasis"><em>64:</em></span> synchronize start phase of grains to <span class="emphasis"><em>kcps</em></span>.</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>32:</em></span> start all grains at integer sample location. This may be faster in some cases, however it also makes the timing of grain envelopes less accurate.</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>16:</em></span> do not render grains with start time less than zero. (see the image below; this option turns off grains marked with red on the image).</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>8:</em></span> interpolate window waveform (slower).</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>4:</em></span> do not interpolate grain waveform (fast, but lower quality).</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>2:</em></span> grain frequency is continuously modified by <span class="emphasis"><em>kcps</em></span> and <span class="emphasis"><em>kfmd</em></span> (by default, each grain keeps the frequency it was launched with). This may be slower at high control rates. It also controls phase modulation (<span class="emphasis"><em>kphs</em></span>).</p>
+            </li>
+            <li class="listitem">
+              <p><span class="emphasis"><em>1:</em></span> skip initialization.</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+    </p>
+        <p>
+      </p>
+        <div class="mediaobject">
+          <img src="images/grain3_2.png" alt="[A diagram showing grains with a start time less than zero in red.]" />
+          <div class="caption">
+            <p>A diagram showing grains with a start time less than zero in red.</p>
+          </div>
+        </div>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103520576"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>ares</em></span> -- output signal.
+    </p>
+        <p>
+      <span class="emphasis"><em>kcps</em></span> -- grain frequency in Hz.
+    </p>
+        <p>
+      <span class="emphasis"><em>kphs</em></span> -- grain phase. This is the location in the grain waveform table, expressed
+as a fraction (between 0 to 1) of the table length.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfmd</em></span> -- random variation (bipolar) in grain frequency in Hz.
+    </p>
+        <p>
+      <span class="emphasis"><em>kpmd</em></span> -- random variation (bipolar) in start phase.
+    </p>
+        <p>
+      <span class="emphasis"><em>kgdur</em></span> -- grain duration in seconds. <span class="emphasis"><em>kgdur</em></span> also controls the duration of already active grains (actually the speed at which the window function is read). This behavior does not depend on the <span class="emphasis"><em>imode</em></span> flags.
+    </p>
+        <p>
+      <span class="emphasis"><em>kdens</em></span> -- number of grains per second.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfrpow</em></span> -- this value controls the distribution of grain frequency variation.  If <span class="emphasis"><em>kfrpow</em></span> is positive, the random distribution (x is in the range -1 to 1) is </p>
+        <div class="literallayout">
+          <p>abs(x) ^ ((1 / kfrpow) - 1)</p>
+        </div>
+        <p>; for negative <span class="emphasis"><em>kfrpow</em></span> values, it is </p>
+        <div class="literallayout">
+          <p>(1 - abs(x)) ^ ((-1 / kfrpow) - 1)</p>
+        </div>
+        <p>Setting <span class="emphasis"><em>kfrpow</em></span> to -1, 0, or 1 will result in uniform distribution (this is also faster to calculate). The image below shows some examples for <span class="emphasis"><em>kfrpow</em></span>. The default value of <span class="emphasis"><em>kfrpow</em></span> is 0.
+    </p>
+        <p>
+      </p>
+        <div class="mediaobject">
+          <img src="images/grain2_rand-448x289.png" alt="[A graph of distributions for different values of kfrpow.]" />
+          <div class="caption">
+            <p>A graph of distributions for different values of <span class="emphasis"><em>kfrpow</em></span>.</p>
+          </div>
+        </div>
+        <p>
+    </p>
+        <p>
+      <span class="emphasis"><em>kprpow</em></span> -- distribution of random phase variation (see <span class="emphasis"><em>kfrpow</em></span>).  Setting <span class="emphasis"><em>kphs</em></span> and <span class="emphasis"><em>kpmd</em></span> to 0.5, and <span class="emphasis"><em>kprpow</em></span> to 0 will emulate <span class="emphasis"><em>grain2</em></span>.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfn</em></span> -- function table containing grain waveform. Table number can be changed at k-rate (this is useful to select from a set of band-limited tables generated by <a class="link" href="GEN30.html" title="GEN30">GEN30</a>, to avoid aliasing).
+    </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note: Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+        <span class="emphasis"><em>grain3</em></span> internally uses the same random number generator as <span class="emphasis"><em>rnd31</em></span>. So reading <a class="link" href="rnd31.html" title="rnd31"><em class="citetitle">its documentation</em></a> is also recommended.
+      </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idp103546928"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the grain3 opcode. It uses the file <a class="ulink" href="examples/grain3.csd" target="_top"><em class="citetitle">grain3.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp103548784"></a>
+          <p class="title">
+            <strong>Example 378. Example of the grain3 opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp246863184"></a>
+              <a class="ulink" href="examples/grain3.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o grain3.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span>	<span class="op">=</span>  48000
+<span class="ohdr">kr</span>	<span class="op">=</span>  1000
+<span class="ohdr">ksmps</span>   <span class="op">=</span>  48
+<span class="ohdr">nchnls</span>	<span class="op">=</span>  1
+
+<span class="op">/</span><span class="op">*</span> Bartlett <span class="opc">window</span> <span class="op">*</span><span class="op">/</span>
+itmp	<span class="ohdr">ftgen</span> 1, 0, 16384, 20, 3, 1
+<span class="op">/</span><span class="op">*</span> sawtooth wave <span class="op">*</span><span class="op">/</span>
+itmp	<span class="ohdr">ftgen</span> 2, 0, 16384, 7, 1, 16384, <span class="op">-</span>1
+<span class="op">/</span><span class="op">*</span> sine <span class="op">*</span><span class="op">/</span>
+itmp	<span class="ohdr">ftgen</span> 4, 0, 1024, 10, 1
+<span class="op">/</span><span class="op">*</span> <span class="opc">window</span> for "soft sync" with 1<span class="op">/</span>32 overlap <span class="op">*</span><span class="op">/</span>
+itmp	<span class="ohdr">ftgen</span> 5, 0, 16384, 7, 0, 256, 1, 7936, 1, 256, 0, 7936, 0
+<span class="op">/</span><span class="op">*</span> generate bandlimited sawtooth waves <span class="op">*</span><span class="op">/</span>
+itmp	<span class="ohdr">ftgen</span> 3, 0, 4096, <span class="op">-</span>30, 2, 1, 2048
+icnt	<span class="op">=</span>  0
+<span class="olabel">loop01</span><span class="op">:</span>
+<span class="comment">; 100 tables for 8 octaves from 30 Hz</span>
+ifrq	<span class="op">=</span>  30 <span class="op">*</span> <span class="opc">exp</span>(<span class="opc">log</span>(2) <span class="op">*</span> 8 <span class="op">*</span> icnt <span class="op">/</span> 100)
+itmp	<span class="ohdr">ftgen</span> icnt <span class="op">+</span> 100, 0, 4096, <span class="op">-</span>30, 3, 1, <span class="ohdr">sr</span> <span class="op">/</span> (2 <span class="op">*</span> ifrq)
+icnt	<span class="op">=</span>  icnt <span class="op">+</span> 1
+	<span class="octrl">if</span> (icnt <span class="op">&lt;</span> 99.5) <span class="octrl">igoto</span> <span class="olabel">loop01</span>
+<span class="op">/</span><span class="op">*</span> convert frequency to <span class="opc">table</span> number <span class="op">*</span><span class="op">/</span>
+<span class="omacro">#define</span> FRQ2FNUM(xout'xcps'xbsfn) #
+
+$xout	<span class="op">=</span>  <span class="opc">int</span>(($xbsfn) <span class="op">+</span> 0.5 <span class="op">+</span> (100 <span class="op">/</span> 8) <span class="op">*</span> <span class="opc">log</span>(($xcps) <span class="op">/</span> 30) <span class="op">/</span> <span class="opc">log</span>(2))
+$xout	limit $xout, $xbsfn, $xbsfn <span class="op">+</span> 99
+
+#
+
+<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 1<span class="op">:</span> pulse width modulated grains <span class="op">*</span><span class="op">/</span>
+
+	<span class="oblock">instr</span> 1
+
+kfrq	<span class="op">=</span>  523.25		<span class="comment">; frequency</span>
+$FRQ2FNUM(kfnum'kfrq'100)	<span class="comment">; table number</span>
+kfmd	<span class="op">=</span>  kfrq <span class="op">*</span> 0.02		<span class="comment">; random variation in frequency</span>
+kgdur	<span class="op">=</span>  0.2			<span class="comment">; grain duration</span>
+kdens	<span class="op">=</span>  200			<span class="comment">; density</span>
+iseed	<span class="op">=</span>  1			<span class="comment">; random seed</span>
+
+kphs	<span class="opc">oscili</span> 0.45, 1, 4	<span class="comment">; phase</span>
+
+a1	<span class="opc">grain3</span>	kfrq, 0, kfmd, 0.5, kgdur, kdens, 100,		\
+		kfnum, 1, <span class="op">-</span>0.5, 0, iseed, 2
+a2	<span class="opc">grain3</span>	kfrq, 0.5 <span class="op">+</span> kphs, kfmd, 0.5, kgdur, kdens, 100,	\
+		kfnum, 1, <span class="op">-</span>0.5, 0, iseed, 2
+
+<span class="comment">; de-click</span>
+aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.05, 1, 0.04, 0, 1, 0
+
+	<span class="opc">out</span> aenv <span class="op">*</span> 2250 <span class="op">*</span> (a1 <span class="op">-</span> a2)
+
+	<span class="oblock">endin</span>
+
+<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 2<span class="op">:</span> phase variation <span class="op">*</span><span class="op">/</span>
+
+	<span class="oblock">instr</span> 2
+
+kfrq	<span class="op">=</span>  220			<span class="comment">; frequency</span>
+$FRQ2FNUM(kfnum'kfrq'100)	<span class="comment">; table number</span>
+kgdur	<span class="op">=</span>  0.2			<span class="comment">; grain duration</span>
+kdens	<span class="op">=</span>  200			<span class="comment">; density</span>
+iseed	<span class="op">=</span>  2			<span class="comment">; random seed</span>
+
+kprdst	<span class="opc">expon</span> 0.5, p3, 0.02	<span class="comment">; distribution</span>
+
+a1	<span class="opc">grain3</span>	kfrq, 0.5, 0, 0.5, kgdur, kdens, 100,		\
+		kfnum, 1, 0, <span class="op">-</span>kprdst, iseed, 64
+
+<span class="comment">; de-click</span>
+aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.05, 1, 0.04, 0, 1, 0
+
+	<span class="opc">out</span> aenv <span class="op">*</span> 1500 <span class="op">*</span> a1
+
+	<span class="oblock">endin</span>
+
+<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 3<span class="op">:</span> "soft sync" <span class="op">*</span><span class="op">/</span>
+
+	<span class="oblock">instr</span> 3
+
+kdens	<span class="op">=</span>  130.8		<span class="comment">; base frequency</span>
+kgdur	<span class="op">=</span>  2 <span class="op">/</span> kdens		<span class="comment">; grain duration</span>
+
+kfrq	<span class="opc">expon</span> 880, p3, 220	<span class="comment">; oscillator frequency</span>
+$FRQ2FNUM(kfnum'kfrq'100)	<span class="comment">; table number</span>
+
+a1	<span class="opc">grain3</span> kfrq, 0, 0, 0, kgdur, kdens, 3, kfnum, 5, 0, 0, 0, 2
+a2	<span class="opc">grain3</span> kfrq, 0.667, 0, 0, kgdur, kdens, 3, kfnum, 5, 0, 0, 0, 2
+
+<span class="comment">; de-click</span>
+aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.05, 1, 0.04, 0, 1, 0
+
+	<span class="opc">out</span> aenv <span class="op">*</span> 10000 <span class="op">*</span> (a1 <span class="op">-</span> a2)
+
+	<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">t</span> 0 60
+<span class="stamnt">i</span> 1 0 3
+<span class="stamnt">i</span> 2 4 3
+<span class="stamnt">i</span> 3 8 3
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103553104"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="grain2.html" title="grain2"><em class="citetitle">grain2</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp103555216"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Istvan Varga</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in version 4.15</p>
+        <p>Updated April 2002 by Istvan Varga</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="grain2.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="granule.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">grain2 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> granule</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

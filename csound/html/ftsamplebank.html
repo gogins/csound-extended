@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ftsamplebank</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="ftmorf.html" title="ftmorf" />
+    <link rel="next" href="ftsave.html" title="ftsave" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">ftsamplebank</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="ftmorf.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="ftsave.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="ftsamplebank"></a>
+      <div class="titlepage"></div>
+      <a id="Indexftsamplebank" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">ftsamplebank</span>
+        </h2>
+        <p>ftsamplebank — 
+      Reads a directory for sound files.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp101903264"></a>
+        <h2>Description</h2>
+        <p>
+      Reads a directory for sound files and loads them to a series of GEN01 function tables. 
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp101904560"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">iNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, iFirstTableNumber, iTrigger, iSkipTime, iFormat, iChannel,</pre>
+        <pre class="synopsis">kNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, kFirstTableNumber, kTrigger, kSkipTime, kFormat, kChannel,</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp101979888"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>SDirectory</em></span> -- a string that identifies the directory to browse for files
+    </p>
+        <p>
+      <span class="emphasis"><em>FirstTableNumber</em></span> -- this sets the number of the first table into which a soundfile will be loaded 
+    </p>
+        <p>
+      <span class="emphasis"><em>Trigger</em></span> -- updates the tables when kTrigger is 1
+    </p>
+        <p>
+      <span class="emphasis"><em>SkipTime</em></span> -- begin reading at <span class="emphasis"><em>skiptime</em></span> seconds into the file.
+    </p>
+        <p>
+      <span class="emphasis"><em>Format</em></span> -- specifies the audio data-file format:
+        </p>
+        <div class="literallayout">
+          <p><br />
+1 - 8-bit signed character    4 - 16-bit short integers <br />
+2 - 8-bit A-law bytes         5 - 32-bit long integers <br />
+3 - 8-bit U-law bytes         6 - 32-bit floats<br />
+        </p>
+        </div>
+        <p>
+    </p>
+        <p>
+      <span class="emphasis"><em>Channel</em></span> -- channel number to read in. 0 denotes read all channels.
+    </p>
+        <p>
+      If <span class="emphasis"><em>format</em></span> = 0 the sample format is taken from the soundfile header, or by default from the CSound <a class="link" href="CommandFlags.html#FlagsMinusLowerO"><em class="citetitle">-o</em></a> command-line flag.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp101989408"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>iNumberOfFile</em></span> -- the number of tables that have been created
+    </p>
+        <p>
+      <span class="emphasis"><em>kNumberOfFile</em></span> -- the number of tables that have been created
+    </p>
+      </div>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Note: Note">
+          <tr>
+            <td rowspan="2" align="center" valign="top" width="25">
+              <img alt="[Note]" src="images/note.png" />
+            </td>
+            <th align="left">Note</th>
+          </tr>
+          <tr>
+            <td align="left" valign="top">
+              <p>
+      Loading a lot of sound files into function tables at k-rate may cause some audio dropouts.   
+      </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="refsect1">
+        <a id="idp101993216"></a>
+        <h2>Example</h2>
+        <p>
+      This example shows ftsamplebank browsing for samples in a fixed location. It loads all samples it finds into GEN01 function tables and then playsa them back in a sequence, one every second. It uses the file <a class="ulink" href="examples/ftsamplebank.csd" target="_top"><em class="citetitle">ftsamplebank.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp101995232"></a>
+          <p class="title">
+            <strong>Example 355. Example of the ftsamplebank opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp246038016"></a>
+              <a class="ulink" href="examples/ftsamplebank.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac<span class="comment">;;RT audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o diskin.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+
+<span class="comment">;load all samples in a given directory into function tables and play them using instrument 1000</span>
+<span class="oblock">instr</span> 1
+   iFirstTableNumber <span class="op">=</span> 60<span class="comment">;</span>
+   iFileCount <span class="opc">init</span> 0
+   iTrig <span class="op">=</span> 1
+   iNumberOfFiles <span class="opc">ftsamplebank</span> ".<span class="op">/</span>examples<span class="op">/</span>", iFirstTableNumber, iTrig, 0, 4, 1
+
+   until iFileCount<span class="op">&gt;=</span>iNumberOfFiles do
+	<span class="opc">event_i</span> "i", 1000, iFileCount, 1, iFirstTableNumber<span class="op">+</span>iFileCount
+	iFileCount <span class="op">=</span> iFileCount<span class="op">+</span>1
+   enduntil
+
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 1000
+   iTable <span class="op">=</span> p4
+   aOut <span class="opc">loscil3</span> 1, 1, iTable, 1, 0<span class="comment">;</span>
+   <span class="opc">outs</span> aOut, aOut
+<span class="oblock">endin</span> 
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span>1 0 100
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp101997152"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Rory Walsh</td>
+          </tr>
+          <tr>
+            <td>2015</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="ftmorf.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="ftsave.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">ftmorf </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> ftsave</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

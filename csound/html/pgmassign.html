@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>pgmassign</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="peak.html" title="peak" />
+    <link rel="next" href="phaser1.html" title="phaser1" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">pgmassign</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="peak.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="phaser1.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="pgmassign"></a>
+      <div class="titlepage"></div>
+      <a id="IndexPgmassign" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">pgmassign</span>
+        </h2>
+        <p>pgmassign — 
+      Assigns an instrument number to a specified MIDI program.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp124338096"></a>
+        <h2>Description</h2>
+        <p>
+      Assigns an instrument number to a specified (or all) MIDI program(s).
+    </p>
+        <p>
+      By default, the instrument is the same as the program number. If the selected instrument is zero or negative or does not exist, the program change is ignored. This opcode is normally used in the orchestra header. Although, like <a class="link" href="massign.html" title="massign"><em class="citetitle">massign</em></a>, it also works in instruments.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp124413200"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>pgmassign</strong></span> ipgm, inst[, ichn]</pre>
+        <pre class="synopsis"><span class="command"><strong>pgmassign</strong></span> ipgm, "insname"[, ichn]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp124416560"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>ipgm</em></span> -- MIDI program number (1 to 128). A value of zero selects all programs.
+    </p>
+        <p>
+      <span class="emphasis"><em>inst</em></span> -- instrument number. If set to zero, or negative, MIDI program changes to <span class="emphasis"><em>ipgm</em></span> are ignored. Currently, assignment to an instrument that does not exist has the same effect. This may be changed in a later release to print an error message.
+    </p>
+        <p>
+      <span class="emphasis"><em><span class="quote">“<span class="quote">insname</span>”</span></em></span> -- A string (in double-quotes) representing a named instrument.
+    </p>
+        <p>
+      <span class="emphasis"><em><span class="quote">“<span class="quote">ichn</span>”</span></em></span> (optional, defaults to zero) -- channel number. If zero, program changes are assigned on all channels.
+    </p>
+        <p>
+      You can disable the turning on of any instruments by using the following in the header:
+      </p>
+        <pre class="programlisting">
+        massign 0, 0
+        pgmassign 0, 0
+      </pre>
+        <p>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp124423664"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the pgmassign opcode. It uses the file <a class="ulink" href="examples/pgmassign.csd" target="_top"><em class="citetitle">pgmassign.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp124425440"></a>
+          <p class="title">
+            <strong>Example 646. Example of the pgmassign opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp258000160"></a>
+              <a class="ulink" href="examples/pgmassign.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in   No messages  MIDI in</span>
+-odac           -iadc     -d         -M0  <span class="comment">;;;RT audio I/O with MIDI in</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o pgmassign.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">; Initialize the global variables.</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 4410
+<span class="ohdr">ksmps</span> <span class="op">=</span> 10
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="comment">; Program 55 (synth vox) uses Instrument #10.</span>
+<span class="ohdr">pgmassign</span> 55, 10 
+
+<span class="comment">; Instrument #10.</span>
+<span class="oblock">instr</span> 10
+  <span class="comment">; Just an example, no working code in here!</span>
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Play Instrument #10 for one second.</span>
+<span class="stamnt">i</span> 10 0 1
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      Here is an example of the pgmassign opcode that will ignore program change events. It uses the file <a class="ulink" href="examples/pgmassign_ignore.csd" target="_top"><em class="citetitle">pgmassign_ignore.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp124430848"></a>
+          <p class="title">
+            <strong>Example 647. Example of the pgmassign opcode that will ignore program change events.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp258009184"></a>
+              <a class="ulink" href="examples/pgmassign_ignore.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in   No messages  MIDI in</span>
+-odac           -iadc     -d         -M0  <span class="comment">;;;RT audio I/O with MIDI in</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o pgmassign_ignore.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">; Initialize the global variables.</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 4410
+<span class="ohdr">ksmps</span> <span class="op">=</span> 10
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="comment">; Ignore all program change events.</span>
+<span class="ohdr">pgmassign</span> 0, <span class="op">-</span>1
+
+<span class="comment">; Instrument #1.</span>
+<span class="oblock">instr</span> 1
+  <span class="comment">; Just an example, no working code in here!</span>
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Play Instrument #1 for one second.</span>
+<span class="stamnt">i</span> 1 0 1
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      Here is an advanced example of the pgmassign opcode. It uses the file <a class="ulink" href="examples/pgmassign_advanced.csd" target="_top"><em class="citetitle">pgmassign_advanced.csd</em></a>.
+    </p>
+        <p>
+      Don't forget that you must include the <a class="link" href="CommandFlags.html#FlagsMinusUpperF"><em class="citetitle">-F flag</em></a> when using an external MIDI file like <span class="quote">“<span class="quote">pgmassign_advanced.mid</span>”</span>.
+    </p>
+        <p>
+      </p>
+        <div class="example">
+          <a id="idp124436112"></a>
+          <p class="title">
+            <strong>Example 648. An advanced example of the pgmassign opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp258038224"></a>
+              <a class="ulink" href="examples/pgmassign_advanced.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac   -F   pgmassign_advanced.mid  <span class="comment">;;;realtime audio out with midifile in</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if real audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o pgmassign_advanced.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+	<span class="ohdr">massign</span> 1, 1	<span class="comment">; channels 1 to 4 use instr 1 by default</span>
+	<span class="ohdr">massign</span> 2, 1
+	<span class="ohdr">massign</span> 3, 1
+	<span class="ohdr">massign</span> 4, 1
+
+<span class="comment">; pgmassign_advanced.mid can be found in /manual/examples</span>
+<span class="comment">; pgmassign.mid has 4 notes with these parameters:</span>
+<span class="comment">;</span>
+<span class="comment">;	    Start time	Channel	Program</span>
+<span class="comment">;</span>
+<span class="comment">; note 1	0.5	   1	  10</span>
+<span class="comment">; note 2	1.5	   2	  11</span>
+<span class="comment">; note 3	2.5	   3	  12</span>
+<span class="comment">; note 4	3.5	   4	  13</span>
+
+	<span class="ohdr">pgmassign</span> 0, 0		<span class="comment">; disable program changes</span>
+	<span class="ohdr">pgmassign</span> 11, 3		<span class="comment">; program 11 uses instr 3</span>
+	<span class="ohdr">pgmassign</span> 12, 2		<span class="comment">; program 12 uses instr 2</span>
+
+<span class="comment">; waveforms for instruments</span>
+itmp	<span class="ohdr">ftgen</span> 1, 0, 1024, 10, 1
+itmp	<span class="ohdr">ftgen</span> 2, 0, 1024, 10, 1, 0.5, 0.3333, 0.25, 0.2, 0.1667, 0.1429, 0.125
+itmp	<span class="ohdr">ftgen</span> 3, 0, 1024, 10, 1, 0, 0.3333, 0, 0.2, 0, 0.1429, 0, 0.10101
+
+	<span class="oblock">instr</span> 1		<span class="op">/</span><span class="op">*</span> sine <span class="op">*</span><span class="op">/</span>
+
+kcps	<span class="opc">cpsmidib</span> 2	<span class="comment">; note frequency</span>
+asnd	<span class="opc">oscili</span> .6, kcps, 1
+	<span class="opc">outs</span> asnd, asnd
+
+	<span class="oblock">endin</span>
+
+	<span class="oblock">instr</span> 2		<span class="op">/</span><span class="op">*</span> band<span class="op">-</span>limited sawtooth <span class="op">*</span><span class="op">/</span>
+
+kcps	<span class="opc">cpsmidib</span> 2	<span class="comment">; note frequency</span>
+asnd	<span class="opc">oscili</span> .6, kcps, 2
+	<span class="opc">outs</span> asnd, asnd
+
+	<span class="oblock">endin</span>
+
+	<span class="oblock">instr</span> 3		<span class="op">/</span><span class="op">*</span> band<span class="op">-</span>limited square <span class="op">*</span><span class="op">/</span>
+
+kcps	<span class="opc">cpsmidib</span> 2	<span class="comment">; note frequency</span>
+asnd	<span class="opc">oscili</span> .6, kcps, 3
+	<span class="opc">outs</span> asnd, asnd
+
+	<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">t</span> 0 120
+<span class="stamnt">f</span> 0 8.5 2 -2 0
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp124438080"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="midichn.html" title="midichn"><em class="citetitle">midichn</em></a> and <a class="link" href="massign.html" title="massign"><em class="citetitle">massign</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp124441152"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Istvan Varga</td>
+          </tr>
+          <tr>
+            <td>May 2002</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in version 4.20</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="peak.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="phaser1.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">peak </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> phaser1</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

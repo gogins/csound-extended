@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/ATSadd-2.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-odac -d -m1
+</CsOptions>
+<CsInstruments>
+;example by joachim heintz
+sr = 44100
+ksmps = 32
+nchnls = 2
+0dbfs = 1
+
+giSine    ftgen     0, 0, 1024, 10, 1
+
+  instr AllTheTones
+Sfile     =         "fox.ats"
+          prints    "Resynthesizing with all the tones.\n"
+iDur      ATSinfo   Sfile, 7
+p3        =         iDur
+iNumParts ATSinfo   Sfile, 3
+          prints    "Overall number of partials = %d\n", iNumParts
+ktime     line      0, iDur, iDur
+asig      ATSadd    ktime, 1, Sfile, giSine, iNumParts
+          outs      asig, asig
+
+;start next instr
+          event_i   "i", "TonesInBandsOfTen", iDur+1, iDur, 0, iNumParts
+  endin
+
+  instr TonesInBandsOfTen
+Sfile     =         "fox.ats"
+iOffset   =         p4 ;start at this partial
+iNumParts =         p5 ;overall number of partials
+          prints    "Resynthesizing with partials %d - %d.\n", iOffset+1, iOffset+10
+ktime     line      0, p3, p3
+asig      ATSadd    ktime, 1, Sfile, giSine, 10, iOffset
+          outs      asig, asig
+
+;start next instance until there are enough partials left
+ if iOffset+20 < iNumParts then
+          event_i   "i", "TonesInBandsOfTen", p3+1, p3, iOffset+10, iNumParts
+          else
+          event_i   "i", "End", p3, 1
+ endif
+  endin
+
+  instr End
+          exitnow
+  endin
+</CsInstruments>
+<CsScore>
+i "AllTheTones" 0 1
+e 999
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

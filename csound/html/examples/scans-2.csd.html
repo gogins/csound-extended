@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/scans-2.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-odac   ;;;realtime audio out
+;-iadc    ;;;uncomment -iadc if realtime audio input is needed too
+; For Non-realtime ouput leave only the line below:
+; -o scans-2.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2
+0dbfs  = 1
+
+strset 1, "mary.wav"
+strset 2, "fox.wav"
+
+instr 	2	;show 2 different trajectories, with samples as excitation signal
+
+ismp = p6		
+iamp = p7
+itrj = p8
+aout soundin p6				;choose wave file
+     scanu ismp, .01, 6, 2, 33, 44, 5, 2, .01, .05, -.05, .1, .5, 0, 0, aout, 1, 0
+asig scans iamp, cpspch(p5), itrj , 0
+     outs asig, asig
+
+endin	
+</CsInstruments>
+<CsScore>
+f1 0 128 7 0 64 1 64 0			; Initial condition
+f2 0 128 -7 1 128 0.3			; Masses
+f33 0 16384 -23 "cylinder-128,8"	; Spring matrices
+f44 0 128 -7 2 4 0 124 2		; Centering force
+f5 0 128 -7 1 128 0			; Damping
+f6 0 128 -7 -.0 128 0			; Initial velocity
+f7 0 128 -5 .001 128 128		; Trajectories
+f77 0 128 -23 "spiral-8,16,128,2,1over2"
+
+s
+i2 0  5  63 6.00 1 .9 7			;"mary.wav" &
+i2 6  5  60 7.00			;trajectory table 7
+i2 10 5  60 8.00
+
+s
+i2 0  5  63 6.00 2 .08 7		;"fox.wav", at much lower volume
+i2 6  5  60 7.00
+i2 10 5  60 8.00
+
+s
+i2 0  5  63 6.00 1 .9 77		;"mary.wav" &
+i2 6  5  60 7.00			;trajectory table 77
+i2 10 5  60 8.00
+
+s
+i2 0  5  63 6.00 2 .08 77		;"fox.wav", at much lower volume
+i2 6  5  60 7.00
+i2 10 5  60 8.00
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

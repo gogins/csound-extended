@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>vbap8</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="vbap4move.html" title="vbap4move" />
+    <link rel="next" href="vbap8move.html" title="vbap8move" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">vbap8</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="vbap4move.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="vbap8move.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="vbap8"></a>
+      <div class="titlepage"></div>
+      <a id="IndexVbap8" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">vbap8</span>
+        </h2>
+        <p>vbap8 — 
+      Distributes an audio signal among 8 channels.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp152575632"></a>
+        <h2>Description</h2>
+        <p>
+      Distributes an audio signal among 8 channels.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp152619936"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ar1, ..., ar8 <span class="command"><strong>vbap8</strong></span> asig, kazim [, kelev] [, kspread]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp152622608"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>asig</em></span> -- audio signal to be panned
+    </p>
+        <p>
+      <span class="emphasis"><em>kazim</em></span> -- azimuth angle of the virtual source
+    </p>
+        <p>
+      <span class="emphasis"><em>kelev</em></span> (optional) -- elevation angle of the virtual source
+    </p>
+        <p>
+      <span class="emphasis"><em>kspread</em></span> (optional) -- spreading of the virtual source (range 0 - 100).  If value is zero, conventional amplitude panning is used. When <span class="emphasis"><em>kspread</em></span> is increased, the number of loudspeakers used in panning increases. If value is 100, the sound is applied to all loudspeakers.
+    </p>
+        <p>
+      <span class="emphasis"><em>vbap8</em></span> takes an input signal, <span class="emphasis"><em>asig</em></span>, and distributes it among 8 outputs, according to the controls <span class="emphasis"><em>kazim</em></span> and <span class="emphasis"><em>kelev</em></span>, and the configured loudspeaker placement.  If <span class="emphasis"><em>idim</em></span> = 2, <span class="emphasis"><em>kelev</em></span> is set to zero. The distribution is performed using Vector Base Amplitude Panning (VBAP - See reference).  VBAP distributes the signal using loudspeaker data configured with <span class="emphasis"><em>vbaplsinit</em></span>. The signal is applied to, at most, two loudspeakers in 2-D loudspeaker configurations, and three loudspeakers in 3-D loudspeaker configurations. If the virtual source is panned outside the region spanned by loudspeakers, the nearest loudspeakers are used in panning.
+    </p>
+        <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Warning">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Warning]" src="images/warning.png" />
+              </td>
+              <th align="left">Warning</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>Please note that all <span class="emphasis"><em>vbap</em></span> panning opcodes require the <span class="emphasis"><em>vbap</em></span> system to be initialized using <a class="link" href="vbaplsinit.html" title="vbaplsinit"><em class="citetitle">vbaplsinit</em></a>.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idp152634112"></a>
+        <h2>Example</h2>
+        <p>
+      Here is a simple example of the <span class="emphasis"><em>vbap8</em></span> opcode. It uses the file <a class="ulink" href="examples/vbap8.csd" target="_top"><em class="citetitle">vbap8.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp152636400"></a>
+          <p class="title">
+            <strong>Example 1008. Example of the vbap8 opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp270636272"></a>
+              <a class="ulink" href="examples/vbap8.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in</span>
+<span class="comment">;-odac           -iadc    ;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+-o vbap8.wav -W <span class="comment">;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+  <span class="ohdr">sr</span>       <span class="op">=</span>          44100
+  <span class="ohdr">kr</span>       <span class="op">=</span>           441
+  <span class="ohdr">ksmps</span>    <span class="op">=</span>           100
+  <span class="ohdr">nchnls</span>   <span class="op">=</span>             4
+  <span class="opc">vbaplsinit</span>          2, 8,  0, 45, 90, 135, 200, 245, 290, 315 
+
+          <span class="oblock">instr</span>  1
+  asig    <span class="opc">oscil</span>       20000, 440, 1
+  a1,a2,a3,a4,a5,a6,a7,a8   <span class="opc">vbap8</span>   asig, p4, 0, 20 <span class="comment">;p4 = azimuth</span>
+	
+  <span class="comment">;render twice with alternate outq  statements</span>
+  <span class="comment">;  to obtain two 4 channel .wav files:</span>
+
+          <span class="opc">outq</span>        a1,a2,a3,a4
+  <span class="comment">;       outq        a5,a6,a7,a8</span>
+<span class="comment">; or use an 8-channel output for realtime output (set nchnls to 8):</span>
+<span class="comment">;        outo a1,a2,a3,a4,a5,a6,a7,a8</span>
+          <span class="oblock">endin</span> 
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 1 0 8192 10 1
+<span class="comment">; Play Instrument #1 for one second.</span>
+<span class="comment">;          azimuth</span>
+<span class="stamnt">i</span> 1 0 1      20
+<span class="stamnt">i</span> 1 + .      40
+<span class="stamnt">i</span> 1 + .      60
+<span class="stamnt">i</span> 1 + .      80
+<span class="stamnt">i</span> 1 + .      100
+<span class="stamnt">i</span> 1 + .      120
+<span class="stamnt">i</span> 1 + .      140
+<span class="stamnt">i</span> 1 + .      160
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp152640688"></a>
+        <h2>Reference</h2>
+        <p>
+      Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp152642800"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="vbap16.html" title="vbap16"><em class="citetitle">vbap16</em></a>,
+      <a class="link" href="vbap16move.html" title="vbap16move"><em class="citetitle">vbap16move</em></a>,
+      <a class="link" href="vbap4.html" title="vbap4"><em class="citetitle">vbap4</em></a>,
+      <a class="link" href="vbap4move.html" title="vbap4move"><em class="citetitle">vbap4move</em></a>,
+      <a class="link" href="vbap8move.html" title="vbap8move"><em class="citetitle">vbap8move</em></a>,
+      <a class="link" href="vbaplsinit.html" title="vbaplsinit"><em class="citetitle">vbaplsinit</em></a>,
+      <a class="link" href="vbapz.html" title="vbapz"><em class="citetitle">vbapz</em></a>,
+      <a class="link" href="vbapzmove.html" title="vbapzmove"><em class="citetitle">vbapzmove</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp152651632"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Ville Pulkki</td>
+          </tr>
+          <tr>
+            <td>Sibelius Academy Computer Music Studio</td>
+          </tr>
+          <tr>
+            <td>Laboratory of Acoustics and Audio Signal Processing</td>
+          </tr>
+          <tr>
+            <td>Helsinki University of Technology</td>
+          </tr>
+          <tr>
+            <td>Helsinki, Finland</td>
+          </tr>
+          <tr>
+            <td>May 2000</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound Version 4.07. Input parameters accept k-rate since Csund 5.09.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="vbap4move.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="vbap8move.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">vbap4move </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> vbap8move</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

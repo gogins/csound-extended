@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>partikkel</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="partials.html" title="partials" />
+    <link rel="next" href="partikkelsync.html" title="partikkelsync" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">partikkel</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="partials.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="partikkelsync.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="partikkel"></a>
+      <div class="titlepage"></div>
+      <a id="IndexPartikkel" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">partikkel</span>
+        </h2>
+        <p>partikkel — 
+      Granular synthesizer with "per grain" control
+      over many of its parameters.  Has a sync input to
+      sychronize its internal grain scheduler clock to an external
+      clock source.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp123098336"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>partikkel</em></span> was conceived after reading Curtis Roads' book
+      "Microsound", and the goal was to create an opcode that was
+      capable of all time-domain varieties of granular synthesis
+      described in this book. The idea being that most of the
+      techniques only differ in parameter values, and by having a
+      single opcode that can do all varieties of granular synthesis
+      makes it possible to interpolate between techniques. Granular synthesis is sometimes dubbed particle
+      synthesis, and it was thought apt to name the opcode <span class="emphasis"><em>partikkel</em></span>
+      to distinguish it from other granular opcodes.  
+    </p>
+        <p>
+      Some of the input parameters to <span class="emphasis"><em>partikkel</em></span> is table numbers,
+      pointing to tables where values for the "per grain" parameter
+      changes are stored.  <span class="emphasis"><em>partikkel</em></span> can use single-cycle or complex
+      (e.g. sampled sound) waveforms as source waveforms for
+      grains. Each grain consists of a mix of 4 source
+      waveforms. Individual tuning of the base frequency can be done
+      for each of the 4 source waveforms. Frequency modulation inside
+      each grain is enabled via an auxillary audio input
+      (<span class="emphasis"><em>awavfm</em></span>). Trainlet synthesis is available, and trainlets can be
+      mixed with wavetable based grains. Up to 8 separate audio
+      outputs can be used.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp123103200"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">a1 [, a2, a3, a4, a5, a6, a7, a8] <span class="command"><strong>partikkel</strong></span> agrainfreq, \
+              kdistribution, idisttab, async, kenv2amt, ienv2tab, ienv_attack, \
+              ienv_decay, ksustain_amount, ka_d_ratio, kduration, kamp, igainmasks, \
+              kwavfreq, ksweepshape, iwavfreqstarttab, iwavfreqendtab, awavfm, \
+              ifmamptab, kfmenv, icosine, ktraincps, knumpartials, kchroma, \
+              ichannelmasks, krandommask, kwaveform1, kwaveform2, kwaveform3, \
+              kwaveform4, iwaveamptab, asamplepos1, asamplepos2, asamplepos3, \
+              asamplepos4, kwavekey1, kwavekey2, kwavekey3, kwavekey4, imax_grains \
+              [, iopcode_id]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp123106016"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>idisttab</em></span> -- function table number,
+      distribution for random grain displacements over time. The table
+      values are interpreted as "displacement amount" scaled by
+      1/grainrate. This means that a value of 0.5 in the table will
+      displace a grain by half the grainrate period. The table values
+      are read randomly, and scaled by <span class="emphasis"><em>kdistribution</em></span>. For realistic
+      stochastic results, it is advisable not to use a too small table
+      size, as this limits the amount of possible displacement
+      values. This can also be utilized for other purposes, e.g. using
+      quantized displacement values to work with controlled time
+      displacement from the periodic grain rate. If <span class="emphasis"><em>kdistribution</em></span> is
+      negative, the table values will be read sequentially. A default
+      table might be selected by using -1 as the ftable number, for
+      <span class="emphasis"><em>idisttab</em></span> the default uses a zero distribution (no
+      displacement). 
+    </p>
+        <p>
+      <span class="emphasis"><em>ienv_attack</em></span> -- function table number,
+      attack shape of grain. Needs extended guard point. A default
+      table might be selected by using -1 as the ftable number, for
+      <span class="emphasis"><em>ienv_attack</em></span> the default uses a square window (no enveloping). 
+    </p>
+        <p>
+      <span class="emphasis"><em>ienv_decay</em></span> -- function table number, decay
+      shape of grain. Needs extended guard point. A default table
+      might be selected by using -1 as the ftable number, for
+      <span class="emphasis"><em>ienv_decay</em></span> the default uses a square window (no enveloping). 
+    </p>
+        <p>
+      <span class="emphasis"><em>ienv2tab</em></span> -- function table number,
+      additional envelope applied to grain, done after attack and
+      decay envelopes. Can be used e.g. for fof formant
+      synthesis. Needs extended guard point. A default table might be
+      selected by using -1 as the ftable number, for <span class="emphasis"><em>ienv2tab</em></span> the
+      default uses a square window (no enveloping). 
+    </p>
+        <p>
+      <span class="emphasis"><em>icosine</em></span> -- function table number, must
+      contain a cosine, used for trainlets. Table size should be at least 2048 for good quality trainlets.
+    </p>
+        <p>
+      <span class="emphasis"><em>igainmasks</em></span> -- function table number, gain per
+      grain. The sequence of values in the table is as follows: index
+      0 is used as a loop start point in reading the values, index 1
+      is used as a loop end point. Remaining indices contain gain
+      values (normally in range 0 - 1, but other values are
+      allowed, negative values will invert phase of waveform inside
+      grain) for a sequence of grains, these are read at grain rate
+      enabling exact patterns of "gain per grain". The loop start and
+      end points are zero based with an origin at index 2, e.g. a loop
+      start value of 0 and loop end value of 3 will read indices
+      2,3,4,5 in a loop at grain rate. A default table might be
+      selected by using -1 as the ftable number, for <span class="emphasis"><em>igainmasks</em></span> the
+      default disables gain masking (all grains are given a gain
+      masking value of 1). 
+    </p>
+        <p>
+      <span class="emphasis"><em>ichannelmasks</em></span> -- function table number, see <span class="emphasis"><em>igainmasks</em></span>
+      for a description of how the values in the table are read. Range
+      is 0 to N, where N is the number of output channels minus 1. A
+      value of zero will send the grain to audio output 1 from the
+      opcode. Fractional values are allowed, e.g. a value of 3.5 will
+      mix the grain equally to outputs 4 and 5. The user is
+      responsible for keeping the values in range, no range checking
+      is done. The opcode will crash with out of range values. A
+      default table might be selected by using -1 as the ftable
+      number, for <span class="emphasis"><em>ichannelmasks</em></span> the default disables channel masking
+      (all grains are given a channel masking value of 0 and are sent
+      to <span class="emphasis"><em>partikkel</em></span> audio out 1). 
+    </p>
+        <p>
+      <span class="emphasis"><em>iwavfreqstarttab</em></span> -- function table number,
+      see <span class="emphasis"><em>igainmasks</em></span> for a description of how the values in the table
+      are read. Start frequency multiplicator for each grain. Pitch
+      will glide from start frequency to end frequency following a
+      line or curve as set by <span class="emphasis"><em>ksweepshape</em></span>. A default table might be
+      selected by using -1 as the ftable number, for <span class="emphasis"><em>iwavfreqstarttab</em></span>
+      the default uses a multiplicator of 1, disabling any start
+      frequency modification.
+    </p>
+        <p>
+      <span class="emphasis"><em>iwavfreqendtab</em></span> -- function table number,
+      see <span class="emphasis"><em>iwavfreqstarttab</em></span>. End frequency multiplicator for each
+      grain. A default table might be selected by using -1 as the
+      ftable number, for <span class="emphasis"><em>iwavfreqendtab</em></span> the default uses a
+      multiplicator of 1, disabling any end frequency modification. 
+    </p>
+        <p>
+      <span class="emphasis"><em>ifmamptab</em></span> -- function table number,
+      see <span class="emphasis"><em>igainmasks</em></span> for a description of how
+      the values in the table are read. Frequency modulation index per
+      grain. The signal <span class="emphasis"><em>awavfm</em></span> will be multiplied by values read from
+      this table. A default table might be selected by using -1 as the
+      ftable number, for <span class="emphasis"><em>ifmamptab</em></span> the default uses 1 as the index
+      multiplicator, enabling fm for all grains. 
+    </p>
+        <p>
+      <span class="emphasis"><em>iwaveamptab</em></span> -- function table number, the 
+      indices are read in a similar way to what is used for
+      <span class="emphasis"><em>igainmasks</em></span>. Index 0 is used as a loop start point, and index 1
+      is used as a loop end point. The rest of the indices are read in
+      groups of 5, where each value represent a gain value for each of
+      the 4 source waveforms, and the 5th value represent trainlet
+      amplitude. A default table might be selected by
+      using -1 as the ftable number, for <span class="emphasis"><em>iwaveamptab</em></span> the default uses
+      an equal mix of all 4 source waveforms (each with an amplitude of 0.5) and setting trainlet amp
+      to zero.
+    </p>
+        <p>
+      Computation of trainlets can be CPU intensive, and setting
+      <span class="emphasis"><em>ktrainamp</em></span> to zero will skip most of the trainlet
+      computations. Trainlets will be normalized to peak (<span class="emphasis"><em>ktrainamp</em></span>),
+      compensating for amplitude variations caused by variations in
+      <span class="emphasis"><em>kpartials</em></span> and <span class="emphasis"><em>kchroma</em></span>. 
+    </p>
+        <p>
+      <span class="emphasis"><em>imax_grains</em></span> -- maximum number of grains per k-period. Estimating a large value should not affect performance, exceeding this value will lead to "oldest grains" being deleted.
+      </p>
+        <p>
+      <span class="emphasis"><em>iopcode_id</em></span> -- the opcode id, linking an
+      instance of <span class="emphasis"><em>partikkel</em></span> to an instance of <a class="link" href="partikkelsync.html" title="partikkelsync"><em class="citetitle">partikkelsync</em></a>, the linked <span class="emphasis"><em>partikkelsync</em></span> will output trigger pulses synchronized to <span class="emphasis"><em>partikkel</em></span>'s grain maker scheduler. 
+      The default value is zero, which means no connection to any <span class="emphasis"><em>partikkelsync</em></span> instances.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp123136624"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>xgrainfreq</em></span> -- number of grains per
+      second. A value of zero is allowed, and this will defer all
+      grain scheduling to the sync input.
+    </p>
+        <p>
+      <span class="emphasis"><em>async</em></span> -- sync input. Input values are added to the 
+      phase value of the internal grain maker clock, enabling tempo synchronization 
+      with an external clock source. As this is an a-rate signal, inputs are usually pulses 
+      of length 1/<span class="emphasis"><em>sr</em></span>. Using such pulses, the internal phase value can be "nudged" up or down,
+      enabling soft or hard synchronization. Negative input values decrements the internal phase,
+      while positive values in the range 0 to 1 increments the internal phase. An input value of 1 
+      will always make <span class="emphasis"><em>partikkel</em></span> generate a grain. 
+      If the value remains at 1, the internal grain scheduler clock will pause but any currently
+      playing grains will still play to end. 
+    </p>
+        <p>
+      <span class="emphasis"><em>kdistribution</em></span> -- periodic or stochastic
+      distribution of grains, 0 = periodic. Stochastic grain displacement is in the range of <span class="emphasis"><em>kdistribution/grainrate</em></span> seconds.
+      The stochastic distribution profile (random distribution) can be set in the <span class="emphasis"><em>idisttab</em></span> table. 
+      If <span class="emphasis"><em>kdistribution</em></span> is negative, the result is deterministic time displacement as described by <span class="emphasis"><em>idisttab</em></span> (sequential read of displacement values). 
+      Maximum grain displacement in all cases is limited to 10 seconds, 
+      and a grain will keep the values (duration, pitch etc) it was given when it was first generated (before time displacement). 
+      Since grain displacement is relative to the grain rate, displacement amount is undefined at 0Hz grain rate and kdistribution is completely disabled in this case.
+    </p>
+        <p>
+      <span class="emphasis"><em>kenv2amt</em></span> -- amount of enveloping for the
+      secondary envelope for each grain. Range 0 to 1, where 0 is no
+      secondary enveloping (square window), a value of 0.5 will use an
+      interpolation between a square window and the shape set by
+      <span class="emphasis"><em>ienv2tab</em></span>.
+    </p>
+        <p>
+      <span class="emphasis"><em>ksustain_amount</em></span> -- sustain time as fraction
+      of grain duration. I.e. balance between enveloped
+      time(attack+decay) and sustain level time. The sustain level is 
+      taken from the last value of the <span class="emphasis"><em>ienv_attack</em></span> ftable.
+    </p>
+        <p>
+      <span class="emphasis"><em>ka_d_ratio</em></span> -- balance between attack time
+      and decay time. For example, with <span class="emphasis"><em>ksustain_amount</em></span> set to 0.5 and
+      <span class="emphasis"><em>ka_d_ratio</em></span> set to 0.5, the attack envelope of each grain will take 25% of
+      the grain duration, full amplitude (sustain) will be held for
+      50% of the grain duration, and the decay envelope will take the
+      remaining 25% of the grain duration.
+    </p>
+        <p>
+      <span class="emphasis"><em>kduration</em></span> -- grain duration in milliseconds.
+    </p>
+        <p>
+      <span class="emphasis"><em>kamp</em></span> -- amplitude scaling of the opcode's
+      output. Multiplied by per grain amplitude read from <span class="emphasis"><em>igainmasks</em></span>.
+      Source waveform playback inside grains can consume a significant amount of CPU cycles, 
+      especially if grain duration is long so that we have a lot of overlapping grains. 
+      Setting kamp to zero will skip waveform playback inside grains (and not generate any sound, obviously). 
+      This can be used as a "soft" bypass method if we want to keep the opcode active but silent for some periods of time.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwavfreq</em></span> -- transposition
+      scaling. Multiplied with start and end transposition values read
+      from <span class="emphasis"><em>iwavfreqstarttab</em></span> and <span class="emphasis"><em>iwavfreqendtab</em></span>.
+    </p>
+        <p>
+      <span class="emphasis"><em>ksweepshape</em></span> -- transposition sweep shape,
+      controls the curvature of the transposition sweep. Range 0
+      to 1. Low values will hold the transposition at the start value
+      longer and then drop to the end value quickly, high values will
+      drop to the end value quickly. A value of 0.5 will give a
+      linear sweep. A value of exactly 0 will bypass sweep and only 
+      use the start frequency, while a value of exactly 1 will bypass sweep 
+      and only use the end frequency. The sweep generator might be slightly 
+      inaccurate in hitting the end frequency when using a steep curve and very long grains.
+    </p>
+        <p>
+      <span class="emphasis"><em>awavfm</em></span> -- audio input for frequency
+      modulation inside grain.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfmenv</em></span> -- function table number, envelope
+      for FM modulator signal enabling the modulation index to change
+      over the duration of a grain.
+    </p>
+        <p>
+      <span class="emphasis"><em>ktraincps</em></span> -- trainlet fundamental frequency.
+    </p>
+        <p>
+      <span class="emphasis"><em>knumpartials</em></span> -- number of partials in trainlets.
+    </p>
+        <p>
+      <span class="emphasis"><em>kchroma</em></span> -- chroma of trainlets. A value of
+      1 give equal amplitude to each partial, higher values will
+      reduce the amplitude of lower partials while strengthening the
+      amplitude of the higher partials.
+    </p>
+        <p>
+      <span class="emphasis"><em>krandommask</em></span> -- random masking (muting) of
+      individual grains. Range 0 to 1, where a value of 0 will give no
+      masking (all grains are played), and a value of 1 will mute all
+      grains.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwaveform1</em></span> -- table number for source waveform 1.
+     </p>
+        <p>
+      <span class="emphasis"><em>kwaveform2</em></span> -- table number for source waveform 2.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwaveform3</em></span> -- table number for source waveform 3.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwaveform4</em></span> -- table number for source waveform 4.
+    </p>
+        <p>
+      <span class="emphasis"><em>asamplepos1</em></span> -- start position for reading
+      source waveform 1 (in range 0..1).
+    </p>
+        <p>
+      <span class="emphasis"><em>asamplepos2</em></span> -- start position for reading
+      source waveform 2.
+    </p>
+        <p>
+      <span class="emphasis"><em>asamplepos3</em></span> -- start position for reading
+      source waveform 3.
+    </p>
+        <p>
+      <span class="emphasis"><em>asamplepos4</em></span> -- start position for reading
+      source waveform 4.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwavekey1</em></span> -- original key of source
+      waveform 1. Can be used to transpose each source waveform
+      independently.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwavekey2</em></span> -- as <span class="emphasis"><em>kwavekey1</em></span>, but for source
+      waveform 2.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwavekey3</em></span> -- as <span class="emphasis"><em>kwavekey1</em></span>, but for source
+      waveform 3.
+    </p>
+        <p>
+      <span class="emphasis"><em>kwavekey4</em></span> -- as <span class="emphasis"><em>kwavekey1</em></span>, but for source waveform 4.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp123172272"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the partikkel opcode. It uses the file <a class="ulink" href="examples/partikkel.csd" target="_top"><em class="citetitle">partikkel.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp123174128"></a>
+          <p class="title">
+            <strong>Example 629. Example of the partikkel opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp256722704"></a>
+              <a class="ulink" href="examples/partikkel.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if real audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o partikkel.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 20
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+giSine		<span class="ohdr">ftgen</span>	0, 0, 65537, 10, 1
+giCosine	<span class="ohdr">ftgen</span>	0, 0, 8193, 9, 1, 1, 90
+
+<span class="oblock">instr</span> 1
+
+kgrainfreq	<span class="op">=</span> 200			<span class="comment">; 4 grains per second</span>
+kdistribution	<span class="op">=</span> 0			<span class="comment">; periodic grain distribution</span>
+idisttab	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; (default) flat distribution used for grain distribution</span>
+async		<span class="op">=</span> 0			<span class="comment">; no sync input</span>
+kenv2amt	<span class="op">=</span> 0			<span class="comment">; no secondary enveloping</span>
+ienv2tab	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; default secondary envelope (flat)</span>
+ienv_attack	<span class="op">=</span> <span class="op">-</span>1 <span class="comment">;			; default attack envelope (flat)</span>
+ienv_decay	<span class="op">=</span> <span class="op">-</span>1 <span class="comment">;			; default decay envelope (flat)</span>
+ksustain_amount	<span class="op">=</span> 0.5			<span class="comment">; time (in fraction of grain dur) at sustain level for each grain</span>
+ka_d_ratio	<span class="op">=</span> 0.5 			<span class="comment">; balance between attack and decay time</span>
+kduration	<span class="op">=</span> (0.5<span class="op">/</span>kgrainfreq)<span class="op">*</span>1000	<span class="comment">; set grain duration relative to grain rate</span>
+kamp		<span class="op">=</span> 5000 			<span class="comment">; amp</span>
+igainmasks	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; (default) no gain masking</span>
+kwavfreq	<span class="op">=</span> 440			<span class="comment">; fundamental frequency of source waveform</span>
+ksweepshape	<span class="op">=</span> 0			<span class="comment">; shape of frequency sweep (0=no sweep)</span>
+iwavfreqstarttab <span class="op">=</span> <span class="op">-</span>1			<span class="comment">; default frequency sweep start (value in table = 1, which give no frequency modification)</span>
+iwavfreqendtab	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; default frequency sweep end (value in table = 1, which give no frequency modification)</span>
+awavfm		<span class="op">=</span> 0			<span class="comment">; no FM input</span>
+ifmamptab	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; default FM scaling (=1)</span>
+kfmenv		<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; default FM envelope (flat)</span>
+icosine		<span class="op">=</span> giCosine		<span class="comment">; cosine ftable</span>
+kTrainCps	<span class="op">=</span> kgrainfreq		<span class="comment">; set trainlet cps equal to grain rate for single-cycle trainlet in each grain</span>
+knumpartials	<span class="op">=</span> 3			<span class="comment">; number of partials in trainlet</span>
+kchroma		<span class="op">=</span> 1			<span class="comment">; balance of partials in trainlet</span>
+ichannelmasks	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; (default) no channel masking, all grains to output 1</span>
+krandommask	<span class="op">=</span> 0			<span class="comment">; no random grain masking</span>
+kwaveform1	<span class="op">=</span> giSine		<span class="comment">; source waveforms</span>
+kwaveform2	<span class="op">=</span> giSine		<span class="comment">;</span>
+kwaveform3	<span class="op">=</span> giSine		<span class="comment">;</span>
+kwaveform4	<span class="op">=</span> giSine		<span class="comment">;</span>
+iwaveamptab	<span class="op">=</span> <span class="op">-</span>1			<span class="comment">; (default) equal mix of all 4 sourcve waveforms and no amp for trainlets</span>
+asamplepos1	<span class="op">=</span> 0			<span class="comment">; phase offset for reading source waveform</span>
+asamplepos2	<span class="op">=</span> 0			<span class="comment">;</span>
+asamplepos3	<span class="op">=</span> 0			<span class="comment">;</span>
+asamplepos4	<span class="op">=</span> 0			<span class="comment">;</span>
+kwavekey1	<span class="op">=</span> 1			<span class="comment">; original key for source waveform</span>
+kwavekey2	<span class="op">=</span> 1			<span class="comment">;</span>
+kwavekey3	<span class="op">=</span> 1			<span class="comment">;</span>
+kwavekey4	<span class="op">=</span> 1			<span class="comment">;</span>
+imax_grains	<span class="op">=</span> 100			<span class="comment">; max grains per k period</span>
+
+asig	<span class="opc">partikkel</span> kgrainfreq, kdistribution, idisttab, async, kenv2amt, ienv2tab, \
+               ienv_attack, ienv_decay, ksustain_amount, ka_d_ratio, kduration, kamp, igainmasks, \
+               kwavfreq, ksweepshape, iwavfreqstarttab, iwavfreqendtab, awavfm, \
+               ifmamptab, kfmenv, icosine, kTrainCps, knumpartials, \
+               kchroma, ichannelmasks, krandommask, kwaveform1, kwaveform2, kwaveform3, kwaveform4, \
+               iwaveamptab, asamplepos1, asamplepos2, asamplepos3, asamplepos4, \
+               kwavekey1, kwavekey2, kwavekey3, kwavekey4, imax_grains
+
+<span class="opc">outs</span>	asig, asig
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span>1 0 5 	<span class="comment">; partikkel</span>
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      Here is another example of the partikkel opcode. It uses the file <a class="ulink" href="examples/partikkel-2.csd" target="_top"><em class="citetitle">partikkel-2.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp123179440"></a>
+          <p class="title">
+            <strong>Example 630. Example 2 of the partikkel opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp257164672"></a>
+              <a class="ulink" href="examples/partikkel-2.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out  </span>
+-odac           <span class="comment">;;;RT audio </span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o partikkel.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 20
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+
+<span class="comment">; Example by Joachim Heintz and Oeyvind Brandtsegg 2008</span>
+
+giCosine	<span class="ohdr">ftgen</span>	0, 0, 8193, 9, 1, 1, 90		<span class="comment">; cosine</span>
+giDisttab	<span class="ohdr">ftgen</span>	0, 0, 32768, 7, 0, 32768, 1	<span class="comment">; for kdistribution</span>
+giFile		<span class="ohdr">ftgen</span>	0, 0, 0, 1, "fox.wav", 0, 0, 0	<span class="comment">; soundfile for source waveform</span>
+giWin		<span class="ohdr">ftgen</span>	0, 0, 4096, 20, 9, 1		<span class="comment">; grain envelope</span>
+giPan		<span class="ohdr">ftgen</span>	0, 0, 32768, <span class="op">-</span>21, 1		<span class="comment">; for panning (random values between 0 and 1)</span>
+
+
+<span class="comment">; *************************************************</span>
+<span class="comment">; partikkel example, processing of soundfile</span>
+<span class="comment">; uses the file "fox.wav" </span>
+<span class="comment">; *************************************************</span>
+		<span class="oblock">instr</span> 1
+
+<span class="op">/</span><span class="op">*</span>score parameters<span class="op">*</span><span class="op">/</span>
+ispeed			<span class="op">=</span> p4		<span class="comment">; 1 = original speed </span>
+igrainrate		<span class="op">=</span> p5		<span class="comment">; grain rate</span>
+igrainsize		<span class="op">=</span> p6		<span class="comment">; grain size in ms</span>
+icent			<span class="op">=</span> p7		<span class="comment">; transposition in cent</span>
+iposrand		<span class="op">=</span> p8		<span class="comment">; time position randomness (offset) of the pointer in ms</span>
+icentrand		<span class="op">=</span> p9		<span class="comment">; transposition randomness in cents</span>
+ipan			<span class="op">=</span> p10		<span class="comment">; panning narrow (0) to wide (1)</span>
+idist			<span class="op">=</span> p11		<span class="comment">; grain distribution (0=periodic, 1=scattered)</span>
+
+<span class="op">/</span><span class="op">*</span>get length of source wave file, needed for both transposition and time pointer<span class="op">*</span><span class="op">/</span>
+ifilen			<span class="opc">tableng</span>	giFile
+ifildur			<span class="op">=</span> ifilen <span class="op">/</span> <span class="ohdr">sr</span>
+
+<span class="op">/</span><span class="op">*</span>sync input (disabled)<span class="op">*</span><span class="op">/</span>
+async			<span class="op">=</span> 0		
+
+<span class="op">/</span><span class="op">*</span><span class="opc">grain</span> envelope<span class="op">*</span><span class="op">/</span>
+kenv2amt		<span class="op">=</span> 1		<span class="comment">; use only secondary envelope</span>
+ienv2tab 		<span class="op">=</span> giWin		<span class="comment">; grain (secondary) envelope</span>
+ienv_attack		<span class="op">=</span> <span class="op">-</span>1 		<span class="comment">; default attack envelope (flat)</span>
+ienv_decay		<span class="op">=</span> <span class="op">-</span>1 		<span class="comment">; default decay envelope (flat)</span>
+ksustain_amount		<span class="op">=</span> 0.5		<span class="comment">; no meaning in this case (use only secondary envelope, ienv2tab)</span>
+ka_d_ratio		<span class="op">=</span> 0.5 		<span class="comment">; no meaning in this case (use only secondary envelope, ienv2tab)</span>
+
+<span class="op">/</span><span class="op">*</span>amplitude<span class="op">*</span><span class="op">/</span>
+kamp			<span class="op">=</span> 0.4<span class="op">*</span><span class="ohdr">0dbfs</span>	<span class="comment">; grain amplitude</span>
+igainmasks		<span class="op">=</span> <span class="op">-</span>1		<span class="comment">; (default) no gain masking</span>
+
+<span class="op">/</span><span class="op">*</span>transposition<span class="op">*</span><span class="op">/</span>
+kcentrand		<span class="opc">rand</span> icentrand	<span class="comment">; random transposition</span>
+iorig			<span class="op">=</span> 1 <span class="op">/</span> ifildur	<span class="comment">; original pitch</span>
+kwavfreq		<span class="op">=</span> iorig <span class="op">*</span> <span class="opc">cent</span>(icent <span class="op">+</span> kcentrand)
+
+<span class="op">/</span><span class="op">*</span>other <span class="opc">pitch</span> related (disabled)<span class="op">*</span><span class="op">/</span>
+ksweepshape		<span class="op">=</span> 0		<span class="comment">; no frequency sweep</span>
+iwavfreqstarttab 	<span class="op">=</span> <span class="op">-</span>1		<span class="comment">; default frequency sweep start</span>
+iwavfreqendtab		<span class="op">=</span> <span class="op">-</span>1		<span class="comment">; default frequency sweep end</span>
+awavfm			<span class="op">=</span> 0		<span class="comment">; no FM input</span>
+ifmamptab		<span class="op">=</span> <span class="op">-</span>1		<span class="comment">; default FM scaling (=1)</span>
+kfmenv			<span class="op">=</span> <span class="op">-</span>1		<span class="comment">; default FM envelope (flat)</span>
+
+<span class="op">/</span><span class="op">*</span>trainlet related (disabled)<span class="op">*</span><span class="op">/</span>
+icosine			<span class="op">=</span> giCosine	<span class="comment">; cosine ftable</span>
+kTrainCps		<span class="op">=</span> igrainrate	<span class="comment">; set trainlet cps equal to grain rate for single-cycle trainlet in each grain</span>
+knumpartials		<span class="op">=</span> 1		<span class="comment">; number of partials in trainlet</span>
+kchroma			<span class="op">=</span> 1		<span class="comment">; balance of partials in trainlet</span>
+
+<span class="op">/</span><span class="op">*</span>panning, using channel masks<span class="op">*</span><span class="op">/</span>
+imid			<span class="op">=</span> .5<span class="comment">; center</span>
+ileftmost		<span class="op">=</span> imid <span class="op">-</span> ipan<span class="op">/</span>2
+irightmost		<span class="op">=</span> imid <span class="op">+</span> ipan<span class="op">/</span>2
+giPanthis		<span class="ohdr">ftgen</span>	0, 0, 32768, <span class="op">-</span>24, giPan, ileftmost, irightmost	<span class="comment">; rescales giPan according to ipan</span>
+			<span class="opc">tableiw</span>		0, 0, giPanthis				<span class="comment">; change index 0 ...</span>
+			<span class="opc">tableiw</span>		32766, 1, giPanthis			<span class="comment">; ... and 1 for ichannelmasks</span>
+ichannelmasks		<span class="op">=</span> giPanthis		<span class="comment">; ftable for panning</span>
+
+<span class="op">/</span><span class="op">*</span><span class="opc">random</span> <span class="opc">gain</span> masking (disabled)<span class="op">*</span><span class="op">/</span>
+krandommask		<span class="op">=</span> 0	
+
+<span class="op">/</span><span class="op">*</span>source waveforms<span class="op">*</span><span class="op">/</span>
+kwaveform1		<span class="op">=</span> giFile	<span class="comment">; source waveform</span>
+kwaveform2		<span class="op">=</span> giFile	<span class="comment">; all 4 sources are the same</span>
+kwaveform3		<span class="op">=</span> giFile
+kwaveform4		<span class="op">=</span> giFile
+iwaveamptab		<span class="op">=</span> <span class="op">-</span>1		<span class="comment">; (default) equal mix of source waveforms and no amplitude for trainlets</span>
+
+<span class="op">/</span><span class="op">*</span>time pointer<span class="op">*</span><span class="op">/</span>
+afilposphas		<span class="opc">phasor</span> ispeed <span class="op">/</span> ifildur
+<span class="op">/</span><span class="op">*</span>generate <span class="opc">random</span> deviation of the time pointer<span class="op">*</span><span class="op">/</span>
+iposrandsec		<span class="op">=</span> iposrand <span class="op">/</span> 1000	<span class="comment">; ms -&gt; sec</span>
+iposrand		<span class="op">=</span> iposrandsec <span class="op">/</span> ifildur	<span class="comment">; phase values (0-1)</span>
+krndpos			<span class="opc">linrand</span>	 iposrand	<span class="comment">; random offset in phase values</span>
+<span class="op">/</span><span class="op">*</span>add <span class="opc">random</span> deviation to the time pointer<span class="op">*</span><span class="op">/</span>
+asamplepos1		<span class="op">=</span> afilposphas <span class="op">+</span> krndpos<span class="comment">; resulting phase values (0-1)</span>
+asamplepos2		<span class="op">=</span> asamplepos1
+asamplepos3		<span class="op">=</span> asamplepos1	
+asamplepos4		<span class="op">=</span> asamplepos1	
+
+<span class="op">/</span><span class="op">*</span>original key for each source waveform<span class="op">*</span><span class="op">/</span>
+kwavekey1		<span class="op">=</span> 1
+kwavekey2		<span class="op">=</span> kwavekey1	
+kwavekey3		<span class="op">=</span> kwavekey1
+kwavekey4		<span class="op">=</span> kwavekey1
+
+<span class="op">/</span><span class="op">*</span> maximum number of grains per <span class="opc">k</span><span class="op">-</span>period<span class="op">*</span><span class="op">/</span>
+imax_grains		<span class="op">=</span> 100		
+
+aL, aR		<span class="opc">partikkel</span> igrainrate, idist, giDisttab, async, kenv2amt, ienv2tab, \
+		ienv_attack, ienv_decay, ksustain_amount, ka_d_ratio, igrainsize, kamp, igainmasks, \
+		kwavfreq, ksweepshape, iwavfreqstarttab, iwavfreqendtab, awavfm, \
+		ifmamptab, kfmenv, icosine, kTrainCps, knumpartials, \
+		kchroma, ichannelmasks, krandommask, kwaveform1, kwaveform2, kwaveform3, kwaveform4, \
+		iwaveamptab, asamplepos1, asamplepos2, asamplepos3, asamplepos4, \
+		kwavekey1, kwavekey2, kwavekey3, kwavekey4, imax_grains
+
+		<span class="opc">outs</span>			aL, aR
+
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="comment">;i1	st	dur	speed	grate	gsize	cent	posrnd	cntrnd	pan	dist</span>
+<span class="stamnt">i</span>1	0	2.757	1	200	15	0	0	0	0	0
+<span class="stamnt">s</span>
+<span class="stamnt">i</span>1	0	2.757	1	200	15	400	0	0	0	0
+<span class="stamnt">s</span>
+<span class="stamnt">i</span>1	0	2.757	1	15	450	400	0	0	0	0
+<span class="stamnt">s</span>
+<span class="stamnt">i</span>1	0	2.757	1	15	450	400	0	0	0	0.4
+<span class="stamnt">s</span>
+<span class="stamnt">i</span>1	0	2.757	1	200	15	0	400	0	0	1
+<span class="stamnt">s</span>
+<span class="stamnt">i</span>1	0	5.514	.5	200	20	0	0	600	.5	1
+<span class="stamnt">s</span>
+<span class="stamnt">i</span>1	0	11.028	.25	200	15	0	1000	400	1	1
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp123181360"></a>
+        <h2>See Also</h2>
+        <p><a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>,
+      <a class="link" href="fof2.html" title="fof2"><em class="citetitle">fof2</em></a>,
+      <a class="link" href="fog.html" title="fog"><em class="citetitle">fog</em></a>,
+      <a class="link" href="grain.html" title="grain"><em class="citetitle">grain</em></a>,
+      <a class="link" href="grain2.html" title="grain2"><em class="citetitle">grain2</em></a>,
+      <a class="link" href="grain3.html" title="grain3"><em class="citetitle">grain3</em></a>,
+      <a class="link" href="granule.html" title="granule"><em class="citetitle">granule</em></a>,
+      <a class="link" href="sndwarp.html" title="sndwarp"><em class="citetitle">sndwarp</em></a>,
+      <a class="link" href="sndwarpst.html" title="sndwarpst"><em class="citetitle">sndwarpst</em></a>,
+      <a class="link" href="syncgrain.html" title="syncgrain"><em class="citetitle">syncgrain</em></a>,
+      <a class="link" href="syncloop.html" title="syncloop"><em class="citetitle">syncloop</em></a>,
+      <a class="link" href="partikkelsync.html" title="partikkelsync"><em class="citetitle">partikkelsync</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp123193712"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Thom Johansen</td>
+          </tr>
+          <tr>
+            <td>Author: Torgeir Strand Henriksen</td>
+          </tr>
+          <tr>
+            <td>Author: Øyvind Brandtsegg</td>
+          </tr>
+          <tr>
+            <td>April 2007</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>Examples written by Joachim Heintz and Øyvind Brandtsegg.</p>
+        <p>
+    </p>
+        <p>New in version 5.06</p>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="partials.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="partikkelsync.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">partials </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> partikkelsync</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

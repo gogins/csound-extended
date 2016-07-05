@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>reverbsc</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="reverb2.html" title="reverb2" />
+    <link rel="next" href="rewindscore.html" title="rewindscore" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">reverbsc</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="reverb2.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="rewindscore.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="reverbsc"></a>
+      <div class="titlepage"></div>
+      <a id="IndexReverbsc" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">reverbsc</span>
+        </h2>
+        <p>reverbsc — 
+      8 delay line stereo FDN reverb, based on work by Sean Costello
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp133612992"></a>
+        <h2>Description</h2>
+        <p>
+		8 delay line stereo FDN reverb, with feedback matrix based upon physical
+		modeling scattering junction of 8 lossless waveguides of equal characteristic
+		impedance. Based on Csound orchestra version by Sean Costello.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp133614560"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">aoutL, aoutR <span class="command"><strong>reverbsc</strong></span> ainL, ainR, kfblvl, kfco[, israte[, ipitchm[, iskip]]] </pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp133665552"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>israte</em></span>
+	  (optional, defaults to the orchestra sample rate) -- assume a sample
+	  rate of israte. This is normally set to sr, but a different setting can
+	  be useful for special effects.
+
+     </p>
+        <p>
+      <span class="emphasis"><em>ipitchm</em></span>
+      (optional, defaults to 1) -- depth of random variation added to
+    delay times, in the range 0 to 10. The default is 1, but this may be
+    too high and may need to be reduced for held pitches such as piano tones.
+    </p>
+        <p>
+	  <span class="emphasis"><em>iskip</em></span>
+	   (optional, defaults to zero) -- if non-zero, initialization of the
+    opcode is skipped, whenever possible.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp133669760"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>aoutL, aoutR</em></span>
+      -- output signals for left and right channel
+    </p>
+        <p>
+      <span class="emphasis"><em>ainL, ainR</em></span>
+      -- left and right channel input. Note that having an input signal
+      on either the left or right channel only will still result in
+      having reverb output on both channels, making this unit more
+      suitable for reverberating stereo input than the
+      <a class="link" href="freeverb.html" title="freeverb">freeverb</a> opcode.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfblvl</em></span>
+      -- feedback level, in the range 0 to 1. 0.6 gives a good small
+    "live" room sound, 0.8 a small hall, and 0.9 a large hall.
+    A setting of exactly 1 means infinite length, while higher values
+    will make the opcode unstable.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfco</em></span>
+      -- cutoff frequency of simple first order lowpass filters in the
+    feedback loop of delay lines, in Hz. Should be in the range 0 to
+    israte/2 (not sr/2). A lower value means faster decay in the high
+    frequency range.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp133675792"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the <span class="emphasis"><em>reverbsc</em></span> opcode. It uses the file <a class="ulink" href="examples/reverbsc.csd" target="_top"><em class="citetitle">reverbsc.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp133678080"></a>
+          <p class="title">
+            <strong>Example 792. An example of the reverbsc opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp262552928"></a>
+              <a class="ulink" href="examples/reverbsc.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o reverbsc.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="ohdr">sr</span>      <span class="op">=</span>  48000
+<span class="ohdr">ksmps</span>   <span class="op">=</span>  32
+<span class="ohdr">nchnls</span>  <span class="op">=</span>  2
+<span class="ohdr">0dbfs</span>   <span class="op">=</span>  1
+
+        <span class="oblock">instr</span> 1
+a1      <span class="opc">vco2</span> 0.85, 440, 10
+kfrq    <span class="opc">port</span> 100, 0.004, 20000
+a1      <span class="opc">butterlp</span> a1, kfrq
+a2      <span class="opc">linseg</span> 0, 0.003, 1, 0.01, 0.7, 0.005, 0, 1, 0
+a1      <span class="op">=</span>  a1 <span class="op">*</span> a2
+a2      <span class="op">=</span>  a1 <span class="op">*</span> p5
+a1      <span class="op">=</span>  a1 <span class="op">*</span> p4
+        <span class="opc">denorm</span> a1, a2
+aL, aR  <span class="opc">reverbsc</span> a1, a2, 0.85, 12000, sr, 0.5, 1
+        <span class="opc">outs</span> a1 <span class="op">+</span> aL, a2 <span class="op">+</span> aR
+        <span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span> 1 0 1 0.71 0.71
+<span class="stamnt">i</span> 1 1 1 0 1
+<span class="stamnt">i</span> 1 2 1 -0.71 0.71
+<span class="stamnt">i</span> 1 3 1 1 0
+<span class="stamnt">i</span> 1 4 4 0.71 0.71
+<span class="stamnt">e</span> 
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp133682272"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Istvan Varga</td>
+          </tr>
+          <tr>
+            <td>2005</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="reverb2.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="rewindscore.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">reverb2 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> rewindscore</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

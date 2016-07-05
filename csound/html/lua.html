@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Lua Opcodes</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="PartOpcodesOverview.html" title="Part II. Opcodes Overview" />
+    <link rel="prev" href="JackoOpcodes.html" title="Jacko Opcodes" />
+    <link rel="next" href="py.html" title="Python Opcodes" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">
+        Lua Opcodes
+    </th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="JackoOpcodes.html">Prev</a> </td>
+          <th width="60%" align="center">Part II. Opcodes Overview</th>
+          <td width="20%" align="right"> <a accesskey="n" href="py.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="chapter">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="lua"></a>
+        Lua Opcodes
+    </h2>
+          </div>
+        </div>
+      </div>
+      <p>
+        The purposes of the Lua opcodes are: 
+    </p>
+      <div class="orderedlist">
+        <ol class="orderedlist" type="1">
+          <li class="listitem">
+            Make it possible to write Csound code in a user-friendly, 
+            high-level language with full lexical scoping, structures and 
+            classes, and support for functional programming, using 
+            LuaJIT (the Lua programming language, implemented with a 
+            just-in-time compiler and foreign function interface).
+        </li>
+          <li class="listitem">
+            Require the installation of no third party software packages, 
+            or at least a minimum installation; also, require no build 
+            system or external compilation.
+        </li>
+          <li class="listitem">
+            Run <span class="emphasis"><em>really fast</em></span>; typically, almost as 
+            fast as compiled C code,  and several times faster than 
+            user-defined opcodes.
+        </li>
+        </ol>
+      </div>
+      <p>
+        Using the Lua opcode family, you can interact with the Lua 
+        interpreter and just-in-time compiler (luajit) embedded in Csound 
+        as follows:
+    </p>
+      <div class="orderedlist">
+        <ol class="orderedlist" type="1">
+          <li class="listitem">
+                Execute any arbitrary block of Lua code (the <a class="link" href="lua_exec.html" title="lua_exec"><em class="citetitle">lua_exec</em></a> opcode),
+            </li>
+          <li class="listitem">
+                Define an opcode in Lua taking any number or type of  
+                parameters, and returning any number or type of parameters 
+                (the <a class="link" href="lua_opdef.html" title="lua_opdef"><em class="citetitle">lua_opdef</em>
+                </a> opcode),
+            </li>
+          <li class="listitem">
+                Call a Lua opcode at i-rate (the <a class="link" href="lua_opcall.html" title="lua_opcall">
+                <em class="citetitle">lua_iopcall</em></a> opcode),
+            </li>
+          <li class="listitem">
+                Call a Lua opcode at i-rate and k-rate (the <a class="link" href="lua_opcall.html" title="lua_opcall">
+                <em class="citetitle">lua_ikopcall</em></a> opcods), or
+            </li>
+          <li class="listitem">
+                Call a Lua opcode at i-rate and a-rate (the <a class="link" href="lua_opcall.html" title="lua_opcall">
+                <em class="citetitle">lua_iaopcall</em></a> opcode).
+            </li>
+        </ol>
+      </div>
+      <p>
+        Lua is Portuguese for "moon." And Lua 
+        (<a class="ulink" href="http://www.lua.org" target="_top"><em class="citetitle">http://www.lua.org</em></a>) is a 
+        lightweight, efficient dynamic programming language, designed for 
+        embedding in C/C++ and extending with C/C++. Lua has a 
+        stack-based calling mechanism and provides a toolkit of features 
+        (tables, metatables, anonymous functions, and closures) with 
+        which many styles of object-oriented and functional programming 
+        may be implemented. Lua's syntax is only slightly harder than Python's. 
+    </p>
+      <p>
+        Lua is already one of the fastest dynamic languages; yet LuaJIT 
+        by Mike Pall (<a class="ulink" href="http://luajit.org" target="_top"><em class="citetitle">http://luajit.org</em></a>) 
+        goes much further, 
+        giving Lua a just-in-time optimizing trace compiler for Intel 
+        architectures. LuaJIT includes an efficient foreign function 
+        interface (FFI) with the ability to define C arrays, structures, 
+        and other types in Lua. The speed of LuaJIT/FFI ranges from 
+        several times as fast as Lua, to faster (in some contexts) than 
+        optimized C.
+    </p>
+      <div class="refsect1">
+        <a id="idp76241760"></a>
+        <h2>
+            Example
+        </h2>
+        <p>
+            Here is an example of a Lua opcode, implementing a Moog 
+            ladder filter. For purposes of comparison, a user-defined 
+            opcode and the native Csound opcode that compute the same 
+            sound using the same algorithm also are shown, and timed.. 
+            The example uses the file <a class="ulink" href="examples/luamoog.csd" target="_top">
+            <em class="citetitle">luamoog.csd</em></a>.
+            </p>
+        <div class="example">
+          <a id="idp76245280"></a>
+          <p class="title">
+            <strong>Example 12. 
+                    Example of a Lua opcode.
+                </strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp232349968"></a>
+              <a class="ulink" href="examples/luamoog.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="ohdr">sr</span> <span class="op">=</span>    48000
+<span class="ohdr">ksmps</span> <span class="op">=</span>   100
+<span class="ohdr">nchnls</span> <span class="op">=</span>    1
+
+    gibegan     <span class="opc">rtclock</span>
+
+    <span class="opc">lua_opdef</span>   "moogladder", {{
+local ffi <span class="op">=</span> require("ffi")
+local math <span class="op">=</span> require("math")
+local string <span class="op">=</span> require("string")
+local csoundApi <span class="op">=</span> ffi.load('csound64.dll.5.2')
+ffi.cdef[[
+    <span class="opc">int</span> csoundGetKsmps(void <span class="op">*</span>)<span class="comment">;</span>
+    double csoundGetSr(void <span class="op">*</span>)<span class="comment">;</span>
+    struct moogladder_t {
+      double <span class="op">*</span><span class="opc">out</span><span class="comment">;</span>
+      double <span class="op">*</span>inp<span class="comment">;</span>
+      double <span class="op">*</span>freq<span class="comment">;</span>
+      double <span class="op">*</span>res<span class="comment">;</span>
+      double <span class="op">*</span>istor<span class="comment">;</span>
+      double <span class="ohdr">sr</span><span class="comment">;</span>
+      double <span class="ohdr">ksmps</span><span class="comment">;</span>
+      double thermal<span class="comment">;</span>
+      double f<span class="comment">;</span>
+      double fc<span class="comment">;</span>
+      double fc2<span class="comment">;</span>
+      double fc3<span class="comment">;</span>
+      double fcr<span class="comment">;</span>
+      double acr<span class="comment">;</span>
+      double tune<span class="comment">;</span>
+      double res4<span class="comment">;</span>
+      double input<span class="comment">;</span>
+      double <span class="opc">i</span><span class="comment">;</span>
+      double j<span class="comment">;</span>
+      double <span class="opc">k</span><span class="comment">;</span>
+      double kk<span class="comment">;</span>
+      double stg[6]<span class="comment">;</span>
+      double delay[6]<span class="comment">;</span>
+      double tanhstg[6]<span class="comment">;</span>
+    }<span class="comment">;</span>
+]]
+
+local moogladder_ct <span class="op">=</span> ffi.typeof('struct moogladder_t <span class="op">*</span>')
+
+function moogladder_init(csound, opcode, carguments)
+    local <span class="opc">p</span> <span class="op">=</span> ffi.cast(moogladder_ct, carguments)
+    p.sr <span class="op">=</span> csoundApi.csoundGetSr(csound)
+    p.ksmps <span class="op">=</span> csoundApi.csoundGetKsmps(csound)
+    <span class="octrl">if</span> p.istor[0] <span class="op">==</span> 0 then
+        for <span class="opc">i</span> <span class="op">=</span> 0, 5 do
+            p.delay[i] <span class="op">=</span> 0.0
+        end
+        for <span class="opc">i</span> <span class="op">=</span> 0, 3 do
+            p.tanhstg[i] <span class="op">=</span> 0.0
+        end
+    end
+    <span class="opc">return</span> 0
+end
+
+function moogladder_kontrol(csound, opcode, carguments)
+    local <span class="opc">p</span> <span class="op">=</span> ffi.cast(moogladder_ct, carguments)
+    <span class="op">-</span><span class="op">-</span> transistor thermal voltage
+    p.thermal <span class="op">=</span> 1.0 <span class="op">/</span> 40000.0
+    <span class="octrl">if</span> p.res[0] <span class="op">&lt;</span> 0.0 then
+        p.res[0] <span class="op">=</span> 0.0
+    end
+    <span class="op">-</span><span class="op">-</span> <span class="ohdr">sr</span> is half the actual filter sampling rate
+    p.fc <span class="op">=</span> p.freq[0] <span class="op">/</span> p.sr
+    p.f <span class="op">=</span> p.fc <span class="op">/</span> 2.0
+    p.fc2 <span class="op">=</span> p.fc <span class="op">*</span> p.fc
+    p.fc3 <span class="op">=</span> p.fc2 <span class="op">*</span> p.fc
+    <span class="op">-</span><span class="op">-</span> frequency <span class="op">&amp;</span> amplitude correction
+    p.fcr <span class="op">=</span> 1.873 <span class="op">*</span> p.fc3 <span class="op">+</span> 0.4955 <span class="op">*</span> p.fc2 <span class="op">-</span> 0.6490 <span class="op">*</span> p.fc <span class="op">+</span> 0.9988
+    p.acr <span class="op">=</span> <span class="op">-</span>3.9364 <span class="op">*</span> p.fc2 <span class="op">+</span> 1.8409 <span class="op">*</span> p.fc <span class="op">+</span> 0.9968
+    <span class="op">-</span><span class="op">-</span> filter tuning
+    p.tune <span class="op">=</span> (1.0 <span class="op">-</span> math.exp(<span class="op">-</span>(2.0 <span class="op">*</span> math.pi <span class="op">*</span> p.f <span class="op">*</span> p.fcr))) <span class="op">/</span> p.thermal
+    p.res4 <span class="op">=</span> 4.0 <span class="op">*</span> p.res[0] <span class="op">*</span> p.acr
+    <span class="op">-</span><span class="op">-</span> Nested 'for' loops crash, not sure why.
+    <span class="op">-</span><span class="op">-</span> Local loop variables also are problematic.
+    <span class="op">-</span><span class="op">-</span> Lower<span class="op">-</span>level loop constructs don't crash.
+    p.i <span class="op">=</span> 0
+    while p.i <span class="op">&lt;</span> p.ksmps do
+        p.j <span class="op">=</span> 0
+        while p.j <span class="op">&lt;</span> 2 do
+            p.k <span class="op">=</span> 0
+            while p.k <span class="op">&lt;</span> 4 do
+                <span class="octrl">if</span> p.k <span class="op">==</span> 0 then
+                    p.input <span class="op">=</span> p.inp[p.i] <span class="op">-</span> p.res4 <span class="op">*</span> p.delay[5]
+                    p.stg[p.k] <span class="op">=</span> p.delay[p.k] <span class="op">+</span> p.tune <span class="op">*</span> (math.tanh(p.input <span class="op">*</span> p.thermal) <span class="op">-</span> p.tanhstg[p.k])
+                <span class="octrl">else</span>
+                    p.input <span class="op">=</span> p.stg[p.k <span class="op">-</span> 1]
+                    p.tanhstg[p.k <span class="op">-</span> 1] <span class="op">=</span> math.tanh(p.input <span class="op">*</span> p.thermal)
+                    <span class="octrl">if</span> p.k <span class="op">&lt;</span> 3 then
+                        p.kk <span class="op">=</span> p.tanhstg[p.k]
+                    <span class="octrl">else</span>
+                        p.kk <span class="op">=</span> math.tanh(p.delay[p.k] <span class="op">*</span> p.thermal)
+                    end
+                    p.stg[p.k] <span class="op">=</span> p.delay[p.k] <span class="op">+</span> p.tune <span class="op">*</span> (p.tanhstg[p.k <span class="op">-</span> 1] <span class="op">-</span> p.kk)
+                end
+                p.delay[p.k] <span class="op">=</span> p.stg[p.k]
+                p.k <span class="op">=</span> p.k <span class="op">+</span> 1
+            end
+            <span class="op">-</span><span class="op">-</span> 1<span class="op">/</span>2<span class="op">-</span>sample <span class="opc">delay</span> for phase compensation
+            p.delay[5] <span class="op">=</span> (p.stg[3] <span class="op">+</span> p.delay[4]) <span class="op">*</span> 0.5
+            p.delay[4] <span class="op">=</span> p.stg[3]
+            p.j <span class="op">=</span> p.j <span class="op">+</span> 1
+        end
+        p.out[p.i] <span class="op">=</span> p.delay[5]
+        p.i <span class="op">=</span> p.i <span class="op">+</span> 1
+    end
+    <span class="opc">return</span> 0
+end
+}}
+
+<span class="op">/</span><span class="op">*</span>
+Moogladder <span class="op">-</span> An improved implementation of the Moog ladder filter
+
+DESCRIPTION
+This is an new digital implementation of the Moog ladder filter based on the work of Antti Huovilainen,
+described <span class="opc">in</span> the paper \"Non<span class="op">-</span>Linear Digital Implementation of the Moog Ladder Filter\" (Proceedings of DaFX04, Univ of Napoli).
+This implementation is probably <span class="opc">a</span> more accurate digital representation of the original analogue filter.
+This is version 2 (revised 14<span class="op">/</span>DEC<span class="op">/</span>04), with improved amplitude<span class="op">/</span>resonance scaling and frequency correction using <span class="opc">a</span> couple of polynomials,as suggested by Antti.
+
+SYNTAX
+ar  Moogladder  asig, kcf, kres
+
+PERFORMANCE
+asig <span class="op">-</span> input signal
+kcf <span class="op">-</span> cutoff frequency (Hz)
+kres <span class="op">-</span> resonance (0 <span class="op">-</span> 1).
+
+CREDITS
+Victor Lazzarini
+<span class="op">*</span><span class="op">/</span>
+
+                    <span class="oblock">opcode</span>  moogladderu, a, akk
+asig, kcf, kres     <span class="opc">xin</span>
+                    <span class="opc">setksmps</span>    1
+ipi                 <span class="op">=</span>           4 <span class="op">*</span> <span class="opc">taninv</span>(1)
+<span class="op">/</span><span class="op">*</span> filter delays <span class="op">*</span><span class="op">/</span>
+az1                 <span class="opc">init</span>        0
+az2                 <span class="opc">init</span>        0
+az3                 <span class="opc">init</span>        0
+az4                 <span class="opc">init</span>        0
+az5                 <span class="opc">init</span>        0
+ay4                 <span class="opc">init</span>        0
+amf                 <span class="opc">init</span>        0
+                    <span class="octrl">if</span>          kres <span class="op">&gt;</span> 1 then
+kres                <span class="op">=</span>           1
+                    <span class="octrl">elseif</span>      kres <span class="op">&lt;</span> 0 then
+kres                <span class="op">=</span>           0
+                    <span class="octrl">endif</span>
+<span class="op">/</span><span class="op">*</span> twice the \'thermal voltage of <span class="opc">a</span> transistor\' <span class="op">*</span><span class="op">/</span>
+i2v                 <span class="op">=</span>           40000
+<span class="op">/</span><span class="op">*</span> <span class="ohdr">sr</span> is half the actual filter sampling rate  <span class="op">*</span><span class="op">/</span>
+kfc                 <span class="op">=</span>           kcf<span class="op">/</span><span class="ohdr">sr</span>
+kf                  <span class="op">=</span>           kcf<span class="op">/</span>(<span class="ohdr">sr</span><span class="op">*</span>2)
+<span class="op">/</span><span class="op">*</span> frequency <span class="op">&amp;</span> amplitude correction  <span class="op">*</span><span class="op">/</span>
+kfcr                <span class="op">=</span>           1.8730 <span class="op">*</span> (kfc^3) <span class="op">+</span> 0.4955 <span class="op">*</span> (kfc^2) <span class="op">-</span> 0.6490 <span class="op">*</span> kfc <span class="op">+</span> 0.9988
+kacr                <span class="op">=</span>           <span class="op">-</span>3.9364 <span class="op">*</span> (kfc^2) <span class="op">+</span> 1.8409 <span class="op">*</span> kfc <span class="op">+</span> 0.9968<span class="comment">;</span>
+<span class="op">/</span><span class="op">*</span> filter tuning  <span class="op">*</span><span class="op">/</span>
+k2vg                <span class="op">=</span>           i2v <span class="op">*</span> (1 <span class="op">-</span> <span class="opc">exp</span>(<span class="op">-</span>2 <span class="op">*</span> ipi <span class="op">*</span> kfcr <span class="op">*</span> kf))
+<span class="op">/</span><span class="op">*</span> cascade of 4 1st order sections         <span class="op">*</span><span class="op">/</span>
+ay1                 <span class="op">=</span>           az1 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>((asig <span class="op">-</span> 4 <span class="op">*</span> kres <span class="op">*</span> amf <span class="op">*</span> kacr) <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az1 <span class="op">/</span> i2v))
+az1                 <span class="op">=</span>           ay1
+ay2                 <span class="op">=</span>           az2 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay1 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az2 <span class="op">/</span> i2v ))
+az2                 <span class="op">=</span>           ay2
+ay3                 <span class="op">=</span>           az3 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay2 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az3 <span class="op">/</span> i2v))
+az3                 <span class="op">=</span>           ay3
+ay4                 <span class="op">=</span>           az4 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay3 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az4 <span class="op">/</span> i2v))
+az4                 <span class="op">=</span>           ay4
+<span class="op">/</span><span class="op">*</span> 1<span class="op">/</span>2<span class="op">-</span>sample <span class="opc">delay</span> for phase compensation  <span class="op">*</span><span class="op">/</span>
+amf                 <span class="op">=</span>           (ay4 <span class="op">+</span> az5) <span class="op">*</span>0.5
+az5                 <span class="op">=</span>           ay4
+<span class="op">/</span><span class="op">*</span> oversampling  <span class="op">*</span><span class="op">/</span>
+ay1                 <span class="op">=</span>           az1 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>((asig <span class="op">-</span> 4 <span class="op">*</span> kres <span class="op">*</span> amf <span class="op">*</span> kacr) <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az1 <span class="op">/</span> i2v))
+az1                 <span class="op">=</span>           ay1
+ay2                 <span class="op">=</span>           az2 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay1 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az2 <span class="op">/</span> i2v ))
+az2                 <span class="op">=</span>           ay2
+ay3                 <span class="op">=</span>           az3 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay2 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az3 <span class="op">/</span> i2v))
+az3                 <span class="op">=</span>           ay3
+ay4                 <span class="op">=</span>           az4 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay3 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az4 <span class="op">/</span> i2v))
+az4                 <span class="op">=</span>           ay4
+amf                 <span class="op">=</span>           (ay4 <span class="op">+</span> az5) <span class="op">*</span> 0.5
+az5                 <span class="op">=</span>           ay4
+                    <span class="opc">xout</span>        amf
+                    <span class="oblock">endop</span>
+
+<span class="oblock">instr</span> 1
+                <span class="opc">prints</span>      "No filter.\n"
+	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
+    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
+    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
+    <span class="comment">; afil      moogladder  asig, kfe, 1</span>
+                <span class="opc">out</span>         asig
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 2
+                <span class="opc">prints</span>      "Native moogladder.\n"
+	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
+    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
+    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
+    afil        <span class="opc">moogladder</span>  asig, kfe, 1
+                <span class="opc">out</span>         afil
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 3
+                <span class="opc">prints</span>      "UDO moogladder.\n"
+	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
+    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
+    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
+    afil        moogladderu asig, kfe, 1
+                <span class="opc">out</span>         afil
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 4
+                <span class="opc">prints</span>      "Lua moogladder.\n"
+    kres        <span class="opc">init</span>        1
+    istor       <span class="opc">init</span>        0
+	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
+    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
+    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
+    afil        <span class="opc">init</span>        0
+                <span class="opc">lua_ikopcall</span>    "moogladder", afil, asig, kfe, kres, istor
+                <span class="opc">out</span>         afil
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 5
+    giended     <span class="opc">rtclock</span>
+    ielapsed    <span class="op">=</span>           giended <span class="op">-</span> gibegan
+                <span class="opc">print</span>       ielapsed
+    gibegan     <span class="opc">rtclock</span>
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 1     0 65536 10 1
+<span class="stamnt">i</span> 5.1   0   1
+<span class="stamnt">i</span> 4     1   20
+<span class="stamnt">i</span> 5.2   21  1
+<span class="stamnt">i</span> 4     22  20
+<span class="stamnt">i</span> 5.3   42  1
+<span class="stamnt">i</span> 2     43  20
+<span class="stamnt">i</span> 5.4   63  1
+<span class="stamnt">i</span> 2     64  20
+<span class="stamnt">i</span> 5.5   84  1
+<span class="stamnt">i</span> 3     85  20
+<span class="stamnt">i</span> 5.6   105 1
+<span class="stamnt">i</span> 3     106 20
+<span class="stamnt">i</span> 5.7   126 1
+<span class="stamnt">i</span> 1     127 20
+<span class="stamnt">i</span> 5.8   147 1
+<span class="stamnt">i</span> 1     148 20
+<span class="stamnt">i</span> 5.9   168 1
+<span class="stamnt">i</span> 4     169 20
+<span class="stamnt">i</span> 4     170 20
+<span class="stamnt">i</span> 4     171 20
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+        </p>
+      </div>
+      <h2><a id="idp76247072"></a>
+        Credits
+    </h2>
+      <p>
+        Copyright (c) 2011 by Michael Gogins. All rights reserved.
+    </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="JackoOpcodes.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="PartOpcodesOverview.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="py.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Jacko Opcodes </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Python Opcodes</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

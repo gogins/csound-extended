@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>vosim</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="voice.html" title="voice" />
+    <link rel="next" href="vphaseseg.html" title="vphaseseg" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">vosim</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="voice.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="vphaseseg.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="vosim"></a>
+      <div class="titlepage"></div>
+      <a id="IndexVosim" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">vosim</span>
+        </h2>
+        <p>vosim — 
+      Simple vocal simulation based on glottal pulses with formant characteristics.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp156175008"></a>
+        <h2>Description</h2>
+        <p>
+      This opcode produces a simple vocal simulation based on glottal pulses with formant characteristics.
+Output is a series of sound events, where each event is composed of a burst of squared sine pulses followed by silence.
+The VOSIM (VOcal SIMulation) synthesis method was developed by Kaegi and Tempelaars in the 1970's.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp156176512"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ar <span class="command"><strong>vosim</strong></span> kamp, kFund, kForm, kDecay, kPulseCount, kPulseFactor, ifn [, iskip]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp156178592"></a>
+        <h2>Intialization</h2>
+        <p><span class="emphasis"><em>ifn</em></span> - a sound table, normally containing half a period of a sinewave, squared (see notes below).</p>
+        <p><span class="emphasis"><em>iskip</em></span> - (optional) Skip initialization, for tied notes.</p>
+      </div>
+      <div class="refsect1">
+        <a id="idp156180880"></a>
+        <h2>Performance</h2>
+        <p><span class="emphasis"><em>ar</em></span> - output signal. Note that the output is usually unipolar - positive only.</p>
+        <p><span class="emphasis"><em>kamp</em></span> - output amplitude, the peak amplitude of the first pulse in each burst.
+</p>
+        <p><span class="emphasis"><em>kFund</em></span> - fundamental pitch, in Herz. Each event is 1/kFund seconds long.
+</p>
+        <p><span class="emphasis"><em>kForm</em></span> - formant center frequency. Length of each pulse in the burst is 1/kForm seconds.
+</p>
+        <p><span class="emphasis"><em>kDecay</em></span> - a dampening factor from pulse to pulse. This is subtracted from amplitude on each new pulse.
+</p>
+        <p><span class="emphasis"><em>kPulseCount</em></span> - number of pulses in the burst part of each event.
+</p>
+        <p><span class="emphasis"><em>kPulseFactor</em></span> - the pulse width is multiplied by this value at each new pulse.
+This results in formant sweeping. If factor is  &lt; 1.0, the formant sweeps up, if &gt; 1.0 each new pulse is longer,
+so the formant sweeps down. The final pitch of the formant is kForm * pow(kPulseFactor, kPulseCount)</p>
+        <p>The output of <span class="emphasis"><em>vosim</em></span> is a series of sound events, where each event is composed of a burst of squared sine pulses followed by silence.
+The total duration of the events determines fundamental frequency.
+The length of each single pulse in the squared-sine bursts produce a formant frequency band. The width of the formant is determined by rate of silence to pulses (see below). The final result is also shaped by the dampening factor from pulse to pulse.</p>
+        <p>A small practical problem in using this opcode is that no GEN function will create a squared sine wave out of the box. Something like the following can be used to create the appropriate table from the score.</p>
+        <pre class="programlisting"><span class="comment">; use GEN09 to create half a sine in table 17
+</span>
+<span class="stamnt">f</span> 17 <span class="emphasis"><em>time</em></span> <span class="emphasis"><em>size</em></span> 9  0.5  1 0
+
+<span class="comment">; run instr 101 on table 17 for a single init-pass
+</span>
+<span class="stamnt">i</span> 101 0 0 17
+    </pre>
+        <p>It can also be done with an instrument writing to an f-table in the orchestra:</p>
+        <pre class="programlisting">	; square each point in table #p4. This should be run as init-only, just once in the performance.
+
+<span class="oblock">instr</span> 101
+
+    index <span class="opc">tableng</span> p4
+
+    index <span class="op">=</span> index - 1  <span class="comment">; start from last point</span>
+loop:
+
+    ival <span class="opc">table</span> index, p4
+
+    ival <span class="op">=</span> ival * ival
+
+    <span class="opc">tableiw</span> ival, index, p4
+
+    index <span class="op">=</span> index - 1
+
+    if index &lt; 0 <span class="opctrl">igoto</span> <span class="olabel">endloop</span>
+            <span class="opctrl">igoto</span> <span class="olabel">loop</span>
+<span class="olabel">endloop:</span>
+<span class="oblock">endin</span></pre>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note: Parameter Limits">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Parameter Limits</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>The count of pulses multiplied by pulse width should fit in the event length (1/<span class="emphasis"><em>kFund</em></span>).
+If this is not fulfilled, the algorithm does not break, we just do not start any pulses that would outlast the event.
+This might introduce a silence at end of event even if none was intended.
+In consequence,
+<span class="emphasis"><em>kForm</em></span> should be higher than <span class="emphasis"><em>kFund</em></span>, otherwise only silence is output.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <p><span class="emphasis"><em>Vosim</em></span> was created to emulate voice sounds using a model of glottal pulse.
+Rich sounds can be created by combining several instances of <span class="emphasis"><em>vosim</em></span> with different parameters.
+One drawback is that the signal is not band-limited. But as the authors point out, attenuation of high-pitch components is -60 dB
+at 6 times the fundamental frequency. The signal can also be changed by changing the source signal in the lookup table.
+The technique has historical interest, and can produce rich sound very cheaply (each sample requires only a table lookup and a single multiplication for attenuation).
+</p>
+        <p>As stated, formant bandwidth depends on the ratio between pulse burst and silence in an event.
+But this is not an independent parameter: The fundamental decides event length, and formant center defines the pulse length. It is therefore impossible to guarantee a specific burst/silence ratio, since the burst length has to be an integer multiple of pulse length. The decay of pulses can be used to smooth the transition from N to N+/-1 pulses, but there will still be steps in the spectral profile of output. The example code below shows one approach to this.
+</p>
+        <p>All input parameters are k-rate. The input parameters are only used to set up each new event (or grain). Event amplitude is fixed for each event at initialization.
+In normal parameter ranges, when <a class="link" href="ksmps.html" title="ksmps"><em class="citetitle">ksmps</em></a> &lt;500, the k-rate parameters are updated more often than events are created. In any case, no wide-band noise will be injected in the system due to k-rate inputs being updated less often than they are read,
+but some other artefacts could be created.</p>
+        <p>The opcode should behave reasonably in the face of all user inputs. Some details:
+      </p>
+        <div class="orderedlist">
+          <ol class="orderedlist" type="a">
+            <li class="listitem">
+              <p>kFund &lt; 0: This is forced to positive - no point in "reversed" events.</p>
+            </li>
+            <li class="listitem">
+              <p>kFund == 0: This leads to "infinite" length event, ie a pulse burst followed by very long indefinite silence.</p>
+            </li>
+            <li class="listitem">
+              <p>kForm == 0: This leads to infinite length pulse, so no pulses are generated (i.e. silence).</p>
+            </li>
+            <li class="listitem">
+              <p>kForm &lt; 0: Table is read backward. If table is symmetric, <span class="emphasis"><em>kform</em></span> and -<span class="emphasis"><em>kform</em></span> should give bit-identical outputs.
+</p>
+            </li>
+            <li class="listitem">
+              <p>kPulseFactor == 0: Second pulse onwards is zero. See (c).</p>
+            </li>
+            <li class="listitem">
+              <p>kPulseFactor &lt; 0: Pulses alternately read table forward and reversed.
+</p>
+            </li>
+          </ol>
+        </div>
+        <p>
+    </p>
+        <p>With asymmetric pulse table there may be some use for negative <span class="emphasis"><em>kForm</em></span> or negative <span class="emphasis"><em>kPulseFactor</em></span>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp156221040"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the vosim opcode. It uses the file <a class="ulink" href="examples/vosim.csd" target="_top"><em class="citetitle">vosim.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp156222896"></a>
+          <p class="title">
+            <strong>Example 1045. Example of the vosim opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp272065376"></a>
+              <a class="ulink" href="examples/vosim.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in</span>
+-odac           -iadc    <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o vosim.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="ohdr">sr</span>     <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span>  <span class="op">=</span> 100
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="comment">;#################################################</span>
+<span class="comment">; By Rasmus Ekman 2008</span>
+
+<span class="comment">; Square each point in table #p4. This should only be run once in the performance.</span>
+<span class="oblock">instr</span> 10
+
+	index <span class="opc">tableng</span> p4
+	index <span class="op">=</span> index <span class="op">-</span> 1  <span class="comment">; start from last point</span>
+<span class="olabel">loop</span><span class="op">:</span>
+	ival <span class="opc">table</span> index, p4
+	ival <span class="op">=</span> ival <span class="op">*</span> ival
+	<span class="opc">tableiw</span> ival, index, p4
+	index <span class="op">=</span> index <span class="op">-</span> 1
+	<span class="octrl">if</span> index <span class="op">&lt;</span> 0 <span class="octrl">igoto</span> <span class="olabel">endloop</span>
+		<span class="octrl">igoto</span> <span class="olabel">loop</span>
+<span class="olabel">endloop</span><span class="op">:</span> 
+<span class="oblock">endin</span>
+
+<span class="comment">;#################################################</span>
+
+<span class="comment">; Main vosim instrument. Sweeps from a fund1/form1 to fund2/form2,</span>
+<span class="comment">; trying for narrowest formant bandwidth (still quite wide by the looks of it)</span>
+<span class="comment">; p4:     amp</span>
+<span class="comment">; p5, p6: fund beg-end</span>
+<span class="comment">; p7, p8: form beg-end</span>
+<span class="comment">; p9:     amp decay (ignored)</span>
+<span class="comment">; p10:    pulse count (ignored - calc internally)</span>
+<span class="comment">; p11:    pulse length mod</span>
+<span class="comment">; p12:    skip (for tied events)</span>
+<span class="comment">; p13:    don't fade out (if followed by tied note)</span>
+<span class="oblock">instr</span> 1
+    kamp  <span class="opc">init</span>  p4
+    <span class="comment">; freq start, end</span>
+    kfund  <span class="opc">line</span>  p5, p3, p6
+    <span class="comment">; formant start, end</span>
+    kform  <span class="opc">line</span>  p7, p3, p8
+
+	<span class="comment">; Try for constant ratio burst/silence, and narrowest formant bandwidth</span>
+	kPulseCount  <span class="op">=</span> (kform <span class="op">/</span> kfund)  <span class="comment">;init p10</span>
+	<span class="comment">; Attempt to smooth steps between format bandwidths,</span>
+	<span class="comment">; increasing decay before we are forced to a lower pulse count</span>
+	kDecay <span class="op">=</span> kPulseCount<span class="op">/</span>(kform <span class="op">%</span> kfund)  <span class="comment">; init p9</span>
+	<span class="octrl">if</span> (kDecay <span class="op">*</span> kPulseCount) <span class="op">&gt;</span> kamp then
+		kDecay <span class="op">=</span> kamp <span class="op">/</span> kPulseCount
+	<span class="octrl">endif</span>
+	kDecay <span class="op">=</span> 0.3 <span class="op">*</span> kDecay
+
+	kPulseFactor <span class="opc">init</span> p11
+	
+<span class="comment">;  ar	vosim	kamp, kFund, kForm, kDecay, kPulseCount, kPulseFactor, ifn [, iskip]</span>
+    ar1	<span class="opc">vosim</span> 	kamp, kfund, kform, kDecay, kPulseCount, kPulseFactor, 17, p12
+
+    <span class="comment">; scale amplitude for 16-bit files, with quick fade out</span>
+    amp <span class="opc">init</span> 20000
+    <span class="octrl">if</span> (p13 <span class="op">!=</span> 0) <span class="octrl">goto</span> <span class="olabel">nofade</span>
+	amp <span class="opc">linseg</span> 20000, p3<span class="op">-</span>.02, 20000, .02, 0
+<span class="olabel">nofade</span><span class="op">:</span>
+	<span class="opc">out</span> ar1 <span class="op">*</span> amp
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">f</span>1       0  32768    9  1    1  0   <span class="comment">; sine wave</span>
+<span class="stamnt">f</span>17      0  32768    9  0.5  1  0   <span class="comment">; half sine wave</span>
+<span class="stamnt">i</span>10 0 0 17 <span class="comment">; init run only, square table 17</span>
+
+<span class="comment">; Vosim score</span>
+
+<span class="comment">; Picking some formants from the table in Csound manual</span>
+
+<span class="comment">;      p4=amp  fund     form      decay pulses pulsemod [skip] nofade</span>
+<span class="comment">; tenor a -&gt; e</span>
+<span class="stamnt">i</span>1 0  .5  .5   280 240  650  400   .03   5      1
+<span class="stamnt">i</span>1 .  .   .3   .   .    1080 1700  .03   5      .
+<span class="stamnt">i</span>1 .  .   .2   .   .    2650 2600  .03   5      .
+<span class="stamnt">i</span>1 .  .   .15  .   .    2900 3200  .03   5      .
+
+<span class="comment">; tenor a -&gt; o</span>
+<span class="stamnt">i</span>1 0.6 .2  .5  300 210  650  400   .03   5      1      0      1
+<span class="stamnt">i</span>1 .   .   .3  .   .    1080 800   .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .2  .   .    2650 2600  .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .15 .   .    2900 2800  .03   5      .      .      .
+<span class="comment">; tenor o -&gt; aah</span>
+<span class="stamnt">i</span>1 .8  .3  .5  210 180  400  650   .03   5      1      1      1
+<span class="stamnt">i</span>1 .   .   .3  .   .    800  1080  .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .2  .   .    2600 2650  .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .15 .   .    2800 2900  .03   5      .      .      .
+<span class="comment">; tenor aa -&gt; i</span>
+<span class="stamnt">i</span>1 1.1 .2  .5  180 250  650  290   .03   5      1      1      1
+<span class="stamnt">i</span>1 .   .   .3  .   .    1080 1870  .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .2  .   .    2650 2800  .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .15 .   .    2900 3250  .03   5      .      .      .
+<span class="comment">; tenor i -&gt; u</span>
+<span class="stamnt">i</span>1 1.3 .3  .5  250 270  290  350   .03   5      1      1      0
+<span class="stamnt">i</span>1 .   .   .3  .   .    1870 600   .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .2  .   .    2800 2700  .03   5      .      .      .
+<span class="stamnt">i</span>1 .   .   .15 .   .    3250 2900  .03   5      .      .      .
+
+<span class="stamnt">e</span>
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp156227184"></a>
+        <h2>See also</h2>
+        <p>
+      <a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>,
+      <a class="link" href="fof2.html" title="fof2"><em class="citetitle">fof2</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp156230128"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Rasmus Ekman</td>
+          </tr>
+          <tr>
+            <td>March 2008</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="voice.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="vphaseseg.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">voice </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> vphaseseg</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

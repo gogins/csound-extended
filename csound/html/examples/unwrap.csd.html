@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/unwrap.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+</CsOptions>
+<CsInstruments>
+ksmps = 64
+
+ifn1 ftgen 1, 0, 512, 7, 0, 512, 0
+ifn2 ftgen 2, 0, 512, 7, 0, 512, 0
+
+opcode PVA,k[]k[]k,aii
+ asig,isize,ihop xin
+ iolaps init isize/ihop
+ kcnt init 0
+ krow init 1
+ kIn[] init isize
+ kOlph[] init isize/2 + 1
+ ifac = (sr/(ihop*2*$M_PI));
+ iscal = (2*$M_PI*ihop/isize);
+ kfl = 0
+ kIn shiftin asig
+ if kcnt == ihop then
+   kWin[] window kIn,krow*ihop
+   kSpec[] rfft kWin
+   kMags[] mags kSpec
+   kPha[] phs kSpec
+   kDelta[] = kPha - kOlph
+   kOlph = kPha
+   kk = 0
+   kDelta unwrap kDelta
+   while kk < isize/2 do
+    kPha[kk] = (kDelta[kk] + kk*iscal)*ifac
+    kk += 1
+   od   
+   krow = (krow+1)%iolaps
+   kcnt = 0
+   kfl = 1
+ endif
+ xout kMags,kPha,kfl
+ kcnt += ksmps
+endop
+
+opcode PVS,a,k[]k[]kii
+ kMags[],kFr[],kfl,isize,ihop xin
+ iolaps init isize/ihop
+ ifac = ihop*2*$M_PI/sr;
+ iscal = sr/isize
+ krow init 0
+ kOla[] init isize
+ kOut[][] init iolaps,isize
+ kPhs[] init isize/2+1
+ if kfl == 1 then
+  kk = 0
+  while kk < isize/2 do
+    kFr[kk] = (kFr[kk] - kk*iscal)*ifac
+    kk += 1
+  od
+  kPhs = kFr + kPhs
+  kSpec[] pol2rect kMags,kPhs
+  kRow[] rifft kSpec
+  kWin[] window kRow, krow*ihop
+  kOut setrow kWin, krow
+  kOla = 0
+  kk = 0
+  until kk == iolaps do
+   kRow getrow kOut, kk
+   kOla = kOla + kRow
+   kk += 1
+  od
+  krow = (krow+1)%iolaps
+ endif
+ xout shiftout(kOla)/iolaps
+endop
+ 
+instr 1
+isi = 1024
+ihop = 128
+
+a1 diskin2 "fox.wav",1,0,1 ; audio input
+kMags[],kPhs[],kflg PVA a1,isi,ihop
+a2 PVS kMags,kPhs,kflg,isi,ihop
+   out a2
+
+endin 
+ 
+
+</CsInstruments>
+<CsScore>
+i1 0 10
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

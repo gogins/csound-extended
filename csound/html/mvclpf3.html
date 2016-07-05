@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>mvclpf3</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="mvclpf2.html" title="mvclpf2" />
+    <link rel="next" href="mvclpf4.html" title="mvclpf4" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">mvclpf3</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="mvclpf2.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="mvclpf4.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="mvclpf3"></a>
+      <div class="titlepage"></div>
+      <a id="IndexMvclpf3" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">mvclpf3</span>
+        </h2>
+        <p>mvclpf3 — 
+      Moog voltage-controlled lowpass filter emulation. 
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp117243552"></a>
+        <h2>Description</h2>
+        <p>
+Mvclpf3 is an digital implementation of the 4th-order (24 dB/oct) Moog ladder filter
+originally written by Fons Andriaensen. According to the author,
+mvclpf3 "is based on mvclpf2 , with two differences. It uses the
+the technique described by Stilson and Smith to extend the constant-Q
+range, and the internal sample frequency is doubled, giving a better
+approximation to the non-linear behaviour at high freqencies.
+This version has high Q over the entire frequency range and will
+oscillate up to above 10 kHz, while the two others show a decreasing
+Q at high frequencies. Mvclpf3  is reasonably well tuned, and can be
+'played' as a VCO up to at least 5 kHz".
+
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp117307328"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">asig <span class="command"><strong>mvclpf3</strong></span> ain, xcf, xres[, istor]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp117309392"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>istor</em></span> --initial disposition of internal
+      data space. Since filtering incorporates a feedback loop of
+      previous output, the initial status of the storage space used is
+      significant.  A zero value will clear the space; a non-zero
+      value will allow previous information to remain. The default
+      value is 0.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp117311296"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>ain</em></span> -- input signal.
+    </p>
+        <p>
+      <span class="emphasis"><em>xcf</em></span> -- filter
+      cutoff frequency. The useful range is around six octaves below
+      and above middle C (pch 8.00).
+    </p>
+        <p>
+      <span class="emphasis"><em>xres</em></span> --
+      resonance, limited to the interval [0,1].
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp117314688"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the mvclpf3 opcode. It uses the file <a class="ulink" href="examples/mvclpf3.csd" target="_top"><em class="citetitle">mvclpf3.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp117316544"></a>
+          <p class="title">
+            <strong>Example 559. Example of the mvclpf3 opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp254484032"></a>
+              <a class="ulink" href="examples/mvclpf3.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+-odac 
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+ kenv <span class="opc">linen</span> p4,0.1,p3,0.1
+ ain <span class="opc">rand</span> kenv 
+ kfr <span class="opc">expon</span> 220, p3, 1760
+ asig <span class="opc">mvclpf3</span> ain,kfr,0.9
+   <span class="opc">out</span> asig
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span>1 0 5 0.9
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp117320832"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Fons Andriaensen, </td>
+          </tr>
+          <tr>
+            <td> ported to Csound by Victor Lazzarini</td>
+          </tr>
+          <tr>
+            <td>January 2016</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in version 6.07</p>
+        <p>January 2016.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="mvclpf2.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="mvclpf4.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">mvclpf2 </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> mvclpf4</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>loopxseg</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="looptseg.html" title="looptseg" />
+    <link rel="next" href="lorenz.html" title="lorenz" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">loopxseg</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="looptseg.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="lorenz.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="loopxseg"></a>
+      <div class="titlepage"></div>
+      <a id="IndexLoopxseg" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">loopxseg</span>
+        </h2>
+        <p>loopxseg — 
+      Generate control signal consisting of exponential segments delimited by two or more specified points.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp110357392"></a>
+        <h2>Description</h2>
+        <p>
+      Generate control signal consisting of exponential segments delimited by two or more specified points. The entire envelope is looped at <span class="emphasis"><em>kfreq</em></span> rate. Each parameter can be varied at k-rate.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp110432720"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ksig <span class="command"><strong>loopxseg</strong></span> kfreq, ktrig, iphase, ktime0, kvalue0 [, ktime1] [, kvalue1] \
+      [, ktime2] [, kvalue2] [...]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp110435008"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>ksig</em></span> -- Output signal.
+    </p>
+        <p>
+      <span class="emphasis"><em>kfreq</em></span> -- Repeat rate in Hz or fraction of Hz.
+    </p>
+        <p>
+      <span class="emphasis"><em>ktrig</em></span> -- If non-zero, retriggers the envelope from start (see <a class="link" href="trigger.html" title="trigger"><em class="citetitle">trigger opcode</em></a>), before the envelope cycle is completed.
+    </p>
+        <p>
+      <span class="emphasis"><em>iphase</em></span> -- A value between 0 and 1 to say
+      where to start the loop.  Zero, the commonest value, indicates
+      the beginning.
+    </p>
+        <p>
+      <span class="emphasis"><em>ktime0...ktimeN</em></span> -- Times of points; expressed in fraction of a cycle.
+    </p>
+        <p>
+      <span class="emphasis"><em>kvalue0...kvalueN</em></span> -- Values of points
+    </p>
+        <p>
+      <span class="emphasis"><em>loopxseg</em></span> opcode is similar to <a class="link" href="expseg.html" title="expseg"><em class="citetitle">expseg</em></a>, but the entire envelope is looped at <span class="emphasis"><em>kfreq</em></span> rate. Notice that times are not expressed in seconds but in fraction of a cycle. Actually each duration represent is proportional to the other, and the entire cycle duration is proportional to the sum of all duration values.  
+    </p>
+        <p>
+      The sum of all duration is then rescaled according to <span class="emphasis"><em>kfreq</em></span> argument. For example, considering an envelope made up of 3 segments, each segment having 100 as duration value, their sum will be 300. This value represents the total duration of the envelope, and is actually divided into 3 equal parts, a part for each segment.
+    </p>
+        <p>
+      Actually, the real envelope duration in seconds is determined by <span class="emphasis"><em>kfreq</em></span>. Again, if the envelope is made up of 3 segments, but this time the first and last segments have a duration of 50, whereas the central segment has a duration of 100 again, their sum will be 200. This time 200 represent the total duration of the 3 segments, so the central segment will be twice as long as the other segments.
+    </p>
+        <p>
+      All parameters can be varied at k-rate.  Negative frequency values are allowed, reading the envelope backward.  <span class="emphasis"><em>ktime0</em></span> should always be set to 0, except if the user wants some special effect.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp110447888"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the loopxseg opcode. It uses the file <a class="ulink" href="examples/loopxseg.csd" target="_top"><em class="citetitle">loopxseg.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp110449744"></a>
+          <p class="title">
+            <strong>Example 459. Example of the loopxseg opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp249821680"></a>
+              <a class="ulink" href="examples/loopxseg.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac      <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o loopxseg.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+kfreq  <span class="opc">rspline</span>  0.01,20,0.2,1   <span class="comment">; freq. of loop repetition created by random spline</span>
+ktrig  <span class="opc">init</span>     0   <span class="comment">; loop restart trigger (not used)</span>
+iphase <span class="op">=</span>        0   <span class="comment">; initial phase</span>
+<span class="comment">; loop of filter cutoff values (oct format). Rescaled further down.</span>
+kcfoct <span class="opc">loopxseg</span>  kfreq, ktrig, iphase, 1,1,0,0
+kenv  <span class="opc">linseg</span>   0,0.01,1,p3<span class="op">-</span>5.01,1,5,0
+asig  <span class="opc">vco2</span>     0.2<span class="op">*</span>kenv,cpsmidinn(48),0
+kdep  <span class="opc">rspline</span>  5,8,0.2,1  <span class="comment">; filter depth created by a random spline</span>
+kcf   <span class="opc">port</span>     <span class="opc">cpsoct</span>((kcfoct<span class="op">*</span>kdep)<span class="op">+</span>4), 0.001  <span class="comment">; smooth filter changes</span>
+asig  <span class="opc">moogladder</span>  asig,kcf,rnd(0.6)
+aL,aR <span class="opc">pan2</span>     asig,rnd(1)
+      <span class="opc">outs</span>     aL, aR
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">i</span> 1  0 60
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp110454032"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="lpshold.html" title="lpshold"><em class="citetitle">lpshold</em></a>
+      <a class="link" href="loopseg.html" title="loopseg"><em class="citetitle">loopseg</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp110457008"></a>
+        <h2>Credits</h2>
+        <p>Author: John ffitch</p>
+        <p>New in Version 5.12</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="looptseg.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="lorenz.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">looptseg </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> lorenz</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

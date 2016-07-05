@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/pvsbufread2.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+</CsOptions>
+
+<CsInstruments>
+ksmps  = 64
+0dbfs  = 1
+nchnls = 2
+
+instr 1
+kcnt     init         0
+ifftsize =            2048
+ihop     =            ifftsize/4
+
+a1       diskin2      "beats.wav", 1, 0, 1
+a1       =            a1*0.5
+fsig1    pvsanal      a1, ifftsize, ihop, ifftsize, 1
+ih, kt   pvsbuffer    fsig1, 10
+
+fsig2    pvsbufread2  kt, ih, 1, 1
+fsig3    pvsbufread2  kt, ih, 2, 2
+
+a2       pvsynth      fsig3
+a3       pvsynth      fsig2
+
+         outs         a2, a3
+endin
+</CsInstruments>
+
+<CsScore>
+f1 0 2048 -7 0 128 1.1 128 0.5  256 1.8 512 1.1 1024 0.1
+f2 0 2048 -7 1 128 0.2 128 0.05 256 0.5 512 0.9 1024 0.1
+
+i1 0 60
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

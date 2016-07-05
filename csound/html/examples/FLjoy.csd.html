@@ -1,0 +1,122 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/FLjoy.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac           -iadc     -d     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o FLjoy.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+; Demonstration of the flpanel opcode
+; Horizontal click-dragging controls the frequency of the oscillator
+; Vertical click-dragging controls the amplitude of the oscillator
+sr = 44100
+kr = 441
+ksmps = 100
+nchnls = 1
+
+FLpanel "X Y Panel", 900, 400, 50, 50
+    ; Minimum value output by x movement (frequency)
+    iminx = 200
+    ; Maximum value output by x movement (frequency)
+    imaxx = 5000 
+    ; Minimum value output by y movement (amplitude)
+    iminy = 0
+    ; Maximum value output by y movement (amplitude)
+    imaxy = 15000
+    ; Logarithmic change in x direction
+    iexpx = -1
+    ; Linear change in y direction
+    iexpy = 0
+    ; Display handle x direction (-1=not used)
+    idispx = -1
+    ; Display handle y direction (-1=not used)
+    idispy = -1
+    ; Width of the x y panel in pixels
+    iwidth = 800
+    ; Height of the x y panel in pixels
+    iheight = 300
+    ; Distance of the left edge of the x y panel from 
+    ; the left edge of the panel
+    ix = 50
+    ; Distance of the top edge of the x y 
+    ; panel from the top edge of the panel
+    iy = 50
+
+    gkfreqx, gkampy, ihandlex, ihandley FLjoy "X - Frequency Y - Amplitude", iminx, imaxx, iminy, imaxy, iexpx, iexpy, idispx, idispy, iwidth, iheight, ix, iy
+; End of panel contents
+FLpanelEnd
+; Run the widget thread!
+FLrun
+
+instr 1
+    ifn = 1
+    asig oscili gkampy, gkfreqx, ifn
+    out asig
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; Function table that defines a single cycle
+; of a sine wave.
+f 1 0 1024 10 1
+
+; Instrument 1 will play a note for 1 hour.
+i 1 0 3600
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

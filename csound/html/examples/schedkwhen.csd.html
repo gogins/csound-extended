@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/schedkwhen.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc    ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o schedkwhen.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+; Initialize the global variables.
+sr = 44100
+kr = 44100
+ksmps = 1
+nchnls = 1
+
+; Instrument #1 - oscillator with a high note.
+instr 1
+  ; Use the fourth p-field as the trigger.
+  ktrigger = p4
+  kmintim = 0
+  kmaxnum = 2
+  kinsnum = 2
+  kwhen = 0
+  kdur = 0.5
+
+  ; Play Instrument #2 at the same time, if the trigger is set.
+  schedkwhen ktrigger, kmintim, kmaxnum, kinsnum, kwhen, kdur
+
+  ; Play a high note.
+  a1 oscils 10000, 880, 1
+  out a1
+endin
+
+; Instrument #2 - oscillator with a low note.
+instr 2
+  ; Play a low note.
+  a1 oscils 10000, 220, 1
+  out a1
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; Table #1, a sine wave.
+f 1 0 16384 10 1
+
+; p4 = trigger for Instrument #2 (when p4 > 0).
+; Play Instrument #1 for half a second, no trigger.
+i 1 0 0.5 0
+; Play Instrument #1 for half a second, trigger Instrument #2.
+i 1 1 0.5 1
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>STKBowed</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="STKBlowHole.html" title="STKBlowHole" />
+    <link rel="next" href="STKBrass.html" title="STKBrass" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">STKBowed</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="STKBlowHole.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="STKBrass.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="STKBowed"></a>
+      <div class="titlepage"></div>
+      <a id="IndexStkbowed" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">STKBowed</span>
+        </h2>
+        <p>STKBowed — 
+      STKBowed is a bowed string instrument.
+      </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp142626800"></a>
+        <h2>Description</h2>
+        <p>
+      STKBowed is a bowed string instrument, using a waveguide model.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp142630944"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">asignal <span class="command"><strong>STKBowed</strong></span> ifrequency, iamplitude, [kpress, kv1[, kpos, kv2[, klfo, kv3[, klfodepth, kv4[, kvol, kv5]]]]]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp142633232"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
+    </p>
+        <p>
+      <span class="emphasis"><em>iamplitude</em></span> -- Amplitude of note played (range 0-1).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp142698848"></a>
+        <h2>Performance</h2>
+        <p><span class="emphasis"><em>kpress</em></span> -- controller 2, bow pressure. Value range of kv1 is 0-127.</p>
+        <p><span class="emphasis"><em>kpos</em></span> -- controller 4, position on bow. Value range of kv2 is 0-127.</p>
+        <p><span class="emphasis"><em>klfo</em></span> -- controller 11, speed of low-frequency oscillator. Value range of kv3 is 0-127.</p>
+        <p><span class="emphasis"><em>klfodepth</em></span> -- controller 1, depth of low-frequency oscillator. Value range of kv4 is 0-127.</p>
+        <p><span class="emphasis"><em>kvol</em></span> -- controller 128, volume. Value range of kv5 is 0-127.</p>
+      </div>
+      <div class="refsect1">
+        <a id="idp142703264"></a>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note: Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+         The code for this opcode is taken directly from the Bowed class in the Synthesis Toolkit in C++ by Perry R. Cook and Gary P. Scavone. More on the STK classes can be found here:  
+<a class="ulink" href="https://ccrma.stanford.edu/software/stk/classes.html" target="_top"><em class="citetitle">https://ccrma.stanford.edu/software/stk/classes.html</em></a>
+</p>
+                <p>
+        <span class="emphasis"><em>kc1, kv1, kc2, kv2, kc3, kv3, kc4, kv4, kc5, kv5, kc6, kv6, kc7, kv7, kc8, kv8</em></span> -- Up to 8 optional k-rate controller pairs for the STK opcodes.
+      Each controller pair consists of a controller number (kc) followed by a controller value (kv). Both the controller numbers and the controller values are krate variables. However, during a performance, normally the controller numbers stay fixed while the corresponding controller values may change at any time.
+The order of the controller pair is arbitrary, as long as they are after <span class="emphasis"><em>iamplitude</em></span>. Also, it is not needed that all controller pairs are used.
+</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idp142707744"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the STKBowed opcode. It uses the file <a class="ulink" href="examples/STKBowed.csd" target="_top"><em class="citetitle">STKBowed.csd</em></a>.
+     
+      </p>
+        <div class="example">
+          <a id="idp142709600"></a>
+          <p class="title">
+            <strong>Example 878. Example of the STKBowed opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp265613936"></a>
+              <a class="ulink" href="examples/STKBowed.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac     <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o STKBowed.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1
+
+ipch	<span class="op">=</span> p4
+kv2	<span class="op">=</span> p7							<span class="comment">;position on bow</span>
+kv1	<span class="opc">line</span>	p5, p3, p6					<span class="comment">;bow pressure</span>
+kv4	<span class="opc">line</span>	0, p3, 7					<span class="comment">;depth of low-frequency oscillator</span>
+
+asig	<span class="opc">STKBowed</span> <span class="opc">cpspch</span>(ipch), 1, 2, kv1, 4, kv2, 11, 40, 1, kv4, 128, 100
+asig	<span class="op">=</span>	asig<span class="op">*</span>2						<span class="comment">;amplify</span>
+	<span class="opc">outs</span>	asig, asig
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">i</span> 1 0 15 6.00 20 100 115
+<span class="stamnt">i</span> 1 17 3 7.00 120 0  0
+<span class="stamnt">i</span> 1 21 3 7.09 120 0  30
+<span class="stamnt">i</span> 1 21 4 7.03 50  0  0
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp142711520"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Michael Gogins (after Perry Cook)</td>
+          </tr>
+          <tr>
+            <td>Irreducible Productions</td>
+          </tr>
+          <tr>
+            <td>New York, NY</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New in Csound version 5.11</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="STKBlowHole.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="STKBrass.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">STKBlowHole </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> STKBrass</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

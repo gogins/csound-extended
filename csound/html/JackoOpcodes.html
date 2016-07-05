@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Jacko Opcodes</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="PartOpcodesOverview.html" title="Part II. Opcodes Overview" />
+    <link rel="prev" href="SignalFlowGraphOpcodes.html" title="Signal Flow Graph Opcodes" />
+    <link rel="next" href="lua.html" title="Lua Opcodes" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Jacko Opcodes</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="SignalFlowGraphOpcodes.html">Prev</a> </td>
+          <th width="60%" align="center">Part II. Opcodes Overview</th>
+          <td width="20%" align="right"> <a accesskey="n" href="lua.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="chapter">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="JackoOpcodes"></a>Jacko Opcodes</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+    These opcodes enable the use of Jack ports from within Csound
+    orchestras and instruments. Ports can receive or send audio 
+    or MIDI data, and send note data.
+  </p>
+      <p>
+    The Jacko opcodes do not replace the Jack driver and Jack
+    command-line options for Csound, nor do the Jacko opcodes work
+    with them (hence the name "Jacko" instead of "Jack"). 
+    The Jacko opcodes are an independent facility that offers 
+    greater flexibility in signal routing.
+  </p>
+      <p>
+    In addition, the Jacko opcodes can work with the Jack system
+    in "freewheeling" mode, which enables the use of Jack-enabled
+    external synthesizers, such as Aeolus or Pianoteq, to render
+    Csound pieces either faster or, even more importantly, slower
+    than real time. This is extremely useful for rendering complex
+    pieces without dropouts using instruments, such as Aeolus, 
+    that may not be available except through Jack.
+  </p>
+      <p>
+    The Jacko opcodes include: 
+    
+    <a class="link" href="JackoInit.html" title="JackoInit"><em class="citetitle">JackoInit</em></a>, 
+    for initializing the current instance of Csound as a Jack client.
+    
+    <a class="link" href="JackoInfo.html" title="JackoInfo"><em class="citetitle">JackoInfo</em></a>, 
+    for printing information about the Jack daemon, its clients, their ports,
+    and their connections.
+    
+    <a class="link" href="JackoFreewheel.html" title="JackoFreewheel"><em class="citetitle">JackoFreewheel</em></a>, 
+    for turning Jack's freewheeling mode on or off.
+    
+    <a class="link" href="JackoAudioInConnect.html" title="JackoAudioInConnect"><em class="citetitle">JackoAudioInConnect</em></a>, 
+    for creating a connection from an external Jack audio output port to a Jack port in Csound.
+    
+    <a class="link" href="JackoAudioOutConnect.html" title="JackoAudioOutConnect"><em class="citetitle">JackoAudioOutConnect</em></a>, 
+    for creating a connection from a Jack port in Csound to an external Jack audio input port.
+    
+    <a class="link" href="JackoMidiInConnect.html" title="JackoMidiInConnect"><em class="citetitle">JackoMidiInConnect</em></a>, 
+    for creating a connection from an external Jack MIDI port. MIDI events from Jack
+    are received by Csound's regular MIDI opcodes and MIDI interop system.
+    
+    <a class="link" href="JackoMidiOutConnect.html" title="JackoMidiOutConnect"><em class="citetitle">JackoMidiOutConnect</em></a>, 
+    for creating a connection from a Jack port in Csound to an external Jack MIDI input port.
+    
+    <a class="link" href="JackoOn.html" title="JackoOn"><em class="citetitle">JackoOn</em></a>, 
+    for turning Jack ports in Csound on or off.
+    
+    <a class="link" href="JackoAudioIn.html" title="JackoAudioIn"><em class="citetitle">JackoAudioIn</em></a>, 
+    for receiving audio from a Jack input port in Csound, which in turn has received the audio
+    from its connected external port.
+
+    <a class="link" href="JackoAudioOut.html" title="JackoAudioOut"><em class="citetitle">JackoAudioOut</em></a>, 
+    for sending audio to a Jack output port in Csound, which in turn will send the audio
+    on to its connected external port.
+
+    <a class="link" href="JackoMidiOut.html" title="JackoMidiOut"><em class="citetitle">JackoMidiOut</em></a>, 
+    for sending MIDI channel messages to a Jack output port in Csound, which in turn 
+    will send the MIDI on to its connected external port.
+
+    <a class="link" href="JackoNoteOut.html" title="JackoNoteOut"><em class="citetitle">JackoNoteOut</em></a>, 
+    for sending a note (with duration) to a Jack output port in Csound, 
+    which in turn will send the note on to its connected external port.
+
+    <a class="link" href="JackoTransport.html" title="JackoTransport"><em class="citetitle">JackoTransport</em></a>, 
+    for controlling the Jack transport.
+  </p>
+      <p>
+    A typical scenario for the use of the Jacko opcodes would be something like this.
+  </p>
+      <div class="refsect1">
+        <a id="idp76192496"></a>
+        <h2>Example</h2>
+        <p>
+      Here is an example of the Jacko opcodes. It uses the file <a class="ulink" href="examples/jacko.csd" target="_top"><em class="citetitle">jacko.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp76195616"></a>
+          <p class="title">
+            <strong>Example 11. Example of the Jacko opcodes.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp54934496"></a>
+              <a class="ulink" href="examples/jacko.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+csound -m255 -M0 -+rtmidi=null -RWf --midi-key=4 --midi-velocity=5 -o jacko_test.wav
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">;;;;</span>
+<span class="comment">;;;; NOTE: this csd must be run after starting "aeolus -t".</span>
+<span class="comment">;;;;</span>
+
+<span class="ohdr">sr</span>    	   <span class="op">=</span> 48000
+	   <span class="comment">; The control rate must be BOTH a power of 2 (for Jack)</span>
+	   <span class="comment">; AND go evenly into sr. This is about the only one that works!</span>
+<span class="ohdr">ksmps</span> 	   <span class="op">=</span> 128
+<span class="ohdr">nchnls</span> 	   <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span> 	   <span class="op">=</span> 1
+
+	   <span class="opc">JackoInit</span>		"default", "csound"
+
+	   <span class="comment">; To use ALSA midi ports, use "jackd -Xseq"</span>
+	   <span class="comment">; and use "jack_lsp -A -c" or aliases from JackInfo,</span>
+	   <span class="comment">; probably together with information from the sequencer,</span>
+	   <span class="comment">; to figure out the damn port names.</span>
+
+	   <span class="comment">; JackoMidiInConnect   "alsa_pcm:in-131-0-Master", "midiin"</span>
+	   <span class="opc">JackoAudioInConnect</span> 	"aeolus<span class="op">:</span>out.L", "leftin"
+	   <span class="opc">JackoAudioInConnect</span> 	"aeolus<span class="op">:</span>out.R", "rightin"
+	   <span class="opc">JackoMidiOutConnect</span> 	"midiout", "aeolus<span class="op">:</span>Midi<span class="op">/</span>in"
+
+           <span class="comment">; Note that Jack enables audio to be output to a regular</span>
+ 	   <span class="comment">; Csound soundfile and, at the same time, to a sound </span>
+	   <span class="comment">; card in real time to the system client via Jack. </span>
+
+       	   <span class="opc">JackoAudioOutConnect</span> "leftout", "system<span class="op">:</span>playback_1"
+	   <span class="opc">JackoAudioOutConnect</span> "rightout", "system<span class="op">:</span>playback_2"
+	   <span class="opc">JackoInfo</span>
+
+	   <span class="comment">; Turning freewheeling on seems automatically </span>
+           <span class="comment">; to turn system playback off. This is good!</span>
+
+	   <span class="opc">JackoFreewheel</span>	1
+	   <span class="opc">JackoOn</span>
+
+	   <span class="opc">alwayson</span>		"jackin"
+
+	   <span class="oblock">instr</span> 1
+	   <span class="comment">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+ichannel   <span class="op">=</span>			p1 <span class="op">-</span> 1
+itime 	   <span class="op">=</span> 			p2
+iduration  <span class="op">=</span> 			p3
+ikey 	   <span class="op">=</span> 			p4
+ivelocity  <span class="op">=</span> 			p5
+	   <span class="opc">JackoNoteOut</span> 	"midiout", ichannel, ikey, ivelocity
+	   <span class="opc">print</span> 		itime, iduration, ichannel, ikey, ivelocity
+	   <span class="oblock">endin</span>
+
+	   <span class="oblock">instr</span> jackin
+	   <span class="comment">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+	   <span class="opc">JackoTransport</span>	3, 1.0
+aleft 	   <span class="opc">JackoAudioIn</span>		"leftin"
+aright 	   <span class="opc">JackoAudioIn</span> 	"rightin"
+
+	   <span class="comment">; Aeolus uses MIDI controller 98 to control stops. </span>
+           <span class="comment">; Only 1 data value byte is used, not the 2 data </span>
+	   <span class="comment">; bytes often used  with NRPNs. </span>
+           <span class="comment">; The format for control mode is 01mm0ggg:</span>
+	   <span class="comment">; mm 10 to set stops, 0, ggg group (or Division, 0 based).</span>
+	   <span class="comment">; The format for stop selection is 000bbbbb:   </span>
+	   <span class="comment">; bbbbb for button number (0 based).</span>
+
+	   <span class="comment">; Mode to enable stops for Divison I: b1100010 (98 </span>
+           <span class="comment">; [this controller VALUE is a pure coincidence]).</span>
+
+	   <span class="opc">JackoMidiOut</span>          "midiout", 176, 0, 98, 98 
+
+	   <span class="comment">; Stops: Principal 8 (0), Principal 4 (1) , Flote 8 (8) , Flote 2 (10)</span>
+
+	   <span class="opc">JackoMidiOut</span>          "midiout", 176, 0, 98, 0
+	   <span class="opc">JackoMidiOut</span>          "midiout", 176, 0, 98, 1
+	   <span class="opc">JackoMidiOut</span>          "midiout", 176, 0, 98, 8
+	   <span class="opc">JackoMidiOut</span>          "midiout", 176, 0, 98, 10
+
+	   <span class="comment">; Sends audio coming in from Aeolus out</span>
+	   <span class="comment">; not only to the Jack system out (sound card),</span>
+	   <span class="comment">; but also to the output soundfile.</span>
+           <span class="comment">; Note that in freewheeling mode, "leftout"</span>
+           <span class="comment">; and "rightout" simply go silent.</span>
+
+ 	   <span class="opc">JackoAudioOut</span> 	"leftout", aleft
+	   <span class="opc">JackoAudioOut</span> 	"rightout", aright
+	   <span class="opc">outs</span>  		aright, aleft
+	   <span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 0 30
+<span class="stamnt">i</span> 1 1 30 60 60
+<span class="stamnt">i</span> 1 2 30 64 60
+<span class="stamnt">i</span> 1 3 30 71 60
+<span class="stamnt">e</span> 2
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp76197376"></a>
+        <h2>Credits</h2>
+        <p>By: Michael Gogins 2010</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="SignalFlowGraphOpcodes.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="PartOpcodesOverview.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="lua.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">
+    Signal Flow Graph Opcodes
+ </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> 
+        Lua Opcodes
+    </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>FLslider</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="FLslidBnk2Setk.html" title="FLslidBnk2Setk" />
+    <link rel="next" href="FLtabs.html" title="FLtabs" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">FLslider</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="FLslidBnk2Setk.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="FLtabs.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="FLslider"></a>
+      <div class="titlepage"></div>
+      <a id="IndexFLslider" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">FLslider</span>
+        </h2>
+        <p>FLslider — 
+      Puts a slider into the corresponding FLTK container.
+          </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp97909568"></a>
+        <h2>Description</h2>
+        <p>
+      <span class="emphasis"><em>FLslider</em></span> puts a slider into the corresponding container.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp97911328"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">kout, ihandle <span class="command"><strong>FLslider</strong></span> "label", imin, imax, iexp, itype, idisp, iwidth, \
+      iheight, ix, iy</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp97913680"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>ihandle</em></span> -- a handle value (an integer number) that unequivocally references a corresponding widget. This is used by other opcodes that modify a widget's properties (see <a class="link" href="ControlFltkAppearance.html" title="Modifying FLTK Widget Appearance"><em class="citetitle">Modifying FLTK Widget Appearance</em></a>). It is automatically output by <span class="emphasis"><em>FLslider</em></span> and must not be set by the user label. (The user label is a double-quoted string containing some user-provided text placed near the widget.)
+    </p>
+        <p>
+      <span class="emphasis"><em><span class="quote">“<span class="quote">label</span>”</span></em></span> -- a double-quoted string containing some user-provided text, placed near the corresponding widget.
+    </p>
+        <p>
+      <span class="emphasis"><em>imin</em></span> -- minimum value of output range (corresponds to the left value for horizontal sliders, and the top value for vertical sliders).
+    </p>
+        <p>
+      <span class="emphasis"><em>imax</em></span> -- maximum value of output range (corresponds to the right value for horizontal sliders, and the bottom value for vertical sliders).
+    </p>
+        <p>
+      The <span class="emphasis"><em>imin</em></span> argument may be greater than <span class="emphasis"><em>imax</em></span> argument. This has the effect of <span class="quote">“<span class="quote">reversing</span>”</span> the object so the larger values are in the opposite direction. This also switches which end of the filled sliders is filled.
+    </p>
+        <p>
+      <span class="emphasis"><em>iexp</em></span> -- an integer number denoting the behaviour of valuator:
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p>0 = valuator output is linear</p>
+            </li>
+            <li class="listitem">
+              <p>-1 = valuator output is exponential</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+    </p>
+        <p>
+      All other positive numbers for <span class="emphasis"><em>iexp</em></span> indicate the number of an existing table that is used for indexing. Linear interpolation is provided in table indexing. A negative table number suppresses interpolation.
+    </p>
+        <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Warning: IMPORTANT!">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Warning]" src="images/warning.png" />
+              </td>
+              <th align="left">IMPORTANT!</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+        Notice that the tables used by valuators must be created with the <a class="link" href="ftgen.html" title="ftgen"><em class="citetitle">ftgen</em></a> opcode and placed in the orchestra before the corresponding valuator. They can not placed in the score. This is because tables placed in the score are created later than the initialization of the opcodes placed in the header section of the orchestra.
+      </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <p>
+      <span class="emphasis"><em>itype</em></span> -- an integer number denoting the appearance of the valuator.
+    </p>
+        <p>
+      The <span class="emphasis"><em>itype</em></span> argument can be set to the following values:
+
+      </p>
+        <div class="itemizedlist">
+          <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p>1 - shows a horizontal fill slider</p>
+            </li>
+            <li class="listitem">
+              <p>2 - a vertical fill slider</p>
+            </li>
+            <li class="listitem">
+              <p>3 - a horizontal engraved slider</p>
+            </li>
+            <li class="listitem">
+              <p>4 - a vertical engraved slider</p>
+            </li>
+            <li class="listitem">
+              <p>5 - a horizontal nice slider</p>
+            </li>
+            <li class="listitem">
+              <p>6 - a vertical nice slider</p>
+            </li>
+            <li class="listitem">
+              <p>7 - a horizontal up-box nice slider</p>
+            </li>
+            <li class="listitem">
+              <p>8 - a vertical up-box nice slider</p>
+            </li>
+          </ul>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/flslider_horizontal-fill.png" alt="FLslider - a horizontal fill slider (itype=1)." />
+          <div class="caption">
+            <p>FLslider - a horizontal fill slider (itype=1).</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/flslider_horizontal-engraved.png" alt="FLslider - a horizontal engraved slider (itype=3)." />
+          <div class="caption">
+            <p>FLslider - a horizontal engraved slider (itype=3).</p>
+          </div>
+        </div>
+        <p>
+
+      </p>
+        <div class="mediaobject">
+          <img src="images/flslider_horizontal-nice.png" alt="FLslider - a horizontal nice slider (itype=5)." />
+          <div class="caption">
+            <p>FLslider - a horizontal nice slider (itype=5).</p>
+          </div>
+        </div>
+        <p>
+      You can also create "plastic" looking sliders by adding 20 to <span class="emphasis"><em>itype</em></span>.
+    </p>
+        <p>
+      <span class="emphasis"><em>idisp</em></span> -- a handle value that was output from a previous instance of the <a class="link" href="FLvalue.html" title="FLvalue"><em class="citetitle">FLvalue</em></a> opcode to display the current value of the current valuator in the <span class="emphasis"><em>FLvalue</em></span> widget itself. If the user doesn't want to use this feature that displays current values, it must be set to a negative number by the user.
+    </p>
+        <p>
+      <span class="emphasis"><em>iwidth</em></span> -- width of widget.
+    </p>
+        <p>
+      <span class="emphasis"><em>iheight</em></span> -- height of widget.
+    </p>
+        <p>
+      <span class="emphasis"><em>ix</em></span> -- horizontal position of upper left corner of the valuator, relative to the upper left corner of corresponding window (expressed in pixels).
+    </p>
+        <p>
+      <span class="emphasis"><em>iy</em></span> -- vertical position of upper left corner of the valuator, relative to the upper
+left corner of corresponding window (expressed in pixels).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp97953008"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>kout</em></span> -- output value
+    </p>
+        <p>
+      FLsliders are created with the minimum value by default in the left/at the top. If you want to reverse the slider, reverse the values. See the example below.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp97955440"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the FLslider opcode. It uses the file <a class="ulink" href="examples/FLslider.csd" target="_top"><em class="citetitle">FLslider.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp97957296"></a>
+          <p class="title">
+            <strong>Example 303. Example of the FLslider opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp243251360"></a>
+              <a class="ulink" href="examples/FLslider.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o FLslider.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="comment">; A sine with oscillator with flslider controlled frequency</span>
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 441
+<span class="ohdr">ksmps</span> <span class="op">=</span> 100
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="opc">FLpanel</span> "Frequency Slider", 900, 400, 50, 50
+    <span class="comment">; Minimum value output by the slider</span>
+    imin <span class="op">=</span> 200
+    <span class="comment">; Maximum value output by the slider</span>
+    imax <span class="op">=</span> 5000
+    <span class="comment">; Logarithmic type slider selected</span>
+    iexp <span class="op">=</span> <span class="op">-</span>1
+    <span class="comment">; Slider graphic type (5='nice' slider)</span>
+    itype <span class="op">=</span> 5 
+    <span class="comment">; Display handle (-1=not used)</span>
+    idisp <span class="op">=</span> <span class="op">-</span>1
+    <span class="comment">; Width of the slider in pixels</span>
+    iwidth <span class="op">=</span> 750
+    <span class="comment">; Height of the slider in pixels</span>
+    iheight <span class="op">=</span> 30
+    <span class="comment">; Distance of the left edge of the slider</span>
+    <span class="comment">; from the left edge of the panel</span>
+    ix <span class="op">=</span> 125
+    <span class="comment">; Distance of the top edge of the slider </span>
+    <span class="comment">; from the top edge of the panel</span>
+    iy <span class="op">=</span> 50
+
+    gkfreq, ihandle <span class="opc">FLslider</span> "Frequency", imin, imax, iexp, itype, idisp, iwidth, iheight, ix, iy
+<span class="comment">; End of panel contents</span>
+<span class="opc">FLpanelEnd</span>
+<span class="comment">; Run the widget thread!</span>
+<span class="opc">FLrun</span>
+
+<span class="comment">;Set the widget's initial value</span>
+<span class="opc">FLsetVal_i</span> 300, ihandle
+
+<span class="oblock">instr</span> 1
+    iamp <span class="op">=</span> 15000
+    ifn <span class="op">=</span> 1
+    kfreq <span class="opc">portk</span> gkfreq, 0.005  <span class="comment">;Smooth gkfreq to avoid zipper noise</span>
+    asig <span class="opc">oscili</span> iamp, kfreq, ifn
+    <span class="opc">out</span> asig
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="comment">; Function table that defines a single cycle</span>
+<span class="comment">; of a sine wave.</span>
+<span class="stamnt">f</span> 1 0 1024 10 1
+
+<span class="comment">; Instrument 1 will play a note for 1 hour.</span>
+<span class="stamnt">i</span> 1 0 3600
+<span class="stamnt">e</span>
+
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      Here is another example of the FLslider opcode, showing the slider types and other options. It also shows the usage of FLvalue to display a widget's contents. It uses the file <a class="ulink" href="examples/FLslider-2.csd" target="_top"><em class="citetitle">FLslider-2.csd</em></a>.
+
+      </p>
+        <div class="example">
+          <a id="idp97962720"></a>
+          <p class="title">
+            <strong>Example 304. More complex example of the FLslider opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp243095168"></a>
+              <a class="ulink" href="examples/FLslider-2.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o FLslider-2.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 441
+<span class="ohdr">ksmps</span> <span class="op">=</span> 100
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="comment">;By Andres Cabrera 2007</span>
+
+<span class="opc">FLpanel</span> "Slider Types", 410, 260, 50, 50
+    <span class="comment">; Distance of the left edge of the slider</span>
+    <span class="comment">; from the left edge of the panel</span>
+    ix <span class="op">=</span> 10
+    <span class="comment">; Distance of the top edge of the slider </span>
+    <span class="comment">; from the top edge of the panel</span>
+    iy <span class="op">=</span> 10
+    <span class="comment">; Create boxes to display widget values</span>
+    givalue1 <span class="opc">FLvalue</span> "1", 60, 20, ix <span class="op">+</span> 330, iy
+    givalue3 <span class="opc">FLvalue</span> "3", 60, 20, ix <span class="op">+</span> 330, iy <span class="op">+</span> 40
+    givalue5 <span class="opc">FLvalue</span> "5", 60, 20, ix <span class="op">+</span> 330, iy <span class="op">+</span> 80
+
+    givalue2 <span class="opc">FLvalue</span> "2", 60, 20, ix <span class="op">+</span> 60, iy <span class="op">+</span> 140
+    givalue4 <span class="opc">FLvalue</span> "4", 60, 20, ix <span class="op">+</span> 195, iy <span class="op">+</span> 140
+    givalue6 <span class="opc">FLvalue</span> "6", 60, 20, ix <span class="op">+</span> 320, iy <span class="op">+</span> 140
+
+    <span class="comment">;Horizontal sliders</span>
+    gkdummy1, gihandle1 <span class="opc">FLslider</span> "Type 1", 200, 5000, <span class="op">-</span>1, 1, givalue1, 320, 20, ix, iy
+    gkdummy3, gihandle3 <span class="opc">FLslider</span> "Type 3", 0, 15000, 0, 3, givalue3, 320, 20, ix, iy <span class="op">+</span> 40
+    <span class="comment">; Reversed slider</span>
+    gkdummy5, gihandle5 <span class="opc">FLslider</span> "Type 5", 1, 0, 0, 5, givalue5, 320, 20, ix, iy <span class="op">+</span> 80
+
+    <span class="comment">;Vertical sliders</span>
+    gkdummy2, gihandle2 <span class="opc">FLslider</span> "Type 2", 0, 1, 0, 2, givalue2, 20, 100, ix<span class="op">+</span> 30 , iy <span class="op">+</span> 120
+    <span class="comment">; Reversed slider</span>
+    gkdummy4, gihandle4 <span class="opc">FLslider</span> "Type 4", 1, 0, 0, 4, givalue4, 20, 100, ix <span class="op">+</span> 165 , iy <span class="op">+</span> 120
+    gkdummy6, gihandle6 <span class="opc">FLslider</span> "Type 6", 0, 1, 0, 6, givalue6, 20, 100, ix <span class="op">+</span> 290 , iy <span class="op">+</span> 120
+<span class="opc">FLpanelEnd</span>
+
+<span class="opc">FLpanel</span> "Plastic Slider Types", 410, 300, 150, 150
+    <span class="comment">; Distance of the left edge of the slider</span>
+    <span class="comment">; from the left edge of the panel</span>
+    ix <span class="op">=</span> 10
+    <span class="comment">; Distance of the top edge of the slider </span>
+    <span class="comment">; from the top edge of the panel</span>
+    iy <span class="op">=</span> 10
+    <span class="comment">; Create boxes to display widget values</span>
+    givalue21 <span class="opc">FLvalue</span> "21", 60, 20, ix <span class="op">+</span> 330, iy
+    givalue23 <span class="opc">FLvalue</span> "23", 60, 20, ix <span class="op">+</span> 330, iy <span class="op">+</span> 40
+    givalue25 <span class="opc">FLvalue</span> "25", 60, 20, ix <span class="op">+</span> 330, iy <span class="op">+</span> 80
+
+    givalue22 <span class="opc">FLvalue</span> "22", 60, 20, ix <span class="op">+</span> 60, iy <span class="op">+</span> 140
+    givalue24 <span class="opc">FLvalue</span> "24", 60, 20, ix <span class="op">+</span> 195, iy <span class="op">+</span> 140
+    givalue26 <span class="opc">FLvalue</span> "26", 60, 20, ix <span class="op">+</span> 320, iy <span class="op">+</span> 140
+
+    <span class="comment">;Horizontal sliders</span>
+    gkdummy21, gihandle21 <span class="opc">FLslider</span> "Type 21", 200, 5000, <span class="op">-</span>1, 21, givalue21, 320, 20, ix, iy
+    gkdummy23, gihandle23 <span class="opc">FLslider</span> "Type 23", 0, 15000, 0, 23, givalue23, 320, 20, ix, iy <span class="op">+</span> 40
+    <span class="comment">; Reversed slider</span>
+    gkdummy25, gihandle25 <span class="opc">FLslider</span> "Type 25", 1, 0, 0, 25, givalue25, 320, 20, ix, iy <span class="op">+</span> 80
+
+    <span class="comment">;Vertical sliders</span>
+    gkdummy22, gihandle22 <span class="opc">FLslider</span> "Type 22", 0, 1, 0, 22, givalue22, 20, 100, ix<span class="op">+</span> 30 , iy <span class="op">+</span> 120
+    <span class="comment">; Reversed slider</span>
+    gkdummy24, gihandle24 <span class="opc">FLslider</span> "Type 24", 1, 0, 0, 24, givalue24, 20, 100, ix <span class="op">+</span> 165 , iy <span class="op">+</span> 120
+    gkdummy26, gihandle26 <span class="opc">FLslider</span> "Type 26", 0, 1, 0, 26, givalue26, 20, 100, ix <span class="op">+</span> 290 , iy <span class="op">+</span> 120
+    <span class="comment">;Button to add color to the sliders</span>
+    gkcolors, ihdummy <span class="opc">FLbutton</span> "Color", 1, 0, 21, 150, 30, 30, 260, 0, 10, 0, 1
+<span class="opc">FLpanelEnd</span>
+<span class="opc">FLrun</span>
+
+
+
+<span class="comment">;Set some widget's initial value</span>
+<span class="opc">FLsetVal_i</span> 500, gihandle1
+<span class="opc">FLsetVal_i</span> 1000, gihandle3
+
+<span class="oblock">instr</span> 10
+<span class="comment">; Set the color of widgets</span>
+<span class="opc">FLsetColor</span> 200, 230, 0, gihandle1
+<span class="opc">FLsetColor</span> 0, 123, 100, gihandle2
+<span class="opc">FLsetColor</span> 180, 23, 12, gihandle3
+<span class="opc">FLsetColor</span> 10, 230, 0, gihandle4
+<span class="opc">FLsetColor</span> 0, 0, 0, gihandle5
+<span class="opc">FLsetColor</span> 0, 0, 0, gihandle6
+
+<span class="opc">FLsetColor</span> 200, 230, 0, givalue1
+<span class="opc">FLsetColor</span> 0, 123, 100, givalue2
+<span class="opc">FLsetColor</span> 180, 23, 12, givalue3
+<span class="opc">FLsetColor</span> 10, 230, 0, givalue4
+<span class="opc">FLsetColor</span> 255, 255, 255, givalue5
+<span class="opc">FLsetColor</span> 255, 255, 255, givalue6
+
+<span class="opc">FLsetColor2</span> 20, 23, 100, gihandle1
+<span class="opc">FLsetColor2</span> 200,0 ,123 , gihandle2
+<span class="opc">FLsetColor2</span> 180, 180, 100, gihandle3
+<span class="opc">FLsetColor2</span> 180, 23, 12, gihandle4
+<span class="opc">FLsetColor2</span> 180, 180, 100, gihandle5
+<span class="opc">FLsetColor2</span> 180, 23, 12, gihandle6
+
+<span class="opc">FLsetColor</span> 200, 230, 0, gihandle21
+<span class="opc">FLsetColor</span> 0, 123, 100, gihandle22
+<span class="opc">FLsetColor</span> 180, 23, 12, gihandle23
+<span class="opc">FLsetColor</span> 10, 230, 0, gihandle24
+<span class="opc">FLsetColor</span> 0, 0, 0, gihandle25
+<span class="opc">FLsetColor</span> 0, 0, 0, gihandle26
+
+<span class="opc">FLsetColor</span> 200, 230, 0, givalue21
+<span class="opc">FLsetColor</span> 0, 123, 100, givalue22
+<span class="opc">FLsetColor</span> 180, 23, 12, givalue23
+<span class="opc">FLsetColor</span> 10, 230, 0, givalue24
+<span class="opc">FLsetColor</span> 255, 255, 255, givalue25
+<span class="opc">FLsetColor</span> 255, 255, 255, givalue26
+
+<span class="opc">FLsetColor2</span> 20, 23, 100, gihandle21
+<span class="opc">FLsetColor2</span> 200,0 ,123 , gihandle22
+<span class="opc">FLsetColor2</span> 180, 180, 100, gihandle23
+<span class="opc">FLsetColor2</span> 180, 23, 12, gihandle24
+<span class="opc">FLsetColor2</span> 180, 180, 100, gihandle25
+<span class="opc">FLsetColor2</span> 180, 23, 12, gihandle26
+
+<span class="comment">; Slider values must be updated for colors to change</span>
+<span class="opc">FLsetVal_i</span> 250, gihandle1
+<span class="opc">FLsetVal_i</span> 0.5, gihandle2
+<span class="opc">FLsetVal_i</span> 0, gihandle3
+<span class="opc">FLsetVal_i</span> 0, gihandle4
+<span class="opc">FLsetVal_i</span> 0, gihandle5
+<span class="opc">FLsetVal_i</span> 0.5, gihandle6
+<span class="opc">FLsetVal_i</span> 250, gihandle21
+<span class="opc">FLsetVal_i</span> 0.5, gihandle22
+<span class="opc">FLsetVal_i</span> 500, gihandle23
+<span class="opc">FLsetVal_i</span> 0, gihandle24
+<span class="opc">FLsetVal_i</span> 0, gihandle25
+<span class="opc">FLsetVal_i</span> 0.5, gihandle26
+
+<span class="oblock">endin</span>
+
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span> 0 3600   <span class="comment">;Dumy table to make csound wait for realtime events</span>
+
+<span class="stamnt">e</span>
+
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp97964688"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="FLcount.html" title="FLcount"><em class="citetitle">FLcount</em></a>,
+      <a class="link" href="FLjoy.html" title="FLjoy"><em class="citetitle">FLjoy</em></a>,
+      <a class="link" href="FLknob.html" title="FLknob"><em class="citetitle">FLknob</em></a>,
+      <a class="link" href="FLroller.html" title="FLroller"><em class="citetitle">FLroller</em></a>,
+      <a class="link" href="FLslidBnk.html" title="FLslidBnk"><em class="citetitle">FLslidBnk</em></a>,
+      <a class="link" href="FLtext.html" title="FLtext"><em class="citetitle">FLtext</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp97971600"></a>
+        <h2>Credits</h2>
+        <p>Author: Gabriel Maldonado</p>
+        <p>New in version 4.22</p>
+        <p>February 2004. Thanks to a note from Dave Phillips, deleted the extraneous istep parameter.</p>
+        <p>Example written by Iain McCurdy, edited by Kevin Conder.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="FLslidBnk2Setk.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="FLtabs.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">FLslidBnk2Setk </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> FLtabs</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

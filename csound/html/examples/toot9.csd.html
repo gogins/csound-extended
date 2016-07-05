@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/toot9.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-odac
+</CsOptions>
+<CsInstruments>
+
+nchnls    =         2                        ; stereo output
+
+garvbsig  init      0                        ; global "a" variable initialized to 0
+
+          instr 9
+
+idur      =         p3
+iamp      =         p4
+iskiptime =         p5
+iattack   =         p6
+irelease  =         p7
+ibalance  =         p8                       ; 1 = left, .5 = center, 0 = right
+irvbgain  =         p9
+
+kamp      linen     iamp, iattack, idur, irelease
+asig      soundin   "fox.wav", iskiptime
+arampsig  =         kamp * asig
+
+          outs      arampsig * ibalance, arampsig * (1 - ibalance)
+
+garvbsig  =         garvbsig + arampsig * irvbgain
+
+          endin
+
+          instr 99
+
+irvbtime  =         p4
+
+asig      reverb    garvbsig,  irvbtime      ; put global sig into reverb
+
+          outs      asig, asig
+
+garvbsig  =         0                        ; then clear it
+
+          endin
+
+</CsInstruments>
+<CsScore>
+
+;ins strt dur  rvbtime
+i99  0    15   2.2
+
+;ins strt dur  amp  skip atk  rel  blnce(0-1)     rvbsend
+i9   0    1.2  .5   0    .02  .1   1              .2
+i9   2    1.4  .5   0    .03  .1   0              .3
+i9   3.5  2.28 .5   0    .9   .1   .5             .1
+i9   4.5  2.28 .5   0    1.2  .1   0              .2
+i9   5    2.28 .5   0    .2   .1   1              .3
+i9   9    2.28 .7   0    .1   .1   .5             .03
+
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

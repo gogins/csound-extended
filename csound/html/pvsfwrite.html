@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>pvsfwrite</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="pvsftw.html" title="pvsftw" />
+    <link rel="next" href="pvsgain.html" title="pvsgain" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">pvsfwrite</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="pvsftw.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="pvsgain.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="pvsfwrite"></a>
+      <div class="titlepage"></div>
+      <a id="Indexpvsfwrite" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">pvsfwrite</span>
+        </h2>
+        <p>pvsfwrite — 
+ Write a fsig to a PVOCEX file.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129568848"></a>
+        <h2>Description</h2>
+        <p>
+      This opcode writes a fsig to a PVOCEX file (which in turn can be read by pvsfread or other programs that support PVOCEX file input).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129643104"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>pvsfwrite</strong></span> fsig, ifile</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp129645184"></a>
+        <h2>Initialisation</h2>
+        <p>
+      <span class="emphasis"><em>fsig</em></span> -- fsig input data.
+      <span class="emphasis"><em>ifile</em></span> -- filename (a string in double-quotes) .
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129647376"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the pvsfwrite opcode. It uses the file <a class="ulink" href="examples/pvsfwrite.csd" target="_top"><em class="citetitle">pvsfwrite.csd</em></a>. This example uses realtime audio input.
+      </p>
+        <div class="example">
+          <a id="idp129649232"></a>
+          <p class="title">
+            <strong>Example 724. Example of the pvsfwrite opcode</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp260091408"></a>
+              <a class="ulink" href="examples/pvsfwrite.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="comment">; Audio out   Audio in</span>
+-odac           -iadc    <span class="comment">;;;RT audio I/O</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o pvsfwrite.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">kr</span> <span class="op">=</span> 4410
+<span class="ohdr">ksmps</span> <span class="op">=</span> 10
+<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+
+<span class="comment">;By Victor Lazzarini 2008</span>
+
+<span class="oblock">instr</span> 1
+asig <span class="opc">oscili</span> 10000, 440, 1
+fss <span class="opc">pvsanal</span>  asig, 1024,256,1024,0
+<span class="opc">pvsfwrite</span> fss, "mypvs.pvx"
+ase <span class="opc">pvsynth</span> fss
+           <span class="opc">out</span> ase
+<span class="oblock">endin</span>
+
+<span class="oblock">instr</span> 2 <span class="comment">; must be called after instr 1 finishes</span>
+ktim <span class="opc">timeinsts</span>
+fss  <span class="opc">pvsfread</span> ktim, "mypvs.pvx"
+asig <span class="opc">pvsynth</span> fss
+  <span class="opc">out</span> asig
+<span class="oblock">endin</span>
+
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="stamnt">f</span>1 0 16384 10 1
+<span class="stamnt">i</span>1 0   1
+<span class="stamnt">i</span>2 1   1
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129653520"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
+      <a class="link" href="pvsynth.html" title="pvsynth"><em class="citetitle">pvsynth</em></a>,
+      <a class="link" href="pvsadsyn.html" title="pvsadsyn"><em class="citetitle">pvsadsyn</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp129657552"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: Victor Lazzarini</td>
+          </tr>
+          <tr>
+            <td>November 2004 </td>
+          </tr>
+        </table>
+        <p>
+    </p>
+        <p>New plugin in version 5</p>
+        <p>November 2004.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="pvsftw.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="pvsgain.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">pvsftw </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> pvsgain</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

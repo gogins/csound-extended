@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/FLvalue.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac           -iadc     -d     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o FLvalue.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+; Using the opcode flvalue to display the output of a slider 
+sr = 44100
+kr = 441
+ksmps = 100
+nchnls = 1
+
+FLpanel "Value Display Box", 900, 200, 50, 50
+    ; Width of the value display box in pixels
+    iwidth = 50
+    ; Height of the value display box in pixels
+    iheight = 20
+    ; Distance of the left edge of the value display
+    ; box from the left edge of the panel
+    ix = 65
+    ; Distance of the top edge of the value display
+    ; box from the top edge of the panel
+    iy = 55
+
+    idisp FLvalue "Hertz", iwidth, iheight, ix, iy
+    gkfreq, ihandle FLslider "Frequency", 200, 5000, -1, 5, idisp, 750, 30, 125, 50
+    FLsetVal_i 500, ihandle
+; End of panel contents
+FLpanelEnd
+; Run the widget thread!
+FLrun
+
+instr 1
+    iamp = 15000
+    ifn = 1
+    asig oscili iamp, gkfreq, ifn
+    out asig
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; Function table that defines a single cycle
+; of a sine wave.
+f 1 0 1024 10 1
+
+; Instrument 1 will play a note for 1 hour.
+i 1 0 3600
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

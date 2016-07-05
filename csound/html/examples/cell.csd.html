@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title>
+<link rel="stylesheet" type="text/css" href="csound.css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+<link rel="prev" href="active.html" title="active" />
+<link rel="next" href="adsyn.html" title="adsyn" />
+</head>
+<h1>examples/cell.csd.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+;-odac           -iadc     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o cell.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+; cell.csd by Gleb Rogozinsky
+
+sr        = 44100
+kr        = 4410
+ksmps     = 10
+nchnls    = 1
+0dbfs     = 1
+
+; Cellular automaton-driven synthesis in spectral domain
+instr 1
+
+  iatt      = p4                                ; envelope attack time
+  isus      = p5                                ; envelope sustain time
+  irel      = p6                                ; envelope release time
+  ivol      = p7                                ; overall volume
+  
+  ; create some white noise
+  asig      rand      0.8                      
+  
+  ; spectral analysis of asig
+  fsig      pvsanal   asig, 2048, 1024, 2048, 0  ; get a vector of magnitudes
+           
+  ; calculate cellular automaton state
+  kfreq     line      50, 5, 1                  ; variable CA triggering frequency
+  ktrig     metro     kfreq                     ; trigger the CA to update cells
+            cell      ktrig, 0, 3, 1, 2, 2048   ; cells are written into ftable 3 
+                                                                        
+                                                                         
+  ; use current row of cells in spectral domain
+  fmas      pvstencil fsig, 0, 1, 3             ; apply spectral mask 
+  aout      pvsynth   fmas                      ; reconstruct time signal 
+  
+  ; apply envelope and out signal
+  kenv      expseg    .001, iatt, 1, isus, 1, irel, .001
+            out       aout*kenv*ivol
+endin
+
+</CsInstruments>
+<CsScore>
+
+; This example uses one-dimensional cellular automaton
+; to produce structures in spectral domain
+
+; We have to prepare initial row of cells.
+; One alive cell is enough to produce a simple fractal,
+; so two alivee cells will make structure more sophisticated
+f1 0 2048 7 0 150 0 0 1 1 1 0 0 45 0 0 1 1 1 0 0
+
+; The CA rule is used as follows:
+; the states (values) of each cell are summed with their neighboring cells.
+; Each sum is used as an index to read a next state of cell
+; from the rule table.
+; Let us try rule # 129 (LSB binary 1 0 0 0 0 0 0 1).
+; This rule will produce a fractal structure for single active cell
+; For more rules see http://mathworld.wolfram.com/ElementaryCellularAutomaton.html
+f2 0 8 -2 1 0 0 0 0 0 0 1
+; Try some different rules i.E. 254 (0 1 1 1 1 1 1 1) or 169 (1 0 0 1 0 1 0 1)
+
+; Prepare the output table of ielements size
+f3 0 2048 10 0
+
+; Time to make it sound!
+i1 0  13  0.3  7  3  1 
+e
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+    console.log(message);
+    var messages_textarea = document.getElementById("console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message.data;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+}
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+    csound.stop();
+    sleep(500).then(() => {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+    })    
+}
+function stop_onclick () {
+    csound.stop();
+}
+</script>
+ <div id="engine"></div>
+</body>
+</html>

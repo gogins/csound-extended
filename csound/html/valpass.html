@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>valpass</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="vaget.html" title="vaget" />
+    <link rel="next" href="vaset.html" title="vaset" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">valpass</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="vaget.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="vaset.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="valpass"></a>
+      <div class="titlepage"></div>
+      <a id="IndexValpass" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">valpass</span>
+        </h2>
+        <p>valpass — 
+      Variably reverberates an input signal with a flat frequency response.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp151703552"></a>
+        <h2>Description</h2>
+        <p>
+      Variably reverberates an input signal with a flat frequency response.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp151704704"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ares <span class="command"><strong>valpass</strong></span> asig, krvt, xlpt, imaxlpt [, iskip] [, insmps]</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idp151706944"></a>
+        <h2>Initialization</h2>
+        <p>
+      <span class="emphasis"><em>imaxlpt</em></span> -- maximum loop time for <span class="emphasis"><em>klpt</em></span>
+    </p>
+        <p>
+      <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- initial disposition of delay-loop data space (cf. <a class="link" href="reson.html" title="reson"><em class="citetitle">reson</em></a>). The default value is 0.
+    </p>
+        <p>
+      <span class="emphasis"><em>insmps</em></span> (optional, default=0) -- delay amount, as a number of samples.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp151711680"></a>
+        <h2>Performance</h2>
+        <p>
+      <span class="emphasis"><em>krvt</em></span> -- the reverberation time (defined as the time in seconds for a signal to decay to 1/1000, or 60dB down from its original amplitude).
+    </p>
+        <p>
+      <span class="emphasis"><em>xlpt</em></span> -- variable loop time in seconds, same as <span class="emphasis"><em>ilpt</em></span> in <span class="emphasis"><em>comb</em></span>.  Loop time can be as large as <span class="emphasis"><em>imaxlpt</em></span>.
+    </p>
+        <p>
+      This filter reiterates input with an echo density determined by loop time <span class="emphasis"><em>xlpt</em></span>. The attenuation rate is independent and is determined by <span class="emphasis"><em>krvt</em></span>, the reverberation time (defined as the time in seconds for a signal to decay to 1/1000, or 60dB down from its original amplitude). Its output will begin to appear immediately.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp151717248"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the valpass opcode. It uses the file <a class="ulink" href="examples/valpass.csd" target="_top"><em class="citetitle">valpass.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp151719104"></a>
+          <p class="title">
+            <strong>Example 999. Example of the valpass opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idp270580160"></a>
+              <a class="ulink" href="examples/valpass.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac  <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o valpass.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+<span class="oblock">instr</span> 1 
+
+krvt <span class="op">=</span> 1.5
+klpt <span class="opc">line</span> p4, p3, p5
+imaxlpt <span class="op">=</span> .1
+
+a1 <span class="opc">diskin2</span> "fox.wav", 1
+a1 <span class="opc">valpass</span> a1, krvt, klpt, imaxlpt
+a2 <span class="opc">valpass</span> a1, krvt, klpt<span class="op">*</span>.5, imaxlpt
+   <span class="opc">outs</span>	a1, a2  
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+
+<span class="stamnt">i</span> 1 0 5 .01 .2
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+        <p>
+      Here is another example of the valpass opcode. It uses the file <a class="ulink" href="examples/valpass-2.csd" target="_top"><em class="citetitle">valpass-2.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idp151724384"></a>
+          <p class="title">
+            <strong>Example 1000. Second example of the valpass opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idp270549936"></a>
+              <a class="ulink" href="examples/valpass-2.csd.html" target="_top">Play</a>
+              <pre class="programlisting">
+<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
+<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="comment">; Select audio/midi flags here according to platform</span>
+-odac  <span class="comment">;;;realtime audio out</span>
+<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="comment">; -o valpass-2.wav -W ;;; for file output any platform</span>
+<span class="csdtag">&lt;/CsOptions&gt;</span>
+<span class="csdtag">&lt;CsInstruments&gt;</span>
+
+<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="ohdr">ksmps</span> <span class="op">=</span> 32
+<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+
+giSine <span class="ohdr">ftgen</span> 0, 0, 65536, 10, 1			<span class="comment">;sine wave</span>
+
+<span class="oblock">instr</span> 1
+
+asig <span class="opc">diskin2</span> "beats.wav", 1, 0, 1
+krvt <span class="opc">line</span> 0.01, p3, p3				<span class="comment">;reverb time</span>
+adepth <span class="op">=</span> p4					<span class="comment">;sine depth </span>
+krate <span class="op">=</span> 0.3					<span class="comment">;sine rate (speed)</span>
+adel <span class="opc">oscil</span> 0.5, krate, giSine			<span class="comment">;delay time oscillator (LFO)</span>
+adel <span class="op">=</span> ((adel<span class="op">+</span>0.5)<span class="op">*</span>adepth)			<span class="comment">;scale and offset LFO</span>
+aout <span class="opc">valpass</span> asig, krvt, adel<span class="op">*</span>0.01, 0.5
+     <span class="opc">outs</span> aout, aout
+
+<span class="oblock">endin</span>
+<span class="csdtag">&lt;/CsInstruments&gt;</span>
+<span class="csdtag">&lt;CsScore&gt;</span>
+	
+<span class="stamnt">i</span>1 0  10 1
+<span class="stamnt">i</span>1 11 10 5	
+<span class="stamnt">e</span>
+<span class="csdtag">&lt;/CsScore&gt;</span>
+<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp151726304"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="alpass.html" title="alpass"><em class="citetitle">alpass</em></a>,
+      <a class="link" href="comb.html" title="comb"><em class="citetitle">comb</em></a>,
+      <a class="link" href="reverb.html" title="reverb"><em class="citetitle">reverb</em></a>,
+      <a class="link" href="vcomb.html" title="vcomb"><em class="citetitle">vcomb</em></a>
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idp151731232"></a>
+        <h2>Credits</h2>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>Author: William <span class="quote">“<span class="quote">Pete</span>”</span> Moss</td>
+          </tr>
+          <tr>
+            <td>University of Texas at Austin</td>
+          </tr>
+          <tr>
+            <td>Austin, Texas USA</td>
+          </tr>
+          <tr>
+            <td>January 2002</td>
+          </tr>
+        </table>
+        <p>
+    </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="vaget.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="vaset.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">vaget </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> vaset</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
