@@ -1,4 +1,6 @@
-# HTML5 Empowering Csound
+# Csound Goodies
+
+This Web site contains various resources for using Csound. These resources include examples, a playable version of the Csound reference manual, and Lisp code written by Drew Krause that can be used for algorithmic composition for Csound.
 
 ## Playable version of the Csound Reference Manual
 
@@ -24,3 +26,7 @@ https://gogins.github.io/csound/PNaCl_Csound_04_RealTime3DScoreGenerator.html
 https://gogins.github.io/csound/CompileCsdText.html
 
 https://gogins.github.io/csound/Scrims_pnacl.html
+
+## Nudruz
+
+This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is hosted with his permission. The code has been lightly edited to make it more usable with Steel Bank Common Lisp and the current version of Csound. Drew's code also is licensed under the terms of the GNU Lesser General Public License.
