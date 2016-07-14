@@ -3,13 +3,13 @@
 ;; Drew Krause, 2004
 ;; drkrause@mindspring.com
 ;; www.wordecho.org
+;; Michael Gogins, 2016
 
-;; include cllib, screamer etc. -- see file
-(load "cminit.lisp")
+(load (merge-pathnames "cminit.lisp" *nudruz-home*))
 
 (in-package :cm)
 
-(load "data/partition-table.lisp")
+;(load "data/partition-table.lisp")
 
 ;; first, some needed basic stuff
 
@@ -244,7 +244,7 @@
       (apply #'make-instance class arg vals args))))
 
 ;; multievent example
-;(define multithing
+;(defun multithing
 ;  (process repeat 20
 ;        output (multievent 'midi :keynum
 ;                             :keynum (next pcycle)
@@ -414,6 +414,25 @@
     (apply #'+ (second (midi-in mfile)))
     60)))
 
+;; SPLAY -- the simplest: plays pits/durs
+;; durs may be list, pattern, or simple value
+;; added optional channel argument Nov. 2005
+;; channel may be integer, list, or pattern (July 2008)
+(defun splay (inpits indurs &optional (chans 0))
+  (let* ((pl (plists inpits indurs))
+         (pits (first pl))
+         (durs (second pl))
+	 (chanpatt (if (pattern? chans) chans (makecyc chans)))) 
+    (process for x in pits
+             for dur in durs
+	     for chan in (next chanpatt (length pits))
+             output (multievent 'midi :keynum
+                                :channel chan
+                                :keynum x
+                                :time (now)
+                                :duration dur)
+             wait dur)))
+
 ;; PLAYMIDS -- combine midi files
 (defun playmids (&rest names)
   (loop for nam in names collect
@@ -426,7 +445,7 @@
   (:parameters time dur amp freq))
 
 ;; SIMPL4SCO -- generic playback routine
-(define (simpl4sco pits durs atkpts)
+(defun simpl-for-sco (pits durs atkpts)
   (process for x in pits
            for dur in durs
            for atk in atkpts
@@ -1975,32 +1994,32 @@
 
 ;; MIDDLEWEIGHT-5 -- tends to bounce back to 3 of 5
 ;; May 2009: changed to range 3-7
-(define middleweight-5 
-  (new graph of 
-       `((3 :id A :to ,(new weighting of '(C D)))
-	 (4 :id B :to C)
-	 (5 :id C :to ,(new weighting of '(A B C D)))
-	 (6 :id D :to ,(new weighting of '(C E)))
-	 (7 :id E :to D))))
+;mkg (defun middleweight-5 
+;mkg   (new graph of 
+;mkg        `((3 :id A :to ,(new weighting of '(C D)))
+;mkg 	 (4 :id B :to C)
+;mkg 	 (5 :id C :to ,(new weighting of '(A B C D)))
+;mkg 	 (6 :id D :to ,(new weighting of '(C E)))
+;mkg 	 (7 :id E :to D))))
 
 ;; FOLLOWING-5 -- tends to move gradually from one area to another
 ;; used mostly for registers
 ;; May 2009: changed to range 3-7
-(define following-5 
-      (new graph of 
-	   `((3 :id A :to B)
-	     (4 :id B :to ,(new weighting of '(A B C)))
-	     (5 :id C :to ,(new weighting of '(B C D)))
-	     (6 :id D :to ,(new weighting of '(C D E)))
-	     (7 :id E :to D))))
+;mkg (defun following-5 
+;mkg       (new graph of 
+;mkg 	   `((3 :id A :to B)
+;mkg 	     (4 :id B :to ,(new weighting of '(A B C)))
+;mkg 	     (5 :id C :to ,(new weighting of '(B C D)))
+;mkg 	     (6 :id D :to ,(new weighting of '(C D E)))
+;mkg 	     (7 :id E :to D))))
 
 ;; FOLLOWING-3 -- tends to move gradually from one area to another
 ;; used mostly for registers
-(define following-3 
-      (new graph of 
-	   `((4 :id A :to B)
-	     (5 :id B :to ,(new weighting of '(A B C)))
-	     (6 :id C :to B))))
+;mkg (defun following-3 
+;mkg       (new graph of 
+;mkg 	   `((4 :id A :to B)
+;mkg 	     (5 :id B :to ,(new weighting of '(A B C)))
+;mkg 	     (6 :id C :to B))))
 
 ;;; RHYTHM STUFF
 
@@ -2301,13 +2320,13 @@
    0 len))
 
 ;; examples of possible rhyt-pairs
-(define updur (pairlis '(0 1 2 3 4 5 6 7 8 9 10 11)
+(defun updur () (pairlis '(0 1 2 3 4 5 6 7 8 9 10 11)
 			'(1 1 1 2 2 2 3 3 3 4 4 4)))
 
-(define downdur (pairlis '(0 1 2 3 4 5 6 7 8 9 10 11)
+(defun downdur () (pairlis '(0 1 2 3 4 5 6 7 8 9 10 11)
 			'(4 4 4 3 3 3 2 2 2 1 1 1)))
 
-(define shuffdur (pairlis '(0 1 2 3 4 5 6 7 8 9 10 11)
+(defun shuffdur () (pairlis '(0 1 2 3 4 5 6 7 8 9 10 11)
 			(shuffle '(1 2 3 4 5 6 7 8 9 10 11 12))))
 
 (defun randdur (maxdur)
@@ -2326,7 +2345,7 @@
 
 
 ;; midi example: random durations fixed by melodic interval
-;(define fixed-mel
+;(defun fixed-mel
 ;  (let* ((a-mel (randmel 100))
 ;	(a-rhylist (fixrhythm a-mel downdur)))
 ;  (process for i below (length a-mel)
@@ -2338,7 +2357,7 @@
 ; (events fixed-mel "fixedmel.midi")
 
 ;; midi example: random durations fixed by pitch class
-;(define fixed-pc
+;(defun fixed-pc
 ;  (loop for key from 60 to 72 
 ;        for beg from 0 by .1
 ;        collect (new midi :time beg
@@ -2897,25 +2916,6 @@
 ;                     (t (copylist (list indurs) pitlen)))))
 ;    (list pits durs (apply #'+ durs))))
 
-;; SPLAY -- the simplest: plays pits/durs
-;; durs may be list, pattern, or simple value
-;; added optional channel argument Nov. 2005
-;; channel may be integer, list, or pattern (July 2008)
-(defun splay (inpits indurs &optional (chans 0))
-  (let* ((pl (plists inpits indurs))
-         (pits (first pl))
-         (durs (second pl))
-	 (chanpatt (if (pattern? chans) chans (makecyc chans)))) 
-    (process for x in pits
-             for dur in durs
-	     for chan in (next chanpatt (length pits))
-             output (multievent 'midi :keynum
-                                :channel chan
-                                :keynum x
-                                :time (now)
-                                :duration dur)
-             wait dur)))
-
 ;; SPLAY-CMN -- export to cmn 
 ;; pits & durs only
 (defun splay-cmn (inpits indurs)
@@ -3398,7 +3398,7 @@
 ;; RUN-CONCORDE -- utility for TSP-CHORDS
 ;; runs "concorde.pl" & writes to output file
 (defun run-concorde (input-file output-file)
-    (ext:run-program "concorde.pl" 
+    (uiop:run-program "concorde.pl" 
 		     (list input-file)
 ;		   :if-output-exists :supersede
 		   :output output-file))
@@ -3420,8 +3420,8 @@
 	  (flatten
 	   (make-list-from-file outfilename))))
     (progn
-      (ext:run-program "rm" (list infilename))
-      (ext:run-program "rm" (list outfilename))
+      (uiop:run-program "rm" (list infilename))
+      (uiop:run-program "rm" (list outfilename))
       (loop for n in (cdr output-idxs) collect (nth (- n 1) chdlist)))))
 
 ;; POPOUT -- removes random items from a list
@@ -5096,8 +5096,8 @@
 	  (flatten
 	   (make-list-from-file outfilename))))
     (progn
-      (ext:run-program "rm" (list infilename))
-      (ext:run-program "rm" (list outfilename))
+      (uiop:run-program "rm" (list infilename))
+      (uiop:run-program "rm" (list outfilename))
       (loop for n in (cdr output-idxs) collect (nth (- n 1) rowlist)))))
 
 ;; SWAP-CONCORDE-EDGEWEIGHTS -- utility for 'rows-by-swap'
@@ -5130,8 +5130,8 @@
 	  (flatten
 	   (make-list-from-file outfilename))))
     (progn
-      (ext:run-program "rm" (list infilename))
-      (ext:run-program "rm" (list outfilename))
+      (uiop:run-program "rm" (list infilename))
+      (uiop:run-program "rm" (list outfilename))
       (loop for n in (cdr output-idxs) collect (nth (- n 1) rowlist)))))
 
 ;; "bestmatch" = most compact note-by-note match of two melodies (by consn-p)
@@ -5160,7 +5160,7 @@
 ;; RUN-BMATCH -- utility for 'bestmatch'
 ;; runs "bestmatch.pl" & writes to output file
 (defun run-bmatch (len1 len2 input-file output-file)
-    (ext:run-program "bestmatch.pl" 
+    (uiop:run-program "bestmatch.pl" 
 		     (list (format nil "~a" len1)
 			   (format nil "~a" len2)
 			   input-file)
@@ -5182,8 +5182,8 @@
 	 (matchidxs
 	  (make-list-from-file outfilename)))
     (progn
-      (ext:run-program "rm" (list infilename))
-      (ext:run-program "rm" (list outfilename))
+      (uiop:run-program "rm" (list infilename))
+      (uiop:run-program "rm" (list outfilename))
       (match-slots line1 line2 matchidxs))))
 
 ;; PERLES -- corresponding sum-row
