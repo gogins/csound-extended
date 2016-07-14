@@ -1,4 +1,6 @@
-# HTML5 Empowering Csound
+# Csound Goodies
+
+This Web site contains various resources for using Csound. These resources include examples, a playable version of the Csound reference manual, and Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound.
 
 ## Playable version of the Csound Reference Manual
 
@@ -11,7 +13,7 @@ Not all examples are playable at this time. Only csd based examples (not orc bas
 ## Sample Pieces
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of 
-Google's Chrome browser for OS X, Windows, or Linux. Click on the links below to play the examples.
+Google's Chrome browser for OS X, Windows, or Linux. Click on the links below to play the examples. If you don't hear anything at first, make sure Csound has finished loading, and play with the sliders, particularly the output level slider.
 
 https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html
 
@@ -19,8 +21,10 @@ https://gogins.github.io/csound/PNaCl_Csound_02_Instrument_Controls.html
 
 https://gogins.github.io/csound/PNaCl_Csound_03_Style_Sheet.html
 
-https://gogins.github.io/csound/PNaCl_Csound_04_RealTime3DScoreGenerator.html
-
 https://gogins.github.io/csound/CompileCsdText.html
 
-https://gogins.github.io/csound/Scrims_pnacl.html
+I performed this piece for the 2016 New York City Electroacoustic Music Festival: https://gogins.github.io/csound/Scrims_pnacl.html
+
+## Nudruz
+
+This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is hosted with his permission. The code has been lightly edited to make it more usable with Steel Bank Common Lisp and the current version of Csound. Drew's code also is licensed under the terms of the GNU Lesser General Public License.
