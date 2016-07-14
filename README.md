@@ -13,7 +13,7 @@ Not all examples are playable at this time. Only csd based examples (not orc bas
 ## Sample Pieces
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of 
-Google's Chrome browser for OS X, Windows, or Linux. Click on the links below to play the examples.
+Google's Chrome browser for OS X, Windows, or Linux. Click on the links below to play the examples. If you don't hear anything at first, make sure Csound has finished loading, and play with the sliders, particularly the output level slider.
 
 https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html
 
