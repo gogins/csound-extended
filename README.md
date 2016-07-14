@@ -1,6 +1,6 @@
 # Csound Goodies
 
-This Web site contains various resources for using Csound. These resources include examples, a playable version of the Csound reference manual, and Lisp code written by Drew Krause that can be used for algorithmic composition for Csound.
+This Web site contains various resources for using Csound. These resources include examples, a playable version of the Csound reference manual, and Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound.
 
 ## Playable version of the Csound Reference Manual
 
