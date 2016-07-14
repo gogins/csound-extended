@@ -23,7 +23,7 @@ https://gogins.github.io/csound/PNaCl_Csound_03_Style_Sheet.html
 
 https://gogins.github.io/csound/CompileCsdText.html
 
-https://gogins.github.io/csound/Scrims_pnacl.html
+I performed this piece for the 2016 New York City Electroacoustic Music Festival: https://gogins.github.io/csound/Scrims_pnacl.html
 
 ## Nudruz
 
