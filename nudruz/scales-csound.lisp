@@ -240,8 +240,6 @@ pitch bend values to reset the channel tuning levels back to zero:
            output (new midi-pitch-bend :time (now)
                        :channel i :bend 0)))
 
-
-
 (events (clearbends) "clear.mid" :play true)
 
 #|
@@ -336,7 +334,10 @@ Lets define a process that plays random triads from the major mode.
              wait r)))
                          
 (events (ranchords 30 'c4 maj .3) "scales.mid")
-          
+(defparameter mylist (new seq))
+(events (ranchords 30 'c4 maj .3) mylist)
+(print (slot-value mylist 'subobjects))
+
 #|
 TRY:
 
