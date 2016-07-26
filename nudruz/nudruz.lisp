@@ -6,7 +6,6 @@
 ;; Michael Gogins, 2016
 
 (load (merge-pathnames "cminit.lisp" *nudruz-home*))
-
 (in-package :cm)
 
 ;(load "data/partition-table.lisp")
