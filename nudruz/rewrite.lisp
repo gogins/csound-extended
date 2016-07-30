@@ -129,7 +129,7 @@
            (* 12 (mod (second x) 7)))))
 
 ;; MTRULES -- morse-thue rules
-(define mtrules '((0 -> (0 1))
+(defparameter mtrules '((0 -> (0 1))
                   (1 -> (1 0))))
 
 ;; RW-NEXT -- returns next complete generation of rewrite
@@ -284,7 +284,7 @@
 
 
 ;; some step-rules
-(define steprules1 '((1 -> (1 -1 1))
+(defparameter steprules1 '((1 -> (1 -1 1))
                      (-1 -> (-1 -1 1))))
 
 
@@ -310,23 +310,23 @@
 
 ;; Jacobs "Mephisto Waltz" infinite word -- fourth-power-free!
 ;; p. 25
-(define mephistorules '((0 -> (0 0 1))
+(defparameter mephistorules '((0 -> (0 0 1))
                         (1 -> (1 1 0))))
 
 ;; p. 25
-(define cubefreerules '((0 -> (0 0 1))
+(defparameter cubefreerules '((0 -> (0 0 1))
                         (1 -> (0 1 1))))
 
 ; p. 27 (#30)
 ;; limit h^n(a) is squarefree
-(define sfree3rules
+(defparameter sfree3rules
  '((0 -> (0 1 2 0 1))
     (1 -> (0 2 0 1 2 1))
     (2 -> (0 2 1 2 0 2 1))))
 
 ; p. 27 (#32)
 ;; limit h^n(a) is squarefree
-(define sfree4rules
+(defparameter sfree4rules
 '((0 -> (0 1 2 3))
   (1 -> (1 0 2 3))
   (2 -> (2 0 1 3))
@@ -335,7 +335,7 @@
 ; p. 33 
 ; non-uniform morphism
 ; fixed point is squarefree
-(define hawksfreerules
+(defparameter hawksfreerules
  '((0 -> (1 0 2 1 2 0 2 1 0 1 2 1 0 2 0))
    (1 -> (1 0 2 1 0 1 2 1 0 2 1 2 0 2 1 0 2 0))
    (2 ->  (1 0 2 1 2 0 1 0 2 0 1 2 1 0 2 0))))
@@ -343,7 +343,7 @@
 ; p. 33
 ; 13-uniform morphism
 ; fixed point is squarefree
-(define morph13rules
+(defparameter morph13rules
   '((0 -> (0 1 2 1 0 2 1 2 0 1 2 1 0))
     (1 -> (1 2 0 2 1 0 2 0 1 2 0 2 1))
     (2 -> (2 0 1 0 2 1 0 1 2 0 1 0 2))))
@@ -351,7 +351,7 @@
 ; p. 34
 ; 12-uniform morphism
 ; fixed point is squarefree
-(define morph12rules
+(defparameter morph12rules
   '((0 -> (2 0 2 1 2 0 1 0 2 1 0 1))
     (1 -> (2 0 1 0 2 1 2 0 2 1 0 1))
     (2 -> (2 1 0 2 1 2 0 1 2 1 0 1))))
@@ -359,7 +359,7 @@
 ; p. 34
 ; non-uniform
 ; fixed point is squarefree
-(define pleasantsrules
+(defparameter pleasantsrules
  '((0 -> (0 1 2 0 1))
     (1 -> (0 2 0 1 2 1))
     (2 -> (0 2 1 2 0 2 1))))
@@ -368,7 +368,7 @@
 ; Baum-Sweet sequence
 ; then must apply 'bscoding'
 ; e.g. (bscoding (rwgen bsrules '(a) 3))
-(define bsrules
+(defparameter bsrules
 '((0 -> (0 1))
   (1 -> (2 1))
   (2 -> (1 3))
@@ -389,7 +389,7 @@
 ; c  = move from 3 to 1
 ; ci = move from 1 to 3
 
-(define hanoirules
+(defparameter hanoirules
   '((a -> (a ci))
     (b -> (c bi))
     (c -> (b ai))
@@ -438,7 +438,7 @@
 
 ;; Peano space-filling curve (p. 202)
 
-(define peanorules
+(defparameter peanorules
   '((S1 -> (S1 R1 R2))
     (S2 -> (S2 L1 L2))
     (R1 -> (S2 L1 L2))
@@ -453,7 +453,7 @@
 
 ; Fibonacci morphism (p. 212)
 ; fixed point of f(0)
-(define fiborules
+(defparameter fiborules
   '((0 -> (0 1))
     (1 -> 0)))
 
@@ -467,7 +467,7 @@
 ; c1 = move from 3 to 2
 ; c2 = move from 1 to 2
 
-(define c-hanoirules
+(defparameter c-hanoirules
   '((a1 -> (a1 b2 a1))
     (b1 -> (b1 c2 b1))
     (c1 -> (c1 a2 c1))
@@ -522,7 +522,7 @@
 ;;; PAPERFOLDING from set of 4 (p. 304)
 ;; fixed point at a is interior sequence of paperfolding
 ;; p(n) = 4n for all n >= 1
-(define paperfoldrules
+(defparameter paperfoldrules
    '((0 -> (0 1))
     (1 -> (2 1))
     (2 -> (0 3))

@@ -2,7 +2,7 @@
 ;; first = all subdivs of this length that use 2,3,4,5-ples only
 ;; second = corresponding durations for those subdivisions
 
-(define beats
+(defparameter beats
     '((nil nil)
       (( 1 2 3 4 5 ) ( 1 1/2 1/3 1/4 1/5 ))
       (( 1 2 3 4 5 6 8 10 ) ( 2 1 2/3 1/2 2/5 1/3 1/4 1/5 ))
@@ -582,7 +582,7 @@
        ( 200 100 200/3 50 40 100/3 25 20 50/3 40/3 25/2 10 25/3 8 20/3 25/4 
 	5 4 10/3 8/3 5/2 2 5/3 8/5 4/3 5/4 1 4/5 2/3 1/2 2/5 1/3 1/4 1/5 ))))
 
-(define simplebeats
+(defparameter simplebeats
     '((nil nil)
       (( 1 2 3 4 )
        ( 1 1/2 1/3 1/4 ))

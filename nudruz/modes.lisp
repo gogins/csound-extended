@@ -1,7 +1,7 @@
 ;; examples of working with modes
 
 ; (note 51 :in oct) = E5
-; (define oct-1 (transpose oct 'cs)) == same mode up a half-step
+; (defun oct-1 (transpose oct 'cs)) == same mode up a half-step
 ; (keynum (note 51 :in oct))
 ; (loop for i from 1 to 7 collect (keynum (note i :in oct)))
 
@@ -23,32 +23,31 @@
 
 ;; some basic mod12 modes
 
-(define pentatonic (new mode steps '(2 2 3 2 3))) ; 5 members
-(define pelog (new mode steps '(1 2 4 1 4)))   ; 5 members
-(define wholetone (new mode steps '(2 2 2 2 2 2))) ; 6 members
-(define wt-0 wholetone)
-(define wt-1 (transp-mode wholetone 1))
-(define mlt5 (new mode steps '(1 4 1 1 4 1))) ; 6 members
-(define symmetric6 (new mode steps '(1 3 1 3 1 3))) ; 6 members
-(define ionian (new mode steps '(2 2 1 2 2 2 1))) ; 7 members
-(define hminor (new mode steps '(2 1 2 2 1 3 1)))
-(define octatonic (new mode steps '(1 2 1 2 1 2 1 2))) ; 8 members
-(define mlt4 (new mode steps '(1 1 3 1 1 1 3 1))) ; 8 members
-(define mlt6 (new mode steps '(2 2 1 1 2 2 1 1))) ; 8 members
-(define mlt3 (new mode steps '(2 1 1 2 1 1 2 1 1))) ; 9 members
-(define mlt7 (new mode steps '(1 1 1 2 1 1 1 1 2 1))) ; 10 members
-(define chromatic (new mode steps '(1 1 1 1 1 1 1 1 1 1 1 1))) ; 12 members
-(define goodmode (new mode steps '(1 1 3 1 1 2 3))) ; 7 members
-(define chahargah (new mode steps '(1 3 1 2 1 3 1))) ; 7 members
+(defparameter pentatonic (new mode steps '(2 2 3 2 3))) ; 5 members
+(defparameter pelog (new mode steps '(1 2 4 1 4)))   ; 5 members
+(defparameter wholetone (new mode steps '(2 2 2 2 2 2))) ; 6 members
+(defparameter wt-0 wholetone)
+(defparameter wt-1 (transp-mode wholetone 1))
+(defparameter mlt5 (new mode steps '(1 4 1 1 4 1))) ; 6 members
+(defparameter symmetric6 (new mode steps '(1 3 1 3 1 3))) ; 6 members
+(defparameter ionian (new mode steps '(2 2 1 2 2 2 1))) ; 7 members
+(defparameter hminor (new mode steps '(2 1 2 2 1 3 1)))
+(defparameter octatonic (new mode steps '(1 2 1 2 1 2 1 2))) ; 8 members
+(defparameter mlt4 (new mode steps '(1 1 3 1 1 1 3 1))) ; 8 members
+(defparameter mlt6 (new mode steps '(2 2 1 1 2 2 1 1))) ; 8 members
+(defparameter mlt3 (new mode steps '(2 1 1 2 1 1 2 1 1))) ; 9 members
+(defparameter mlt7 (new mode steps '(1 1 1 2 1 1 1 1 2 1))) ; 10 members
+(defparameter chromatic (new mode steps '(1 1 1 1 1 1 1 1 1 1 1 1))) ; 12 members
+(defparameter goodmode (new mode steps '(1 1 3 1 1 2 3))) ; 7 members
+(defparameter chahargah (new mode steps '(1 3 1 2 1 3 1))) ; 7 members
 
 ;; some cooler (not mod 12) modes
-(define stravmode (new mode steps '(2 1 2))) ; also "Shur"
-(define hyperlydian (new mode steps '(2 2 2 1))) 
-(define hyperphrygian (new mode steps '(1 2 2))) ; also "Segah"
-(define shushtar (new mode steps '(1 2 1 3)))
-(define bayati (new mode steps '(2 2 1 2 1))) ; also "Bayati Shiraz"
-(define humayun (new mode steps '(1 3 1 2 2)))
-
+(defparameter stravmode (new mode steps '(2 1 2))) ; also "Shur"
+(defparameter hyperlydian (new mode steps '(2 2 2 1))) 
+(defparameter hyperphrygian (new mode steps '(1 2 2))) ; also "Segah"
+(defparameter shushtar (new mode steps '(1 2 1 3)))
+(defparameter bayati (new mode steps '(2 2 1 2 1))) ; also "Bayati Shiraz"
+(defparameter humayun (new mode steps '(1 3 1 2 2)))
 
 ;; PLAY-MODE -- a function to convert to keynums
 ; (play-mode (transp (randmel 20 5) 20) hyperlydian) = 
@@ -69,7 +68,7 @@
     (t 'r)))
 
 ;; PLAYMODE - a process
-(define (playmode a-list mode basepit durs)
+(defun playmode (a-list mode basepit durs)
   (process 
     for i in a-list 
     for thisdur in durs

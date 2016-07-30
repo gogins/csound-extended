@@ -261,114 +261,114 @@
 (defun spaceregchain (mxlist reglist &optional (treeflag nil))
   (let ((raw (spaceregchainraw mxlist reglist)))
     (if treeflag raw (flatter raw))))
-
+;;MKG typo? (defparameter
 ;; SPACEGROUP DATA BELOW (mx's used in for all transforms
 
 ;; from the Dade group (here called 'matz12')
 ;; "gap> MatGroupZClass(2,4,4,1)"
-(define mx1 (make-array 
+(defparameter mx1 (make-array 
 	     '(2 2) :initial-contents '((-1 0) (-1 1))))
-(define mx2 (make-array 
+(defparameter mx2 (make-array 
 	     '(2 2) :initial-contents '((-1 0) (0 -1))))
-(define mx3 (make-array 
+(defparameter mx3 (make-array 
 	     '(2 2) :initial-contents '((-1 1) (-1 0))))
-(define mx4 (make-array 
+(defparameter mx4 (make-array 
 	     '(2 2) :initial-contents '((-1 1) (0 1))))
-(define mx5 (make-array 
+(defparameter mx5 (make-array 
 	     '(2 2) :initial-contents '((0 -1) (-1 0))))
-(define mx6 (make-array 
+(defparameter mx6 (make-array 
 	     '(2 2) :initial-contents '((0 -1) (1 -1))))
-(define mx7 (make-array 
+(defparameter mx7 (make-array 
 	     '(2 2) :initial-contents '((0 1) (-1 1))))
-(define mx8 (make-array 
+(defparameter mx8 (make-array 
 	     '(2 2) :initial-contents '((0 1) (1 0))))
-(define mx9 (make-array 
+(defparameter mx9 (make-array 
 	     '(2 2) :initial-contents '((1 -1) (0 -1))))
-(define mx10 (make-array 
+(defparameter mx10 (make-array 
 	      '(2 2) :initial-contents '((1 -1) (1 0))))
-(define mx11 (make-array 
+(defparameter mx11 (make-array 
 	      '(2 2) :initial-contents '((1 0) (0 1))))
-(define mx12 (make-array 
+(defparameter mx12 (make-array 
 	      '(2 2) :initial-contents '((1 0) (1 -1))))
 
 ;; MATZ12 -- list of all mx** [12 total]
-(define matz12
+(defparameter matz12
   (list mx1 mx2 mx3 mx4 mx5 mx6 mx7 mx8 mx9 mx10 mx11 mx12))
  
 ;; "gap> MatGroupZClass(2,4,2,1)"
 ;; here called "matz6"
-(define mb1 (make-array 
+(defparameter mb1 (make-array 
 	     '(2 2) :initial-contents '((-1 1) (-1 0))))
-(define mb2 (make-array 
+(defparameter mb2 (make-array 
 	     '(2 2) :initial-contents '((-1 1) (0 1))))
-(define mb3 (make-array 
+(defparameter mb3 (make-array 
 	     '(2 2) :initial-contents '((0 -1) (-1 0))))
-(define mb4 (make-array 
+(defparameter mb4 (make-array 
 	     '(2 2) :initial-contents '((0 -1) (1 -1))))
-(define mb5 (make-array 
+(defparameter mb5 (make-array 
 	     '(2 2) :initial-contents '((1 0) (0 1))))
-(define mb6 (make-array 
+(defparameter mb6 (make-array 
 	     '(2 2) :initial-contents '((1 0) (1 -1))))
 
 ;; MATZ6 -- six-element space group "mb*" 
 ;; "gap> MatGroupZClass(2,4,2,1)"
-(define matz6
+(defparameter matz6
   (list mb1 mb2 mb3 mb4 mb5 mb6))
 
 ;; "gap> MatGroupZClass(2,2,2,1)"
 ;; here called "matz4"
-(define mw1 (make-array 
+(defparameter mw1 (make-array 
 	     '(2 2) :initial-contents '((-1 0) (0 -1))))
-(define mw2 (make-array 
+(defparameter mw2 (make-array 
 	     '(2 2) :initial-contents '((-1 0) (0 1))))
-(define mw3 (make-array 
+(defparameter mw3 (make-array 
 	     '(2 2) :initial-contents '((1 0) (0 -1))))
-(define mw4 (make-array 
+(defparameter mw4 (make-array 
 	     '(2 2) :initial-contents '((1 0) (0 1))))
 
 ;; MATZ4 -- six-element space group "mb*" 
 ;; "gap> MatGroupZClass(2,2,2,1)"
-(define matz4
+(defparameter matz4
   (list mw1 mw2 mw3 mw4))
 
 ;; "gap> MatGroupZClass(2,2,2,2)"
 ;; here called "
-(define mr1 (make-array 
+(defparameter mr1 (make-array 
 	     '(2 2) :initial-contents '((-1 0) (0 -1))))
-(define mr2 (make-array 
+(defparameter mr2 (make-array 
 	     '(2 2) :initial-contents '((0 -1) (-1 0))))
-(define mr3 (make-array 
+(defparameter mr3 (make-array 
 	     '(2 2) :initial-contents '((1 0) (0 1))))
-(define mr4 (make-array 
+(defparameter mr4 (make-array 
 	     '(2 2) :initial-contents '((0 1) (1 0))))
 
-(define mrmat (list mr1 mr2 mr3 mr4))
+(defparameter mrmat (list mr1 mr2 mr3 mr4))
 
 ; 2,3,2,1
 
-(define mz1 (make-array 
+(defparameter mz1 (make-array 
 	     '(2 2) :initial-contents
 	     '(( -1 0 ) ( 0 -1 ))))
-(define mz2 (make-array 
+(defparameter mz2 (make-array 
 	     '(2 2) :initial-contents 
 	     '( ( -1 0 ) ( 0 1 ) )))
-(define mz3 (make-array 
+(defparameter mz3 (make-array 
 	     '(2 2) :initial-contents
 	     '( ( 0 -1 ) ( -1 0 ) )))
-(define mz4 (make-array 
+(defparameter mz4 (make-array 
 	     '(2 2) :initial-contents
 	     '( ( 0 -1 ) ( 1 0 ) )))
-(define mz5 (make-array 
+(defparameter mz5 (make-array 
 	     '(2 2) :initial-contents
 	     '( ( 0 1 ) ( -1 0 ) ))) 
-(define mz6 (make-array 
+(defparameter mz6 (make-array 
 	     '(2 2) :initial-contents
 	     '( ( 0 1 ) ( 1 0 ) )))
-(define mz7 (make-array 
+(defparameter mz7 (make-array 
 	     '(2 2) :initial-contents
 	     '( ( 1 0 ) ( 0 -1 ) ))) 
-(define mz8 (make-array 
+(defparameter mz8 (make-array 
 	     '(2 2) :initial-contents
 	     '( ( 1 0 ) ( 0 1 ) ) ))
 
-(define mzmat (list mz1 mz2 mz3 mz4 mz5 mz6 mz7 mz8))
+(defparameter mzmat (list mz1 mz2 mz3 mz4 mz5 mz6 mz7 mz8))

@@ -6,14 +6,14 @@
 ;; www.wordecho.org
 
 ;; D4-GRAPH: dihedral group (4) -- size 4
-(define d4-graph (new graph :of
+(defparameter d4-graph (new graph :of
 		      `((a :id 1 :to ,(new weighting of '(2 3)))
 			(b :id 2 :to ,(new weighting of '(1 4)))
 			(c :id 3 :to ,(new weighting of '(1 4)))
 			(d :id 4 :to ,(new weighting of '(2 3))))))
 
 ;; TRANS8C-GRAPH: transitive group (8) id 3 -- size 8
-(define trans8c-graph (new graph :of
+(defparameter trans8c-graph (new graph :of
 			   `((a :id 1 :to ,(new weighting of '(3 5 8)))
 			     (b :id 2 :to ,(new weighting of '(3 6 8)))
 			     (c :id 3 :to ,(new weighting of '(1 2 7)))
@@ -25,7 +25,7 @@
 
 ;; TRANS6A-GRAPH: transitive group (6) id 1 -- size 6
 ;; "kinda cyclic"
-(define trans6a-graph (new graph :of
+(defparameter trans6a-graph (new graph :of
 			   `((a :id 1 :to ,(new weighting of '(2 6)))
 			     (b :id 2 :to ,(new weighting of '(1 3)))
 			     (c :id 3 :to ,(new weighting of '(2 4)))
@@ -35,7 +35,7 @@
 
 ;; TRANS6B-GRAPH: transitive group (6) id 2 -- size 6
 ;; "no steps"
-(define trans6b-graph (new graph :of
+(defparameter trans6b-graph (new graph :of
 			   `((a :id 1 :to ,(new weighting of '(3 4 5)))
 			     (b :id 2 :to ,(new weighting of '(4 5 6)))
 			     (c :id 3 :to ,(new weighting of '(1 5 6)))
@@ -44,7 +44,7 @@
 			     (f :id 6 :to ,(new weighting of '(2 3 4))))))
 
 ;; TRANS6C-GRAPH: transitive group (6) id 3 --- size 12
-(define trans6c-graph (new graph :of
+(defparameter trans6c-graph (new graph :of
 		      `((a :id 1 :to ,(new weighting of '(4 7 11)))
 			(b :id 2 :to ,(new weighting of '(3 8 12)))
 			(c :id 3 :to ,(new weighting of '(2 5 10)))
@@ -59,7 +59,7 @@
 			(l :id 12 :to ,(new weighting of '(2 6 9))))))
 
 ;; SMALL12A-GRAPH: small group (12) id 1 --- size 12
-(define small12a-graph (new graph :of
+(defparameter small12a-graph (new graph :of
 		      `((a :id 1 :to ,(new weighting of '(2 3 4 5 8)))
 			(b :id 2 :to ,(new weighting of '(1 3 5 6 10)))
 			(c :id 3 :to ,(new weighting of '(1 2 5 7 11)))
@@ -74,7 +74,7 @@
 			(l :id 12 :to ,(new weighting of '(5 8 9 10 11))))))
 
 ;; SMALL12B-GRAPH: small group (12) id 2 --- size 12
-(define small12b-graph (new graph :of
+(defparameter small12b-graph (new graph :of
 		      `((a :id 1 :to ,(new weighting of '(2 3 4 6 7)))
 			(b :id 2 :to ,(new weighting of '(1 4 5 6 9)))
 			(c :id 3 :to ,(new weighting of '(1 5 7 8 10)))
@@ -89,7 +89,7 @@
 			(l :id 12 :to ,(new weighting of '(6 7 9 10 11))))))
 
 ;; ALT4-GRAPH: alternating group (4) --- size 12
-(define alt4-graph (new graph :of
+(defparameter alt4-graph (new graph :of
 		      `((a :id 1 :to ,(new weighting of '(2 3 5 7)))
 			(b :id 2 :to ,(new weighting of '(1 3 9 10)))
 			(c :id 3 :to ,(new weighting of '(1 2 4 11)))

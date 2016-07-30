@@ -28,13 +28,15 @@
 
 ; gap> D := PGPointFlatBlockDesign(221);; D.blocks; BlockNumbers(D);
 ; size 7
-(define pplane3
+; MKG: defparameter for define
+(defparameter pplane3
   '( ( 1 2 3 ) ( 1 4 5 ) ( 1 6 7 ) ( 2 4 6 ) ( 2 5 7 ) 
     ( 3 4 7 ) ( 3 5 6 ) ))
 
 ; gap> D := PGPointFlatBlockDesign(231);; D.blocks; BlockNumbers(D);
 ; size 13
-(define pplane4
+; MKG: defparameter for define
+(defparameter pplane4
   '( ( 1 2 3 4 ) ( 1 5 6 7 ) ( 1 8 9 10 ) ( 1 11 12 13 ) 
     ( 2 5 8 11 ) ( 2 6 9 12 ) ( 2 7 10 13 ) ( 3 5 9 13 ) 
     ( 3 6 10 11 ) ( 3 7 8 12 ) ( 4 5 10 12 ) ( 4 6 8 13 ) 
@@ -44,7 +46,8 @@
 ;; CONTOURS3 -- ternary contours (13 total)
 ;; added June 2005
 ;; can use with pplane4 and 'contour-chain' function
-(define contours3
+; MKG: defparameter for define
+(defparameter contours3
   '((0 1 2) (0 1 1) (0 1 0) (0 2 1) (1 2 0) 
     (0 0 1) (0 0 0) (2 1 0) (1 0 0)
     (1 0 1) (2 0 1) (1 0 2) (1 1 0)))
@@ -52,7 +55,8 @@
 ;; NOTE: ALL PPLANE4 CONTOURS have length 9, max height 7
 ;; 312 contours total (including permutations)
 ;; added June 2005
-(define pp4contours
+; MKG: defparameter for define
+(defparameter pp4contours
   '((0 1 2 3 3 4 3 5 4) (0 1 2 3 3 5 4 5 4) (0 1 2 3 2 3 3 5 4)
     (0 1 2 3 2 4 3 4 4) (0 1 2 4 3 4 4 5 4) (0 1 2 4 3 4 3 4 4)
     (0 1 1 2 3 4 3 5 4) (0 1 1 2 3 5 4 5 4) (0 1 1 2 1 2 3 5 4)
@@ -160,7 +164,7 @@
 
 ; gap> D := PGPointFlatBlockDesign(241);; D.blocks; BlockNumbers(D);
 ; size 21
-(define pplane5
+(defparameter pplane5
   '( ( 1 2 3 4 5 ) ( 1 6 7 8 9 ) ( 1 10 11 12 13 ) 
     ( 1 14 15 16 17 ) ( 1 18 19 20 21 ) ( 2 6 10 14 18 ) 
     ( 2 7 11 15 19 ) ( 2 8 12 16 20 ) ( 2 9 13 17 21 ) 
@@ -171,14 +175,14 @@
 
 ;; MODE7-DYADS unordered dyads mod 7 (21 total)
 ;; can be used with pplane5
-(define mode7-dyads
+(defparameter mode7-dyads
   '((5 6) (4 6) (4 5) (3 6) (3 5) (3 4) (2 6) 
     (2 5) (2 4) (2 3) (1 6) (1 5) (1 4)
     (1 3) (1 2) (0 6) (0 5) (0 4) (0 3) (0 2) (0 1)))
 
 ; gap> D := PGPointFlatBlockDesign(251);; D.blocks; BlockNumbers(D);
 ; size 31
-(define pplane6
+(defparameter pplane6
 '( ( 1 2 3 4 5 6 ) ( 1 7 8 9 10 11 ) ( 1 12 13 14 15 16 ) 
   ( 1 17 18 19 20 21 ) ( 1 22 23 24 25 26 ) 
   ( 1 27 28 29 30 31 ) ( 2 7 12 17 22 27 ) 
@@ -197,7 +201,7 @@
 
 ; gap> D := PGPointFlatBlockDesign(271);; D.blocks; BlockNumbers(D);
 ; size 57
-(define pplane8
+(defparameter pplane8
 '( ( 1 2 3 4 5 6 7 8 ) ( 1 9 10 11 12 13 14 15 ) 
   ( 1 16 17 18 19 20 21 22 ) ( 1 23 24 25 26 27 28 29 ) 
   ( 1 30 31 32 33 34 35 36 ) ( 1 37 38 39 40 41 42 43 ) 
@@ -230,7 +234,7 @@
 
 ; gap> D := PGPointFlatBlockDesign(281);; D.blocks; BlockNumbers(D);
 ; size 73
-(define pplane9
+(defparameter pplane9
 '( ( 1 2 3 4 5 6 7 8 9 ) ( 1 10 11 12 13 14 15 16 17 ) 
   ( 1 18 19 20 21 22 23 24 25 ) ( 1 26 27 28 29 30 31 32 33 )
      ( 1 34 35 36 37 38 39 40 41 ) 
@@ -283,7 +287,7 @@
 
 ; gap> D := PGPointFlatBlockDesign(291);; D.blocks; BlockNumbers(D);
 ; size 91
-(define pplane10
+(defparameter pplane10
 '( ( 1 2 3 4 5 6 7 8 9 10 ) ( 1 11 12 13 14 15 16 17 18 19 )
      ( 1 20 21 22 23 24 25 26 27 28 ) 
   ( 1 29 30 31 32 33 34 35 36 37 ) 
@@ -377,7 +381,7 @@
 
 ; gap> D := PGPointFlatBlockDesign(2111);; D.blocks; BlockNumbers(D);
 ; size 133
-(define pplane12
+(defparameter pplane12
 '( ( 1 2 3 4 5 6 7 8 9 10 11 12 ) 
   ( 1 13 14 15 16 17 18 19 20 21 22 23 ) 
   ( 1 24 25 26 27 28 29 30 31 32 33 34 ) 
@@ -518,13 +522,13 @@
 
 ; 9 elements
 ; 12 vectors
-(define aplane3
+(defparameter aplane3
   '((1 2 3) (1 4 5) (1 6 7) (1 8 9) (2 4 6) (2 5 8) (2 7 9) (3 4 9)
     (3 5 7) (3 6 8) (4 7 8) (5 6 9)))
 
 ; 16 elements
 ; 20 vectors
-(define aplane4
+(defparameter aplane4
   '((1 2 3 4) (1 5 6 7) (1 8 9 10) (1 11 12 13) (1 14 15 16) (2 5 11 14)
     (2 6 8 12) (2 7 9 15) (2 10 13 16) (3 5 8 16) (3 6 13 15) (3 7 10 11)
     (3 9 12 14) (4 5 9 13) (4 6 10 14) (4 7 12 16) (4 8 11 15) (5 10 12 15)
@@ -532,7 +536,7 @@
 
 ;; 25 elements
 ;; 30 vectors
-(define aplane5
+(defparameter aplane5
   '((1 2 3 4 5) (1 6 7 8 9) (1 10 11 12 13) (1 14 15 16 17) (1 18 19 20 21)
     (1 22 23 24 25) (2 6 10 14 22) (2 7 15 18 23) (2 8 11 16 19) (2 9 12 20 24)
     (2 13 17 21 25) (3 6 16 20 25) (3 7 11 17 24) (3 8 13 18 22) (3 9 10 15 21)
@@ -545,13 +549,13 @@
 
 ; 7 elements
 ; 7 vectors
-(define sts7
+(defparameter sts7
   '( ( 1 2 3 ) ( 1 4 5 ) ( 1 6 7 ) ( 2 4 6 ) ( 2 5 7 ) 
     ( 3 4 7 ) ( 3 5 6 ) ))
 
 ; 9 elements
 ; 9 vectors
-(define sts9
+(defparameter sts9
   '( ( 1 2 3 ) ( 1 4 5 ) ( 1 6 7 ) ( 1 8 9 ) ( 2 4 6 ) 
     ( 2 5 8 ) ( 2 7 9 ) ( 3 4 9 ) ( 3 5 7 ) ( 3 6 8 ) 
     ( 4 7 8 ) ( 5 6 9 ) ))
@@ -560,7 +564,7 @@
 
 ; 8 elements
 ; 14 vectors
-(define sqs8
+(defparameter sqs8
   '( ( 1 2 3 4 ) ( 1 2 5 6 ) ( 1 2 7 8 ) ( 1 3 5 7 ) 
     ( 1 3 6 8 ) ( 1 4 5 8 ) ( 1 4 6 7 ) ( 2 3 5 8 ) 
     ( 2 3 6 7 ) ( 2 4 5 7 ) ( 2 4 6 8 ) ( 3 4 5 6 ) 
@@ -571,7 +575,7 @@
 
 ; S(3 4 10) 
 ; size 30
-(define s-3-4-10
+(defparameter s-3-4-10
   '( ( 1 2 3 4 ) ( 1 2 5 6 ) ( 1 2 7 8 ) ( 1 2 9 10 ) 
     ( 1 3 5 7 ) ( 1 3 6 9 ) ( 1 3 8 10 ) ( 1 4 5 10 ) 
     ( 1 4 6 8 ) ( 1 4 7 9 ) ( 1 5 8 9 ) ( 1 6 7 10 ) 
@@ -583,7 +587,7 @@
 
 ; S(3 3 9)
 ; size 84
-(define s-3-3-9
+(defparameter s-3-3-9
   ' ( ( 1 2 3 ) ( 1 2 4 ) ( 1 2 5 ) ( 1 2 6 ) ( 1 2 7 ) 
       ( 1 2 8 ) ( 1 2 9 ) ( 1 3 4 ) ( 1 3 5 ) ( 1 3 6 ) 
       ( 1 3 7 ) ( 1 3 8 ) ( 1 3 9 ) ( 1 4 5 ) ( 1 4 6 ) 
@@ -604,7 +608,7 @@
 
 ; S (5 6 12)
 ; size 132
-(define s-5-6-12
+(defparameter s-5-6-12
   '( ( 1 2 3 4 5 6 ) ( 1 2 3 4 7 8 ) ( 1 2 3 4 9 10 ) 
     ( 1 2 3 4 11 12 ) ( 1 2 3 5 7 9 ) ( 1 2 3 5 8 11 ) 
     ( 1 2 3 5 10 12 ) ( 1 2 3 6 7 12 ) ( 1 2 3 6 8 10 ) 
@@ -655,7 +659,7 @@
 ; gap> Had348 := BlockDesigns(rec(
 ; > v:=8,blockSizes:=[4],
 ; > tSubsetStructure:=rec(t:=3,lambdas:=[1])));
-(define s-3-4-8
+(defparameter s-3-4-8
   '( ( 1 2 3 4 ) ( 1 2 5 6 ) ( 1 2 7 8 ) ( 1 3 5 7 ) 
     ( 1 3 6 8 ) ( 1 4 5 8 ) ( 1 4 6 7 ) ( 2 3 5 8 ) 
     ( 2 3 6 7 ) ( 2 4 5 7 ) ( 2 4 6 8 ) ( 3 4 5 6 ) 
@@ -663,7 +667,7 @@
 
 ; S3 (3 6 12)
 ; size 22
-(define s3-3-6-12
+(defparameter s3-3-6-12
   '( ( 1 2 3 4 5 6 ) ( 1 2 3 7 8 9 ) ( 1 2 4 7 10 11 ) 
     ( 1 2 5 8 10 12 ) ( 1 2 6 9 11 12 ) ( 1 3 4 8 11 12 ) 
     ( 1 3 5 9 10 11 ) ( 1 3 6 7 10 12 ) ( 1 4 5 7 9 12 ) 
@@ -676,7 +680,7 @@
 ;; Witt geometry -- Steiner S(5,6,12)
 ;; automorphism group = Mathieu 12 (M12)
 
-(define w12
+(defparameter w12
     '( ( 1 2 3 4 5 6 ) ( 1 2 3 4 7 8 ) ( 1 2 3 4 9 10 )
       ( 1 2 3 4 11 12 ) ( 1 2 3 5 7 9 ) ( 1 2 3 5 8 11 )
       ( 1 2 3 5 10 12 ) ( 1 2 3 6 7 12 ) ( 1 2 3 6 8 10 )

@@ -148,7 +148,7 @@
 
 ;;  ====== scanon data below ==============
 ;; pushed all to 'all-scans'
-(define all-scans ())
+(defparameter all-scans '())
 
 ;; NOTE: these scans use consvec of '(3 4 7 8 9) -- *not* including octave!
 ;; NOTE: all scans with vc > 2 use deepscans with 'lenient' setting (not strictly scans)

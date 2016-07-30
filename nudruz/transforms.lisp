@@ -70,7 +70,7 @@
 		 (cons (+ x 6) (set-difference chd (list x)))))))
 
 ;; all permutations of 12-3 partitions
-(define threeparts
+(defparameter threeparts
     '((4 4 4) (5 4 3) (5 3 4) (4 5 3) (4 3 5) (3 5 4) (3 4 5) (5 5 2) (5 2 5)
       (2 5 5) (6 3 3) (3 6 3) (3 3 6) (6 4 2) (6 2 4) (4 6 2) (4 2 6) (2 6 4)
       (2 4 6) (6 5 1) (6 1 5) (5 6 1) (5 1 6) (1 6 5) (1 5 6) (7 3 2) (7 2 3)

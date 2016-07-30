@@ -176,18 +176,17 @@
 ;;; demonstration follows ...
 ;;;
 
-;(define tzplay
-;  (process for thischord in (tzrandchain '(3 26 48) 20)
-;           for dur = (pick 3 4 5)
-;           output (multievent 'midi :keynum
-;                              :keynum (transp thischord 40)
-;                              :time (now)
-;                              :duration dur)
-;           wait dur))
+(defun tzplay ()
+  (cm::process for thischord in (tzrandchain '(3 26 48) 20)
+           for dur = (pick 3 4 5)
+           output (multievent 'midi :keynum
+                              :keynum (transp thischord 40)
+                              :time (now)
+                              :duration dur)
+           wait dur))
 
-
-;; store them in a midi file
-; (events tzplay "tzplay.midi")
+; store them in a midi file
+(cm::events (tzplay) "tzplay.midi")
 
 
 ;; below added June 2006

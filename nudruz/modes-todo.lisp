@@ -49,43 +49,36 @@
   (let ((msize (mode-size modename)))
     (mapcar (lambda (x) (mod x msize)) modenums)))
 
-
-
-
-
 (mixo '(7 9 11 9 9 11 9 7 9)) ;  = (7 9 10 9 9 10 9 7 9)
-
 
 (modeheight (heapvec 30 80) pentatonic)
 
 (modeheight 54 pentatonic)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;;;;;;;; FILTERING ON MODES
 
-(define theselens '(4.5 5.25 2.0 3.0 4.75))
+;;; MKG: Translating Scheme-isms to SBCL: "define" for
+;;; expressions with defparameter, for functions with defun.
+;;; See: http://stackoverflow.com/questions/28938940/simulate-scheme-define-in-common-lisp.
+;;; (define myplus otherfun)             ; (setf (symbol-function 'myplus) otherfun)
+;;; (define myplus (lambda args . body)) ; (defun myplus args . body)
+;;; (define (myplus . args) . body )     ; (defun myplus args . body)
+;;; (define value 10)                    ; (defparameter value 10)
 
-(define modelist '(pelog pentatonic wholetone stravmode))
+;(define theselens '(4.5 5.25 2.0 3.0 4.75))
+(defparameter theselens '(4.5 5.25 2.0 3.0 4.75))
 
-(define modecyc (new cycle of modelist))
+;(define modelist '(pelog pentatonic wholetone stravmode))
+(defparameter modelist '(pelog pentatonic wholetone stravmode))
 
-(define rawcyc (new cycle of (transp (heapvec 2000 48) 50)))
+;(define modecyc (new cycle of modelist))
+(defparameter modecyc (new cycle of modelist))
 
-(define (modey modename len)
+;(define rawcyc (new cycle of (transp (heapvec 2000 48) 50)))
+(defparameter rawcyc (new cycle of (transp (heapvec 2000 48) 50)))
+
+;(define (modey modename len)
+(defun (modey modename len)
   (process
     repeat (/ len .125)
         output (multievent 'midi :keynum
@@ -95,7 +88,8 @@
                              :duration .125)
         wait .125))
 
-(define mmmode
+;(define mmmode
+(defun mmmode
   (process for x in theselens
            sprout (modey (next modecyc) x) at (now)
            wait x))

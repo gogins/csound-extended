@@ -22,7 +22,7 @@
 (load "reger.lisp")
 (load "combinatorics.lisp")
 
-(load "data/besthex.lisp")
+; MKG: Missing file: (load "data/besthex.lisp")
 
 ;; KEEPERS
 
@@ -64,7 +64,7 @@
 (use-package :cmn)
 
 
-(define (testit stf len nts)
+(defun testit (stf len nts)
   ;; midi channel numbers map to staves.
   (let ((nts (new heap :notes nts))
         (rhy (new weighting
@@ -836,14 +836,11 @@
                             &optional (pattype 'line) (args :name 'whatever))
   `(next (new ,pattype :of ,alist ,args) ,readlen))
 
-
-
 (readlist 30 '(1 2 32 4))
 
 (readlist-mac 30 (indices 5) heap)
 
 (funcall list '(2 3 4))
-
 
 ;;; checking out new pattern functionality
 (define mychord
@@ -857,28 +854,27 @@
   (next mychord 100)
   .25) "out.midi" :play 'nil)
 
+(defparameter cyc1 (new cycle :of '(0 1 10)))
+(defparameter cyc2 (new cycle :of '(1 10 0)))
 
-(define cyc1 (new cycle :of '(0 1 10)))
-(define cyc2 (new cycle :of '(1 10 0)))
-
-(define plcyc
+(defparameter plcyc
 (new rewrite
           :of (listsub '(1 2 3) '(0 1 2) pleasantsrules)))
 
 (next plcyc #t)
 
-(define pat1
+(defparameter pat1
   (new random :of (list (new cycle :keynums '(a4 b c5 d))
                         (new heap :keynums '(gs4 as cs5 ds)))))
 
-(define pat2
+(defparameter pat2
   (new cycle :of  `(100 ,(new line :of (indices 21) :for 4) 2887
                     ,(new random :of '(44 55 66 77) :for 2))))
 
 (next pat2 #t)
 
 ; mixing patterns using "make-instance"
-(define (play-pats pats trope reps rate)
+(defun play-pats (pats trope reps rate)
   (process with dur = (* rate 2.5)
            repeat reps
            for len = (pick 8 12 16)
@@ -891,7 +887,7 @@
                        :duration dur)
            wait (* rate len)))
 
-(define pcns
+(defparameter pcns
   (new random :of '((heap :weight 2) line cycle
                     (palindrome :elide #t) rotation)))
 
@@ -906,11 +902,11 @@
 
 (next pat1 #t)
 
-(define x (new copier :of (new cycle :of '(a b c) :for 2)
+(defparameter x (new copier :of (new cycle :of '(a b c) :for 2)
                :for 3))
 
 
-(define pat1
+(defparameter pat1
   (new random :of (list (new cycle :keynums '(a4 b c5 d))
                         (new heap :keynums '(gs4 as cs5 ds)))))
 
@@ -1168,7 +1164,7 @@
 
 ;; test with 's4freerules'
 
-(define (rwrecursion-midi tone melody transpvec basedur)
+(defun rwrecursion-midi (tone melody transpvec basedur)
   (let ((len (length melody))
         (levels (length transpvec))
         (rwlen (length (car (last (first rwrules))))))
@@ -1189,7 +1185,7 @@
 
 (events (sierpinski 'a0 '(0 7 5) 4 3 .5) "sier.midi" :play 'nil)
 
-(define (sierpinski tone melody levels dur amp)
+(defun sierpinski (tone melody levels dur amp)
   (let ((len (length melody)))
     (process for i in melody
              for k = (transpose tone i)

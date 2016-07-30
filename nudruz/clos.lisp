@@ -7,7 +7,6 @@
 ; :INITFORM expression
 ; :INITARG symbol
 
-
 (defclass 2d-object () ())
 
 (defclass 2d-centered-object (2d-object)
@@ -23,13 +22,6 @@
   ((n-sides :accessor number-of-sides)
    (size :accessor size)))
 
-
-
-
-
-
-
-
 (defclass 3d-point ()
   ((x :accessor point-x)
    (y :accessor point-y)
@@ -38,7 +30,6 @@
 (let ((a-point (make-instance '3d-point)))
   (setf (point-x a-point) 0)
   (point-x a-point))
-
 
 (defclass 3d-point ()
   ((x :reader get-x :writer set-x)

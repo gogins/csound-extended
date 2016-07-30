@@ -28,7 +28,7 @@
 ;; between 'minups' and 'maxups' upbeats of 1
 ;; between 'mindown' and 'maxdown' length of downbeat
 
-(define (upbeatcyc minups maxups mindown maxdown)
+(defun upbeatcyc (minups maxups mindown maxdown)
   (new random :of `((1 :min ,minups :max ,maxups) 
 		    (,(pval (between mindown maxdown)) :max 1))))
 

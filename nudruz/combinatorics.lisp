@@ -1,64 +1,64 @@
 
 ;; COMBINATORICS.LISP -- misc pcset & combinatorics data
 
-(define latinsquare3
+(defparameter latinsquare3
     '(  ( 0 1 2 ) ( 1 2 0 ) ( 2 0 1 ) ))
-(define latinsquare4
+(defparameter latinsquare4
     '( ( 0 1 2 3 ) ( 1 0 3 2 ) ( 2 3 0 1 ) ( 3 2 1 0 )))
 
-(define latinsquare5a
+(defparameter latinsquare5a
     '( ( 0 1 2 3 4 ) ( 1 2 3 4 0 ) ( 2 3 4 0 1 )
       ( 3 4 0 1 2 ) ( 4 0 1 2 3 ) ))
-(define latinsquare5b
+(defparameter latinsquare5b
     '( ( 0 1 2 3 4 ) ( 2 3 4 0 1 ) ( 4 0 1 2 3 )
       ( 1 2 3 4 0 ) ( 3 4 0 1 2 ) ) )
 
-(define prime-trichords
+(defparameter prime-trichords
     '((0 4 8) (0 3 7) (0 2 7) (0 3 6) (0 2 6) (0 1 6) (0 2 5) (0 1 5) (0 2 4)
       (0 1 4) (0 1 3) (0 1 2)))
 
 ;; partitions
-(define parts6.3
+(defparameter parts6.3
     '( ( 2 2 2 ) ( 3 2 1 ) ( 4 1 1 ) ))
-(define parts6.4
+(defparameter parts6.4
     '( ( 2 2 1 1 ) ( 3 1 1 1 ) ))
-(define parts7.3
+(defparameter parts7.3
     '( ( 3 2 2 ) ( 3 3 1 ) ( 4 2 1 ) ( 5 1 1 ) ))
-(define parts7.4
+(defparameter parts7.4
     '( ( 2 2 2 1 ) ( 3 2 1 1 ) ( 4 1 1 1 ) ))
-(define parts8.3
+(defparameter parts8.3
     '( ( 3 3 2 ) ( 4 2 2 ) ( 4 3 1 ) ( 5 2 1 ) ( 6 1 1 ) ))
-(define parts8.4
+(defparameter parts8.4
     '( ( 2 2 2 2 ) ( 3 2 2 1 ) ( 3 3 1 1 ) ( 4 2 1 1 ) ( 5 1 1 1 ) ))
-(define parts9.3
+(defparameter parts9.3
     '( ( 3 3 3 ) ( 4 3 2 ) ( 4 4 1 ) ( 5 2 2 ) ( 5 3 1 ) ( 6 2 1 ) 
       ( 7 1 1 ) ))
-(define parts9.4
+(defparameter parts9.4
     '( ( 3 2 2 2 ) ( 3 3 2 1 ) ( 4 2 2 1 ) ( 4 3 1 1 ) ( 5 2 1 1 ) 
       ( 6 1 1 1 ) ))
-(define parts10.3
+(defparameter parts10.3
     '( ( 4 3 3 ) ( 4 4 2 ) ( 5 3 2 ) ( 5 4 1 ) ( 6 2 2 ) ( 6 3 1 ) 
       ( 7 2 1 ) ( 8 1 1 ) ))
-(define parts10.4
+(defparameter parts10.4
     '( ( 3 3 2 2 ) ( 3 3 3 1 ) ( 4 2 2 2 ) ( 4 3 2 1 ) ( 4 4 1 1 ) 
       ( 5 2 2 1 ) ( 5 3 1 1 ) ( 6 2 1 1 ) ( 7 1 1 1 ) ))
-(define parts11.3
+(defparameter parts11.3
     '( ( 4 4 3 ) ( 5 3 3 ) ( 5 4 2 ) ( 5 5 1 ) ( 6 3 2 ) ( 6 4 1 ) 
       ( 7 2 2 ) ( 7 3 1 ) ( 8 2 1 ) ( 9 1 1 ) ))
-(define parts11.4
+(defparameter parts11.4
     '( ( 3 3 3 2 ) ( 4 3 2 2 ) ( 4 3 3 1 ) ( 4 4 2 1 ) ( 5 2 2 2 ) 
       ( 5 3 2 1 ) ( 5 4 1 1 ) ( 6 2 2 1 ) ( 6 3 1 1 ) ( 7 2 1 1 ) 
       ( 8 1 1 1 ) ))
-(define parts12.3
+(defparameter parts12.3
     '( ( 4 4 4 ) ( 5 4 3 ) ( 5 5 2 ) ( 6 3 3 ) ( 6 4 2 ) ( 6 5 1 ) 
       ( 7 3 2 ) ( 7 4 1 ) ( 8 2 2 ) ( 8 3 1 ) ( 9 2 1 ) ( 10 1 1 ) ))
-(define parts12.4
+(defparameter parts12.4
     '( ( 3 3 3 3 ) ( 4 3 3 2 ) ( 4 4 2 2 ) ( 4 4 3 1 ) ( 5 3 2 2 ) 
       ( 5 3 3 1 ) ( 5 4 2 1 ) ( 5 5 1 1 ) ( 6 2 2 2 ) ( 6 3 2 1 ) 
       ( 6 4 1 1 ) ( 7 2 2 1 ) ( 7 3 1 1 ) ( 8 2 1 1 ) ( 9 1 1 1 ) ))
 
 ; 12 divided into 3 partitions -- all permutations
-(define parts12-3
+(defparameter parts12-3
     (remove-duplicates
      (flatter
       (mapcar #'permutations
@@ -68,7 +68,7 @@
      :test #'seq-eql))
 
 ;; ORDERED PARTITIONS -- 4-12 contained in "data/ordparts.lisp"
-(load "data/ordparts.lisp")
+;; MKG missing file: (load "data/ordparts.lisp")
 
 (defun ordered-partitions (n)
   (nth n (list nil nil nil nil ordparts4 ordparts5 ordparts6 ordparts7
@@ -80,25 +80,25 @@
   (nth n (list nil nil nil nil parts4 parts5 parts6 parts7
 	       parts8 parts9 parts10 parts11 parts12)))
 
-(define parts4
+(defparameter parts4
     '( ( 1 1 1 1 ) ( 2 1 1 ) ( 2 2 ) ( 3 1 ) ( 4 ) ))
-(define parts5
+(defparameter parts5
     '( ( 1 1 1 1 1 ) ( 2 1 1 1 ) ( 2 2 1 ) ( 3 1 1 ) ( 3 2 ) ( 4 1 ) 
       ( 5 ) ))
-(define parts6
+(defparameter parts6
     '( ( 1 1 1 1 1 1 ) ( 2 1 1 1 1 ) ( 2 2 1 1 ) ( 2 2 2 ) ( 3 1 1 1 ) 
       ( 3 2 1 ) ( 3 3 ) ( 4 1 1 ) ( 4 2 ) ( 5 1 ) ( 6 ) ))
-(define parts7
+(defparameter parts7
     '( ( 1 1 1 1 1 1 1 ) ( 2 1 1 1 1 1 ) ( 2 2 1 1 1 ) ( 2 2 2 1 ) 
       ( 3 1 1 1 1 ) ( 3 2 1 1 ) ( 3 2 2 ) ( 3 3 1 ) ( 4 1 1 1 ) 
       ( 4 2 1 ) ( 4 3 ) ( 5 1 1 ) ( 5 2 ) ( 6 1 ) ( 7 ) ))
-(define parts8
+(defparameter parts8
     '( ( 1 1 1 1 1 1 1 1 ) ( 2 1 1 1 1 1 1 ) ( 2 2 1 1 1 1 ) 
       ( 2 2 2 1 1 ) ( 2 2 2 2 ) ( 3 1 1 1 1 1 ) ( 3 2 1 1 1 ) 
       ( 3 2 2 1 ) ( 3 3 1 1 ) ( 3 3 2 ) ( 4 1 1 1 1 ) ( 4 2 1 1 ) 
       ( 4 2 2 ) ( 4 3 1 ) ( 4 4 ) ( 5 1 1 1 ) ( 5 2 1 ) ( 5 3 ) 
       ( 6 1 1 ) ( 6 2 ) ( 7 1 ) ( 8 ) ))
-(define parts9
+(defparameter parts9
     '( ( 1 1 1 1 1 1 1 1 1 ) ( 2 1 1 1 1 1 1 1 ) ( 2 2 1 1 1 1 1 ) 
       ( 2 2 2 1 1 1 ) ( 2 2 2 2 1 ) ( 3 1 1 1 1 1 1 ) 
       ( 3 2 1 1 1 1 ) ( 3 2 2 1 1 ) ( 3 2 2 2 ) ( 3 3 1 1 1 ) 
@@ -106,7 +106,7 @@
       ( 4 3 1 1 ) ( 4 3 2 ) ( 4 4 1 ) ( 5 1 1 1 1 ) ( 5 2 1 1 ) 
       ( 5 2 2 ) ( 5 3 1 ) ( 5 4 ) ( 6 1 1 1 ) ( 6 2 1 ) ( 6 3 ) 
       ( 7 1 1 ) ( 7 2 ) ( 8 1 ) ( 9 ) ))
-(define parts10
+(defparameter parts10
     '( ( 1 1 1 1 1 1 1 1 1 1 ) ( 2 1 1 1 1 1 1 1 1 ) 
       ( 2 2 1 1 1 1 1 1 ) ( 2 2 2 1 1 1 1 ) ( 2 2 2 2 1 1 ) 
       ( 2 2 2 2 2 ) ( 3 1 1 1 1 1 1 1 ) ( 3 2 1 1 1 1 1 ) 
@@ -117,7 +117,7 @@
       ( 5 3 1 1 ) ( 5 3 2 ) ( 5 4 1 ) ( 5 5 ) ( 6 1 1 1 1 ) 
       ( 6 2 1 1 ) ( 6 2 2 ) ( 6 3 1 ) ( 6 4 ) ( 7 1 1 1 ) ( 7 2 1 ) 
       ( 7 3 ) ( 8 1 1 ) ( 8 2 ) ( 9 1 ) ( 10 ) ))
-(define parts11
+(defparameter parts11
     '( ( 1 1 1 1 1 1 1 1 1 1 1 ) ( 2 1 1 1 1 1 1 1 1 1 ) 
       ( 2 2 1 1 1 1 1 1 1 ) ( 2 2 2 1 1 1 1 1 ) ( 2 2 2 2 1 1 1 ) 
       ( 2 2 2 2 2 1 ) ( 3 1 1 1 1 1 1 1 1 ) ( 3 2 1 1 1 1 1 1 ) 
@@ -132,7 +132,7 @@
       ( 6 3 2 ) ( 6 4 1 ) ( 6 5 ) ( 7 1 1 1 1 ) ( 7 2 1 1 ) ( 7 2 2 ) 
       ( 7 3 1 ) ( 7 4 ) ( 8 1 1 1 ) ( 8 2 1 ) ( 8 3 ) ( 9 1 1 ) ( 9 2 ) 
       ( 10 1 ) ( 11 ) ))
-(define parts12
+(defparameter parts12
     '( ( 1 1 1 1 1 1 1 1 1 1 1 1 ) ( 2 1 1 1 1 1 1 1 1 1 1 ) 
       ( 2 2 1 1 1 1 1 1 1 1 ) ( 2 2 2 1 1 1 1 1 1 ) 
       ( 2 2 2 2 1 1 1 1 ) ( 2 2 2 2 2 1 1 ) ( 2 2 2 2 2 2 ) 
@@ -155,12 +155,12 @@
       ( 9 3 ) ( 10 1 1 ) ( 10 2 ) ( 11 1 ) ( 12 ) ))
 
 ;; gray codes [adjacent codewords]
-(define gray3 
+(defparameter gray3 
     '( ( 0 0 0 ) ( 0 0 1 ) ( 0 1 1 ) 
       ( 0 1 0 ) ( 1 1 0 ) ( 1 1 1 ) 
       ( 1 0 1 ) ( 1 0 0 ) ))
 
-(define gray4
+(defparameter gray4
 '( ( 0 0 0 0 ) ( 0 0 0 1 )
   ( 0 0 1 1 ) ( 0 0 1 0 )
   ( 0 1 1 0 ) ( 0 1 1 1 )
@@ -170,7 +170,7 @@
   ( 1 0 1 0 ) ( 1 0 1 1 )
   ( 1 0 0 1 ) ( 1 0 0 0 )))
 
-(define gray5
+(defparameter gray5
 '( ( 0 0 0 0 0 ) 
   ( 0 0 0 0 1 ) 
   ( 0 0 0 1 1 ) 
@@ -204,7 +204,7 @@
   ( 1 0 0 0 1 ) 
   ( 1 0 0 0 0 ) ))
 
-(define gray6
+(defparameter gray6
 '( ( 0 0 0 0 0 0 ) 
   ( 0 0 0 0 0 1 ) 
   ( 0 0 0 0 1 1 ) 
@@ -270,7 +270,7 @@
   ( 1 0 0 0 0 1 ) 
   ( 1 0 0 0 0 0 ) ))
 
-(define gray7
+(defparameter gray7
 '( ( 0 0 0 0 0 0 0 ) 
   ( 0 0 0 0 0 0 1 ) 
   ( 0 0 0 0 0 1 1 ) 
@@ -400,7 +400,7 @@
   ( 1 0 0 0 0 0 1 ) 
   ( 1 0 0 0 0 0 0 ) ))
 
-(define gray8
+(defparameter gray8
 '( ( 0 0 0 0 0 0 0 0 ) 
   ( 0 0 0 0 0 0 0 1 ) 
   ( 0 0 0 0 0 0 1 1 ) 
@@ -658,7 +658,7 @@
   ( 1 0 0 0 0 0 0 1 ) 
   ( 1 0 0 0 0 0 0 0 ) ))
 
-(define gray9
+(defparameter gray9
 '( ( 0 0 0 0 0 0 0 0 0 ) 
   ( 0 0 0 0 0 0 0 0 1 ) 
   ( 0 0 0 0 0 0 0 1 1 ) 
@@ -1172,7 +1172,7 @@
   ( 1 0 0 0 0 0 0 0 1 ) 
   ( 1 0 0 0 0 0 0 0 0 )))
 
-(define gray10
+(defparameter gray10
 '( ( 0 0 0 0 0 0 0 0 0 0 ) 
   ( 0 0 0 0 0 0 0 0 0 1 ) 
   ( 0 0 0 0 0 0 0 0 1 1 ) 
@@ -2198,7 +2198,7 @@
   ( 1 0 0 0 0 0 0 0 0 1 ) 
   ( 1 0 0 0 0 0 0 0 0 0 ) ))
 
-(define gray11
+(defparameter gray11
 '( ( 0 0 0 0 0 0 0 0 0 0 
     0 ) ( 0 0 0 0 0 0 0 0 
     0 0 1 ) 
@@ -5272,7 +5272,7 @@
    1 ) ( 1 0 0 0 0 0 0 0 
    0 0 0 ) ))
 
-(define gray12
+(defparameter gray12
 '( ( 0 0 0 0 0 0 0 0 0 0 
     0 0 ) 
   ( 0 0 0 0 0 0 0 0 0 0 
