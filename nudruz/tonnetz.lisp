@@ -189,8 +189,8 @@
 ; (events tzplay "tzplay.midi")
 
 
-(defun tzplay ()
-  (cm::process for thischord in (tzrandchain '(3 26 48) 20)
+(defparameter tzplay
+  (process for thischord in (tzrandchain '(3 26 48) 20)
            for dur = (pick 3 4 5)
            output (multievent 'midi :keynum
                               :keynum (transp thischord 40)
