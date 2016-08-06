@@ -8,6 +8,8 @@
 
 ; (load "nudruz.lisp")
 
+(in-package :cm)
+
 ;; SOME BASIC UTILITIES
 ;; May 2005: "inverse-idx" moved to nudruz.lisp 
 ;; April 2007: "SIS" moved to nudruz.lisp

@@ -1527,7 +1527,7 @@
 ;; MODMULT -- multiplies & mods (number or list)
 ;; example: (modmult '(1 2 3) 3 4) = (3 2 1)
 (defun modmult (input multnum modnum)
-  (if (number? input) 
+  (if (numberp input) 
     (mod (* multnum input) modnum)
     (mapcar (lambda (x) (mod (* multnum x) modnum)) input)))
 
