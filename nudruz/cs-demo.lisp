@@ -1,9 +1,9 @@
-
-(load "Druzaks/nudruz.lisp")
+(in-package :cm)
+(load "nudruz.lisp")
 (load "rhythm.lisp")
 
 ;; RPCYC -- makes a long list of keynums
-(define rpcyc
+(defparameter rpcyc
   (loop repeat 25
   
     ;; make a list between 5 and 9 random pitches
@@ -17,7 +17,7 @@
     collect (chd-inversion (shuffle bpits) (random 12) (random 4))))
 
 ;; RHYTCYC -- makes long rhythm cycle
-(define rhytcyc (new cycle of 
+(defparameter rhytcyc (new cycle of 
 		     ;; merges attacks within list1 by list2
 		     (combine-atks
 		     ;; combines measures & subdivisions into a cycle
@@ -27,7 +27,7 @@
 
 ;; MIDI PLAYBACK
 ;; define some midi events
-(define flcyc
+(defparameter flcyc
   (let 	((inpits (flatten rpcyc)))
   (process 
     for thispit in inpits
@@ -54,7 +54,7 @@
 
 ;; now define some csound events
 
-(define csflcyc
+(defparameter csflcyc
   (let 	((inpits (flatten rpcyc)))
   (process 
     for thispit in inpits
@@ -67,7 +67,7 @@
 
 ;; NEED TO DEFINE SCO-HEADERS
 ; for dkspace
-(define sco-header
+(defparameter sco-header
 	"f 1 0 16384 10 1")
 
 ;; now write out to sco and wav
@@ -80,7 +80,7 @@
 
 ;; NOW LET'S USE P6 (dkspace2.orc)
 
-(define csflcyc
+(defparameter csflcyc
   (let 	((inpits (flatten rpcyc)))
   (process 
     for thispit in inpits
@@ -94,7 +94,7 @@
 
 ;; LET'S ALSO ADD OVERTONES TO THE SINE
 ; for dkspace 
-(define sco-header
+(defparameter sco-header
 	"f 1 0 16384 10 1 .5")
 
 ;; now write out to sco and wav

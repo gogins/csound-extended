@@ -1,5 +1,6 @@
 ;; ASYM-RHYTS.LISP -- asymmetrical rhythms [after Chemillier, Truchet, et. al.]
 ;; those with 'rhythmic oddity' property
+(in-package :cm)
 
 ;; ODDITY-IDX -- takes durs; returns number of atx that split totalen evenly
 (defun oddity-idx (alist)
@@ -32,7 +33,7 @@
 ;; ODDITIES - all listed asymmetrical rhythms (including rotations) -- all unique
 ;; nbr atx: (3 4 5 7 9 11)
 ;; durations: (8 11 12 16 18 20 22 24)
-(define oddities
+(defparameter oddities
     '((2 3 3) (3 3 2) (3 2 3) (2 3 2 3 2) (3 2 3 2 2) (2 3 2 2 3) (3 2 2 3 2)
       (2 2 3 2 3) (2 3 2 2 3 2 2) (3 2 2 3 2 2 2) (2 2 3 2 2 2 3) (2 3 2 2 2 3 2)
       (3 2 2 2 3 2 2) (2 2 2 3 2 2 3) (2 2 3 2 2 3 2) (2 3 2 2 2 3 2 2 2)

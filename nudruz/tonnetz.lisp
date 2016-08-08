@@ -177,20 +177,6 @@
 ;;; 
 ;;; demonstration follows ...
 ;;;
-;(define tzplay
-;  (process for thischord in (tzrandchain '(3 26 48) 20)
-;           for dur = (pick 3 4 5)
-;           output (multievent 'midi :keynum
-;                              :keynum (transp thischord 40)
-;                              :time (now)
-;                              :duration dur)
-;           wait dur))
-
-
-;; store them in a midi file
-; (events tzplay "tzplay.midi")
-
-
 (defparameter tzplay
   (process for thischord in (tzrandchain '(3 26 48) 20)
            for dur = (pick 3 4 5)
@@ -200,11 +186,8 @@
                               :duration dur)
            wait dur))
 
-
 ;; store them in a midi file
-(events tzplay "tzplay.midi")
-
-
+; (events tzplay "tzplay.midi")
 
 ;; below added June 2006
 ;; tonnetz metric work -- distances & paths btwn trichords!!

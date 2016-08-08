@@ -1,6 +1,7 @@
 
 ;; TONAL PITCH SPACE
-(load "/home/drew/Lisp/cm-2.4.0/Druzaks/nudruz.lisp")
+; MKG (load "/home/drew/Lisp/cm-2.4.0/Druzaks/nudruz.lisp")
+(in-package :cm)
 
 ;; four levels (with all belonging to lower levels as well)
 ;; 'tonic' = 1 member
@@ -29,24 +30,20 @@
 	 :initarg :triad)
   (scale :initform '(2 5 9 11))))
 
-(define mytps (make-instance 'tps))
+(defun mytps () (make-instance 'tps))
 
+(defun myspace () (make-instance 'tps))
 
+; MKG not defined, not used. (tps-scale (myspace))
 
-
-(define myspace (make-tps))
-
-(tps-scale myspace)
-
-
-(define mymode (new mode :tonic 'd :steps '(c d e fs g a bf)))
+(defun mymode () (new mode :tonic 'd :steps '(c d e fs g a bf)))
 (loop for x to 10 collect (note x :in mymode))
 
-(define thatmode (make-instance 'mode :tonic 'f))
+(defparameter thatmode (make-instance 'mode :tonic 'f))
 
-(define mymode (new mode :tonic 'd))
+(defparameter mymode (new mode :tonic 'd))
 
-(define mytps (new tpspace :tonic 'd :basechd '(d f a)))
+(defparameter mytps (new tpspace :tonic 'd :basechd '(d f a)))
 
 ; (slot-value mymode 'scale) = #<tuning "chromatic-scale">
 ; (slot-value mymode 'octave) = 12

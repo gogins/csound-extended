@@ -39,7 +39,7 @@
 
 ;; WORK
 
-(define three 3)
+(defparameter three 3)
 
 (* 8 3)
 
@@ -80,7 +80,7 @@
              wait r)))
 
 ;;; define staff descriptions
-(define staffs
+(defparameter staffs
   '((0 :name "Viola" :clef :alto :meter (4 4))
     (2 :name "Flute" :clef :treble :meter (4 4))))
 
@@ -107,7 +107,7 @@
 
 
 
-(define myline
+(defparameter myline
   (process repeat 30
            for dur = .25
            output (multievent 'midi :keynum
@@ -120,17 +120,17 @@
 
 (note :keynum 63.4)
 
-(define snarepits (copylist '(38) 216))
+(defparameter snarepits (copylist '(38) 216))
 
-(define s2 (rwgen sfree3rules '(1) 2))
-
-
-(define s3 (rwgen sfree3rules '(1) 3))
-
-(define snp (tpoints snarepits s3 3))
+(defparameter s2 (rwgen sfree3rules '(1) 2))
 
 
-(define cymp (tpoints (copylist '(51 R R R R R) 36) 
+(defparameter s3 (rwgen sfree3rules '(1) 3))
+
+(defparameter snp (tpoints snarepits s3 3))
+
+
+(defparameter cymp (tpoints (copylist '(51 R R R R R) 36) 
                       (transp s2 6 #'*) 18))
 
 
@@ -194,9 +194,9 @@
 
 ;;
 
-(define entro (flatten (transp (entropy '(0 1 3 5)) 60)))
+(defparameter entro (flatten (transp (entropy '(0 1 3 5)) 60)))
 
-(define centro (au-contraire entro 50))
+(defparameter centro (au-contraire entro 50))
 
 (defun dkplay4 (pits)
     (process
@@ -253,7 +253,7 @@
 
 ;; extraction, au-contraire etc
 
-(define mypits
+(defparameter mypits
          (norpt (play-mode (flatten (loop for x in (heapvec 20 7) collect
                         (chd-inversion '(29 31 30 27) x))) stravmode)))
 
@@ -322,7 +322,7 @@
 
 
 ;; stack-by
-(define sb (stack-by (heapvec 5 12 40) 5))
+(defparameter sb (stack-by (heapvec 5 12 40) 5))
 (events 
  (splay (transp sb 14) 1.25) "out.midi")
 
@@ -332,9 +332,9 @@
 ;;; 
 ;; general inflection for a line
 
-(define mylist (randsteps 50 10))
+(defparameter mylist (randsteps 50 10))
 
-(define mylist '(1 2 3 5 3 4 6))
+(defparameter mylist '(1 2 3 5 3 4 6))
 
 
 ;;; NEEDS WORK
@@ -361,7 +361,7 @@
   (lambda (x) (mod x 12)))
 
 ;; a loop
-(define diff1vals '(0 1 5 11 6 1 1 2 6 9 4 2 2 3 4 10 5 3))
+(defparameter diff1vals '(0 1 5 11 6 1 1 2 6 9 4 2 2 3 4 10 5 3))
 
 (define-diff diff2
   (0 1 1)
@@ -371,7 +371,7 @@
   (lambda (x) (mod x 12)))
 
 ;(diff-vals 'diff2 0 30)
-(define diff2vals '(0 9 1 4 1 1 9 3 4 10 10 7))
+(defparameter diff2vals '(0 9 1 4 1 1 9 3 4 10 10 7))
 
 (define-diff diff3
     (1 3 4)
@@ -381,7 +381,7 @@
   (lambda (x) (mod x 12)))
 
 (diff-vals 'diff3 0 20)
-(define diff3vals '(3 4 1 9 8 11))
+(defparameter diff3vals '(3 4 1 9 8 11))
 
 (define-diff diff3b
     (1 1 4)
@@ -392,16 +392,16 @@
 
 (diff-vals 'diff3b 0 30)
 
-(define diff3bvals '(1 4 11 5 4 7 5 8 7 1 8 11)) 
+(defparameter diff3bvals '(1 4 11 5 4 7 5 8 7 1 8 11)) 
 
 (floor (* 12 (sin 2)))
 
-(define d12
+(defparameter d12
   (apply-across #'-
                 (diff-vals 'diff1 0 100)
                 (diff-vals 'diff2 0 100)))
 
-(define d12b
+(defparameter d12b
   (apply-across #'min
                 (diff-vals 'diff1 0 100)
                 (diff-vals 'diff2 0 100)))
@@ -431,13 +431,13 @@
 
 
 
-(define ranpits
+(defparameter ranpits
  (loop repeat 200 collect
   (+ (round (* 10
                (ran :type :gaussian))) 60)))
 ;  (0 0 2 2 1 6 12 7 14 13 25 12 21 13 20 12 18 7 5 4)
 
-(define ranpits
+(defparameter ranpits
  (loop repeat 200 collect
   (+ (round (* 40
                (ran :type :beta :a 2 :b 10))) 40)))
@@ -448,7 +448,7 @@
 ;; a=2 b=10
 ;; (12 32 46 30 37 18 7 9 7 1 1 0 0 0 0 0 0 0 0 0)
 
-(define ranpits
+(defparameter ranpits
  (loop repeat 200 collect
   (+ (round (* .5
                (ran :type :cauchy :a 't) 60)))))
@@ -459,7 +459,7 @@
 ;; 212 11 2 4 66 0 10 5 36 13 86 79 25 1 80)
 ;; (histogram ranpits 0 5000 10) = (194 2 0 0 1 1 0 1 0 0)
 
-(define ranpits
+(defparameter ranpits
  (loop repeat 200 collect
   (+ 30 (round (* 1
                (ran :type :poisson :a 30))))))
@@ -468,7 +468,7 @@
 ;; a=30
 ;; (0 0 0 0 0 0 7 15 22 42 42 33 22 10 3 3 1 0 0 0)
 
-(define ranpits
+(defparameter ranpits
  (loop repeat 200 collect
   (+ 30 (round (* 1
                (ran :type :gamma :a 30))))))
@@ -477,9 +477,9 @@
 
 (histogram ranpits 30 90 20)
 
-(define dpickpatt (new random of '(3 4 5)))
+(defparameter dpickpatt (new random of '(3 4 5)))
 
-(define ranpits
+(defparameter ranpits
  (loop repeat 200 collect
   (+ (round (* 5
                (ran :type :exponential :a .6))) 50)))
@@ -511,11 +511,12 @@
      (transp (second sd2) .25 #'*))) 
   ) "ran.midi" :play 'nil)
 
- (define msd2
+ (defun msd2 ()
          (slots->durs
           (extract ranpits (lambda (x) 
                              (and (eql 0 (mod x 3))
-                                  (keynum x :in? stravmode))))))
+; MKG: Not sureif mapcar is part of msd2 or not.
+                                  (keynum x :in? stravmode)))))
 
      (mapcar (lambda (x) (list x (+ x (next dpickpatt)))) (first msd2)))
 
@@ -537,8 +538,8 @@
  (ransegs 17 :type :gaussian :sum 20)
  0 10 10)
 
-(splay (durfunc 20 rs '(round (+ 50 (* 20 (sin x)))))
-       rs))
+(splay (durfunc 20 rs '(round (+ 50 (* 20 (sin x))))
+       rs)
 "out.midi" :play 'nil)
 
 
@@ -787,7 +788,7 @@
 
 ;; contour
 
-(define nt6 (ntn->clists '(-1 0 1) 6))
+(defparameter nt6 (ntn->clists '(-1 0 1) 6))
 
 (events
  (let ((hv (safesort (heapvec 6 60 30))))
@@ -843,7 +844,7 @@
 (funcall list '(2 3 4))
 
 ;;; checking out new pattern functionality
-(define mychord
+(defparameter mychord
   (new chord :of (new heap 
                    :notes '(c5 d ef f g af bf c6)
                    :for (new rewrite 
@@ -893,7 +894,7 @@
 
 (events (play-pats pcns '(a4 b c5 d) 12 .1) "test.mid")
 
-(define pat1
+(defparameter pat1
   (new cycle :of (list (new cycle :of '(50 51 51 53)
                             :for (new cycle :of '(4 3 2 1 0)))
                        (new cycle :of '(70 71 72 73)
@@ -912,7 +913,7 @@
 
 (note (next pat1 10))
 
-(define xpat (new cycle :of (indices 10) :for (new heap of (indices 3 5))))
+(defparameter xpat (new cycle :of (indices 10) :for (new heap of (indices 3 5))))
 
 (loop repeat 10 collect
 (next xpat #t))
@@ -956,7 +957,7 @@
 ;; pattern returns 'next' at each dbl point
 (defun pattern-descent
 
-(define apitlist 
+(defparameter apitlist 
   '(68 67 62 66 65 60 63 69 61 64 60 66 63 67 68 65 61 69 62 64))
 ; (slowline apitlist '(2 3))
 ; (68 R 62 R R 60 R 69 R R 60 R 63 R R 65 R 69 R R)
@@ -1061,7 +1062,7 @@
 
 (fm-spectrum 400 1.4 4 :spectrum ':keynum)
 
-(define fmspvec
+(defparameter fmspvec
   (loop for chd in 
         (loop for x from 100 to 200 by 5 collect
               (mapcar #'round
@@ -1205,13 +1206,13 @@
 (loop for x in (randvec 10 4) collect
       (rwgen sfree4rules (list x) 2))
 
-(define sf4 (new rewrite of :sfree4rules))
+(defparameter sf4 (new rewrite of :sfree4rules))
 
 (menses '(1) 4)
 
 ;; sfree3rules is non-uniform [size=3]
 
-(define rw-sf3
+(defparameter rw-sf3
   (new rewrite 
     :of sfree3rules
     :initially '(1)))
@@ -1336,7 +1337,7 @@
 
 ;; plotter
 
-(define myplot
+(defparameter myplot
 (plotter :zoom .5
          (loop for x from 0 to 1 by .2
                for y = (random 1.0)
@@ -1354,13 +1355,13 @@
 
 (load "spears/partials8hz-as.lisp")
 
-(define pars8slots
+(defparameter pars8slots
   (spear->slots partials8hz-as))
 
-(define pars8mels
+(defparameter pars8mels
   (spearmels partials8hz-as))
 
-(define qpatt (new random of '(1/6 1/4 1/3)))
+(defparameter qpatt (new random of '(1/6 1/4 1/3)))
 
 
 ;;; !!!
@@ -1554,12 +1555,12 @@ collect (transp 30 x))
 ;; rsm stuff
 
 
-(define myq (rsm.queue::list->queue (indices 5)))
-(define myq2 (rsm.queue::list->queue (heapvec 4 4 10)))
+(defparameter myq (rsm.queue::list->queue (indices 5)))
+(defparameter myq2 (rsm.queue::list->queue (heapvec 4 4 10)))
 
 (rsm.queue::get-last myq2)
 
-(define nuq (rsm.queue::append-queue myq myq2))
+(defparameter nuq (rsm.queue::append-queue myq myq2))
 
 nuq
 myq 
@@ -1778,7 +1779,7 @@ topic argument: American elections
 
 (cl-graph:get-transitive-closure (indices 10))
 
-(define myvar 5)
+(defparameter myvar 5)
 
 (alexandria:if-let (oddp myvar) (* 4 myvar) (* -1 myvar))
 
@@ -1798,12 +1799,12 @@ topic argument: American elections
 
 ;; PERLE FUNCTIONS
 
-(define up1s (indices 12))
-(define down1s (rotate-list (reverse (indices 12)) 11))
-(define up7s (mod12 (transp up1s 7 #'*)))
-(define down7s (mod12 (transp down1s 7 #'*)))
+(defparameter up1s (indices 12))
+(defparameter down1s (rotate-list (reverse (indices 12)) 11))
+(defparameter up7s (mod12 (transp up1s 7 #'*)))
+(defparameter down7s (mod12 (transp down1s 7 #'*)))
 
-(define perlerow '(0 7 5 2 10 9 3 4 8 11 1 6))
+(defparameter perlerow '(0 7 5 2 10 9 3 4 8 11 1 6))
 
 
 (defun row-neighbors (arow)
@@ -1917,7 +1918,7 @@ topic argument: American elections
   .125 #'*)
  "out.mid" :play 'nil)
 
-(define arows 
+(defparameter arows 
     (rows-by-seglen (allrows (randhexrow))))
 
 (chop-list (next (makecyc (flatten arows)) 200) 3)
@@ -1948,12 +1949,12 @@ topic argument: American elections
 (sets-len
 
 
-(define c5-branch
+(defparameter c5-branch
     (generic-branch #'tonnetz-func  
 		    (mod12 (expand (list (m7 (indices 12)) '(0 4 7))))))
 
 
-(define smoothpits (shuffle-all (smoothlist
+(defparameter smoothpits (shuffle-all (smoothlist
 				 (transp (mapcar #'stack-up (shuffle-all (flatter c5-branch))) 60))))
 
 ;; lullaby
@@ -1966,7 +1967,7 @@ topic argument: American elections
 
 ;; 
 
-(define dkrow1 '(5 0 9 7 11 10 3 6 8 1 4 2))
+(defparameter dkrow1 '(5 0 9 7 11 10 3 6 8 1 4 2))
 
 (events
  (let ((pits
@@ -2081,12 +2082,12 @@ v			 (shuffle-all
 
 (load "tiles.lisp")
 
-(define m5chds
+(defparameter m5chds
     (mod12
      (loop for n in (m5 (indices 12)) collect
 	   (transp '(0 3 5 7) n))))
 
-(define rgrthing 
+(defparameter rgrthing 
     (generic-branch #'rgr-alldim1 m5chds))
 
 (events
@@ -2097,11 +2098,11 @@ v			 (shuffle-all
 	   (closest-mod-list (mod12 (flatter rgrthing))))))
  "out.mid" :play 'nil)
 
-(define blah (heapvec 12))
+(defparameter blah (heapvec 12))
 
 (heapvec 12)
 
-(define thisrgr
+(defparameter thisrgr
 (generic-branch #'rgr-alldim1 (make-poly (heapvec 12) 3)))
 
 
@@ -2165,15 +2166,15 @@ v			 (shuffle-all
 
 ;;  CARTER etc
 
-(define drow (randhexrow))
+(defparameter drow (randhexrow))
 
-(define chex3 '(5 6 8 9 10 1))
+(defparameter chex3 '(5 6 8 9 10 1))
 
 
 chex3
 
 ;; 99 all-int rows: interval list!
-;(define carter1-ints '(2 7 4 3 1 6 11 9 8 5 10))
+;(defparameter carter1-ints '(2 7 4 3 1 6 11 9 8 5 10))
 
 (events
  (splay

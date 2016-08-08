@@ -1,13 +1,13 @@
 
 ;
-
+(in-system :cm)
 (use-system :cmn)
 
 
 
 ; METHOD 1: EXPORT
 
-(define up
+(defparameter up
   (process for key from 60 to 72 
         for beg from 0 by 1
         collect (new midi :time beg

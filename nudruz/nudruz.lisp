@@ -5,7 +5,7 @@
 ;; www.wordecho.org
 ;; Michael Gogins, 2016
 
-(load (merge-pathnames "cminit.lisp" *nudruz-home*))
+; MKG: Now in asd. (load (merge-pathnames "cminit.lisp" *nudruz-home*))
 (in-package :cm)
 
 ;(load "data/partition-table.lisp")
@@ -1188,7 +1188,7 @@
 
 ;; INVERT-DK -- subtracting number or list from number, mod12
 ;; added Sept. 2008
-(defun invert-dk (input level)
+(defun invert-dk (input &optional (level 0))
   (if (eql level 'r) 'r
       (cond
 	((eql input 'r) 'r)
@@ -5586,8 +5586,8 @@
   (pickl (all-figs len nbratx)))
 
 ; alternate name
-(defun randfigure (len nbratx)
-  (rand-fig (len nbratx)))
+;(defun randfigure (len nbratx)
+;  (rand-fig (len nbratx)))
 
 ;; END-TO-END -- last of each sublist starts the next one
 ;; used like 'make-poly'
