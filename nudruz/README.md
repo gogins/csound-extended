@@ -8,14 +8,14 @@ Drew's code also is licensed under the terms of the GNU Lesser General Public Li
 ## Changes
 
 1. All code has been brought into the Common Music package (that is, of course, the Lisp version of Common Music available 
-from 
+from svn://svn.code.sf.net/p/commonmusic/code/branches/cm2.
 1. Residual uses of Scheme syntax and of CLisp-compatible but Steel Bank Common Lisp-incompatible syntax have been ported 
 to SBCL. In particular, `(define` has been replaced wth `(defparameter` if no parameters are used or `defun` if parameters 
 are used.
 1. Csound classes in nudruz have been replaced with the Csound FFI facility. NOTE: Csound is not supported in the 
- Common Music Lisp branch.
+ Common Music Lisp branch (cm2).
 1. I have created a `nudruz.asd` system definition. It excludes all examples and files containing unfinished or unworkable 
-code. To use `nudruz.asd` you must first load `:rsm-mod` and `:cllib`. Do that, for example, have in 
+code. To use `nudruz.asd` you must first load `:rsm-mod` and `:cllib`. Do that, for example, by having in  
 your `.sbclrc` file something like:
 
 <pre>
