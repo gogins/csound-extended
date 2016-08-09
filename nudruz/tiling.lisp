@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; TILING.LISP -- creating tiling canons
 ;; see Tangian (PNM 41:2) etc.
 

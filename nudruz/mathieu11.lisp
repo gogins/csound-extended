@@ -1,8 +1,8 @@
-
+(in-package :cm)
 ;; w11 = Witt geometry;
 ;; 5-blocks out of 11 ; entire set used in each 'M11' permutation
 
-(define w11
+(defparameter w11
     '( ( 1 2 3 4 5 ) ( 1 2 3 6 7 ) ( 1 2 3 8 9 ) 
       ( 1 2 3 10 11 ) ( 1 2 4 6 8 ) ( 1 2 4 7 10 ) 
       ( 1 2 4 9 11 ) ( 1 2 5 6 11 ) ( 1 2 5 7 9 ) 
@@ -29,7 +29,7 @@
 ;; m11 = Mathieu 11
 ;; orbit of 0..10 permutations; used *in order*
 
-(define m11
+(defparameter m11
     '( ( 0 1 2 3 4 5 6 7 8 9 10) ( 1 0 3 2 4 5 7 6 9 8 10 ) 
       ( 2 3 1 0 4 5 9 8 6 7 10 ) ( 4 0 1 3 2 5 10 6 8 7 9 ) 
       ( 4 1 2 0 3 8 9 6 10 7 5 ) ( 4 1 3 6 7 2 0 10 9 8 5 ) 

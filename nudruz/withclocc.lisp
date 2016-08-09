@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; WITHCLOCC.LISP -- some stuff that requires clocc libraries
 
 

@@ -21,7 +21,7 @@
 (load (translate-logical-pathname "clocc:src;cllib;stat"))
 (load (translate-logical-pathname "clocc:src;cllib;rng"))
 (load (translate-logical-pathname "clocc:src;screamer;screamer"))
-(load "/usr/local/src/clocc/src/defsystem-3.x/defsystem.lisp")
+; MKG: Use standard defsystem. (load "/usr/local/src/clocc/src/defsystem-3.x/defsystem.lisp")
 
 (load "nondet.lisp")
 ; (use-system :clm)

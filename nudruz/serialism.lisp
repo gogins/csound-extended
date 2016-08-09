@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; 'mallalieu.lisp' = mallalieu (selfsim) & other rows
 

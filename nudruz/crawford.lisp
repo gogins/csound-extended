@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ; inspired by J"The Music of Ruth Crawford Seeger"
 
 ; (load "nudruz.lisp")

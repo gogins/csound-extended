@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; DOESN'T COPY AMPLITUDES -- USE "MIDI2CS.LISP" INSTEAD
 
 (setf tracks (import-events "hhc.mid"))

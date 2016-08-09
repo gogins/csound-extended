@@ -1,14 +1,12 @@
-(setq *clocc-root* "/usr/local/src/clocc/") ; or whatever ...
-(load (concatenate 'string *clocc-root* "clocc"))
+(in-package :cm)
 ; (load (translate-logical-pathname "clocc:src;cllib;base"))
 ; (load (translate-logical-pathname "clocc:src;cllib;matrix"))
 ; (load (translate-logical-pathname "clocc:src;cllib;gnuplot"))
 ; (load (translate-logical-pathname "clocc:src;cllib;octave"))
 ; (load (translate-logical-pathname "clocc:src;cllib;iter"))
 ;  (load (translate-logical-pathname "clocc:src;cllib;stat"))
-(load (translate-logical-pathname "clocc:src;screamer;screamer"))
 
-(use-package 'screamer)
+;;(use-package :screamer)
 
 ;; FLATTEN -- removes all nesting in list
 ;; "thank you Paul Graham!"
@@ -36,10 +34,10 @@
 (defun wiggle-to2 (startnum endnum maxlen allowed-ints)
    (remove-duplicates
      (all-values
-      (let* ((len (an-integer-between 0 maxlen))
+      (let* ((len (screamer::an-integer-between 0 maxlen))
              (intslen (length allowed-ints))
              (multvars (make-array intslen)))
-        (dotimes (j intslen) (setf (aref multvars j) (an-integer-between 0 len)))
+        (dotimes (j intslen) (setf (aref multvars j) (screamer::an-integer-between 0 len)))
         (assert! (< (apply-nondeterministic #'+ (coerce multvars 'list))
                     (+ maxlen 1)))
         (assert! (= (- endnum startnum)

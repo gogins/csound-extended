@@ -1,7 +1,7 @@
+(in-package :cm)
 
 ;; TONAL PITCH SPACE
 ; MKG (load "/home/drew/Lisp/cm-2.4.0/Druzaks/nudruz.lisp")
-(in-package :cm)
 
 ;; four levels (with all belonging to lower levels as well)
 ;; 'tonic' = 1 member

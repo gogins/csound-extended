@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; BEATS = from 0 to 200, contains two-part list:
 ;; first = all subdivs of this length that use 2,3,4,5-ples only
 ;; second = corresponding durations for those subdivisions

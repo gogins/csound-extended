@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; examples of working with modes
 
 ; (note 51 :in oct) = E5

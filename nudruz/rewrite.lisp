@@ -1,4 +1,4 @@
-
+(in-package :cm)
 
 ;; REWRITE.LISP -- using CM's rewrite function
 ;; some general functions

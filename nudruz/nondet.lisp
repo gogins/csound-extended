@@ -1,6 +1,8 @@
+(in-package :cm)
+;;(use-package :screamer)
 
 ;; load nondeterminism stuff ;;;;  not (use-package 'screamer)
-(in-package :screamer-user)
+; MKG (in-package :screamer-user)
 
 (defun list-eql (list1 list2)
   (and (subsetp list1 list2)
@@ -23,7 +25,7 @@
 (defun wigto (startnum endnum maxlen allowed-ints)
   (remove-duplicates
    (all-values
-    (let ((multvars (n-of-list (an-integer-between 0 maxlen) allowed-ints)))
+    (let ((multvars (n-of-list (screamer::an-integer-between 0 maxlen) allowed-ints)))
       (unless (= (reduce #'+ multvars) (- endnum startnum)) (fail))
       multvars))
    :test #'list-eql))
@@ -33,7 +35,7 @@
   (remove-duplicates
    (all-values
     (let* ((maxlen (ceiling (/ targetnum (reduce #'min componentnums))))
-           (multvars (n-of-list (an-integer-between 0 maxlen) componentnums)))
+           (multvars (n-of-list (screamer::an-integer-between 0 maxlen) componentnums)))
       (unless (= (reduce #'+ multvars) targetnum) (fail))
       multvars))
    :test #'list-eql))
@@ -47,11 +49,11 @@
             (all-values
              (let* ((triadsum (apply #'+ triad))
                     (sortd (sort triad #'<))
-                    (a (an-integer-between (max 0 (- (first sortd) span))
+                    (a screamer::(an-integer-between (max 0 (- (first sortd) span))
                                            (+ (first sortd) span)))
-                    (b (an-integer-between (- (second sortd) span)
+                    (b (screamer::an-integer-between (- (second sortd) span)
                                            (+ (second sortd) span)))
-                    (c (an-integer-between (- (third sortd) span)
+                    (c (screamer::an-integer-between (- (third sortd) span)
                                            (+ (third sortd) span))))
                (assert! (= (+ a b c) triadsum))
                (assert! (not (or (= a b) (= a c) (= b c))))
@@ -68,11 +70,11 @@
             (all-values
              (let* ((triadsum (apply #'+ triad))
                     (sortd (sort triad #'<))
-                    (a (an-integer-between (max 0 (- (first sortd) span))
+                    (a (screamer::an-integer-between (max 0 (- (first sortd) span))
                                            (+ (first sortd) span)))
-                    (b (an-integer-between (- (second sortd) span)
+                    (b (screamer::an-integer-between (- (second sortd) span)
                                            (+ (second sortd) span)))
-                    (c (an-integer-between (- (third sortd) span)
+                    (c (screamer::an-integer-between (- (third sortd) span)
                                            (+ (third sortd) span))))
                (assert! (< (abs (- (+ a b c) triadsum)) sumspan))
                (assert! (not (or (= a b) (= a c) (= b c))))
@@ -84,10 +86,10 @@
 (defun all-btwn (num1 num2)
   (if (> num2 num1)
     (all-values
-     (an-integer-between num1 num2))
+     (screamer::an-integer-between num1 num2))
     (reverse
      (all-values
-      (an-integer-between num2 num1)))))
+      (screamer::an-integer-between num2 num1)))))
 
 
 ;; CONTOUR-CONSTRAINTS-ND
@@ -170,13 +172,13 @@
 ;; returns all vectors (lr# ud# diag#)
 (defun tzpathfactors (x y tlevel &optional (modlen 12))
   (all-values
-   (let ((n (an-integer-between 
+   (let ((n (screamer::an-integer-between 
              (* -1 (floor (/ modlen (* 2 x))))
              (floor (/ modlen (* 2 x)))))
-         (m (an-integer-between 
+         (m (screamer::an-integer-between 
              (* -1 (floor (/ modlen (* 2 y))))
              (floor (/ modlen (* 2 y)))))
-         (p (an-integer-between -6 6)))
+         (p (screamer::an-integer-between -6 6)))
      (unless (= tlevel (mod
                    (+ (* n x) (* m y) (* p (+ x y)))
                    modlen))
@@ -219,8 +221,6 @@
       (assert! 
 	(nonmatch pairlist mel1places mel2places)))
     (list mel1places mel2places)))
-
-(in-package :cm)
 
 ;; call with "(screamer-user::wiggle-to2 45 48 8 '(2 -1))" etc.
 

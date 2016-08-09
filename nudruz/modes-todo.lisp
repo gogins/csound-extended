@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ; MODES-TODO.LISP
 
 (load "nudruz.lisp")
@@ -42,7 +44,7 @@
 (mode-lowest pentatonic)
 (mode-octave pentatonic)
 
-(floor 
+;; MKG: Incomplete... (floor 
 
 ;; converts mode indices by mod modesize
 (defun modemodnum (modenums modename)

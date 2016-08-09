@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; NONDET-TODO.LISP
 ;; nondeterministic forays for Common Music
 ;; needs screamer installed
@@ -10,11 +12,11 @@
 
 ;; to develop generically
 ;; (load "nudruz.lisp")
-;; (use-package 'screamer)
+;;(use-package :screamer)
 
 ;; to develop within screamer environment
-(load "cminit.lisp")
-(in-package :screamer-user)
+; MKG: Removed. (load "cminit.lisp")
+; MKG: Removed. (in-package :screamer-user)
 
 ;; revert with "(in-package :cm)"
 
@@ -65,7 +67,6 @@
           collect (loop repeat (nth x (second wigpair)) 
                     collect (nth x (first wigpair))))))
 
-
 ;; WRAP-WIG: 'wiggle-to-gen' wrapper for wigline
 ;; example: (wrap-wig 40 43 20 '(4 5 -1)) = ((40 39 44) 3)
 (defun wrap-wig (startnum endnum maxlen allowed-ints)
@@ -78,9 +79,6 @@
        (length wigwrap))
       (list startnum maxlen))))
 
-
-
-;;;
 ;; stuff for midchord
 
 (defun pairwise (list1 list2)
@@ -93,16 +91,14 @@
     (sort templist #'<)))
 
 ;; N-BETWEEN -- utility for midchord
-; (n-between '((10 20) (30 35)) = ((an-integer-between 10 20) (an-integer-between 30 35))
+; (n-between '((10 20) (30 35)) = ((screamer::an-integer-between 10 20) (screamer::an-integer-between 30 35))
 
 (defun n-between (listpairs)
   (let ((n (length (first listpairs))))
     (if (= n 0) '()
-         (cons (an-integer-between (first (car listpairs))
+         (cons (screamer::an-integer-between (first (car listpairs))
                                    (second (car listpairs)))
                (n-between (- n 1) listpairs)))))
-
-
 
 (all-btwn 10 5)
 
@@ -124,9 +120,9 @@
   (all-values
    (let* ((starts (safesort2 startc))
           (ends (safesort endc))
-          (a (an-integer-between (first starts) (first ends)))
-          (b (an-integer-between (second starts) (second ends)))
-          (c (an-integer-between (third starts) (third ends))))
+          (a (screamer::an-integer-between (first starts) (first ends)))
+          (b (screamer::an-integer-between (second starts) (second ends)))
+          (c (screamer::an-integer-between (third starts) (third ends))))
      (assert! (not (or (list-eql (a b c) starts)
                       (list-eql (a b c) ends))))
      (list a b c))))
@@ -165,7 +161,7 @@
 
 (defun tz-to (a-chd targetpit &optional (maxlen 10))
   (one-value
-   (let* ((len (an-integer-between 0 maxlen))
+   (let* ((len (screamer::an-integer-between 0 maxlen))
          (tzgen (tzchain a-chd (make-a-tz-chain a-chd len)))
           (lastz (last tzgen)))
      (unless (member targetpit lastz)
@@ -222,9 +218,9 @@
 
 (defun pythagorean-triples (n)
  (all-values
-  (let ((a (an-integer-between 1 n))
-        (b (an-integer-between 1 n))
-        (c (an-integer-between 1 n)))
+  (let ((a (screamer::an-integer-between 1 n))
+        (b (screamer::an-integer-between 1 n))
+        (c (screamer::an-integer-between 1 n)))
    (unless (= (+ (* a a) (* b b)) (* c c)) (fail))
    (list a b c))))
 
@@ -240,7 +236,7 @@
 (defun n-queens (n &optional queens)
  (if (= (length queens) n)
      queens
-     (let ((queen (an-integer-between 1 n)))
+     (let ((queen (screamer::an-integer-between 1 n)))
       (check-queens queen queens)
       (n-queens n (cons queen queens)))))
 

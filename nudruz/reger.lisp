@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; REGER.LISP
 ;; Reger model (after Harrison 1986 diss.)
 

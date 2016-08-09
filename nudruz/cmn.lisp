@@ -1,9 +1,4 @@
-
-;
-(in-system :cm)
-(use-system :cmn)
-
-
+(in-package :cm)
 
 ; METHOD 1: EXPORT
 

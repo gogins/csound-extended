@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; CYC-RHYTHMS -- combines measures and subdivisions cyclically
 (defun cyc-rhythms (mlens subdivs)
   (let* ((subdivcyc (new cycle of subdivs))
@@ -29,7 +31,7 @@
 ;; between 'mindown' and 'maxdown' length of downbeat
 
 (defun upbeatcyc (minups maxups mindown maxdown)
-  (new random :of `((1 :min ,minups :max ,maxups) 
+  (new cm::random :of `((1 :min ,minups :max ,maxups) 
 		    (,(pval (between mindown maxdown)) :max 1))))
 
 (next (upbeatcyc 2 5 10 20) 20)

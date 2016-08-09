@@ -1,6 +1,7 @@
 ;; SCANONS.LISP -- scanons as class-instances
 
 (in-package :cm)
+;;(use-package :screamer)
 
 ; (load "nudruz.lisp")
 
@@ -20,7 +21,7 @@
 (defun scanons (mlen tlevel vcs &optional (consvec '(3 4 7 8 9)))
   (remove-duplicates
    (loop for scan in 
-         (screamer-user::scanons-nd mlen tlevel vcs consvec)
+         (scanons-nd mlen tlevel vcs consvec)
          collect (transp-to 0 scan))
    :test #'list-eql))
 

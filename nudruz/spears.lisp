@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; from "ampsums" files
 

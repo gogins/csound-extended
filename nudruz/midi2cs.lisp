@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; GETTING WARM!!!
 (defobject midi2cs (i)
   ((ins :initform 1)

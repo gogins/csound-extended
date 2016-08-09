@@ -1,3 +1,4 @@
+(in-package :cm)
 ;;; modifications by Drew Krause
 
 ;; genetic-salesman.lisp
@@ -220,7 +221,7 @@ segment will come from list2."
 ;; (ga-salesman *sp* 20 10)
 ;; (ga-salesman *sp* 20 20)
 
-(define mysp
+(defparameter mysp 
       (make-instance 'salesman-problem
         :names '(a b c d e f g h i j k l m n o p
                  q r s t u v w x y z)))

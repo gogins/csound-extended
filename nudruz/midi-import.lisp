@@ -1,4 +1,4 @@
-
+(in-package :cm)
 
 ;; MIDI-IN -- creates (pits durs) two-element list of lists from midifile
 ;; note: gives same duration to simultaneous atx (legato to next atk)

@@ -1,5 +1,6 @@
+(in-package :cm)
 
-(define dyads5-graph
+(defparameter dyads5-graph
   (new graph of 
        `(((1 2) :id ab :to ,(new random of '(cd de ce)))
 	 ((1 3) :id ac :to ,(new random of '(de be bd)))
@@ -14,7 +15,7 @@
 
 ; (next dyads5-graph 10)
 
-(define dyads6-graph
+(defparameter dyads6-graph
   (new graph of 
        `(((1 2) :id ab :to ,(new random of '(cd ef df cf ce de)))
 	 ((1 3) :id ac :to ,(new random of '(de ef bf df bd be)))
@@ -33,7 +34,7 @@
 	 ((5 6) :id ef :to ,(new random of '(cd bd ab ad ac bc))))))
 
 
-(define dyads7-graph
+(defparameter dyads7-graph
   (new graph of 
        `(((1 2) :id ab :to ,(new random of '(cd fg eg dg ce cg de df ef cf)))
 	 ((1 3) :id ac :to ,(new random of '(de fg bg eg bd bf dg be df ef)))

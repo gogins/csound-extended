@@ -1,7 +1,7 @@
-;; ASYM-RHYTS.LISP -- asymmetrical rhythms [after Chemillier, Truchet, et. al.]
-;; those with 'rhythmic oddity' property
 (in-package :cm)
 
+;; ASYM-RHYTS.LISP -- asymmetrical rhythms [after Chemillier, Truchet, et. al.]
+;; those with 'rhythmic oddity' property
 ;; ODDITY-IDX -- takes durs; returns number of atx that split totalen evenly
 (defun oddity-idx (alist)
   (let ((totalen (apply #'+ alist)))

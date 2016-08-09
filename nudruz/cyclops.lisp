@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; CYCLOPS.LISP
 ;; melodic possibilities for self-similar canons
 ;; --> use these with the 'scf' function in nudruz.lisp
@@ -13,7 +15,6 @@
 ;; >  [ [ 0 ], [ 1, 2 ] ]
 ;; > 2
 ;; this becomes a 'cyclops' (a b b)
-
 
 ;; GAP2CYCLOPS converting exported 'gap' to cyclops
 (defun gap2cyclops (idxs)

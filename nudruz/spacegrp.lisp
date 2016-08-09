@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; SPACEGRP.LISP
 ;; some interesting transformations using matrix groups
 ;; to extend traditional (dihedral) transformations

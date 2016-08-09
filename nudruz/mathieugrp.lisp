@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; mathieu etc.
 
@@ -24,13 +25,13 @@
 
 
 ;; moving 'w11alt' to 0..11 domain
-(define w11alt0 (mapcar (lambda (x) (transp x -1)) w11alt))
+(defparameter w11alt0 (mapcar (lambda (x) (transp x -1)) w11alt))
 
 ; & shuffled
-(define shfw (shuffle w11alt0))
+(defparameter shfw (shuffle w11alt0))
 
 ;; shorter 'm11alt' for prototyping
-(define shortm11 (subseq m11alt 0 20))
+(defparameter shortm11 (subseq m11alt 0 20))
 
 ;; NOTE: "chds->lines" will give smoothness, instead of 'smoothlist'
 

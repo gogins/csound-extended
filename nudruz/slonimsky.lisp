@@ -1,27 +1,29 @@
+(in-package :cm)
+
 ;; patterns from the Slonimsky "Thesaurus"
 
 ;; 12-tone patterns
-(define patt500
+(defparameter patt500
     (flatten
      (expand '((0 3 6 9) (1 0 5)))))
 
-(define patt503
+(defparameter patt503
     (flatten
      (expand '((0 3 6 9) (1 0 8)))))
 
-(define patt505
+(defparameter patt505
     (flatten
      (expand '((0 3 6 9) (2 0 7)))))
 
-(define patt508
+(defparameter patt508
     (flatten
      (expand '((0 3 6 9) (2 0 10)))))
 
-(define patt512
+(defparameter patt512
     (flatten
      (expand '((0 3 6 9) (4 0 8)))))
 
-(define ttone-patts
+(defparameter ttone-patts
     (list patt500 patt503 patt505 patt508 patt512))
 
 ;; SLONIM-TT -- returns a randomly-generated 12-tone slonimsky pattern

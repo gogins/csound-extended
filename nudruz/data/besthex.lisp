@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; BESTHEX -- all unsorted first hexachords that will have a
 ;; hexachorally-related inversion 
@@ -14,7 +15,7 @@
 ;		   :test #'list-eql)
 ;	   thex)))
 
-(define besthex
+(defparameter besthex
     '((0 1 2 3 4 5) (0 1 2 3 4 6) (0 1 2 3 4 10) (0 1 2 3 4 11) (0 1 2 3 5 7)
       (0 1 2 3 5 10) (0 1 2 3 5 11) (0 1 2 3 6 7) (0 1 2 3 8 9) (0 1 2 3 8 10)
       (0 1 2 3 9 11) (0 1 2 3 10 11) (0 1 2 4 5 8) (0 1 2 4 6 8) (0 1 2 4 6 10)

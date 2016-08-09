@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; SELFSIM.LISP
 ;; making self-similar canons with cyclops.lisp and scf (nudruz.lisp)
 

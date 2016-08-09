@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ; INFLECT.LISP
 ; Drew Krause (2005)
 ; www.wordecho.org

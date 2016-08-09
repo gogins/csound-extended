@@ -1,12 +1,11 @@
-
-
+(in-package :cm)
 
 ;; Witt geometry -- Steiner S(5,6,12)
 ;; automorphism group = Mathieu 12 (M12)
 
 ;; these are the blocks used for each of M12's permutations on 12 pts.
 
-(define w12
+(defparameter w12
     '( ( 1 2 3 4 5 6 ) ( 1 2 3 4 7 8 ) ( 1 2 3 4 9 10 )
       ( 1 2 3 4 11 12 ) ( 1 2 3 5 7 9 ) ( 1 2 3 5 8 11 )
       ( 1 2 3 5 10 12 ) ( 1 2 3 6 7 12 ) ( 1 2 3 6 8 10 )
@@ -52,7 +51,7 @@
       ( 4 6 7 9 10 12 ) ( 4 6 8 10 11 12 ) ( 5 6 7 8 9 10 )
       ( 5 6 7 8 11 12 ) ( 5 6 9 10 11 12 ) ( 7 8 9 10 11 12 ) ))
 
-(define m12
+(defparameter m12
     '( ( 0 1 2 3 4 5 6 7 8 9 10 11 )
       ( 0 2 1 4 3 5 6 8 7 10 9 11 ) 
       ( 0 4 3 1 2 5 6 9 10 8 7 11 ) 

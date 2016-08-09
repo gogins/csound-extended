@@ -1,5 +1,6 @@
 ;; CSND.LISP -- writing to csound
 ;; todo: going from midi to csound
+(in-package :cm)
 
 ;; need these
 (defobject csnd-inst (i)
@@ -10,7 +11,7 @@
   (amp freq)
   (:parameters time dur amp freq))
 
-(define sco-header
+(defparameter sco-header
         "f 1  0 16384 10    1")
 
 

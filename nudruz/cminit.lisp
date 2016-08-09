@@ -1,9 +1,9 @@
+
 ;;;; Forms to be evaluated when Common Music starts.
 ;;;; Assumes that Common Music has already been loaded using asdf.
 
 (load (merge-pathnames "clocc.lisp" *clocc-home*))
 
-(in-package :cm)
 (load (translate-logical-pathname "clocc:src;cllib;base"))
 (load (translate-logical-pathname "clocc:src;cllib;matrix"))
 (load (translate-logical-pathname "clocc:src;cllib;gnuplot"))

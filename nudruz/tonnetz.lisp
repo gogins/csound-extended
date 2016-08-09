@@ -9,6 +9,7 @@
 ; (load "nudruz.lisp")
 
 (in-package :cm)
+;;(use-package :screamer)
 
 ;; SOME BASIC UTILITIES
 ;; May 2005: "inverse-idx" moved to nudruz.lisp 
@@ -212,7 +213,7 @@
 ;; TZPATH-VECTORS -- returns sorted set of (Nx My P(x+y)) factors
 ;; for any given transposition 'tlen'
 (defun tzpath-vectors (x y tlen &optional (modlen 12))
-  (sort (screamer-user::tzpathfactors x y tlen modlen)
+  (sort (tzpathfactors x y tlen modlen)
         (lambda (x y)
           (< (tzmin-sum x) (tzmin-sum y)))))
 
@@ -220,7 +221,7 @@
 ;; for any given transposition 'tlen'
 ;; [picked randomly from equally best factors]
 (defun best-tzpath-vector (x y tlen &optional (modlen 12))
-  (let* ((tzpaths (screamer-user::tzpathfactors x y tlen modlen))
+  (let* ((tzpaths (tzpathfactors x y tlen modlen))
          (minsum (loop for tzp in tzpaths minimize (tzmin-sum tzp))))
     (pickl (no-nils
             (loop for x in tzpaths collect
@@ -230,7 +231,7 @@
 ;; for any given transposition 'tlen'
 ;; [picked randomly from equally best factors]
 (defun tzpath-vector-len (x y tlen vlen &optional (modlen 12))
-  (let* ((tzpaths (screamer-user::tzpathfactors x y tlen modlen)))
+  (let* ((tzpaths (tzpathfactors x y tlen modlen)))
     (pickl (no-nils
             (loop for x in tzpaths collect
                   (if (= (tzmin-sum x) vlen) x))))))

@@ -1,4 +1,4 @@
-
+(in-package :cm)
 ;; DESIGNS.LISP -- various routines & block designs (as lists of lists)
 
 ;; DESIGNREM -- utility for working with designs

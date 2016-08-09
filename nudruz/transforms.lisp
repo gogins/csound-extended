@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; transforms -- chord transformations
 
 ;; generalized paths & branches

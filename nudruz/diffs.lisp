@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; DIFFS.LISP -- difference equations
 

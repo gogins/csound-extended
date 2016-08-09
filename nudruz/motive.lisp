@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; MOTIVE.LISP -- using codes to create "motive" structure
 

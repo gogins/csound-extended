@@ -1,3 +1,5 @@
+(in-package :cm)
+
 ;; GRAPHS.LISP
 ;; some CM graphs from group theory
 

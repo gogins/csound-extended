@@ -1,3 +1,4 @@
+(in-package :cm)
 
 ;; COMBINATORICS.LISP -- misc pcset & combinatorics data
 
