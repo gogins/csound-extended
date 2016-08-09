@@ -2,25 +2,25 @@
 
 ;; mathieu etc.
 
-(load "nudruz.lisp")
-(load "beats.lisp")
-(load "inflect.lisp")
-(load "designs.lisp")
-(load "modes.lisp")
-(load "diffs.lisp")
-(load "rewrite.lisp")
-(load "graphs.lisp")
-(load "phrasing.lisp")
-(load "tonnetz.lisp")
-(load "selfsim.lisp")
-(load "reger.lisp")
-(load "scanons.lisp")
-(load "nondet.lisp")
-(load "motive.lisp")
-(load "lewin.lisp")
-(load "slonimsky.lisp")
+;(load "nudruz.lisp")
+;(load "beats.lisp")
+;(load "inflect.lisp")
+;(load "designs.lisp")
+;(load "modes.lisp")
+;(load "diffs.lisp")
+;(load "rewrite.lisp")
+;(load "graphs.lisp")
+;(load "phrasing.lisp")
+;(load "tonnetz.lisp")
+;(load "selfsim.lisp")
+;(load "reger.lisp")
+;(load "scanons.lisp")
+;(load "nondet.lisp")
+;(load "motive.lisp")
+;(load "lewin.lisp")
+;(load "slonimsky.lisp")
 
-(load "mathieu11alt.lisp")
+;(load "mathieu11alt.lisp")
 
 
 
@@ -36,6 +36,8 @@
 ;; NOTE: "chds->lines" will give smoothness, instead of 'smoothlist'
 
 ;; smoothlist with ttmode
+; MKG: Disabling example.
+#|
 (events
  (splay
   (play-mode
@@ -48,3 +50,4 @@
    )
   .125)
   "out.midi" :play 'nil)
+|#

@@ -69,7 +69,7 @@
      :test #'seq-eql))
 
 ;; ORDERED PARTITIONS -- 4-12 contained in "data/ordparts.lisp"
-;; MKG missing file: (load "data/ordparts.lisp")
+(load "data/ordparts.lisp")
 
 (defun ordered-partitions (n)
   (nth n (list nil nil nil nil ordparts4 ordparts5 ordparts6 ordparts7

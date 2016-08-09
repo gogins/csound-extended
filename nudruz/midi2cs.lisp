@@ -1,5 +1,7 @@
 (in-package :cm)
 
+(print "LOADING midi2cs...")
+
 ;; GETTING WARM!!!
 (defobject midi2cs (i)
   ((ins :initform 1)

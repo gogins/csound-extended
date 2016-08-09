@@ -49,7 +49,7 @@
             (all-values
              (let* ((triadsum (apply #'+ triad))
                     (sortd (sort triad #'<))
-                    (a screamer::(an-integer-between (max 0 (- (first sortd) span))
+                    (a (screamer::an-integer-between (max 0 (- (first sortd) span))
                                            (+ (first sortd) span)))
                     (b (screamer::an-integer-between (- (second sortd) span)
                                            (+ (second sortd) span)))

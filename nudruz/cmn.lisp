@@ -9,11 +9,9 @@
                      :keynum key
                      :duration 1)))
 
-(events (splay (indices 10 60) .5) 
-"my-score.eps" :title "up")
+(events (splay (indices 10 60) .5) "my-score.eps" :title "up")
 
-(events up "my-score.eps"
-	:title "up!")
+(events up "my-score.eps" :title "up!")
 
 ; ; then ">gs my-score.eps" to see it!
 

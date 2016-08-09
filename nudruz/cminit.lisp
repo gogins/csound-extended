@@ -11,7 +11,7 @@
 (load (translate-logical-pathname "clocc:src;cllib;iter"))
 (load (translate-logical-pathname "clocc:src;cllib;stat"))
 (load (translate-logical-pathname "clocc:src;cllib;rng"))
-(load (translate-logical-pathname "clocc:src;screamer;screamer"))
+;; MKG:  Replaced with quicklisp. (load (translate-logical-pathname "clocc:src;screamer;screamer"))
 ;(load "/usr/local/src/clocc/src/defsystem-3.x/defsystem.lisp")
 
 ;(load "nondet.lisp")

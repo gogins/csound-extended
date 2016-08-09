@@ -321,6 +321,8 @@ tonic using the transpose function
 Lets define a process that plays random triads from the major mode.
 |#
 
+#| MKG: Disabling example.
+
 (defun ranchords (len pos mode amp)
   (let ((rhy (new heap :of '(.5 .25 .124))))
     (process for i below  len 
@@ -337,6 +339,8 @@ Lets define a process that plays random triads from the major mode.
 (defparameter mylist (new seq))
 (events (ranchords 30 'c4 maj .3) mylist)
 (print (slot-value mylist 'subobjects))
+
+|#
 
 #|
 TRY:
