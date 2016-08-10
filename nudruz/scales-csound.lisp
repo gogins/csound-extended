@@ -183,7 +183,7 @@ Now lets create a function that plays an upward or downward segment of
 a scale.
 |#
 
-(defun stepper (k1 k2 scale rate dur amp1 amp2)
+(defun scale-stepper (k1 k2 scale rate dur amp1 amp2)
   (process with i = (if (> k2 k1) 1 -1) 
            and k = k1
            output
@@ -202,11 +202,11 @@ not in the standard chromatic scale, you need to set the streams
 difference.
 |#
 
-(events (stepper 20 40 harms .1 .35 .2 .7)
+(events (scale-stepper 20 40 harms .1 .35 .2 .7)
         "scales.sco"
         :channel-tuning 3 :versioning true)
 
-(events (stepper 50 40 harms .1 .35 .2 .7)
+(events (scale-stepper 50 40 harms .1 .35 .2 .7)
         "scales.sco"
         :channel-tuning 3)
 
@@ -220,7 +220,7 @@ inserts, these processes inside the already running scheduler.
   (process while (< (now) end)
     for k2 = (between low high)
     unless (= k1 k2)
-    sprout (stepper k1 k2 scale rate dur
+    sprout (scale-stepper k1 k2 scale rate dur
                     (between .2 .8)
                     (between .2 .8))
     wait (* rate (abs (- k1 k2)))
@@ -259,10 +259,10 @@ TRY:
      (ran :type :low :from 10 :below 20)
      (ran :type :high :from 10 :below 20)
      (round (ran :type :beta :a .3 :b .3 :from 10 :below 20))
-2. Stepper could be made more musically interesting if, instead of
+2. scale-stepper could be made more musically interesting if, instead of
    always incrementing by 1, it "stuttered" once in awhile, by leaping
    back one or two tones before continuing on.
-3. Another effect worth trying: allow stepper to select any tone on
+3. Another effect worth trying: allow scale-stepper to select any tone on
    either side the actual tone within some window width.
 
 Working with modes
