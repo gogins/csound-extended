@@ -65,6 +65,5 @@ are used.
 (defparameter *nudruz-home* #P"/home/mkg/csound/gogins.github.io/nudruz/")
 (defparameter *clocc-home* #P"/home/mkg/clocc-hg/")
 (push *nudruz-home* asdf:*central-registry*)
-;(load "/home/mkg/csound/gogins.github.io/nudruz/nudruz.lisp")
 (asdf:load-system :nudruz)
 </pre>
