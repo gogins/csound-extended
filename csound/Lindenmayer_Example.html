@@ -21,11 +21,11 @@
                 var nwgui = require('nw.gui');
                 //nwgui.Window.get().showDevTools()
                 nwgui.Window.get().on('close', function() {
-                    console.log('Closing down...');
-                    process.exit(0);
-                });
+                        console.log('Closing down...');
+                        process.exit(0);
+                    });
                 } catch (err) {
-                    console.log(err.message)[]
+                    console.log(err.message);
                 }
             }
         </script>
