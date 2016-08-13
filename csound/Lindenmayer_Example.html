@@ -15,14 +15,19 @@
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
         <script>
-            var csound = require('csound.node');
-            var fs = require('fs');
-            var nwgui = require('nw.gui');
-            //nwgui.Window.get().showDevTools()
-            nwgui.Window.get().on('close', function() {
-                console.log('Closing down...');
-                process.exit(0);
-            });
+            try {
+                var csound = require('csound.node');
+                var fs = require('fs');
+                var nwgui = require('nw.gui');
+                //nwgui.Window.get().showDevTools()
+                nwgui.Window.get().on('close', function() {
+                    console.log('Closing down...');
+                    process.exit(0);
+                });
+                } catch (err) {
+                    console.log(err.message)[]
+                }
+            }
         </script>
     </head>
     <body style="background:black;">
