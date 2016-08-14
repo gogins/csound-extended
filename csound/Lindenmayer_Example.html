@@ -1329,5 +1329,9 @@ endin
         csound.is_playing = false;
         csound.is_paused = false;
        </script>
+        <!--The PNaCl csound module must be the very last element in the body, 
+            because the "csound.js" script attaches the Csound module and its 
+            callbacks to that element. -->
+        <div id="engine"></div>
     </body>
 </html>
