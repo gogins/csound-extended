@@ -808,25 +808,20 @@ scoreline_i "i \"Clear\" 0 -1"
             gk_overlap: 0.05,
             gk_FM_Clang_preset: 1,
             gk_FM_Clang_level: 0,
-            Play_Stop: function() {
+             Play_Stop: function() {
+                if (typeof csound.is_playing === 'undefined') {
+                    csound.is_playing = false;
+                }
                 if (csound.is_playing === false) {
-                    Silencio.saveDatGuiJson(gui);
-                    csound.is_playing = true;
-                    csound.setMessageCallback(csoundMessage);
-                    csound.compileOrc(document.getElementById('orc').value);
-                    csound.setOption('-m0');
-                    //csound.setOption('-j3');
-                    csound.setOption('--nodisplays');
-                    csound.setOption('-odac');
-                    generate();
                     csound.perform();
+                    generate();
+                    gui.revert();
+                    csound.compileOrc(document.getElementById('orc').value);
                     start_time_seconds = new Date().getTime() / 1000.0;
-                    startTime = csound.getScoreTime();
-                    setTimeout(updateTimeCell, 0);
+                    csound.is_playing = true;
                 } else {
                     csound.is_playing = false;
                     csound.stop();
-                    location.reload();
                 }
             },
             Pause_Resume: function() {
@@ -923,8 +918,9 @@ scoreline_i "i \"Clear\" 0 -1"
             slider.onChange(on_parameter_change);
             return slider;
         };
-        csound.is_playing = false;
-        csound.is_paused = false;
+        if (typeof csound !== 'undefined') {
+            csound.is_playing = false;
+        }
     </script>
     <script type="text/javascript" src="csound.js"></script>
     <script>
