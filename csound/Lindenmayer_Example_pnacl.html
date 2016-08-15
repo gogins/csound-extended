@@ -41,36 +41,20 @@
         <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col>
             <col>
-            <tr style="color:gold;">
+            <tr style="color:gold;font-size:24px;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
-            <td style="font-weight:bold;">Scrims (PNaCl version for Chrome)</td><td style="color:gold;text-align:right;">Michael Gogins</td>
+            <td style="font-weight:bold;">Lindenmayer Example</td>
+            <td style="color:gold;text-align:right;">Michael Gogins</td>
+            </tr>
+            <tr style="font-size:24px;">
+            <td>Time:</td>
+            <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
             </tr>
             <tr>
-                <td>Time: </td><td id="Time_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-            <tr>
-                <td>Subset: </td><td id="Subset_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-            <tr>
-                <td>Point: </td><td id="Point_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-            <tr>
-                <td>X: </td><td id="X_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-            <tr>
-                <td>Y: </td><td id="Y_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-             <tr>
-                <td>Chord: </td><td id="Chord_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-            <tr>
-                <td>Notes: </td><td id="Notes_cell" style="color:SkyBlue;text-align:right;"></td>
-            </tr>
-           <tr>
             <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
-                <td colspan=2><textarea id="console" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
+            <td colspan=2><textarea id="Log_cell" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
             </tr>
-        </table>
+    </table>
     <textarea class="code" id="orc" hidden rows=24 cols=80>
 opcode hertz2midinn, i, i
 ihertz xin
@@ -630,7 +614,6 @@ scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
     </textarea>
     <script type="text/javascript">
-   <script>
         window.onerror = function (message, url, line) {
           csound.message(message + '\n' + url + '\n' + line + '\n');
           console.trace();
