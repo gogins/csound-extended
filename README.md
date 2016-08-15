@@ -30,7 +30,11 @@ I performed this piece for the 2016 New York City Electroacoustic Music Festival
 The examples in this category are not necessarily playable, as they may depend on resources not available in the Web browser. They are included here to show how to use various features of Silencio and/or Csound.
 
 I performed this piece for the 2016 New York City Electroacoustic Music Festival. It is an example of the use of the new parametric Lindenmayer system class along with chord transformations:
-<a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>. In order to view the code, either download the file, or right-click to view the frame source
+<a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>. In order to view the code, either download the file, or right-click to view the frame source.
+
+Here is a variant of Sevier reworked for PNaCl:
+https://gogins.github.io/csound/Lindenmayer_Example_pnacl.html
+
 
 ## Nudruz
 
