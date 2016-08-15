@@ -943,9 +943,10 @@ scoreline_i "i \"Clear\" 0 -1"
             slider.onChange(on_parameter_change);
             return slider;
         };
-        csound.is_playing = false;
-        csound.is_paused = false;
-    </script>
+        if (typeof csound !== 'undefined') {
+            csound.is_playing = false;
+        }
+       </script>
     <script type="text/javascript" src="csound.js"></script>
     <script>
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
