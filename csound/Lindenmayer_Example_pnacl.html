@@ -16,7 +16,7 @@
         <meta http-equiv="Expires" content="0" />
         <script>
             try {
-                var nw_window = nwgui.Window.get();
+                var nw_window = gui.Window.get();
                 nw_window.on('close', function() {
                     console.log('Closing down...');
                     //process.exit(0);
@@ -834,7 +834,7 @@ scoreline_i "i \"Clear\" 0 -1"
                 }
             },
              Developer_tools: function() {
-                nwgui.Window.get().showDevTools();
+                gui.Window.get().showDevTools();
             },
         };
         var gui = null;
