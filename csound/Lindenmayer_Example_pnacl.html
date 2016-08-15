@@ -814,9 +814,9 @@ scoreline_i "i \"Clear\" 0 -1"
                 }
                 if (csound.is_playing === false) {
                     csound.perform();
-                    generate();
                     gui.revert();
                     csound.compileOrc(document.getElementById('orc').value);
+                    generate();
                     start_time_seconds = new Date().getTime() / 1000.0;
                     csound.is_playing = true;
                 } else {
