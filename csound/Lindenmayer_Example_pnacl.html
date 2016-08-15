@@ -37,7 +37,7 @@
                 background-coor:transparent;
             }
         </style>
-        <div id = 'webgl_cell' class='canvas' style="width:82vw;height:98vh;"/div>
+        <div id = 'graphics_canvas' class='canvas' style="width:82vw;height:98vh;"/div>
         <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col>
             <col>
@@ -630,6 +630,7 @@ scoreline_i "i \"MasterOutput\" 0 -1"
 scoreline_i "i \"Clear\" 0 -1"
     </textarea>
     <script type="text/javascript">
+   <script>
         window.onerror = function (message, url, line) {
           csound.message(message + '\n' + url + '\n' + line + '\n');
           console.trace();
@@ -767,11 +768,7 @@ scoreline_i "i \"Clear\" 0 -1"
             Log_cell.scrollTop = Log_cell.scrollHeight;
          }
         function onWindowResize( event ) {
-            var container = document.getElementById('webgl_cell');
-            windowHalfX = container.clientWidth / 2;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize( container.clientWidth, container.clientHeight );
+            var container = document.getElementById('graphics_canvas');
         }
         function handleMessage(message) {
             csoundMessage(message);
@@ -829,19 +826,24 @@ scoreline_i "i \"Clear\" 0 -1"
             gk_FM_Clang_preset: 1,
             gk_FM_Clang_level: 0,
             Play_Stop: function() {
-                if (typeof csound.is_playing === 'undefined') {
-                    csound.is_playing = false;
-                }
                 if (csound.is_playing === false) {
-                    csound.perform();
-                    gui.revert();
-                    csound.compileOrc(document.getElementById('orc').value);
-		    generate();
-                    start_time_seconds = new Date().getTime() / 1000.0;
+                    Silencio.saveDatGuiJson(gui);
                     csound.is_playing = true;
+                    csound.setMessageCallback(csoundMessage);
+                    csound.compileOrc(document.getElementById('orc').value);
+                    csound.setOption('-m0');
+                    //csound.setOption('-j3');
+                    csound.setOption('--nodisplays');
+                    csound.setOption('-odac');
+                    generate();
+                    csound.perform();
+                    start_time_seconds = new Date().getTime() / 1000.0;
+                    startTime = csound.getScoreTime();
+                    setTimeout(updateTimeCell, 0);
                 } else {
                     csound.is_playing = false;
                     csound.stop();
+                    location.reload();
                 }
             },
             Pause_Resume: function() {
@@ -938,10 +940,9 @@ scoreline_i "i \"Clear\" 0 -1"
             slider.onChange(on_parameter_change);
             return slider;
         };
-        if (typeof csound !== 'undefined') {
-            csound.is_playing = false;
-        }
-       </script>
+        csound.is_playing = false;
+        csound.is_paused = false;
+    </script>
     <script type="text/javascript" src="csound.js"></script>
     <script>
     // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
