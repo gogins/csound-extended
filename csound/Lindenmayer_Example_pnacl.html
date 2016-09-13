@@ -37,7 +37,7 @@
                 background-coor:transparent;
             }
         </style>
-        <canvas id = 'graphics_canvas' class='canvas' style="width:92vw;height:98vh;"/canvas>
+        <canvas id = 'graphics_canvas' class='canvas' style="width:98vw;height:98vh;"/canvas>
         <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col>
             <col>
@@ -833,9 +833,6 @@ scoreline_i "i \"Clear\" 0 -1"
                     csound.is_paused = false;
                 }
             },
-             Developer_tools: function() {
-                gui.Window.get().showDevTools();
-            },
         };
         var gui = null;
         var parameters_default_json = {"preset":"Default","remembered":{"Default":{"0":{"gk_overlap":7.966035720428351,"gk_Reverb_Feedback":0.7647639458262565,"gk_Reverb2_Feedback":0.7,"gk_MasterOutput_level":0.4,"gk_FM_Clang_preset":8,"gk_FM_Clang_level":8.488855828305333,"gk_Blower_grainDensity":122.66065388951522,"gk_Blower_grainDuration":0.2479543763947432,"gk_Blower_grainAmplitudeRange":79.36865839909808,"gk_Blower_grainFrequencyRange":25.25366403607666,"gk_Blower_level":0.5,"gk_Bower_pressure":0.4316242848352937,"gk_Bower_level":8.488855828305333,"gk_Buzzer_Harmonics":4.775417619454314,"gk_Buzzer_level":2.6114187582077193,"gk_Droner_partial1":0.2846883580828533,"gk_Droner_partial2":0.47754176194543135,"gk_Droner_partial3":0.1,"gk_Droner_partial4":0.1,"gk_Droner_partial5":0.3581563214590735,"gk_Droner_level":1.8767391244455212,"gk_Harpsichord_pick":0.75,"gk_Harpsichord_reflection":0.6042838951521984,"gk_Harpsichord_pluck":0.75,"gk_Harpsichord_level":9.223535462067538,"gk_Phaser_ratio1":1.6234498308906427,"gk_Phaser_ratio2":0.7936865839909808,"gk_Phaser_index1":1,"gk_Phaser_index2":0.43291995490417134,"gk_Phaser_level":4.815457659494328,"gk_Piano_level":0.5,"gk_Shiner_level":2.6114187582077193,"gk_Sweeper_britel":1.432625285836294,"gk_Sweeper_briteh":2.9,"gk_Sweeper_britels":1.2856893590838536,"gk_Sweeper_britehs":2.5713787181677072,"gk_Sweeper_level":0.5,"gk_YiString_reverb_send":0.5,"gk_YiString_chorus_send":0.5,"gk_YiString_level":10.692894729591941}}},"closed":false,"folders":{"Master effects":{"preset":"Default","closed":false,"folders":{}},"Csound instruments":{"preset":"Default","closed":false,"folders":{"FM Clang":{"preset":"Default","closed":false,"folders":{}},"Blower":{"preset":"Default","closed":false,"folders":{}},"Bower":{"preset":"Default","closed":false,"folders":{}},"Buzzer":{"preset":"Default","closed":false,"folders":{}},"Droner":{"preset":"Default","closed":false,"folders":{}},"Harpsichord":{"preset":"Default","closed":false,"folders":{}},"Phaser":{"preset":"Default","closed":false,"folders":{}},"Pianoteq":{"preset":"Default","closed":true,"folders":{}},"Shiner":{"preset":"Default","closed":false,"folders":{}},"Sweeper":{"preset":"Default","closed":false,"folders":{}},"YiString":{"preset":"Default","closed":false,"folders":{}}}}}};
@@ -845,8 +842,6 @@ scoreline_i "i \"Clear\" 0 -1"
             gui = new dat.GUI({load: parameters_json, width: 300});
             gui.remember(parameters);
             gui.add(parameters, 'Play_Stop').name('Play/Stop');
-            //gui.add(parameters, 'Pause_Resume').name('Pause/Resume');
-            gui.add(parameters, 'Developer_tools').name('Developer tools');
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
             add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
