@@ -16,7 +16,7 @@
         <meta http-equiv="Expires" content="0" />
         <script>
             try {
-                var nw_window = gui.Window.get();
+                var nw_window = nwgui.Window.get();
                 nw_window.on('close', function() {
                     console.log('Closing down...');
                     //process.exit(0);
@@ -37,7 +37,7 @@
                 background-coor:transparent;
             }
         </style>
-        <canvas id = 'graphics_canvas' class='canvas' style="width:98vw;height:98vh;"/canvas>
+        <div id = 'graphics_canvas' class='canvas' style="width:98vw;height:98vh;"/canvas>
         <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col>
             <col>
@@ -899,9 +899,11 @@ scoreline_i "i \"Clear\" 0 -1"
             parameters.Play_Stop();
         }
         function gk_update(name, value) {
-          var numberValue = parseFloat(value);
-          csound.setControlChannel(name, numberValue);
-          csound.message(name + ': ' + numberValue + '\n');
+            if (typeof csound !== 'undefined') {            
+                var numberValue = parseFloat(value);
+                csound.setControlChannel(name, numberValue);
+                csound.message(name + ': ' + numberValue + '\n');
+            }
         }
         function add_slider(gui_folder, token, minimum, maximum) {
             var on_parameter_change = function(value) {
