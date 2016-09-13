@@ -86,8 +86,8 @@ var csound = (function() {
    */
    function moduleDidLoad() {
     csound.module = document.getElementById('csound_module');
-       updateStatus('Ready.', 1);
     if (typeof window.moduleDidLoad !== 'undefined') {
+      updateStatus('Ready.', 1);
       window.moduleDidLoad();
     }
   }
@@ -96,7 +96,11 @@ var csound = (function() {
    * Unloads/destroys module.
    */
   function destroyModule() {
-    csound.module.parentNode.removeChild(csound.module);
+    try {
+    	csound.module.parentNode.removeChild(csound.module);
+    } catch(exception) {
+    	updateStatus("No module in destroyModule:\n" + exception);
+    }
     csound.module = null;
   }
 
