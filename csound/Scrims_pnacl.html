@@ -38,7 +38,7 @@
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col width=300px>
             <col width=150px>
-            <th style="color:gold;text-align:left">Scrims (PNaCl version for Chrome), by Michael Gogins.
+            <th style="color:gold;text-align:left">Scrims (PNaCl version for Chrome), by Michael Gogins. BOO!!
             Wait for "Csound: Ready."; click "Play/Stop"; adjust "Master effects" group "gk_MasterOutput_level" slider.</p></td><td style="color:gold;text-align:right;"</th>
             <!-- Copyright (C) 2016 by Michael Gogins -->
             <tr>
@@ -384,7 +384,7 @@ aenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iam
 ihertz = cpsmidinn(ikey)
 icps = ihertz
 kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
-ktonemoddep jspline 0.01,0.05,0.2
+ktonemoddep jspline 0.01,0.05,0.012
 ktonemodrte jspline 6,0.1,0.2
 ktone poscil3 ktonemoddep, ktonemodrte, gi_Sweeper_sine
 kbrite rspline gk_Sweeper_britel, gk_Sweeper_briteh, gk_Sweeper_britels, gk_Sweeper_britehs
@@ -704,7 +704,7 @@ scoreline_i "i \"Clear\" 0 -1"
         var windowHalfX = container.clientWidth / 2;
         var windowHalfY = container.clientHeight / 2;
         var Scene_speed = 2;///parseFloat(document.getElementById('Scene_speed').value);
-        var rotationSpeed = 0;
+        var rotationSpeed = 0.01;
         var randomization = 0;
         init();
         animate();
