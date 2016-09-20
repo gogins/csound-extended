@@ -6,7 +6,7 @@ Copyright (C) 2014 by Michael Gogins
 This software is licensed under the terms of the
 GNU Lesser General Public License
 
-Part of Silencio, an algorithmic music composition library for Csound.
+Part of Silencio, an HTML5 algorithmic music composition library for Csound.
 
 DEVELOPMENT LOG
 
@@ -22,6 +22,10 @@ not implement deep clones or deep value comparisons out of the box.
 
 It is now clear that Lua (and especially LuaJIT) is a rather superior
 language; and yet, JavaScript provides everything that I need.
+
+2016-08-04
+
+I am going to start using some ECMAScript 6 features supported by Chrome.
 
 TO DO
 
