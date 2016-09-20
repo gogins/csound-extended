@@ -85,10 +85,14 @@ var csound = (function() {
    *  After loading the Csound module, point the csound member var to to it.
    */
    function moduleDidLoad() {
+    try {
     csound.module = document.getElementById('csound_module');
+    updateStatus('Ready.', 1);
     if (typeof window.moduleDidLoad !== 'undefined') {
-      updateStatus('Ready.', 1);
       window.moduleDidLoad();
+    }
+    } catch(exception) {
+    	updateStatus("No module in destroyModule:\n" + exception);
     }
   }
 
