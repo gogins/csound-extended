@@ -16,9 +16,9 @@ Silencio.js was relatively easy, ChordSpace.js is going to be harder. The main
 problems are that JavaScript does not permit operator overloading, and it does
 not implement deep clones or deep value comparisons out of the box.
 
- I will omit the chord space group stuff because it will not always be
- possible to save the chord space group files, which are necessarily for
- efficient use with chords of more than 3 or 4 voices.
+I will omit the chord space group stuff because it will not always be
+possible to save the chord space group files, which are necessarily for
+efficient use with chords of more than 3 or 4 voices.
 
 It is now clear that Lua (and especially LuaJIT) is a rather superior
 language; and yet, JavaScript provides everything that I need.
@@ -35,6 +35,13 @@ TO DO
 --  Implement tendency masks.
 
 --  Implement Xenakis sieves.
+
+DEPENDENCIES
+
+three.js
+TrackballControls.js
+sprintf.js
+tinycolor.js
 
 */
 
@@ -344,6 +351,11 @@ function Score() {
   this.maxima = new Event();
   this.ranges = new Event();
   this.context = null;
+  this.scene = null;
+  this.camera = null;
+  this.renderer = null;
+  this.controls = null;
+  this.score_cursor = null;
 }
 Score.prototype.add = function(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) {
   var event = new Event();
@@ -436,11 +448,11 @@ Score.prototype.sendToCsound = function(csound, extra) {
         jscore = '';
     } else {
         extra = 5.0;
-        this.sort();
-        var duration = this.getDuration() + extra;
-        jscore = 'f 0 ' + duration + ' 0\n';
+  this.sort();
+  var duration = this.getDuration() + extra;
+  jscore = 'f 0 ' + duration + ' 0\n';
     }
-    //for (var i = 0; i < this.data.length; i++) {
+  //for (var i = 0; i < this.data.length; i++) {
     //    var event = this.data[i];
     //    var pfields = [];
     //    pfields.push(event.data[3]);
@@ -453,7 +465,7 @@ Score.prototype.sendToCsound = function(csound, extra) {
     //    pfields.push(event.data[8]);
     //    pfields.push(event.data[9]);
     //    csound.scoreEvent('i', pfields);
-    //}
+  //}
   for (var i = 0; i < this.data.length; i++) {
     jscore += this.data[i].toIStatement();
   }
@@ -543,7 +555,7 @@ Score.prototype.tieOverlaps = function(tieExact) {
           {
               //console.log('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
               //console.log('    to: ' + laterI + ' ' + laterEvent.toString());
-              earlierEvent.end = laterEvent.end;
+            earlierEvent.end = laterEvent.end;
               laterEvent.duration = 0;
               laterEvent.velocity = 0;
               //console.log('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
@@ -624,6 +636,155 @@ Score.prototype.draw = function(canvas, W, H) {
   return context;
 }
 
+Score.prototype.progress3D = function(score_time) {
+    if (this.scene !== null) {
+         if (this.score_cursor === null) {
+            var sphere_geometry = new THREE.SphereGeometry(.5, 10, 10);
+            var sphere_material = new THREE.MeshLambertMaterial();
+            sphere_material.color.setRGB(255, 0, 0);
+            this.score_cursor = new THREE.Mesh(sphere_geometry, sphere_material);
+            this.scene.add(this.score_cursor);
+        }
+        this.score_cursor.position.x = score_time;
+        this.score_cursor.position.y = 60;
+        this.score_cursor.position.z = 0.5;
+        this.controls.update();
+        ///this.camera.updateProjectionMatrix();
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+/**
+ * Draws the notes in this score as a 3-dimensional piano roll. The score is 
+ * fitted into the viewport to start with, but the user can use the mouse or 
+ * trackball to move around the score and to zoom in and out. The dimensions 
+ * are: time = x, MIDI key = y, MIDI channel = z and hue, and loudness = 
+ * value; a grid shows tens of seconds and octaves.
+ */
+Score.prototype.draw3D = function(container) {
+    this.findScales();
+    var time_minimum = this.minima.time;
+    var time_maximum = this.maxima.time;
+    var key_minimum = this.minima.key;
+    var key_maximum = this.maxima.key;
+    var channel_minimum = this.minima.channel;
+    var channel_maximum = this.maxima.channel;
+    var channelRange = this.ranges.channel;
+    if (channelRange == 0) {
+        channelRange = 1;
+    }
+    var velocityRange = this.ranges.velocity;
+    if (velocityRange == 0) {        
+        velocityRange = 1;
+    }
+    this.scene = new THREE.Scene();
+    var scene = this.scene;
+    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    var renderer = this.renderer;
+    renderer.setClearColor(0);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(container.width, container.height);
+    renderer.sortObjects = false;
+    container.appendChild(renderer.domElement);
+    this.canvas = renderer.domElement;
+    var canvas = this.canvas;
+    this.camera = new THREE.PerspectiveCamera(90, container.width / container.height, 1, 10000);
+    var camera = this.camera;
+   // Wire up the view controls to the camera.
+    this.controls = new THREE.TrackballControls(camera, canvas);
+    var controls = this.controls;
+    controls.rotateSpeed = 1.0;
+    controls.zoomSpeed = 0.25;
+    controls.panSpeed = 0.8;
+    controls.noZoom = false;
+    controls.noPan = false;
+    controls.staticMoving = true;
+    controls.dynamicDampingFactor = 0.3;
+    // Ensure that all sides are lighted.
+    var light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1).normalize();
+    this.scene.add(light);
+    var light2 = new THREE.AmbientLight(0x404040, .5);
+    this.scene.add(light2);
+    // Plot the notes.
+    var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+    for (var i = 0; i < this.data.length; i++) {
+        var begin = this.data[i].time;
+        var end = this.data[i].end;
+        var key = this.data[i].key;
+        var channel = this.data[i].channel - this.minima.channel;
+        hue = channel / channelRange;
+        var value = this.data[i].velocity - this.minima.velocity;
+        value = value / velocityRange;
+        value = .5 + value / 2;
+        var material = new THREE.MeshLambertMaterial();
+        material.color.setHSL(hue, 1, value);
+        material.opacity = 0.5;
+        material.reflectivity = 0.5;
+        material.transparent = true;
+        material.emissive = material.color;
+        material.emissiveIntensity = 2 / 3;
+        var note = new THREE.Mesh(geometry, material);
+        note.scale.x = end - begin;
+        note.scale.y = 1;
+        note.scale.z = 1;
+        note.position.x = begin + 1;
+        note.position.y = key;
+        note.position.z = channel;
+        this.scene.add(note);
+    }    
+    // Generate the grid. Its origin for time is 0 and for pitch its origin is the 
+    // first C lower than or equal to the lowest pitch in the score.
+    var line_material = new THREE.LineBasicMaterial();
+    time_minimum = 0;
+    if (key_minimum % 12 !== 0) {
+        key_minimum -= (key_minimum % 12);
+    }
+    for (var t = time_minimum; t <= time_maximum + 10; t = t + 10) {
+        for (var k = key_minimum; k <= key_maximum; k = k + 12) {
+            var box = new THREE.Line(geometry, line_material);
+            box = new THREE.EdgesHelper(box);
+            box.material.color.setRGB(0, 0.25, 0);
+            box.material.opacity = .25;
+            box.material.transparent = true;
+            box.scale.x = 10;
+            box.scale.y = 12;
+            box.scale.z = 0;
+            box.position.x = t + 5;
+            box.position.y = k + 6;
+            box.position.z = 0 + .5;
+            this.scene.add(box);
+        }
+    }
+    // Put a ball at the origin, to indicate orientation.
+    var sphere_geometry = new THREE.SphereGeometry(.5, 10, 10);
+    var sphere_material = new THREE.MeshLambertMaterial();
+    sphere_material.color.setRGB(0, 255, 0);
+    var origin = new THREE.Mesh(sphere_geometry, sphere_material);
+    origin.position.x = time_minimum;
+    origin.position.y = key_minimum;
+    origin.position.z = 0.5;
+    this.scene.add(origin);
+    var onResize = function() {
+        camera.aspect = canvas.width / canvas.height ;
+        renderer.setSize(canvas.width, canvas.height);
+        controls.handleResize();
+        camera.updateProjectionMatrix();
+        renderer.render(scene, camera);
+    }
+    canvas.addEventListener('resize', onResize, false);
+    // Start out looking straight at the full score.
+    var bounding_box = new THREE.Box3().setFromObject(scene);
+    camera.lookAt(bounding_box.center());
+    camera.fov = 2 * Math.atan((bounding_box.size().x / (canvas.width / canvas.height)) / (2 * bounding_box.size().y)) * (180 / Math.PI);
+    camera.position.copy(bounding_box.center());
+    camera.position.z = 3 * Math.min(bounding_box.size().x, bounding_box.size().y);
+    camera.updateProjectionMatrix();
+    controls.target.copy(bounding_box.center());
+    renderer.render(scene, camera);
+    return canvas;
+}
+
 Score.prototype.toString = function() {
     var result = '';
     for (var i = 0; i < this.data.length; i++) {
@@ -659,8 +820,8 @@ Score.prototype.get = function(index) {
 // The events in the slice are values unless
 // by_reference is true.
 Score.prototype.slice = function(begin, end_, by_reference) {
-      if (typeof by_reference === 'undefined') {
-      by_reference = false;
+    if (typeof by_reference === 'undefined') {
+          by_reference = false;
     }
     this.sort();
     var s = new Silencio.Score();
@@ -671,7 +832,7 @@ Score.prototype.slice = function(begin, end_, by_reference) {
             if (by_reference === true) {
                 s.append(event);
             } else {
-                s.append(event.clone());
+            s.append(event.clone ());
             }
         };
     };
