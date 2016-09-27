@@ -625,31 +625,21 @@ Score.prototype.draw = function(canvas, W, H) {
     value = .5 + value / 2;
     var hsv = "hsv("+hue+","+1+","+value+")";
     context.strokeStyle = tinycolor(hsv).toHexString();
-    //csound.message("color: " + context.strokeStyle + "\n");
-    //context.strokeStyle = 'red';
     context.beginPath();
     context.moveTo(x1, y);
     context.lineTo(x2, y);
     context.stroke();
-    //console.log(this.data[i].toString() + ' x1: ' + x1 + ' x2: ' + x2 + ' y: ' + y + ' hsv: ' + hsv + '.');
   }
   return context;
 }
 
 Score.prototype.progress3D = function(score_time) {
     if (this.scene !== null) {
-         if (this.score_cursor === null) {
-            var sphere_geometry = new THREE.SphereGeometry(.5, 10, 10);
-            var sphere_material = new THREE.MeshLambertMaterial();
-            sphere_material.color.setRGB(255, 0, 0);
-            this.score_cursor = new THREE.Mesh(sphere_geometry, sphere_material);
-            this.scene.add(this.score_cursor);
-        }
         this.score_cursor.position.x = score_time;
         this.score_cursor.position.y = 60;
         this.score_cursor.position.z = 0.5;
         this.controls.update();
-        ///this.camera.updateProjectionMatrix();
+        this.camera.updateProjectionMatrix();
         this.renderer.render(this.scene, this.camera);
     }
 }
@@ -661,10 +651,13 @@ Score.prototype.progress3D = function(score_time) {
  * are: time = x, MIDI key = y, MIDI channel = z and hue, and loudness = 
  * value; a grid shows tens of seconds and octaves.
  */
-Score.prototype.draw3D = function(container) {
+Score.prototype.draw3D = function(canvas) {
+    this.canvas = canvas;
+    canvas.width  = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
     this.findScales();
     var time_minimum = this.minima.time;
-    var time_maximum = this.maxima.time;
+    var time_maximum = this.getDuration();
     var key_minimum = this.minima.key;
     var key_maximum = this.maxima.key;
     var channel_minimum = this.minima.channel;
@@ -679,22 +672,19 @@ Score.prototype.draw3D = function(container) {
     }
     this.scene = new THREE.Scene();
     var scene = this.scene;
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
     var renderer = this.renderer;
     renderer.setClearColor(0);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(container.width, container.height);
     renderer.sortObjects = false;
-    container.appendChild(renderer.domElement);
-    this.canvas = renderer.domElement;
-    var canvas = this.canvas;
-    this.camera = new THREE.PerspectiveCamera(90, container.width / container.height, 1, 10000);
+    renderer.setViewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(canvas.devicePixelRatio);
+    // Wire up the view controls to the camera.
+    this.camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 1, 10000);
     var camera = this.camera;
-   // Wire up the view controls to the camera.
     this.controls = new THREE.TrackballControls(camera, canvas);
     var controls = this.controls;
     controls.rotateSpeed = 1.0;
-    controls.zoomSpeed = 0.25;
+    controls.zoomSpeed = 0.125;
     controls.panSpeed = 0.8;
     controls.noZoom = false;
     controls.noPan = false;
@@ -726,9 +716,7 @@ Score.prototype.draw3D = function(container) {
         material.emissiveIntensity = 2 / 3;
         var note = new THREE.Mesh(geometry, material);
         note.scale.x = end - begin;
-        note.scale.y = 1;
-        note.scale.z = 1;
-        note.position.x = begin + 1;
+        note.position.x = begin + (note.scale.x / 2);
         note.position.y = key;
         note.position.z = channel;
         this.scene.add(note);
@@ -756,8 +744,8 @@ Score.prototype.draw3D = function(container) {
             this.scene.add(box);
         }
     }
-    // Put a ball at the origin, to indicate orientation.
-    var sphere_geometry = new THREE.SphereGeometry(.5, 10, 10);
+    // Put a ball at the origin, to indicate the orientation of the score.
+    var sphere_geometry = new THREE.SphereGeometry(1, 10, 10);
     var sphere_material = new THREE.MeshLambertMaterial();
     sphere_material.color.setRGB(0, 255, 0);
     var origin = new THREE.Mesh(sphere_geometry, sphere_material);
@@ -765,22 +753,34 @@ Score.prototype.draw3D = function(container) {
     origin.position.y = key_minimum;
     origin.position.z = 0.5;
     this.scene.add(origin);
+    // Put a ball at the start of middle C, to indicate the current Csound 
+    // score time.
+    var cursor_material = new THREE.MeshLambertMaterial();
+    cursor_material.color.setRGB(255, 0, 0);
+    this.score_cursor = new THREE.Mesh(sphere_geometry, cursor_material);
+    this.score_cursor.position.x = time_minimum;
+    this.score_cursor.position.y = 60;
+    this.score_cursor.position.z = 0.5;
+    this.scene.add(this.score_cursor);
     var onResize = function() {
-        camera.aspect = canvas.width / canvas.height ;
-        renderer.setSize(canvas.width, canvas.height);
+        canvas.width  = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        renderer.setViewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
         controls.handleResize();
         camera.updateProjectionMatrix();
         renderer.render(scene, camera);
     }
-    canvas.addEventListener('resize', onResize, false);
+    window.addEventListener('resize', onResize, false);
     // Start out looking straight at the full score.
     var bounding_box = new THREE.Box3().setFromObject(scene);
     camera.lookAt(bounding_box.center());
     camera.fov = 2 * Math.atan((bounding_box.size().x / (canvas.width / canvas.height)) / (2 * bounding_box.size().y)) * (180 / Math.PI);
     camera.position.copy(bounding_box.center());
-    camera.position.z = 3 * Math.min(bounding_box.size().x, bounding_box.size().y);
-    camera.updateProjectionMatrix();
+    camera.position.z = 1.125 * Math.min(bounding_box.size().x, bounding_box.size().y);
     controls.target.copy(bounding_box.center());
+    controls.update();
+    camera.updateProjectionMatrix();
     renderer.render(scene, camera);
     return canvas;
 }
