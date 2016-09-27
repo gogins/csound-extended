@@ -5,11 +5,13 @@
         <script type="text/javascript" src="js/numeric.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/tinycolor.js"></script>
+        <script type="text/javascript" src="js/sprintf.js"></script>
+        <script type="text/javascript" src="js/three.js"></script>
+        <script type="text/javascript" src="js/TrackballControls.js"></script>
         <script type="text/javascript" src="js/Silencio.js"></script>
         <script type="text/javascript" src="js/ChordSpace.js"></script>
         <script type="text/javascript" src="js/ParametricLindenmayer.js"></script>
         <script type="text/javascript" src="js/dat.gui.js"></script>
-        <script type="text/javascript" src="js/sprintf.js"></script>
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
@@ -53,7 +55,7 @@
             <td colspan=2><textarea id="console" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
             </tr>
         </table>
-        <canvas id = 'webgl_cell' class='canvas' style="position: absolute; top:0px; left:0px; width:98vw;height:98vh;"></canvas>
+        <canvas id = 'webgl_cell' class='canvas' style="position: absolute; top:0px; left:0px; width:98vw;height:98vh;"/>
     <textarea class="code" id="orc" hidden rows=24 cols=80>
 opcode hertz2midinn, i, i
 ihertz xin
@@ -740,7 +742,7 @@ alwayson "Clear"
             csound.message(lsys.score.minima.toString());
             csound.message(lsys.score.ranges.toString());
             csound.message('Generated ' + lsys.score.data.length + ' notes.\n');
-            context = lsys.score.draw(canvas, W, H);
+            context = lsys.score.draw3D(canvas, W, H);
             lsys.score.add(540, 1, 144, 999);
             lsys.score.sendToCsound(csound);
            } catch(err) {
@@ -767,7 +769,7 @@ alwayson "Clear"
             var score_time_cell = document.getElementById('Time_cell');
             score_time_cell.innerHTML = score_time.toFixed(4);
             setTimeout(updateTimeCell, .02);
-            lsys.score.progress(score_time);
+            lsys.score.progress3D(score_time);
         };
         var parameters = {
             gk_MasterOutput_level: .4,
