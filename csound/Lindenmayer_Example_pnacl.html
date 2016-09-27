@@ -38,25 +38,22 @@
         </style>
     </head>
     <body style="background:black;">
-        <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
-        <tr>
-            <th style="color:gold;text-align:left">Lindenmayer Example (PNaCl version), by Michael Gogins.
-            Wait for "Csound: Ready."; click "Play/Stop"; adjust "Master effects" group "gk_MasterOutput_level" slider.</th>
-            </tr>
-              <!-- Copyright (C) 2016 by Michael Gogins -->
+         <canvas id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"></canvas>
+            <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col width=300px>
             <col width=150px>
+            <th style="color:gold;text-align:left">Lindenmayer Example (PNaCl version for Chrome), by Michael Gogins.
+            Wait for "Csound: Ready."; click "Play/Stop"; adjust "Master effects" group "gk_MasterOutput_level" slider.</p></td><td style="color:gold;text-align:right;"</th>
+            <!-- Copyright (C) 2016 by Michael Gogins -->
             <tr>
-                <td>Time: </td>
-                <td id="Time_cell" style="color:SkyBlue;text-align:right;"></td>
+                <td>Time: </td><td id="Time_cell" style="color:SkyBlue;text-align:right;"></td>
             </tr>
             <tr>
             <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
-            <td colspan=2><textarea id="console" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
+                <td colspan=2><textarea id="console" style="width:100%;color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;overflow:auto;"></textarea></td>
             </tr>
         </table>
-        <canvas id = 'webgl_cell' class='canvas' style="position: absolute; top:0px; left:0px; width:98vw;height:98vh;"/>
-    <textarea class="code" id="orc" hidden rows=24 cols=80>
+     <textarea class="code" id="orc" hidden rows=24 cols=80>
 opcode hertz2midinn, i, i
 ihertz xin
 print ihertz
@@ -634,12 +631,6 @@ alwayson "Clear"
           try {
             var startTime = 0;
             var canvas = document.getElementById('webgl_cell');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            var ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            var H = canvas.height;
-            var W = canvas.width;
             // Move(i,t,d,k,v,p)
             lsys.set_axiom('T(0);Push();Move(-1,5,0,-4,0,0);AA();Pop();Push();Move(0,5,0,4,0,0);AA();Pop();Move(1,5,0,-4,0,0);A();');
             lsys.add_rule('A();',  'iteration < 3',                 'Note();Move(1,5,0,4,0,0);A();Push();T(2);Move(-11,5,0,4,0,0);AA();Pop();Move(1,5,0,4,0,0);Note();Move(1,5,0,4,0,0);Note();Move(1,5,0,4,0,0);A();Note();');
@@ -711,7 +702,7 @@ alwayson "Clear"
             // Also if keys overlap.
             for (var i = 0; i < lsys.score.data.length; i++) {
                 var event = lsys.score.data[i];
-                console.log(event.toIStatement() + ' e: ' + event.end);
+                ///console.log(event.toIStatement() + ' e: ' + event.end);
                 var channel = Math.floor(event.channel);
                 var key = event.key;
                 for (var j = i + 1; j < lsys.score.data.length; j++) {
@@ -721,14 +712,8 @@ alwayson "Clear"
                     if (key === overlap_key && channel === overlap_channel && channel === 2) {
                         if (event.end > overlap.time) {
                             var the_end = Math.max(event.end, overlap.end);
-                            //console.log('Correcting overlap for:');
-                            //console.log('  ' + event.toIStatement() + ' e: ' + event.end);
-                            //console.log('  ' + overlap.toIStatement() + ' e: ' + overlap.end);
                             event.end = the_end;
                             overlap.end = the_end;
-                            //console.log('to:');
-                            //console.log('  ' + event.toIStatement() + ' e: ' + event.end);
-                            //console.log('  ' + overlap.toIStatement() + ' e: ' + overlap.end + '\n');
                          }
                     }
                 }
@@ -742,13 +727,13 @@ alwayson "Clear"
             csound.message(lsys.score.minima.toString());
             csound.message(lsys.score.ranges.toString());
             csound.message('Generated ' + lsys.score.data.length + ' notes.\n');
-            context = lsys.score.draw3D(canvas, W, H);
+            context = lsys.score.draw3D(canvas);
             lsys.score.add(540, 1, 144, 999);
             lsys.score.sendToCsound(csound);
            } catch(err) {
+            console.log(err.stack);
             csound.message(err.name + ': ' + err.message + ' line: ' + err.line + '\n');
             csound.message(err.stack + '\n');
-            console.log(err.stack);
           }
         }
         function csoundMessage(text) {
@@ -757,18 +742,18 @@ alwayson "Clear"
             console.log(text);
             Log_cell.scrollTop = Log_cell.scrollHeight;
          }
-        function onWindowResize( event ) {
-            var container = document.getElementById('graphics_canvas');
-        }
-        //function handleMessage(message) {
-        //    csoundMessage(message);
+        //function onWindowResize( event ) {
+        //    var container = document.getElementById('graphics_canvas');
         //}
+        function handleMessage(message) {
+            csoundMessage(message);
+        }
         function updateTimeCell() {
             var current_time_seconds = new Date().getTime() / 1000.0;
             var score_time = current_time_seconds - start_time_seconds;
             var score_time_cell = document.getElementById('Time_cell');
             score_time_cell.innerHTML = score_time.toFixed(4);
-            setTimeout(updateTimeCell, .02);
+            setTimeout(updateTimeCell, 10);
             lsys.score.progress3D(score_time);
         };
         var parameters = {
@@ -818,7 +803,7 @@ alwayson "Clear"
                     generate();
                     start_time_seconds = new Date().getTime() / 1000.0;
                     csound.is_playing = true;
-                    setTimeout(updateTimeCell, .02);
+                    setTimeout(updateTimeCell, 0);
                 } else {
                     csound.is_playing = false;
                     csound.stop();

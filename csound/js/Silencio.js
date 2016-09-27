@@ -716,6 +716,8 @@ Score.prototype.draw3D = function(canvas) {
         material.emissiveIntensity = 2 / 3;
         var note = new THREE.Mesh(geometry, material);
         note.scale.x = end - begin;
+        note.scale.y = 1;
+        note.scale.z = 1;
         note.position.x = begin + (note.scale.x / 2);
         note.position.y = key;
         note.position.z = channel;
@@ -730,14 +732,14 @@ Score.prototype.draw3D = function(canvas) {
     }
     for (var t = time_minimum; t <= time_maximum + 10; t = t + 10) {
         for (var k = key_minimum; k <= key_maximum; k = k + 12) {
-            var box = new THREE.Line(geometry, line_material);
-            box = new THREE.EdgesHelper(box);
+            var box = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), line_material);
+            ///box = new THREE.EdgesGeometry(box);
             box.material.color.setRGB(0, 0.25, 0);
             box.material.opacity = .25;
             box.material.transparent = true;
             box.scale.x = 10;
             box.scale.y = 12;
-            box.scale.z = 0;
+            box.scale.z = 1;
             box.position.x = t + 5;
             box.position.y = k + 6;
             box.position.z = 0 + .5;
@@ -774,11 +776,11 @@ Score.prototype.draw3D = function(canvas) {
     window.addEventListener('resize', onResize, false);
     // Start out looking straight at the full score.
     var bounding_box = new THREE.Box3().setFromObject(scene);
-    camera.lookAt(bounding_box.center());
-    camera.fov = 2 * Math.atan((bounding_box.size().x / (canvas.width / canvas.height)) / (2 * bounding_box.size().y)) * (180 / Math.PI);
-    camera.position.copy(bounding_box.center());
-    camera.position.z = 1.125 * Math.min(bounding_box.size().x, bounding_box.size().y);
-    controls.target.copy(bounding_box.center());
+    camera.lookAt(bounding_box.getCenter());
+    camera.fov = 2 * Math.atan((bounding_box.getSize().x / (canvas.width / canvas.height)) / (2 * bounding_box.getSize().y)) * (180 / Math.PI);
+    camera.position.copy(bounding_box.getCenter());
+    camera.position.z = 1.125 * Math.min(bounding_box.getSize().x, bounding_box.getSize().y);
+    controls.target.copy(bounding_box.getCenter());
     controls.update();
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);
