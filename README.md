@@ -27,7 +27,7 @@ I performed this piece for the 2016 New York City Electroacoustic Music Festival
 
 ## Playing With the Examples
 
-If you want to see what happens when you edit these examples, or if you want to use them as a basis for your own works, clone this repository on your computer using the <b>Clone or download this repository</b> button on this page. Make sure Python is installed. Then go to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server. Open Chrome, and navigate to http://localhost:8080. You can then find and run the examples. Edit the examples or create your own pieces using a regular text editor, and refresh the browser to see your changes in action.
+If you want to see what happens when you edit these examples, or if you want to use them as a basis for your own works, clone this repository on your computer using the <b>Clone or download</b> button on this page. Make sure Python is installed. Then go to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server. Open Chrome, and navigate to http://localhost:8080. You can then find and run the examples. Edit the examples or create your own pieces using a regular text editor, and refresh the browser to see your changes in action.
 
 ## Other Sample Pieces
 
