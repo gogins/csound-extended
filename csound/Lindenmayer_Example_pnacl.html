@@ -634,7 +634,7 @@ alwayson "Clear"
             // Move(i,t,d,k,v,p)
             lsys.set_axiom('T(0);Push();Move(-1,5,0,-4,0,0);AA();Pop();Push();Move(0,5,0,4,0,0);AA();Pop();Move(1,5,0,-4,0,0);A();');
             lsys.add_rule('A();',  'iteration < 3',                 'Note();Move(1,5,0,4,0,0);A();Push();T(2);Move(-11,5,0,4,0,0);AA();Pop();Move(1,5,0,4,0,0);Note();Move(1,5,0,4,0,0);Note();Move(1,5,0,4,0,0);A();Note();');
-            lsys.add_rule('A();',  'iteration == 3',                'T(5);A();Note();Move(1,5,0,4,0,0;Note();Move(0,2,0,-1,0,0);Push();Move(-21,5,0,-4,0,0);AA();Pop();K();Note();Move(1,5,0,4,0,0);A();Move(1,5,0,4,0,0);Note();');
+            lsys.add_rule('A();',  'iteration == 3',                'T(5);A();Note();Move(1,5,0,.4,0,0;Note();Move(0,2,0,-1,0,0);Push();Move(-21,5,0,-4,0,0);AA();Pop();K();Note();Move(1,5,0,4,0,0);A();Move(1,5,0,4,0,0);Note();');
             lsys.add_rule('AA();', 'iteration == 3',                'qqNote();Move(-10,-5,0,-14,0,0);Scale(0, .95);A();Scale(0, 1/.975);Push();Move(1,5,0,-14,0,0);K();AA();Pop();Move(-1,5,0,4,0,0);qqNote();Note();Move(1,5,0,4,0,0);Note();Move(1,5,0,4,0,0);AA();qqNote();');
             lsys.add_rule('AA();', 'iteration > 3 && iteration < 6',  'Note();Move(-1,5,0,4,0,0);Scale(0, .95);A();Scale(0, 1/.975);Push();Move(1,5,0,4,0,0);AA();Pop();Move(-1,5,0,4,0,0);qqNote();Note();Move(-1,5,0,4,0,0);Note();Move(1,5,0,-4,0,0);AA();Note();');
             lsys.add_rule('AA();', 'iteration <  3',                'AA();Note();Move(1,-5,0,4,0,0);Note();Move(1,5,0,-14,0,0);Push();Move(1,-5,0,4,0,0);AA();Push();Move(-1,5,0,-4,0,0);AA();Pop();Pop();qqNote();Move(1,5,0,4,0,0);Q(2);AA();Move(1,5,0,-4,0,0);Note();');
