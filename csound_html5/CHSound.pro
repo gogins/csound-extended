@@ -9,7 +9,8 @@ QT       += network webenginewidgets webchannel
 CONFIG += c++11 # for R -multiline strings before Qt 5.6
 TARGET = CHSound
 TEMPLATE = app
-CSOUND_HOME = /usr/local
+linux:CSOUND_HOME = /usr/local
+win32-msvc2013:CSOUND_HOME = C:/Program_Files/Csound6_x64
 SOURCES += main.cpp \
     message_event.cpp \
     csoundwebview.cpp \
@@ -24,10 +25,11 @@ FORMS    += \
     mainwindow.ui
 message("All configuration is via CMake variable CSOUND_HOME.")
 message("These point to installation directories, not source directories.")
-INCLUDEPATH += $$CSOUND_HOME/include/csound
-INCLUDEPATH += $$CSOUND_HOME/H
+linux:INCLUDEPATH += $$CSOUND_HOME/include/csound
+linux:INCLUDEPATH += $$CSOUND_HOME/H
+win32-msvc2013:INCLUDEPATH += $$CSOUND_HOME/include/csound
 INCLUDEPATH += .
-win32-msvc2013:CSOUND_LIB = $$CSOUND_HOME\\mingw64\\csound64.lib
+win32-msvc2013:CSOUND_LIB = $$CSOUND_HOME\\lib\\csound64.lib
 linux:CSOUND_LIB = $$CSOUND_HOME/lib/libcsound64.so
 LIBS += $$CSOUND_LIB
 win32-msvc2013:LIBS += user32.lib
