@@ -37,6 +37,7 @@ public:
     {
         return ((stop == false) && (finished == false));
     }
+    void recreateBrowser(int which);
 public slots:
     void newCsd();
     void openCsd();

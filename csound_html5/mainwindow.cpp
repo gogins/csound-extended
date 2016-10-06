@@ -225,6 +225,24 @@ QString getElement(const QString &text, const QString &tag)
     return "<" + tag + element + "</" + tag + ">";
 }
 
+void MainWindow::recreateBrowser(int which) {
+    switch (which) {
+    case 1:
+        ui->tabs->removeTab(1);
+        delete htmlView;
+        htmlView = 0;
+        htmlView = new CsoundWebView();
+        ui->tabs->insertTab(1, htmlView, "HTML");
+        ///htmlView->sizePolicy().setVerticalPolicy(QSizePolicy::Policy::Expanding);
+       /// ui->htmlView->layout()->setMargin(0);
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    }
+}
+
 void MainWindow::saveAndLoadHtml()
 {
     qDebug() << __FUNCTION__;
@@ -233,13 +251,7 @@ void MainWindow::saveAndLoadHtml()
     // the channel quits working. As a workaround, we remove and recreate the
     // browser whenever we load a new page.
     if (htmlView) {
-        ui->tabs->removeTab(1);
-        delete htmlView;
-        htmlView = 0;
-        htmlView = new CsoundWebView();
-        ui->tabs->insertTab(1, htmlView, "HTML");
-        ///htmlView->sizePolicy().setVerticalPolicy(QSizePolicy::Policy::Expanding);
-        ///ui->htmlWidget->layout()->setMargin(0);
+        recreateBrowser(1);
     }
     auto text = ui->csdEdit->toPlainText();
     QFile csdfile(filename);
