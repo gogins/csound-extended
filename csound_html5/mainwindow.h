@@ -16,9 +16,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     Ui::MainWindow *ui;
-    CsoundWebView *htmlView;
-    CsoundWebView *manualView;
-    CsoundWebView *portalView;
     QCsound csound;
     QWebChannel channel;
     QSettings settings;
@@ -37,6 +34,7 @@ public:
     {
         return ((stop == false) && (finished == false));
     }
+    void replaceBrowser(int which);
 public slots:
     void newCsd();
     void openCsd();

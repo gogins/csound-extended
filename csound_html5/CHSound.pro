@@ -46,4 +46,5 @@ RESOURCES +=
 
 DISTFILES += \
     04_Styles.csd \
-    xanadu.csd
+    xanadu.csd \
+    README.md
