@@ -158,16 +158,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     csound.SetHostData(this);
     csound.SetMessageCallback(&messageCallback);
-    //    connect(this, SIGNAL(updateMessages(QString)),
-    //            this, SLOT(on_updateMessages(QString)) );
-    connect(this, SIGNAL(updateStatus(QString)),
-            statusBar(), SLOT(showMessage(QString)) );
     ui->setupUi(this);
     ui->htmlTab->page()->setWebChannel(&channel);
     channel.registerObject("csound", &csound);
-    ui->manualTab;
     ui->manualTab->setUrl(QUrl("http://csound.github.io/docs/manual/indexframes.html"));
-    ui->portalView;
     ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     ui->licenseEdit->setPlainText(license);
 }
@@ -189,22 +183,22 @@ void MainWindow::newCsd()
 {
     qDebug() << __FUNCTION__;
     auto csd = R"(<CsoundSynthesizer>
-            <CsOptions>
-            -odac
-            </CsOptions>
-            <CsInstruments>
+<CsOptions>
+-odac
+</CsOptions>
+<CsInstruments>
 
-            sr = 48000
-            ksmps = 100
-            nchnls = 2
-            0dbfs = 1.0
+sr = 48000
+ksmps = 100
+nchnls = 2
+0dbfs = 1.0
 
-            </CsInstruments>
-            <CsScore>
+</CsInstruments>
+<CsScore>
 
-            </CsScore>
-            </CsoundSynthesizer>
-            )";
+</CsScore>
+</CsoundSynthesizer>
+)";
     ui->csdEdit->clear();
     ui->csdEdit->appendPlainText(csd);
     ui->csdEdit->moveCursor (QTextCursor::Start);
@@ -231,17 +225,20 @@ void MainWindow::replaceBrowser(int which)
     if (which == 1) {
         auto index = ui->tabs->indexOf(ui->htmlTab);
         ui->tabs->removeWidget(ui->htmlTab);
+        delete ui->htmlTab;
         ui->htmlTab = new CsoundWebView();
         ui->tabs->insertWidget(index, ui->htmlTab);
     } else if (which == 2) {
         auto index = ui->tabs->indexOf(ui->manualTab);
         ui->tabs->removeWidget(ui->manualTab);
+        delete ui->manualTab;
         ui->manualTab = new CsoundWebView();
         ui->tabs->insertWidget(index, ui->manualTab);
         QUrl url("http://csound.github.io/docs/manual/indexframes.html");
         ui->manualTab->setUrl(url);
     } else if (which == 3) {
         ui->portalTab->layout()->removeWidget(ui->portalView);
+        delete ui->portalView;
         ui->portalView = new CsoundWebView();
         ui->portalTab->layout()->addWidget(ui->portalView);
         ui->portalView->setUrl(QUrl("http://csound.github.io/"));
@@ -498,9 +495,4 @@ void MainWindow::showLicenseTab()
 {
     qDebug() << __FUNCTION__;
     ui->tabs->setCurrentIndex(4);
-}
-
-void MainWindow::on_MainWindowClass_iconSizeChanged(const QSize &iconSize)
-{
-    (void) iconSize;
 }

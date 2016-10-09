@@ -51,7 +51,7 @@
        <property name="styleSheet">
         <string notr="true">background-color:lightgray</string>
        </property>
-       <widget class="QWidget" name="csdTab" native="true">
+       <widget class="QWidget" name="csdTab">
         <layout class="QVBoxLayout" name="verticalLayout_7">
          <property name="leftMargin">
           <number>0</number>
@@ -84,7 +84,7 @@ color: rgb(0, 0, 0);</string>
          </item>
         </layout>
        </widget>
-       <widget class="CsoundWebView" name="htmlTab" native="true">
+       <widget class="CsoundWebView" name="htmlTab">
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="leftMargin">
           <number>0</number>
@@ -100,10 +100,10 @@ color: rgb(0, 0, 0);</string>
          </property>
         </layout>
        </widget>
-       <widget class="CsoundWebView" name="manualTab" native="true">
+       <widget class="CsoundWebView" name="manualTab">
         <layout class="QVBoxLayout" name="verticalLayout_3"/>
        </widget>
-       <widget class="QWidget" name="portalTab" native="true">
+       <widget class="QWidget" name="portalTab">
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
           <widget class="QWidget" name="browserToolsWidget" native="true">
@@ -217,7 +217,7 @@ color: rgb(0, 0, 0);</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="licenseTab" native="true">
+       <widget class="QWidget" name="licenseTab">
         <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
           <widget class="QPlainTextEdit" name="licenseEdit">

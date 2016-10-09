@@ -9,7 +9,6 @@
 #include <QMutex>
 #include <QtWebEngineWidgets>
 #include <QtWebChannel/QtWebChannel>
-#include "message_event.h"
 
 class CsoundWebView : public QWebEngineView
 {
@@ -34,11 +33,9 @@ class CsoundWebView : public QWebEngineView
   void navStateChanged(bool canGoBack, bool canGoForward);
   void jsMessage(const QString& name, const QVariantList& args);
 protected:
-  virtual void OnMessageEvent(MessageEvent* e);
   virtual void resizeEvent(QResizeEvent*);
   virtual void closeEvent(QCloseEvent*);
   virtual void showEvent(QShowEvent*);
-  virtual void customEvent(QEvent*);
   virtual void OnAddressChange(const QString& url);
   virtual void OnTitleChange(const QString& title);
   virtual void SetLoading(bool isLoading);

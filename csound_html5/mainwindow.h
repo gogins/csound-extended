@@ -64,7 +64,6 @@ private slots:
     void on_googleButton_clicked();
     void on_urlEdit_returnPressed();
     void on_updateMessages(const QString &);
-    void on_MainWindowClass_iconSizeChanged(const QSize &iconSize);
 };
 
 #endif // MAINWINDOWCLASS_H

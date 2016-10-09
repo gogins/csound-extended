@@ -1,5 +1,5 @@
 #include "qcsound.h"
-#include<QDebug>
+#include <QDebug>
 
 QCsound::QCsound(QObject *parent) : QObject(parent) {
 }
