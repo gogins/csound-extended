@@ -43,8 +43,6 @@ public slots:
     void saveCsdAs();
     void runCsd();
     void stopCsd();
-    void sendOrc();
-    void sendSco();
     void runCsdText(const QString &csd);
     void makeFullScreen();
     void showCsdTab();

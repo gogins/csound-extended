@@ -16,7 +16,7 @@ class QCsound : public QObject, public Csound
     Q_OBJECT
     bool stop_;
     bool finished;
-    std::thread *thread;
+    std::thread *thread_;
 public:
     explicit QCsound(QObject *parent = 0);
     Q_INVOKABLE int compileCsd(const QString &filename);
@@ -40,13 +40,19 @@ public:
     Q_INVOKABLE bool isPlaying();
     Q_INVOKABLE int isScorePending();
     Q_INVOKABLE void message(const QString &text);
+    /**
+     * Starts a Csound performance in a separate thread of execution, which
+     * can be ended by calling stop(). Other API calls must/may then be used
+     * to compile a csd, orc, or sco. Csound messages are emitted via the
+     * updateMessages() signal.
+     */
     Q_INVOKABLE int perform();
+    Q_INVOKABLE int perform_thread_routine();
     Q_INVOKABLE int readScore(const QString &text);
     Q_INVOKABLE void rewindScore();
     /**
-     * @brief run -- Compiles and performs the CSD file in a separate thread,
-     * which can be ended by calling stop(). Csound messages are emitted via the
-     * updateMessages() signal.
+     * @brief run -- Compiles and performs the CSD file. Csound messages are
+     * emitted via the updateMessages() signal.
      * @param csd_ Text of CSD file.
      */
     void run(const QString &csd_);

@@ -164,6 +164,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->manualTab->setUrl(QUrl("http://csound.github.io/docs/manual/indexframes.html"));
     ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     ui->licenseEdit->setPlainText(license);
+    ui->csdEdit->createStandardContextMenu();
 }
 
 MainWindow::~MainWindow()
@@ -218,7 +219,7 @@ QString getElement(const QString &text, const QString &tag)
 // if a page with a QWebChannel is reloaded, the qt module vanishes and
 // the channel quits working. I also find problems with tabbing back to a tab with a browser
 // which is supposed to show something, but doesn't. As a workaround, we remove and recreate the
-// browser whenever we load a new page.
+// browser whenever we show a new tab or load a new page.
 
 void MainWindow::replaceBrowser(int which)
 {
@@ -296,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
 void MainWindow::openCsd()
 {
     qDebug() << __FUNCTION__;
-    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco)"));
+    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco);;HTML files (*.htm, *.html);;All files (*.*)"));
     if (filename.size() > 0) {
         QFile file(filename);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -307,7 +308,11 @@ void MainWindow::openCsd()
         ui->csdEdit->clear();
         ui->csdEdit->appendPlainText(text);
         ui->csdEdit->moveCursor (QTextCursor::Start);
-        saveAndLoadHtml();
+        if (text.indexOf("</html>", 0, Qt::CaseInsensitive) != -1){
+           saveAndLoadHtml();
+        } else {
+           showCsdTab();
+        }
         setWindowTitle(filename);
         setWindowFilePath(filename);
         this->statusBar()->showMessage("Loaded " + filename);
@@ -365,7 +370,11 @@ void MainWindow::runCsd()
 {
     qDebug() << __FUNCTION__;
     saveCsd();
-    saveAndLoadHtml();
+    if (ui->csdEdit->toPlainText().indexOf("</html>", 0, Qt::CaseInsensitive) != -1) {
+        saveAndLoadHtml();
+    } else {
+        showCsdTab();
+    }
     runCsdText(ui->csdEdit->toPlainText());
 }
 
@@ -391,16 +400,6 @@ void MainWindow::stopCsd()
         delete thread;
         thread = nullptr;
     }
-}
-
-void MainWindow::sendOrc()
-{
-
-}
-
-void MainWindow::sendSco()
-{
-
 }
 
 void MainWindow::on_backButton_clicked()

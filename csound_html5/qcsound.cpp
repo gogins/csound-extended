@@ -1,7 +1,7 @@
 #include "qcsound.h"
 #include <QDebug>
 
-QCsound::QCsound(QObject *parent) : QObject(parent) {
+QCsound::QCsound(QObject *parent) : QObject(parent), thread_(nullptr) {
 }
 
 Q_INVOKABLE int QCsound::compileCsd(const QString &filename) {
@@ -91,7 +91,32 @@ Q_INVOKABLE void QCsound::message(const QString &text) {
 }
 
 Q_INVOKABLE int QCsound::perform() {
-    return Perform();
+    stop();
+    thread_ = new std::thread(&QCsound::perform_thread_routine, this);
+    if (thread_) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+Q_INVOKABLE int QCsound::perform_thread_routine() {
+    qDebug() << __FUNCTION__;
+    int result = 0;
+    result = Start();
+    message("Csound is running...");
+    for (stop_ = false, finished = false;
+         ((stop_ == false) && (finished == false)); )
+    {
+        finished = PerformKsmps();
+    }
+    message("Csound has stopped.");
+    result = Cleanup();
+    if (result) {
+        message("Failed to clean up Csound performance.");
+    }
+    Reset();
+    return result;
 }
 
 Q_INVOKABLE int QCsound::readScore(const QString &text) {
@@ -177,12 +202,11 @@ Q_INVOKABLE void QCsound::tableSet(int table_number, int index, double value){
 
 Q_INVOKABLE void QCsound::stop(){
     stop_ = true;
-    if (thread != nullptr) {
-        thread->join();
-        delete thread;
-        thread = nullptr;
+    if (thread_ != nullptr) {
+        thread_->join();
+        delete thread_;
+        thread_ = nullptr;
     }
-
 }
 
 
