@@ -35,14 +35,14 @@ The examples in this category require the use of csound.node, a csound "addon" f
 
 To run a piece using csound.node, you must provide the piece in the form of an HTML file, and you just also provide an "application manifest" named `package.json`. Rather than writing a new manifest for each piece, it is easier to copy the piece to a file named `csound_node_run.html` and use the manifest [here](https://gogins.github.io/csound/package.json).
 
-In my text editor, SciTE, I provide the following command for running any piece in NW.js:
+In my text editor, SciTE, I provide the following command in my user options file for running any piece in NW.js:
 
-`
+<pre>
 command.name.8.*=Run as NW.js application
 # Rather than rewrite the package.json manifest for each file to run, we use a 
 # static manifest, and we copy the file to run to the name in the manifest.
 command.8.*=cd $(FileDir) && cp -f $(FilePath) csound_node_run.html && /home/mkg/nwjs-sdk-v0.17.6-linux-x64/nw .
-`
+</pre>
 
 I performed this piece for the 2016 New York City Electroacoustic Music Festival. It is an example of the use of the new parametric Lindenmayer system class along with chord transformations:
 <a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>. In order to view the code, either download the file, or right-click to view the frame source.
@@ -55,8 +55,6 @@ https://gogins.github.io/csound/Lindenmayer_Example_node.html
 
 And a variant of Scrims reworked for csound.node:
 https://gogins.github.io/csound/Scrims_node.html
-
-
 
 ## Nudruz
 
