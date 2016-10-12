@@ -33,9 +33,9 @@ If you want to see what happens when you edit these examples, or if you want to 
 
 The examples in this category require the use of csound.node, a csound "addon" for [NW.js](http://nwjs.io/).
 
-To run a piece using csound.node, you must provide the piece in the form of an HTML file, and you just also provide an "application manifest" named `package.json`. Rather than writing a new manifest for each piece, it is easier to copy the piece to a file named `csound_node_run.html` and use the manifest [here](https://gogins.github.io/csound/package.json).
+To run a piece using csound.node, you must of course install NW.js, then provide the piece in the form of an HTML file, along with an "application manifest" named `package.json`. Rather than writing a new manifest for each piece, it is easier to copy the piece to a file named `csound_node_run.html` and use the manifest [here](https://gogins.github.io/csound/package.json).
 
-In my text editor, SciTE, I provide the following command in my user options file for running any piece in NW.js:
+In my text editor, SciTE, I provide the following command in my user options file for running any piece in NW.js using this one manifest:
 
 <pre>
 command.name.8.*=Run as NW.js application
@@ -51,7 +51,7 @@ Here is a variant of Sevier reworked for PNaCl:
 https://gogins.github.io/csound/Lindenmayer_Example_pnacl.html
 
 Here is a variant of Sevier that uses csound.node with Silencio to provide a 3-dimensional piano roll score display:
-https://gogins.github.io/csound/Lindenmayer_Example_node.html
+https://gogins.github.io/csound/Lindenmayer_Example_node.html. Don't expect pieces written for csound.node to run with PNaCl, sorry! Maybe someday...
 
 And a variant of Scrims reworked for csound.node:
 https://gogins.github.io/csound/Scrims_node.html
