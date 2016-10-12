@@ -43,12 +43,19 @@
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col width=300px>
             <col width=150px>
-            <th style="color:gold;text-align:left">Scrims (csound.node version for NW.js), by Michael Gogins.
-            Click "Play/Stop"; adjust "Master effects" group "gk_MasterOutput_level" slider.</p></td><td style="color:gold;text-align:right;"</th>
+            <tr style="color:gold;font-size:18px;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
+            <td style="font-weight:bold;">Scrims, for csound.node</td>
+            <td style="color:gold;text-align:right;">Michael Gogins</td>
             <tr>
-                <td>Time: </td><td id="Time_cell" style="color:SkyBlue;text-align:right;"></td>
+                <td colspan="2" style="color:gold;text-align:left">Click "Play"; adjust "Master effects" group "gk_MasterOutput_level" slider.</td>
             </tr>
+        </tr>
+            <tr>
+            <td>Time:</td>
+            <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
+            </tr>
+        <tr>
             <tr>
                 <td>Subset: </td><td id="Subset_cell" style="color:SkyBlue;text-align:right;"></td>
             </tr>
@@ -69,7 +76,7 @@
             </tr>
            <tr>
             <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
-                <td colspan=2><textarea id="console" style="width:100%;color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;overflow:auto;"></textarea></td>
+                <td colspan="2"><textarea id="console" style="width:100%;color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:8.25px;height:200px;overflow:auto;"></textarea></td>
             </tr>
         </table>
     <textarea class="code" id="orc" hidden rows=24 cols=80>
@@ -1353,19 +1360,21 @@ endin
             var score_text = score.toString();
             // Protect against trying to call an undefined Csound.
             if (typeof csound !== 'undefined') {
-                score.sendToCsound(csound);
-                var Chord_cell = document.getElementById('Chord_cell');
-                Chord_cell.innerHTML = chord.name();
-                var Notes_cell = document.getElementById('Notes_cell');
-                Notes_cell.innerHTML = note_count;
-                var Subset_cell  = document.getElementById('Subset_cell');
-                Subset_cell.innerHTML = subset_index;
-                var Point_cell  = document.getElementById('Point_cell');
-                Point_cell.innerHTML = subset_point_index;
-                var X_cell  = document.getElementById('X_cell');
-                X_cell.innerHTML = sprintf("%011.4f", point.x);
-                var Y_cell  = document.getElementById('Y_cell');
-                Y_cell.innerHTML = sprintf("%011.4f", point.y);
+                if (csound.isPlaying()) {
+                    score.sendToCsound(csound);
+                    var Chord_cell = document.getElementById('Chord_cell');
+                    Chord_cell.innerHTML = chord.name();
+                    var Notes_cell = document.getElementById('Notes_cell');
+                    Notes_cell.innerHTML = note_count;
+                    var Subset_cell  = document.getElementById('Subset_cell');
+                    Subset_cell.innerHTML = subset_index;
+                    var Point_cell  = document.getElementById('Point_cell');
+                    Point_cell.innerHTML = subset_point_index;
+                    var X_cell  = document.getElementById('X_cell');
+                    X_cell.innerHTML = sprintf("%011.4f", point.x);
+                    var Y_cell  = document.getElementById('Y_cell');
+                    Y_cell.innerHTML = sprintf("%011.4f", point.y);
+                }
             }
             score.clear();
             note_count = note_count + 1;
@@ -1442,6 +1451,7 @@ endin
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
                 csound.perform();
+                csound.readScore('f 0 360\n');
                 start_time_seconds = new Date().getTime() / 1000.0;
                 startTime = csound.getScoreTime();
                 setTimeout(updateTimeCell, 0);
@@ -1516,9 +1526,9 @@ endin
             gui.remember(parameters);
             gui.add(parameters, 'Play').name('Play');
             gui.add(parameters, 'Stop').name('Stop');
-            gui.add(parameters, 'Developer_tools').name('Developer tools');
+            gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
-             var intruments = gui.addFolder('Csound instruments');
+             var intruments = gui.addFolder('Instruments');
             var fmclang = intruments.addFolder('FM Clang');
             add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
             add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
@@ -1549,8 +1559,8 @@ endin
             add_slider(Phaser, 'gk_Phaser_index1', 0, 1);
             add_slider(Phaser, 'gk_Phaser_index2', 0, 1);
             add_slider(Phaser, 'gk_Phaser_level', -40, 40);
-            var Pianoteq = intruments.addFolder('Pianoteq');
-            add_slider(Pianoteq, 'gk_Piano_level', -40, 40);
+            var Piano = intruments.addFolder('Piano');
+            add_slider(Piano, 'gk_Piano_level', -40, 40);
             var Shiner = intruments.addFolder('Shiner');
             add_slider(Shiner, 'gk_Shiner_level', -40, 40);
             var Sweeper = intruments.addFolder('Sweeper');

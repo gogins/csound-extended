@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Sevier</title>
+        <title>Parametric Lindenmayer System Example</title>
         <script type="text/javascript" src="js/dat.gui.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/Silencio.js"></script>
@@ -46,12 +46,16 @@
     <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
         <col>
         <col>
-            <tr style="color:gold;font-size:24px;">
+            <tr style="color:gold;font-size:18px;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
-            <td style="font-weight:bold;">Sevier</td>
+            <td style="font-weight:bold;">Parametric Lindenmayer System Example, for csound.node</td>
             <td style="color:gold;text-align:right;">Michael Gogins</td>
+            <tr>
+                <td colspan="2" style="color:gold;text-align:left">Click "Play"; adjust "Master effects" group "gk_MasterOutput_level" slider.</td>
+            </tr>
+            
         </tr>
-            <tr style="font-size:24px;">
+            <tr style="font-size:14px;">
             <td>Time:</td>
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
             </tr>
@@ -1265,7 +1269,7 @@ endin
           "closed": false,
           "folders": {}
         },
-        "Pianoteq": {
+        "Piano": {
           "preset": "Default",
           "closed": false,
           "folders": {}
@@ -1375,7 +1379,7 @@ endin
             gui.remember(parameters);
             gui.add(parameters, 'Play').name('Play');
             gui.add(parameters, 'Stop').name('Stop');
-            gui.add(parameters, 'Developer_tools').name('Developer tools');
+            gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
@@ -1383,7 +1387,7 @@ endin
             add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
             add_slider(Master, 'gk_MasterOutput_level', -40, 40);
 
-            var intruments = gui.addFolder('Csound instruments');
+            var intruments = gui.addFolder('Instruments');
             var fmclang = intruments.addFolder('FM Clang');
             add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
             add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
@@ -1417,8 +1421,8 @@ endin
             add_slider(Phaser, 'gk_Phaser_index1', 0, 1);
             add_slider(Phaser, 'gk_Phaser_index2', 0, 1);
             add_slider(Phaser, 'gk_Phaser_level', -40, 40);
-            var Pianoteq = intruments.addFolder('Pianoteq');
-            add_slider(Pianoteq, 'gk_Piano_level', -40, 40);
+            var Piano = intruments.addFolder('Piano');
+            add_slider(Piano, 'gk_Piano_level', -40, 40);
             var Shiner = intruments.addFolder('Shiner');
             add_slider(Shiner, 'gk_Shiner_level', -40, 40);
             var Sweeper = intruments.addFolder('Sweeper');

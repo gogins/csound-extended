@@ -479,7 +479,7 @@ color: rgb(0, 255, 0);</string>
    <sender>actionRun</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>runCsd()</slot>
+   <slot>runFile()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

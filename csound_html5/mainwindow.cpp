@@ -366,7 +366,7 @@ void MainWindow::run(const QString &csd_)
     csound.Reset();
 }
 
-void MainWindow::runCsd()
+void MainWindow::runFile()
 {
     qDebug() << __FUNCTION__;
     saveCsd();
@@ -375,7 +375,9 @@ void MainWindow::runCsd()
     } else {
         showCsdTab();
     }
-    runCsdText(ui->csdEdit->toPlainText());
+    if (filename.endsWith(".csd", Qt::CaseInsensitive)) {
+        runCsdText(ui->csdEdit->toPlainText());
+    }
 }
 
 void MainWindow::runCsdText(const QString &csdText)
