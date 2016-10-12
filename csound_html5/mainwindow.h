@@ -41,7 +41,13 @@ public slots:
     void saveCsd();
     void saveAndLoadHtml();
     void saveCsdAs();
-    void runCsd();
+    /**
+     * @brief runFile -- Run the contents of the editor. CSD files are run
+     * using Csound in the calling process, HTML is run using the
+     * QtWebEngineView in its own process. HTML-only files must control Csound
+     * using only JavaScript in the HTML code.
+     */
+    void runFile();
     void stopCsd();
     void runCsdText(const QString &csd);
     void makeFullScreen();

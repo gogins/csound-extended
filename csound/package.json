@@ -1,0 +1,21 @@
+{
+  "main": "csound_node_run.html",
+  "name": "csound.node",
+  "description": "HTML5 with Csound",
+  "version": "0.1.0",
+  "keywords": [ "Csound", "node-webkit" ],
+  "nodejs": true,
+  "node-remote": "http://<all-urls>/*",
+  "window": {
+    "title": "csound.node",
+    "icon": "link.png",
+    "toolbar": false,
+    "frame": false,
+    "maximized": true,
+    "position": "mouse",
+    "fullscreen": true
+  },
+  "webkit": {
+    "plugin": true
+  }
+}

@@ -14,9 +14,9 @@
 class QCsound : public QObject, public Csound
 {
     Q_OBJECT
-    bool stop_;
-    bool finished;
-    std::thread *thread_;
+    bool csound_stop;
+    bool csound_finished;
+    std::thread *csound_thread;
 public:
     explicit QCsound(QObject *parent = 0);
     Q_INVOKABLE int compileCsd(const QString &filename);
