@@ -1,7 +1,7 @@
 #include "qcsound.h"
 #include <QDebug>
 
-QCsound::QCsound(QObject *parent) : QObject(parent), thread_(nullptr) {
+QCsound::QCsound(QObject *parent) : QObject(parent), csound_thread(nullptr) {
 }
 
 Q_INVOKABLE int QCsound::compileCsd(const QString &filename) {
@@ -79,7 +79,7 @@ Q_INVOKABLE int QCsound::getVersion() {
 }
 
 Q_INVOKABLE bool QCsound::isPlaying() {
-    return ((stop_ == false) && (finished == false));
+    return ((csound_stop == false) && (csound_finished == false));
 }
 
 Q_INVOKABLE int QCsound::isScorePending() {
@@ -92,8 +92,8 @@ Q_INVOKABLE void QCsound::message(const QString &text) {
 
 Q_INVOKABLE int QCsound::perform() {
     stop();
-    thread_ = new std::thread(&QCsound::perform_thread_routine, this);
-    if (thread_) {
+    csound_thread = new std::thread(&QCsound::perform_thread_routine, this);
+    if (csound_thread) {
         return 0;
     } else {
         return 1;
@@ -105,10 +105,10 @@ Q_INVOKABLE int QCsound::perform_thread_routine() {
     int result = 0;
     result = Start();
     message("Csound is running...");
-    for (stop_ = false, finished = false;
-         ((stop_ == false) && (finished == false)); )
+    for (csound_stop = false, csound_finished = false;
+         ((csound_stop == false) && (csound_finished == false)); )
     {
-        finished = PerformKsmps();
+        csound_finished = PerformKsmps();
     }
     message("Csound has stopped.");
     result = Cleanup();
@@ -135,10 +135,10 @@ void QCsound::run(const QString &csd_)
     result = CompileCsdText(csd_.toStdString().c_str());
     result = Start();
     emit updateStatus("Csound is running...");
-    for (stop_ = false, finished = false;
-         ((stop_ == false) && (finished == false)); )
+    for (csound_stop = false, csound_finished = false;
+         ((csound_stop == false) && (csound_finished == false)); )
     {
-        finished = PerformKsmps();
+        csound_finished = PerformKsmps();
     }
     emit updateStatus("Csound has stopped.");
     result = Cleanup();
@@ -201,11 +201,11 @@ Q_INVOKABLE void QCsound::tableSet(int table_number, int index, double value){
 }
 
 Q_INVOKABLE void QCsound::stop(){
-    stop_ = true;
-    if (thread_ != nullptr) {
-        thread_->join();
-        delete thread_;
-        thread_ = nullptr;
+    csound_stop = true;
+    if (csound_thread != nullptr) {
+        csound_thread->join();
+        delete csound_thread;
+        csound_thread = nullptr;
     }
 }
 
