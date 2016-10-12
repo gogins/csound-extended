@@ -1,0 +1,3 @@
+[submodule "csound/silencio"]
+	path = csound/silencio
+	url = https://github.com/gogins/silencio.git
