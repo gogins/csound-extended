@@ -10,7 +10,7 @@ https://gogins.github.io/csound/html/indexframes.html
 
 Not all examples are playable at this time. Only csd based examples (not orc based) that output stereo audio, and do not use file-based resources (such as sample soundfiles) or network-based resources (e.g. OSC does not work), are currently working.
 
-## Playable Sample Pieces (with Csound for PNaCl)
+## Playable Sample Pieces for Csound for PNaCl
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of 
 Google's Chrome browser for OS X, Windows, or Linux. Click on the links below to play the examples. If you don't hear anything at first, make sure Csound has finished loading, and play with the sliders, particularly the output level slider.
@@ -23,17 +23,27 @@ https://gogins.github.io/csound/PNaCl_Csound_03_Style_Sheet.html
 
 https://gogins.github.io/csound/CompileCsdText.html
 
-I performed this piece for the 2016 New York City Electroacoustic Music Festival: https://gogins.github.io/csound/Scrims_pnacl.html
+I performed this piece for the 2016 New York City Electroacoustic Music Festival:
+
+https://gogins.github.io/csound/Scrims_pnacl.html
 
 ## Playing With the Examples
 
-If you want to see what happens when you edit these examples, or if you want to use them as a basis for your own works, clone this repository on your computer using the <b>Clone or download</b> button on this page. Make sure Python is installed. Then go to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server. Open Chrome, and navigate to http://localhost:8080. You can then find and run the examples. Edit the examples or create your own pieces using a regular text editor, and refresh the browser to see your changes in action.
+If you want to see what happens when you edit these examples, or if you want to use them as a basis for your own works, clone this repository on your computer using the <b>Clone or download</b> button on this page. On the command line, execute `git clone --recursive https://github.com/gogins/gogins.github.io.git` to ensure that you bring in the Git module for Silencio, which includes JavaScript files used by the samples. Make sure Python is installed. Then go to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server. Open Chrome, and navigate to http://localhost:8080. You can then find and run the examples. Edit the examples or create your own pieces using a regular text editor, and refresh the browser to see your changes in action.
 
-## Other Sample Pieces (for csound.node)
+## Other Example Pieces for csound.node
 
-The examples in this category require the use of csound.node, a csound "addon" for [NW.js](http://nwjs.io/).
+### Getting Started with csound.node
 
-To run a piece using csound.node, you must of course install NW.js, then provide the piece in the form of an HTML file, along with an "application manifest" named `package.json`. Rather than writing a new manifest for each piece, it is easier to copy the piece to a file named `csound_node_run.html` and use the manifest [here](https://gogins.github.io/csound/package.json).
+The examples in this category require the use of csound.node, a csound "addon" for [NW.js](http://nwjs.io/)
+
+1. Clone this repository using `git clone --recursive https://github.com/gogins/gogins.github.io.git`.
+
+2. Install NW.js.
+
+3. Build or install csound.node following [these instructions](https://github.com/csound/csound/tree/develop/frontends/nwjs).
+
+4. To run a piece using csound.node, you must provide the piece in the form of an HTML file, along with an "application manifest" named `package.json`. Rather than writing a new manifest for each piece, it is easier to copy the piece to a file named `csound_node_run.html` and use the manifest [here](https://gogins.github.io/csound/package.json).
 
 In my text editor, SciTE, I provide the following command in my user options file for running any piece in NW.js using this one manifest:
 
@@ -44,16 +54,24 @@ command.name.8.*=Run as NW.js application
 command.8.*=cd $(FileDir) && cp -f $(FilePath) csound_node_run.html && /home/mkg/nwjs-sdk-v0.17.6-linux-x64/nw .
 </pre>
 
+### Examples
+
 I performed this piece for the 2016 New York City Electroacoustic Music Festival. It is an example of the use of the new parametric Lindenmayer system class along with chord transformations:
-<a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>. In order to view the code, either download the file, or right-click to view the frame source.
+
+<a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>. 
+
+In order to view the code, either download the file, or right-click to view the frame source.
 
 Here is a variant of Sevier reworked for PNaCl:
+
 https://gogins.github.io/csound/Lindenmayer_Example_pnacl.html
 
 Here is a variant of Sevier that uses csound.node with Silencio to provide a 3-dimensional piano roll score display:
-https://gogins.github.io/csound/Lindenmayer_Example_node.html. Don't expect pieces written for csound.node to run with PNaCl, sorry! Maybe someday...
+
+https://gogins.github.io/csound/Lindenmayer_Example_node.html. 
 
 And a variant of Scrims reworked for csound.node:
+
 https://gogins.github.io/csound/Scrims_node.html
 
 ## Nudruz
