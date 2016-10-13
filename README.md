@@ -14,7 +14,7 @@ https://gogins.github.io/csound/html/indexframes.html
 
 Not all examples are playable at this time. Only csd based examples (not orc based) that output stereo audio, and do not use file-based resources (such as sample soundfiles) or network-based resources (e.g. OSC does not work), are currently working.
 
-## Playable Example Pieces for Csound for PNaCl
+## Playable Example Pieces Using Csound for PNaCl
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux. 
 
@@ -46,7 +46,7 @@ I performed this piece for the 2016 New York City Electroacoustic Music Festival
 
 https://gogins.github.io/csound/Scrims_pnacl.html
 
-## Example Pieces for csound.node
+## Example Pieces Using csound.node
 
 ### Getting Started with csound.node
 
