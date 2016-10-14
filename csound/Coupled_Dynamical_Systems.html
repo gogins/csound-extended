@@ -51,9 +51,9 @@
         }
     </style>
     <canvas id = 'graphics_canvas' class='canvas' style="width:98vw;height:98vh;"></canvas>
-    <table id = 'statistics' style="position: absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
-        <col>
-        <col>
+      <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
+            <col width=300px>
+            <col width=150px>
         <tr style="color:gold;font-size:18px;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
             <td style="font-weight:bold;">Coupled Dynamical Systems, for csound.node</td>
@@ -62,34 +62,20 @@
         <tr>
             <td colspan="2" style="color:gold;text-align:left">Click "Play"; adjust "Master effects" group "gk_MasterOutput_level" slider.</td>
         </tr>
-        <tr>
-            <td colspan="2">When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
-$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</td>
-
-        </tr>
         <tr style="font-size:14px;">
             <td>Time:</td>
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
+            <td colspan="2">A "lattice" of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, $\epsilon$ is the coupling between the dynamical systems, and $s$ is the seed of the random generator. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to Csound instruments. Additional controls include the choice of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping.
+            </td>
+        </tr>
+        <tr>
             <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
-            <td colspan=2><textarea id="Log_cell" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
+            <td colspan="2"><textarea id="Log_cell" style="color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;width:550px;overflow:auto;"></textarea></td>
         </tr>
     </table>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-		
-         <mrow>
-            <msup><mi>a</mi><mn>2</mn></msup>
-            <mo>+</mo>
-				
-            <msup><mi>b</mi><mn>2</mn></msup>
-            <mo>=</mo>
-				
-            <msup><mi>c</mi><mn>2</mn></msup>
-         </mrow>
-			
-      </math>    
-    <textarea class="code" id="orc" hidden rows=24 cols=80>
+     <textarea class="code" id="orc" hidden rows=24 cols=80>
 
 sr = 88200
 ksmps = 200
@@ -1341,6 +1327,12 @@ endin
             gk_overlap: 0.05,
             gk_FM_Clang_preset: 1,
             gk_FM_Clang_level: 0,
+            Notes_per_second: 4,
+            N: 12,
+            a: .92,
+            epsilon: .5,
+            Lowest_note: 36,
+            Range: 60,
             Play: function() {
                 csound.stop();
                 try {
@@ -1384,12 +1376,18 @@ endin
             gui.add(parameters, 'Stop').name('Stop');
             gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
+            var Dynamical_Systems = gui.addFolder('Dynamical systems');
+            add_slider(Dynamical_Systems, 'N', 2, 12);
+            add_slider(Dynamical_Systems, 'a', 0, 1);
+            add_slider(Dynamical_Systems, 'epsilon', 0, 1);
+            add_slider(Dynamical_Systems, 'Notes_per_second', 0.25, 32);
+            add_slider(Dynamical_Systems, 'Lowest_note', 24, 60);
+            add_slider(Dynamical_Systems, 'Range', 12, 72);
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
             add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
             add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
             add_slider(Master, 'gk_MasterOutput_level', -40, 40);
-
             var intruments = gui.addFolder('Instruments');
             var fmclang = intruments.addFolder('FM Clang');
             add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
