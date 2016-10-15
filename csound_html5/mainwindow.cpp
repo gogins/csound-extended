@@ -4,10 +4,6 @@
 #include <QTextStream>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#if !defined(__BUILDING_LIBCSOUND)
-//#define __BUILDING_LIBCSOUND
-//#endif
-//#include <csoundCore.h>
 
 extern "C" int argdecode(CSOUND *csound, int size, char **argv);
 
@@ -162,19 +158,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     csound.SetHostData(this);
     csound.SetMessageCallback(&messageCallback);
-    //    connect(this, SIGNAL(updateMessages(QString)),
-    //            this, SLOT(on_updateMessages(QString)) );
-    connect(this, SIGNAL(updateStatus(QString)),
-            statusBar(), SLOT(showMessage(QString)) );
     ui->setupUi(this);
-    htmlView = ui->htmlTab; //new CsoundWebView();
-    htmlView->page()->setWebChannel(&channel);
+    ui->htmlTab->page()->setWebChannel(&channel);
     channel.registerObject("csound", &csound);
-    manualView = ui->manualTab;//new CsoundWebView();
-    manualView->setUrl(QUrl("http://csound.github.io/docs/manual/indexframes.html"));
-    portalView = ui->portalView;
-    portalView->setUrl(QUrl("http://csound.github.io/"));
+    ui->manualTab->setUrl(QUrl("http://csound.github.io/docs/manual/indexframes.html"));
+    ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     ui->licenseEdit->setPlainText(license);
+    ui->csdEdit->createStandardContextMenu();
 }
 
 MainWindow::~MainWindow()
@@ -194,22 +184,22 @@ void MainWindow::newCsd()
 {
     qDebug() << __FUNCTION__;
     auto csd = R"(<CsoundSynthesizer>
-            <CsOptions>
-            -odac
-            </CsOptions>
-            <CsInstruments>
+<CsOptions>
+-odac
+</CsOptions>
+<CsInstruments>
 
-            sr = 48000
-            ksmps = 100
-            nchnls = 2
-            0dbfs = 1.0
+sr = 48000
+ksmps = 100
+nchnls = 2
+0dbfs = 1.0
 
-            </CsInstruments>
-            <CsScore>
+</CsInstruments>
+<CsScore>
 
-            </CsScore>
-            </CsoundSynthesizer>
-            )";
+</CsScore>
+</CsoundSynthesizer>
+)";
     ui->csdEdit->clear();
     ui->csdEdit->appendPlainText(csd);
     ui->csdEdit->moveCursor (QTextCursor::Start);
@@ -225,34 +215,42 @@ QString getElement(const QString &text, const QString &tag)
     return "<" + tag + element + "</" + tag + ">";
 }
 
-void MainWindow::recreateBrowser(int which) {
-    switch (which) {
-    case 1:
-        ui->tabs->removeTab(1);
-        delete htmlView;
-        htmlView = 0;
-        htmlView = new CsoundWebView();
-        ui->tabs->insertTab(1, htmlView, "HTML");
-        ///htmlView->sizePolicy().setVerticalPolicy(QSizePolicy::Policy::Expanding);
-       /// ui->htmlView->layout()->setMargin(0);
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
+
+// https://bugreresize(ui->tabs->currentWidget()->size());ports.qt.io/browse/QTBUG-53411 in Qt SDK 5.7.0 means that
+// if a page with a QWebChannel is reloaded, the qt module vanishes and
+// the channel quits working. I also find problems with tabbing back to a tab with a browser
+// which is supposed to show something, but doesn't. As a workaround, we remove and recreate the
+// browser whenever we show a new tab or load a new page.
+
+void MainWindow::replaceBrowser(int which)
+{
+    if (which == 1) {
+        auto index = ui->tabs->indexOf(ui->htmlTab);
+        ui->tabs->removeWidget(ui->htmlTab);
+        delete ui->htmlTab;
+        ui->htmlTab = new CsoundWebView();
+        ui->tabs->insertWidget(index, ui->htmlTab);
+    } else if (which == 2) {
+        auto index = ui->tabs->indexOf(ui->manualTab);
+        ui->tabs->removeWidget(ui->manualTab);
+        delete ui->manualTab;
+        ui->manualTab = new CsoundWebView();
+        ui->tabs->insertWidget(index, ui->manualTab);
+        QUrl url("http://csound.github.io/docs/manual/indexframes.html");
+        ui->manualTab->setUrl(url);
+    } else if (which == 3) {
+        ui->portalTab->layout()->removeWidget(ui->portalView);
+        delete ui->portalView;
+        ui->portalView = new CsoundWebView();
+        ui->portalTab->layout()->addWidget(ui->portalView);
+        ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     }
 }
 
 void MainWindow::saveAndLoadHtml()
 {
     qDebug() << __FUNCTION__;
-    // https://bugreresize(ui->tabs->currentWidget()->size());ports.qt.io/browse/QTBUG-53411 in Qt SDK 5.7.0 means that
-    // if a page with a QWebChannel is reloaded, the qt module vanishes and
-    // the channel quits working. As a workaround, we remove and recreate the
-    // browser whenever we load a new page.
-    if (htmlView) {
-        recreateBrowser(1);
-    }
+    replaceBrowser(1);
     auto text = ui->csdEdit->toPlainText();
     QFile csdfile(filename);
     csdfile.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -287,11 +285,11 @@ document.addEventListener("DOMContentLoaded", function () {
         QTextStream out(&htmlfile);
         out << html;
         htmlfile.close();
-        htmlView->page()->setWebChannel(&channel);
+        ui->htmlTab->page()->setWebChannel(&channel);
         channel.registerObject("csound", &csound);
-        htmlView->setUrl(QUrl::fromLocalFile(htmlfile.fileName()));
+        ui->htmlTab->setUrl(QUrl::fromLocalFile(htmlfile.fileName()));
     } else {
-        htmlView->load(QUrl("about:blank"));
+        ui->htmlTab->load(QUrl("about:blank"));
         ui->tabs->setCurrentIndex(0);
     }
     repaint();
@@ -300,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
 void MainWindow::openCsd()
 {
     qDebug() << __FUNCTION__;
-    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco)"));
+    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco);;HTML files (*.htm, *.html);;All files (*.*)"));
     if (filename.size() > 0) {
         QFile file(filename);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -311,7 +309,11 @@ void MainWindow::openCsd()
         ui->csdEdit->clear();
         ui->csdEdit->appendPlainText(text);
         ui->csdEdit->moveCursor (QTextCursor::Start);
-        saveAndLoadHtml();
+        if (text.indexOf("</html>", 0, Qt::CaseInsensitive) != -1){
+           saveAndLoadHtml();
+        } else {
+           showCsdTab();
+        }
         setWindowTitle(filename);
         setWindowFilePath(filename);
         this->statusBar()->showMessage("Loaded " + filename);
@@ -355,7 +357,7 @@ void MainWindow::run(const QString &csd_)
     for (stop = false, finished = false;
          ((stop == false) && (finished == false)); )
     {
-        finished = csound.PerformBuffer();
+        finished = csound.PerformKsmps();
     }
     emit updateStatus("Csound has stopped.");
     result = csound.Cleanup();
@@ -365,12 +367,18 @@ void MainWindow::run(const QString &csd_)
     csound.Reset();
 }
 
-void MainWindow::runCsd()
+void MainWindow::runFile()
 {
     qDebug() << __FUNCTION__;
     saveCsd();
-    saveAndLoadHtml();
-    runCsdText(ui->csdEdit->toPlainText());
+    if (ui->csdEdit->toPlainText().indexOf("</html>", 0, Qt::CaseInsensitive) != -1) {
+        saveAndLoadHtml();
+    } else {
+        showCsdTab();
+    }
+    if (filename.endsWith(".csd", Qt::CaseInsensitive)) {
+        runCsdText(ui->csdEdit->toPlainText());
+    }
 }
 
 void MainWindow::runCsdText(const QString &csdText)
@@ -397,62 +405,52 @@ void MainWindow::stopCsd()
     }
 }
 
-void MainWindow::sendOrc()
-{
-
-}
-
-void MainWindow::sendSco()
-{
-
-}
-
 void MainWindow::on_backButton_clicked()
 {
     qDebug() << __FUNCTION__;
-    portalView->back();
+    ui->portalView->back();
 }
 
 void MainWindow::on_loadButton_clicked()
 {
     qDebug() << __FUNCTION__;
     QUrl url(ui->urlEdit->text());
-    portalView->load(url);
+    ui->portalView->load(url);
 }
 
 void MainWindow::on_csoundHomeButton_clicked()
 {
     qDebug() << __FUNCTION__;
     QUrl url("http://csound.github.io/");
-    portalView->load(url);
+    ui->portalView->load(url);
 }
 
 void MainWindow::on_forwardButton_clicked()
 {
     qDebug() << __FUNCTION__;
-    portalView->forward();
+    ui->portalView->forward();
 }
 
 void MainWindow::on_stopLoadingButton_clicked()
 {
     qDebug() << __FUNCTION__;
-    portalView->stop();
+    ui->portalView->stop();
 }
 
 void MainWindow::on_googleButton_clicked()
 {
     qDebug() << __FUNCTION__;
     QUrl url("http://google.com/");
-    portalView->load(url);
-    portalView->setFocus();
+    ui->portalView->load(url);
+    ui->portalView->setFocus();
 }
 
 void MainWindow::on_urlEdit_returnPressed()
 {
     qDebug() << __FUNCTION__;
     QUrl url(ui->urlEdit->text());
-    portalView->load(url);
-    portalView->setFocus();
+    ui->portalView->load(url);
+    ui->portalView->setFocus();
 }
 
 void MainWindow::makeFullScreen()
@@ -474,38 +472,29 @@ void MainWindow::showCsdTab()
 void MainWindow::showHtmlTab()
 {
     qDebug() << __FUNCTION__;
+    saveAndLoadHtml();
     ui->tabs->setCurrentIndex(1);
-    ui->tabs->currentWidget()->show();
-    ui->tabs->currentWidget()->raise();
-    ui->tabs->currentWidget()->adjustSize();
-    ///ui->htmlTab->setUrl();
 }
 
 void MainWindow::showManualTab()
 {
     qDebug() << __FUNCTION__;
+    replaceBrowser(2);
     ui->tabs->setCurrentIndex(2);
-    ui->tabs->currentWidget()->show();
-    ui->tabs->currentWidget()->raise();
-    ui->tabs->currentWidget()->adjustSize();
-    QUrl url("http://csound.github.io/docs/manual/indexframes.html");
-    ui->manualTab->setUrl(url);
+    ui->manualTab->updateGeometry();
 }
 
 void MainWindow::showPortalTab()
 {
     qDebug() << __FUNCTION__;
+    replaceBrowser(3);
     ui->tabs->setCurrentIndex(3);
-    portalView->setFocus();
+    ui->portalView->updateGeometry();
+    ui->portalTab->update();
 }
 
 void MainWindow::showLicenseTab()
 {
     qDebug() << __FUNCTION__;
     ui->tabs->setCurrentIndex(4);
-}
-
-void MainWindow::on_MainWindowClass_iconSizeChanged(const QSize &iconSize)
-{
-    (void) iconSize;
 }

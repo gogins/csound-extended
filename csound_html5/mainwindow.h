@@ -16,9 +16,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     Ui::MainWindow *ui;
-    CsoundWebView *htmlView;
-    CsoundWebView *manualView;
-    CsoundWebView *portalView;
     QCsound csound;
     QWebChannel channel;
     QSettings settings;
@@ -37,17 +34,21 @@ public:
     {
         return ((stop == false) && (finished == false));
     }
-    void recreateBrowser(int which);
+    void replaceBrowser(int which);
 public slots:
     void newCsd();
     void openCsd();
     void saveCsd();
     void saveAndLoadHtml();
     void saveCsdAs();
-    void runCsd();
+    /**
+     * @brief runFile -- Run the contents of the editor. CSD files are run
+     * using Csound in the calling process, HTML is run using the
+     * QtWebEngineView in its own process. HTML-only files must control Csound
+     * using only JavaScript in the HTML code.
+     */
+    void runFile();
     void stopCsd();
-    void sendOrc();
-    void sendSco();
     void runCsdText(const QString &csd);
     void makeFullScreen();
     void showCsdTab();
@@ -67,7 +68,6 @@ private slots:
     void on_googleButton_clicked();
     void on_urlEdit_returnPressed();
     void on_updateMessages(const QString &);
-    void on_MainWindowClass_iconSizeChanged(const QSize &iconSize);
 };
 
 #endif // MAINWINDOWCLASS_H

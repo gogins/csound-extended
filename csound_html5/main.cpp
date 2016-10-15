@@ -2,9 +2,7 @@
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
-#ifdef QT_DEBUG
-    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "23654");
-#endif
+  qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "8080");
   QApplication application(argc, argv);
   MainWindow mainWindow;
   mainWindow.show();

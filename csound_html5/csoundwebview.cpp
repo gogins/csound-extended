@@ -1,7 +1,6 @@
 #include "csoundwebview.h"
 #include <QCoreApplication>
 #include <QString>
-#include "message_event.h"
 
 const QString CsoundWebView::kUrlBlank = "about:blank";
 
@@ -46,25 +45,6 @@ void CsoundWebView::showEvent(QShowEvent* e) {
     adjustSize();
     repaint();
     e->accept();
-}
-
-void CsoundWebView::OnMessageEvent(MessageEvent* e) {
-    qDebug() << __FUNCTION__ << QThread::currentThreadId();
-    // Cross thread. Not in ui thread here.
-    QCoreApplication::postEvent(this, e, Qt::HighEventPriority);
-    e->accept();
-}
-
-
-void CsoundWebView::customEvent(QEvent* e) {
-    qDebug() << __FUNCTION__ << QThread::currentThreadId();
-    if (e->type() == MessageEvent::MessageEventType) {
-        MessageEvent* event = static_cast<MessageEvent*>(e);
-        QString name = event->name();
-        QVariantList args = event->args();
-        qDebug() << __FUNCTION__ << name << args;
-        emit jsMessage(name, args);
-    }
 }
 
 void CsoundWebView::OnAddressChange(const QString& url) {

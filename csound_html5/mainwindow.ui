@@ -47,17 +47,11 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QTabWidget" name="tabs">
+      <widget class="QStackedWidget" name="tabs">
        <property name="styleSheet">
         <string notr="true">background-color:lightgray</string>
        </property>
-       <property name="currentIndex">
-        <number>3</number>
-       </property>
        <widget class="QWidget" name="csdTab">
-        <attribute name="title">
-         <string>CSD</string>
-        </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_7">
          <property name="leftMargin">
           <number>0</number>
@@ -91,9 +85,6 @@ color: rgb(0, 0, 0);</string>
         </layout>
        </widget>
        <widget class="CsoundWebView" name="htmlTab">
-        <attribute name="title">
-         <string>HTML</string>
-        </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="leftMargin">
           <number>0</number>
@@ -110,15 +101,9 @@ color: rgb(0, 0, 0);</string>
         </layout>
        </widget>
        <widget class="CsoundWebView" name="manualTab">
-        <attribute name="title">
-         <string>Manual</string>
-        </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3"/>
        </widget>
        <widget class="QWidget" name="portalTab">
-        <attribute name="title">
-         <string>Portal</string>
-        </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
           <widget class="QWidget" name="browserToolsWidget" native="true">
@@ -233,9 +218,6 @@ color: rgb(0, 0, 0);</string>
         </layout>
        </widget>
        <widget class="QWidget" name="licenseTab">
-        <attribute name="title">
-         <string>About</string>
-        </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
           <widget class="QPlainTextEdit" name="licenseEdit">
@@ -497,7 +479,7 @@ color: rgb(0, 255, 0);</string>
    <sender>actionRun</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>runCsd()</slot>
+   <slot>runFile()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
