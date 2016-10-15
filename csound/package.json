@@ -1,13 +1,12 @@
 {
-  "main": "csound_node_run.html",
-  "name": "csound.node",
-  "description": "HTML5 with Csound",
+  "main": "Coupled_Dynamical_Systems.html",
+  "name": "Coupled_Dynamical_Systems",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "csound.node",
+    "title": "Coupled_Dynamical_Systems",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
