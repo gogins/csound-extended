@@ -346,10 +346,10 @@ color: rgb(0, 255, 0);</string>
   </action>
   <action name="actionShowCsdTab">
    <property name="text">
-    <string>CSD</string>
+    <string>Editor</string>
    </property>
    <property name="toolTip">
-    <string>Show the CSD editor.</string>
+    <string>Show the code editor.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+1</string>

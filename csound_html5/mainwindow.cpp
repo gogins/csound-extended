@@ -304,10 +304,10 @@ void MainWindow::openCsd()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             return;
         }
-        QString text = file.readAll();
+        QString text = file.readAll().toStdString().c_str();
         file.close();
         ui->csdEdit->clear();
-        ui->csdEdit->appendPlainText(text);
+        ui->csdEdit->setPlainText(text);
         ui->csdEdit->moveCursor (QTextCursor::Start);
         if (text.indexOf("</html>", 0, Qt::CaseInsensitive) != -1){
            saveAndLoadHtml();
