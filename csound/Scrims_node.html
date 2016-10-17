@@ -1528,7 +1528,12 @@ endin
             gui.add(parameters, 'Stop').name('Stop');
             gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
-             var intruments = gui.addFolder('Instruments');
+            var Master = gui.addFolder('Master effects');
+            add_slider(Master, 'gk_overlap', 0, 20);
+            add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
+            add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
+            add_slider(Master, 'gk_MasterOutput_level', -40, 40);
+            var intruments = gui.addFolder('Instruments');
             var fmclang = intruments.addFolder('FM Clang');
             add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
             add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
@@ -1570,11 +1575,6 @@ endin
             add_slider(Sweeper, 'gk_Sweeper_britehs', 0, 4);
             add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
             add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
-            var Master = gui.addFolder('Master effects');
-            add_slider(Master, 'gk_overlap', 0, 20);
-            add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
-            add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
-            add_slider(Master, 'gk_MasterOutput_level', -40, 40);
             var Hopalong = gui.addFolder('Hopalong fractal');
             add_slider(Hopalong, 'A', -30, 30);
             add_slider(Hopalong, 'B', .2, 1.8);

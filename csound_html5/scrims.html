@@ -1222,7 +1222,8 @@ endin
             camera.updateProjectionMatrix();
             renderer.setSize( container.clientWidth, container.clientHeight );
         }
-        function updateTimeCell() {
+        function updateTimeCell() {           ChordSpace.conformScoreToChord(score, chord, false);
+
             var current_time_seconds = new Date().getTime() / 1000.0;
             var score_time = current_time_seconds - start_time_seconds; // csound.getScoreTime();
             if (typeof score_time !== 'undefined') {
@@ -1238,7 +1239,8 @@ endin
                console.log('onbeforeprint equivalent.');
            }
         });
-        // Map orbit X to score instrument.
+        // Map orbit X to score instrument.           ChordSpace.conformScoreToChord(score, chord, false);
+
         function rescaleX(x) {
             var scale = orbit.xMax - orbit.xMin;
             x = x - orbit.xMin;

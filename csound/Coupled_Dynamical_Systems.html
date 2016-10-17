@@ -11,6 +11,7 @@
         <script type="text/javascript" src="silencio/js/TrackballControls.js"></script>
         <script type="text/javascript" src="silencio/js/ParametricLindenmayer.js"></script>
         <script type='text/javascript' src='silencio/js/tinycolor.js'></script>
+        <script type='text/javascript' src='silencio/js/numeric.js'></script>
         <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
@@ -52,11 +53,11 @@
     </style>
     <canvas id = 'graphics_canvas' class='canvas' style="width:98vw;height:98vh;"></canvas>
       <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
-            <col width=300px>
-            <col width=150px>
-        <tr style="color:gold;font-size:18px;">
+            <col style="width:300px">
+            <col style="width:150px">
+        <tr style="color:gold;font-size:14px;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
-            <td style="font-weight:bold;">Coupled Dynamical Systems, for csound.node</td>
+            <td style="font-weight:bold;"><b><i>Coupled Dynamical Systems</i></b> for csound.node</td>
             <td style="color:gold;text-align:right;">Michael Gogins</td>
         </tr>
         <tr>
@@ -67,7 +68,7 @@
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
-            <td colspan="2">A "lattice" of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, $\epsilon$ is the coupling between the dynamical systems, and $s$ is the seed of the random generator. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to Csound instruments. Additional controls include the choice of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping.
+            <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping.
             </td>
         </tr>
         <tr>
@@ -239,6 +240,132 @@ outleta "outleft", aleft * kgain
 outleta "outright", aright * kgain
 ;;;;;;;;;;;;;;;;;;;;i
 prints "Harpsichord i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+opcode FM_Clang_veloc, i, iii
+; *p->r = *p->ilo + csound->curip->m_veloc*(*p->ihi - *p->ilo) * dv127;
+ivel, ilow, ihigh xin
+xout ilow + ivel * (ihigh - ilow) * 0.007874
+endop
+
+instr FM_Clang ; Sound producing instrument. Triggered by MIDI notes or score notes.
+//////////////////////////////////////////////
+// Original by Iain McCurdy.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+kgain init 1
+insno = p1
+itime = p2
+iduration = p3
+ikey = p4
+ivelocity = p5
+iphase = p6
+ipan = p7
+idepth = p8
+iheight = p9
+ipcs = p10
+ihomogeneity = p11
+icps = cpsmidinn(ikey)
+inum = ikey
+iamplitude = ampdb(ivelocity)
+; icps cpsmidi
+; inum notnum
+iKybdScl table inum,gi_FM_Clang_scale ; Keyboard scaling value. Note '0' maps to a value of -1, note 64 maps to a value of zero and note 127 maps to a value of 1.
+; Amplitude Envelope
+idur = i(gk_FM_Clang_Dur)
+iAmpCurve = -8
+iRelTim = (i(gk_FM_Clang_Sustain)==1?idur:0.1)
+;iAttVel veloc i(gk_FM_Clang_AttVel)*0.05,0
+iAttVel FM_Clang_veloc ivelocity, i(gk_FM_Clang_AttVel)*0.05,0
+iAttTim = iAttVel + i(gk_FM_Clang_AttTim)
+if iAttTim==0 then
+aAEnv transegr 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
+else
+aAEnv transegr 0,iAttTim,iAmpCurve, 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
+endif
+; Key velocity to amplitude
+;iAVel veloc 0,0.1
+iAVel FM_Clang_veloc ivelocity, 0, 0.1
+; FM index
+iNdx veloc 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
+iNdx FM_Clang_veloc ivelocity, 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
+kIEnv transeg iNdx*octave(-iKybdScl*4),idur,-i(gk_FM_Clang_NdxCurve),0 ; Index envelope. Amplitude influenced by 'Index' widget control and keyboard scaling (index reduced for higher notes, increased for lower notes)
+; Carrier frequency keyboard scaling
+icar = 1 * octave(iKybdScl*i(gk_FM_Clang_CarKyb))
+; Carrier ratio modulation
+iModRte table inum,gi_FM_Clang_scale
+iModRte = octave(iModRte*i(gk_FM_Clang_ModRteKyb))
+kDepEnv transeg 1,idur,-4,0
+amod lfo gk_FM_Clang_ModDep*0.1*kDepEnv, gk_FM_Clang_ModRte * iModRte, 0
+; Noise bandpass filter cutoff as it respond to the 'Carrier Follow' switch
+kcf = gk_FM_Clang_NseFllw==1?icps*gk_FM_Clang_mod:icps
+; Noise amplitude keyboard following
+kNseAmp = octave(iKybdScl*-4)*gk_FM_Clang_NseAmp
+; Main FM algorithm
+if gk_FM_Clang_NseAmp>0 then ; If noise amplitude is greater than zero...
+aNse gauss kNseAmp ; ... generate some gaussian noise
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; bandpass filter the noise
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; and again
+else
+aNse = 0 ; Otherwise no noise signal!
+endif
+idetune table inum,gi_FM_Clang_detune ; Read a detuning value from a random table
+asig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair
+aModSig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair with modulation
+asig = asig + (aModSig * gk_FM_Clang_ModMix) ; Mix the two FM pairs.
+; Auxilliary FM algorithm (used for detuning)
+if gk_FM_Clang_DtnMix>0&&gk_FM_Clang_Detune>0 then
+if gk_FM_Clang_NseAmp>0 then
+aNse gauss kNseAmp
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
+aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
+else
+aNse = 0
+endif
+idetune table inum+128,gi_FM_Clang_detune ; Read a detuning value from a random table
+asig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; Detuning applied to fundemental
+aModSig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine
+asig2 = asig2 + (aModSig2 * gk_FM_Clang_ModMix)
+asig = asig + asig2*gk_FM_Clang_DtnMix
+endif
+; Filter Fundemental
+if i(gk_FM_Clang_FiltFund)==1 then ; If filter fundemental switch is active
+asig butbr asig,icps*icar,icps*icar*0.3 ; Filter out fundemental
+asig butbr asig,icps*icar,icps*icar*0.3 ; and again to make sure it is all gone
+endif
+; Lowpass Filter
+if i(gk_FM_Clang_LPF)<32 then ; If lowpass filter is less than maximum...
+kCF limit icps*gk_FM_Clang_LPF,20,20000 ; ...create the cutoff value in CPS based on fundemental and LPF ratio control. Limit to prevent out of range values.
+asig clfilt asig,kCF,0,2 ; Butterworth lowpass filter
+endif
+; Amplitude Envelope
+kgain = ampdb(gk_FM_Clang_level)
+asig = asig * aAEnv * gk_FM_Clang_Amp * kgain; Apply amplitude envelope
+; Stereo Effect
+iDlyTimL table inum,gi_FM_Clang_stereo ; Read a delay time value from a random table based on note played
+iDlyTimR table inum+128,gi_FM_Clang_stereo ; Read a different delay time value from a random table based on note played
+if gk_FM_Clang_StWidth>0&&gk_FM_Clang_StMix>0 then ; If 'width' is above zero and 'mix' is above zero...
+aL vdelay asig, iDlyTimL*gk_FM_Clang_StWidth*1000, 0.2*1000 ; ...left channel delay
+aR vdelay asig, iDlyTimR*gk_FM_Clang_StWidth*1000, 0.2*1000 ; right channel delay
+aL ntrpol asig, aL, gk_FM_Clang_StMix ; Mix delayed and dry signal
+aR ntrpol asig, aR, gk_FM_Clang_StMix ;
+aleft = aL;*gk_FM_Clang_Dry
+aright = aR;*gk_FM_Clang_Dry
+gaSendL = gaSendL + aL ; Send to reverb
+gaSendR = gaSendR + aR
+else
+aleft = asig;*gk_FM_Clang_Dry
+aright = asig;*gk_FM_Clang_Dry
+gaSendL = gaSendL + asig ; Send to reverb
+gaSendR = gaSendR + asig
+endif
+aleft1 = aleft * ampdb(ivelocity)
+aright1 = aright * ampdb(ivelocity)
+asignal = (aleft1 + aright1) *100
+aleft2, aright2 pan2 asignal, ipan
+outleta "outleft", aleft2
+outleta "outright", aright2
+prints "FM_Clang    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
 gk_Bower_level init 0.5
@@ -624,132 +751,6 @@ outleta "outright", aright * kgain
 prints "Blower      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-opcode FM_Clang_veloc, i, iii
-; *p->r = *p->ilo + csound->curip->m_veloc*(*p->ihi - *p->ilo) * dv127;
-ivel, ilow, ihigh xin
-xout ilow + ivel * (ihigh - ilow) * 0.007874
-endop
-
-instr FM_Clang ; Sound producing instrument. Triggered by MIDI notes or score notes.
-//////////////////////////////////////////////
-// Original by Iain McCurdy.
-// Adapted by Michael Gogins.
-//////////////////////////////////////////////
-kgain init 1
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = p7
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-icps = cpsmidinn(ikey)
-inum = ikey
-iamplitude = ampdb(ivelocity)
-; icps cpsmidi
-; inum notnum
-iKybdScl table inum,gi_FM_Clang_scale ; Keyboard scaling value. Note '0' maps to a value of -1, note 64 maps to a value of zero and note 127 maps to a value of 1.
-; Amplitude Envelope
-idur = i(gk_FM_Clang_Dur)
-iAmpCurve = -8
-iRelTim = (i(gk_FM_Clang_Sustain)==1?idur:0.1)
-;iAttVel veloc i(gk_FM_Clang_AttVel)*0.05,0
-iAttVel FM_Clang_veloc ivelocity, i(gk_FM_Clang_AttVel)*0.05,0
-iAttTim = iAttVel + i(gk_FM_Clang_AttTim)
-if iAttTim==0 then
-aAEnv transegr 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
-else
-aAEnv transegr 0,iAttTim,iAmpCurve, 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
-endif
-; Key velocity to amplitude
-;iAVel veloc 0,0.1
-iAVel FM_Clang_veloc ivelocity, 0, 0.1
-; FM index
-iNdx veloc 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
-iNdx FM_Clang_veloc ivelocity, 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
-kIEnv transeg iNdx*octave(-iKybdScl*4),idur,-i(gk_FM_Clang_NdxCurve),0 ; Index envelope. Amplitude influenced by 'Index' widget control and keyboard scaling (index reduced for higher notes, increased for lower notes)
-; Carrier frequency keyboard scaling
-icar = 1 * octave(iKybdScl*i(gk_FM_Clang_CarKyb))
-; Carrier ratio modulation
-iModRte table inum,gi_FM_Clang_scale
-iModRte = octave(iModRte*i(gk_FM_Clang_ModRteKyb))
-kDepEnv transeg 1,idur,-4,0
-amod lfo gk_FM_Clang_ModDep*0.1*kDepEnv, gk_FM_Clang_ModRte * iModRte, 0
-; Noise bandpass filter cutoff as it respond to the 'Carrier Follow' switch
-kcf = gk_FM_Clang_NseFllw==1?icps*gk_FM_Clang_mod:icps
-; Noise amplitude keyboard following
-kNseAmp = octave(iKybdScl*-4)*gk_FM_Clang_NseAmp
-; Main FM algorithm
-if gk_FM_Clang_NseAmp>0 then ; If noise amplitude is greater than zero...
-aNse gauss kNseAmp ; ... generate some gaussian noise
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; bandpass filter the noise
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; and again
-else
-aNse = 0 ; Otherwise no noise signal!
-endif
-idetune table inum,gi_FM_Clang_detune ; Read a detuning value from a random table
-asig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair
-aModSig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair with modulation
-asig = asig + (aModSig * gk_FM_Clang_ModMix) ; Mix the two FM pairs.
-; Auxilliary FM algorithm (used for detuning)
-if gk_FM_Clang_DtnMix>0&&gk_FM_Clang_Detune>0 then
-if gk_FM_Clang_NseAmp>0 then
-aNse gauss kNseAmp
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
-else
-aNse = 0
-endif
-idetune table inum+128,gi_FM_Clang_detune ; Read a detuning value from a random table
-asig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; Detuning applied to fundemental
-aModSig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine
-asig2 = asig2 + (aModSig2 * gk_FM_Clang_ModMix)
-asig = asig + asig2*gk_FM_Clang_DtnMix
-endif
-; Filter Fundemental
-if i(gk_FM_Clang_FiltFund)==1 then ; If filter fundemental switch is active
-asig butbr asig,icps*icar,icps*icar*0.3 ; Filter out fundemental
-asig butbr asig,icps*icar,icps*icar*0.3 ; and again to make sure it is all gone
-endif
-; Lowpass Filter
-if i(gk_FM_Clang_LPF)<32 then ; If lowpass filter is less than maximum...
-kCF limit icps*gk_FM_Clang_LPF,20,20000 ; ...create the cutoff value in CPS based on fundemental and LPF ratio control. Limit to prevent out of range values.
-asig clfilt asig,kCF,0,2 ; Butterworth lowpass filter
-endif
-; Amplitude Envelope
-kgain = ampdb(gk_FM_Clang_level)
-asig = asig * aAEnv * gk_FM_Clang_Amp * kgain; Apply amplitude envelope
-; Stereo Effect
-iDlyTimL table inum,gi_FM_Clang_stereo ; Read a delay time value from a random table based on note played
-iDlyTimR table inum+128,gi_FM_Clang_stereo ; Read a different delay time value from a random table based on note played
-if gk_FM_Clang_StWidth>0&&gk_FM_Clang_StMix>0 then ; If 'width' is above zero and 'mix' is above zero...
-aL vdelay asig, iDlyTimL*gk_FM_Clang_StWidth*1000, 0.2*1000 ; ...left channel delay
-aR vdelay asig, iDlyTimR*gk_FM_Clang_StWidth*1000, 0.2*1000 ; right channel delay
-aL ntrpol asig, aL, gk_FM_Clang_StMix ; Mix delayed and dry signal
-aR ntrpol asig, aR, gk_FM_Clang_StMix ;
-aleft = aL;*gk_FM_Clang_Dry
-aright = aR;*gk_FM_Clang_Dry
-gaSendL = gaSendL + aL ; Send to reverb
-gaSendR = gaSendR + aR
-else
-aleft = asig;*gk_FM_Clang_Dry
-aright = asig;*gk_FM_Clang_Dry
-gaSendL = gaSendL + asig ; Send to reverb
-gaSendR = gaSendR + asig
-endif
-aleft1 = aleft * ampdb(ivelocity)
-aright1 = aright * ampdb(ivelocity)
-asignal = (aleft1 + aright1) *100
-aleft2, aright2 pan2 asignal, ipan
-outleta "outleft", aleft2
-outleta "outright", aright2
-prints "FM_Clang    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
 gk_FM_Clang_preset init 1
 instr FM_Clang_preset
 gk_FM_Clang_preset chnget "gk_FM_Clang_preset"
@@ -1033,112 +1034,89 @@ endin
           console.trace();
         }
         // Coupled dynamical systems: N identical discrete 
-        // dynamical systems (here, the logistic equation)
-        // in which the systems are coupled by a mean field.
+        // dynamical systems in which the systems are coupled by a mean field.
         // See Balmforth, N.J, Jacobson, A., and Provenzale, A, "Synchronized family dynamics in globally coupled maps", Chaos 9 (3), 1999.
         // Number of dynamical system instances.
-        var N = 10;
-        // Coefficient of the logistic equations.
-        var a = .91;
-        var e = .5;
-        
         var title = 'Coupled_Dynamical_Systems';
         var context = null;
-        var lsys = null;
         var startTime = 0;
-        var score = new Silencio.Score();
-        var generate = function() {
-          csound.message("generate()...\n");
-          try {
-            var startTime = 0;
-            var canvas = document.getElementById('graphics_canvas');
-            score.setDuration(530);
-            //console.log(score.toString());
-            console.log('After conforming to chord:');
-            console.log(score.toString());
-            csound.message('Cleaning up some annoying things in the score...');
-            for (var i = 0; i < score.data.length; i++) {
-                var event = score.data[i];
-                // We didn't generate pan, so just randomize it.
-                var pan = Math.random() * 2 - 1;
-                event.pan = pan;
-                var minimum_gap = null;
-                var minimum_gap_event = null;
-                // Move too-high notes for "Harpsichord" down.
-                if (Math.floor(event.channel) === 3) {
-                    while (event.key > 67) {
-                        event.key = event.key - 12;
-            }
-                }
-                // Close up gaps in the score.
-                for (j = i + 1; j < score.data.length - 1; j++) {
-                    var gap_event = score.data[j];
-                    var gap = gap_event.time - event.end;
-                    if (gap <= 0) {
-                        minimum_gap = 0;
-                        minimum_gap_event = null;
-                        break;
-                    }
-                    if (minimum_gap == null) {
-                        minimum_gap = gap;
-                        minimum_gap_event = gap_event;
-                    }
-                    if (gap < minimum_gap) {
-                        minimum_gap = gap;
-                    }
-                }
-                if (minimum_gap_event !== null && minimum_gap > 0) {
-                    event.end = minimum_gap_event.time;
-                }
-            }
-            // Pianoteq misbehaves if we start right at time 0.
-            for (var i = 0; i < score.data.length; i++) {
-                var event = score.data[i];
-                event.time = event.time + 1;
-            }
-            // Also if keys overlap.
-            for (var i = 0; i < score.data.length; i++) {
-                var event = score.data[i];
-                console.log(event.toIStatement() + ' e: ' + event.end);
-                var channel = Math.floor(event.channel);
-                var key = event.key;
-                for (var j = i + 1; j < score.data.length; j++) {
-                    var overlap = score.data[j];
-                    var overlap_channel = Math.floor(overlap.channel);
-                    var overlap_key = overlap.key;
-                    if (key === overlap_key && channel === overlap_channel && channel === 2) {
-                        if (event.end > overlap.time) {
-                            var the_end = Math.max(event.end, overlap.end);
-                            console.log('Correcting overlap for:');
-                            console.log('  ' + event.toIStatement() + ' e: ' + event.end);
-                            console.log('  ' + overlap.toIStatement() + ' e: ' + overlap.end);
-                            event.end = the_end;
-                            overlap.end = the_end;
-                            console.log('to:');
-                            console.log('  ' + event.toIStatement() + ' e: ' + event.end);
-                            console.log('  ' + overlap.toIStatement() + ' e: ' + overlap.end + '\n');
-                         }
-                    }
-                }
-             }
-            var panskip = .05;
-            var leftpan = panskip / 2;
-            var panrange = 1 - panskip;
-            score.setScale(6, leftpan, panrange);
-            score.setScale(7, leftpan, panrange);
-            score.findScales();
-            csound.message(score.minima.toString());
-            csound.message(score.ranges.toString());
-            csound.message('Generated ' + score.data.length + ' notes.\n');
-            context = score.draw3D(canvas);
-            score.add(540, 1, 144, 999);
-            score.sendToCsound(csound);
-           } catch(err) {
-            csound.message(err.name + ': ' + err.message + ' line: ' + err.line + '\n');
-            csound.message(err.stack + '\n');
-            console.log(err.stack);
-          }
+        var CoupledSystems = function() {
+            this.value = [];
+            this.prior_value = [];
+            this.chord = ChordSpace.chordForName('DM9');
+            this.score = new Silencio.Score();
+            this.Random_seed = 0;
+            this.a = .94;
+            this.N = 10;
+            this.epsilon = 0.05;
+            this.Lowest_note = 36;
+            this.Range = 60;
+            this.Notes_per_second = 4;
+            this.Duration_factor = 4;
+            this.iteration = 0;
         }
+        CoupledSystems.prototype.create = function() {
+            this.score.clear();
+            this.iteration = 0;
+            numeric.seedrandom.seedrandom(this.Random_seed);
+            // Create random initial values.
+            for (var i = 0; i < this.N; i++) {
+                this.prior_value[i] = numeric.seedrandom.random();
+            }
+        }
+        // Assumes that system, N, a, epsilon, seed, bass, and range have already been set,
+        // and that create has been called.
+        CoupledSystems.prototype.iterate = function() {
+            // Find mean value of prior iteration, this is the "mean field."
+            this.mean_prior_value = 0;
+            for (var i = 0; i < this.N; i++) {
+                this.mean_prior_value += this.prior_value[i];
+            }
+            this.mean_prior_value /= this.N;
+            // Iterate each system and send its note to Csound.
+            this.score.clear();
+            for (var i = 0; i < this.N; i++) {
+                var y = this.prior_value[i];
+                this.value[i] = ((1 - this.epsilon) * (4 * this.a * y * (1 - y))) + (this.epsilon * this.mean_prior_value);
+                if (i === 0) {
+                    if ((this.iteration % 8) === 0) {
+                        var transpose = Math.floor(this.value[i] * 12);
+                        this.chord = this.chord.T(transpose);
+                    }
+                } else if (i === 1) {
+                    if ((this.iteration % 16) === 0) {
+                        var operation = Math.floor(this.value[i] * 6);
+                        if        (operation === 0) {
+                            this.chord = this.chord.K();
+                        } else if (operation === 1) {
+                            var inversions = this.chord.J(2);
+                            if (inversions) {
+                                var temp = inversions[2];
+                                if (temp) {
+                                    this.chord = temp;
+                                }
+                            }
+                        } else if (operation === 2) {
+                            this.chord = this.chord.T(5);
+                        } // Otherwise, do nothing.
+                    }
+                } else {
+                    var key = Math.round(this.value[i] * this.Range + this.Lowest_note);
+                    var velocity = 60;
+                    this.pan = numeric.seedrandom.random();
+                    var duration = this.Duration_factor / this.Notes_per_second;
+                    var pan = 1 / (1 + i);
+                    this.score.add(0, duration, 144, i - 1, key, velocity, pan, pan);
+                }
+            }
+            ChordSpace.conformScoreToChord(this.score, this.chord, false);
+            this.score.sendToCsound(csound);
+            for (var i = 0; i < this.N; i++) {
+                this.prior_value[i] = this.value[i];
+            }
+            this.iteration += 1;
+        }
+        var coupled_systems = new CoupledSystems();
         function csoundMessage(text) {
             var Log_cell = document.getElementById('Log_cell');
             Log_cell.value += text;
@@ -1155,133 +1133,16 @@ endin
         function handleMessage(message) {
             csoundMessage(message);
         }
-        function updateTimeCell() {
+        function updateSystem() {
             var score_time = csound.getScoreTime();
             if (typeof score_time !== 'undefined') {
                 var score_time_cell = document.getElementById('Time_cell');
                 score_time_cell.innerHTML = score_time.toFixed(4);
             }
-            setTimeout(updateTimeCell, .02);
-            score.progress3D(score_time);
+            coupled_systems.iterate();
+            setTimeout(updateSystem, 1 / coupled_systems.Notes_per_second * 1000);
         };
-        var json = {
-  "preset": "Default",
-  "closed": false,
-  "remembered": {
-    "Default": {
-      "0": {
-        "gk_overlap": 3.0777934936350775,
-        "gk_Reverb_Feedback": 0.7422913719943423,
-        "gk_Reverb2_Feedback": 0.8181186605530082,
-        "gk_MasterOutput_level": 15.038189533239041,
-        "gk_FM_Clang_preset": 8.034949267192784,
-        "gk_FM_Clang_level": 16,
-        "gk_Blower_grainDensity": 227.75147079925384,
-        "gk_Blower_grainDuration": 0.33060697374085235,
-        "gk_Blower_grainAmplitudeRange": 55.10116229014206,
-        "gk_Blower_grainFrequencyRange": 52.346104175634956,
-        "gk_Blower_level": -6.939302625914763,
-        "gk_Bower_pressure": 0.15611995982206917,
-        "gk_Bower_level": -4.00057397044052,
-        "gk_Buzzer_Harmonics": 2.755058114507103,
-        "gk_Buzzer_level": 6,
-        "gk_Droner_partial1": 0.14693643277371216,
-        "gk_Droner_partial2": 0.5050939876596355,
-        "gk_Droner_partial3": 0.33060697374085235,
-        "gk_Droner_partial4": 0.32142344669249534,
-        "gk_Droner_partial5": 0.21122112211221122,
-        "gk_Droner_level": -1.7965274788348395,
-        "gk_Harpsichord_pick": 0.7530492179652748,
-        "gk_Harpsichord_reflection": 0.4959104687903573,
-        "gk_Harpsichord_pluck": 0.75,
-        "gk_Harpsichord_level": 3.346247668245084,
-        "gk_Phaser_ratio1": 2,
-        "gk_Phaser_ratio2": 0.33,
-        "gk_Phaser_index1": 0.3,
-        "gk_Phaser_index2": 1,
-        "gk_Phaser_level": -1.7965274788348395,
-        "gk_Piano_level": -20,
-        "gk_Shiner_level": -5.469938298177645,
-        "gk_Sweeper_britel": 0.5510116229014206,
-        "gk_Sweeper_briteh": 2.9,
-        "gk_Sweeper_britels": 0.4775434065145645,
-        "gk_Sweeper_britehs": 1.25,
-        "gk_Sweeper_level": -6.939302625914763,
-        "gk_YiString_reverb_send": 0.09019165727170236,
-        "gk_YiString_chorus_send": 0.7846674182638106,
-        "gk_YiString_level": 9.22370497919357
-      }
-    }
-  },
-  "folders": {
-    "Master effects": {
-      "preset": "Default",
-      "closed": false,
-      "folders": {}
-    },
-    "Csound instruments": {
-      "preset": "Default",
-      "closed": false,
-      "folders": {
-        "FM Clang": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Blower": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Bower": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Buzzer": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Droner": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Harpsichord": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Phaser": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Piano": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Shiner": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Sweeper": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "YiString": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        }
-      }
-    }
-  }
-};
+        var timeout_function = null;
         var parameters = {
             gk_Bower_pressure: 0.25,
             gk_Bower_level: 0.5,
@@ -1331,8 +1192,12 @@ endin
             N: 12,
             a: .92,
             epsilon: .5,
+            Random_seed: 1058392,
+            System: "logistic",
             Lowest_note: 36,
             Range: 60,
+            Notes_per_second: 4,
+            Duration_factor: 4,
             Play: function() {
                 csound.stop();
                 try {
@@ -1342,20 +1207,21 @@ endin
                 }
                 csound.compileOrc(document.getElementById('orc').value);
                 csound.setOption('-m0');
-                //csound.setOption('-j3');
+                csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
-                generate();
                 csound.perform();
+                coupled_systems.create();
                 start_time_seconds = new Date().getTime() / 1000.0;
                 startTime = csound.getScoreTime();
-                setTimeout(updateTimeCell, 0);
+                timeout_function = setTimeout(updateSystem, 0);
             },
             Developer_tools: function() {
                 nwgui.Window.get().showDevTools();
             },
             Stop: function() {
                 csound.stop();
+                clearTimeout(timeout_function);
             },
             Close: function() {
                 try {
@@ -1380,7 +1246,10 @@ endin
             add_slider(Dynamical_Systems, 'N', 2, 12);
             add_slider(Dynamical_Systems, 'a', 0, 1);
             add_slider(Dynamical_Systems, 'epsilon', 0, 1);
-            add_slider(Dynamical_Systems, 'Notes_per_second', 0.25, 32);
+            add_slider(Dynamical_Systems, 'Random_seed', 0, 100000000);
+            add_slider(Dynamical_Systems, 'System', ['logistic', 'circle', 'tent']);
+            add_slider(Dynamical_Systems, 'Notes_per_second', 0.05, 8);
+            add_slider(Dynamical_Systems, 'Duration_factor', 0.25, 12);
             add_slider(Dynamical_Systems, 'Lowest_note', 24, 60);
             add_slider(Dynamical_Systems, 'Range', 12, 72);
             var Master = gui.addFolder('Master effects');
@@ -1439,15 +1308,30 @@ endin
             gui.revert();
         }
         function gk_update(name, value) {
-          var numberValue = parseFloat(value);
-          csound.setControlChannel(name, numberValue);
-          csound.message(name + ': ' + numberValue + '\n');
+          console.log(name + ': ' + value);
+          if (name === 'a') {
+            coupled_systems.a = parseFloat(value);
+          } else if (name === 'epsilon') {
+            coupled_systems.epsilon = parseFloat(value);
+          } else if (name === 'System') {
+            coupled_systems.System = value;
+          } else if (name == 'Lowest_note') {
+            coupled_systems.Lowest_note = parseFloat(value); 
+          } else if (name == 'Range') {
+            coupled_systems.Range = parseFloat(value);
+          } else if (name == 'Notes_per_second') {
+            coupled_systems.Notes_per_second = parseFloat(value);
+          } else if (name == 'Duration_factor') {
+            coupled_systems.Duration_factor = parseFloat(value);
+          } else {          
+              var numberValue = parseFloat(value);
+              csound.setControlChannel(name, numberValue);
+          }
+          csound.message(name + ': ' + value + '\n');
         }
         function add_slider(gui_folder, token, minimum, maximum) {
             var on_parameter_change = function(value) {
-                if (token.startsWith('gk_')) {
-                    gk_update(token, value);
-                }
+                gk_update(token, value);
             };
             var slider = gui_folder.add(parameters, token, minimum, maximum);
             slider.onChange(on_parameter_change);

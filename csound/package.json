@@ -1,12 +1,12 @@
 {
-  "main": "Scrims_node.html",
-  "name": "Scrims_node",
+  "main": "Coupled_Dynamical_Systems.html",
+  "name": "Coupled_Dynamical_Systems",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_node",
+    "title": "Coupled_Dynamical_Systems",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
