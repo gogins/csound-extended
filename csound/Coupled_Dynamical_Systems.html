@@ -68,8 +68,11 @@
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
-            <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping.
-            </td>
+            <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to the pitches of notes played by Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping. The logistic map is $$ T(x) =  4 a x (1 - x). $$ The sine-circle map is $$ T(x)= x+a+{b\over 2\pi}\sin{2\pi x}, $$ computed mod 1.  The tent map is $$T(x) = \left\{ \begin{array}{lc} 
+2 a x & 0 \leq x < \frac{1}{2} \\  
+2 a (1-x) & \frac{1}{2} \leq x < 1
+\end{array} \right\}.$$ In all cases,the parameters are normalized to the unit interval.
+    </td>
         </tr>
         <tr>
             <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
@@ -238,7 +241,8 @@ aleft, aright pan2 asignal, ipan
 kgain = ampdb(gk_Harpsichord_level)
 outleta "outleft", aleft * kgain
 outleta "outright", aright * kgain
-;;;;;;;;;;;;;;;;;;;;i
+;;;;;;;;;;;;;;;;;;;;ikgain = ampdb(gk_Bower_level)
+
 prints "Harpsichord i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
@@ -248,6 +252,7 @@ ivel, ilow, ihigh xin
 xout ilow + ivel * (ihigh - ilow) * 0.007874
 endop
 
+gk_FM_Clang_level init 0
 instr FM_Clang ; Sound producing instrument. Triggered by MIDI notes or score notes.
 //////////////////////////////////////////////
 // Original by Iain McCurdy.
@@ -322,6 +327,7 @@ aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
 else
 aNse = 0
 endif
+
 idetune table inum+128,gi_FM_Clang_detune ; Read a detuning value from a random table
 asig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; Detuning applied to fundemental
 aModSig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine
@@ -363,8 +369,8 @@ aleft1 = aleft * ampdb(ivelocity)
 aright1 = aright * ampdb(ivelocity)
 asignal = (aleft1 + aright1) *100
 aleft2, aright2 pan2 asignal, ipan
-outleta "outleft", aleft2
-outleta "outright", aright2
+outleta "outleft", aleft2 * kgain
+outleta "outright", aright2 * kgain
 prints "FM_Clang    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
@@ -1047,6 +1053,7 @@ endin
             this.score = new Silencio.Score();
             this.Random_seed = 0;
             this.a = .94;
+            this.b =.5;
             this.N = 10;
             this.epsilon = 0.05;
             this.Lowest_note = 36;
@@ -1075,9 +1082,23 @@ endin
             this.mean_prior_value /= this.N;
             // Iterate each system and send its note to Csound.
             this.score.clear();
+            var velocity = 60;
+            var duration = this.Duration_factor / this.Notes_per_second;
             for (var i = 0; i < this.N; i++) {
                 var y = this.prior_value[i];
-                this.value[i] = ((1 - this.epsilon) * (4 * this.a * y * (1 - y))) + (this.epsilon * this.mean_prior_value);
+                var y1;
+                if        (this.System === 'logistic') {
+                        y1 = ((1 - this.epsilon) * (4 * this.a * y * (1 - y)))                                          + (this.epsilon * this.mean_prior_value);
+                } else if (this.System === 'circle') {
+                        y1 = ((1 - this.epsilon) * ((y + this.a + this.b / (2 * Math.PI) * Math.sin(y * 2 * Math.PI)))  + (this.epsilon * this.mean_prior_value)) % 1.0;
+                } else if (this.System === 'tent') {
+                    if (y < 0.5) {
+                        y1 = ((1 - this.epsilon) * (2 * this.a * y          ))                                          + (this.epsilon * this.mean_prior_value);
+                    } else {
+                        y1 = ((1 - this.epsilon) * (2 * this.a * (1 - y)))                                              + (this.epsilon * this.mean_prior_value);
+                    }
+                }
+                this.value[i] = y1;
                 if (i === 0) {
                     if ((this.iteration % 8) === 0) {
                         var transpose = Math.floor(this.value[i] * 12);
@@ -1102,9 +1123,7 @@ endin
                     }
                 } else {
                     var key = Math.round(this.value[i] * this.Range + this.Lowest_note);
-                    var velocity = 60;
                     this.pan = numeric.seedrandom.random();
-                    var duration = this.Duration_factor / this.Notes_per_second;
                     var pan = 1 / (1 + i);
                     this.score.add(0, duration, 144, i - 1, key, velocity, pan, pan);
                 }
@@ -1176,6 +1195,7 @@ endin
             gk_Sweeper_britehs: 2.5 / 2,
             gk_Sweeper_level: 0.5,
             gk_YiString_reverb_send: 0.5,
+
             gk_YiString_chorus_send: 0.5,
             gk_YiString_level: 0.5,
             gk_SolinaChorus_chorus_lfo1_hz: 18,
@@ -1188,9 +1208,11 @@ endin
             gk_overlap: 0.05,
             gk_FM_Clang_preset: 1,
             gk_FM_Clang_level: 0,
+
             Notes_per_second: 4,
             N: 12,
             a: .92,
+            b: .5,
             epsilon: .5,
             Random_seed: 1058392,
             System: "logistic",
@@ -1245,6 +1267,7 @@ endin
             var Dynamical_Systems = gui.addFolder('Dynamical systems');
             add_slider(Dynamical_Systems, 'N', 2, 12);
             add_slider(Dynamical_Systems, 'a', 0, 1);
+            add_slider(Dynamical_Systems, 'b', 0, 1);
             add_slider(Dynamical_Systems, 'epsilon', 0, 1);
             add_slider(Dynamical_Systems, 'Random_seed', 0, 100000000);
             add_slider(Dynamical_Systems, 'System', ['logistic', 'circle', 'tent']);
@@ -1311,8 +1334,12 @@ endin
           console.log(name + ': ' + value);
           if (name === 'a') {
             coupled_systems.a = parseFloat(value);
+          } else if (name === 'b') {
+            coupled_systems.b = parseFloat(value);
           } else if (name === 'epsilon') {
             coupled_systems.epsilon = parseFloat(value);
+          } else if (name === 'N') {
+            coupled_systems.N = parseFloat(value);
           } else if (name === 'System') {
             coupled_systems.System = value;
           } else if (name == 'Lowest_note') {
