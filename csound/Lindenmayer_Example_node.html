@@ -1041,8 +1041,8 @@ endin
             lsys.set_axiom('T(0);Push();Move(1,20,0,4,0,0);AA();Pop();Push();Move(-1,-4,0,2,0,0);AA();Pop();Move(1,-1,0,0,0,0);A();');
             lsys.add_rule('A();',  'iteration < 3',                 'Note();Move(1,1.75,1.05,12,0,0);A();Push();Move(1,-2.5,4,2,0,0);AA();Pop();Move(0,1,0,-11,0,0);Note();Move(-1,1,0,11,-1,0);Note();Move(0,1.75,-1,-12,2,0);A();Note();');
             lsys.add_rule('A();',  'iteration == 3',                'T(4);A();Note();Move(.1,1,0,8,0,0);Note();Move(0,2,0,-11,0,0);Push();Move(1,2,4,1,0,0);AA();Pop();K();Note();Move(-1,3,0,11,0,0);A();Move(0,1,0,-1,0,0);Note();');
-            lsys.add_rule('AA();', 'iteration == 3',                'qqNote();Move(1,2.5,1.05,12,0,0);Scale(0, .95);A();Scale(0, 1/.9975);Push();Move(1,2,4,2,0,0);K();AA();Pop();Move(0,1,0,-11,0,0);qqNote();Note();Move(-1,1,0,11,0,0);Note();Move(0,2,-1,-12,0,0);AA();qqNote();');
-            lsys.add_rule('AA();', 'iteration > 3 && iteration < 6','qqNote();Move(1,2.5,1.75,12,0,0);Scale(0, .95);A();Scale(0, 1/.975);Push();Move(1,2,4,2,0,0);AA();Pop();Move(0,1,0,-11,0,0);qqNote();Note();Move(-1,1,0,11,0,0);Note();Move(0,2,-1,-12,0,0);AA();qqNote();');
+            lsys.add_rule('AA();', 'iteration == 3',                'Note();Move(1,2.5,1.05,12,0,0);Scale(0, .95);A();Scale(0, 1/.9975);Push();Move(1,2,4,2,0,0);K();AA();Pop();Move(0,1,0,-11,0,0);qqNote();Note();Move(-1,1,0,11,0,0);Note();Move(0,2,-1,-12,0,0);AA();qqNote();');
+            lsys.add_rule('AA();', 'iteration > 3 && iteration < 6','Note();Move(1,2.5,1.75,12,0,0);Scale(0, .95);A();Scale(0, 1/.975);Push();Move(1,2,4,2,0,0);AA();Pop();Move(0,1,0,-11,0,0);qqNote();Note();Move(-1,1,0,11,0,0);Note();Move(0,2,-1,-12,0,0);AA();qqNote();');
             lsys.add_rule('AA();', 'iteration <  3',                'AA();Note();Move(1,2,0,8,0,0);Note();Move(0,2,0,-11,+1,0);Push();Move(1,1.9846,4,1,0,0);AA();Push();Move(1,-18,4,1.5,0,0);AA();Pop();Pop();qqNote();Move(-1,3,0,11,0,0);Q(2);AA();Move(0,1,0,-6,0,0);Note();');
             var chord = ChordSpace.chordForName('F#m');
             console.log(chord.information());

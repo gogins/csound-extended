@@ -52,7 +52,7 @@
         }
     </style>
     <canvas id = 'graphics_canvas' class='canvas' style="width:98vw;height:98vh;"></canvas>
-      <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
+    <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col style="width:300px">
             <col style="width:150px">
         <tr style="color:gold;font-size:14px;">
@@ -1039,12 +1039,19 @@ endin
           csound.message(text + '\n' + url + '\n' + line + '\n');
           console.trace();
         }
+        var graphics_canvas = document.getElementById('graphics_canvas');        
+        var display_score = new Silencio.Score();
+        function onWindowResize( event ) {
+            windowHalfX = graphics_canvas.clientWidth / 2;
+            camera.aspect = graphics_canvas.clientWidth / graphics_canvas.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(graphics_canvas.clientWidth, graphics_canvas.clientHeight );
+        }
         // Coupled dynamical systems: N identical discrete 
         // dynamical systems in which the systems are coupled by a mean field.
         // See Balmforth, N.J, Jacobson, A., and Provenzale, A, "Synchronized family dynamics in globally coupled maps", Chaos 9 (3), 1999.
         // Number of dynamical system instances.
         var title = 'Coupled_Dynamical_Systems';
-        var context = null;
         var startTime = 0;
         var CoupledSystems = function() {
             this.value = [];
@@ -1074,7 +1081,7 @@ endin
         // Assumes that system, N, a, epsilon, seed, bass, and range have already been set,
         // and that create has been called.
         CoupledSystems.prototype.iterate = function() {
-            // Find mean value of prior iteration, this is the "mean field."
+            // Find mean value of systems at prior iteration, this is the "mean field."
             this.mean_prior_value = 0;
             for (var i = 0; i < this.N; i++) {
                 this.mean_prior_value += this.prior_value[i];
@@ -1126,13 +1133,20 @@ endin
                     this.pan = numeric.seedrandom.random();
                     var pan = 1 / (1 + i);
                     this.score.add(0, duration, 144, i - 1, key, velocity, pan, pan);
-                }
+                 }
             }
             ChordSpace.conformScoreToChord(this.score, this.chord, false);
+            // Add the notes to the scene and move it back.
             this.score.sendToCsound(csound);
             for (var i = 0; i < this.N; i++) {
                 this.prior_value[i] = this.value[i];
             }
+            var time_ = csound.getScoreTime();
+            for (var i = 0; i < this.score.data.length; i++) {
+                this.score.data[i].time = time_;
+                display_score.plotNote3D(this.score.data[i]);
+            }
+            display_score.lookAtFullScore3D();
             this.iteration += 1;
         }
         var coupled_systems = new CoupledSystems();
@@ -1236,6 +1250,7 @@ endin
                 coupled_systems.create();
                 start_time_seconds = new Date().getTime() / 1000.0;
                 startTime = csound.getScoreTime();
+                display_score.prepareScene3D(graphics_canvas);
                 timeout_function = setTimeout(updateSystem, 0);
             },
             Developer_tools: function() {
