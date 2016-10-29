@@ -12,7 +12,7 @@ Generative music, algorithmic composition, score generation, call it what you wi
 
 Silencio features advanced score generators based on recurrent iterated function systems and parametric Lindenmayer systems, and includes code for chord transformations and voice-leading inspired by the work of [Dmitri Tymoczko](http://dmitri.mycpanel.princeton.edu/) and other mathematical music theorists. I have been performing works composed with Silencio at conferences and festivals for several years.
 
-Please note, some full-scale examples for Silencio may be found at https://github.com/gogins/gogins.github.io.
+Please note, some full-scale examples for Silencio may be found here.
 
 The original version of Silencio is written in the Lua programming language, and runs best on Mike Pall's marvelous [LuaJIT/FFI](http://luajit.org/). The current version of Silencio is written in portable JavaScript because that makes more capabilities (audio, MIDI, animated 3-dimensional graphics, video, proper mathematics typesetting, symbolic mathematics, <it>etc</it>., <it>etc</it>.) available to Csound than any other programming environment. 
 
@@ -33,6 +33,10 @@ Both the Lua and the JavaScript versions of Silencio are designed to be used wit
 Currently, the environments I recommend for musicians are csound.node running in [NW.js](http://nwjs.io/) on the desktop, and [Csound for Android](https://play.google.com/store/apps/details?id=com.csounds.Csound6&hl=en) for mobile devices.
 
 ## News
+
+### 29 October 2016
+
+Please note, development of Silencio has moved to the csound/silencio subdirectory of this repository. The original repository at https://github.com/gogins/silencio remains in place with a notice to come here for the current version of the code.
 
 ### 12 October 2016
 

@@ -6,7 +6,11 @@ michael /dot/ gogins /at/ gmail /dot/ com
 
 This Web site contains various resources for composing with Csound, focusing on using HTML5 with Csound. These resources include example pieces, a playable version of the Csound reference manual, and Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound.
 
-## Playable version of the Csound Reference Manual
+## Silencio Library for Algorithmic Composition
+
+The Silencio library in JavaScript (formerly in Lua) has moved to the [csound/silencio](https://github.com/gogins/gogins.github.io/tree/master/csound/silencio) subdirectory of this repository from https://github.com/gogins/silencio. That repository will remain in place, but all futher development of the JavaScript code will be done in this repository.
+
+## Playable Version of the Csound Reference Manual
 
 The following link will take you to an online version of the Csound Reference Manual. It contains examples that will play right in your browser. You can even edit the examples and play them again hear the results of your changes. Currently this is supported only in desktop versions of Google's Chrome browser.
 
