@@ -1,0 +1,300 @@
+<html>
+<script>
+(function() {
+  // STEP ONE: Convert all characters to lowercase to simplify testing
+  var agt=navigator.userAgent.toLowerCase();
+
+  // SETP TWO: Determine Browser Version
+  // Note: On IE5, these return 4, so use is_ie5up to detect IE5.
+  var is_major = parseInt(navigator.appVersion);
+  var is_minor = parseFloat(navigator.appVersion);
+
+  // Note: Opera and WebTV spoof Navigator.  We do strict client detection.
+  // If you want to allow spoofing, take out the tests for opera and webtv.
+  var is_nav  = ((agt.indexOf('mozilla')!=-1) && (agt.indexOf('spoofer')==-1)
+    && (agt.indexOf('compatible') == -1) && (agt.indexOf('opera')==-1)
+    && (agt.indexOf('webtv')==-1) && (agt.indexOf('hotjava')==-1));
+  var is_nav2 = (is_nav && (is_major == 2));
+  var is_nav3 = (is_nav && (is_major == 3));
+  var is_nav4 = (is_nav && (is_major == 4));
+  var is_nav4up = (is_nav && (is_major >= 4));
+  var is_navonly = (is_nav && ((agt.indexOf(";nav") != -1) ||
+    (agt.indexOf("; nav") != -1)) );
+  var is_nav6 = (is_nav && (is_major == 5));
+  var is_nav6up = (is_nav && (is_major >= 5));
+  var is_gecko = (agt.indexOf('gecko') != -1);
+
+  var is_ie     = ((agt.indexOf("msie") != -1) && (agt.indexOf("opera") == -1));
+  var is_ie3    = (is_ie && (is_major < 4));
+  var is_ie4    = (is_ie && (is_major == 4) && (agt.indexOf("msie 4")!=-1) );
+  var is_ie4up  = (is_ie && (is_major >= 4));
+  var is_ie5    = (is_ie && (is_major == 4) && (agt.indexOf("msie 5.0")!=-1) );
+  var is_ie5_5  = (is_ie && (is_major == 4) && (agt.indexOf("msie 5.5") !=-1));
+  var is_ie5up  = (is_ie && !is_ie3 && !is_ie4);
+  var is_ie5_5up =(is_ie && !is_ie3 && !is_ie4 && !is_ie5);
+  var is_ie6    = (is_ie && (is_major == 4) && (agt.indexOf("msie 6.")!=-1) );
+  var is_ie6up  = (is_ie && !is_ie3 && !is_ie4 && !is_ie5 && !is_ie5_5);
+
+  // KNOWN BUG: On AOL4, returns false if IE3 is embedded browser
+  // or if this is the first browser window opened.  Thus the
+  // variables is_aol, is_aol3, and is_aol4 aren't 100% reliable.
+  var is_aol   = (agt.indexOf("aol") != -1);
+  var is_aol3  = (is_aol && is_ie3);
+  var is_aol4  = (is_aol && is_ie4);
+  var is_aol5  = (agt.indexOf("aol 5") != -1);
+  var is_aol6  = (agt.indexOf("aol 6") != -1);
+
+  var is_opera = (agt.indexOf("opera") != -1);
+  var is_opera2 = (agt.indexOf("opera 2") != -1 || agt.indexOf("opera/2") != -1);
+  var is_opera3 = (agt.indexOf("opera 3") != -1 || agt.indexOf("opera/3") != -1);
+  var is_opera4 = (agt.indexOf("opera 4") != -1 || agt.indexOf("opera/4") != -1);
+  var is_opera5 = (agt.indexOf("opera 5") != -1 || agt.indexOf("opera/5") != -1);
+  var is_opera5up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4);
+
+  var is_webtv = (agt.indexOf("webtv") != -1); 
+  var is_TVNavigator = ((agt.indexOf("navio") != -1) || (agt.indexOf("navio_aoltv") != -1)); 
+  var is_AOLTV = is_TVNavigator;
+
+  var is_hotjava = (agt.indexOf("hotjava") != -1);
+  var is_hotjava3 = (is_hotjava && (is_major == 3));
+  var is_hotjava3up = (is_hotjava && (is_major >= 3));
+
+  // STEP THREE: Associate Javascript Version with Browser
+  var is_js;
+  if (is_nav2 || is_ie3) is_js = 1.0;
+  else if (is_nav3) is_js = 1.1;
+  else if (is_opera5up) is_js = 1.3;
+  else if (is_opera) is_js = 1.1;
+  else if ((is_nav4 && (is_minor <= 4.05)) || is_ie4) is_js = 1.2;
+  else if ((is_nav4 && (is_minor > 4.05)) || is_ie5) is_js = 1.3;
+  else if (is_hotjava3up) is_js = 1.4;
+  else if (is_nav6 || is_gecko) is_js = 1.5;
+  // NOTE: In the future, update this code when newer versions of JS
+  // are released. For now, we try to provide some upward compatibility
+  // so that future versions of Nav and IE will show they are at
+  // *least* JS 1.x capable. Always check for JS version compatibility
+  // with > or >=.
+  else if (is_nav6up) is_js = 1.5;
+  // NOTE: ie5up on mac is 1.4
+  else if (is_ie5up) is_js = 1.3
+  // HACK: no idea for other browsers; always check for JS version with > or >=
+  else is_js = 0.0;
+  console.log('JavaScript version:' + is_js);
+  return (is_js) ; 
+})();
+</script>
+<H1>ChordSpace Tests</H1>
+  <script src='./Silencio.js'>
+</script>
+  <script src='./lodash.js'>
+</script>
+  <script src='./sprintf.js'>
+</script>
+  <script src='./ChordSpace.js'>
+  </script>
+<script>
+  function wryte(source) {
+    document.write('<h3>Source</h3>');
+    document.write('<pre>'+ source + '</pre>');
+    var result = eval(source);
+    document.write('<h3>Result</h3>');
+    document.write('<pre>' + result + '</pre>');
+  }
+  function test(title, source) {
+    document.write('<h2>' + title + '</h2>');
+    wryte(source);
+  }
+test('Help', 'ChordSpace.help()');
+test('factorial', 'ChordSpace.factorial(8)');
+test('EPSILON', 'ChordSpace.EPSILON');
+test('eq_epsilon', 'ChordSpace.eq_epsilon(1,1.00000000000001)');
+test('eq_epsilon', 'ChordSpace.eq_epsilon(1,1.00000001)');
+test('gt_epsilon', 'ChordSpace.gt_epsilon(1.00000000000001, 1)');
+test('gt_epsilon', 'ChordSpace.gt_epsilon(1.00000001, 1)');
+test('lt_epsilon', 'ChordSpace.lt_epsilon(1.00000000000001, 1)');
+test('lt_epsilon', 'ChordSpace.lt_epsilon(1.00000001, 1)');
+test('ge_epsilon', 'ChordSpace.ge_epsilon(1.00000000000001, 1)');
+test('ge_epsilon', 'ChordSpace.ge_epsilon(1.00000001, 1)');
+test('le_epsilon', 'ChordSpace.le_epsilon(1.00000000000001, 1)');
+test('le_epsilon', 'ChordSpace.le_epsilon(1.00000001, 1)');
+test('OCTAVE', 'ChordSpace.OCTAVE');
+test('T', 'ChordSpace.T(5, 5)');
+test('I', 'ChordSpace.I(5)');
+var chord = new ChordSpace.Chord();
+chord.resize(5);
+test('New chord', 'chord.toString()');
+chord.setPitch(1, 2);
+chord.setPitch(3, 2);
+test('count', 'chord.count(2)');
+a = new ChordSpace.Chord();
+a.resize(4);
+b = a.T(1);
+test('Chord.eq_epsilon', 'a');
+wryte('b');
+test('a.eq_epsilon(b)');
+test('Chord.lt_epsilon', 'a.lt_epsilon(b)');
+test('Chord.le_epsilon', 'a.le_epsilon(b)');
+test('Chord.hash', 'chord.hash()');
+test('Chord.contains', 'chord.contains(5)');
+test('Chord.contains', 'chord.contains(0)');
+test('Chord.min', 'chord.min()');
+test('Chord.minimumInterval', 'chord.minimumInterval()');
+test('Chord.max', 'chord.max()');
+test('Chord.maximumInterval', 'chord.maximumInterval()');
+clone = chord.clone();
+test('Chord.clone', 'chord.clone()');
+test('Chord.floor', 'chord.floor()');
+test('Chord.ceil', 'chord.ceil()');
+test('Chord.origin', 'chord.origin()');
+b.setPitch(0, 5);
+a.setPitch(3, 7);
+test('Euclidean distance', 'ChordSpace.euclidean(a, b)');
+test('Chord.distanceToOrigin', 'chord.distanceToOrigin()');
+test('Chord.layer', 'chord.layer()');
+test('Chord.distanceToUnisonDiagonal', 'chord.distanceToUnisonDiagonal()');
+trichord = new ChordSpace.Chord();
+trichord.resize(3);
+test('Chord.maximallyEven', 'chord.maximallyEven(1)');
+wryte('trichord.maximallyEven(1)');
+test('Chord.T', 'chord.T(1)');
+test('Chord.I', 'chord.I()');
+wryte('trichord.I(6)');
+test('ChordSpace.modulo',  'ChordSpace.modulo(  7,  3)');
+wryte('ChordSpace.modulo(-7,  3)');
+wryte('ChordSpace.modulo( 7, -3)');
+wryte('ChordSpace.modulo(-7, -3)');
+test('ChordSpace.epc',  'ChordSpace.epc(7)');
+wryte('ChordSpace.epc(12+7)');
+test('Chord.isepcs',  'chord.isepcs()');
+wryte('chord.T(11).isepcs()');
+test('Chord.er',  'chord.T(12).er(24)');
+test('Chord.epcs',  'chord.T(12).epcs()');
+test('Chord.et',  'chord.T(12).et()');
+test('Chord.iset',  'chord.T(12).iset()');
+wryte('chord.iset()');
+test('Chord.iseR',  'chord.T(12).iseR(12)');
+wryte('chord.iseR(12)');
+test('Chord.iseO',  'chord.T(12).iseO()');
+wryte('chord.iseO()');
+test('Chord.eR',  'chord.T(12).eR(24)');
+wryte('chord.T(12).eR(12)');
+wryte('chord.eR(12)');
+test('Chord.eO',  'chord.T(12).eO()');
+test('Chord.iseP',  'chord.iseP()');
+test('Chord.eP',  'chord.eP()');
+test('Chord.iseT',  'chord.T(12).iseT()');
+wryte('chord.iseT()');
+test('Chord.eT',  'chord.eT()');
+test('Chord.eTT',  'chord.eTT()');
+test('Chord.iseTT',  'chord.iseTT()');
+test('Chord.iseI',  'chord.iseI()');
+test('Chord.eI',  'chord.eI()');
+test('Chord.iseRP',  'chord.T(12).iseRP(24)');
+wryte('chord.eTT().eP().iseRP(12)');
+test('Chord.iseOP',  'chord.T(12).iseOP()');
+wryte('chord.eTT().eP().iseOP()');
+test('Chord.eRP',  'chord.T(12).eRP(24)');
+test('Chord.eOP',  'chord.T(12).eOP()');
+wryte('chord.eOP()');
+wryte('chord.T(10).eOP()');
+test('Chord.permutations',  'chord');
+wryte('chord.permutations()');
+test('Chord.iseV',  'chord.iseV()');
+wryte('chord.cycle(-1).iseV()');
+test('Chord.eV',  'chord.eV()');
+test('Chord.iseRPT',  'chord.T(12).iseRPT(24)');
+wryte('chord.eP().iseRPT(12)');
+test('Chord.iseRPTT',  'chord.T(12).iseRPTT(24)');
+wryte('chord.eP().iseRPTT(12)');
+test('Chord.iseOPT',  'chord.T(12).iseOPT()');
+wryte('chord.eP().iseOPT()');
+test('Chord.iseOPTT',  'chord.T(12).iseOPTT()');
+wryte('chord.eP().iseOPTT()');
+var CM7 = new ChordSpace.Chord();
+CM7.set([0, 4, 7, 11]);
+test('Chord.cycle',  'CM7.cycle(1)');
+wryte('CM7');
+wryte('CM7.cycle(-1)');
+wryte('CM7.cycle(0)');
+test('Chord.v', 'CM7');
+wryte('CM7.v(1)');
+wryte('CM7.v(-1)');
+wryte('CM7.voicings()');
+test('Chord.eRPT', 'CM7.eRPT(12)');
+wryte('CM7.T(3).eRPT(12)');
+test('Chord.eRPTT', 'CM7.eRPTT(12)');
+wryte('CM7.T(3).eRPTT(12)');
+test('Chord.eOPT', 'CM7.eOPT()');
+wryte('CM7.T(3).eOPT(12)');
+test('Chord.eOPTT', 'CM7.eOPTT()');
+wryte('CM7.T(3).eOPTT()');
+test('Chord.iseOPI', 'CM7.iseOPI()');
+wryte('CM7.I().iseOPI()');
+test('Chord.eOPI', 'CM7.eOPI()');
+wryte('CM7.I().eOPI()');
+test('Chord.iseOPTI',  'CM7.T(1).iseOPTI()');
+wryte('CM7.iseOPTI()');
+test('Chord.iseOPTTI',  'CM7.T(1).iseOPTTI()');
+wryte('CM7.iseOPTTI()');
+test('Chord.eOPTI',  'CM7.T(1).eOPTI()');
+wryte('CM7.I().eOPTI()');
+wryte('CM7.eOPTI()');
+test('Chord.eOPTTI',  'CM7.T(1).eOPTTI()');
+wryte('CM7.I().eOPTTI()');
+wryte('CM7.eOPTTI()');
+test('Pitch-class names',  'ChordSpace.pitchClassesForNames');
+wryte('ChordSpace.pitchClassesForNames["Ab"]');
+wryte('ChordSpace.pitchClassesForNames["G#"]');
+test('Pitch-class set names',  'ChordSpace.chordsForNames');
+wryte('ChordSpace.chordsForNames["GM"]');
+wryte('ChordSpace.chordsForNames["AbM9"]');
+wryte('ChordSpace.chordsForNames["Em7"]');
+wryte('ChordSpace.chordsForNames["G7b9#5"]');
+test('Names for chords', 'ChordSpace.nameForChord(CM7.T(2))');
+CM = new ChordSpace.Chord()
+CM.set([0, 4, 7]);
+test('P',  'ChordSpace.nameForChord(CM.nrP())');
+wryte('CM.nrP().eOP()');
+test('L',  'ChordSpace.nameForChord(CM.nrL())');
+wryte('CM.nrL().eOP()');
+test('R',  'ChordSpace.nameForChord(CM.nrR())');
+wryte('CM.nrR().eOP()');
+test('D',  'ChordSpace.nameForChord(CM.nrD())');
+wryte('CM.nrD().eOP()');
+test('Chord information',  'CM7.information()');
+test('K',  'CM7.K().information()');
+var minor = ChordSpace.chordForName('Cm');
+var major = ChordSpace.chordForName('CM');
+var CM = major.clone();
+var result = CM.Q(1, minor);  
+test('Q',  'CM.Q(1, minor)');
+wryte('CM.Q(1, major).information()');
+wryte('CM.Q(1, minor).information()');
+test('J',  'CM.J(1)');
+test('ChordSpace.voiceleading',  'ChordSpace.voiceleading(major,minor)');
+test('ChordSpace.parallelFifth',  'ChordSpace.parallelFifth(major,minor)');
+wryte('ChordSpace.parallelFifth(major.T(7),major)');
+test('ChordSpace.voiceleadingSmoothness',  'ChordSpace.voiceleadingSmoothness(major,minor)');
+test('ChordSpace.voiceleadingClosestRange',  'ChordSpace.voiceleadingClosestRange(major.T(12),minor.T(4),36)');
+test('Chord.note',  'CM.note(2)');
+test('Chord.notes',  'CM7.notes()');
+var score = new Silencio.Score();
+test('Chord.toScore',  'CM7.toScore(score)');
+test('ChordSpace.conformPitchToChord',  'ChordSpace.conformPitchToChord(8+12,minor)');
+var event = new Silencio.Event();
+event.key = 24+9;
+test('ChordSpace.conformToChord',  'ChordSpace.conformToChord(event, CM7)');
+event.key = 24+9;
+wryte('ChordSpace.conformToChord(event, CM7.T(24))');
+event.key = 24+9;
+wryte('ChordSpace.conformToChord(event, CM7.T(24), false)');
+var c1 = CM7.T(3).K();
+var c2 = CM.I(4).Q(2, minor);
+ChordSpace.insert(score, c1, 2, 2);
+ChordSpace.insert(score, c2, 2, 2);
+ChordSpace.insert(score, c1, 2, 2);
+test('Score.slice', 'score.slice(2, 3)');
+test('ChordSpace.gather',  'ChordSpace.gather(score, 2, 3)');
+ 
+</script>
+</html>
