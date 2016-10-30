@@ -1030,12 +1030,6 @@ endin
           try {
             var startTime = 0;
             var canvas = document.getElementById('graphics_canvas');
-            ///canvas.width = window.innerWidth;
-            ///canvas.height = window.innerHeight;
-            ///var ctx = canvas.getContext("2d");
-            ///ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ///var H = canvas.height;
-            ///var W = canvas.width;
             lsys = new ParametricLindenmayer.PLSystem();
             // Move(i,t,d,k,v,p)
             lsys.set_axiom('T(0);Push();Move(1,20,0,4,0,0);AA();Pop();Push();Move(-1,-4,0,2,0,0);AA();Pop();Move(1,-1,0,0,0,0);A();');

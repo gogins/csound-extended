@@ -679,8 +679,8 @@ Score.prototype.prepareScene3D = function(canvas) {
     this.controls = new THREE.TrackballControls(camera, canvas);
     var controls = this.controls;
     controls.rotateSpeed = 1.0;
-    controls.zoomSpeed = 0.125;
-    controls.panSpeed = 0.8;
+    controls.zoomSpeed = 1;
+    controls.panSpeed = 1;
     controls.noZoom = false;
     controls.noPan = false;
     controls.staticMoving = true;
@@ -706,24 +706,22 @@ Score.prototype.prepareScene3D = function(canvas) {
 /**
  * Adds the note to the 3D scene. Can be used with a fixed or a real-time score.
  */
-Score.prototype.plotNote3D = function(note) {
+Score.prototype.plotNote3D = function(note, channel_minimum, channel_range, velocity_minimum, velocity_range) {
     var begin = note.time;
     var end = note.end;
     var duration = end - begin;
     var key = note.key;
-    var channel = note.channel - this.minima.channel;
+    var channel = note.channel - channel_minimum;
     var geometry = new THREE.BoxBufferGeometry(duration, 1, 1);
-    var channelRange = this.ranges.channel;
-    if (channelRange == 0) {
-        channelRange = 1;
+     if (channel_range == 0) {
+        channel_range = 1;
     }
-    var velocityRange = this.ranges.velocity;
-    if (velocityRange == 0) {        
-        velocityRange = 1;
+    if (velocity_range == 0) {        
+        velocity_range = 1;
     }
-    hue = channel / channelRange;
-    var value = note.velocity - this.minima.velocity;
-    value = value / velocityRange;
+    hue = channel / channel_range;
+    var value = note.velocity - velocity_minimum;
+    value = value / velocity_range;
     value = .5 + value / 2;
     var material = new THREE.MeshLambertMaterial();
     material.color.setHSL(hue, 1, value);
@@ -814,10 +812,19 @@ Score.prototype.lookAtFullScore3D = function() {
 Score.prototype.lookAtFront3D = function() {
     var bounding_box = new THREE.Box3().setFromObject(this.scene);
     this.camera.lookAt(bounding_box.getCenter());
-    this.camera.fov = 2 * Math.atan((bounding_box.getSize().z / (this.canvas.width / this.canvas.height)) / (2 * bounding_box.getSize().y)) * (180 / Math.PI);
+    this.camera.fov = 2 * Math.atan((bounding_box.getSize().y / (this.canvas.width / this.canvas.height)) / (2 * bounding_box.getSize().z)) * (180 / Math.PI);
     this.camera.position.copy(bounding_box.getCenter());
-    this.camera.position.z = 1.125 * Math.min(bounding_box.getSize().z, bounding_box.getSize().y);
+    this.camera.position.x = 1.125 * Math.max(bounding_box.getSize().x, bounding_box.getSize().y);
     this.controls.target.copy(bounding_box.getCenter());
+    this.controls.update();
+    this.camera.updateProjectionMatrix();
+    this.renderer.render(this.scene, this.camera);
+}
+
+/**
+ * Redraws the scene using the camera updated from the controls.
+ */
+Score.prototype.render3D = function() {
     this.controls.update();
     this.camera.updateProjectionMatrix();
     this.renderer.render(this.scene, this.camera);
@@ -834,7 +841,7 @@ Score.prototype.draw3D = function(canvas) {
     this.prepareScene3D(canvas);
     // Plot the notes.
     for (var i = 0; i < this.data.length; i++) {
-        this.plotNote3D(this.data[i]);
+        this.plotNote3D(this.data[i], this.minima.channel, this.ranges.channel, this.minima.velocity, this.ranges.velocity);
     }    
     this.plotGrid3D();
     this.lookAtFullScore3D();

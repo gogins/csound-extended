@@ -1143,10 +1143,16 @@ endin
             }
             var time_ = csound.getScoreTime();
             for (var i = 0; i < this.score.data.length; i++) {
-                this.score.data[i].time = time_;
-                display_score.plotNote3D(this.score.data[i]);
+                var note = this.score.data[i];
+                note.time = time_;
+                display_score.plotNote3D(note, 1, 6, 60, 80);
             }
-            display_score.lookAtFullScore3D();
+            if (this.iteration < 1) {
+                display_score.lookAtFront3D();
+            } else {
+                display_score.camera.position.x += duration;
+                display_score.render3D();
+            }
             this.iteration += 1;
         }
         var coupled_systems = new CoupledSystems();
