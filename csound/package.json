@@ -1,12 +1,12 @@
 {
-  "main": "Coupled_Dynamical_Systems.html",
-  "name": "Coupled_Dynamical_Systems",
+  "main": "Symbolic_Spirograph.html",
+  "name": "Symbolic_Spirograph",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Coupled_Dynamical_Systems",
+    "title": "Symbolic_Spirograph",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

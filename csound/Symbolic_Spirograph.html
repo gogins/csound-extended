@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Coupled Dynamical Systems Example</title>
+        <title>Symbolic Math Example</title>
         <script type="text/javascript" src="silencio/js/dat.gui.js"></script>
         <script type="text/javascript" src="silencio/js/jquery.js"></script>
         <script type="text/javascript" src="silencio/js/Silencio.js"></script>
@@ -9,9 +9,9 @@
         <script type="text/javascript" src="silencio/js/sprintf.js"></script>
         <script type="text/javascript" src="silencio/js/three.js"></script>
         <script type="text/javascript" src="silencio/js/TrackballControls.js"></script>
-        <script type="text/javascript" src="silencio/js/ParametricLindenmayer.js"></script>
         <script type='text/javascript' src='silencio/js/tinycolor.js'></script>
         <script type='text/javascript' src='silencio/js/numeric.js'></script>
+        <script type='text/javascript' src='silencio/js/algebrite.bundle-for-browser.js'></script>
         <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
@@ -68,10 +68,7 @@
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
-            <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to the pitches of notes played by Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping. The logistic map is $$ T(x) =  4 a x (1 - x). $$ The sine-circle map is $$ T(x)= x+a+{b\over 2\pi}\sin{2\pi x}, $$ computed mod 1.  The tent map is $$T(x) = \left\{ \begin{array}{lc} 
-2 a x & 0 \leq x < \frac{1}{2} \\  
-2 a (1-x) & \frac{1}{2} \leq x < 1
-\end{array} \right\}.$$ In all cases,the parameters are normalized to the unit interval.
+            <td colspan="2">This piece generates a score from a simple spirograph using the Algebrite.js symbolic algebra library to "plot" the parametric equation of the spirograph.
     </td>
         </tr>
         <tr>
@@ -1047,115 +1044,8 @@ endin
             camera.updateProjectionMatrix();
             renderer.setSize(graphics_canvas.clientWidth, graphics_canvas.clientHeight );
         }
-        // Coupled dynamical systems: N identical discrete 
-        // dynamical systems in which the systems are coupled by a mean field.
-        // See Balmforth, N.J, Jacobson, A., and Provenzale, A, "Synchronized family dynamics in globally coupled maps", Chaos 9 (3), 1999.
-        // Number of dynamical system instances.
-        var title = 'Coupled_Dynamical_Systems';
+        var title = 'Symbolic_Spirograph';
         var startTime = 0;
-        var CoupledSystems = function() {
-            this.value = [];
-            this.prior_value = [];
-            this.chord = ChordSpace.chordForName('D7b9');
-            this.score = new Silencio.Score();
-            this.Random_seed = 0;
-            this.a = .94;
-            this.b =.5;
-            this.N = 10;
-            this.epsilon = 0.05;
-            this.Lowest_note = 36;
-            this.Range = 60;
-            this.Notes_per_second = 4;
-            this.Duration_factor = 4;
-            this.iteration = 0;
-        }
-        CoupledSystems.prototype.create = function() {
-            this.score.clear();
-            this.iteration = 0;
-            numeric.seedrandom.seedrandom(this.Random_seed);
-            // Create random initial values.
-            for (var i = 0; i < this.N; i++) {
-                this.prior_value[i] = numeric.seedrandom.random();
-            }
-        }
-        // Assumes that system, N, a, epsilon, seed, bass, and range have already been set,
-        // and that create has been called.
-        CoupledSystems.prototype.iterate = function() {
-            // Find mean value of systems at prior iteration, this is the "mean field."
-            this.mean_prior_value = 0;
-            for (var i = 0; i < this.N; i++) {
-                this.mean_prior_value += this.prior_value[i];
-            }
-            this.mean_prior_value /= this.N;
-            // Iterate each system and send its note to Csound.
-            this.score.clear();
-            var velocity = 60;
-            var duration = this.Duration_factor / this.Notes_per_second;
-            for (var i = 0; i < this.N; i++) {
-                var y = this.prior_value[i];
-                var y1;
-                if        (this.System === 'logistic') {
-                        y1 = ((1 - this.epsilon) * (4 * this.a * y * (1 - y)))                                          + (this.epsilon * this.mean_prior_value);
-                } else if (this.System === 'circle') {
-                        y1 = ((1 - this.epsilon) * ((y + this.a + this.b / (2 * Math.PI) * Math.sin(y * 2 * Math.PI)))  + (this.epsilon * this.mean_prior_value)) % 1.0;
-                } else if (this.System === 'tent') {
-                    if (y < 0.5) {
-                        y1 = ((1 - this.epsilon) * (2 * this.a * y          ))                                          + (this.epsilon * this.mean_prior_value);
-                    } else {
-                        y1 = ((1 - this.epsilon) * (2 * this.a * (1 - y)))                                              + (this.epsilon * this.mean_prior_value);
-                    }
-                }
-                this.value[i] = y1;
-                if (i === 0) {
-                    if ((this.iteration % 8) === 0) {
-                        var transpose = Math.floor(this.value[i] * 12);
-                        this.chord = this.chord.T(transpose);
-                    }
-                } else if (i === 1) {
-                    if ((this.iteration % 16) === 0) {
-                        var operation = Math.floor(this.value[i] * 6);
-                        if        (operation === 0) {
-                            this.chord = this.chord.K();
-                        } else if (operation === 1) {
-                            var inversions = this.chord.J(2);
-                            if (inversions) {
-                                var temp = inversions[2];
-                                if (temp) {
-                                    this.chord = temp;
-                                }
-                            }
-                        } else if (operation === 2) {
-                            this.chord = this.chord.T(5);
-                        } // Otherwise, do nothing.
-                    }
-                } else {
-                    var key = Math.round(this.value[i] * this.Range + this.Lowest_note);
-                    this.pan = numeric.seedrandom.random();
-                    var pan = 1 / (1 + i);
-                    this.score.add(0, duration, 144, i - 1, key, velocity, pan, pan);
-                 }
-            }
-            ChordSpace.conformScoreToChord(this.score, this.chord, false);
-            // Add the notes to the scene and move it back.
-            this.score.sendToCsound(csound);
-            for (var i = 0; i < this.N; i++) {
-                this.prior_value[i] = this.value[i];
-            }
-            var time_ = csound.getScoreTime();
-            for (var i = 0; i < this.score.data.length; i++) {
-                var note = this.score.data[i];
-                note.time = time_;
-                display_score.plotNote3D(note, 1, 6, 60, 80);
-            }
-            if (this.iteration < 1) {
-                display_score.lookAtFront3D();
-            } else {
-                display_score.camera.position.x += duration;
-                display_score.render3D();
-            }
-            this.iteration += 1;
-        }
-        var coupled_systems = new CoupledSystems();
         function csoundMessage(text) {
             var Log_cell = document.getElementById('Log_cell');
             Log_cell.value += text;
@@ -1229,16 +1119,13 @@ endin
             gk_FM_Clang_preset: 1,
             gk_FM_Clang_level: 0,
 
-            Notes_per_second: 4,
-            N: 12,
-            a: .92,
-            b: .5,
-            epsilon: .5,
-            Random_seed: 1058392,
-            System: "logistic",
+            Note_count: 800,
+            Duration_seconds: 240,
+            R: 12,
+            r: .92,
+            p: .5,
             Lowest_note: 36,
             Range: 60,
-            Notes_per_second: 4,
             Duration_factor: 4,
             Play: function() {
                 csound.stop();
@@ -1247,13 +1134,12 @@ endin
                 } catch(e) {
                     console.log(e);
                 }
-                csound.compileOrc(document.getElementById('orc').value);
+                csound.compileOrc(document.getElementById('orc').value);subst( u, exp(x), 2*exp(x) )
                 csound.setOption('-m0');
                 csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
                 csound.perform();
-                coupled_systems.create();
                 start_time_seconds = new Date().getTime() / 1000.0;
                 startTime = csound.getScoreTime();
                 display_score.prepareScene3D(graphics_canvas);
@@ -1285,16 +1171,12 @@ endin
             gui.add(parameters, 'Stop').name('Stop');
             gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
-            var Dynamical_Systems = gui.addFolder('Dynamical systems');
-            add_slider(Dynamical_Systems, 'N', 2, 12);
-            add_slider(Dynamical_Systems, 'a', 0, 1);
-            add_slider(Dynamical_Systems, 'b', 0, 1);
-            add_slider(Dynamical_Systems, 'epsilon', 0, 1);
-            add_slider(Dynamical_Systems, 'Random_seed', 0, 100000000);
-            add_slider(Dynamical_Systems, 'System', ['logistic', 'circle', 'tent']);
-            add_slider(Dynamical_Systems, 'Notes_per_second', 0.05, 8);
-            add_slider(Dynamical_Systems, 'Duration_factor', 0.25, 12);
-            add_slider(Dynamical_Systems, 'Lowest_note', 24, 60);
+            var Dynamical_Systems = gui.addFolder('Spirograph');
+            add_slider(Dynamical_Systems, 'R', 2, 12);
+            add_slider(Dynamical_Systems, 'r', 0, 1);
+            add_slider(Dynamical_Systems, 'p', 0, 1);
+            add_slider(Dynamical_Systems, 'Note_count', 12, 4000);
+            add_slider(Dynamical_Systems, 'Duraton_seconds', 30, 600);
             add_slider(Dynamical_Systems, 'Range', 12, 72);
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
