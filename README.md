@@ -1,10 +1,10 @@
-# Csound Goodies
+# Computer Music Resources
 
 Michael Gogins<br>
 http://michaelgogins.tumblr.com<br>
 michael /dot/ gogins /at/ gmail /dot/ com
 
-This Web site contains various resources for composing with Csound, focusing on using HTML5 with Csound. These resources include example pieces, a playable version of the Csound reference manual, and Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound.
+This Web site contains various resources for computer and electroacoustic musicians. All of these resources are tools that I have created for the purpose of composing my own music and that I have made publicly available here. These resources include tools for composing with Csoundand using HTML5 with Csound; example pieces; a playable version of the Csound reference manual; Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound; and a prototype "front end" for composing pieces that use HTML5 with Csound.
 
 ## Silencio Library for Algorithmic Composition
 
@@ -96,3 +96,7 @@ https://gogins.github.io/csound/Scrims_node.html
 ## Nudruz
 
 This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is hosted with his permission. The code has been lightly edited to make it more usable with Steel Bank Common Lisp and the current version of Csound. Drew's code also is licensed under the terms of the GNU Lesser General Public License.
+
+## CHSound
+
+The ```csound_html5``` directory contains a prototype program written with the Qt SDK and its QtWebEngine browser with a JavaScript interface to Csound, for editing and performing pieces that use JavaScript and HTML5 to compose and Csound to render audio.
