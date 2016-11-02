@@ -57,7 +57,7 @@
             <col style="width:150px">
         <tr style="color:gold;font-size:14px;">
             <!-- Copyright (C) 2016 by Michael Gogins -->
-            <td style="font-weight:bold;"><b><i>Coupled Dynamical Systems</i></b> for csound.node</td>
+            <td style="font-weight:bold;"><b><i>Spirograph</i></b> for csound.node</td>
             <td style="color:gold;text-align:right;">Michael Gogins</td>
         </tr>
         <tr>
@@ -1127,6 +1127,8 @@ endin
             Lowest_note: 36,
             Range: 60,
             Duration_factor: 4,
+            var equation_for_time  = '(R + r) cos(theta) + p cos((R + r) theta / r)';
+            var equation_for_pitch = '(R + r) sin(theta) + p sin((R + r) theta / r)';
             Play: function() {
                 csound.stop();
                 try {
@@ -1176,7 +1178,9 @@ endin
             add_slider(Dynamical_Systems, 'r', 0, 1);
             add_slider(Dynamical_Systems, 'p', 0, 1);
             add_slider(Dynamical_Systems, 'Note_count', 12, 4000);
-            add_slider(Dynamical_Systems, 'Duraton_seconds', 30, 600);
+            add_slider(Dynamical_Systems, 'Duration_seconds', 30, 600);
+            add_slider(Dynamical_Systems, 'Duration_factor', .25, 8);
+            add_slider(Dynamical_Systems, 'Lowest_note', 12, 72);
             add_slider(Dynamical_Systems, 'Range', 12, 72);
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);

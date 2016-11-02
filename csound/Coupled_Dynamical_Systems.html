@@ -1150,7 +1150,7 @@ endin
             if (this.iteration < 1) {
                 display_score.lookAtFront3D();
             } else {
-                display_score.camera.position.x += duration;
+                display_score.camera.position.x += 1 / this.Notes_per_second;
                 display_score.render3D();
             }
             this.iteration += 1;
