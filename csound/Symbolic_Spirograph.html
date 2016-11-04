@@ -11,7 +11,9 @@
         <script type="text/javascript" src="silencio/js/TrackballControls.js"></script>
         <script type='text/javascript' src='silencio/js/tinycolor.js'></script>
         <script type='text/javascript' src='silencio/js/numeric.js'></script>
-        <script type='text/javascript' src='silencio/js/algebrite.bundle-for-browser.js'></script>
+        <script type='text/javascript' src="silencio/js/nerdamer.core.js"></script> 
+        <script type='text/javascript' src="silencio/js/Algebra.js"></script>
+        <script type='text/javascript' src="silencio/js/Calculus.js"></script>        
         <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
@@ -1037,7 +1039,9 @@ endin
           console.trace();
         }
         var graphics_canvas = document.getElementById('graphics_canvas');        
-        var display_score = new Silencio.Score();
+        var function_for_time  = nerdamer('(R + r) * cos(theta) + p * cos((R + r) * theta / r)');
+        var function_for_pitch = nerdamer('(R + r) * sin(theta) + p * sin((R + r) * theta / r)');
+        var score = new Silencio.Score();
         function onWindowResize( event ) {
             windowHalfX = graphics_canvas.clientWidth / 2;
             camera.aspect = graphics_canvas.clientWidth / graphics_canvas.clientHeight;
@@ -1068,8 +1072,8 @@ endin
                 var score_time_cell = document.getElementById('Time_cell');
                 score_time_cell.innerHTML = score_time.toFixed(4);
             }
-            coupled_systems.iterate();
-            setTimeout(updateSystem, 1 / coupled_systems.Notes_per_second * 1000);
+            setTimeout(updateSystem, .02);
+            score.progress3D(score_time);
         };
         var timeout_function = null;
         var parameters = {
@@ -1119,6 +1123,7 @@ endin
             gk_FM_Clang_preset: 1,
             gk_FM_Clang_level: 0,
 
+            Theta_increment: 0.01,
             Note_count: 800,
             Duration_seconds: 240,
             R: 12,
@@ -1127,8 +1132,6 @@ endin
             Lowest_note: 36,
             Range: 60,
             Duration_factor: 4,
-            var equation_for_time  = '(R + r) cos(theta) + p cos((R + r) theta / r)';
-            var equation_for_pitch = '(R + r) sin(theta) + p sin((R + r) theta / r)';
             Play: function() {
                 csound.stop();
                 try {
@@ -1136,7 +1139,9 @@ endin
                 } catch(e) {
                     console.log(e);
                 }
-                csound.compileOrc(document.getElementById('orc').value);subst( u, exp(x), 2*exp(x) )
+                generate();
+                score.draw3D(graphics_canvas);
+                csound.compileOrc(document.getElementById('orc').value);
                 csound.setOption('-m0');
                 csound.setOption('-j3');
                 csound.setOption('--nodisplays');
@@ -1144,7 +1149,6 @@ endin
                 csound.perform();
                 start_time_seconds = new Date().getTime() / 1000.0;
                 startTime = csound.getScoreTime();
-                display_score.prepareScene3D(graphics_canvas);
                 timeout_function = setTimeout(updateSystem, 0);
             },
             Developer_tools: function() {
@@ -1163,6 +1167,23 @@ endin
                 }
             }
         };
+        function generate() {
+            score.clear();
+            var t = 0;
+            for (var i = 0; i < parameters.Note_count; i++) {
+                var variables = {R: parameters.R, r: parameters.r, p: parameters.p, theta: t};
+                var x = nerdamer(function_for_pitch, variables);
+                x = x.evaluate();
+                x = Number(x);
+                var y = nerdamer(function_for_time, variables);
+                y = y.evaluate();
+                y = Number(y);
+                score.add(2, x, parameters.Duration_factor, y, 60, 0);
+                // Roll the little wheel.
+                t += parameters.Theta_increment;
+            }
+            score.draw3D(graphics_canvas);
+        }
         var gui = null;
         window.onload = function() {
             //csound.message('platform: ' + navigator.platform + '\n');
@@ -1239,24 +1260,24 @@ endin
         }
         function gk_update(name, value) {
           console.log(name + ': ' + value);
-          if (name === 'a') {
-            coupled_systems.a = parseFloat(value);
-          } else if (name === 'b') {
-            coupled_systems.b = parseFloat(value);
-          } else if (name === 'epsilon') {
-            coupled_systems.epsilon = parseFloat(value);
-          } else if (name === 'N') {
-            coupled_systems.N = parseFloat(value);
-          } else if (name === 'System') {
-            coupled_systems.System = value;
+          if (name === 'Note_count') {
+            parameters.Note_count = parseFloat(value);
+          } else if (name === 'Duration_seconds') {
+            parameters.Duration_seconds = parseFloat(value);
+          } else if (name === 'Theta_increment') {
+            parameters.Theta_increment = parseFloat(value);
+         } else if (name === 'R') {
+            parameters.R = parseFloat(value);
+          } else if (name === 'r') {
+            parameters.r = parseFloat(value);
+          } else if (name === 'p') {
+            parameters.p = value;
           } else if (name == 'Lowest_note') {
-            coupled_systems.Lowest_note = parseFloat(value); 
+            parameters.Lowest_note = parseFloat(value); 
           } else if (name == 'Range') {
-            coupled_systems.Range = parseFloat(value);
-          } else if (name == 'Notes_per_second') {
-            coupled_systems.Notes_per_second = parseFloat(value);
+            parameters.Range = parseFloat(value);
           } else if (name == 'Duration_factor') {
-            coupled_systems.Duration_factor = parseFloat(value);
+            parameters.Duration_factor = parseFloat(value);
           } else {          
               var numberValue = parseFloat(value);
               csound.setControlChannel(name, numberValue);

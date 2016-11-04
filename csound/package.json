@@ -1,12 +1,12 @@
 {
-  "main": "Symbolic_Spirograph.html",
-  "name": "Symbolic_Spirograph",
+  "main": "csound_node_run.html",
+  "name": "csound.node",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Symbolic_Spirograph",
+    "title": "csound.node",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
