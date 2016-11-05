@@ -357,7 +357,8 @@ function Score() {
   this.controls = null;
   this.score_cursor = null;
 }
-Score.prototype.add = function(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) {
+
+Score.prototype.add = function(p0_time, p1_duration, p2_status, p3_channel, p4_key, p5_velocity, p6_x, p7_y, p8_z, p9_phase, p10_homogeneity) {
   var event = new Event();
   for (var i = 0; i < event.data.length; i++) {
     if (typeof arguments[i] !== 'undefined') {
@@ -781,7 +782,7 @@ Score.prototype.plotGrid3D = function() {
     this.scene.add(origin);
     // Put a ball at the start of middle C, to indicate the current Csound 
     // score time.
-    var cursor_geometry = new THREE.SphereGeometry(1, 1, 1);
+    var cursor_geometry = new THREE.SphereGeometry(1, 10, 10);
     var cursor_material = new THREE.MeshLambertMaterial();
     cursor_material.color.setRGB(255, 0, 0);
     this.score_cursor = new THREE.Mesh(cursor_geometry, cursor_material);

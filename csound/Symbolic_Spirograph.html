@@ -11,9 +11,7 @@
         <script type="text/javascript" src="silencio/js/TrackballControls.js"></script>
         <script type='text/javascript' src='silencio/js/tinycolor.js'></script>
         <script type='text/javascript' src='silencio/js/numeric.js'></script>
-        <script type='text/javascript' src="silencio/js/nerdamer.core.js"></script> 
-        <script type='text/javascript' src="silencio/js/Algebra.js"></script>
-        <script type='text/javascript' src="silencio/js/Calculus.js"></script>        
+        <script type='text/javascript' src='silencio/js/algebrite.bundle-for-browser.js'></script>
         <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
@@ -70,8 +68,24 @@
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
-            <td colspan="2">This piece generates a score from a simple spirograph using the Algebrite.js symbolic algebra library to "plot" the parametric equation of the spirograph.
-    </td>
+            <td colspan="2">This piece generates a score from a simple spirograph using the <a href='http://algebrite.org/'>Algebrite</a> symbolic algebra library to "plot" the parametric equation of the spirograph with parameters controlled by the composer. The plot is then conformally mapped from the disk containing the spirograph to a square.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">Symbolic math in JavaScript has pros and cons. Pros: Save on writing code by writing equations; smaller chance of logic or coding errors; can be easier to find cool equations than cool code; equations can be controlled parametrically for interactive composition. Cons: Runs somewhat slower than code. The parametric equations for the spirograph are:
+            </td>
+        </tr>
+        <tr id=eq_1>
+            <td colspan="2">equation 1
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">The conformal mapping is:
+            </td>
+        </tr>
+        <tr id=eq_2>
+            <td colspan="2">equation 2
+            </td>
         </tr>
         <tr>
             <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
@@ -1039,9 +1053,13 @@ endin
           console.trace();
         }
         var graphics_canvas = document.getElementById('graphics_canvas');        
-        var function_for_time  = nerdamer('(R + r) * cos(theta) + p * cos((R + r) * theta / r)');
-        var function_for_pitch = nerdamer('(R + r) * sin(theta) + p * sin((R + r) * theta / r)');
         var score = new Silencio.Score();
+        var function_for_time = null;
+        var function_for_pitch = null;
+        var mapping_for_time = null;
+        var mapping_for_pitch = null;
+        var simplified_for_time = null;
+        var simplified_for_pitch = null;
         function onWindowResize( event ) {
             windowHalfX = graphics_canvas.clientWidth / 2;
             camera.aspect = graphics_canvas.clientWidth / graphics_canvas.clientHeight;
@@ -1171,18 +1189,79 @@ endin
             score.clear();
             var t = 0;
             for (var i = 0; i < parameters.Note_count; i++) {
-                var variables = {R: parameters.R, r: parameters.r, p: parameters.p, theta: t};
-                var x = nerdamer(function_for_pitch, variables);
-                x = x.evaluate();
-                x = Number(x);
-                var y = nerdamer(function_for_time, variables);
-                y = y.evaluate();
-                y = Number(y);
-                score.add(2, x, parameters.Duration_factor, y, 60, 0);
+                var x = Algebrite.eval(function_for_pitch,  'R', parameters.R, 'r', parameters.r, 'p', parameters.p, 'theta', t);
+                var p0_time = Number(x);
+                var p1_duration = parameters.Duration_factor;
+                var y = Algebrite.eval(function_for_time,  'R', parameters.R, 'r', parameters.r, 'p', parameters.p, 'theta', t);
+                var p2_status = 144;
+                var p3_channel = (i % 5) + 2;
+                var p4_key = Number(y);
+                var p5_velocity = 60;
+                score.add(p0_time, p1_duration, p2_status, p3_channel, p4_key, p5_velocity);
                 // Roll the little wheel.
                 t += parameters.Theta_increment;
             }
+            // Rescale and otherwise massage the score.
+            score.findScales();
+            csound.message(score.getDuration().toString() + '\n');
+            score.sort();
+            //score.setScale(3, 2, 9.9);
+            score.setScale(4, 24, 72);
+            score.temper(12);
+            score.setScale(5, 60, 10);
+            score.setScale(6, .4, .6);
+            score.setScale(7, .4, .6);
+            ///score.tieOverlaps(true);
+            ///conformToChords();
+            score.setDuration(240);
+            score.setScale(1, 1, 5);
+            //console.log(score.toString());
+            console.log('After conforming to chord:');
+            console.log(score.toString());
+            csound.message('Cleaning up some annoying things in the score...');
+            for (var i = 0; i < score.data.length; i++) {
+                var event = score.data[i];
+                // We didn't generate pan, so just randomize it.
+                var pan = Math.random() * 2 - 1;
+                event.pan = pan;
+            }
+            // Pianoteq misbehaves if we start right at time 0.
+            for (var i = 0; i < score.data.length; i++) {
+                var event = score.data[i];
+                event.time = event.time + 1;
+            }
+            // Also if keys overlap.
+            for (var i = 0; i < score.data.length; i++) {
+                var event = score.data[i];
+                console.log(event.toIStatement() + ' e: ' + event.end);
+                var channel = Math.floor(event.channel);
+                var key = event.key;
+                for (var j = i + 1; j < score.data.length; j++) {
+                    var overlap = score.data[j];
+                    var overlap_channel = Math.floor(overlap.channel);
+                    var overlap_key = overlap.key;
+                    if (key === overlap_key && channel === overlap_channel && channel === 2) {
+                        if (event.end > overlap.time) {
+                            var the_end = Math.max(event.end, overlap.end);
+                            console.log('Correcting overlap for:');
+                            console.log('  ' + event.toIStatement() + ' e: ' + event.end);
+                            console.log('  ' + overlap.toIStatement() + ' e: ' + overlap.end);
+                            event.end = the_end;
+                            overlap.end = the_end;
+                            console.log('to:');
+                            console.log('  ' + event.toIStatement() + ' e: ' + event.end);
+                            console.log('  ' + overlap.toIStatement() + ' e: ' + overlap.end + '\n');
+                         }
+                    }
+                }
+             }
+            var panskip = .05;
+            var leftpan = panskip / 2;
+            var panrange = 1 - panskip;
+            score.setScale(6, leftpan, panrange);
+            score.setScale(7, leftpan, panrange);
             score.draw3D(graphics_canvas);
+            score.sendToCsound(csound);
         }
         var gui = null;
         window.onload = function() {
@@ -1195,9 +1274,10 @@ endin
             gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
             var Dynamical_Systems = gui.addFolder('Spirograph');
-            add_slider(Dynamical_Systems, 'R', 2, 12);
+            add_slider(Dynamical_Systems, 'R', 0, 1);
             add_slider(Dynamical_Systems, 'r', 0, 1);
             add_slider(Dynamical_Systems, 'p', 0, 1);
+            add_slider(Dynamical_Systems, 'Theta_increment', 0, 10);
             add_slider(Dynamical_Systems, 'Note_count', 12, 4000);
             add_slider(Dynamical_Systems, 'Duration_seconds', 30, 600);
             add_slider(Dynamical_Systems, 'Duration_factor', .25, 8);
@@ -1257,6 +1337,15 @@ endin
             add_slider(YiString, 'gk_YiString_chorus_send', 0, 1);
             add_slider(YiString, 'gk_YiString_level', -40, 40);
             gui.revert();
+            function_for_time  = Algebrite.eval('(R + r) * cos(theta) + p * cos((R + r) * theta / r)');
+            function_for_pitch = Algebrite.eval('(R + r) * sin(theta) + p * sin((R + r) * theta / r)');
+            var latex_for_time = function_for_time.toLatexString();
+            var latex_for_pitch = function_for_pitch.toLatexString();
+            var K_e = Algebrite.eval('defint(d(t) / sqrt(1 - 1/2 sin^2 t), t, 0, 2)');
+            var K = Algebrite.float(K_e);
+            //mapping_for_time = Algebrite.eval('x = ');
+            //mapping_for_pitch = Algebrite.eval('xxx');
+            document.getElementById('eq_1').innerHTML = '$$' + latex_for_time + '$$ <br> $$' + latex_for_pitch + '$$ <br> $$' + K_e.toLatexString() + ',$$ is ' + K;
         }
         function gk_update(name, value) {
           console.log(name + ': ' + value);

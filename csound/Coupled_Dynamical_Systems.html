@@ -71,7 +71,7 @@
             <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to the pitches of notes played by Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping. The logistic map is $$ T(x) =  4 a x (1 - x). $$ The sine-circle map is $$ T(x)= x+a+{b\over 2\pi}\sin{2\pi x}, $$ computed mod 1.  The tent map is $$T(x) = \left\{ \begin{array}{lc} 
 2 a x & 0 \leq x < \frac{1}{2} \\  
 2 a (1-x) & \frac{1}{2} \leq x < 1
-\end{array} \right\}.$$ In all cases,the parameters are normalized to the unit interval.
+\end{array} \right\}.$$ In all cases, the parameters are normalized to the unit interval.
     </td>
         </tr>
         <tr>
