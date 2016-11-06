@@ -68,7 +68,7 @@
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
-            <td colspan="2">This piece generates a score from a simple spirograph using the <a href='http://algebrite.org/'>Algebrite</a> symbolic algebra library to "plot" the parametric equation of the spirograph with parameters controlled by the composer. The plot is then conformally mapped from the disk containing the spirograph to a square.
+            <td colspan="2">This piece generates a score from a simple spirograph using the <a href='http://algebrite.org/'>Algebrite</a> symbolic algebra library to "plot" the parametric equation of the spirograph as notes, with parameters controlled by the composer. The disk containing the spirograph is then mapped to a square using the elliptical grid map from <a href='https://arxiv.org/pdf/1509.06344.pdf'>Chamberlain Fong, <b><i>Analytical Methods for Squaring the Disc</b></i></a>, which is then remapped to the rectangle containing the score.
             </td>
         </tr>
         <tr>
@@ -80,7 +80,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2">The conformal mapping is:
+            <td colspan="2">The disk to square mapping is:
             </td>
         </tr>
         <tr id=eq_2>
@@ -1188,14 +1188,29 @@ endin
         function generate() {
             score.clear();
             var t = 0;
+            var R = parameters.R;
+            var r = parameters.r;
+            var p = parameters.p;
+            // We must ensure that the spirograph is entirely bounded by the unit disc,
+            // otherwise the disc to square mapping will give coordinates with imaginary parts.
+            var R_max = R + r + p;
+            R = R / R_max;
+            r = r / R_max;
+            p = p / R_max;
             for (var i = 0; i < parameters.Note_count; i++) {
-                var x = Algebrite.eval(function_for_pitch,  'R', parameters.R, 'r', parameters.r, 'p', parameters.p, 'theta', t);
-                var p0_time = Number(x);
+                var u = Algebrite.float(Algebrite.eval(function_for_pitch,  'R', R, 'r', r, 'p', p, 'theta', t));
+                u = Number(u);
+                var v = Algebrite.float(Algebrite.eval(function_for_time,  'R', R, 'r', r, 'p', p, 'theta', t));
+                v = Number(v);
+                var x = Algebrite.float(Algebrite.eval(mapping_for_time, 'u', u, 'v', v));
+                x = Number(x);
+                var y = Algebrite.float(Algebrite.eval(mapping_for_pitch, 'u', u, 'v', v));
+                y = Number(y);
+                var p0_time = x;
                 var p1_duration = parameters.Duration_factor;
-                var y = Algebrite.eval(function_for_time,  'R', parameters.R, 'r', parameters.r, 'p', parameters.p, 'theta', t);
                 var p2_status = 144;
                 var p3_channel = (i % 5) + 2;
-                var p4_key = Number(y);
+                var p4_key = y;
                 var p5_velocity = 60;
                 score.add(p0_time, p1_duration, p2_status, p3_channel, p4_key, p5_velocity);
                 // Roll the little wheel.
@@ -1206,18 +1221,15 @@ endin
             csound.message(score.getDuration().toString() + '\n');
             score.sort();
             //score.setScale(3, 2, 9.9);
-            score.setScale(4, 24, 72);
+            score.setScale(4, parameters.Lowest_note, parameters.Range);
             score.temper(12);
             score.setScale(5, 60, 10);
             score.setScale(6, .4, .6);
             score.setScale(7, .4, .6);
             ///score.tieOverlaps(true);
             ///conformToChords();
-            score.setDuration(240);
+            score.setDuration(parameters.Duration_seconds);
             score.setScale(1, 1, 5);
-            //console.log(score.toString());
-            console.log('After conforming to chord:');
-            console.log(score.toString());
             csound.message('Cleaning up some annoying things in the score...');
             for (var i = 0; i < score.data.length; i++) {
                 var event = score.data[i];
@@ -1337,15 +1349,22 @@ endin
             add_slider(YiString, 'gk_YiString_chorus_send', 0, 1);
             add_slider(YiString, 'gk_YiString_level', -40, 40);
             gui.revert();
-            function_for_time  = Algebrite.eval('(R + r) * cos(theta) + p * cos((R + r) * theta / r)');
-            function_for_pitch = Algebrite.eval('(R + r) * sin(theta) + p * sin((R + r) * theta / r)');
-            var latex_for_time = function_for_time.toLatexString();
-            var latex_for_pitch = function_for_pitch.toLatexString();
-            var K_e = Algebrite.eval('defint(d(t) / sqrt(1 - 1/2 sin^2 t), t, 0, 2)');
-            var K = Algebrite.float(K_e);
-            //mapping_for_time = Algebrite.eval('x = ');
-            //mapping_for_pitch = Algebrite.eval('xxx');
-            document.getElementById('eq_1').innerHTML = '$$' + latex_for_time + '$$ <br> $$' + latex_for_pitch + '$$ <br> $$' + K_e.toLatexString() + ',$$ is ' + K;
+            // Set up the Algebrite expressions for the spirograph.
+            Algebrite.run('w = (R + r) * cos(theta) + p * cos((R + r) * theta / r)');
+            Algebrite.run('z = (R + r) * sin(theta) + p * sin((R + r) * theta / r)');
+            function_for_time  = Algebrite.eval('w');
+            function_for_pitch = Algebrite.eval('z');
+            // I would have liked to try a true conformal mapping, but Algebrite can't solve the following definite integral:
+            // Algebrite.run('K_e = defint(d(t) / sqrt(1 - 1/2 sin^2 t), t, 0, 1/2 pi)');
+            // var K_e = Algebrite.eval('K_e')
+            // var K = Algebrite.float(K_e);
+            // Set up the Algebrite expressions for mapping the spirograph to a square.
+            Algebrite.run('x = 1 / 2 (sqrt(2 + u^2 - v^2 + 2 sqrt(2) u)) - 1 / 2 (sqrt(2 + u^2 - v^2 - 2 sqrt(2) u))');
+            mapping_for_time = Algebrite.eval('x')
+            Algebrite.run('y = 1 / 2 (sqrt(2 - u^2 + v^2 + 2 sqrt(2) v)) - 1 / 2 (sqrt(2 - u^2 + v^2 - 2 sqrt(2) v))');
+            mapping_for_pitch = Algebrite.eval('y')
+            document.getElementById('eq_1').innerHTML = '$$u = ' + function_for_time.toLatexString() + '$$ <br> $$v = ' + function_for_pitch.toLatexString() + '.$$';
+            document.getElementById('eq_2').innerHTML = '$$x = ' + mapping_for_time.toLatexString() + '$$ <br> $$y = ' + mapping_for_pitch.toLatexString() + '.$$';
         }
         function gk_update(name, value) {
           console.log(name + ': ' + value);
