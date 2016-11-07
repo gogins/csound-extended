@@ -1198,13 +1198,18 @@ endin
             r = r / R_max;
             p = p / R_max;
             for (var i = 0; i < parameters.Note_count; i++) {
-                var u = Algebrite.float(Algebrite.eval(function_for_pitch,  'R', R, 'r', r, 'p', p, 'theta', t));
+                // To reliably get actual numbers, 3 steps are required: eval, float, and Number.
+                var u = Algebrite.eval(function_for_pitch,  'R', R, 'r', r, 'p', p, 'theta', t);
+                u = Algebrite.float(u);
                 u = Number(u);
-                var v = Algebrite.float(Algebrite.eval(function_for_time,  'R', R, 'r', r, 'p', p, 'theta', t));
+                var v = Algebrite.eval(function_for_time,  'R', R, 'r', r, 'p', p, 'theta', t);
+                v = Algebrite.float(v);
                 v = Number(v);
-                var x = Algebrite.float(Algebrite.eval(mapping_for_time, 'u', u, 'v', v));
+                var x = Algebrite.eval(mapping_for_time, 'u', u, 'v', v);
+                x = Algebrite.float(x);
                 x = Number(x);
-                var y = Algebrite.float(Algebrite.eval(mapping_for_pitch, 'u', u, 'v', v));
+                var y = Algebrite.eval(mapping_for_pitch, 'u', u, 'v', v);
+                y = Algebrite.float(y);
                 y = Number(y);
                 var p0_time = x;
                 var p1_duration = parameters.Duration_factor;
@@ -1226,7 +1231,7 @@ endin
             score.setScale(5, 60, 10);
             score.setScale(6, .4, .6);
             score.setScale(7, .4, .6);
-            ///score.tieOverlaps(true);
+            score.tieOverlaps(true);
             ///conformToChords();
             score.setDuration(parameters.Duration_seconds);
             score.setScale(1, 1, 5);
@@ -1289,10 +1294,10 @@ endin
             add_slider(Dynamical_Systems, 'R', 0, 1);
             add_slider(Dynamical_Systems, 'r', 0, 1);
             add_slider(Dynamical_Systems, 'p', 0, 1);
-            add_slider(Dynamical_Systems, 'Theta_increment', 0, 10);
+            add_slider(Dynamical_Systems, 'Theta_increment', 0, 4);
             add_slider(Dynamical_Systems, 'Note_count', 12, 4000);
             add_slider(Dynamical_Systems, 'Duration_seconds', 30, 600);
-            add_slider(Dynamical_Systems, 'Duration_factor', .25, 8);
+            add_slider(Dynamical_Systems, 'Duration_factor', .125, 8);
             add_slider(Dynamical_Systems, 'Lowest_note', 12, 72);
             add_slider(Dynamical_Systems, 'Range', 12, 72);
             var Master = gui.addFolder('Master effects');
@@ -1354,10 +1359,12 @@ endin
             Algebrite.run('z = (R + r) * sin(theta) + p * sin((R + r) * theta / r)');
             function_for_time  = Algebrite.eval('w');
             function_for_pitch = Algebrite.eval('z');
+            
             // I would have liked to try a true conformal mapping, but Algebrite can't solve the following definite integral:
             // Algebrite.run('K_e = defint(d(t) / sqrt(1 - 1/2 sin^2 t), t, 0, 1/2 pi)');
             // var K_e = Algebrite.eval('K_e')
             // var K = Algebrite.float(K_e);
+            
             // Set up the Algebrite expressions for mapping the spirograph to a square.
             Algebrite.run('x = 1 / 2 (sqrt(2 + u^2 - v^2 + 2 sqrt(2) u)) - 1 / 2 (sqrt(2 + u^2 - v^2 - 2 sqrt(2) u))');
             mapping_for_time = Algebrite.eval('x')
