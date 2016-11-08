@@ -12,9 +12,9 @@ This file implements Koenig tendency masks with some extensions. A tendency
 mask is an envelope for the boundaries of a random variable, which is sampled 
 to generate parameters for musical events.
 
-The user must specify a random number generator (or indeed any function that 
-can be sampled), the top and bottom envelopes within which the samples are 
-rescaled, and the sample count, stride, and time step.
+The user must specify a Csound instrument and pfields, a random number generator 
+(or indeed any function that can be sampled), the top and bottom envelopes within 
+which the samples are rescaled, and the sample count, stride, and time step.
 
 The mask may be used to generate a series of samples over an interval, 
 normally time, or to modify one or another field of the events in a 
