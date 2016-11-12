@@ -258,25 +258,40 @@ void MainWindow::saveAndLoadHtml()
     out << text;
     csdfile.close();
     auto html = getElement(text, "html");
+
+
     // Inject necessary code to load qtwebchannel/qwebchannel.js.
-    QString injection = R"(<head>
+    QString injection = R"(
 <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <script>
 "use strict";
 document.addEventListener("DOMContentLoaded", function () {
-        try {
-            console.log("Initializing Csound...");
-            window.channel = new QWebChannel(qt.webChannelTransport, function(channel) {
-            window.csound = channel.objects.csound;
-            csound.message("Initialized csound.");
-            });
-        } catch (e) {
-            alert("initialize_csound error: " + e.message);
-            console.log(e.message);
-        }
+try {
+    console.log("Initializing Csound...");
+    window.channel = new QWebChannel(qt.webChannelTransport, function(channel) {
+    window.csound = channel.objects.csound;
+    csound.message("Initialized csound.");
     });
-</script>)";
-    html = html.replace("<head>", injection);
+} catch (e) {
+    alert("initialize_csound error: " + e.message);
+    console.log(e.message);
+}
+});
+</script>
+)";
+    // Tricky because now HTML doesn't have to have a <head> element,
+    // and both <html> and <head> can have attributes. So we need to find an
+    // injection point that is the very first place allowed to put a <script>
+    // element.
+    int injection_index = html.indexOf("<head", 0, Qt::CaseInsensitive);
+    if (injection_index != -1) {
+        injection_index = html.indexOf(">", injection_index) + 1;
+    } else {
+        injection_index = html.indexOf("<html", 0, Qt::CaseInsensitive);
+        injection_index = html.indexOf(">", injection_index) + 1;
+    }
+    html = html.insert(injection_index, injection);
+    csound.message(("Injected WebChannel proxy startup code into HTML page.\n"));
     if (html.size() > 0) {
         ui->tabs->setCurrentIndex(1);
         QString htmlfilename = filename + ".html";
@@ -287,7 +302,9 @@ document.addEventListener("DOMContentLoaded", function () {
         htmlfile.close();
         ui->htmlTab->page()->setWebChannel(&channel);
         channel.registerObject("csound", &csound);
+        csound.message(("Injected WebChannel proxy into HTML page.\n"));
         ui->htmlTab->setUrl(QUrl::fromLocalFile(htmlfile.fileName()));
+        csound.message(("Loaded HTML page.\n"));
     } else {
         ui->htmlTab->load(QUrl("about:blank"));
         ui->tabs->setCurrentIndex(0);
