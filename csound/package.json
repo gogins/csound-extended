@@ -1,12 +1,12 @@
 {
-  "main": "csound_node_run.html",
-  "name": "csound.node",
+  "main": "Simple_Csound_Example.html",
+  "name": "Simple_Csound_Example",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "csound.node",
+    "title": "Simple_Csound_Example",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

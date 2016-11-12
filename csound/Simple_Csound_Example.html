@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Simple Csound HTML5 Example</title>
 </head>
-<script>
+<script type="text/javascript">
     // "require" must be used to instantiate Csound in csound.node, 
     // but in other environments, where Csound has already been instantiated 
     // by the environment, this causes an exception that must be handled.
@@ -19,7 +20,11 @@
     }
     var start_onclick = function() {
         csound.stop();
-        csound.setMessageCallback(handleMessage);
+        try {
+            csound.setMessageCallback(handleMessage);
+        } catch(error) {
+            alert(error.message);
+        }
         var csd = document.getElementById('csd').value;
         csound.compileCsdText(csd);
         csound.perform();
@@ -31,7 +36,6 @@
         var slider_value = parseFloat(event.target.value);
         csound.setControlChannel(event.target.id, slider_value);    
     }
-    </script>
 </script>
 <body>
     <h1>Simple Csound HTML5 Example</h1>

@@ -17,6 +17,7 @@ class QCsound : public QObject, public Csound
     bool csound_stop;
     bool csound_finished;
     std::thread *csound_thread;
+    QObject *message_callback;
 public:
     explicit QCsound(QObject *parent = 0);
     Q_INVOKABLE int compileCsd(const QString &filename);
@@ -61,6 +62,7 @@ public:
     Q_INVOKABLE void setControlChannel(const QString &name, double value);
     Q_INVOKABLE int setGlobalEnv(const QString &name, const QString &value);
     Q_INVOKABLE void setInput(const QString &name);
+    Q_INVOKABLE void setMessageCallback(QObject *callback);
     Q_INVOKABLE int setOption(const QString &name);
     Q_INVOKABLE void setOutput(const QString &name, const QString &type, const QString &format);
     Q_INVOKABLE void setScoreOffsetSeconds(double value);

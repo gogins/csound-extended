@@ -1,7 +1,7 @@
 #include "qcsound.h"
 #include <QDebug>
 
-QCsound::QCsound(QObject *parent) : QObject(parent), csound_thread(nullptr) {
+QCsound::QCsound(QObject *parent) : QObject(parent), csound_thread(nullptr), message_callback(nullptr) {
 }
 
 Q_INVOKABLE int QCsound::compileCsd(const QString &filename) {
@@ -101,7 +101,7 @@ Q_INVOKABLE int QCsound::perform() {
 }
 
 Q_INVOKABLE int QCsound::perform_thread_routine() {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     int result = 0;
     result = Start();
     message("Csound is running...");
@@ -129,7 +129,7 @@ Q_INVOKABLE void QCsound::rewindScore() {
 
 void QCsound::run(const QString &csd_)
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     int result = 0;
     emit updateStatus("Csound is compiling...");
     result = CompileCsdText(csd_.toStdString().c_str());
@@ -166,6 +166,11 @@ Q_INVOKABLE int QCsound::setGlobalEnv(const QString &name, const QString &value)
 
 Q_INVOKABLE void QCsound::setInput(const QString &name){
     SetInput(name.toLocal8Bit());
+}
+
+Q_INVOKABLE void QCsound::setMessageCallback(QObject *callback){
+    qDebug()<<"QCsound::setMessageCallback";
+    callback->dumpObjectInfo();
 }
 
 Q_INVOKABLE int QCsound::setOption(const QString &name){

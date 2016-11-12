@@ -182,7 +182,7 @@ void MainWindow::on_updateMessages(const QString &line)
 
 void MainWindow::newCsd()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     auto csd = R"(<CsoundSynthesizer>
 <CsOptions>
 -odac
@@ -249,7 +249,7 @@ void MainWindow::replaceBrowser(int which)
 
 void MainWindow::saveAndLoadHtml()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     replaceBrowser(1);
     auto text = ui->csdEdit->toPlainText();
     QFile csdfile(filename);
@@ -258,23 +258,21 @@ void MainWindow::saveAndLoadHtml()
     out << text;
     csdfile.close();
     auto html = getElement(text, "html");
-
-
     // Inject necessary code to load qtwebchannel/qwebchannel.js.
     QString injection = R"(
 <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
-<script>
+<script type="text/javascript">
 "use strict";
-document.addEventListener("DOMContentLoaded", function () {
-try {
-    console.log("Initializing Csound...");
-    window.channel = new QWebChannel(qt.webChannelTransport, function(channel) {
-    window.csound = channel.objects.csound;
-    csound.message("Initialized csound.");
-    });
-} catch (e) {
-    alert("initialize_csound error: " + e.message);
-    console.log(e.message);
+document.addEventListener("DOMContentLoaded", function() {
+    try {
+        console.log("Initializing Csound...");
+        window.channel = new QWebChannel(qt.webChannelTransport, function(channel) {
+        window.csound = channel.objects.csound;
+        csound.message("Initialized csound.\n");
+        });
+    } catch (e) {
+        alert("initialize_csound error: " + e.message);
+        console.log(e.message);
 }
 });
 </script>
@@ -291,7 +289,7 @@ try {
         injection_index = html.indexOf(">", injection_index) + 1;
     }
     html = html.insert(injection_index, injection);
-    csound.message(("Injected WebChannel proxy startup code into HTML page.\n"));
+    csound.message("Injected WebChannel proxy startup code into HTML page.\n");
     if (html.size() > 0) {
         ui->tabs->setCurrentIndex(1);
         QString htmlfilename = filename + ".html";
@@ -302,9 +300,9 @@ try {
         htmlfile.close();
         ui->htmlTab->page()->setWebChannel(&channel);
         channel.registerObject("csound", &csound);
-        csound.message(("Injected WebChannel proxy into HTML page.\n"));
+        csound.message("Injected WebChannel 'csound' proxy into HTML page.\n");
         ui->htmlTab->setUrl(QUrl::fromLocalFile(htmlfile.fileName()));
-        csound.message(("Loaded HTML page.\n"));
+        csound.message("Loaded HTML page.\n");
     } else {
         ui->htmlTab->load(QUrl("about:blank"));
         ui->tabs->setCurrentIndex(0);
@@ -314,7 +312,7 @@ try {
 
 void MainWindow::openCsd()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco);;HTML files (*.htm, *.html);;All files (*.*)"));
     if (filename.size() > 0) {
         QFile file(filename);
@@ -339,7 +337,7 @@ void MainWindow::openCsd()
 
 void MainWindow::saveCsd()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         return;
@@ -355,7 +353,7 @@ void MainWindow::saveCsd()
 
 void MainWindow::saveCsdAs()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     auto newfilename = QFileDialog::getSaveFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco)"));
     if (newfilename.size() > 0) {
         filename = newfilename;
@@ -365,7 +363,7 @@ void MainWindow::saveCsdAs()
 
 void MainWindow::run(const QString &csd_)
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     int result = 0;
     emit updateStatus("Csound is compiling...");
     result = csound.CompileCsdText(csd_.toStdString().c_str());
@@ -386,7 +384,7 @@ void MainWindow::run(const QString &csd_)
 
 void MainWindow::runFile()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     saveCsd();
     if (ui->csdEdit->toPlainText().indexOf("</html>", 0, Qt::CaseInsensitive) != -1) {
         saveAndLoadHtml();
@@ -400,7 +398,7 @@ void MainWindow::runFile()
 
 void MainWindow::runCsdText(const QString &csdText)
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     if (thread != nullptr) {
         stop = true;
         thread->join();
@@ -413,7 +411,7 @@ void MainWindow::runCsdText(const QString &csdText)
 
 void MainWindow::stopCsd()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     stop = true;
     if (thread != 0) {
         thread->join();
@@ -424,39 +422,39 @@ void MainWindow::stopCsd()
 
 void MainWindow::on_backButton_clicked()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     ui->portalView->back();
 }
 
 void MainWindow::on_loadButton_clicked()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     QUrl url(ui->urlEdit->text());
     ui->portalView->load(url);
 }
 
 void MainWindow::on_csoundHomeButton_clicked()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     QUrl url("http://csound.github.io/");
     ui->portalView->load(url);
 }
 
 void MainWindow::on_forwardButton_clicked()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     ui->portalView->forward();
 }
 
 void MainWindow::on_stopLoadingButton_clicked()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     ui->portalView->stop();
 }
 
 void MainWindow::on_googleButton_clicked()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     QUrl url("http://google.com/");
     ui->portalView->load(url);
     ui->portalView->setFocus();
@@ -464,7 +462,7 @@ void MainWindow::on_googleButton_clicked()
 
 void MainWindow::on_urlEdit_returnPressed()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     QUrl url(ui->urlEdit->text());
     ui->portalView->load(url);
     ui->portalView->setFocus();
@@ -472,7 +470,7 @@ void MainWindow::on_urlEdit_returnPressed()
 
 void MainWindow::makeFullScreen()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     if (this->isFullScreen()) {
         showNormal();
     } else {
@@ -482,20 +480,20 @@ void MainWindow::makeFullScreen()
 
 void MainWindow::showCsdTab()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     ui->tabs->setCurrentIndex(0);
 }
 
 void MainWindow::showHtmlTab()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     saveAndLoadHtml();
     ui->tabs->setCurrentIndex(1);
 }
 
 void MainWindow::showManualTab()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     replaceBrowser(2);
     ui->tabs->setCurrentIndex(2);
     ui->manualTab->updateGeometry();
@@ -503,7 +501,7 @@ void MainWindow::showManualTab()
 
 void MainWindow::showPortalTab()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     replaceBrowser(3);
     ui->tabs->setCurrentIndex(3);
     ui->portalView->updateGeometry();
@@ -512,6 +510,6 @@ void MainWindow::showPortalTab()
 
 void MainWindow::showLicenseTab()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CHSound: " << __FUNCTION__;
     ui->tabs->setCurrentIndex(4);
 }
