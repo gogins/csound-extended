@@ -220,7 +220,7 @@ QString getElement(const QString &text, const QString &tag)
 // if a page with a QWebChannel is reloaded, the qt module vanishes and
 // the channel quits working. I also find problems with tabbing back to a tab with a browser
 // which is supposed to show something, but doesn't. As a workaround, we remove and recreate the
-// browser whenever we show a new tab or load a new page.
+// browser whenever we show a new tab or load a new page. This is not necessary with Qt 5.8.
 
 void MainWindow::replaceBrowser(int which)
 {
@@ -250,7 +250,9 @@ void MainWindow::replaceBrowser(int which)
 void MainWindow::saveAndLoadHtml()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
+#if (QT_VERSION < 0x050800)
     replaceBrowser(1);
+#endif
     auto text = ui->csdEdit->toPlainText();
     QFile csdfile(filename);
     csdfile.open(QIODevice::WriteOnly | QIODevice::Text);

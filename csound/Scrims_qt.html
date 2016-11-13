@@ -32,6 +32,7 @@
                 process.exit(0);
             });
         } catch (err) {
+            ///alert(err);
             console.log(err.message);
         }
     </script>
@@ -1351,8 +1352,9 @@ endin
                 } catch(e) {
                     console.log(e);
                 }
+                gui.revert();
                 csound.compileOrc(document.getElementById('orc').value);
-                csound.setOption('-m3');
+                csound.setOption('-m0');
                 //csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
@@ -1363,6 +1365,9 @@ endin
             },
             Stop: function() {
                 csound.stop();
+            },
+            Developer_tools: function() {
+                nwgui.Window.get().showDevTools();
             },
             Close: function() {
                 try {
@@ -1427,7 +1432,8 @@ endin
             gui = new dat.GUI({width: 300});
             gui.remember(parameters);
             gui.add(parameters, 'Play').name('Play');
-            gui.add(parameters, 'Stop').name('Stop');           
+            gui.add(parameters, 'Stop').name('Stop');
+            gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
@@ -1502,8 +1508,7 @@ endin
             add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
            gui.revert();
         }
-        function gk_update(name, value) {            ///alert(err);
-
+        function gk_update(name, value) {
             if (typeof csound !== 'undefined') {
                 var numberValue = parseFloat(value);
                 csound.setControlChannel(name, numberValue);
