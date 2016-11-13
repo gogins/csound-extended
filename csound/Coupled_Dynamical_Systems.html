@@ -1081,6 +1081,10 @@ endin
         // Assumes that system, N, a, epsilon, seed, bass, and range have already been set,
         // and that create has been called.
         CoupledSystems.prototype.iterate = function() {
+            var prior_chord = null;
+            if (this.score.data.length > 3) {
+                prior_chord = ChordSpace.gather(this.score, 0, this.score.getEnd());
+            }
             // Find mean value of systems at prior iteration, this is the "mean field."
             this.mean_prior_value = 0;
             for (var i = 0; i < this.N; i++) {
@@ -1135,7 +1139,12 @@ endin
                     this.score.add(0, duration, 144, i - 1, key, velocity, pan, pan);
                  }
             }
-            ChordSpace.conformScoreToChord(this.score, this.chord, false);
+            if (prior_chord === null) {
+                prior_chord = this.chord;
+            }
+            var voice_led_chord = ChordSpace.voiceleadingClosestRange(prior_chord, this.chord, this.Range, true);
+            voice_led_chord = voice_led_chord.T(this.Lowest_note);
+            ChordSpace.conformScoreToChord(this.score, voice_led_chord, false);
             // Add the notes to the scene and move it back.
             this.score.sendToCsound(csound);
             for (var i = 0; i < this.N; i++) {

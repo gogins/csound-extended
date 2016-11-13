@@ -25,7 +25,6 @@
         try {
             var csound = require('csound.node');
             console.log('csound:', csound);
-            //var fs = require('fs');
             var nwgui = require('nw.gui');
             var nw_window = nwgui.Window.get();
             nw_window.on('close', function() {
@@ -33,7 +32,6 @@
                 process.exit(0);
             });
         } catch (err) {
-            ///alert(err);
             console.log(err.message);
         }
     </script>
@@ -88,8 +86,6 @@ nchnls = 2
 
 connect "FM_Clang", "outleft", "ReverbLeft", "inleft"
 connect "FM_Clang", "outright", "ReverbRight", "inright"
-connect "Blower", "outleft", "ReverbLeft", "inleft"
-connect "Blower", "outright", "ReverbRight", "inright"
 connect "Bower", "outleft", "ReverbLeft", "inleft"
 connect "Bower", "outright", "ReverbRight", "inright"
 connect "Buzzer", "outleft", "ReverbLeft", "inleft"
@@ -543,90 +539,6 @@ outleta "outright", aright * kgain
 prints "Shiner      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
-gk_Blower_grainDensity init 150
-gk_Blower_grainDuration init 0.2
-gk_Blower_grainAmplitudeRange init 100
-gk_Blower_grainFrequencyRange init .033
-gk_Blower_level init 0.5
-instr Blower
- //////////////////////////////////////////////
- // Original by Hans Mikelson.
- // Adapted by Michael Gogins.
- //////////////////////////////////////////////
-i_time = p2
-i_duration = p3
-i_midikey = p4
-i_midivelocity = p5
-i_phase = p6
-i_pan = p6
-i_depth = p8
-i_height = p9
-i_pitchclassset = p10
-i_homogeneity = p11
-ifrequency = cpsmidinn(i_midikey)
-iamplitude = ampdb(i_midivelocity) / 200
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ; f1 0 65536 1 "hahaha.aif" 0 4 0
- ; f2 0 1024 7 0 224 1 800 0
- ; f3 0 8192 7 1 8192 -1
- ; f4 0 1024 7 0 512 1 512 0
- ; f5 0 1024 10 1 .3 .1 0 .2 .02 0 .1 .04
- ; f6 0 1024 10 1 0 .5 0 .33 0 .25 0 .2 0 .167
- ; a0 14 50
- ; p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
- ; Start Dur Amp Freq GrTab WinTab FqcRng Dens Fade
- ; i1 0.0 6.5 700 9.00 5 4 .210 200 1.8
- ; i1 3.2 3.5 800 7.08 . 4 .042 100 0.8
- ; i1 5.1 5.2 600 7.10 . 4 .0320 100 0.9
- ; i1 7.2 6.6 900 8.03 . 4 .021 150 1.6
- ; i1 21.3 4.5 1000 9.00 . 4 .031 150 1.2
- ; i1 26.5 13.5 1100 6.09 . 4 .121 150 1.5
- ; i1 30.7 9.3 900 8.05 . 4 .014 150 2.5
- ; i1 34.2 8.8 700 10.02 . 4 .14 150 1.6
-igrtab ftgenonce 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
-iwintab ftgenonce 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
-iHz = ifrequency
-ihertz = iHz
-ip4 = iamplitude
-ip5 = iHz
-ip6 = igrtab
-ip7 = iwintab
-ip8 = 0.033
-ip8 = .002
-ip9 = 150
-ip9 = 100
-ip10 = 1.6
-ip10 = 3
-idur = p3
-iamp = iamplitude ; p4
-ifqc = iHz ; cpspch(p5)
-igrtab = ip6
-iwintab = ip7
-ifrng = ip8
-idens = ip9
-ifade = ip10
-igdur = 0.2
-iattack = i(gk_overlap) * 2
-idecay = i(gk_overlap) * 2
-isustain = p3 - i(gk_overlap) * 2
-p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
-kamp = kenvelope
-; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
-aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange,  gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
-aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
-aleft = aoutl * kamp * iamplitude
-aright = aoutr * kamp * iamplitude
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-kgain = ampdb(gk_Blower_level)
-outleta "outleft", aleft * kgain
-outleta "outright", aright * kgain
-;;;;;;;;;;;;;;;;;;;;i
-prints "Blower      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
 
 opcode FM_Clang_veloc, i, iii
 ; *p->r = *p->ilo + csound->curip->m_veloc*(*p->ihi - *p->ilo) * dv127;
@@ -1044,7 +956,7 @@ endin
         var modality = chord.clone();
         var RANGE = 60;
         var BASS = 36;
-        var INSTRUMENT_COUNT = 12;
+        var INSTRUMENT_COUNT = 10;
         var NOTE_COUNT = 16;
         var container = document.getElementById('webgl_cell');
         console.log('container:' + container);
@@ -1188,12 +1100,10 @@ endin
             }
             renderer.render(scene, camera);
             if (typeof csound !== 'undefined') {
-                ///if (csound.isPlaying() === true) {
-                    score_time_cell = document.getElementById('Time_cell');
-                    current_time_seconds = new Date().getTime() / 1000.0;
-                    var score_time = current_time_seconds - start_time_seconds;
-                    score_time_cell.innerHTML = score_time.toFixed(3);
-                 ///}
+                score_time_cell = document.getElementById('Time_cell');
+                current_time_seconds = new Date().getTime() / 1000.0;
+                var score_time = current_time_seconds - start_time_seconds;
+                score_time_cell.innerHTML = score_time.toFixed(3);
             }
         }
         ///////////////////////////////////////////////
@@ -1312,13 +1222,10 @@ endin
             renderer.setSize( container.clientWidth, container.clientHeight );
         }
         function updateTimeCell() {
-            ///var score_time = csound.getScoreTime();
-            ///if (typeof score_time !== 'undefined') {
-                var score_time_cell = document.getElementById('Time_cell');
-                var score_time = new Date().getTime() / 1000.0;
-                score_time_cell.innerHTML = score_time.toFixed(4);
-            ///}
-            setTimeout(updateTimeCell, 100);
+            var score_time_cell = document.getElementById('Time_cell');
+            var score_time = new Date().getTime() / 1000.0;
+            score_time_cell.innerHTML = score_time.toFixed(4);
+            setTimeout(updateTimeCell, .02);
         };
         var mediaQueryList = window.matchMedia('print');
         mediaQueryList.addListener(function(mql) {
@@ -1361,21 +1268,19 @@ endin
             var score_text = score.toString();
             // Protect against trying to call an undefined Csound.
             if (typeof csound !== 'undefined') {
-                ///if (csound.isPlaying()) {
-                    score.sendToCsound(csound);
-                    var Chord_cell = document.getElementById('Chord_cell');
-                    Chord_cell.innerHTML = chord.name();
-                    var Notes_cell = document.getElementById('Notes_cell');
-                    Notes_cell.innerHTML = note_count;
-                    var Subset_cell  = document.getElementById('Subset_cell');
-                    Subset_cell.innerHTML = subset_index;
-                    var Point_cell  = document.getElementById('Point_cell');
-                    Point_cell.innerHTML = subset_point_index;
-                    var X_cell  = document.getElementById('X_cell');
-                    X_cell.innerHTML = sprintf("%011.4f", point.x);
-                    var Y_cell  = document.getElementById('Y_cell');
-                    Y_cell.innerHTML = sprintf("%011.4f", point.y);
-                ///}
+                score.sendToCsound(csound);
+                var Chord_cell = document.getElementById('Chord_cell');
+                Chord_cell.innerHTML = chord.name();
+                var Notes_cell = document.getElementById('Notes_cell');
+                Notes_cell.innerHTML = note_count;
+                var Subset_cell  = document.getElementById('Subset_cell');
+                Subset_cell.innerHTML = subset_index;
+                var Point_cell  = document.getElementById('Point_cell');
+                Point_cell.innerHTML = subset_point_index;
+                var X_cell  = document.getElementById('X_cell');
+                X_cell.innerHTML = sprintf("%011.4f", point.x);
+                var Y_cell  = document.getElementById('Y_cell');
+                Y_cell.innerHTML = sprintf("%011.4f", point.y);
             }
             score.clear();
             note_count = note_count + 1;
@@ -1447,21 +1352,17 @@ endin
                     console.log(e);
                 }
                 csound.compileOrc(document.getElementById('orc').value);
-                csound.setOption('-m0');
+                csound.setOption('-m3');
                 //csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
                 csound.perform();
                 csound.readScore('f 0 360\n');
                 start_time_seconds = new Date().getTime() / 1000.0;
-                ///startTime = csound.getScoreTime();
                 setTimeout(updateTimeCell, 0);
             },
             Stop: function() {
                 csound.stop();
-            },
-            Developer_tools: function() {
-                nwgui.Window.get().showDevTools();
             },
             Close: function() {
                 try {
@@ -1526,8 +1427,7 @@ endin
             gui = new dat.GUI({width: 300});
             gui.remember(parameters);
             gui.add(parameters, 'Play').name('Play');
-            gui.add(parameters, 'Stop').name('Stop');
-            gui.add(parameters, 'Developer_tools').name('Debugger');
+            gui.add(parameters, 'Stop').name('Stop');           
             gui.add(parameters, 'Close').name('Close');
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
@@ -1538,12 +1438,6 @@ endin
             var fmclang = intruments.addFolder('FM Clang');
             add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
             add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
-            var Blower = intruments.addFolder('Blower');
-            add_slider(Blower, 'gk_Blower_grainDensity', 0, 400);
-            add_slider(Blower, 'gk_Blower_grainDuration', 0, .5);
-            add_slider(Blower, 'gk_Blower_grainAmplitudeRange', 0, 400);
-            add_slider(Blower, 'gk_Blower_grainFrequencyRange', 0, 100);
-            add_slider(Blower, 'gk_Blower_level', -40, 40);
             var Bower = intruments.addFolder('Bower');
             add_slider(Bower, 'gk_Bower_pressure', 0, 1);
             add_slider(Bower, 'gk_Bower_level', -40, 40);
@@ -1576,6 +1470,10 @@ endin
             add_slider(Sweeper, 'gk_Sweeper_britehs', 0, 4);
             add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
             add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
+            var YiString = intruments.addFolder('YiString');
+            add_slider(YiString, 'gk_YiString_reverb_send', 0, 1);
+            add_slider(YiString, 'gk_YiString_chorus_send', 0, 1);
+            add_slider(YiString, 'gk_YiString_level', -40, 40);
             var Hopalong = gui.addFolder('Hopalong fractal');
             add_slider(Hopalong, 'A', -30, 30);
             add_slider(Hopalong, 'B', .2, 1.8);
@@ -1604,7 +1502,8 @@ endin
             add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
            gui.revert();
         }
-        function gk_update(name, value) {
+        function gk_update(name, value) {            ///alert(err);
+
             if (typeof csound !== 'undefined') {
                 var numberValue = parseFloat(value);
                 csound.setControlChannel(name, numberValue);

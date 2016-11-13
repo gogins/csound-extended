@@ -1,12 +1,12 @@
 {
-  "main": "Simple_Csound_Example.html",
-  "name": "Simple_Csound_Example",
+  "main": "Scrims_qt.html",
+  "name": "Scrims_qt",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Simple_Csound_Example",
+    "title": "Scrims_qt",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
