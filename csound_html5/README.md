@@ -25,6 +25,10 @@ when it becomes available.
 The JavaScript API methods and names are otherwise roughly the same as found
 in CsoundQt, Csound for Android, csound.node, and Csound for PNaCl.
 
+One major difference is that the Csound API for CHSound, which uses the QWebChannel for creating a proxy for the Csound shared library, is completely asynchronous. If a return value for an API call is required, it must be obtained by passing a callback function as the last parameter of the API call.
+
+In practice, at least for most of my own pieces, even complex ones, a return value is simply not required, and with a few minor changes in coding practice all the Csound API calls can be made asynchronously. For example, see Scrims_qt.html in the csound directory, and compare it with Scrims_node.html. 
+
 This project requires a recent version of the Qt SDK with QtWebEngine support.
 The only external dependency is a recent version of Csound. CHSound should
 build and run on Windows, Linux, and OS X.
