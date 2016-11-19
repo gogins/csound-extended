@@ -1,12 +1,12 @@
 {
-  "main": "Scrims_qt.html",
-  "name": "Scrims_qt",
+  "main": "Performance_Patcher.html",
+  "name": "Performance_Patcher",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_qt",
+    "title": "Performance_Patcher",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

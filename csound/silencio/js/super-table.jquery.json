@@ -1,0 +1,27 @@
+{
+  "name": "super-table",
+  "title": "jQuery Super Table",
+  "description": "jQuery plugin that allows HTML table headers to intuitively scroll with the browser window. Optionally simplify complex tables by expanding/collapsing groups of rows or columns.",
+  "keywords": [
+    "table",
+    "scroll",
+    "collapse",
+    "expand",
+    "thead",
+    "head",
+    "scrolling"
+  ],
+  "version": "1.0.0",
+  "author": {
+    "name": "Andrew Hackley"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/hackley2/super-table/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.2.6"
+  }
+}
