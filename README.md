@@ -4,7 +4,7 @@ Michael Gogins<br>
 http://michaelgogins.tumblr.com<br>
 michael /dot/ gogins /at/ gmail /dot/ com
 
-This Web site contains various resources for computer and electroacoustic musicians. All of these resources are tools that I have created for the purpose of composing my own music and that I have made publicly available here. These resources include tools for composing with Csoundand using HTML5 with Csound; example pieces; a playable version of the Csound reference manual; Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound; and a prototype "front end" for composing pieces that use HTML5 with Csound.
+This Web site contains various resources for computer and electroacoustic musicians. All of these resources are tools that I have created for the purpose of composing my own music and that I have made publicly available here. These resources include tools for composing with Csoundand using HTML5 with Csound; example pieces; a playable version of the Csound reference manual; Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound; and a prototype "front end," CHSound, for composing pieces that use HTML5 with Csound.
 
 ## Silencio Library for Algorithmic Composition
 
