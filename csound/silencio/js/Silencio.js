@@ -1179,6 +1179,118 @@ function Recurrent(generators, transitions, depth, index, cursor, score)
     }
 }
 
+/**
+ * Like ES6 Map, but with value keys, which are represented by stringified 
+ * keys.
+ */
+function ValueMap(make_key_) {
+    this.map = new Map();
+    this.make_key = this.make_key_;
+/*     Object.defineProperty(this,"size",{
+ *         configurable: true,
+ *         get: function() { return this.map.size; },
+ *         set: function(value) { this.map.size = value; }
+ *     });
+ */
+}
+
+ValueMap.prototype.get_size = function() {
+    return this.map.size;
+}
+
+ValueMap.prototype.set_size = function(count) {
+    this.map.size = count;
+}
+
+
+ValueMap.prototype.clear = function() {
+    this.map.clear();
+}
+
+ValueMap.prototype.delete = function(key) {
+    return this.map.delete(this.make_key(key));
+}
+
+ValueMap.prototype.entries = function() {
+    return this.map.entries();
+}
+
+ValueMap.prototype.forEach = function(callback, thisarg) {
+    this.map.forEach(callback, thisarg);
+}
+
+ValueMap.prototype.get = function(key) {
+    return this.map.get(this.make_key(key));
+}
+
+ValueMap.prototype.has = function(key) {
+    return this.map.has(this.make_key(key));
+}
+
+ValueMap.prototype.keys = function() {
+    return this.map.keys();
+}
+
+ValueMap.prototype.set = function(key, value) {
+    this.map.set(this.make_key(key), value);
+    return this;
+}
+
+ValueMap.prototype.values = function() {
+    return this.map.values();
+}
+
+/**
+ * Like ES6 Set, but treats elements as values, which are represented as 
+ * stringified values.
+ */
+function ValueSet(make_key_) {
+    this.map = new Map();
+    this.make_key = make_key_;
+/*     Object.defineProperty(this,"size",{
+ *         configurable: true,
+ *         get: function() { return this.map.size; },
+ *         set: function(value) { this.map.size = value; }
+ *     });
+ */
+}
+
+ValueSet.prototype.get_size = function() {
+    return this.map.size;
+}
+
+ValueSet.prototype.set_size = function(count) {
+    this.map.size = count;
+}
+ValueSet.prototype.add = function(value) {
+    this.map.set(this.make_key(value), value);
+    return this;
+}
+
+ValueSet.prototype.clear = function() {
+    this.map.clear();
+}
+
+ValueSet.prototype.delete = function(value) {
+    return this.map.delete(this.make_key(value));
+}
+
+ValueSet.prototype.entries = function() {
+    return this.map.entries();
+}
+
+ValueSet.prototype.forEach = function(callback, thisarg) {
+    this.map.forEach(callback, thisarg);
+}
+    
+ValueSet.prototype.has = function(value) {
+    return this.map.has(this.make_key(value));
+}
+
+ValueSet.prototype.values = function() {
+    return this.map.values();
+}
+
 console.log('browser:  ' + navigator.appName)
 console.log('platform: ' + navigator.platform)
 var Silencio = {
@@ -1196,7 +1308,9 @@ var Silencio = {
   saveToLocalFile: saveToLocalFile,
   restoreFromLocalFile: restoreFromLocalFile,
   saveDatGuiJson: saveDatGuiJson,
-  restoreDatGuiJson: restoreDatGuiJson
+  restoreDatGuiJson: restoreDatGuiJson,
+  ValueMap: ValueMap,
+  ValueSet: ValueSet
 };
 // Node: Export function
 if (typeof module !== "undefined" && module.exports) {
