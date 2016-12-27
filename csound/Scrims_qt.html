@@ -1352,13 +1352,11 @@ endin
                     console.log(e);
                 }
                 gui.revert();
+                //csound.reset();
                 csound.compileOrc(document.getElementById('orc').value);
-                csound.setOption('-m0');
-                //csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
                 csound.perform();
-                csound.readScore('f 0 360\n');
                 start_time_seconds = new Date().getTime() / 1000.0;
                 setTimeout(updateTimeCell, 0);
             },
