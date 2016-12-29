@@ -1352,10 +1352,10 @@ endin
                     console.log(e);
                 }
                 gui.revert();
-                //csound.reset();
-                csound.compileOrc(document.getElementById('orc').value);
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
+                csound.start();
+                csound.compileOrc(document.getElementById('orc').value);
                 csound.perform();
                 start_time_seconds = new Date().getTime() / 1000.0;
                 setTimeout(updateTimeCell, 0);

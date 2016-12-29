@@ -1,7 +1,6 @@
 {
   "main": "Scrims_qt.html",
   "name": "Scrims_qt",
-  "description": "Visual music for Csound and HTML5",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
