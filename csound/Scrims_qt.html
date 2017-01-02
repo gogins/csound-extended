@@ -1345,18 +1345,18 @@ endin
             Notes_per_second: 8,
             Stride: 100,
             Play: function() {
-                csound.stop();
                 try {
                     csound.setMessageCallback(csoundMessage);
                 } catch(e) {
                     console.log(e);
                 }
-                gui.revert();
+                csound.setOption('-m3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
-                csound.start();
                 csound.compileOrc(document.getElementById('orc').value);
-                csound.perform();
+                csound.readScore('f 0 360\n');
+                csound.start();
+                csound.perform();   
                 start_time_seconds = new Date().getTime() / 1000.0;
                 setTimeout(updateTimeCell, 0);
             },

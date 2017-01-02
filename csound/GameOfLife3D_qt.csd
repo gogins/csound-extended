@@ -336,7 +336,7 @@ Use right mouse button for devtools to debug or examine.
                     var cellStatus = evaluateCell( p );
                     if (cellStatus == true) {
                         var pan = z / side;
-                        var instrument = 1 + pan * 20;
+                        var instrument = 1 + pan * 10;
                         var key = 24 + (y * 7) + x;
                         var velocity = 50 + x;
                         var scoreline = sprintf("i %9.4f 0.0 6.0 %9.4f %9.4f", instrument, key, velocity, pan);
@@ -858,6 +858,7 @@ aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
                                 endin
 
+
                                 instr                   DelayedPluckedString
                                 //////////////////////////////////////////////////////
                                 // By Michael Gogins.
@@ -1081,6 +1082,39 @@ a18                             =                       (a16 + a4) * irightgain 
 aoutleft                        =                       a17 * adeclick
 aoutright                       =                       a18 * adeclick
                                 outleta                 "outleft",  aoutleft
+                                outleta                 "outright", aoutright
+                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                endin
+
+                                instr                   STKBeeThree
+                                //////////////////////////////////////////////
+                                // Original by Perry R. Cook.
+                                // Adapted by Michael Gogins.
+                                //////////////////////////////////////////////
+
+i_instrument                    =                       p1
+i_time                          =                       p2
+i_duration                      =                       p3
+i_midikey                       =                       p4
+i_midivelocity                  =                       p5
+i_phase                         =                       p6
+i_pan                           =                       p7
+i_depth                         =                       p8
+i_height                        =                       p9
+i_pitchclassset                 =                       p10
+i_homogeneity                   =                       p11
+ifrequency                      =                       cpsmidinn(i_midikey)
+iamplitude                      =                       ampdb(i_midivelocity) * 16
+asignal 		                STKBeeThree 		    ifrequency, 1.0, 1, 1.5, 2, 4.8, 4, 2.1
+aphased                         phaser1                 asignal, 4000, 16, .2, .9
+idampingattack                  =                       .002
+idampingrelease                 =                       .01
+idampingsustain                 =                       p3
+iduration                       =                       idampingattack + idampingsustain + idampingrelease
+p3                              =                       iduration
+adeclick                        linsegr                 0, idampingattack, 1, idampingsustain, 1, idampingrelease, 0
+aoutleft, aoutright             pan2                    aphased * iamplitude * adeclick, i_pan
+                                outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
                                 prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
                                 endin
@@ -1925,39 +1959,6 @@ irelease                        =                       0.06
 p3                              =                       isustain + iattack + irelease
 adeclick                        linsegr                 0.0, iattack, 1.0, isustain, 1.0, irelease, 0.0
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
-                                outleta                 "outleft", aoutleft
-                                outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-                                endin
-
-                                instr                   STKBeeThree
-                                //////////////////////////////////////////////
-                                // Original by Perry R. Cook.
-                                // Adapted by Michael Gogins.
-                                //////////////////////////////////////////////
-
-i_instrument                    =                       p1
-i_time                          =                       p2
-i_duration                      =                       p3
-i_midikey                       =                       p4
-i_midivelocity                  =                       p5
-i_phase                         =                       p6
-i_pan                           =                       p7
-i_depth                         =                       p8
-i_height                        =                       p9
-i_pitchclassset                 =                       p10
-i_homogeneity                   =                       p11
-ifrequency                      =                       cpsmidinn(i_midikey)
-iamplitude                      =                       ampdb(i_midivelocity) * 16
-asignal 		                STKBeeThree 		    ifrequency, 1.0, 1, 1.5, 2, 4.8, 4, 2.1
-aphased                         phaser1                 asignal, 4000, 16, .2, .9
-idampingattack                  =                       .002
-idampingrelease                 =                       .01
-idampingsustain                 =                       p3
-iduration                       =                       idampingattack + idampingsustain + idampingrelease
-p3                              =                       iduration
-adeclick                        linsegr                 0, idampingattack, 1, idampingsustain, 1, idampingrelease, 0
-aoutleft, aoutright             pan2                    aphased * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
                                 prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
