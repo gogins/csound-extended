@@ -494,6 +494,7 @@ ParametricLindenmayer.PLSystem.prototype.conformToChords = function () {
     times = times.sort(function(a, b){return a - b; });
     var length_ = times.length;
     times.push(this.score.getEnd());
+    this.score.sort();
     for (var i = 0; i < length_; i++) {
         var begin = times[i];
         var end = times[i + 1];

@@ -1346,8 +1346,9 @@ endin
             Stride: 100,
             Play: function() {
                 try {
+                    gui.revert();
                     csound.setMessageCallback(csoundMessage);
-                } catch(e) {
+                } catch (e) {
                     console.log(e);
                 }
                 csound.setOption('-m3');
