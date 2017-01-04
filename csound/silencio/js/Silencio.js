@@ -890,7 +890,7 @@ Score.prototype.slice = function(begin, end_, by_reference) {
     this.sort();
     var s = new Silencio.Score();
     for (var index = 0; index < this.size(); index++) {
-        var event = this.data [index];
+        var event = this.data[index];
         var time_ = event.time;
         if (time_ >= begin && time_ < end_) {
             if (by_reference === true) {

@@ -1853,7 +1853,7 @@ ChordSpace.apply = function(score, chord, start, end_, octaveEquivalence) {
 // and up to but not including the end time.
 ChordSpace.gather = function(score, start, end_) {
     var chord = new ChordSpace.Chord();
-    var slice = score.slice(start, end_);
+    var slice = score.slice(start, end);
     for(var index = 0; index < slice.size(); index++) {
         var event = slice.get(index);
         var pitch = event.key;

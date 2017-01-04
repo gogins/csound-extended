@@ -501,6 +501,7 @@ ParametricLindenmayer.PLSystem.prototype.conformToChords = function () {
         var chord = this.chords_for_times[begin];
         ChordSpace.apply(this.score, chord, begin, end, false);
     }
+    console.log('Applied ' + length_ + ' chords to score.')
 }
 
 
