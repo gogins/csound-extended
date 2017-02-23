@@ -1,12 +1,13 @@
 {
-  "main": "Scrims_qt.html",
-  "name": "Scrims_qt",
+  "main": "test.csd",
+  "name": "test",
+  "description": "Visual music for Csound and HTML5",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_qt",
+    "title": "test",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

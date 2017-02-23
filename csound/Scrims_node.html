@@ -1460,9 +1460,6 @@ endin
             Stop: function() {
                 csound.stop();
             },
-            Developer_tools: function() {
-                nwgui.Window.get().showDevTools();
-            },
             Close: function() {
                 try {
                     csound.stop();
@@ -1527,7 +1524,6 @@ endin
             gui.remember(parameters);
             gui.add(parameters, 'Play').name('Play');
             gui.add(parameters, 'Stop').name('Stop');
-            gui.add(parameters, 'Developer_tools').name('Debugger');
             gui.add(parameters, 'Close').name('Close');
             var Master = gui.addFolder('Master effects');
             add_slider(Master, 'gk_overlap', 0, 20);
