@@ -34,14 +34,14 @@ import csnd6
 csd = '''
 <CsoundSynthesizer>
 <CsOptions>
-csound -m3 --midi-key=4 --midi-velocity=5 -Fabjad_csound.mid -odac
+csound -m167 --midi-key=4 --midi-velocity=5 -Fabjad_csound.mid -odac
 </CsOptions>
 <CsInstruments>
 
 sr = 48000
-ksmps = 100
+ksmps = 128
 nchnls = 2
-0dbfs = 3000000
+0dbfs = 300000000
 
 massign 1, 1
 massign 2, 5
@@ -91,7 +91,7 @@ gk_overlap init .25
 
 gaSendM,gaSendL,gaSendR init 0
 
-gk_FMBell_level init 0
+gk_FMBell_level init -8
 instr FMBell
 insno = p1
 itime = p2
@@ -100,17 +100,17 @@ iduration = p3
 ikey = p4
 ivelocity = p5
 iphase = p6
-ipan = p7
+ipan = p1 / 6
 idepth = p8
 iheight = p9
 ipcs = p10
 ihomogeneity = p11
-iattack = .005
+iattack = .002
 isustain = p3
 irelease = .3
 p3 = iattack + isustain + irelease
 kHz = cpsmidinn(ikey)
-kamp = p4
+kamp ampmidid p5, 10, 1
 kfreq = 880
 kc1 = 1
 kc2 = 12
@@ -118,7 +118,7 @@ kvdepth = 0.005
 kvrate = 6
 asignal fmbell kamp, kfreq, kc1, kc2, kvdepth, kvrate
 adeclick linsegr 0, iattack, 1, isustain, 1, irelease, 0
-asignal = asignal * adeclick * 2000
+asignal = asignal * adeclick
 aleft, aright pan2 asignal, ipan
 kgain = ampdb(gk_FMBell_level)
 outleta "outleft", aleft * kgain
@@ -169,7 +169,7 @@ outleta "outright", aright * kgain
 prints "Harpsichord i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
 endin
 
-gk_YiString_level init 12
+gk_YiString_level init 16
 gk_YiString_reverb_send init .5
 gk_YiString_chorus_send init .5
 instr Bower
@@ -184,8 +184,8 @@ iduration = p3
 ikey = p4
 ivelocity = p5
 iphase = p6
-ipan = p7
-iamp ampmidid ivelocity, 20, 1
+ipan = p1 / 6
+iamp ampmidid p5, 10, 1
 iattack = 0.05
 idecay = 0.1
 isustain = p3
@@ -280,7 +280,7 @@ outleta "outright", aright * kgain
 prints "Phaser      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
 endin
 
-gk_YiString_level init 7
+gk_YiString_level init -12
 gk_YiString_reverb_send init .5
 gk_YiString_chorus_send init .5
 instr YiString
@@ -296,7 +296,7 @@ mididefault 100, p3
 ivelocity = p5
 iphase = p6
 ipan = p7
-iamp = ampdb(ivelocity) * 16
+iamp ampmidid p5, 10, 1
 iattack = i(gk_overlap)
 idecay = i(gk_overlap)
 isustain = p3 - i(gk_overlap)
@@ -321,7 +321,7 @@ gk_Droner_partial2 init .5
 gk_Droner_partial3 init .1
 gk_Droner_partial4 init .1
 gk_Droner_partial5 init .2
-gk_Droner_level init 0.5
+gk_Droner_level init -3
 instr Droner
 insno = p1
 istart = p2
@@ -329,8 +329,9 @@ mididefault 100, p3
 iduration = p3
 ikey = p4
 ivelocity = p5
+iamp ampmidid p5, 10, 1
 iphase = p6
-ipan = p7
+ipan = p1 / 6
 k1 init .5
 k2 init .05
 k3 init .1
@@ -347,7 +348,6 @@ k5 = gk_Droner_partial3
 k6 = gk_Droner_partial4
 k7 = gk_Droner_partial5
 kwaveform init 0
-iamp = ampdb(ivelocity)
 iattack = i(gk_overlap)
 idecay = i(gk_overlap)
 isustain = p3 - i(gk_overlap)
@@ -365,7 +365,7 @@ if kwaveform == 2 then
 asignal vco2 1, ihertz, 12 ; triangle
 endif
 asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
-asignal = asignal * kenvelope * 10
+asignal = asignal * kenvelope
 aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
@@ -560,7 +560,7 @@ ip9 = 100
 ip10 = 1.6
 ip10 = 3
 idur = p3
-iamp ampmidid p5, 20, 1
+iamp ampmidid p5, 10, 1
 ifqc = iHz ; cpspch(p5)
 igrtab = ip6
 iwintab = ip7
