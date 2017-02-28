@@ -91,7 +91,7 @@ gk_overlap init .25
 
 gaSendM,gaSendL,gaSendR init 0
 
-gk_FMBell_level init -8
+gk_FMBell_level init -12
 instr FMBell
 insno = p1
 itime = p2
@@ -110,7 +110,7 @@ isustain = p3
 irelease = .3
 p3 = iattack + isustain + irelease
 kHz = cpsmidinn(ikey)
-kamp ampmidid p5, 10, 1
+kamp ampmidid p5, 6, 1
 kfreq = 880
 kc1 = 1
 kc2 = 12
@@ -307,6 +307,8 @@ ihertz = cpsmidinn(ikey)
 asignal = vco2(1, ihertz)
 asignal = moogladder(asignal, 6000, 0.1)
 asignal *= aenvelope
+icount active p1
+asignal /= icount
 aleft, aright pan2 asignal, ipan
 kgain = ampdb(gk_YiString_level)
 outleta "outleft", aleft * kgain * gk_YiString_reverb_send
@@ -366,6 +368,8 @@ asignal vco2 1, ihertz, 12 ; triangle
 endif
 asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
 asignal = asignal * kenvelope
+icount active p1
+asignal /= icount
 aleft, aright pan2 asignal, ipan
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
@@ -646,8 +650,8 @@ outleta "outleft", aleft
 outleta "outright", aright
 endin
 
-gk_Reverb_Feedback init 0.81
-gk_Delay_Modulation init 0.1
+gk_Reverb_Feedback init 0.78
+gk_Delay_Modulation init 0.02
 
 instr ReverbLeft
 aleft init 0
