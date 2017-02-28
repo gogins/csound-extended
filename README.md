@@ -20,7 +20,7 @@ Not all examples are playable at this time. Only csd based examples (not orc bas
 
 ## Playable Example Pieces Using Csound for PNaCl
 
-This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux. 
+This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux.
 
 ### Getting Started with Csound for PNaCl
 
@@ -28,12 +28,12 @@ If you only want to perform these examples, all you need is a recent desktop ver
 
 If you want to modify these examples or use them as a starting point for creating your own pieces:
 
-1. Clone this repository on your computer using Git. On the command line, execute `git clone --recursive https://github.com/gogins/gogins.github.io.git` to ensure that you bring in the Git module for Silencio, which includes JavaScript files used by the examples. 
+1. Clone this repository on your computer using Git. On the command line, execute `git clone --recursive https://github.com/gogins/gogins.github.io.git` to ensure that you bring in the Git module for Silencio, which includes JavaScript files used by the examples.
 2. Install Python.
-3. Change to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server. 
-4. Open Chrome, and navigate to ```http://localhost:8080```. You can then find and run the examples. 
+3. Change to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server.
+4. Open Chrome, and navigate to ```http://localhost:8080```. You can then find and run the examples.
 5. Edit the examples or create your own pieces using a regular text editor, and refresh the browser to see your changes in action.
- 
+
 ### Examples
 
 Click on the links below to play the examples. If you don't hear anything at first, make sure Csound has finished loading, and play with the sliders, particularly the output level slider.
@@ -68,7 +68,7 @@ In my text editor, SciTE, I provide the following command in my user options fil
 
 <pre>
 command.name.8.*=Run as NW.js application
-# Rather than rewrite the package.json manifest for each file to run, we use a 
+# Rather than rewrite the package.json manifest for each file to run, we use a
 # static manifest, and we copy the file to run to the name in the manifest.
 command.8.*=cd $(FileDir) && cp -f $(FilePath) csound_node_run.html && /home/mkg/nwjs-sdk-v0.17.6-linux-x64/nw .
 </pre>
@@ -77,7 +77,7 @@ command.8.*=cd $(FileDir) && cp -f $(FilePath) csound_node_run.html && /home/mkg
 
 I performed this piece for the 2016 New York City Electroacoustic Music Festival. It is an example of the use of the new parametric Lindenmayer system class along with chord transformations:
 
-<a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>. 
+<a href="https://www.dropbox.com/s/nkcubcw3jwe3nqt/Sevier.6.html" type="text/plain"><b>Sevier</b></a>.
 
 In order to view the code, either download the file, or right-click to view the frame source.
 
@@ -87,11 +87,29 @@ https://gogins.github.io/csound/Lindenmayer_Example_pnacl.html
 
 Here is a variant of Sevier that uses csound.node with Silencio to provide a 3-dimensional piano roll score display:
 
-https://gogins.github.io/csound/Lindenmayer_Example_node.html. 
+https://gogins.github.io/csound/Lindenmayer_Example_node.html.
 
 And a variant of Scrims reworked for csound.node:
 
 https://gogins.github.io/csound/Scrims_node.html
+
+## Abjad
+
+<a href="http:/abjadproject.com">Abjad</a> is a Python library for notating music in standard Western music notation.
+It is like LaTeX for music, but offers easier programmability.
+
+https://gogins.github.io/csound/abjad_csound.py is a Python script that renders
+<i><b>Cantus for Cantus in Memory of Benjamin Britten (1980)</i></b> by Arvo Part, an example score from the Abjad
+repository, using an embedded Csound orchestra.
+
+In the Csound instruments, the MIDI file velocities are rescaled using the `ampmidid` opcode for a smaller dynamic range, and the resulting amplitudes
+are further rescaled by dividing by the number of active instrument instances using the `active` opcode. Finally, the
+`mididefault` opcode is used to turn on the instruments for indefinite operation until the MIDI off message is received, but
+to turn on and off normally according to p3 for non-MIDI performance. This enables the exact same instrument definitions to be
+used for both MIDI and non-MIDI performance.
+
+In the near future I will post an original composition done in this way. I feel this approach is worth investigating because I have experimented
+with various methods of notating computer music (such as Fomus) and found them either not useful, or not maintained.
 
 ## Nudruz
 
