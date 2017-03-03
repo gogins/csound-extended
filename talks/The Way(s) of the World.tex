@@ -1,0 +1,209 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \definecolor{links}{HTML}{2A1B81}
+  \hypersetup{colorlinks,linkcolor=,urlcolor=links}
+  %\usetheme{Frankfurt}
+  \usecolortheme{seagull}
+  % or ...
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{attachfile}
+
+\title[The Way(s) of the World] % (optional, use only with long paper titles)
+{Way(s) of the World}
+
+\author[Gogins] % (optional, use only with lots of authors)
+{Michael Gogins\\
+\url{http://michaelgogins.tumblr.com} 
+}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[Irreducible Productions] % (optional, but mostly needed)
+{
+  Irreducible Productions\\
+  New York
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[6 March 2017] % (optional, should be abbreviation of conference name)
+{6 March 2017}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Computer Music}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+\begin{document}
+\lstset{basicstyle=\ttfamily\tiny,commentstyle=\ttfamily\tiny,tabsize=2,breaklines,fontadjust=true,keepspaces=false,fancyvrb=true,showstringspaces=false,moredelim=[is][\textbf]{\\emph\{}{\}}}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{My Background}
+  \begin{itemize}
+  \item
+    I spent the first half of my life working part time as an office temp. I wrote poetry, played music, and did street photography on my own time.
+  \item
+    Halfway along I got seriously interested in computer music. To do it, I taught myself programming.
+  \item
+    I had friends who were programmers. When they saw what I was doing, they told their bosses to interview me for programming jobs.
+  \item 
+    My first programming job was helping to write an operating system in C for an insurance terminal in doctors' offices. This was for a consulting firm.
+  \item
+    My second job was working on a foreign currency trading system in C++. This was for an international conglomerate. It worked as a day job for me, so I stayed 21 years -- until I retired a year ago.
+  \item
+    On both jobs, I was part of the hiring process and interviewed prospective employees.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Motivation}
+  \begin{itemize}
+  \item
+    There is a huge difference between a job, a career that is your main thing, and a day job that you do to enable some other goal.
+  \item
+    All my life I've had day jobs but I ended up making a pretty good living. It took a while.
+  \item
+    I learned some lessons along the way that I think might be helpful for some of you. 
+  \item
+    First you need to be clear: do I want a job, or a day job?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Career}
+  \begin{itemize}
+  \item
+    If you are seeking a career you should not worry so much at first about hours, pay, etc. 
+  \item
+    You should focus on finding work that you are \emph{good at}. Most likely you will also enjoy such work.
+  \item
+    Good pay, working conditions, etc. will come later if you really are \emph{good at it}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Day Job}
+  \begin{itemize}
+  \item
+    If you are seeking a day job, you should focus on:
+  \begin{itemize}
+    \item Time above all! Work part-time if possible, avoid frequent overtime \dots but \emph{occasional} overtime is actually good as it demonstrates commitment.
+    \item Also either minimize your commute, or find a commute where you can work while commuting.
+    \item Look for high pay of course.
+    \item After that, look for work that will increase your skills for your real work. In my case the skill was computer programming.   
+  \end{itemize}
+  \item
+    Pay attention to whether the day job makes it harder to do your real work, e.g. whether doing game music would get in the way of doing art music if that is your real goal.
+  \item
+    Good pay, working conditions, etc. will \emph{still} come (later) if you are good at your work.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Finding Work}
+  \begin{itemize}
+  \item
+    No doubt about it, finding a good job is hard, whether for a career or as a day job.
+  \item
+    You must be prepared for frequent rejections. The more of this you can endure, the better your bargaining position.
+  \item
+    Personal contacts are indeed important.
+  \item
+    The nature of the employer is even more important.
+  \item
+    Unfortunately, supply and demand are the most important.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Personal Contacts}
+  \begin{itemize}
+  \item
+    Don't keep up personal contacts just for the purpose of getting a job. People don't like being used.
+  \item
+    But if you have friends in fields that might hire you, keep in touch with them, let them know about your projects.
+  \item
+    And also let them know if you are looking for work.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Entrepreneurs and Bureaucrats}
+  \begin{itemize}
+  \item
+    It makes a huge difference what kind of prospective employer you are talking to.
+  \item
+    Companies and managers with an entrepreneurial or artistic bent will be much more interested in what you can do versus what your credentials are.
+  \item
+    Big companies, companies in established industries, and middle managers will only care about your credentials and previous job experience.
+  \item
+    There's a grey area. My second employer was an international conglomerate in an established industry, but the unit that hired me was run like a startup.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Boom or Bust}
+  \begin{itemize}
+  \item
+    Unfortunately the biggest factor is supply and demand, which is driven mainly by whether the economy is growing.
+  \item
+    In boom times, even bureaucrats in large, older companies are truly desperate to hire, and will actually listen to you.
+  \item
+    In a recession, it is far more competitive.
+  \item 
+    In a boom, you can be hired after half an hour on the phone with some manager.
+  \item
+    In a recession, you may have to do dozens and dozens of interviews, and two or three in-person interviews at a single company.
+  \item
+    It's common to wait for a boom and then to go looking for a better job with higher pay. The people in Pune we outsourced to lost programmers after six months.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Proof of Competence}
+  \begin{itemize}
+  \item
+    Any employer has a right to demand proof of competence.
+  \item
+    Any employer will pay attention to a specialized degree from a recognized school, and to a good resume and references.
+  \item
+    But a hiring manager with an open mind \emph{will} be open to other proofs of competence.
+  \item
+    In my case, I made computer music. Because you have to be able to program to make computer music, making computer music was proof of competence in programming.
+  \item
+    I made samples of my code available for prospective employers to read. I gave them to my friends, who gave them to their managers.
+  \item
+    Publications in refereed journals also are very nice.
+  \item
+    There's a bargain: we're giving you a chance, and we expect you to stick around for a year at least to make it worth our while.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Interviews}
+  \begin{itemize}
+  \item
+    There is all kinds of bullshit \emph{about} interviews and \emph{in} interviews.
+  \item
+    If somebody is trying to prove how dumb you are, you probably don't want to work for them.
+  \item
+    A job should be a fair deal. It should be good for them, and good for you. Good employers know this.
+  \item
+    If you expect tricky technical questions, by all means, buy the book with the answers and \emph{practice} them.
+  \item
+  	 Don't ever lie. When I was interviewing, I checked references and facts, and I found several liars.
+  \end{itemize}
+\end{frame}
+\end{document}
+
+
