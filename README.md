@@ -99,7 +99,7 @@ https://gogins.github.io/csound/Scrims_node.html
 It is like LaTeX for music, but offers easier programmability.
 
 https://gogins.github.io/csound/abjad_csound.py is a Python script that renders
-<i><b>Cantus for Cantus in Memory of Benjamin Britten (1980)</i></b> by Arvo Part, an example score from the Abjad
+<i><b>Cantus in Memory of Benjamin Britten (1980)</i></b> by Arvo Part, an example score from the Abjad
 repository, using an embedded Csound orchestra.
 
 In the Csound instruments, the MIDI file velocities are rescaled using the `ampmidid` opcode for a smaller dynamic range, and the resulting amplitudes
