@@ -1,13 +1,13 @@
 {
-  "main": "test.csd",
-  "name": "test",
+  "main": "Scrims_node.html",
+  "name": "Scrims_node",
   "description": "Visual music for Csound and HTML5",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "test",
+    "title": "Scrims_node",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

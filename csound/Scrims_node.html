@@ -1361,7 +1361,7 @@ endin
             var score_text = score.toString();
             // Protect against trying to call an undefined Csound.
             if (typeof csound !== 'undefined') {
-                ///if (csound.isPlaying()) {
+                if (csound.isPlaying()) {
                     score.sendToCsound(csound);
                     var Chord_cell = document.getElementById('Chord_cell');
                     Chord_cell.innerHTML = chord.name();
@@ -1375,7 +1375,7 @@ endin
                     X_cell.innerHTML = sprintf("%011.4f", point.x);
                     var Y_cell  = document.getElementById('Y_cell');
                     Y_cell.innerHTML = sprintf("%011.4f", point.y);
-                ///}
+                }
             }
             score.clear();
             note_count = note_count + 1;
@@ -1440,20 +1440,21 @@ endin
             Notes_per_second: 8,
             Stride: 100,
             Play: function() {
-                csound.stop();
+                //csound.stop();
                 try {
                     csound.setMessageCallback(csoundMessage);
                 } catch(e) {
                     console.log(e);
                 }
-                csound.compileOrc(document.getElementById('orc').value);
+                csound.start();
+                 csound.compileOrc(document.getElementById('orc').value);
                 csound.setOption('-m0');
                 //csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
                 csound.perform();
-                csound.readScore('f 0 360\n');
-                start_time_seconds = new Date().getTime() / 1000.0;
+                //csound.readScore('f 0 360\n');
+               start_time_seconds = new Date().getTime() / 1000.0;
                 ///startTime = csound.getScoreTime();
                 setTimeout(updateTimeCell, 0);
             },
