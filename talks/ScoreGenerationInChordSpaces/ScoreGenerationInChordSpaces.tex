@@ -43,9 +43,9 @@
 %%\frontmatter
 \lstset{language=c++,basicstyle=\ttfamily\scriptsize,commentstyle=\ttfamily\small,tabsize=8,breaklines,backgroundcolor=\color{LstColor},fontadjust=true,keepspaces=false,fancyvrb=true,showstringspaces=false,moredelim=[is][\textbf]{\\emph\{}{\}}}
 
-\title{Score Generation in Voice-Leading and Chord Spaces}
+\title{Score Generation in Chord Spaces}
 \author{
-Michael Gogins  (gogins@pipeline.com)
+Michael Gogins  (michael.gogins@gmail.com)
 }
 \maketitle
 
@@ -71,11 +71,11 @@ Michael Gogins  (gogins@pipeline.com)
 
 \begin{itemize}
 
-\item The \emph{Tonnetz} is the graph of minimal voice-leadings between triads. 
+\item The \emph{Tonnetz} is the graph of minimal voice-leadings between the major and minor triads. 
 
-\item The \emph{Tonnetz} can be generalized as an orbifold (i.e.\ a quotient space) in which every point is a chord, and the smoothness of a voice-leading equals the closeness of its chords \cite{geometryofchords}. 
+\item The \emph{Tonnetz} can be generalized as ``chord space,'' an orbifold (i.e.\ a quotient space) in which every point is a chord, and the smoothness of a voice-leading equals the closeness of its chords \cite{geometryofchords}. 
 
-\item From this orbifold I derive related geometries to represent all trichords, higher arities of chord, voice-leading solutions, chord progressions, \emph{etc}. 
+\item From chord space I derive related geometries to represent all trichords, higher arities of chord, voice-leading solutions, chord progressions, \emph{etc}. 
 
 \item I present a Lindenmayer system that recursively rewrites an axiom by applying symbol replacement rules. The final production of the system is a string of commands for a turtle that moves within either a chord progression space, or a voice-leading space, to write a score.
 
@@ -91,7 +91,7 @@ Michael Gogins  (gogins@pipeline.com)
 
 \item The group action permutes the corners of the orbifold, to glue faces of the quotient space together. 
 
-\item For example, a strip of paper is a quotient space of the plane; gluing two ends together creates a ring, which is an orbifold. 
+\item For example, a strip of paper is a quotient space of the plane; gluing two ends together creates ring, which is an orbifold. 
 
 \item Giving the ends a half twist before gluing them creates a Moebius band, another orbifold.
 
@@ -103,7 +103,7 @@ Michael Gogins  (gogins@pipeline.com)
 
 \item Music theorists distinguish various equivalence classes with respect to pitches: octave equivalence, permutational equivalence, inversional equivalence, and transpositional equivalence.
 
-\item For each equivalence class, and each \emph{combination} of classes, there exists an orbifold in pitch space. The equivalence defines which points of the space are identified to form the orbifold \cite{generalizedchordspaces}. 
+\item For each equivalence class, and each \emph{combination} of classes, there exists an orbifold in chord space. The equivalence defines which points of the space are identified to form the orbifold \cite{generalizedchordspaces}. 
 
 \item The orbifold most familiar to musicians is pitch under octave equivalence, or pitch-class set space, $\textbf{R}/12\textbf{Z}$, where the octave is defined as 12 semitones.
 	
@@ -149,9 +149,9 @@ Its fundamental domains are $n - 1$ dimensional simplexes.
 
 \begin{itemize}
 
-\item In the present work, musical scores are represented as functions of time onto chord space. Arpeggios, passing tones, counterpoint, and so on are considered to be composed of more or less fleeting chords.
+\item The present work represents musical scores as functions of time onto chord space. Arpeggios, passing tones, counterpoint, etc.\ are represented as succcessions of more or less fleeting chords.
 
-\item The \emph{Tonnetz} itself is not sufficient to serve as a space for composing:
+\item Chord spaces themselves are not sufficient to serve as spaces for composing:
 
 \begin{itemize}
 
@@ -200,9 +200,9 @@ Its fundamental domains are $n - 1$ dimensional simplexes.
 
 \begin{itemize}
 
-\item Tymoczko defines a normlike total preorder for voice-leadings within the completed \emph{Tonnetz}, first by smoothness (distance between chords, using either the taxicab norm or the Euclidean norm), and then by parsimony (fewer or shorter movements of voices). Every known measure of voice-leading size creates a normlike total preorder \cite{geometryofchords}.
+\item Tymoczko defines a normlike total preorder for voice-leadings within chord spaces, first by smoothness (distance between chords, using either the taxicab norm or the Euclidean norm), and then by parsimony (fewer or shorter movements of voices). Every known measure of voice-leading size creates a normlike total preorder \cite{geometryofchords}.
 
-\item I have used this normlike ordering to implement a simple algorithm for finding the closest voice-leading in ranged chord space from a source chord to a target pitch-class set. Such algorithms can be very useful in score generators. Keep in mind that each voice of the source chord could be in any octave of the space's range. As both the \emph{Tonnetz} and ranged chord space inherit their metric from the same parent, Euclidean space, it follows that the normlike total preorder for voice-leadings in the \emph{Tonnetz} also exists in ranged chord space.
+\item I have used this normlike ordering to implement a simple algorithm for finding the closest voice-leading in ranged chord space from a source chord to a target pitch-class set. Such algorithms can be very useful in score generators. Keep in mind that each voice of the source chord could be in any octave of the space's range. As both the octave-equivalent and ranged chord spaces inherit their metric from the same parent, Euclidean space, it follows that the normlike total preorder for voice-leadings also exists in ranged chord space.
 
 \subsubsection{Voice-Leading Algorithm}
 
@@ -445,7 +445,7 @@ Replace \ttfamily F & \ttfamily Cv Pv1,2,1,2 Cv Pv5,5,5,6 Cv Pv2,2,3,2 Cv F Cv\\
 
 \bibliographystyle{chicago}
 \small{
-\bibliography{../algorithmic/score_generation_in_voiceleading_orbifolds/gogins}
+\bibliography{gogins}
 }
 
 \end{document}
