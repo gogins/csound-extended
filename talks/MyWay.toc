@@ -1,4 +1,0 @@
-\select@language {english}
-\beamer@sectionintoc {1}{My Goals}{3}{0}{1}
-\beamer@sectionintoc {2}{My Approach}{11}{0}{2}
-\beamer@sectionintoc {3}{My Results}{16}{0}{3}
