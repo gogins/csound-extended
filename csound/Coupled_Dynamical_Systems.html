@@ -32,7 +32,8 @@
             var nw_window = nwgui.Window.get();
             nw_window.on('close', function() {
                 console.log('Closing down...');
-                process.exit(0);
+                this.close(true);
+                //process.exit(0);
             });
         } catch (err) {
             alert(err);
@@ -68,8 +69,8 @@
             <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
         </tr>
         <tr>
-            <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to the pitches of notes played by Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping. The logistic map is $$ T(x) =  4 a x (1 - x). $$ The sine-circle map is $$ T(x)= x+a+{b\over 2\pi}\sin{2\pi x}, $$ computed mod 1.  The tent map is $$T(x) = \left\{ \begin{array}{lc} 
-2 a x & 0 \leq x < \frac{1}{2} \\  
+            <td colspan="2">A finite set of dynamical systems coupled by a mean field is $$x_{n+1}(i)=(1-\epsilon )f(x_n (i))+\frac{\epsilon }{N}\sum_{j=1}^N f(x_n (j)),$$ where $f(x_n (i))$ is the logistic equation, the circle map, or some other chaotic discrete dynamical system. In this composition, $N$ is the number of coupled dynamical systems, $a$ is the controlling parameter of the dynamical systems, and $\epsilon$ is the coupling between the dynamical systems. One dynamical system is mapped to chord root progression, one dynamical system is mapped to chord transformation, and the other dynamical systems are mapped to the pitches of notes played by Csound instruments. Additional controls include the choice of the seed for the random variable used to set the initial states of the dynamical systems (which must differ), the type of dynamical system (logistic map, circle map, or tent map), the number of notes per second, the lowest note of the MIDI key mapping, and the range of the MIDI key mapping. The logistic map is $$ T(x) =  4 a x (1 - x). $$ The sine-circle map is $$ T(x)= x+a+{b\over 2\pi}\sin{2\pi x}, $$ computed mod 1.  The tent map is $$T(x) = \left\{ \begin{array}{lc}
+2 a x & 0 \leq x < \frac{1}{2} \\
 2 a (1-x) & \frac{1}{2} \leq x < 1
 \end{array} \right\}.$$ In all cases, the parameters are normalized to the unit interval.
     </td>
@@ -1039,7 +1040,7 @@ endin
           csound.message(text + '\n' + url + '\n' + line + '\n');
           console.trace();
         }
-        var graphics_canvas = document.getElementById('graphics_canvas');        
+        var graphics_canvas = document.getElementById('graphics_canvas');
         var display_score = new Silencio.Score();
         function onWindowResize( event ) {
             windowHalfX = graphics_canvas.clientWidth / 2;
@@ -1047,7 +1048,7 @@ endin
             camera.updateProjectionMatrix();
             renderer.setSize(graphics_canvas.clientWidth, graphics_canvas.clientHeight );
         }
-        // Coupled dynamical systems: N identical discrete 
+        // Coupled dynamical systems: N identical discrete
         // dynamical systems in which the systems are coupled by a mean field.
         // See Balmforth, N.J, Jacobson, A., and Provenzale, A, "Synchronized family dynamics in globally coupled maps", Chaos 9 (3), 1999.
         // Number of dynamical system instances.
@@ -1373,14 +1374,14 @@ endin
           } else if (name === 'System') {
             coupled_systems.System = value;
           } else if (name == 'Lowest_note') {
-            coupled_systems.Lowest_note = parseFloat(value); 
+            coupled_systems.Lowest_note = parseFloat(value);
           } else if (name == 'Range') {
             coupled_systems.Range = parseFloat(value);
           } else if (name == 'Notes_per_second') {
             coupled_systems.Notes_per_second = parseFloat(value);
           } else if (name == 'Duration_factor') {
             coupled_systems.Duration_factor = parseFloat(value);
-          } else {          
+          } else {
               var numberValue = parseFloat(value);
               csound.setControlChannel(name, numberValue);
           }

@@ -28,7 +28,8 @@
             var nw_window = nwgui.Window.get();
             nw_window.on('close', function() {
                 console.log('Closing down...');
-                process.exit(0);
+                this.close(true);
+                //process.exit(0);
             });
         } catch (err) {
             ///alert(err);

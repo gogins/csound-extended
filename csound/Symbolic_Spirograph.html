@@ -32,7 +32,8 @@
             var nw_window = nwgui.Window.get();
             nw_window.on('close', function() {
                 console.log('Closing down...');
-                process.exit(0);
+                this.close(true);
+                //process.exit(0);
             });
         } catch (err) {
             alert(err);
@@ -1052,7 +1053,7 @@ endin
           csound.message(text + '\n' + url + '\n' + line + '\n');
           console.trace();
         }
-        var graphics_canvas = document.getElementById('graphics_canvas');        
+        var graphics_canvas = document.getElementById('graphics_canvas');
         var score = new Silencio.Score();
         var function_for_time = null;
         var function_for_pitch = null;
@@ -1360,12 +1361,12 @@ endin
             Algebrite.run('z = (R + r) * sin(theta) + p * sin((R + r) * theta / r)');
             function_for_time  = Algebrite.eval('w');
             function_for_pitch = Algebrite.eval('z');
-            
+
             // I would have liked to try a true conformal mapping, but Algebrite can't solve the following definite integral:
             // Algebrite.run('K_e = defint(d(t) / sqrt(1 - 1/2 sin^2 t), t, 0, 1/2 pi)');
             // var K_e = Algebrite.eval('K_e')
             // var K = Algebrite.float(K_e);
-            
+
             // Set up the Algebrite expressions for mapping the spirograph to a square.
             Algebrite.run('x = 1 / 2 (sqrt(2 + u^2 - v^2 + 2 sqrt(2) u)) - 1 / 2 (sqrt(2 + u^2 - v^2 - 2 sqrt(2) u))');
             mapping_for_time = Algebrite.eval('x')
@@ -1389,12 +1390,12 @@ endin
           } else if (name === 'p') {
             parameters.p = value;
           } else if (name == 'Lowest_note') {
-            parameters.Lowest_note = parseFloat(value); 
+            parameters.Lowest_note = parseFloat(value);
           } else if (name == 'Range') {
             parameters.Range = parseFloat(value);
           } else if (name == 'Duration_factor') {
             parameters.Duration_factor = parseFloat(value);
-          } else {          
+          } else {
               var numberValue = parseFloat(value);
               csound.setControlChannel(name, numberValue);
           }

@@ -26,8 +26,9 @@
                 var nw_window = nwgui.Window.get();
                 nw_window.on('close', function() {
                     console.log('Closing down...');
-                    //process.exit(0);
-                }); 
+                this.close(true);
+                //process.exit(0);
+                });
             } catch (err) {
                 console.log(err.message);
             }
@@ -1160,7 +1161,7 @@ scoreline_i "i \"Clear\" 0 -1"
             gui.revert();
         }
         function gk_update(name, value) {
-            if (typeof csound !== 'undefined') {            
+            if (typeof csound !== 'undefined') {
                 var numberValue = parseFloat(value);
                 csound.setControlChannel(name, numberValue);
                 csound.message(name + ': ' + numberValue + '\n');
@@ -1205,18 +1206,18 @@ scoreline_i "i \"Clear\" 0 -1"
         }
        </script>
     <script>
-    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the 
+    // Messages both from the "csound.js" wrapper and from Csound itself are combined in the
     // "console" text area.
     function handleMessage(message) {
         console.log(message);
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + message.data;
-        messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;
     }
     </script>
-    <!--The PNaCl csound module must be the very last element in the body, 
-        because the "csound.js" script attaches the Csound module and its 
+    <!--The PNaCl csound module must be the very last element in the body,
+        because the "csound.js" script attaches the Csound module and its
         callbacks to that element. -->
     <script type="text/javascript" src="csound.js"></script>
     <div id="engine"></div>
