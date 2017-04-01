@@ -451,11 +451,11 @@ Score.prototype.setDuration = function (duration) {
 }
 
 Score.prototype.sendToCsound = function(csound, extra) {
+  this.sort();
     if (typeof extra === 'undefined') {
         jscore = '';
     } else {
         extra = 5.0;
-  this.sort();
   var duration = this.getDuration() + extra;
   jscore = 'f 0 ' + duration + ' 0\n';
     }

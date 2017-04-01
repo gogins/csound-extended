@@ -61,6 +61,8 @@ parameter expressions are evaluated using the actual parameter values of the
 parent Word as the values of the unevaluated parameters in the actual
 parameter expressions.
 
+Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.random().
+
 */
 
 (function() {

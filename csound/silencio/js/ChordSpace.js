@@ -1495,7 +1495,7 @@ Chord.prototype.nrD = function() {
     return this.T(-7);
 }
 
-// Returns the chord inverted by the sum of its first two voiceN.
+// Returns the chord inverted by the sum of its first two voices.
 // NOTE: Does NOT return the result under any equivalence class.
 Chord.prototype.K = function(range) {
     range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;

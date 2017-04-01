@@ -249,17 +249,17 @@ ParametricLindenmayer.PLSystem = function() {
         return turtle;
     });
     this.add_command('Assign(t, d, s, c, k, v, x)', function(lsystem, turtle, t, d, s, c, k, v, x) {
-        turtle.note.time = t;
-        turtle.note.duration = d;
-        turtle.note.status = s;
-        turtle.note.channel = c;
-        turtle.note.key = k;
-        turtle.note.velocity = v;
-        turtle.note.pan = x;
+        turtle.note.time = (t * turtle.scale[0]);
+        turtle.note.duration = (d * turtle.scale[1]);
+        turtle.note.status = (s * turtle.scale[3]);
+        turtle.note.channel = (c * turtle.scale[3]);
+        turtle.note.key = (k * turtle.scale[4]);
+        turtle.note.velocity = (v * turtle.scale[5]);
+        turtle.note.pan = (x * turtle.scale[6]);
         return turtle;
     });
     this.add_command('Move(t, d, s, c, k, v, x)', function(lsystem, turtle, t, d, s, c, k, v, x) {
-        turtle.note.time = (turtle.note.time + (t * turtle.scale[0]));
+        turtle.note.time += (t * turtle.scale[0]);
         turtle.note.duration += (d * turtle.scale[1]);
         turtle.note.status += (s * turtle.scale[3]);
         turtle.note.channel += (c * turtle.scale[3]);
@@ -269,13 +269,13 @@ ParametricLindenmayer.PLSystem = function() {
         return turtle;
     });
     this.add_command('Note(t, d, s, c, k, v, x)', function(lsystem, turtle, t, d, s, c, k, v, x) {
-        turtle.note.time = t;
-        turtle.note.duration = d;
-        turtle.note.status = s;
-        turtle.note.channel = c;
-        turtle.note.key = k;
-        turtle.note.velocity = v;
-        turtle.note.pan = x;
+        turtle.note.time = (t * turtle.scale[0]);
+        turtle.note.duration = (d * turtle.scale[1]);
+        turtle.note.status = (s * turtle.scale[3]);
+        turtle.note.channel = (c * turtle.scale[3]);
+        turtle.note.key = (k * turtle.scale[4]);
+        turtle.note.velocity = (v * turtle.scale[5]);
+        turtle.note.pan = (x * turtle.scale[6]);
         lsystem.score.append(turtle.note.clone());
         return turtle;
     });
@@ -494,16 +494,13 @@ ParametricLindenmayer.PLSystem.prototype.conformToChords = function () {
     times = times.sort(function(a, b){return a - b; });
     var length_ = times.length;
     times.push(this.score.getEnd());
-    this.score.sort();
     for (var i = 0; i < length_; i++) {
         var begin = times[i];
         var end = times[i + 1];
         var chord = this.chords_for_times[begin];
         ChordSpace.apply(this.score, chord, begin, end, false);
     }
-    console.log('Applied ' + length_ + ' chords to score.')
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 // EXPORTS
