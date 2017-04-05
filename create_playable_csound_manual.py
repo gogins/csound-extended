@@ -37,9 +37,9 @@ play_button_template = '''<a class="ulink" href="examples/%s.csd.html" target="_
 
 def format_playable_example(filename, text):
     try:
-        html_filename = filename + '.html'
+        html_filename = filename
         print("Writing playable example: {}".format(html_filename))
-        fout = cStringIO.StringIO()#open(html_filename, 'w')
+        fout = cStringIO.StringIO()
         chunk = '''<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
