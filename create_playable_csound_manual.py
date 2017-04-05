@@ -111,7 +111,7 @@ for filename in source_pages:
             print 'Rewriting:', source_pathname, 'to:', target_pathname
             with open(source_pathname, 'r') as source_file:
                 source_page = source_file.read()
-                source_page = source_page.replace('.csd" target="_top">', '.csd.html" target="_top">')
+                source_page = source_page.replace('.csd" target="_top">', '.csd.html" target="_top"> (click here to play) ')
                 with open(target_pathname, 'w') as target_file:
                     target_file.write(source_page)
         else:
