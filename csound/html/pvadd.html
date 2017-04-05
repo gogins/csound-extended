@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pvadd</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="puts.html" title="puts" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127407232"></a>
+        <a id="idm1517731568"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>pvadd</em></span> reads from a <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a> file and uses the data to perform additive synthesis using an internal array of interpolating oscillators. The user supplies the wave table (usually one period of a sine wave), and can choose which analysis bins will be used in the re-synthesis.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127410064"></a>
+        <a id="idm1517727088"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>pvadd</strong></span> ktimpnt, kfmod, ifilcod, ifn, ibins [, ibinoffset] \
       [, ibinincr] [, iextractmode] [, ifreqlim] [, igatefn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp127476160"></a>
+        <a id="idm1517730928"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- integer or character-string denoting a control-file derived from <a class="link" href="pvanal.html" title="pvanal"><em class="citetitle">pvanal</em></a> analysis of an audio signal. An integer denotes the suffix of a file <span class="emphasis"><em>pvoc.m</em></span>; a character-string (in double quotes) gives a filename, optionally a full pathname. If not fullpath, the file is sought first in the current directory, then in the one given by the environment variable <a class="link" href="OrchDirFiles.html" title="Directories and Files"><em class="citetitle">SADIR</em></a> (if defined). <span class="emphasis"><em>pvoc</em></span> control files contain data organized for fft resynthesis. Memory usage depends on the size of the files involved, which are read and held entirely in memory during computation but are shared by multiple calls (see also <a class="link" href="lpread.html" title="lpread"><em class="citetitle">lpread</em></a>).
@@ -76,14 +77,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127495456"></a>
+        <a id="idm1517715824"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktimpnt</em></span> and <span class="emphasis"><em>kfmod</em></span> are used in the same way as in <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127498512"></a>
+        <a id="idm1517712496"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -195,53 +196,52 @@ asig  <span class="opc">pvadd</span> ktime, 1, <span class="quote">“<span clas
           </table>
         </div>
         <p>
-      Here is a complete example of the pvadd opcode. It uses the file <a class="ulink" href="examples/pvadd.csd" target="_top"><em class="citetitle">pvadd.csd</em></a>
+      Here is a complete example of the pvadd opcode. It uses the file <a class="ulink" href="examples/pvadd.csd.html" target="_top"><em class="citetitle">pvadd.csd</em></a>
       </p>
         <div class="example">
-          <a id="idp127536944"></a>
+          <a id="idm1517676656"></a>
           <p class="title">
-            <strong>Example 692. Example of the pvadd opcode.</strong>
+            <strong>Example 712. Example of the pvadd opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259736112"></a>
-              <a class="ulink" href="examples/pvadd.csd.html" target="_top">Play</a>
+              <a id="idm1339225584"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvadd.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvadd.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">; analyze "fox.wav" with PVANAL first</span>
-igatefn <span class="op">=</span> p4
-ktime <span class="opc">line</span> 0, p3, p3
-asig  <span class="opc">pvadd</span> ktime, 1, "fox.pvx", 1, 300, 2, 2, 0, 0, igatefn
-      <span class="opc">outs</span> asig<span class="op">*</span>3, asig<span class="op">*</span>3
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; analyze "fox.wav" with PVANAL first</span>
+i<span class="n">gatefn</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">time</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p3</span>
+a<span class="n">sig</span>  <span class="nb">pvadd</span> k<span class="n">time</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"fox.pvx"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">gatefn</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">3</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 10 1	<span class="comment">;sine wave</span>
-<span class="stamnt">f</span> 2 0 512 5 1 256 .001
-<span class="stamnt">f</span> 3 0 512 7 0 256 1 256 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">512</span> <span class="mi">5</span> <span class="mi">1</span> <span class="mi">256</span> <span class="mf">.001</span>
+<span class="nb">f</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">512</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">256</span> <span class="mi">1</span> <span class="mi">256</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 2.8 2 
-<span class="stamnt">i</span> 1 + 2.8 3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">2.8</span> <span class="mi">2</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">2.8</span> <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -250,7 +250,7 @@ asig  <span class="opc">pvadd</span> ktime, 1, "fox.pvx", 1, 300, 2, 2, 0, 0, ig
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127541232"></a>
+        <a id="idm1517681136"></a>
         <h2>Credits</h2>
         <p>
       </p>

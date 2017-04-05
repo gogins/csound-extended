@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>seqtime2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="serialWrite.html" title="serialWrite" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136093664"></a>
+        <a id="idm1508800112"></a>
         <h2>Description</h2>
         <p>
       Generates a trigger signal according to the values stored in a table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136094944"></a>
+        <a id="idm1508797040"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktrig_out <span class="command"><strong>seqtime2</strong></span> ktrig_in, ktime_unit, kstart, kloop, kinitndx, kfn_times</pre>
       </div>
       <div class="refsect1">
-        <a id="idp136097120"></a>
+        <a id="idm1508795248"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig_out</em></span> -- output trigger signal
@@ -139,74 +140,73 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136189056"></a>
+        <a id="idm1508771824"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the seqtime2 opcode. It uses the file <a class="ulink" href="examples/seqtime2.csd" target="_top"><em class="citetitle">seqtime2.csd</em></a>.
+      Here is an example of the seqtime2 opcode. It uses the file <a class="ulink" href="examples/seqtime2.csd.html" target="_top"><em class="citetitle">seqtime2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp136190912"></a>
+          <a id="idm1508773616"></a>
           <p class="title">
-            <strong>Example 829. Example of the seqtime2 opcode.</strong>
+            <strong>Example 855. Example of the seqtime2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp263871424"></a>
-              <a class="ulink" href="examples/seqtime2.csd.html" target="_top">Play</a>
+              <a id="idm1328818288"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o seqtime2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o seqtime2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gitabMap2 <span class="ohdr">ftgen</span>	57,0,512,<span class="op">-</span>2, 1,1<span class="op">/</span>4,1<span class="op">/</span>4,1<span class="op">/</span>8,1<span class="op">/</span>8,1<span class="op">/</span>8,1<span class="op">/</span>8,1<span class="op">/</span>4,1<span class="op">/</span>4,.5,1<span class="op">/</span>4,1<span class="op">/</span>4,1<span class="op">/</span>16,1<span class="op">/</span>16,1<span class="op">/</span>16,1<span class="op">/</span>16,1<span class="op">/</span>16,1<span class="op">/</span>16,1<span class="op">/</span>16,1<span class="op">/</span>16
-gisine	  <span class="ohdr">ftgen</span>	1,0,512,10, 1
+gi<span class="n">tabMap2</span> <span class="nb">ftgen</span>	<span class="mi">57</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="mf">.5</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span>
+gi<span class="n">sine</span>	  <span class="nb">ftgen</span>	<span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ktrigin	<span class="opc">metro</span>	.333333333333
-ktrig2	<span class="opc">metro</span>	1
-	<span class="opc">schedkwhen</span> ktrig2, 0,0, 2, 0, .1			<span class="comment">; just to set the metronome!</span>
-kspeed	<span class="opc">init</span>	1
-<span class="comment">;          	 ktime_unit, kstart, kloop, initndx, kfn_times </span>
-ktrig	<span class="opc">seqtime2</span> ktrigin, kspeed, 0, 20, 2, gitabMap2
-<span class="comment">;ktrig	seqtime	 kspeed, 0, 20, 0, gitabMap2			; try with seqtime too...		</span>
-	<span class="opc">schedkwhen</span> ktrig, 0, 0, 3, 0, ktrig			<span class="comment">; the duration is got from seqtime2 output!</span>
-<span class="oblock">endin</span>
+k<span class="n">trigin</span>	<span class="nb">metro</span>	<span class="mf">.333333333333</span>
+k<span class="n">trig2</span>	<span class="nb">metro</span>	<span class="mi">1</span>
+	<span class="nb">schedkwhen</span> k<span class="n">trig2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.1</span>			<span class="c1">; just to set the metronome!</span>
+k<span class="n">speed</span>	<span class="nb">init</span>	<span class="mi">1</span>
+<span class="c1">;          	 ktime_unit, kstart, kloop, initndx, kfn_times </span>
+k<span class="n">trig</span>	<span class="nb">seqtime2</span> k<span class="n">trigin</span><span class="p">,</span> k<span class="n">speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> gi<span class="n">tabMap2</span>
+<span class="c1">;ktrig	seqtime	 kspeed, 0, 20, 0, gitabMap2			; try with seqtime too...		</span>
+	<span class="nb">schedkwhen</span> k<span class="n">trig</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">trig</span>			<span class="c1">; the duration is got from seqtime2 output!</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-a1	<span class="opc">line</span>	1,p3,0
-aout	<span class="opc">oscili</span>	0.7<span class="op">*</span>a1,500,gisine
-	<span class="opc">outs1</span>	aout
-<span class="oblock">endin</span>	
+a<span class="n">1</span>	<span class="nb">line</span>	<span class="mi">1</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span><span class="mi">0</span>
+a<span class="n">out</span>	<span class="nb">oscili</span>	<span class="mf">0.7</span><span class="o">*</span>a<span class="n">1</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span>gi<span class="n">sine</span>
+	<span class="nb">outs1</span>	a<span class="n">out</span>
+<span class="kd">endin</span>	
 
 
-<span class="oblock">instr</span> 3
+<span class="kd">instr</span> <span class="nf">3</span>
 
-a1	<span class="opc">line</span> 	1,p3,0
-aout	<span class="opc">oscili</span>	0.7<span class="op">*</span>a1,1000,gisine
-	<span class="opc">outs2</span>	aout
-<span class="oblock">endin</span>	
+a<span class="n">1</span>	<span class="nb">line</span> 	<span class="mi">1</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span><span class="mi">0</span>
+a<span class="n">out</span>	<span class="nb">oscili</span>	<span class="mf">0.7</span><span class="o">*</span>a<span class="n">1</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span>gi<span class="n">sine</span>
+	<span class="nb">outs2</span>	a<span class="n">out</span>
+<span class="kd">endin</span>	
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 20
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">20</span>
 
-<span class="comment">;f0 3600</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">;f0 3600</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -215,7 +215,7 @@ aout	<span class="opc">oscili</span>	0.7<span class="op">*</span>a1,1000,gisine
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136202368"></a>
+        <a id="idm1508769136"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GEN02.html" title="GEN02"><em class="citetitle">GEN02</em></a>,
@@ -226,7 +226,7 @@ aout	<span class="opc">oscili</span>	0.7<span class="op">*</span>a1,1000,gisine
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136208240"></a>
+        <a id="idm1508761200"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
       </div>

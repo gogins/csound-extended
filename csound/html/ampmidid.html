@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ampmidid</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ampmidi.html" title="ampmidi" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79198960"></a>
+        <a id="idm1566977776"></a>
         <h2>Description</h2>
         <p>
         Musically map MIDI velocity to peak amplitude within a specified dynamic range in decibels.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79200400"></a>
+        <a id="idm1566978032"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iamplitude <span class="command"><strong>ampmidid</strong></span> ivelocity, idecibels</pre>
         <pre class="synopsis">kamplitude <span class="command"><strong>ampmidid</strong></span> kvelocity, idecibels</pre>
       </div>
       <div class="refsect1">
-        <a id="idp79272304"></a>
+        <a id="idm1566978544"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iamplitude</em></span> -- Amplitude.
@@ -64,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79275872"></a>
+        <a id="idm1566975984"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamplitude</em></span> -- Amplitude.
@@ -90,64 +91,63 @@ The International Computer Music Association), pp. 193-196.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79279920"></a>
+        <a id="idm1566967792"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ampmidid opcode. It uses the file <a class="ulink" href="examples/ampmidid.csd" target="_top"><em class="citetitle">ampmidid.csd</em></a>.
+      Here is an example of the ampmidid opcode. It uses the file <a class="ulink" href="examples/ampmidid.csd.html" target="_top"><em class="citetitle">ampmidid.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp79281696"></a>
+          <a id="idm1566969840"></a>
           <p class="title">
             <strong>Example 54. Example of the ampmidid opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp234484608"></a>
-              <a class="ulink" href="examples/ampmidid.csd.html" target="_top">Play</a>
+              <a id="idm1405994224"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">;;;RT audio out, note=p4 and velocity=p5</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">;;;RT audio out, note=p4 and velocity=p5</span>
 -odac --midi-key=4 --midi-velocity-amp=5
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ampmidid.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ampmidid.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="ohdr">massign</span> 0, 1	<span class="comment">;assign all midi to instr. 1</span>
+<span class="nb">massign</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;assign all midi to instr. 1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-isine <span class="opc">ftgenonce</span> 0, 0, 4096, 10, 1 <span class="comment">;sine wave</span>
+i<span class="n">sine</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;sine wave</span>
 
-  ihz <span class="op">=</span> <span class="opc">cpsmidinn</span>(p4)
-  ivelocity <span class="op">=</span> p5
-  idb <span class="opc">ampmidid</span> ivelocity, 20	<span class="comment">;map to dynamic range of 20 dB.</span>
-  idb <span class="op">=</span> idb <span class="op">+</span> 60		<span class="comment">;limit range to 60 to 80 decibels</span>
-  iamplitude <span class="op">=</span> <span class="opc">ampdb</span>(idb)	<span class="comment">;loudness in dB to signal amplitude</span>
+  i<span class="n">hz</span> <span class="o">=</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+  i<span class="n">velocity</span> <span class="o">=</span> <span class="nb">p5</span>
+  i<span class="n">db</span> <span class="nb">ampmidid</span> i<span class="n">velocity</span><span class="p">,</span> <span class="mi">20</span>	<span class="c1">;map to dynamic range of 20 dB.</span>
+  i<span class="n">db</span> <span class="o">=</span> i<span class="n">db</span> <span class="o">+</span> <span class="mi">60</span>		<span class="c1">;limit range to 60 to 80 decibels</span>
+  i<span class="n">amplitude</span> <span class="o">=</span> <span class="nb">ampdb</span><span class="p">(</span>i<span class="n">db</span><span class="p">)</span>	<span class="c1">;loudness in dB to signal amplitude</span>
 
-a1   <span class="opc">oscili</span> iamplitude, ihz, isine
-aenv <span class="opc">madsr</span> 0.05, 0.1, 0.5, 0.2
-asig <span class="op">=</span> a1 <span class="op">*</span> aenv
-     <span class="opc">outs</span> asig, asig
+a<span class="n">1</span>   <span class="nb">oscili</span> i<span class="n">amplitude</span><span class="p">,</span> i<span class="n">hz</span><span class="p">,</span> i<span class="n">sine</span>
+a<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span>
+a<span class="n">sig</span> <span class="o">=</span> a<span class="n">1</span> <span class="o">*</span> a<span class="n">env</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;       note velocity</span>
-<span class="stamnt">i</span> 1 0 2  61  100
-<span class="stamnt">i</span> 1 + 2  65  10
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;       note velocity</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>  <span class="mi">61</span>  <span class="mi">100</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span>  <span class="mi">65</span>  <span class="mi">10</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -156,7 +156,7 @@ asig <span class="op">=</span> a1 <span class="op">*</span> aenv
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79285984"></a>
+        <a id="idm1566970736"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
@@ -173,7 +173,7 @@ asig <span class="op">=</span> a1 <span class="op">*</span> aenv
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79297696"></a>
+        <a id="idm1566961136"></a>
         <h2>Credits</h2>
         <p>
       </p>

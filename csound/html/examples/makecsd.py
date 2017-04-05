@@ -30,6 +30,7 @@ for file in files:
 
   newtext +=  orc + '\n</CsInstruments>\n<CsScore>\n' + sco + '\n</CsScore>\n</CsoundSynthesizer>\n'
   #print newtext
+  newtext = newtext.sub("out ", "outs ")
   dest = open(file[:file.index('.orc')]+'.csd','w')
   dest.write(newtext)
   dest.close()

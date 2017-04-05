@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>framebuffer</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fractalnoise.html" title="fractalnoise" />
@@ -38,30 +39,30 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101170048"></a>
+        <a id="idm1544937072"></a>
         <h2>Description</h2>
         <p>
         <span class="emphasis"><em>framebuffer</em></span> converts audio signals into a 1 dimensional k-rate array of a specified size. The size of the k-rate array must be larger than ksmps. It also converts 1 dimensional k-rate arrays back into audio signals, the k-rate arrays must be uninitialised and also be larger than ksmps in size. The buffer works as a circular buffer and may be used for doing frame based audio processing such as spectral analysis/synthesis or as a simple delay line.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101172048"></a>
+        <a id="idm1544937200"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>framebuffer</strong></span> ain, isize</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101174160"></a>
+        <a id="idm1544941808"></a>
         <pre class="synopsis">aout <span class="command"><strong>framebuffer</strong></span> kin, isize</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101175952"></a>
+        <a id="idm1544936432"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isize</em></span> -- The amount of samples that the buffer will contain.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101177552"></a>
+        <a id="idm1544937328"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- The k-rate array output from the framebuffer.
@@ -73,52 +74,51 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101181056"></a>
+        <a id="idm1544934000"></a>
         <h2>Examples</h2>
         <p>
-      Here is a simple example of the framebuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd" target="_top"><em class="citetitle">framebuffer.csd</em></a>.
+      Here is a simple example of the framebuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd.html" target="_top"><em class="citetitle">framebuffer.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp101182944"></a>
+          <a id="idm1544929904"></a>
           <p class="title">
-            <strong>Example 342. Example of the framebuffer opcode.</strong>
+            <strong>Example 345. Example of the framebuffer opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp245423392"></a>
-              <a class="ulink" href="examples/framebuffer.csd.html" target="_top">Play</a>
+              <a id="idm1376771824"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
-<span class="ohdr">ksmps</span> <span class="op">=</span> 128
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
 
-<span class="oblock">instr</span> 1
-    isize <span class="opc">init</span> 1024
-    ioverlaps <span class="opc">init</span> 4
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">size</span> <span class="nb">init</span> <span class="mi">1024</span>
+    i<span class="n">overlaps</span> <span class="nb">init</span> <span class="mi">4</span>
 
-    asig <span class="opc">diskin2</span> "fox.wav", 1, 0, 1
-    kframe[] <span class="opc">framebuffer</span> asig, isize
-    kwindowedFrame[] <span class="opc">window</span> kframe, isize
+    a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    k<span class="n">frame</span><span class="p">[]</span> <span class="nb">framebuffer</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">size</span>
+    k<span class="n">windowedFrame</span><span class="p">[]</span> <span class="nb">window</span> k<span class="n">frame</span><span class="p">,</span> i<span class="n">size</span>
 
-    aout <span class="opc">olabuffer</span> kwindowedFrame, ioverlaps
-    aout <span class="op">=</span> aout <span class="op">/</span> 2
+    a<span class="n">out</span> <span class="nb">olabuffer</span> k<span class="n">windowedFrame</span><span class="p">,</span> i<span class="n">overlaps</span>
+    a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span> <span class="o">/</span> <span class="mi">2</span>
 
-    <span class="opc">outs</span> aout, aout
-<span class="oblock">endin</span>
+    <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 400
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">400</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -127,7 +127,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101187232"></a>
+        <a id="idm1544929392"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="olabuffer.html" title="olabuffer"><em class="citetitle">olabuffer</em></a>
@@ -136,7 +136,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101191472"></a>
+        <a id="idm1544926064"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>doppler</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="divz.html" title="divz" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89480784"></a>
+        <a id="idm1556850672"></a>
         <h2>Description</h2>
         <p>
       A fast and robust method for approximating sound propagation, achieving convincing Doppler shifts without having to solve equations. The method computes frequency shifts based on reading an input delay line at a delay time computed from the distance between source and mic and the speed of sound. One instance of the opcode is required for each dimension of space through which the sound source moves. If the source sound moves at a constant speed from in front of the microphone, through the microphone, to behind the microphone, then the output will be frequency shifted above the source frequency at a constant frequency while the source approaches, then discontinuously will be shifted below the source frequency at a constant frequency as the source recedes from the microphone. If the source sound moves at a constant speed through a point to one side of the microphone, then the rate of change of position will not be constant, and the familiar Doppler frequency shift typical of a siren or engine approaching and receding along a road beside a listener will be heard.
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp89485904"></a>
+        <a id="idm1556841328"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ashifted <span class="command"><strong>doppler</strong></span> asource, ksourceposition, kmicposition [, isoundspeed, ifiltercutoff]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp89488080"></a>
+        <a id="idm1556839920"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isoundspeed</em></span> (optional, default=340.29) -- Speed of sound in meters/second.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89548576"></a>
+        <a id="idm1556843376"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asource</em></span> -- Input signal at the sound source.
@@ -73,63 +74,62 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89551984"></a>
+        <a id="idm1556838512"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the doppler opcode. It uses the file <a class="ulink" href="examples/doppler.csd" target="_top"><em class="citetitle">doppler.csd</em></a>.
+      Here is an example of the doppler opcode. It uses the file <a class="ulink" href="examples/doppler.csd.html" target="_top"><em class="citetitle">doppler.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp89553728"></a>
+          <a id="idm1556834416"></a>
           <p class="title">
-            <strong>Example 215. Example of the doppler opcode.</strong>
+            <strong>Example 217. Example of the doppler opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp239789712"></a>
-              <a class="ulink" href="examples/doppler.csd.html" target="_top">Play</a>
+              <a id="idm1391725680"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o doppler.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o doppler.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 48000
-<span class="ohdr">ksmps</span> <span class="op">=</span> 128
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">48000</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-iattack       <span class="opc">init</span>    0.05
-irelease      <span class="opc">init</span>    0.05
-isustain      <span class="opc">init</span>    p3
-p3            <span class="opc">init</span>    iattack <span class="op">+</span> isustain <span class="op">+</span> irelease
-kdamping      <span class="opc">linseg</span>  0.0, iattack, 1.0, isustain, 1.0, irelease, 0.0	
-kmic          <span class="opc">init</span>    4
-              <span class="comment">; Position envelope, with a changing rate of change of position.</span>
-<span class="comment">;             transeg a   dur   ty  b      dur    ty  c    dur    ty d</span>
-kposition     <span class="opc">transeg</span> 4, p3<span class="op">*</span>.4, 0, 120,   p3<span class="op">*</span>.3, <span class="op">-</span>3, 50,   p3<span class="op">*</span>.3, 2, 4
-ismoothinghz  <span class="opc">init</span>    6
-ispeedofsound <span class="opc">init</span>    340.29
-asignal       <span class="opc">vco2</span>    0.5, 110
-aoutput       <span class="opc">doppler</span> asignal, kposition, kmic, ispeedofsound, ismoothinghz
-              <span class="opc">outs</span>    aoutput<span class="op">*</span>kdamping, aoutput <span class="op">*</span> kdamping
-<span class="oblock">endin</span>
+i<span class="n">attack</span>       <span class="nb">init</span>    <span class="mf">0.05</span>
+i<span class="n">release</span>      <span class="nb">init</span>    <span class="mf">0.05</span>
+i<span class="n">sustain</span>      <span class="nb">init</span>    <span class="nb">p3</span>
+<span class="nb">p3</span>            <span class="nb">init</span>    i<span class="n">attack</span> <span class="o">+</span> i<span class="n">sustain</span> <span class="o">+</span> i<span class="n">release</span>
+k<span class="n">damping</span>      <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> i<span class="n">attack</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">release</span><span class="p">,</span> <span class="mf">0.0</span>	
+k<span class="n">mic</span>          <span class="nb">init</span>    <span class="mi">4</span>
+              <span class="c1">; Position envelope, with a changing rate of change of position.</span>
+<span class="c1">;             transeg a   dur   ty  b      dur    ty  c    dur    ty d</span>
+k<span class="n">position</span>     <span class="nb">transeg</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span>   <span class="nb">p3</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span>   <span class="nb">p3</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span>
+i<span class="n">smoothinghz</span>  <span class="nb">init</span>    <span class="mi">6</span>
+i<span class="n">speedofsound</span> <span class="nb">init</span>    <span class="mf">340.29</span>
+a<span class="n">signal</span>       <span class="nb">vco2</span>    <span class="mf">0.5</span><span class="p">,</span> <span class="mi">110</span>
+a<span class="n">output</span>       <span class="nb">doppler</span> a<span class="n">signal</span><span class="p">,</span> k<span class="n">position</span><span class="p">,</span> k<span class="n">mic</span><span class="p">,</span> i<span class="n">speedofsound</span><span class="p">,</span> i<span class="n">smoothinghz</span>
+              <span class="nb">outs</span>    a<span class="n">output</span><span class="o">*</span>k<span class="n">damping</span><span class="p">,</span> a<span class="n">output</span> <span class="o">*</span> k<span class="n">damping</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1	0.0	20	
-<span class="stamnt">e</span>1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span>	<span class="mf">0.0</span>	<span class="mi">20</span>	
+<span class="nb">e</span><span class="mi">1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -138,7 +138,7 @@ aoutput       <span class="opc">doppler</span> asignal, kposition, kmic, ispeedo
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89560096"></a>
+        <a id="idm1556837104"></a>
         <h2>Credits</h2>
         <p>
       </p>

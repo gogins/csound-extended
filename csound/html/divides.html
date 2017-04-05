@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>/</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="subtracts.html" title="-" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp77699232"></a>
+        <a id="idm1568787440"></a>
         <h2>Description</h2>
         <p>
       Arithmetic operators perform operations of change-sign (negate), don't-change-sign, logical AND logical OR, add, subtract, multiply and divide. Note that a value or an expression may fall between two of these operators, either of which could take it as its left or right argument, as in
@@ -105,7 +106,7 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77751552"></a>
+        <a id="idm1568781040"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a <span class="command"><strong>/</strong></span>  b  (no rate restriction)</pre>
         <p>
@@ -113,7 +114,7 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77755024"></a>
+        <a id="idm1568775664"></a>
         <h2>Arguments</h2>
         <p>
       The arguments of / can be scalar values or k-rate one
@@ -122,58 +123,57 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77756560"></a>
+        <a id="idm1568772336"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the / operator. It uses the file <a class="ulink" href="examples/divides.csd" target="_top"><em class="citetitle">divides.csd</em></a>.
+      Here is an example of the / operator. It uses the file <a class="ulink" href="examples/divides.csd.html" target="_top"><em class="citetitle">divides.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp77758336"></a>
+          <a id="idm1568771056"></a>
           <p class="title">
             <strong>Example 30. Example of the / operator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp233306992"></a>
-              <a class="ulink" href="examples/divides.csd.html" target="_top">Play</a>
+              <a id="idm1407815024"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o /.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o /.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-idiv  <span class="op">=</span> 1<span class="op">/</span>p3 <span class="op">*</span> p4
-ktrm  <span class="opc">oscil</span> 1, idiv, 1						<span class="comment">;use oscil as an envelope</span>
-<span class="opc">printf</span> "retrigger rate per note duration <span class="op">=</span> <span class="op">%</span>f\n",1, idiv
-kndx  <span class="opc">line</span> 5, p3, 1						<span class="comment">;vary index of FM</span>
-asig  <span class="opc">foscil</span> ktrm, 200, 1, 1.4, kndx, 1
-      <span class="opc">outs</span> asig, asig
+i<span class="n">div</span>  <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="nb">p3</span> <span class="o">*</span> <span class="nb">p4</span>
+k<span class="n">trm</span>  <span class="nb">oscil</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">div</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;use oscil as an envelope</span>
+<span class="nb">printf</span> <span class="s">"retrigger rate per note duration = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> i<span class="n">div</span>
+k<span class="n">ndx</span>  <span class="nb">line</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;vary index of FM</span>
+a<span class="n">sig</span>  <span class="nb">foscil</span> k<span class="n">trm</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> <span class="mi">1</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1  0 4096 10   1    <span class="comment">;sine wave</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span>  <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span>   <span class="mi">1</span>    <span class="c1">;sine wave</span>
 
-<span class="stamnt">i</span> 1 0 3	10   
-<span class="stamnt">i</span> 1 4 3 15  	
-<span class="stamnt">i</span> 1 8 3 2 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span>	<span class="mi">10</span>   
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">15</span>  	
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mi">3</span> <span class="mi">2</span> 
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -189,7 +189,7 @@ retrigger rate per note duration = 0.666667</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77763520"></a>
+        <a id="idm1568767600"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="subtracts.html" title="-"><em class="citetitle">-</em></a>, 
@@ -197,12 +197,12 @@ retrigger rate per note duration = 0.666667</pre>
       <a class="link" href="opand.html" title="&amp;&amp;"><em class="citetitle">&amp;&amp;</em></a>, 
       <a class="link" href="opor.html" title="||"><em class="citetitle">||</em></a>, 
       <a class="link" href="multiplies.html" title="*"><em class="citetitle">*</em></a>, 
-      <a class="link" href="raises.html" title="^"><em class="citetitle">^</em></a>, 
+      <a class="link" href="raises.html" title="ˆ"><em class="citetitle">ˆ</em></a>, 
       <a class="link" href="modulus.html" title="%"><em class="citetitle">%</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77771392"></a>
+        <a id="idm1568757872"></a>
         <h2>Credits</h2>
         <p>Arithmetic on vectors is new in version 6.00</p>
       </div>

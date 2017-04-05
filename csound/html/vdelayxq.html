@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vdelayxq</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vdelayx.html" title="vdelayx" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153981680"></a>
+        <a id="idm1490619888"></a>
         <h2>Description</h2>
         <p>
       A 4-channel variable delay opcode with high quality interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp154050368"></a>
+        <a id="idm1490614256"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout1, aout2, aout3, aout4 <span class="command"><strong>vdelayxq</strong></span> ain1, ain2, ain3, ain4, adl, imd, iws [, ist]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp154052624"></a>
+        <a id="idm1490613232"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imd</em></span> -- max. delay time (seconds)
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp154055904"></a>
+        <a id="idm1490612848"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout1, aout2, aout3, aout4</em></span> -- output audio signals.
@@ -123,61 +124,60 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp154066944"></a>
+        <a id="idm1490596976"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vdelayxq opcode. It uses the file <a class="ulink" href="examples/vdelayxq.csd" target="_top"><em class="citetitle">vdelayxq.csd</em></a>.
+      Here is an example of the vdelayxq opcode. It uses the file <a class="ulink" href="examples/vdelayxq.csd.html" target="_top"><em class="citetitle">vdelayxq.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp154068800"></a>
+          <a id="idm1490602736"></a>
           <p class="title">
-            <strong>Example 1021. Example of the vdelayxq opcode.</strong>
+            <strong>Example 1047. Example of the vdelayxq opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp271098288"></a>
-              <a class="ulink" href="examples/vdelayxq.csd.html" target="_top">Play</a>
+              <a id="idm1309364336"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vdelayxq.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vdelayxq.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 4
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 
+<span class="kd">instr</span> <span class="nf">1</span> 
 
-ims   <span class="op">=</span>	.5						<span class="comment">;maximum delay time in seconds</span>
-iws   <span class="op">=</span>	1024						<span class="comment">;window size</span>
-adl   <span class="op">=</span>	.5
-aout1  <span class="opc">diskin2</span> "beats.wav", 1, 0, 1			<span class="comment">;loop beats.wav</span>
-aout2  <span class="opc">diskin2</span> "fox.wav", 1, 0, 1			<span class="comment">;loop fox.wav</span>
-aout3  <span class="opc">diskin2</span> "Church.wav", 1, 0, 1			<span class="comment">;loop Church.wav</span>
-aout4  <span class="opc">diskin2</span> "flute.aiff", 1, 0, 1			<span class="comment">;loop flute.aiff</span>
-a2    <span class="opc">poscil</span> .1, .5, 1					<span class="comment">;make an LFO, 1 cycle per 2 seconds</span>
-adl   <span class="op">=</span> a2 <span class="op">+</span> ims<span class="op">/</span>2      				<span class="comment">;offset the LFO so that it is positive</span>
-aout1, aout2, aout3, aout4 <span class="opc">vdelayxq</span> aout1, aout2, aout3, aout4, adl, ims, iws<span class="comment">; Use the LFO to control delay time</span>
-      <span class="opc">outq</span> aout1, aout2, aout3, aout4
+i<span class="n">ms</span>   <span class="o">=</span>	<span class="mf">.5</span>						<span class="c1">;maximum delay time in seconds</span>
+i<span class="n">ws</span>   <span class="o">=</span>	<span class="mi">1024</span>						<span class="c1">;window size</span>
+a<span class="n">dl</span>   <span class="o">=</span>	<span class="mf">.5</span>
+a<span class="n">out1</span>  <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop beats.wav</span>
+a<span class="n">out2</span>  <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop fox.wav</span>
+a<span class="n">out3</span>  <span class="nb">diskin2</span> <span class="s">"Church.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop Church.wav</span>
+a<span class="n">out4</span>  <span class="nb">diskin2</span> <span class="s">"flute.aiff"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop flute.aiff</span>
+a<span class="n">2</span>    <span class="nb">poscil</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span>					<span class="c1">;make an LFO, 1 cycle per 2 seconds</span>
+a<span class="n">dl</span>   <span class="o">=</span> a<span class="n">2</span> <span class="o">+</span> i<span class="n">ms</span><span class="o">/</span><span class="mi">2</span>      				<span class="c1">;offset the LFO so that it is positive</span>
+a<span class="n">out1</span><span class="p">,</span> a<span class="n">out2</span><span class="p">,</span> a<span class="n">out3</span><span class="p">,</span> a<span class="n">out4</span> <span class="nb">vdelayxq</span> a<span class="n">out1</span><span class="p">,</span> a<span class="n">out2</span><span class="p">,</span> a<span class="n">out3</span><span class="p">,</span> a<span class="n">out4</span><span class="p">,</span> a<span class="n">dl</span><span class="p">,</span> i<span class="n">ms</span><span class="p">,</span> i<span class="n">ws</span><span class="c1">; Use the LFO to control delay time</span>
+      <span class="nb">outq</span> a<span class="n">out1</span><span class="p">,</span> a<span class="n">out2</span><span class="p">,</span> a<span class="n">out3</span><span class="p">,</span> a<span class="n">out4</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 8192 10 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 10 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span> 
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -187,7 +187,7 @@ aout1, aout2, aout3, aout4 <span class="opc">vdelayxq</span> aout1, aout2, aout3
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp154073328"></a>
+        <a id="idm1490592240"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vdelayx.html" title="vdelayx"><em class="citetitle">vdelayx</em></a>,

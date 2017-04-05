@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tabifd</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tab.html" title="tab" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp145849056"></a>
+        <a id="idm1499162224"></a>
         <h2>Description</h2>
         <p>
   The tabifd opcode takes an input function table and performs an Instantaneous Frequency,
@@ -50,12 +51,12 @@
 	      </p>
       </div>
       <div class="refsect1">
-        <a id="idp145891792"></a>
+        <a id="idm1499165424"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ffr,fphs <span class="command"><strong>tabifd</strong></span> ktimpt, kamp, kpitch, ifftsize, ihopsize, iwintype,ifn</pre>
       </div>
       <div class="refsect1">
-        <a id="idp145894000"></a>
+        <a id="idm1499169264"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifftsize</em></span> -- FFT analysis size, must be power-of-two and integer multiple of the hopsize.
@@ -71,7 +72,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp145898224"></a>
+        <a id="idm1499168240"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ffr</em></span> -- output pv stream in AMP_FREQ format
@@ -91,56 +92,55 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp145903344"></a>
+        <a id="idm1499158768"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tabifd opcode. It uses the file <a class="ulink" href="examples/tabifd.csd" target="_top"><em class="citetitle">tabifd.csd</em></a>.
+      Here is an example of the tabifd opcode. It uses the file <a class="ulink" href="examples/tabifd.csd.html" target="_top"><em class="citetitle">tabifd.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp145905120"></a>
+          <a id="idm1499158896"></a>
           <p class="title">
-            <strong>Example 925. Example of the tabifd opcode.</strong>
+            <strong>Example 951. Example of the tabifd opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp267558336"></a>
-              <a class="ulink" href="examples/tabifd.csd.html" target="_top">Play</a>
+              <a id="idm1319504368"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tabifd.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">ksmps</span><span class="op">=</span>1
-<span class="ohdr">nchnls</span><span class="op">=</span>1
-<span class="oblock">opcode</span> TrackPlay, a, kkiiii
- ktime,kthr,isiz,ihsiz,ifcos,ifn  <span class="opc">xin</span> 
- idel <span class="op">=</span> isiz<span class="op">-</span>ihsiz<span class="op">*</span>(isiz<span class="op">/</span>(2<span class="op">*</span>ihsiz)<span class="op">-</span>1)
- ffr,fphs <span class="opc">tabifd</span> ktime,10000,1, isiz, ihsiz, 1, ifn
- ftrk <span class="opc">partials</span> ffr, fphs,kthr, 1, 1, 500
- aout <span class="opc">tradsyn</span>   ftrk, 2,1, 500, ifcos 
- <span class="opc">xout</span> aout
-<span class="oblock">endop</span>
-<span class="oblock">instr</span> 1
-p3 <span class="op">=</span> <span class="opc">ftlen</span>(2)<span class="op">/</span><span class="ohdr">sr</span>
-ktime <span class="opc">line</span> 0,p3,p3
-ares TrackPlay ktime, 0.003,2048,256,1,2
-     <span class="opc">outs</span> ares
-<span class="oblock">endin</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tabifd.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">1</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">1</span>
+<span class="kd">opcode</span> <span class="nf">TrackPlay</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">kkiiii</span>
+ k<span class="n">time</span><span class="p">,</span>k<span class="n">thr</span><span class="p">,</span>i<span class="n">siz</span><span class="p">,</span>i<span class="n">hsiz</span><span class="p">,</span>i<span class="n">fcos</span><span class="p">,</span>i<span class="n">fn</span>  <span class="nb">xin</span> 
+ i<span class="n">del</span> <span class="o">=</span> i<span class="n">siz</span><span class="o">-</span>i<span class="n">hsiz</span><span class="o">*</span><span class="p">(</span>i<span class="n">siz</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span>i<span class="n">hsiz</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+ <span class="n">ffr</span><span class="p">,</span><span class="n">fphs</span> <span class="nb">tabifd</span> k<span class="n">time</span><span class="p">,</span><span class="mi">10000</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> i<span class="n">siz</span><span class="p">,</span> i<span class="n">hsiz</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">fn</span>
+ <span class="n">ftrk</span> <span class="nb">partials</span> <span class="n">ffr</span><span class="p">,</span> <span class="n">fphs</span><span class="p">,</span>k<span class="n">thr</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span>
+ a<span class="n">out</span> <span class="nb">tradsyn</span>   <span class="n">ftrk</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> i<span class="n">fcos</span> 
+ <span class="nb">xout</span> a<span class="n">out</span>
+<span class="kd">endop</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="nb">p3</span> <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="vg">sr</span>
+k<span class="n">time</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span><span class="nb">p3</span>
+a<span class="n">res</span> <span class="nf">TrackPlay</span> k<span class="n">time</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span><span class="mi">2048</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+     <span class="nb">outs</span> a<span class="n">res</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 16384 9 1 1 90
-<span class="stamnt">f</span>2 0 0 1 "<span class="stamnt">f</span>ox.wav" 0 0 1
-<span class="stamnt">i</span>1	0 1 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">9</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">90</span>
+<span class="nb">f</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"fox.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span>	<span class="mi">0</span> <span class="mi">1</span> 
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -150,7 +150,7 @@ ares TrackPlay ktime, 0.003,2048,256,1,2
         <p>The example above shows the tabifd analysis feeding into partial tracking andcubic-phase additive resynthesis with pitch shifting.</p>
       </div>
       <div class="refsect1">
-        <a id="idp145909936"></a>
+        <a id="idm1499149296"></a>
         <h2>Credits</h2>
         <p>
       </p>

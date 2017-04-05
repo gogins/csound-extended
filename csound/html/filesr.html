@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>filesr</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="filescal.html" title="filescal" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92682064"></a>
+        <a id="idm1553411440"></a>
         <h2>Description</h2>
         <p>
       Returns the sample rate of a sound file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92683408"></a>
+        <a id="idm1553406704"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>filesr</strong></span> ifilcod [, iallowraw]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp92685616"></a>
+        <a id="idm1553411952"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- sound file to be queried
@@ -60,72 +61,69 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92749472"></a>
+        <a id="idm1553400816"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>filesr</em></span> returns the sample rate of the sound file <span class="emphasis"><em>ifilcod</em></span>. <span class="emphasis"><em>filesr</em></span> can return the sample rate of convolve and PVOC files if the <span class="emphasis"><em>iallowraw</em></span> flag is not zero (it is non-zero by default).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92752608"></a>
+        <a id="idm1553399024"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the filesr opcode. It uses the file <a class="ulink" href="examples/filesr.csd" target="_top"><em class="citetitle">filesr.csd</em></a>,
+      Here is an example of the filesr opcode. It uses the file <a class="ulink" href="examples/filesr.csd.html" target="_top"><em class="citetitle">filesr.csd</em></a>,
 and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp92755312"></a>
+          <a id="idm1553397616"></a>
           <p class="title">
-            <strong>Example 267. Example of the filesr opcode.</strong>
+            <strong>Example 269. Example of the filesr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp241777952"></a>
-              <a class="ulink" href="examples/filesr.csd.html" target="_top">Play</a>
+              <a id="idm1387383664"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o filesr.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o filesr.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">;after an example from Jonathan Murphy</span>
+<span class="c1">;after an example from Jonathan Murphy</span>
 
-<span class="oblock">instr</span> 1 
-<span class="comment">;load sound into an ftable</span>
-  Sfile	    <span class="opc">strcpy</span>    "beats.wav" 
-  ilen	    <span class="opc">filelen</span>   Sfile 
-  isr	    <span class="opc">filesr</span>    Sfile 
-  isamps    <span class="op">=</span>  ilen <span class="op">*</span> isr 
-<span class="comment">;adjust the length of the table to be a power of two closest</span>
-<span class="comment">;to the actual size of the sound </span>
-  isize	    <span class="opc">init</span>      1 
-<span class="olabel">loop</span><span class="op">:</span> 
-  isize	    <span class="op">=</span>  isize <span class="op">*</span> 2 
-  <span class="octrl">if</span> (isize <span class="op">&lt;</span> isamps) <span class="octrl">igoto</span> <span class="olabel">loop</span> 
-  itab	    <span class="ohdr">ftgen</span>     0, 0, isize, 1, Sfile, 0, 0, 0 
-<span class="opc">prints</span>  "sample rate <span class="op">=</span> <span class="op">%</span>f, size <span class="op">=</span> <span class="op">%</span>f\n", isr, isize <span class="comment">;prints them</span>
+<span class="kd">instr</span> <span class="nf">1</span> 
+<span class="c1">;load sound into an ftable</span>
+  S<span class="n">file</span>	    <span class="nb">strcpy</span>    <span class="s">"beats.wav"</span> 
+  i<span class="n">len</span>	    <span class="nb">filelen</span>   S<span class="n">file</span> 
+  i<span class="n">sr</span>	    <span class="nb">filesr</span>    S<span class="n">file</span> 
+  i<span class="n">samps</span>    <span class="o">=</span>  i<span class="n">len</span> <span class="o">*</span> i<span class="n">sr</span> 
+<span class="c1">;adjust the length of the table to be a power of two closest</span>
+<span class="c1">;to the actual size of the sound </span>
+  i<span class="n">size</span>	    <span class="nb">init</span>      <span class="mi">1</span> 
+<span class="nl">loop</span><span class="p">:</span> 
+  i<span class="n">size</span>	    <span class="o">=</span>  i<span class="n">size</span> <span class="o">*</span> <span class="mi">2</span> 
+  <span class="k">if</span> <span class="p">(</span>i<span class="n">size</span> <span class="o">&lt;</span> i<span class="n">samps</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">loop</span> 
+  i<span class="n">tab</span>	    <span class="nb">ftgen</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">file</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> 
+<span class="nb">prints</span>  <span class="s">"sample rate = %f, size = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">sr</span><span class="p">,</span> i<span class="n">size</span> <span class="c1">;prints them</span>
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
-<span class="stamnt">i</span>1 0 2
-<span class="stamnt">e</span> 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">e</span> 
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -141,7 +139,7 @@ sample rate = 44100.000000, size = 131072.000000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92761328"></a>
+        <a id="idm1553393392"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="filebit.html" title="filebit"><em class="citetitle">filebit</em></a>,
@@ -151,7 +149,7 @@ sample rate = 44100.000000, size = 131072.000000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92766352"></a>
+        <a id="idm1553390448"></a>
         <h2>Credits</h2>
         <p>
       </p>

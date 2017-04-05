@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>voice</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vmultv_i.html" title="vmultv_i" />
@@ -38,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155985488"></a>
+        <a id="idm1488636784"></a>
         <h2>Description</h2>
         <p>
       An emulation of a human voice.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156068016"></a>
+        <a id="idm1488640112"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>voice</strong></span> kamp, kfreq, kphoneme, kform, kvibf, kvamp, ifn, ivfn</pre>
       </div>
       <div class="refsect1">
-        <a id="idp156070256"></a>
+        <a id="idm1488635632"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span>, <span class="emphasis"><em>ivfn</em></span> -- two table numbers containing the carrier waveform and the vibrato waveform. The files <a class="ulink" href="examples/impuls20.aiff" target="_top"><em class="citetitle">impuls20.aiff</em></a>, <a class="ulink" href="examples/ahh.aiff" target="_top"><em class="citetitle">ahh.aiff</em></a>, <a class="ulink" href="examples/eee.aiff" target="_top"><em class="citetitle">eee.aiff</em></a>, or <a class="ulink" href="examples/ooo.aiff" target="_top"><em class="citetitle">ooo.aiff</em></a> are suitable for the first of these, and a sine wave for the second. These files are available from <a class="ulink" href="ftp://ftp.cs.bath.ac.uk/pub/dream/documentation/sounds/modelling/" target="_top"><em class="citetitle">ftp://ftp.cs.bath.ac.uk/pub/dream/documentation/sounds/modelling/</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156076624"></a>
+        <a id="idm1488628720"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -138,71 +139,70 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156104096"></a>
+        <a id="idm1488604144"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the voice opcode. It uses the file <a class="ulink" href="examples/voice.csd" target="_top"><em class="citetitle">voice.csd</em></a>, and <a class="ulink" href="examples/impuls20.aiff" target="_top"><em class="citetitle">impuls20.aiff</em></a>.
+      Here is an example of the voice opcode. It uses the file <a class="ulink" href="examples/voice.csd.html" target="_top"><em class="citetitle">voice.csd</em></a>, and <a class="ulink" href="examples/impuls20.aiff" target="_top"><em class="citetitle">impuls20.aiff</em></a>.
       </p>
         <div class="example">
-          <a id="idp156106800"></a>
+          <a id="idm1488603248"></a>
           <p class="title">
-            <strong>Example 1044. Example of the voice opcode.</strong>
+            <strong>Example 1070. Example of the voice opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp272149136"></a>
-              <a class="ulink" href="examples/voice.csd.html" target="_top">Play</a>
+              <a id="idm1306747888"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o voice.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o voice.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kamp  <span class="op">=</span> p4
-kphon <span class="op">=</span> p5
-asig  <span class="opc">voice</span> kamp, 200, kphon, 0.488, 0, 1, 1, 2
-      <span class="opc">outs</span> asig, asig
+k<span class="n">amp</span>  <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">phon</span> <span class="o">=</span> <span class="nb">p5</span>
+a<span class="n">sig</span>  <span class="nb">voice</span> k<span class="n">amp</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> k<span class="n">phon</span><span class="p">,</span> <span class="mf">0.488</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 256 1 "impuls20.ai<span class="stamnt">f</span><span class="stamnt">f</span>" 0 0 0	<span class="comment">;audio file for the carrier waveform</span>
-<span class="stamnt">f</span> 2 0 256 10 1				<span class="comment">;sine wave for the vibrato waveform</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">256</span> <span class="mi">1</span> <span class="s">"impuls20.aiff"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>	<span class="c1">;audio file for the carrier waveform</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">256</span> <span class="mi">10</span> <span class="mi">1</span>				<span class="c1">;sine wave for the vibrato waveform</span>
 
-<span class="comment">;       ampl phoneme</span>
-<span class="stamnt">i</span> 1 0 2 0.8    1
-<span class="stamnt">i</span> 1 + . 0.6    2
-<span class="stamnt">i</span> 1 + . 1.8    3
-<span class="stamnt">i</span> 1 + . 15.0   4
-<span class="stamnt">i</span> 1 + . 0.05   5
-<span class="stamnt">i</span> 1 + . 0.06   6
-<span class="stamnt">i</span> 1 + . 0.03   7
-<span class="stamnt">i</span> 1 + . 0.0002 8
-<span class="stamnt">i</span> 1 + . 0.1    9
-<span class="stamnt">i</span> 1 + . 0.5   10
-<span class="stamnt">i</span> 1 + . 100   11
-<span class="stamnt">i</span> 1 + . 0.03  12
-<span class="stamnt">i</span> 1 + . 0.04  13
-<span class="stamnt">i</span> 1 + . 0.04  14
-<span class="stamnt">i</span> 1 + . 0.04  15
-<span class="stamnt">i</span> 1 + . 0.05  16
+<span class="c1">;       ampl phoneme</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">0.8</span>    <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.6</span>    <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">1.8</span>    <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">15.0</span>   <span class="mi">4</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.05</span>   <span class="mi">5</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.06</span>   <span class="mi">6</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.03</span>   <span class="mi">7</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.0002</span> <span class="mi">8</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.1</span>    <span class="mi">9</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.5</span>   <span class="mi">10</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mi">100</span>   <span class="mi">11</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.03</span>  <span class="mi">12</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.04</span>  <span class="mi">13</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.04</span>  <span class="mi">14</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.04</span>  <span class="mi">15</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">0.05</span>  <span class="mi">16</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -211,7 +211,7 @@ asig  <span class="opc">voice</span> kamp, 200, kphon, 0.488, 0, 1, 1, 2
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156111088"></a>
+        <a id="idm1488610032"></a>
         <h2>Credits</h2>
         <p>
       </p>

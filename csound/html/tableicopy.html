@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tableicopy</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tablei.html" title="tablei" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp146328256"></a>
+        <a id="idm1498962928"></a>
         <h2>Description</h2>
         <p>
       Simple, fast table copy opcode.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146369472"></a>
+        <a id="idm1498962672"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tableicopy</strong></span> idft, isft</pre>
       </div>
       <div class="refsect1">
-        <a id="idp146371456"></a>
+        <a id="idm1498966384"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idft</em></span> -- Destination function table.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146373968"></a>
+        <a id="idm1499326064"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tableicopy</em></span> -- Simple, fast table copy opcodes. Takes the table length from the destination table, and reads from the start of the source table. For speed reasons, does not check the source length - just copies regardless - in "wrap" mode. This may read through the source table several times. A source table with length 1 will cause all values in the destination table to be written to its value.
@@ -76,7 +77,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146380144"></a>
+        <a id="idm1498327408"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tablecopy.html" title="tablecopy"><em class="citetitle">tablecopy</em></a>,
@@ -87,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146386096"></a>
+        <a id="idm1498314608"></a>
         <h2>Credits</h2>
         <p>
       </p>

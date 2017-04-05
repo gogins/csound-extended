@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>hrtfmove</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="hrtfearly.html" title="hrtfearly" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104357952"></a>
+        <a id="idm1541868272"></a>
         <h2>Description</h2>
         <p>
       This opcode takes a source signal and spatialises it in the 3 dimensional space around a listener
@@ -46,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104359328"></a>
+        <a id="idm1541866864"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aleft, aright <span class="command"><strong>hrtfmove</strong></span> asrc, kAz, kElev, ifilel, ifiler [, imode, ifade, isr]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp104361536"></a>
+        <a id="idm1541862000"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilel </em></span> -- left HRTF spectral data file
@@ -142,81 +143,80 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104381040"></a>
+        <a id="idm1541846640"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the hrtfmove opcode. It uses the file <a class="ulink" href="examples/hrtfmove.csd" target="_top"><em class="citetitle">hrtfmove.csd</em></a>. 
+      Here is an example of the hrtfmove opcode. It uses the file <a class="ulink" href="examples/hrtfmove.csd.html" target="_top"><em class="citetitle">hrtfmove.csd</em></a>. 
     </p>
         <div class="example">
-          <a id="idp104383024"></a>
+          <a id="idm1541852400"></a>
           <p class="title">
-            <strong>Example 389. Example of the htrfmove opcode.</strong>
+            <strong>Example 396. Example of the htrfmove opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp247547504"></a>
-              <a class="ulink" href="examples/hrtfmove.csd.html" target="_top">Play</a>
+              <a id="idm1371404144"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select flags here</span>
-<span class="comment">; realtime audio out </span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select flags here</span>
+<span class="c1">; realtime audio out </span>
  -o dac 
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
- <span class="comment">;-o hrtf.wav</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+ <span class="c1">;-o hrtf.wav</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-gasrc <span class="opc">init</span> 0
+ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</span>
 
-<span class="oblock">instr</span> 1		<span class="comment">;a plucked string</span>
+<span class="kd">instr</span> <span class="nf">1</span>		<span class="c1">;a plucked string</span>
 
-  kamp <span class="op">=</span> p4
-  kcps <span class="op">=</span> <span class="opc">cpspch</span>(p5)
-  icps <span class="op">=</span> <span class="opc">cpspch</span>(p5)
+  k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+  k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
+  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
 
-  a1 <span class="opc">pluck</span> kamp, kcps, icps, 0, 1
+  a<span class="n">1</span> <span class="nb">pluck</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 
-  gasrc <span class="op">=</span> a1
+  ga<span class="n">src</span> <span class="o">=</span> a<span class="n">1</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 10	<span class="comment">;uses output from instr1 as source</span>
+<span class="kd">instr</span> <span class="nf">10</span>	<span class="c1">;uses output from instr1 as source</span>
 
- kaz	<span class="opc">linseg</span> 0, p3, 720		<span class="comment">;2 full rotations</span>
+ k<span class="n">az</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">720</span>		<span class="c1">;2 full rotations</span>
 
- aleft,aright <span class="opc">hrtfmove</span> gasrc, kaz,0, "hrtf<span class="op">-</span>44100<span class="op">-</span>left.dat","hrtf<span class="op">-</span>44100<span class="op">-</span>right.dat"
+ a<span class="n">left</span><span class="p">,</span>a<span class="n">right</span> <span class="nb">hrtfmove</span> ga<span class="n">src</span><span class="p">,</span> k<span class="n">az</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="s">"hrtf-44100-left.dat"</span><span class="p">,</span><span class="s">"hrtf-44100-right.dat"</span>
 
- <span class="opc">outs</span>	aleft, aright
+ <span class="nb">outs</span>	a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>
   
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Play Instrument 1: a simple arpeggio</span>
-<span class="stamnt">i</span>1 0 .2 15000 8.00 
-<span class="stamnt">i</span>1 + .2 15000 8.04
-<span class="stamnt">i</span>1 + .2 15000 8.07
-<span class="stamnt">i</span>1 + .2 15000 8.11
-<span class="stamnt">i</span>1 + .2 15000 9.02
-<span class="stamnt">i</span>1 + 1.5 15000 8.11
-<span class="stamnt">i</span>1 + 1.5 15000 8.07
-<span class="stamnt">i</span>1 + 1.5 15000 8.04
-<span class="stamnt">i</span>1 + 1.5 15000 8.00
-<span class="stamnt">i</span>1 + 1.5 15000 7.09
-<span class="stamnt">i</span>1 + 1.5 15000 8.00
+<span class="c1">; Play Instrument 1: a simple arpeggio</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mf">.2</span> <span class="mi">15000</span> <span class="mf">8.00</span> 
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">.2</span> <span class="mi">15000</span> <span class="mf">8.04</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">.2</span> <span class="mi">15000</span> <span class="mf">8.07</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">.2</span> <span class="mi">15000</span> <span class="mf">8.11</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">.2</span> <span class="mi">15000</span> <span class="mf">9.02</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="mi">15000</span> <span class="mf">8.11</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="mi">15000</span> <span class="mf">8.07</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="mi">15000</span> <span class="mf">8.04</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="mi">15000</span> <span class="mf">8.00</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="mi">15000</span> <span class="mf">7.09</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="mi">15000</span> <span class="mf">8.00</span>
 
-<span class="comment">; Play Instrument 10 for 10 seconds.</span>
-<span class="stamnt">i</span>10 0 10
+<span class="c1">; Play Instrument 10 for 10 seconds.</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mi">0</span> <span class="mi">10</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -224,7 +224,7 @@ gasrc <span class="opc">init</span> 0
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idp104384816"></a>
+        <a id="idm1541843568"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="hrtfmove2.html" title="hrtfmove2"><em class="citetitle">hrtfmove2</em></a>,
@@ -234,7 +234,7 @@ gasrc <span class="opc">init</span> 0
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue9/newHRTFOpcodes.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue9/newHRTFOpcodes.html</em></a>  , written by Brian Carty </p>
       </div>
       <div class="refsect1">
-        <a id="idp104390176"></a>
+        <a id="idm1541837808"></a>
         <h2>Credits</h2>
         <p>
       </p>

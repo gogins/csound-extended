@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vcopy</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vcomb.html" title="vcomb" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153608640"></a>
+        <a id="idm1490849648"></a>
         <h2>Description</h2>
         <p>
       Copies between two vectorial control signals
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153690960"></a>
+        <a id="idm1490842608"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vcopy</strong></span>  ifn1, ifn2, kelements [, kdstoffset] [, ksrcoffset] [, kverbose]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp153692992"></a>
+        <a id="idm1490835952"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn1</em></span> - number of the table where the vectorial signal will be copied (destination)
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153695584"></a>
+        <a id="idm1490838512"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kelements</em></span> - number of elements of the vector
@@ -135,73 +136,71 @@ ielements  <span class="op">=</span>        20
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153728496"></a>
+        <a id="idm1490817392"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vcopy opcode. It uses the file <a class="ulink" href="examples/vcopy.csd" target="_top"><em class="citetitle">vcopy.csd</em></a>.
+      Here is an example of the vcopy opcode. It uses the file <a class="ulink" href="examples/vcopy.csd.html" target="_top"><em class="citetitle">vcopy.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp153730352"></a>
+          <a id="idm1490815472"></a>
           <p class="title">
-            <strong>Example 1017. Example of the vcopy opcode.</strong>
+            <strong>Example 1043. Example of the vcopy opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp270092720"></a>
-              <a class="ulink" href="examples/vcopy.csd.html" target="_top">Play</a>
+              <a id="idm1309300208"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vcopy.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span><span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vcopy.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">kr</span><span class="op">=</span>4410
-<span class="ohdr">ksmps</span><span class="op">=</span>10
-<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">kr</span><span class="o">=</span><span class="mi">4410</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">10</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
-	<span class="oblock">instr</span> 1 <span class="comment">;table playback</span>
-ar <span class="opc">lposcil</span> 1, 1, 0, 262144, 1
-<span class="opc">outs</span> ar,ar
-	<span class="oblock">endin</span>    
+	<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;table playback</span>
+a<span class="n">r</span> <span class="nb">lposcil</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">262144</span><span class="p">,</span> <span class="mi">1</span>
+<span class="nb">outs</span> a<span class="n">r</span><span class="p">,</span>a<span class="n">r</span>
+	<span class="kd">endin</span>    
 
-	<span class="oblock">instr</span> 2
-<span class="opc">vcopy</span> 2, 1, 20000 <span class="comment">;copy vector from sample to empty table</span>
-<span class="opc">vmult</span> 5, 20000, 262144 <span class="comment">;scale noise to make it audible</span>
-<span class="opc">vcopy</span> 1, 5, 20000  <span class="comment">;put noise into sample</span>
-<span class="opc">turnoff</span>
-	<span class="oblock">endin</span>
+	<span class="kd">instr</span> <span class="nf">2</span>
+<span class="nb">vcopy</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20000</span> <span class="c1">;copy vector from sample to empty table</span>
+<span class="nb">vmult</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="mi">262144</span> <span class="c1">;scale noise to make it audible</span>
+<span class="nb">vcopy</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20000</span>  <span class="c1">;put noise into sample</span>
+<span class="nb">turnoff</span>
+	<span class="kd">endin</span>
 
-	<span class="oblock">instr</span> 3
-<span class="opc">vcopy</span> 1, 2, 20000 <span class="comment">;put original information back in</span>
-<span class="opc">turnoff</span>
-	<span class="oblock">endin</span>
+	<span class="kd">instr</span> <span class="nf">3</span>
+<span class="nb">vcopy</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">20000</span> <span class="c1">;put original information back in</span>
+<span class="nb">turnoff</span>
+	<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1  0 262144   -1 "beats.wav" 0 4 0
-<span class="stamnt">f</span>2  0 262144   2  0
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span>  <span class="mi">0</span> <span class="mi">262144</span>   <span class="o">-</span><span class="mi">1</span> <span class="s">"beats.wav"</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">0</span>
+<span class="nb">f</span><span class="mi">2</span>  <span class="mi">0</span> <span class="mi">262144</span>   <span class="mi">2</span>  <span class="mi">0</span>
 
-<span class="stamnt">f</span>5  0 262144   21  3 30000
+<span class="nb">f</span><span class="mi">5</span>  <span class="mi">0</span> <span class="mi">262144</span>   <span class="mi">21</span>  <span class="mi">3</span> <span class="mi">30000</span>
 
-<span class="stamnt">i</span>1 0 4
-<span class="stamnt">i</span>2 3 1
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span>
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span>
 
-<span class="stamnt">s</span>
-<span class="stamnt">i</span>1 0 4
-<span class="stamnt">i</span>3 3 1
-<span class="stamnt">s</span>
+<span class="nb">s</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span>
+<span class="nb">i</span><span class="mi">3</span> <span class="mi">3</span> <span class="mi">1</span>
+<span class="nb">s</span>
 
-<span class="stamnt">i</span>1 0 4
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -210,7 +209,7 @@ ar <span class="opc">lposcil</span> 1, 1, 0, 262144, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153732272"></a>
+        <a id="idm1490814960"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado. Optional arguments added by Andres Cabrera and Istvan Varga.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

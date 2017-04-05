@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tonek</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tone.html" title="tone" />
@@ -38,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp149601216"></a>
+        <a id="idm1495058096"></a>
         <h2>Description</h2>
         <p>
       A first-order recursive low-pass filter with variable frequency response.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149642496"></a>
+        <a id="idm1495056944"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>tonek</strong></span> ksig, khp [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp149644704"></a>
+        <a id="idm1495052464"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- initial disposition of internal data space. Since filtering incorporates a feedback loop of previous output, the initial status of the storage space used is significant. A zero value will clear the space; a non-zero value will allow previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149646640"></a>
+        <a id="idm1495052592"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kres</em></span> -- the output signal at control-rate.
@@ -74,63 +75,62 @@ output is at control-rate rather than audio rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149651824"></a>
+        <a id="idm1495046960"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tonek opcode. It uses the file <a class="ulink" href="examples/tonek.csd" target="_top"><em class="citetitle">tonek.csd</em></a>.
+      Here is an example of the tonek opcode. It uses the file <a class="ulink" href="examples/tonek.csd.html" target="_top"><em class="citetitle">tonek.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp149653680"></a>
+          <a id="idm1495046832"></a>
           <p class="title">
-            <strong>Example 967. Example of the tonek opcode.</strong>
+            <strong>Example 993. Example of the tonek opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp269268048"></a>
-              <a class="ulink" href="examples/tonek.csd.html" target="_top">Play</a>
+              <a id="idm1315434736"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tonek.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tonek.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gisin <span class="ohdr">ftgen</span> 0, 0, 2^10, 10, 1
+gi<span class="n">sin</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">^</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ksig	<span class="opc">randomh</span>	400, 1800, 150
-aout	<span class="opc">poscil</span>	.2, 100<span class="op">+</span>ksig, gisin
-	<span class="opc">outs</span>	aout, aout
-<span class="oblock">endin</span>
+k<span class="n">sig</span>	<span class="nb">randomh</span>	<span class="mi">400</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">150</span>
+a<span class="n">out</span>	<span class="nb">poscil</span>	<span class="mf">.2</span><span class="p">,</span> <span class="mi">100</span><span class="o">+</span>k<span class="n">sig</span><span class="p">,</span> gi<span class="n">sin</span>
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-ksig	<span class="opc">randomh</span>	400, 1800, 150
-khp	<span class="opc">line</span>	1, p3, 100	<span class="comment">;vary high-pass</span>
-ksig	<span class="opc">tonek</span>	ksig, khp
-aout	<span class="opc">poscil</span>	.2, 100<span class="op">+</span>ksig, gisin
-	<span class="opc">outs</span>	aout, aout
-<span class="oblock">endin</span>
+k<span class="n">sig</span>	<span class="nb">randomh</span>	<span class="mi">400</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">150</span>
+k<span class="n">hp</span>	<span class="nb">line</span>	<span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span>	<span class="c1">;vary high-pass</span>
+k<span class="n">sig</span>	<span class="nb">tonek</span>	k<span class="n">sig</span><span class="p">,</span> k<span class="n">hp</span>
+a<span class="n">out</span>	<span class="nb">poscil</span>	<span class="mf">.2</span><span class="p">,</span> <span class="mi">100</span><span class="o">+</span>k<span class="n">sig</span><span class="p">,</span> gi<span class="n">sin</span>
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">i</span> 2 5.5 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mf">5.5</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -139,7 +139,7 @@ aout	<span class="opc">poscil</span>	.2, 100<span class="op">+</span>ksig, gisin
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149657968"></a>
+        <a id="idm1495038256"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="areson.html" title="areson"><em class="citetitle">areson</em></a>,
@@ -154,7 +154,7 @@ aout	<span class="opc">poscil</span>	.2, 100<span class="op">+</span>ksig, gisin
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149667696"></a>
+        <a id="idm1495036464"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vtabi</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vtablewa.html" title="vtablewa" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157999248"></a>
+        <a id="idm1486624880"></a>
         <h2>Description</h2>
         <p>
       This opcode reads vectors from tables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158000496"></a>
+        <a id="idm1486621808"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vtabi</strong></span>  indx, ifn, iout1 [, iout2, iout3, .... , ioutN ]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp158067280"></a>
+        <a id="idm1486621680"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>indx</em></span> - Index into f-table, either a positive number range matching the table length</p>
@@ -62,7 +63,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idp158070592"></a>
+        <a id="idm1486626032"></a>
         <h2>Performance</h2>
         <p>
       This opcode is useful in all cases in which one needs to access sets of values associated to unique indexes (for example, multi-channel samples, STFT bin frames, spectral formants, p-field based scores etc.). The number of elements of each vector (length of the vector) is determined by the number of optional arguments on the right (<span class="emphasis"><em>iout1</em></span>, <span class="emphasis"><em>iout2</em></span>, <span class="emphasis"><em>iout3</em></span>, ....  <span class="emphasis"><em>ioutN</em></span>).
@@ -92,14 +93,14 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp158080288"></a>
+        <a id="idm1486612336"></a>
         <h2>Examples</h2>
         <p>
       For an example of the vtabi opcode usage, see <a class="link" href="vtablei.html" title="vtablei"><em class="citetitle">vtablei</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158082496"></a>
+        <a id="idm1486618864"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="vtabk.html" title="vtabk"><em class="citetitle">vtabk</em></a>,
@@ -110,7 +111,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158088480"></a>
+        <a id="idm1486608752"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

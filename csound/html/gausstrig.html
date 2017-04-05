@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>gausstrig</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="gaussi.html" title="gaussi" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102451952"></a>
+        <a id="idm1543676656"></a>
         <h2>Description</h2>
         <p>
       Generates random impulses around a certain frequency.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102453248"></a>
+        <a id="idm1543670000"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>gausstrig</strong></span> kamp, kcps, kdev [, imode] [, ifrst1]</pre>
         <pre class="synopsis">kres <span class="command"><strong>gausstrig</strong></span> kamp, kcps, kdev [, imode] [, ifrst1]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp102456768"></a>
+        <a id="idm1543672944"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode</em></span> (optional, default=0) -- imode &gt; 0
@@ -69,7 +70,7 @@
       <span class="emphasis"><em>kdev</em></span> parameters.</p>
       </div>
       <div class="refsect1">
-        <a id="idp102461136"></a>
+        <a id="idm1543670640"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude.
@@ -82,56 +83,55 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102464720"></a>
+        <a id="idm1543667184"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the gausstrig opcode. It uses the file <a class="ulink" href="examples/gausstrig.csd" target="_top"><em class="citetitle">gausstrig.csd</em></a>.
+      Here is an example of the gausstrig opcode. It uses the file <a class="ulink" href="examples/gausstrig.csd.html" target="_top"><em class="citetitle">gausstrig.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp102466496"></a>
+          <a id="idm1543667056"></a>
           <p class="title">
-            <strong>Example 362. Example of the gausstrig opcode.</strong>
+            <strong>Example 366. Example of the gausstrig opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp246251552"></a>
-              <a class="ulink" href="examples/gausstrig.csd.html" target="_top">Play</a>
+              <a id="idm1374867952"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o oscil.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o oscil.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kdev <span class="opc">line</span> 0, p3, 0.9
-<span class="ohdr">seed</span> 20120125
-aimp <span class="opc">gausstrig</span> 0.5, 10, kdev
-aenv <span class="opc">filter2</span> aimp, 1, 1, 0.993, 0.993
-anoi <span class="opc">fractalnoise</span> 0.2, 1.7
-al   <span class="op">=</span> anoi<span class="op">*</span>aenv
-ar   <span class="opc">delay</span> al, 0.02
-<span class="opc">outs</span> al, ar
+k<span class="n">dev</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.9</span>
+<span class="nb">seed</span> <span class="mi">20120125</span>
+a<span class="n">imp</span> <span class="nb">gausstrig</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> k<span class="n">dev</span>
+a<span class="n">env</span> <span class="nb">filter2</span> a<span class="n">imp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.993</span><span class="p">,</span> <span class="mf">0.993</span>
+a<span class="n">noi</span> <span class="nb">fractalnoise</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.7</span>
+a<span class="n">l</span>   <span class="o">=</span> a<span class="n">noi</span><span class="o">*</span>a<span class="n">env</span>
+a<span class="n">r</span>   <span class="nb">delay</span> a<span class="n">l</span><span class="p">,</span> <span class="mf">0.02</span>
+<span class="nb">outs</span> a<span class="n">l</span><span class="p">,</span> a<span class="n">r</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 10
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -139,55 +139,54 @@ ar   <span class="opc">delay</span> al, 0.02
         <p><br class="example-break" />
     </p>
         <p>
-      Here is an example of the gausstrig opcode with imode = 1. It uses the file <a class="ulink" href="examples/gausstrig-2.csd" target="_top"><em class="citetitle">gausstrig-2.csd</em></a>.
+      Here is an example of the gausstrig opcode with imode = 1. It uses the file <a class="ulink" href="examples/gausstrig-2.csd.html" target="_top"><em class="citetitle">gausstrig-2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp102471872"></a>
+          <a id="idm1543652464"></a>
           <p class="title">
-            <strong>Example 363. Example of the gausstrig opcode with imode = 1.</strong>
+            <strong>Example 367. Example of the gausstrig opcode with imode = 1.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp246251920"></a>
-              <a class="ulink" href="examples/gausstrig-2.csd.html" target="_top">Play</a>
+              <a id="idm1374818928"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o oscil.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o oscil.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kfrq0 <span class="opc">oscil</span> 8, 0.25, 1
-ktrig <span class="opc">metro</span> 1
-kfrq  <span class="opc">samphold</span> kfrq0<span class="op">+</span>8, ktrig 
-<span class="ohdr">seed</span>  20120125
-aimp  <span class="opc">gausstrig</span> 0.5, kfrq, 0.5, 1
-aenv  <span class="opc">filter2</span> aimp, 1, 1, 0.993, 0.993
-anoi  <span class="opc">fractalnoise</span> 0.2, 1.7
-al    <span class="op">=</span> anoi<span class="op">*</span>aenv
-ar    <span class="opc">delay</span> al, 0.02
-<span class="opc">outs</span>  al, ar
+k<span class="n">frq0</span> <span class="nb">oscil</span> <span class="mi">8</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">trig</span> <span class="nb">metro</span> <span class="mi">1</span>
+k<span class="n">frq</span>  <span class="nb">samphold</span> k<span class="n">frq0</span><span class="o">+</span><span class="mi">8</span><span class="p">,</span> k<span class="n">trig</span> 
+<span class="nb">seed</span>  <span class="mi">20120125</span>
+a<span class="n">imp</span>  <span class="nb">gausstrig</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">frq</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">env</span>  <span class="nb">filter2</span> a<span class="n">imp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.993</span><span class="p">,</span> <span class="mf">0.993</span>
+a<span class="n">noi</span>  <span class="nb">fractalnoise</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.7</span>
+a<span class="n">l</span>    <span class="o">=</span> a<span class="n">noi</span><span class="o">*</span>a<span class="n">env</span>
+a<span class="n">r</span>    <span class="nb">delay</span> a<span class="n">l</span><span class="p">,</span> <span class="mf">0.02</span>
+<span class="nb">outs</span>  a<span class="n">l</span><span class="p">,</span> a<span class="n">r</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 8192 10 1
-<span class="stamnt">i</span>1 0 16
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">16</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -196,7 +195,7 @@ ar    <span class="opc">delay</span> al, 0.02
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102473840"></a>
+        <a id="idm1543657456"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dust.html" title="dust"><em class="citetitle">dust</em></a>
@@ -205,7 +204,7 @@ ar    <span class="opc">delay</span> al, 0.02
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102477808"></a>
+        <a id="idm1543658608"></a>
         <h2>Credits</h2>
         <p>
       </p>

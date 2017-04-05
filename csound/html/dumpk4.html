@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>dumpk4</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="dumpk3.html" title="dumpk3" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90165408"></a>
+        <a id="idm1555928416"></a>
         <h2>Description</h2>
         <p>
       Periodically writes four orchestra control-signal values to a named external file in a specific format.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90206672"></a>
+        <a id="idm1555929568"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>dumpk4</strong></span> ksig1, ksig2, ksig3, ksig4, ifilname, iformat, iprd</pre>
       </div>
       <div class="refsect1">
-        <a id="idp90208752"></a>
+        <a id="idm1555933792"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilname</em></span> -- character string (in double quotes, spaces permitted) denoting the external file name. May either be a full path name with target directory specified or a simple filename to be created within the current directory
@@ -90,7 +91,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90218688"></a>
+        <a id="idm1555921376"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig1, ksig2, ksig3, ksig4</em></span> -- control-rate signals
@@ -100,73 +101,72 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90221536"></a>
+        <a id="idm1555913824"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the dumpk4 opcode. It uses the file <a class="ulink" href="examples/dumpk4.csd" target="_top"><em class="citetitle">dumpk4.csd</em></a>.
+      Here is an example of the dumpk4 opcode. It uses the file <a class="ulink" href="examples/dumpk4.csd.html" target="_top"><em class="citetitle">dumpk4.csd</em></a>.
       Note that the example must be run from a directory for which the 
       user has write access.
 
       </p>
         <div class="example">
-          <a id="idp90223488"></a>
+          <a id="idm1555914592"></a>
           <p class="title">
-            <strong>Example 227. Example of the dumpk4 opcode.</strong>
+            <strong>Example 229. Example of the dumpk4 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240277552"></a>
-              <a class="ulink" href="examples/dumpk4.csd.html" target="_top">Play</a>
+              <a id="idm1390436592"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o dumpk4.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o dumpk4.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giSine <span class="ohdr">ftgen</span> 0, 0, 2^10, 10, 1
+gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">^</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">;writes four control signals to a file</span>
-kcf       <span class="opc">randh</span>     950, 1, 2, 1, 1050 <span class="comment">;generates one random number between 100 and 2000 per second</span>
-kq        <span class="opc">randh</span>     10, 1, 2, 1, 11 <span class="comment">;generates another random number between 1 and 21 per second</span>
-kdb       <span class="opc">randh</span>     9, 1, 2, 1, <span class="op">-</span>15 <span class="comment">;amplitudes in dB between -24 and -6</span>
-kpan      <span class="opc">randh</span>     .5, 1, 2, 1, .5 <span class="comment">;panning between 0 and 1</span>
-          <span class="opc">dumpk4</span>    kcf, kq, kdb, kpan, "dumpk4.txt", 8, 1 <span class="comment">;writes the control signals</span>
-          <span class="opc">prints</span>    "WRITING<span class="op">:</span>\n"
-          <span class="opc">printks</span>   "kcf <span class="op">=</span> <span class="op">%</span>f, kq <span class="op">=</span> <span class="op">%</span>f, kdb <span class="op">=</span> <span class="op">%</span>f, kpan <span class="op">=</span> <span class="op">%</span>f\n", 1, kcf, kq, kdb, kpan  <span class="comment">;prints them</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;writes four control signals to a file</span>
+k<span class="n">cf</span>       <span class="nb">randh</span>     <span class="mi">950</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1050</span> <span class="c1">;generates one random number between 100 and 2000 per second</span>
+k<span class="n">q</span>        <span class="nb">randh</span>     <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">11</span> <span class="c1">;generates another random number between 1 and 21 per second</span>
+k<span class="n">db</span>       <span class="nb">randh</span>     <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span> <span class="c1">;amplitudes in dB between -24 and -6</span>
+k<span class="n">pan</span>      <span class="nb">randh</span>     <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span> <span class="c1">;panning between 0 and 1</span>
+          <span class="nb">dumpk4</span>    k<span class="n">cf</span><span class="p">,</span> k<span class="n">q</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">pan</span><span class="p">,</span> <span class="s">"dumpk4.txt"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;writes the control signals</span>
+          <span class="nb">prints</span>    <span class="s">"WRITING:</span><span class="se">\n</span><span class="s">"</span>
+          <span class="nb">printks</span>   <span class="s">"kcf = %f, kq = %f, kdb = %f, kpan = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">q</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">pan</span>  <span class="c1">;prints them</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2 <span class="comment">;reads the file written by instr 1</span>
-kcf,kq,kdb,kp <span class="opc">readk4</span> "dumpk4.txt", 8, 1
-          <span class="opc">prints</span>    "READING<span class="op">:</span>\n"
-          <span class="opc">printks</span>   "kcf <span class="op">=</span> <span class="op">%</span>f, kq <span class="op">=</span> <span class="op">%</span>f, kdb <span class="op">=</span> <span class="op">%</span>f, kpan <span class="op">=</span> <span class="op">%</span>f\n", 1, kcf, kq, kdb, kp  <span class="comment">;prints values</span>
-kdb       <span class="opc">lineto</span>    kdb, .1 <span class="comment">;smoothing amp transition</span>
-kp        <span class="opc">lineto</span>    kp, .1 <span class="comment">;smoothing pan transition</span>
-anoise    <span class="opc">rand</span>      <span class="opc">ampdb</span>(kdb), 2, 1
-kbw       <span class="op">=</span>         kcf<span class="op">/</span>kq <span class="comment">;bandwidth of resonant filter</span>
-abp       <span class="opc">reson</span>     anoise, kcf, kbw
-aout      <span class="opc">balance</span>   abp, anoise
-aL, aR    <span class="opc">pan2</span>      aout, kp
-          <span class="opc">outs</span>      aL, aR
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;reads the file written by instr 1</span>
+k<span class="n">cf</span><span class="p">,</span>k<span class="n">q</span><span class="p">,</span>k<span class="n">db</span><span class="p">,</span>k<span class="n">p</span> <span class="nb">readk4</span> <span class="s">"dumpk4.txt"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span>
+          <span class="nb">prints</span>    <span class="s">"READING:</span><span class="se">\n</span><span class="s">"</span>
+          <span class="nb">printks</span>   <span class="s">"kcf = %f, kq = %f, kdb = %f, kpan = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">q</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">p</span>  <span class="c1">;prints values</span>
+k<span class="n">db</span>       <span class="nb">lineto</span>    k<span class="n">db</span><span class="p">,</span> <span class="mf">.1</span> <span class="c1">;smoothing amp transition</span>
+k<span class="n">p</span>        <span class="nb">lineto</span>    k<span class="n">p</span><span class="p">,</span> <span class="mf">.1</span> <span class="c1">;smoothing pan transition</span>
+a<span class="n">noise</span>    <span class="nb">rand</span>      <span class="nb">ampdb</span><span class="p">(</span>k<span class="n">db</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">bw</span>       <span class="o">=</span>         k<span class="n">cf</span><span class="o">/</span>k<span class="n">q</span> <span class="c1">;bandwidth of resonant filter</span>
+a<span class="n">bp</span>       <span class="nb">reson</span>     a<span class="n">noise</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">bw</span>
+a<span class="n">out</span>      <span class="nb">balance</span>   a<span class="n">bp</span><span class="p">,</span> a<span class="n">noise</span>
+a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>    <span class="nb">pan2</span>      a<span class="n">out</span><span class="p">,</span> k<span class="n">p</span>
+          <span class="nb">outs</span>      a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">i</span> 2 5 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -198,7 +198,7 @@ kcf = 497.430100, kq = 13.605500, kdb = -21.586600, kpan = 0.179200
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90230320"></a>
+        <a id="idm1555919328"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dumpk.html" title="dumpk"><em class="citetitle">dumpk</em></a>,
@@ -211,7 +211,7 @@ kcf = 497.430100, kq = 13.605500, kdb = -21.586600, kpan = 0.179200
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90238160"></a>
+        <a id="idm1555907424"></a>
         <h2>Credits</h2>
         <p>By: John ffitch and Barry L. Vercoe</p>
         <p>1999 or earlier</p>

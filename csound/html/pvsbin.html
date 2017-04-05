@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pvsbin</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pvsbandr.html" title="pvsbandr" />
@@ -38,19 +39,19 @@ Obtain the amp and freq values off a PVS signal bin.
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp128428832"></a>
+        <a id="idm1516696960"></a>
         <h2>Description</h2>
         <p>
 Obtain the amp and freq values off a PVS signal bin as k-rate variables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128430224"></a>
+        <a id="idm1516694016"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kamp, kfr <span class="command"><strong>pvsbin</strong></span> fsig, kbin</pre>
       </div>
       <div class="refsect1">
-        <a id="idp128432464"></a>
+        <a id="idm1516696448"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- bin amplitude
@@ -66,61 +67,60 @@ Obtain the amp and freq values off a PVS signal bin as k-rate variables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128504976"></a>
+        <a id="idm1516684416"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pvsbin opcode. It uses the file <a class="ulink" href="examples/pvsbin.csd" target="_top"><em class="citetitle">pvsbin.csd</em></a>. This example uses realtime input, but you can also use it for soundfile input.
+      Here is an example of the pvsbin opcode. It uses the file <a class="ulink" href="examples/pvsbin.csd.html" target="_top"><em class="citetitle">pvsbin.csd</em></a>. This example uses realtime input, but you can also use it for soundfile input.
       </p>
         <div class="example">
-          <a id="idp128506912"></a>
+          <a id="idm1516685568"></a>
           <p class="title">
-            <strong>Example 704. Example of the pvsbin opcode</strong>
+            <strong>Example 724. Example of the pvsbin opcode</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp260161152"></a>
-              <a class="ulink" href="examples/pvsbin.csd.html" target="_top">Play</a>
+              <a id="idm1338140656"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvsbin.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvsbin.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-ifftsize <span class="op">=</span> 1024  
-iwtype <span class="op">=</span> 1    <span class="op">/</span><span class="op">*</span> cleaner with hanning <span class="opc">window</span> <span class="op">*</span><span class="op">/</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">fftsize</span> <span class="o">=</span> <span class="mi">1024</span>  
+i<span class="n">wtype</span> <span class="o">=</span> <span class="mi">1</span>    <span class="cm">/* cleaner with hanning window */</span>
 
-<span class="comment">;a1   soundin "input.wav"  ;select a soundifle</span>
-a1 <span class="opc">inch</span> 1   <span class="comment">;Use realtime input</span>
+<span class="c1">;a1   soundin "input.wav"  ;select a soundifle</span>
+a<span class="n">1</span> <span class="nb">inch</span> <span class="mi">1</span>   <span class="c1">;Use realtime input</span>
 
-fsig <span class="opc">pvsanal</span>   a1, ifftsize, ifftsize<span class="op">/</span>4, ifftsize, iwtype
-kamp, kfr <span class="opc">pvsbin</span>   fsig, 10
-adm  <span class="opc">oscil</span>     kamp, kfr, 1
+<span class="n">fsig</span> <span class="nb">pvsanal</span>   a<span class="n">1</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">fftsize</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">wtype</span>
+k<span class="n">amp</span><span class="p">,</span> k<span class="n">fr</span> <span class="nb">pvsbin</span>   <span class="n">fsig</span><span class="p">,</span> <span class="mi">10</span>
+a<span class="n">dm</span>  <span class="nb">oscil</span>     k<span class="n">amp</span><span class="p">,</span> k<span class="n">fr</span><span class="p">,</span> <span class="mi">1</span>
 
-       <span class="opc">out</span>    adm
-<span class="oblock">endin</span>
+       <span class="nb">out</span>    a<span class="n">dm</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; sine wave</span>
-<span class="stamnt">f</span> 1 0 4096 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; sine wave</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 30
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -129,7 +129,7 @@ adm  <span class="opc">oscil</span>     kamp, kfr, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128511200"></a>
+        <a id="idm1516685824"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -138,7 +138,7 @@ adm  <span class="opc">oscil</span>     kamp, kfr, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128515232"></a>
+        <a id="idm1516679424"></a>
         <h2>Credits</h2>
         <p>
       </p>

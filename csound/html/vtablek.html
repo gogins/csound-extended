@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vtablek</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vtablei.html" title="vtablei" />
@@ -39,19 +40,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157718912"></a>
+        <a id="idm1486980592"></a>
         <h2>Description</h2>
         <p>
 	This opcode reads vectors from tables at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157720224"></a>
+        <a id="idm1486981232"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vtablek</strong></span>  kndx, kfn, kinterp, ixmode, kout1 [, kout2, kout3, .... , koutN ]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp157792304"></a>
+        <a id="idm1486979568"></a>
         <h2>Initialization</h2>
         <p> <span class="emphasis"><em>ixmode</em></span> -  index data mode. The default value is 0.
     </p>
@@ -64,7 +65,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idp157796048"></a>
+        <a id="idm1486972656"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kndx</em></span> - Index into f-table, either a positive number range matching the table length (ixmode = 0) or a 0 to 1 range (ixmode != 0).
@@ -106,63 +107,62 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp157807728"></a>
+        <a id="idm1486965616"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vtablek opcode. It uses the files <a class="ulink" href="examples/vtablek.csd" target="_top"><em class="citetitle">vtablek.csd</em></a>.
+      Here is an example of the vtablek opcode. It uses the files <a class="ulink" href="examples/vtablek.csd.html" target="_top"><em class="citetitle">vtablek.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp157809584"></a>
+          <a id="idm1486964336"></a>
           <p class="title">
-            <strong>Example 1066. Example of the vtablek opcode.</strong>
+            <strong>Example 1092. Example of the vtablek opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp273136848"></a>
-              <a class="ulink" href="examples/vtablek.csd.html" target="_top">Play</a>
+              <a id="idm1304568176"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac -B441 -b441
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>     <span class="op">=</span>        44100
-<span class="ohdr">kr</span>     <span class="op">=</span>        100
-<span class="ohdr">ksmps</span>  <span class="op">=</span>        441
-<span class="ohdr">nchnls</span> <span class="op">=</span>        2
+<span class="vg">sr</span>     <span class="o">=</span>        <span class="mi">44100</span>
+<span class="vg">kr</span>     <span class="o">=</span>        <span class="mi">100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span>        <span class="mi">441</span>
+<span class="vg">nchnls</span> <span class="o">=</span>        <span class="mi">2</span>
 
-gkindx <span class="opc">init</span> <span class="op">-</span>1
+gk<span class="n">indx</span> <span class="nb">init</span> <span class="o">-</span><span class="mi">1</span>
 
-       <span class="oblock">instr</span>    1
-kindex <span class="opc">init</span> 0
-ktrig <span class="opc">metro</span> 0.5
-<span class="octrl">if</span> ktrig <span class="op">=</span> 0 <span class="octrl">goto</span> <span class="olabel">noevent</span>
-gkindx <span class="op">=</span> gkindx <span class="op">+</span> 1
-<span class="olabel">noevent</span><span class="op">:</span>
+       <span class="kd">instr</span>    <span class="nf">1</span>
+k<span class="n">index</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">trig</span> <span class="nb">metro</span> <span class="mf">0.5</span>
+<span class="k">if</span> k<span class="n">trig</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">goto</span> <span class="nl">noevent</span>
+gk<span class="n">indx</span> <span class="o">=</span> gk<span class="n">indx</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="nl">noevent</span><span class="p">:</span>
 
-	<span class="oblock">endin</span>
+	<span class="kd">endin</span>
 
-	<span class="oblock">instr</span>	2
-kout1 <span class="opc">init</span> 0
-kout2 <span class="opc">init</span> 0
-kout3 <span class="opc">init</span> 0
-kout4 <span class="opc">init</span> 0
-<span class="opc">vtablek</span>  gkindx, 1, 1, 0, kout1,kout2, kout3, kout4
-<span class="opc">printk2</span> kout1
-<span class="opc">printk2</span> kout2
-<span class="opc">printk2</span> kout3
-<span class="opc">printk2</span> kout4
-	<span class="oblock">endin</span>
+	<span class="kd">instr</span>	<span class="nf">2</span>
+k<span class="n">out1</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">out2</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">out3</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">out4</span> <span class="nb">init</span> <span class="mi">0</span>
+<span class="nb">vtablek</span>  gk<span class="n">indx</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">out1</span><span class="p">,</span>k<span class="n">out2</span><span class="p">,</span> k<span class="n">out3</span><span class="p">,</span> k<span class="n">out4</span>
+<span class="nb">printk2</span> k<span class="n">out1</span>
+<span class="nb">printk2</span> k<span class="n">out2</span>
+<span class="nb">printk2</span> k<span class="n">out3</span>
+<span class="nb">printk2</span> k<span class="n">out4</span>
+	<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 32 10 1
-<span class="stamnt">i</span> 1 0 20
-<span class="stamnt">i</span> 2 0 20
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">20</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -171,7 +171,7 @@ kout4 <span class="opc">init</span> 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157811504"></a>
+        <a id="idm1486971504"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="vtablea.html" title="vtablea"><em class="citetitle">vtablea</em></a>,
@@ -182,7 +182,7 @@ kout4 <span class="opc">init</span> 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157817520"></a>
+        <a id="idm1486961520"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>Example written by Andres Cabrera.</p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>changed2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="changed.html" title="changed" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp83015008"></a>
+        <a id="idm1563296112"></a>
         <h2>Description</h2>
         <p>
 	This opcode outputs a trigger signal that informs when any one
@@ -46,14 +47,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp83016576"></a>
+        <a id="idm1563548144"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktrig <span class="command"><strong>changed2</strong></span> kvar1 [, kvar2,..., kvarN]</pre>
         <pre class="synopsis">ktrig <span class="command"><strong>changed2</strong></span> karr[]</pre>
         <pre class="synopsis">ktrig <span class="command"><strong>changed2</strong></span> aarr[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp83065344"></a>
+        <a id="idm1563548656"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig</em></span> - Outputs a value of 1 when any of
@@ -71,56 +72,55 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp83069936"></a>
+        <a id="idm1563545456"></a>
         <h2>Examples</h2>
         <p>
       Here are two examples of the changed2 opcode. They use the files
-      <a class="ulink" href="examples/changed2.csd" target="_top"><em class="citetitle">changed2.csd</em></a>
-      and <a class="ulink" href="examples/changed2a.csd" target="_top"><em class="citetitle">changed2a.csd</em></a>.
+      <a class="ulink" href="examples/changed2.csd.html" target="_top"><em class="citetitle">changed2.csd</em></a>
+      and <a class="ulink" href="examples/changed2a.csd.html" target="_top"><em class="citetitle">changed2a.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp83072736"></a>
+          <a id="idm1563546352"></a>
           <p class="title">
-            <strong>Example 115. Example of the changed2 opcode.</strong>
+            <strong>Example 116. Example of the changed2 opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp236670448"></a>
-              <a class="ulink" href="examples/changed2.csd.html" target="_top">Play</a>
+              <a id="idm1400075376"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o changed.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o changed.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ksig  <span class="opc">oscil</span> 2, 0.5, 1
-kint  <span class="op">=</span> <span class="opc">int</span>(ksig)
-ktrig <span class="opc">changed2</span> kint
-      <span class="opc">printk</span> 0.2, kint
-      <span class="opc">printk2</span> ktrig
+k<span class="n">sig</span>  <span class="nb">oscil</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">int</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>k<span class="n">sig</span><span class="p">)</span>
+k<span class="n">trig</span> <span class="nb">changed2</span> k<span class="n">int</span>
+      <span class="nb">printk</span> <span class="mf">0.2</span><span class="p">,</span> k<span class="n">int</span>
+      <span class="nb">printk2</span> k<span class="n">trig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 1024 10 1
-<span class="stamnt">i</span> 1 0 20
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">20</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -160,40 +160,41 @@ ktrig <span class="opc">changed2</span> kint
         <p>
     </p>
         <div class="example">
-          <a id="idp83076544"></a>
+          <a id="idm1563538800"></a>
           <p class="title">
-            <strong>Example 116. Example of the changed2 opcode.</strong>
+            <strong>Example 117. Example of the changed2 opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp236694784"></a>
-              <a class="ulink" href="examples/changed2a.csd.html" target="_top">Play</a>
+              <a id="idm1400058608"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+
+<span class="nt">&lt;CsOptions&gt;</span>
 -n
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-gkArray[][] <span class="opc">init</span>   2,3
-gkArray     <span class="opc">array</span>  1,2,3,7,6,5
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+gk<span class="n">Array</span><span class="p">[][]</span> <span class="nb">init</span>   <span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
+gk<span class="n">Array</span>     <span class="nb">array</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span>
 
-<span class="oblock">instr</span> 1
-k1 <span class="opc">changed2</span> gkArray
-<span class="octrl">if</span> k1<span class="op">==</span>1 then
-    <span class="opc">printks</span> "An element <span class="opc">in</span> the <span class="opc">array</span> changed", 0
-<span class="octrl">endif</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">1</span> <span class="nb">changed2</span> gk<span class="n">Array</span>
+<span class="k">if</span> k<span class="n">1</span><span class="o">==</span><span class="mi">1</span> <span class="k">then</span>
+    <span class="nb">printks</span> <span class="s">"An element in the array changed"</span><span class="p">,</span> <span class="mi">0</span>
+<span class="k">endif</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2<span class="comment">; change value of channel 'step1'</span>
-    gkArray[1][0] <span class="op">=</span> 3
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span><span class="c1">; change value of channel 'step1'</span>
+    gk<span class="n">Array</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 100
-<span class="stamnt">i</span>2 4 .1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">100</span>
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">4</span> <span class="mf">.1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -201,7 +202,7 @@ k1 <span class="opc">changed2</span> gkArray
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idp83078336"></a>
+        <a id="idm1563542768"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch.</p>
         <p>Example written by Andrés Cabrera.</p>

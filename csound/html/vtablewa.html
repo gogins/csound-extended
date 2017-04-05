@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vtablewa</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vtablewk.html" title="vtablewk" />
@@ -39,19 +40,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157956480"></a>
+        <a id="idm1487064432"></a>
         <h2>Description</h2>
         <p>
 	This opcode writes vectors to tables at a-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158016768"></a>
+        <a id="idm1487065456"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vtablewa</strong></span>  andx, kfn, ixmode, ainarg1 [, ainarg2, ainarg3 , .... , ainargN ]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp158018752"></a>
+        <a id="idm1487068016"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ixmode</em></span> -  index data mode. The default value is 0.
@@ -62,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158021536"></a>
+        <a id="idm1486652528"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>andx</em></span> - Index into f-table, either a positive number range matching the table length (ixmode = 0) or a 0 to 1 range (ixmode != 0).
@@ -84,52 +85,51 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158029008"></a>
+        <a id="idm1486657136"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vtablewa opcode. It uses the files <a class="ulink" href="examples/vtablewa.csd" target="_top"><em class="citetitle">vtablewa.csd</em></a>.
+      Here is an example of the vtablewa opcode. It uses the files <a class="ulink" href="examples/vtablewa.csd.html" target="_top"><em class="citetitle">vtablewa.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp158030864"></a>
+          <a id="idm1486653040"></a>
           <p class="title">
-            <strong>Example 1068. Example of the vtablewa opcode.</strong>
+            <strong>Example 1094. Example of the vtablewa opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp273138288"></a>
-              <a class="ulink" href="examples/vtablewa.csd.html" target="_top">Play</a>
+              <a id="idm1304763888"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac -b441 -B441
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">kr</span><span class="op">=</span>4410
-<span class="ohdr">ksmps</span><span class="op">=</span>10
-<span class="ohdr">nchnls</span><span class="op">=</span>2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">kr</span><span class="o">=</span><span class="mi">4410</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">10</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-	<span class="oblock">instr</span> 1
-<span class="opc">vcopy</span> 2, 1, 262144
-ar <span class="opc">random</span> 0, 1
-<span class="opc">vtablewa</span> ar,2,1,ar
-<span class="opc">out</span> ar,ar
-	<span class="oblock">endin</span>    
+	<span class="kd">instr</span> <span class="nf">1</span>
+<span class="nb">vcopy</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">262144</span>
+a<span class="n">r</span> <span class="nb">random</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="nb">vtablewa</span> a<span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>a<span class="n">r</span>
+<span class="nb">out</span> a<span class="n">r</span><span class="p">,</span>a<span class="n">r</span>
+	<span class="kd">endin</span>    
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1  0 262144   -1 "beats.wav" 0 4 0
-<span class="stamnt">f</span>2  0 262144   2  0
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span>  <span class="mi">0</span> <span class="mi">262144</span>   <span class="o">-</span><span class="mi">1</span> <span class="s">"beats.wav"</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">0</span>
+<span class="nb">f</span><span class="mi">2</span>  <span class="mi">0</span> <span class="mi">262144</span>   <span class="mi">2</span>  <span class="mi">0</span>
 
-<span class="stamnt">i</span>1 0 4
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -138,7 +138,7 @@ ar <span class="opc">random</span> 0, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158032720"></a>
+        <a id="idm1486646640"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>Example written by Andres Cabrera.</p>

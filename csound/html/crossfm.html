@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>crossfm</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="cross2.html" title="cross2" />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86626432"></a>
+        <a id="idm1559696880"></a>
         <h2>Description</h2>
         <p>
       Two oscillators, mutually frequency and/or phase modulated by each other.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86692368"></a>
+        <a id="idm1559703024"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1, a2 <span class="command"><strong>crossfm</strong></span> xfrq1, xfrq2, xndx1, xndx2, kcps, ifn1, ifn2 [, iphs1] [, iphs2]</pre>
         <pre class="synopsis">a1, a2 <span class="command"><strong>crossfmi</strong></span> xfrq1, xfrq2, xndx1, xndx2, kcps, ifn1, ifn2 [, iphs1] [, iphs2]</pre>
@@ -55,7 +56,7 @@
         <pre class="synopsis">a1, a2 <span class="command"><strong>crossfmpmi</strong></span> xfrq1, xfrq2, xndx1, xndx2, kcps, ifn1, ifn2 [, iphs1] [, iphs2]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp86701872"></a>
+        <a id="idm1559690736"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn1</em></span> -- function table number for oscillator #1.
@@ -77,7 +78,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86707376"></a>
+        <a id="idm1559689584"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xfrq1</em></span> -- a factor that, when multipled by the
@@ -146,58 +147,60 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp86722304"></a>
+        <a id="idm1559679728"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the crossfm opcode. It uses the file
-      <a class="ulink" href="examples/crossfm.csd" target="_top"><em class="citetitle">crossfm.csd</em></a>.
+      <a class="ulink" href="examples/crossfm.csd.html" target="_top"><em class="citetitle">crossfm.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp86724176"></a>
+          <a id="idm1559671920"></a>
           <p class="title">
-            <strong>Example 169. Example of the crossfm opcode.</strong>
+            <strong>Example 171. Example of the crossfm opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp238823904"></a>
-              <a class="ulink" href="examples/crossfm.csd.html" target="_top">Play</a>
+              <a id="idm1394905968"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+
+<span class="nt">&lt;CsOptions&gt;</span>
   -d -o dac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span>        <span class="op">=</span>         96000
-<span class="ohdr">ksmps</span>     <span class="op">=</span>         10
-<span class="ohdr">nchnls</span>    <span class="op">=</span>         2
-<span class="ohdr">0dbfs</span>     <span class="op">=</span>         1
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-<span class="opc">FLpanel</span> "crossfmForm", 600, 400, 0, 0
-  gkfrq1, ihfrq1 <span class="opc">FLcount</span> "Freq #1", 0, 20000, 0.001, 1, 1, 200, 30, 20, 50, <span class="op">-</span>1
-  gkfrq2, ihfrq2 <span class="opc">FLcount</span> "Freq #2", 0, 20000, 0.001, 1, 1, 200, 30, 20, 130, <span class="op">-</span>1
-  gkndx1, gkndx2, ihndx1, ihndx2 <span class="opc">FLjoy</span> "Indexes", 0, 10, 0, 10, 0, 0, <span class="op">-</span>1, <span class="op">-</span>1, 200, 200, 300, 50
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span>        <span class="o">=</span>         <span class="mi">96000</span>
+<span class="vg">ksmps</span>     <span class="o">=</span>         <span class="mi">10</span>
+<span class="vg">nchnls</span>    <span class="o">=</span>         <span class="mi">2</span>
+<span class="vg">0dbfs</span>     <span class="o">=</span>         <span class="mi">1</span>
+
+<span class="nb">FLpanel</span> <span class="s">"crossfmForm"</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+  gk<span class="n">frq1</span><span class="p">,</span> i<span class="n">hfrq1</span> <span class="nb">FLcount</span> <span class="s">"Freq #1"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+  gk<span class="n">frq2</span><span class="p">,</span> i<span class="n">hfrq2</span> <span class="nb">FLcount</span> <span class="s">"Freq #2"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+  gk<span class="n">ndx1</span><span class="p">,</span> gk<span class="n">ndx2</span><span class="p">,</span> i<span class="n">hndx1</span><span class="p">,</span> i<span class="n">hndx2</span> <span class="nb">FLjoy</span> <span class="s">"Indexes"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">50</span>
   
-  <span class="opc">FLsetVal_i</span> 164.5, ihfrq1
-  <span class="opc">FLsetVal_i</span> 263.712, ihfrq2
-  <span class="opc">FLsetVal_i</span> 1.5, ihndx1
-  <span class="opc">FLsetVal_i</span> 3, ihndx2
-<span class="opc">FLpanelEnd</span>
-<span class="opc">FLrun</span>
+  <span class="nb">FLsetVal_i</span> <span class="mf">164.5</span><span class="p">,</span> i<span class="n">hfrq1</span>
+  <span class="nb">FLsetVal_i</span> <span class="mf">263.712</span><span class="p">,</span> i<span class="n">hfrq2</span>
+  <span class="nb">FLsetVal_i</span> <span class="mf">1.5</span><span class="p">,</span> i<span class="n">hndx1</span>
+  <span class="nb">FLsetVal_i</span> <span class="mi">3</span><span class="p">,</span> i<span class="n">hndx2</span>
+<span class="nb">FLpanelEnd</span>
+<span class="nb">FLrun</span>
 
-<span class="opc">maxalloc</span> 1, 2
+<span class="nb">maxalloc</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
 
-          <span class="oblock">instr</span> 1
-kamp      <span class="opc">linen</span>     0.5, 0.01, p3, 0.5 
-a1,a2     <span class="opc">crossfm</span>   gkfrq1, gkfrq2, gkndx1, gkndx2, 1, 1, 1
-          <span class="opc">outs</span>      a1<span class="op">*</span>kamp, a2<span class="op">*</span>kamp
-          <span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 16384 10 1 0
-<span class="stamnt">i</span>1 0 60
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+          <span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">amp</span>      <span class="nb">linen</span>     <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.5</span> 
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>     <span class="nb">crossfm</span>   gk<span class="n">frq1</span><span class="p">,</span> gk<span class="n">frq2</span><span class="p">,</span> gk<span class="n">ndx1</span><span class="p">,</span> gk<span class="n">ndx2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+          <span class="nb">outs</span>      a<span class="n">1</span><span class="o">*</span>k<span class="n">amp</span><span class="p">,</span> a<span class="n">2</span><span class="o">*</span>k<span class="n">amp</span>
+          <span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -212,12 +215,12 @@ a1,a2     <span class="opc">crossfm</span>   gkfrq1, gkfrq2, gkndx1, gkndx2, 1, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86727520"></a>
+        <a id="idm1559678960"></a>
         <h2>See Also</h2>
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue12/crossfm.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue12/crossfm.html</em></a> , written by François Pinot  </p>
       </div>
       <div class="refsect1">
-        <a id="idp86729712"></a>
+        <a id="idm1559677168"></a>
         <h2>Credits</h2>
         <p>
       </p>

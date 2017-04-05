@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>mididefault</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="midictrl.html" title="midictrl" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp114115120"></a>
+        <a id="idm1531446896"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>mididefault</em></span> is designed to simplify writing instruments that can be used interchangeably for either score or MIDI input, and to make it easier to adapt instruments originally written for score input to work with MIDI input.
@@ -52,12 +53,12 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114192032"></a>
+        <a id="idm1531442032"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>mididefault</strong></span> xdefault, xvalue</pre>
       </div>
       <div class="refsect1">
-        <a id="idp114194080"></a>
+        <a id="idm1531437168"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xdefault</em></span> -- specifies a default value that will be used during MIDI activation.
@@ -88,59 +89,58 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp114202192"></a>
+        <a id="idm1531431152"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the mididefault opcode. It uses the file <a class="ulink" href="examples/mididefault.csd" target="_top"><em class="citetitle">mididefault.csd</em></a>.
+      Here is an example of the mididefault opcode. It uses the file <a class="ulink" href="examples/mididefault.csd.html" target="_top"><em class="citetitle">mididefault.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp114204064"></a>
+          <a id="idm1531426288"></a>
           <p class="title">
-            <strong>Example 513. Example of the mididefault opcode.</strong>
+            <strong>Example 529. Example of the mididefault opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp252762960"></a>
-              <a class="ulink" href="examples/mididefault.csd.html" target="_top">Play</a>
+              <a id="idm1356942192"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    -M1  <span class="comment">;;;realtime audio out and midi in </span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o mididefault.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    -M1  <span class="c1">;;;realtime audio out and midi in </span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o mididefault.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="opc">mididefault</span> 60, p3					<span class="comment">;ensures that a MIDI-activated instrument will have a positive p3 field</span>
-<span class="opc">midinoteoncps</span> p4, p5					<span class="comment">;puts MIDI key translated to cycles per second into p4, and MIDI velocity into p5</span>
+<span class="nb">mididefault</span> <span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>					<span class="c1">;ensures that a MIDI-activated instrument will have a positive p3 field</span>
+<span class="nb">midinoteoncps</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>					<span class="c1">;puts MIDI key translated to cycles per second into p4, and MIDI velocity into p5</span>
 
-kvel <span class="op">=</span> p5<span class="op">/</span>127						<span class="comment">;scale midi velocity to 0-1</span>
-kenv <span class="opc">madsr</span> 0.5, 0.8, 0.8, 0.5				<span class="comment">;amplitude envelope multiplied by</span>
-asig <span class="opc">pluck</span> kenv<span class="op">*</span>kvel, p4, p4, 2, 1			<span class="comment">;velocity		</span>
-     <span class="opc">outs</span>  asig, asig
+k<span class="n">vel</span> <span class="o">=</span> <span class="nb">p5</span><span class="o">/</span><span class="mi">127</span>						<span class="c1">;scale midi velocity to 0-1</span>
+k<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span>				<span class="c1">;amplitude envelope multiplied by</span>
+a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</span><span class="o">*</span>k<span class="n">vel</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;velocity		</span>
+     <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 0 30	<span class="comment">;runs for 30 seconds</span>
-<span class="stamnt">f</span> 2 0 4096 10 1	
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">30</span>	<span class="c1">;runs for 30 seconds</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>	
 
-<span class="stamnt">i</span> 1 0 2 440 100	<span class="comment">; play these notes from score as well</span>
-<span class="stamnt">i</span> 1 + 2 1440 100
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">440</span> <span class="mi">100</span>	<span class="c1">; play these notes from score as well</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">1440</span> <span class="mi">100</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -149,7 +149,7 @@ asig <span class="opc">pluck</span> kenv<span class="op">*</span>kvel, p4, p4, 2
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114208352"></a>
+        <a id="idm1531431920"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midichannelaftertouch.html" title="midichannelaftertouch"><em class="citetitle">midichannelaftertouch</em></a>, 
@@ -165,7 +165,7 @@ asig <span class="opc">pluck</span> kenv<span class="op">*</span>kvel, p4, p4, 2
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114219040"></a>
+        <a id="idm1531421936"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins</p>
         <p>New in version 4.20</p>

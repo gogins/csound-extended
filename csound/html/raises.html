@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>^</title>
+    <title>ˆ</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="equals.html" title="==" />
@@ -15,7 +16,7 @@
     <div class="navheader">
       <table width="100%" summary="Navigation header">
         <tr>
-          <th colspan="3" align="center">^</th>
+          <th colspan="3" align="center">ˆ</th>
         </tr>
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="equals.html">Prev</a> </td>
@@ -31,14 +32,14 @@
       <a id="IndexCirc" class="indexterm"></a>
       <div class="refnamediv">
         <h2>
-          <span class="refentrytitle">^</span>
+          <span class="refentrytitle">ˆ</span>
         </h2>
-        <p>^ — 
+        <p>ˆ — 
       <span class="quote">“<span class="quote">Power of</span>”</span> operator.
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp78023344"></a>
+        <a id="idm1568266096"></a>
         <h2>Description</h2>
         <p>
       Arithmetic operators perform operations of change-sign (negate), don't-change-sign, logical AND logical OR, add, subtract, multiply and divide. Note that a value or an expression may fall between two of these operators, either of which could take it as its left or right argument, as in
@@ -104,70 +105,69 @@ a - b - c<br />
       Parentheses may be used as above to force particular groupings.
     </p>
         <p>
-      The operator <span class="emphasis"><em>^</em></span> raises <span class="emphasis"><em>a</em></span> to the <span class="emphasis"><em>b</em></span> power. <span class="emphasis"><em>b</em></span> may not be audio-rate. Use with caution as precedence may not work correctly. See <a class="link" href="pow.html" title="pow"><em class="citetitle">pow</em></a>.  (New in Csound version 3.493.)
+      The operator <span class="emphasis"><em>ˆ</em></span> raises <span class="emphasis"><em>a</em></span> to the <span class="emphasis"><em>b</em></span> power. <span class="emphasis"><em>b</em></span> may not be audio-rate. Use with caution as precedence may not work correctly. See <a class="link" href="pow.html" title="pow"><em class="citetitle">pow</em></a>.  (New in Csound version 3.493.)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78037568"></a>
+        <a id="idm1568256240"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis">a <span class="command"><strong>^</strong></span>  b  (b not audio-rate)</pre>
+        <pre class="synopsis">a <span class="command"><strong>ˆ</strong></span>  b  (b not audio-rate)</pre>
         <p>
       where the arguments <span class="emphasis"><em>a</em></span> and <span class="emphasis"><em>b</em></span> may be further expressions.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78040992"></a>
+        <a id="idm1568252400"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ^ operator. It uses the file <a class="ulink" href="examples/raises.csd" target="_top"><em class="citetitle">raises.csd</em></a>.
+      Here is an example of the ˆ operator. It uses the file <a class="ulink" href="examples/raises.csd.html" target="_top"><em class="citetitle">raises.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp78042816"></a>
+          <a id="idm1568250352"></a>
           <p class="title">
-            <strong>Example 34. Example of the ^ operator.</strong>
+            <strong>Example 34. Example of the ˆ operator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp233637984"></a>
-              <a class="ulink" href="examples/raises.csd.html" target="_top">Play</a>
+              <a id="idm1407622000"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">;-o ^.wav        ; output to audio file</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">;-o ^.wav        ; output to audio file</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
   
-<span class="oblock">instr</span> 1	<span class="comment">; Lo-Fi sound</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; Lo-Fi sound</span>
 
-kpow	  <span class="op">=</span> 10						<span class="comment">;exponent</span>
-kbase	  <span class="opc">line</span> 1, p3, 2.2				<span class="comment">;vary the base</span>
-kQuantize <span class="op">=</span> kbase^kpow
-kQuantize <span class="op">=</span> kQuantize<span class="op">*</span>0.5				<span class="comment">;half the number of steps for each side of a bipolar signal</span>
-<span class="opc">printk2</span>	  kQuantize
-asig	  <span class="opc">diskin2</span> "fox.wav", 1, 0, 1			<span class="comment">;loop the fox</span>
-asig	  <span class="op">=</span> <span class="opc">round</span>(asig <span class="op">*</span> kQuantize) <span class="op">/</span> kQuantize		<span class="comment">;quantize and scale audio signal</span>
-	  <span class="opc">outs</span> asig, asig  
+k<span class="n">pow</span>	  <span class="o">=</span> <span class="mi">10</span>						<span class="c1">;exponent</span>
+k<span class="n">base</span>	  <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">2.2</span>				<span class="c1">;vary the base</span>
+k<span class="n">Quantize</span> <span class="o">=</span> k<span class="n">base</span><span class="o">^</span>k<span class="n">pow</span>
+k<span class="n">Quantize</span> <span class="o">=</span> k<span class="n">Quantize</span><span class="o">*</span><span class="mf">0.5</span>				<span class="c1">;half the number of steps for each side of a bipolar signal</span>
+<span class="nb">printk2</span>	  k<span class="n">Quantize</span>
+a<span class="n">sig</span>	  <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop the fox</span>
+a<span class="n">sig</span>	  <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>a<span class="n">sig</span> <span class="o">*</span> k<span class="n">Quantize</span><span class="p">)</span> <span class="o">/</span> k<span class="n">Quantize</span>		<span class="c1">;quantize and scale audio signal</span>
+	  <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>  
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 19.2
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mf">19.2</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -187,7 +187,7 @@ asig	  <span class="op">=</span> <span class="opc">round</span>(asig <span class
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78047856"></a>
+        <a id="idm1568248304"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="subtracts.html" title="-"><em class="citetitle">-</em></a>, 

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>mvclpf4</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="mvclpf3.html" title="mvclpf3" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117293456"></a>
+        <a id="idm1528121712"></a>
         <h2>Description</h2>
         <p>
 Mvclpf4 is an digital implementation of the 4th-order (24 dB/oct) Moog ladder filter
@@ -49,12 +50,12 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117294896"></a>
+        <a id="idm1528127472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig1,asig2,asig3,asig4 <span class="command"><strong>mvclpf4</strong></span> ain, xcf, xres[, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp117358592"></a>
+        <a id="idm1528115184"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> --initial disposition of internal
@@ -66,7 +67,7 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117360496"></a>
+        <a id="idm1528112240"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig1</em></span> -- 6dB/oct low-pass response output.
@@ -94,46 +95,45 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117367344"></a>
+        <a id="idm1528107120"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the mvclpf4 opcode. It uses the file <a class="ulink" href="examples/mvclpf4.csd" target="_top"><em class="citetitle">mvclpf4.csd</em></a>.
+      Here is an example of the mvclpf4 opcode. It uses the file <a class="ulink" href="examples/mvclpf4.csd.html" target="_top"><em class="citetitle">mvclpf4.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp117369200"></a>
+          <a id="idm1528107376"></a>
           <p class="title">
-            <strong>Example 560. Example of the mvclpf4 opcode.</strong>
+            <strong>Example 578. Example of the mvclpf4 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp254481968"></a>
-              <a class="ulink" href="examples/mvclpf4.csd.html" target="_top">Play</a>
+              <a id="idm1352382192"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac 
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
- asig[] <span class="opc">init</span> 4
- kenv <span class="opc">linen</span> p4,0.1,p3,0.1
- ain <span class="opc">rand</span> kenv 
- kfr <span class="opc">expon</span> 220, p3, 1760
- asig[0],asig[1],asig[2],asig[3] <span class="opc">mvclpf4</span> ain,kfr,0.9
-  <span class="opc">out</span> asig[p5]
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+ a<span class="n">sig</span><span class="p">[]</span> <span class="nb">init</span> <span class="mi">4</span>
+ k<span class="n">env</span> <span class="nb">linen</span> <span class="nb">p4</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span><span class="mf">0.1</span>
+ a<span class="n">in</span> <span class="nb">rand</span> k<span class="n">env</span> 
+ k<span class="n">fr</span> <span class="nb">expon</span> <span class="mi">220</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1760</span>
+ a<span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="nb">mvclpf4</span> a<span class="n">in</span><span class="p">,</span>k<span class="n">fr</span><span class="p">,</span><span class="mf">0.9</span>
+  <span class="nb">out</span> a<span class="n">sig</span><span class="p">[</span><span class="nb">p5</span><span class="p">]</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 5 0.9 0
-<span class="stamnt">i</span>1 + 5 0.9 1
-<span class="stamnt">i</span>1 + 5 0.9 2
-<span class="stamnt">i</span>1 + 5 0.9 3
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span> <span class="mf">0.9</span> <span class="mi">0</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mf">0.9</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mf">0.9</span> <span class="mi">2</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mf">0.9</span> <span class="mi">3</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -142,7 +142,7 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117373488"></a>
+        <a id="idm1528109040"></a>
         <h2>Credits</h2>
         <p>
       </p>

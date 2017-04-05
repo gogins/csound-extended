@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>The Canonical Csound Reference Manual</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="next" href="PrefaceTop.html" title="Preface" />
   </head>
@@ -33,7 +34,7 @@
             <h2 class="title"><a href="indexframes.html">Frames Version</a></h2>
           </div>          </div>
           <div>
-            <h2 class="subtitle">Version 6.07</h2>
+            <h2 class="subtitle">Version 6.08</h2>
           </div>
           <div>
             <div class="authorgroup">
@@ -90,7 +91,7 @@
               </dt>
               <dt>
                 <span class="section">
-                  <a href="PrefaceWhatsNew.html">What's new in Csound 6.07</a>
+                  <a href="PrefaceWhatsNew.html">What's new in Csound 6.08</a>
                 </span>
               </dt>
             </dl>
@@ -225,12 +226,17 @@
                   </dt>
                   <dt>
                     <span class="section">
+                      <a href="RealTimeMac.html">Mac OSX</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="section">
                       <a href="RealTimeWindows.html">Windows</a>
                     </span>
                   </dt>
                   <dt>
                     <span class="section">
-                      <a href="RealTimeMac.html">Mac OSX</a>
+                      <a href="RealTimeJack.html">Realtime I/O with JACK Connection Kit</a>
                     </span>
                   </dt>
                   <dt>
@@ -1033,7 +1039,12 @@
                 <dl>
                   <dt>
                     <span class="section">
-                      <a href="OSCNetwork.html#OSC">OSC</a>
+                      <a href="OSCNetwork.html#AbletonLink">Ableton Link Opcodes</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="section">
+                      <a href="OSC.html">OSC</a>
                     </span>
                   </dt>
                   <dt>
@@ -1284,7 +1295,7 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
-                      <a href="raises.html">^</a>
+                      <a href="raises.html">ˆ</a>
                     </span>
                     <span class="refpurpose"> — 
       <span class="quote">“<span class="quote">Power of</span>”</span> operator.
@@ -1304,6 +1315,14 @@
                     </span>
                     <span class="refpurpose"> — 
       Sets the value of 0 decibels using full scale amplitude.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="A4.html">A4</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Sets the base frequency for pitch A4.
     </span>
                   </dt>
                   <dt>
@@ -1488,7 +1507,7 @@
                     <span class="refentrytitle">
                       <a href="atone.html">atone</a>
                     </span>
-                    <span class="refpurpose">
+                    <span class="refpurpose"> — 
 	    A hi-pass filter whose transfer functions are the complements of the <em class="citetitle">tone</em> opcode.
           </span>
                   </dt>
@@ -1496,7 +1515,7 @@
                     <span class="refentrytitle">
                       <a href="atonek.html">atonek</a>
                     </span>
-                    <span class="refpurpose">
+                    <span class="refpurpose"> — 
 	    A hi-pass filter whose transfer functions are the complements of the <em class="citetitle">tonek</em> opcode.
           </span>
                   </dt>
@@ -1547,7 +1566,7 @@
                     <span class="refentrytitle">
                       <a href="ATSinterpread.html">ATSinterpread</a>
                     </span>
-                    <span class="refpurpose"> allows a user to determine the frequency envelope of any <em class="citetitle">ATSbufread</em>.
+                    <span class="refpurpose"> —  allows a user to determine the frequency envelope of any <em class="citetitle">ATSbufread</em>.
                     </span>
                   </dt>
                   <dt>
@@ -1568,7 +1587,7 @@
                     <span class="refentrytitle">
                       <a href="ATSpartialtap.html">ATSpartialtap</a>
                     </span>
-                    <span class="refpurpose"> returns a frequency, amplitude pair from an <em class="citetitle">ATSbufread</em> opcode.
+                    <span class="refpurpose"> —  returns a frequency, amplitude pair from an <em class="citetitle">ATSbufread</em> opcode.
         </span>
                   </dt>
                   <dt>
@@ -1690,6 +1709,14 @@
                     <span class="refpurpose"> — 
       Returns a random number in a bi-polar range.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="bpf.html">bpf</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Break point function with linear interpolation
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -2044,6 +2071,14 @@
                     <span class="refpurpose"> — 
       Starts one of a number of internal clocks.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="cmp.html">cmp</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Compares two audio signals
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -3795,6 +3830,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="fmanal.html">fmanal</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      AM/FM analysis from quadrature signal.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="fmb3.html">fmb3</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4100,6 +4143,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="ftom.html">ftom</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Convert frequency to midi
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="ftsamplebank.html">ftsamplebank</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4230,6 +4281,22 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="getcol.html">getcol</a>
+                    </span>
+                    <span class="refpurpose"> — 
+     Gets a given column from a 2-dimensional array as a vector.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="getftargs.html">getftargs</a>
+                    </span>
+                    <span class="refpurpose"> — 
+     Fill a string variable with the arguments used to create a function table at k-rate.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="getrow.html">getrow</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4339,6 +4406,14 @@
                     </span>
                     <span class="refpurpose"> — 
       A Hilbert transformer.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="hilbert2.html">hilbert2</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      A Hilbert rransformer.
     </span>
                   </dt>
                   <dt>
@@ -4959,6 +5034,94 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="linlin.html">linlin</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Linear to linear interpolation
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkbeatforce.html">link_beat_force</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Forces the global network Ableton Link session to adopt a specific beat number and time.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkbeatget.html">link_beat_get</a>
+                    </span>
+                    <span class="refpurpose"> — 
+     Returns the beat, phase with respect to the local quantum, and current time for the session.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkbeatrequest.html">link_beat_request</a>
+                    </span>
+                    <span class="refpurpose"> — 
+       Requests the global network Ableton Link session to adopt a specific beat number and time.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkcreate.html">link_create</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Creates a peer in an Ableton Link network session.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkenable.html">link_enable</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Enable or disable synchronization with the Ableton Link session.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkisenabled.html">link_is_enabled</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Returns whether or not this peer is synchronized with the global network Ableton Link session.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkmetro.html">link_metro</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Returns a trigger that is 1 on the beat and 0 otherwise along with beat, phase, and time for this session of Ableton Link.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinkpeers.html">link_peers</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Returns the number of peers in the session.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinktempoget.html">link_tempo_get</a>
+                    </span>
+                    <span class="refpurpose"> — 
+        Returns the current tempo of the global network Ableton Link session.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="opcodeslinktemposet.html">link_tempo_set</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Sets the tempo.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="linrand.html">linrand</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -5509,6 +5672,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="mfb.html">mfb</a>
+                    </span>
+                    <span class="refpurpose"> — 
+     Mel scale filterbank for spectral magnitudes.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="midglobal.html">midglobal</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -5825,7 +5996,7 @@ Phase-locked vocoder processing.
                     </span>
                     <span class="refpurpose"> — 
       Returns the audio spout frame.
-          </span>
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -5914,6 +6085,22 @@ Phase-locked vocoder processing.
                     <span class="refpurpose"> — 
       Send system real-time messages to the MIDI OUT port.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="mtof.html">mtof</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Convert a midi to frequency
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="mton.html">mton</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Convert midi note number to string note name
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -6105,6 +6292,14 @@ Phase-locked vocoder processing.
                     </span>
                     <span class="refpurpose"> — 
       Schedules a new instrument instance, storing the instance handle in a variable.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="ntom.html">ntom</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Convert note name to midi note number
     </span>
                   </dt>
                   <dt>
@@ -6725,6 +6920,14 @@ Phase-locked vocoder processing.
                     </span>
                     <span class="refpurpose"> — 
       Converts an octave-point-decimal value to pitch-class.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="pchtom.html">pchtom</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Convert pch to midi note number
     </span>
                   </dt>
                   <dt>
@@ -7487,6 +7690,14 @@ Phase vocoder analysis processing with onset detection/processing.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="pvstrace.html">pvstrace</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Retain only the N loudest bins.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="pvsvoc.html">pvsvoc</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -8105,6 +8316,38 @@ pitch control and support for timescale-modified input
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="sc_lag.html">sc_lag</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Exponential Lag
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="sc_lagud.html">sc_lagud</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Exponential Lag
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="sc_phasor.html">sc_phasor</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  A resettable linear ramp between two levels
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="sc_trig.html">sc_trig</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Timed trigger
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="seed.html">seed</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -8118,6 +8361,14 @@ pitch control and support for timescale-modified input
                     <span class="refpurpose"> — 
       Semi-physical model of a sekere sound.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="select.html">select</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Select sample value based on audio-rate comparisons.
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -10983,6 +11234,14 @@ Synchronous granular synthesis.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="xyscale.html">xyscale</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  2D linear interpolation 
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="zacl.html">zacl</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -11137,6 +11396,14 @@ Synchronous granular synthesis.
                     </span>
                     <span class="refpurpose"> — 
       This statement resets the clock.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="C.html">C Statement</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      This statement switches automatic carrying of arguments on or off.
     </span>
                   </dt>
                   <dt>
@@ -11583,6 +11850,14 @@ Synchronous granular synthesis.
                     </span>
                     <span class="refpurpose"> — 
       Generate a table with values of the sone function.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="GENquadbezier.html">GENquadbezier</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Generate a table with values from a quadratic Bézier function.
     </span>
                   </dt>
                   <dt>
@@ -12367,7 +12642,7 @@ Synchronous granular synthesis.
                     <span class="refentrytitle">
                       <a href="sndload.html">sndload</a>
                     </span>
-                    <span class="refpurpose">
+                    <span class="refpurpose"> — 
       Loads a sound file into memory for use by <em class="citetitle">loscilx</em>
     </span>
                   </dt>

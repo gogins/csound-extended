@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vdelayx</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vdelay3.html" title="vdelay3" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153918448"></a>
+        <a id="idm1490878192"></a>
         <h2>Description</h2>
         <p>
       A variable delay opcode with high quality interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153922480"></a>
+        <a id="idm1490877936"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>vdelayx</strong></span> ain, adl, imd, iws [, ist]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp153924704"></a>
+        <a id="idm1490874992"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imd</em></span> -- max. delay time (seconds)
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153985632"></a>
+        <a id="idm1490867824"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout</em></span> -- output audio signal
@@ -120,58 +121,57 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp153995712"></a>
+        <a id="idm1490865776"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the use of the <span class="emphasis"><em>vdelayx</em></span> opcode. It uses the file <a class="ulink" href="examples/vdelayx.csd" target="_top"><em class="citetitle">vdelayx.csd</em></a>.
+      Here is an example of the use of the <span class="emphasis"><em>vdelayx</em></span> opcode. It uses the file <a class="ulink" href="examples/vdelayx.csd.html" target="_top"><em class="citetitle">vdelayx.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp153998016"></a>
+          <a id="idm1490866672"></a>
           <p class="title">
-            <strong>Example 1020. Example of the <span class="emphasis"><em>vdelayx</em></span> opcode.</strong>
+            <strong>Example 1046. Example of the <span class="emphasis"><em>vdelayx</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp271417168"></a>
-              <a class="ulink" href="examples/vdelayx.csd.html" target="_top">Play</a>
+              <a id="idm1309432944"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vdelayx.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vdelayx.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 
+<span class="kd">instr</span> <span class="nf">1</span> 
 
-ims  <span class="op">=</span>	.5				<span class="comment">;maximum delay time in seconds</span>
-iws  <span class="op">=</span>	1024				<span class="comment">;window size</span>
-adl  <span class="op">=</span>	.5				<span class="comment">;delay time</span>
-asig <span class="opc">diskin2</span> "fox.wav", 1, 0, 1		<span class="comment">;loop fox.wav</span>
-a2   <span class="opc">poscil</span> .2, .2, 1			<span class="comment">;make an LFO</span>
-adl  <span class="op">=</span> a2 <span class="op">+</span> ims<span class="op">/</span>2      			<span class="comment">;offset the LFO so that it is positive</span>
-aout <span class="opc">vdelayx</span> asig, adl, ims, iws	<span class="comment">;use the LFO to control delay time</span>
-     <span class="opc">outs</span> aout, aout
+i<span class="n">ms</span>  <span class="o">=</span>	<span class="mf">.5</span>				<span class="c1">;maximum delay time in seconds</span>
+i<span class="n">ws</span>  <span class="o">=</span>	<span class="mi">1024</span>				<span class="c1">;window size</span>
+a<span class="n">dl</span>  <span class="o">=</span>	<span class="mf">.5</span>				<span class="c1">;delay time</span>
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;loop fox.wav</span>
+a<span class="n">2</span>   <span class="nb">poscil</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;make an LFO</span>
+a<span class="n">dl</span>  <span class="o">=</span> a<span class="n">2</span> <span class="o">+</span> i<span class="n">ms</span><span class="o">/</span><span class="mi">2</span>      			<span class="c1">;offset the LFO so that it is positive</span>
+a<span class="n">out</span> <span class="nb">vdelayx</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">dl</span><span class="p">,</span> i<span class="n">ms</span><span class="p">,</span> i<span class="n">ws</span>	<span class="c1">;use the LFO to control delay time</span>
+     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 8192 10 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 10
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -180,7 +180,7 @@ aout <span class="opc">vdelayx</span> asig, adl, ims, iws	<span class="comment">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp154002736"></a>
+        <a id="idm1490855152"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vdelayxq.html" title="vdelayxq"><em class="citetitle">vdelayxq</em></a>,

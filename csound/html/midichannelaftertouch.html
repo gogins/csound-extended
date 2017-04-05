@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>midichannelaftertouch</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="midic7.html" title="midic7" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp113861952"></a>
+        <a id="idm1531820528"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>midichannelaftertouch</em></span> is designed to simplify writing instruments that can be used interchangeably for either score or MIDI input, and to make it easier to adapt instruments originally written for score input to work with MIDI input.
@@ -51,12 +52,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113907888"></a>
+        <a id="idm1531814640"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>midichannelaftertouch</strong></span> xchannelaftertouch [, ilow] [, ihigh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp113909984"></a>
+        <a id="idm1531815280"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ilow</em></span> (optional) -- optional low value after rescaling, defaults to 0.
@@ -66,7 +67,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113912768"></a>
+        <a id="idm1531817456"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xchannelaftertouch</em></span> -- returns the MIDI channel aftertouch during MIDI activation, remains unchanged otherwise.
@@ -94,62 +95,61 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp113919488"></a>
+        <a id="idm1531810672"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the midichannelaftertouch opcode. It uses the file <a class="ulink" href="examples/midichannelaftertouch.csd" target="_top"><em class="citetitle">midichannelaftertouch.csd</em></a>.
+      Here is an example of the midichannelaftertouch opcode. It uses the file <a class="ulink" href="examples/midichannelaftertouch.csd.html" target="_top"><em class="citetitle">midichannelaftertouch.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp113921392"></a>
+          <a id="idm1531803632"></a>
           <p class="title">
-            <strong>Example 508. Example of the midichannelaftertouch opcode.</strong>
+            <strong>Example 524. Example of the midichannelaftertouch opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp251699248"></a>
-              <a class="ulink" href="examples/midichannelaftertouch.csd.html" target="_top">Play</a>
+              <a id="idm1357157360"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    -M1  <span class="comment">;;;realtime audio out and midi in </span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o midichannelaftertouch.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    -M1  <span class="c1">;;;realtime audio out and midi in </span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o midichannelaftertouch.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="opc">midinoteoncps</span> p4, p5				<span class="comment">;puts MIDI key translated to cycles per second into p4, and MIDI velocity into p5</span>
-kafter <span class="opc">init</span> 127					<span class="comment">;full open				</span>
-<span class="opc">midichannelaftertouch</span>  kafter
-<span class="opc">printk2</span> kafter					<span class="comment">;display the key value when it changes and when key is pressed</span>
+<span class="nb">midinoteoncps</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>				<span class="c1">;puts MIDI key translated to cycles per second into p4, and MIDI velocity into p5</span>
+k<span class="n">after</span> <span class="nb">init</span> <span class="mi">127</span>					<span class="c1">;full open				</span>
+<span class="nb">midichannelaftertouch</span>  k<span class="n">after</span>
+<span class="nb">printk2</span> k<span class="n">after</span>					<span class="c1">;display the key value when it changes and when key is pressed</span>
 
-kvel <span class="op">=</span> p5<span class="op">/</span>127					<span class="comment">;scale midi velocity to 0-1</span>
-kenv <span class="opc">madsr</span> 0.5, 0.8, 0.8, 0.5			<span class="comment">;amplitude envelope multiplied by</span>
-ain  <span class="opc">pluck</span> kenv<span class="op">*</span>kvel, p4, p4, 2, 1		<span class="comment">;velocity value	</span>
-asig <span class="opc">moogvcf2</span> ain, 200<span class="op">+</span>(kafter<span class="op">*</span>40), .5		<span class="comment">;scale value of aftertouch and control filter frequency</span>
-     <span class="opc">outs</span>  asig, asig				<span class="comment">;base freq of filter = 200 Hz</span>
+k<span class="n">vel</span> <span class="o">=</span> <span class="nb">p5</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;scale midi velocity to 0-1</span>
+k<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span>			<span class="c1">;amplitude envelope multiplied by</span>
+a<span class="n">in</span>  <span class="nb">pluck</span> k<span class="n">env</span><span class="o">*</span>k<span class="n">vel</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;velocity value	</span>
+a<span class="n">sig</span> <span class="nb">moogvcf2</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">200</span><span class="o">+</span><span class="p">(</span>k<span class="n">after</span><span class="o">*</span><span class="mi">40</span><span class="p">),</span> <span class="mf">.5</span>		<span class="c1">;scale value of aftertouch and control filter frequency</span>
+     <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>				<span class="c1">;base freq of filter = 200 Hz</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 0 30	<span class="comment">;runs 30 seconds</span>
-<span class="stamnt">f</span> 2 0 4096 10 1	
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">30</span>	<span class="c1">;runs 30 seconds</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>	
 
-<span class="stamnt">i</span> 1 0 2 440 100	<span class="comment">; play these notes from score as well</span>
-<span class="stamnt">i</span> 1 + 2 1440 100
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">440</span> <span class="mi">100</span>	<span class="c1">; play these notes from score as well</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">1440</span> <span class="mi">100</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -166,7 +166,7 @@ asig <span class="opc">moogvcf2</span> ain, 200<span class="op">+</span>(kafter<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113926528"></a>
+        <a id="idm1531808624"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midicontrolchange.html" title="midicontrolchange"><em class="citetitle">midicontrolchange</em></a>, 
@@ -182,7 +182,7 @@ asig <span class="opc">moogvcf2</span> ain, 200<span class="op">+</span>(kafter<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113937312"></a>
+        <a id="idm1531794672"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins</p>
         <p>New in version 4.20</p>

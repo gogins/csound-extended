@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>r Statement (Repeat Statement)</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="q.html" title="q Statement" />
@@ -39,19 +40,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204374080"></a>
+        <a id="idm1439681904"></a>
         <h2>Description</h2>
         <p>
       Starts a repeated section, which lasts until the next <span class="emphasis"><em>s</em></span>, <span class="emphasis"><em>r</em></span> or <span class="emphasis"><em>e statement</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204438640"></a>
+        <a id="idm1439678064"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>r</strong></span> p1 p2</pre>
       </div>
       <div class="refsect1">
-        <a id="idp204440688"></a>
+        <a id="idm1439678832"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>p1</em></span> -- Number of times to repeat the section.
@@ -61,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204443344"></a>
+        <a id="idm1439676016"></a>
         <h2>Performance</h2>
         <p>
       In order that the sections may be more flexible than simple editing, the macro named p2 is given the value of 1 for the first time through the section, 2 for the second, and 3 for the third.  This can be used to change p-field parameters, or ignored.
@@ -85,80 +86,79 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp204446624"></a>
+        <a id="idm1439667312"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the r statement. It uses the file <a class="ulink" href="examples/r.csd" target="_top"><em class="citetitle">r.csd</em></a>.
+      Here is an example of the r statement. It uses the file <a class="ulink" href="examples/r.csd.html" target="_top"><em class="citetitle">r.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp204448480"></a>
+          <a id="idm1439674352"></a>
           <p class="title">
-            <strong>Example 1116. Example of the r statement.</strong>
+            <strong>Example 1144. Example of the r statement.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp275185648"></a>
-              <a class="ulink" href="examples/r.csd.html" target="_top">Play</a>
+              <a id="idm1299211120"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o r.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o r.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; The score's p4 parameter has the number of repeats.</span>
-  kreps <span class="op">=</span> p4
-  <span class="comment">; The score's p5 parameter has our note's frequency.</span>
-  kcps <span class="op">=</span> p5
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; The score's p4 parameter has the number of repeats.</span>
+  k<span class="n">reps</span> <span class="o">=</span> <span class="nb">p4</span>
+  <span class="c1">; The score's p5 parameter has our note's frequency.</span>
+  k<span class="n">cps</span> <span class="o">=</span> <span class="nb">p5</span>
   
-  <span class="comment">; Print the number of repeats.</span>
-  <span class="opc">printks</span> "Repeated <span class="op">%</span><span class="opc">i</span> time(s).\\n", 1, kreps
+  <span class="c1">; Print the number of repeats.</span>
+  <span class="nb">printks</span> <span class="s">"Repeated </span><span class="si">%i</span><span class="s"> time(s).</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">reps</span>
 
-  <span class="comment">; Generate a nice beep.</span>
-  a1 <span class="opc">oscil</span> 20000, kcps, 1
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1, a sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
-
-<span class="comment">; We'll repeat this section 6 times. Each time it </span>
-<span class="comment">; is repeated, its macro REPS_MACRO is incremented. </span>
-<span class="stamnt">r</span>6 REPS_MACRO
-
-<span class="comment">; Play Instrument #1.</span>
-<span class="comment">; p4 = the r statement's macro, REPS_MACRO.</span>
-<span class="comment">; p5 = the frequency in cycles per second.</span>
-<span class="stamnt">i</span> 1 00.10 00.10 $REPS_MACRO 1760
-<span class="stamnt">i</span> 1 00.30 00.10 $REPS_MACRO 880
-<span class="stamnt">i</span> 1 00.50 00.10 $REPS_MACRO 440
-<span class="stamnt">i</span> 1 00.70 00.10 $REPS_MACRO 220
-
-<span class="comment">; Marks the end of the section.</span>
-<span class="stamnt">s</span>
-
-<span class="stamnt">e</span>
+  <span class="c1">; Generate a nice beep.</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">20000</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; We'll repeat this section 6 times. Each time it </span>
+<span class="c1">; is repeated, its macro REPS_MACRO is incremented. </span>
+<span class="nb">r</span><span class="mi">6</span> <span class="cp">REPS_MACRO</span>
+
+<span class="c1">; Play Instrument #1.</span>
+<span class="c1">; p4 = the r statement's macro, REPS_MACRO.</span>
+<span class="c1">; p5 = the frequency in cycles per second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.10</span> <span class="mf">00.10</span> <span class="cp">$REPS_MACRO</span> <span class="mi">1760</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.30</span> <span class="mf">00.10</span> <span class="cp">$REPS_MACRO</span> <span class="mi">880</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.50</span> <span class="mf">00.10</span> <span class="cp">$REPS_MACRO</span> <span class="mi">440</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.70</span> <span class="mf">00.10</span> <span class="cp">$REPS_MACRO</span> <span class="mi">220</span>
+
+<span class="c1">; Marks the end of the section.</span>
+<span class="nb">s</span>
+
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -167,7 +167,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204450384"></a>
+        <a id="idm1439674608"></a>
         <h2>Credits</h2>
         <p>
       </p>

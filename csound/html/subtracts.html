@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>-</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="adds.html" title="+" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp77637248"></a>
+        <a id="idm1568840688"></a>
         <h2>Description</h2>
         <p>
       Arithmetic operators perform operations of change-sign (negate), don't-change-sign, logical AND logical OR, add, subtract, multiply and divide. Note that a value or an expression may fall between two of these operators, either of which could take it as its left or right argument, as in
@@ -105,7 +106,7 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77673184"></a>
+        <a id="idm1568833392"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>−</strong></span>a  (no rate restriction)</pre>
         <pre class="synopsis">a <span class="command"><strong>−</strong></span> b  (no rate restriction)</pre>
@@ -114,7 +115,7 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77677872"></a>
+        <a id="idm1568832624"></a>
         <h2>Arguments</h2>
         <p>
       The arguments of − can be scalar values or k-rate one
@@ -123,61 +124,60 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77679424"></a>
+        <a id="idm1568828272"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the - operator. It uses the file <a class="ulink" href="examples/subtracts.csd" target="_top"><em class="citetitle">subtracts.csd</em></a>.
+      Here is an example of the - operator. It uses the file <a class="ulink" href="examples/subtracts.csd.html" target="_top"><em class="citetitle">subtracts.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp77681200"></a>
+          <a id="idm1568823280"></a>
           <p class="title">
             <strong>Example 29. Example of the - operator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp233500864"></a>
-              <a class="ulink" href="examples/subtracts.csd.html" target="_top">Play</a>
+              <a id="idm1407811952"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac    <span class="comment">;;;realtime audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o -.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac    <span class="c1">;;;realtime audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o -.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-idur <span class="op">=</span> p3
-iatt <span class="op">=</span> p4
-idec <span class="op">=</span> p5
-isus <span class="op">=</span> p3<span class="op">-</span>iatt<span class="op">-</span>idec				<span class="comment">;calculate sustain time from subtracting attack and decay</span>
-<span class="opc">printf_i</span> "sutain time<span class="op">=</span> note duration <span class="op">-</span> attack <span class="op">-</span> decay <span class="op">-</span><span class="op">-</span><span class="op">&gt;</span> <span class="op">%</span>.1f<span class="op">-</span><span class="op">%</span>.1f<span class="op">-</span><span class="op">%</span>.1f <span class="op">=</span> <span class="op">%</span>.1f\n", 1, idur, iatt, idec, isus
+i<span class="n">dur</span> <span class="o">=</span> <span class="nb">p3</span>
+i<span class="n">att</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">dec</span> <span class="o">=</span> <span class="nb">p5</span>
+i<span class="n">sus</span> <span class="o">=</span> <span class="nb">p3</span><span class="o">-</span>i<span class="n">att</span><span class="o">-</span>i<span class="n">dec</span>				<span class="c1">;calculate sustain time from subtracting attack and decay</span>
+<span class="nb">printf_i</span> <span class="s">"sutain time= note duration - attack - decay --&gt; %.1f-%.1f-%.1f = %.1f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> i<span class="n">att</span><span class="p">,</span> i<span class="n">dec</span><span class="p">,</span> i<span class="n">sus</span>
 
-kenv <span class="opc">expseg</span> 0.01, iatt, 1, isus, 1, idec, 0.01	<span class="comment">;envelope</span>
-asig <span class="opc">poscil</span> 1<span class="op">*</span>kenv, 200, 1
-     <span class="opc">outs</span> asig, asig
+k<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">0.01</span><span class="p">,</span> i<span class="n">att</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">sus</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">dec</span><span class="p">,</span> <span class="mf">0.01</span>	<span class="c1">;envelope</span>
+a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mi">1</span><span class="o">*</span>k<span class="n">env</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 4096 10 1	<span class="comment">;sine wave</span>
-<span class="comment">;      attack decay</span>
-<span class="stamnt">i</span> 1 0 3 .1     .2
-<span class="stamnt">i</span> 1 4 3 .5    1.5
-<span class="stamnt">i</span> 1 8 5  4     .5
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave</span>
+<span class="c1">;      attack decay</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mf">.1</span>     <span class="mf">.2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mf">.5</span>    <span class="mf">1.5</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mi">5</span>  <span class="mi">4</span>     <span class="mf">.5</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -193,7 +193,7 @@ sutain time= note duration - attack - decay --&gt; 5.0-4.0-0.5 = 0.5</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77686480"></a>
+        <a id="idm1568828912"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="adds.html" title="+"><em class="citetitle">+</em></a>, 
@@ -201,12 +201,12 @@ sutain time= note duration - attack - decay --&gt; 5.0-4.0-0.5 = 0.5</pre>
       <a class="link" href="opor.html" title="||"><em class="citetitle">||</em></a>, 
       <a class="link" href="multiplies.html" title="*"><em class="citetitle">*</em></a>, 
       <a class="link" href="divides.html" title="/"><em class="citetitle">/</em></a>, 
-      <a class="link" href="raises.html" title="^"><em class="citetitle">^</em></a>, 
+      <a class="link" href="raises.html" title="ˆ"><em class="citetitle">ˆ</em></a>, 
       <a class="link" href="modulus.html" title="%"><em class="citetitle">%</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77694384"></a>
+        <a id="idm1568821104"></a>
         <h2>Credits</h2>
         <p>Arithmetic on vectors is new in version 6.00</p>
       </div>

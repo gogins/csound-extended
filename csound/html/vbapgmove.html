@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vbapgmove</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vbapg.html" title="vbapg" />
@@ -39,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152149824"></a>
+        <a id="idm1492563440"></a>
         <h2>Description</h2>
         <p>
       Calculates the gains for a sound location between multiple
@@ -47,7 +48,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152151104"></a>
+        <a id="idm1492565488"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kr1[, kr2...] <span class="command"><strong>vbapgmove</strong></span> idur, ispread, ifldnum, ifld1 \
       [, ifld2] [...]</pre>
@@ -55,7 +56,7 @@
       [, ifld2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp152154720"></a>
+        <a id="idm1492562672"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idur</em></span> -- the duration over which the
@@ -76,7 +77,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152160768"></a>
+        <a id="idm1492560624"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>vbapgmove</em></span> allows the use of moving virtual sources. If <span class="emphasis"><em>ifldnum</em></span> is positive, the fields represent directions of virtual sources and equal times, <span class="emphasis"><em>iazi1</em></span>, [<span class="emphasis"><em>iele1</em></span>,] <span class="emphasis"><em>iazi2</em></span>, [<span class="emphasis"><em>iele2</em></span>,], etc.  The position of the virtual source is interpolated between directions starting from the first direction and ending at the last. Each interval is interpolated in time that is fraction total_time / number_of_intervals of the duration of the sound event.
@@ -101,16 +102,16 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp152171424"></a>
+        <a id="idm1492547696"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vbapgmove opcode. It uses the file
-      <a class="ulink" href="examples/vbapgmove.csd" target="_top"><em class="citetitle">vbapgmove.csd</em></a>.
+      <a class="ulink" href="examples/vbapgmove.csd.html" target="_top"><em class="citetitle">vbapgmove.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp152173296"></a>
+          <a id="idm1492550640"></a>
           <p class="title">
-            <strong>Example 1005. Example of the vbapg opcode.</strong>
+            <strong>Example 1031. Example of the vbapg opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time
@@ -119,42 +120,41 @@
         line flags.
         </p>
             <div class="refsect1">
-              <a id="idp270255232"></a>
-              <a class="ulink" href="examples/vbapgmove.csd.html" target="_top">Play</a>
+              <a id="idm1311074032"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vbapgmove.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vbapgmove.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 4	<span class="comment">;quad</span>
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">4</span>	<span class="c1">;quad</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">vbaplsinit</span> 2, 4, 0, 90, 180, 270
+<span class="nb">vbaplsinit</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">270</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">diskin2</span> "beats.wav", 1, 0, 1		<span class="comment">;loop beats.wav</span>
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;loop beats.wav</span>
 
-k0,k1,k2,k3 <span class="opc">vbapgmove</span>  p3, 1, 2, 310, 180	<span class="comment">;change movement of soundsource in</span>
-     <span class="opc">outq</span> k0<span class="op">*</span>asig,k1<span class="op">*</span>asig,k2<span class="op">*</span>asig,k3<span class="op">*</span>asig	<span class="comment">;the rear speakers</span>
+k<span class="n">0</span><span class="p">,</span>k<span class="n">1</span><span class="p">,</span>k<span class="n">2</span><span class="p">,</span>k<span class="n">3</span> <span class="nb">vbapgmove</span>  <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">180</span>	<span class="c1">;change movement of soundsource in</span>
+     <span class="nb">outq</span> k<span class="n">0</span><span class="o">*</span>a<span class="n">sig</span><span class="p">,</span>k<span class="n">1</span><span class="o">*</span>a<span class="n">sig</span><span class="p">,</span>k<span class="n">2</span><span class="o">*</span>a<span class="n">sig</span><span class="p">,</span>k<span class="n">3</span><span class="o">*</span>a<span class="n">sig</span>	<span class="c1">;the rear speakers</span>
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 5
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -163,14 +163,14 @@ k0,k1,k2,k3 <span class="opc">vbapgmove</span>  p3, 1, 2, 310, 180	<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152177616"></a>
+        <a id="idm1492545520"></a>
         <h2>Reference</h2>
         <p>
       Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152179728"></a>
+        <a id="idm1492541168"></a>
         <h2>See Also</h2>
         <p>
      <a class="link" href="vbap.html" title="vbap"><em class="citetitle">vbap</em></a>,
@@ -186,7 +186,7 @@ k0,k1,k2,k3 <span class="opc">vbapgmove</span>  p3, 1, 2, 310, 180	<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152190480"></a>
+        <a id="idm1492529520"></a>
         <h2>Credits</h2>
         <p>
       </p>

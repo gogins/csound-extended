@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tableimix</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tableikt.html" title="tableikt" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146514464"></a>
+        <a id="idm1498447216"></a>
         <h2>Description</h2>
         <p>
       Mixes two tables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146558736"></a>
+        <a id="idm1498451440"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tableimix</strong></span> idft, idoff, ilen, is1ft, is1off, is1g, is2ft, is2off, is2g</pre>
       </div>
       <div class="refsect1">
-        <a id="idp146560752"></a>
+        <a id="idm1498441712"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idft</em></span> -- Destination function table.
@@ -72,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146568176"></a>
+        <a id="idm1498442608"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tableimix</em></span> -- This opcode mixes from two tables, with separate gains into the destination table. Writing is done for <span class="emphasis"><em>ilen</em></span> locations, usually stepping forward through the table - if <span class="emphasis"><em>ilen</em></span> is positive. If it is negative, then the writing and reading order is backwards - towards lower indexes in the tables. This bi-directional option makes it easy to shift the contents of a table sideways by reading from it and writing back to it with a different offset.
@@ -94,55 +95,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146578128"></a>
+        <a id="idm1498428656"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tableimix opcode. It uses the file <a class="ulink" href="examples/tableimix.csd" target="_top"><em class="citetitle">tableimix.csd</em></a>.
+      Here is an example of the tableimix opcode. It uses the file <a class="ulink" href="examples/tableimix.csd.html" target="_top"><em class="citetitle">tableimix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp146579984"></a>
+          <a id="idm1498426096"></a>
           <p class="title">
-            <strong>Example 932. Example of the tableimix opcode.</strong>
+            <strong>Example 958. Example of the tableimix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268034256"></a>
-              <a class="ulink" href="examples/tableimix.csd.html" target="_top">Play</a>
+              <a id="idm1318264176"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tableimix.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tableimix.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gisine <span class="ohdr">ftgen</span> 1, 0, 256, 10, 1, 0, 0, .4		<span class="comment">;sinoid</span>
-gisaw  <span class="ohdr">ftgen</span> 2, 0, 1024, 7, 0, 256, 1		<span class="comment">;saw</span>
-gimix  <span class="ohdr">ftgen</span> 100, 0, 256, 7, 0, 256, 1		<span class="comment">;used to mix</span>
+gi<span class="n">sine</span> <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.4</span>		<span class="c1">;sinoid</span>
+gi<span class="n">saw</span>  <span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;saw</span>
+gi<span class="n">mix</span>  <span class="nb">ftgen</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;used to mix</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-      <span class="opc">tableimix</span> 100, 0, 256, 1, 0, 1, 2, 0, .5
-asig  <span class="opc">poscil</span> .5, 110, gimix			<span class="comment">;mix table 1 &amp; 2			</span>
-      <span class="opc">outs</span>   asig, asig
+      <span class="nb">tableimix</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.5</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> gi<span class="n">mix</span>			<span class="c1">;mix table 1 &amp; 2			</span>
+      <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -151,7 +151,7 @@ asig  <span class="opc">poscil</span> .5, 110, gimix			<span class="comment">;mi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146584272"></a>
+        <a id="idm1498423920"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tablecopy.html" title="tablecopy"><em class="citetitle">tablecopy</em></a>,
@@ -162,7 +162,7 @@ asig  <span class="opc">poscil</span> .5, 110, gimix			<span class="comment">;mi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146590160"></a>
+        <a id="idm1498428272"></a>
         <h2>Credits</h2>
         <p>
       </p>

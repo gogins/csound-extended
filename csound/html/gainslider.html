@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>gainslider</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="gain.html" title="gain" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102244896"></a>
+        <a id="idm1543858288"></a>
         <h2>Description</h2>
         <p>
       This opcode is intended for use to multiply by an audio signal to give a console mixer like feel. There is no bounds in the
@@ -46,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102246624"></a>
+        <a id="idm1543864816"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout <span class="command"><strong>gainslider</strong></span> kindex</pre>
       </div>
       <div class="refsect1">
-        <a id="idp102248864"></a>
+        <a id="idm1543863664"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kindex</em></span> -- Index value. Nominal range from 0-127. For example a range of 0-152 will give you a range from -∞ to +18.0 dB. 
@@ -61,62 +62,61 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102251584"></a>
+        <a id="idm1544112624"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the gainslider opcode. It uses the file <a class="ulink" href="examples/gainslider.csd" target="_top"><em class="citetitle">gainslider.csd</em></a>.
+      Here is an example of the gainslider opcode. It uses the file <a class="ulink" href="examples/gainslider.csd.html" target="_top"><em class="citetitle">gainslider.csd</em></a>.
       
       </p>
         <div class="example">
-          <a id="idp102253360"></a>
+          <a id="idm1544118384"></a>
           <p class="title">
-            <strong>Example 359. Example of the gainslider opcode.</strong>
+            <strong>Example 363. Example of the gainslider opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp245447024"></a>
-              <a class="ulink" href="examples/gainslider.csd.html" target="_top">Play</a>
+              <a id="idm1375182320"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    Silent</span>
--odac           -iadc     -d    <span class="comment">;;;realtime output</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    Silent</span>
+-odac           -iadc     -d    <span class="c1">;;;realtime output</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>	<span class="op">=</span>	48000
-<span class="ohdr">ksmps</span>	<span class="op">=</span>	100
-<span class="ohdr">nchnls</span>	<span class="op">=</span>	2
+<span class="vg">sr</span>	<span class="o">=</span>	<span class="mi">48000</span>
+<span class="vg">ksmps</span>	<span class="o">=</span>	<span class="mi">100</span>
+<span class="vg">nchnls</span>	<span class="o">=</span>	<span class="mi">2</span>
 
-		<span class="oblock">instr</span>	1	<span class="comment">; gainslider test</span>
+		<span class="kd">instr</span>	<span class="nf">1</span>	<span class="c1">; gainslider test</span>
 
-<span class="comment">; uncomment for realtime midi</span>
-<span class="comment">;kmod	ctrl7	1, 1, 0, 127</span>
+<span class="c1">; uncomment for realtime midi</span>
+<span class="c1">;kmod	ctrl7	1, 1, 0, 127</span>
 
-<span class="comment">; uncomment for non realtime</span>
-km0d <span class="opc">phasor</span> 1<span class="op">/</span>10
-kmod <span class="opc">scale</span> km0d, 127, 0
+<span class="c1">; uncomment for non realtime</span>
+k<span class="n">m0d</span> <span class="nb">phasor</span> <span class="mi">1</span><span class="o">/</span><span class="mi">10</span>
+k<span class="n">mod</span> <span class="nb">scale</span> k<span class="n">m0d</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">0</span>
 
-kout	<span class="opc">gainslider</span>	kmod
+k<span class="n">out</span>	<span class="nb">gainslider</span>	k<span class="n">mod</span>
 
-	<span class="opc">printks</span>	"kmod <span class="op">=</span> <span class="op">%</span>f  kout <span class="op">=</span> <span class="op">%</span>f\\n", 0.1, kmod, kout
+	<span class="nb">printks</span>	<span class="s">"kmod = %f  kout = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">mod</span><span class="p">,</span> k<span class="n">out</span>
 
-aout	<span class="opc">diskin2</span>	"fox.wav", 1, 0, 1
+a<span class="n">out</span>	<span class="nb">diskin2</span>	<span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 
-aout	<span class="op">=</span>	aout<span class="op">*</span>kout
+a<span class="n">out</span>	<span class="o">=</span>	a<span class="n">out</span><span class="o">*</span>k<span class="n">out</span>
 
-	<span class="opc">outs</span>	aout, aout
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-		<span class="oblock">endin</span>
+		<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1	0	30
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span>	<span class="mi">0</span>	<span class="mi">30</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -125,7 +125,7 @@ aout	<span class="op">=</span>	aout<span class="op">*</span>kout
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102257696"></a>
+        <a id="idm1544117616"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="scale.html" title="scale"><em class="citetitle">scale</em></a>,
@@ -134,7 +134,7 @@ aout	<span class="op">=</span>	aout<span class="op">*</span>kout
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp102261728"></a>
+        <a id="idm1544110832"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>diff</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="denorm.html" title="denorm" />
@@ -38,109 +39,108 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88723376"></a>
+        <a id="idm1557802352"></a>
         <h2>Description</h2>
         <p>
       Modify a signal by differentiation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88735760"></a>
+        <a id="idm1557795952"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>diff</strong></span> asig [, iskip]</pre>
         <pre class="synopsis">kres <span class="command"><strong>diff</strong></span> ksig [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp88739376"></a>
+        <a id="idm1557795056"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional) -- initial disposition of internal save space (see <a class="link" href="reson.html" title="reson"><em class="citetitle">reson</em></a>). The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88797984"></a>
+        <a id="idm1557792752"></a>
         <h2>Performance</h2>
         <p>
       <a class="link" href="integ.html" title="integ"><em class="citetitle">integ</em></a> and <span class="emphasis"><em>diff</em></span> perform integration and differentiation on an input control signal or audio signal. Each is the converse of the other, and applying both will reconstruct the original signal. Since these units are special cases of low-pass and high-pass filters, they produce a scaled (and phase shifted) output that is frequency-dependent. Thus <span class="emphasis"><em>diff</em></span> of a sine produces a cosine, with amplitude 2 * <span class="emphasis"><em>pi</em></span> * Hz / <span class="emphasis"><em>sr</em></span> that of the original (for each component partial); <span class="emphasis"><em>integ</em></span> will inversely affect the magnitudes of its component inputs. With this understanding, these units can provide useful signal modification.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88802816"></a>
+        <a id="idm1557784432"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the diff opcode. It uses the file <a class="ulink" href="examples/diff.csd" target="_top"><em class="citetitle">diff.csd</em></a>.
+      Here is an example of the diff opcode. It uses the file <a class="ulink" href="examples/diff.csd.html" target="_top"><em class="citetitle">diff.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp88804672"></a>
+          <a id="idm1557784176"></a>
           <p class="title">
-            <strong>Example 205. Example of the diff opcode.</strong>
+            <strong>Example 207. Example of the diff opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp239120112"></a>
-              <a class="ulink" href="examples/diff.csd.html" target="_top">Play</a>
+              <a id="idm1392321264"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o diff.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o diff.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">diskin2</span> "fox.wav", 1
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">; with diff</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">; with diff</span>
 
-asig <span class="opc">diskin2</span> "fox.wav", 1
-ares <span class="opc">diff</span> asig
-     <span class="opc">outs</span> ares, ares
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">res</span> <span class="nb">diff</span> a<span class="n">sig</span>
+     <span class="nb">outs</span> a<span class="n">res</span><span class="p">,</span> a<span class="n">res</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3	<span class="comment">; with integ</span>
+<span class="kd">instr</span> <span class="nf">3</span>	<span class="c1">; with integ</span>
 
-asig <span class="opc">diskin2</span> "fox.wav", 1
-aint <span class="opc">integ</span> asig
-aint <span class="op">=</span> aint<span class="op">*</span>.05			<span class="comment">;way too loud</span>
-     <span class="opc">outs</span> aint, aint
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">int</span> <span class="nb">integ</span> a<span class="n">sig</span>
+a<span class="n">int</span> <span class="o">=</span> a<span class="n">int</span><span class="o">*</span><span class="mf">.05</span>			<span class="c1">;way too loud</span>
+     <span class="nb">outs</span> a<span class="n">int</span><span class="p">,</span> a<span class="n">int</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 4	<span class="comment">; with diff and integ</span>
+<span class="kd">instr</span> <span class="nf">4</span>	<span class="c1">; with diff and integ</span>
 
-asig <span class="opc">diskin2</span> "fox.wav", 1
-ares <span class="opc">diff</span> asig
-aint <span class="opc">integ</span> ares
-     <span class="opc">outs</span> aint, aint
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">res</span> <span class="nb">diff</span> a<span class="n">sig</span>
+a<span class="n">int</span> <span class="nb">integ</span> a<span class="n">res</span>
+     <span class="nb">outs</span> a<span class="n">int</span><span class="p">,</span> a<span class="n">int</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">i</span> 2 1 1
-<span class="stamnt">i</span> 3 2 1
-<span class="stamnt">i</span> 4 3 1
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">1</span>
 
-<span class="stamnt">e</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -149,7 +149,7 @@ aint <span class="opc">integ</span> ares
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88808960"></a>
+        <a id="idm1557787632"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="downsamp.html" title="downsamp"><em class="citetitle">downsamp</em></a>, 

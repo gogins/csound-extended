@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>strchar</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="STKWurley.html" title="STKWurley" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp143923504"></a>
+        <a id="idm1501359856"></a>
         <h2>Description</h2>
         <p>
       Return the ASCII code of the character in Sstr at ipos (defaults to zero
@@ -47,64 +48,63 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143913616"></a>
+        <a id="idm1501345904"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ichr <span class="command"><strong>strchar</strong></span> Sstr[, ipos]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp143915824"></a>
+        <a id="idm1501347952"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the strchar opcode. It uses the file <a class="ulink" href="examples/strchar.csd" target="_top"><em class="citetitle">strchar.csd</em></a>.
+      Here is an example of the strchar opcode. It uses the file <a class="ulink" href="examples/strchar.csd.html" target="_top"><em class="citetitle">strchar.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp143996752"></a>
+          <a id="idm1501347184"></a>
           <p class="title">
-            <strong>Example 901. Example of the strchar opcode.</strong>
+            <strong>Example 927. Example of the strchar opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp266654192"></a>
-              <a class="ulink" href="examples/strchar.csd.html" target="_top">Play</a>
+              <a id="idm1321323376"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -ndm0
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;example by joachim heintz 2013</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;example by joachim heintz 2013</span>
 
-  <span class="oblock">opcode</span> ToAscii, S, <span class="opc">S</span>				<span class="comment">;returns the ASCII numbers of the input string as string</span>
+  <span class="kd">opcode</span> <span class="nf">ToAscii</span><span class="p">,</span> <span class="kt">S</span><span class="p">,</span> <span class="kt">S</span>				<span class="c1">;returns the ASCII numbers of the input string as string</span>
 
-Sin        <span class="opc">xin</span> 					<span class="comment">;input string</span>
-ilen       <span class="opc">strlen</span>     Sin 			<span class="comment">;its length</span>
-ipos       <span class="op">=</span>          0 			<span class="comment">;set counter to zero</span>
-Sres       <span class="op">=</span>          "" 			<span class="comment">;initialize output string</span>
-<span class="olabel">loop</span><span class="op">:</span>                 				<span class="comment">;for all characters in input string:</span>
-ichr       <span class="opc">strchar</span>    Sin, ipos 		<span class="comment">;get its ascii code number</span>
-Snew       <span class="opc">sprintf</span>    "<span class="op">%</span>d ", ichr 		<span class="comment">;put this number into a new string</span>
-Sres       <span class="opc">strcat</span>     Sres, Snew 		<span class="comment">;append this to the output string</span>
-           <span class="octrl">loop_lt</span>    ipos, 1, ilen, <span class="olabel">loop</span> 	<span class="comment">;see comment for 'loop:'</span>
-           <span class="opc">xout</span>       Sres 			<span class="comment">;return output string</span>
-  <span class="oblock">endop</span>
+S<span class="n">in</span>        <span class="nb">xin</span> 					<span class="c1">;input string</span>
+i<span class="n">len</span>       <span class="nb">strlen</span>     S<span class="n">in</span> 			<span class="c1">;its length</span>
+i<span class="n">pos</span>       <span class="o">=</span>          <span class="mi">0</span> 			<span class="c1">;set counter to zero</span>
+S<span class="n">res</span>       <span class="o">=</span>          <span class="s">""</span> 			<span class="c1">;initialize output string</span>
+<span class="nl">loop</span><span class="p">:</span>                 				<span class="c1">;for all characters in input string:</span>
+i<span class="n">chr</span>       <span class="nb">strchar</span>    S<span class="n">in</span><span class="p">,</span> i<span class="n">pos</span> 		<span class="c1">;get its ascii code number</span>
+S<span class="n">new</span>       <span class="nb">sprintf</span>    <span class="s">"</span><span class="si">%d</span><span class="s"> "</span><span class="p">,</span> i<span class="n">chr</span> 		<span class="c1">;put this number into a new string</span>
+S<span class="n">res</span>       <span class="nb">strcat</span>     S<span class="n">res</span><span class="p">,</span> S<span class="n">new</span> 		<span class="c1">;append this to the output string</span>
+           <span class="k">loop_lt</span>    i<span class="n">pos</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> <span class="nl">loop</span> 	<span class="c1">;see comment for 'loop:'</span>
+           <span class="nb">xout</span>       S<span class="n">res</span> 			<span class="c1">;return output string</span>
+  <span class="kd">endop</span>
 
-  <span class="oblock">instr</span> Characters
+  <span class="kd">instr</span> <span class="nf">Characters</span>
 
-<span class="opc">printf_i</span> "\nCharacters<span class="op">:</span>\n  given as single strings<span class="op">:</span> <span class="op">%</span>s<span class="op">%</span>s<span class="op">%</span>s<span class="op">%</span>s<span class="op">%</span>s<span class="op">%</span>s\n", 1, "c", "s", "o", "u", "n", "d"
-<span class="opc">printf_i</span> "  but can also be given as numbers<span class="op">:</span> <span class="op">%</span>c<span class="op">%</span>c<span class="op">%</span>c<span class="op">%</span>c<span class="op">%</span>c<span class="op">%</span>c\n", 1, 99, 115, 111, 117, 110, 100 
-Scsound ToAscii "csound"
-<span class="opc">printf_i</span> "  <span class="opc">in</span> csound, the ASCII code of <span class="opc">a</span> character can be accessed with the <span class="oblock">opcode</span> strchar.<span class="op">%</span>s", 1, "\n"
-<span class="opc">printf_i</span> "  the name 'csound' returns the numbers <span class="op">%</span>s\n\n", 1, Scsound
-  <span class="oblock">endin</span>
+<span class="nb">printf_i</span> <span class="s">"</span><span class="se">\n</span><span class="s">Characters:</span><span class="se">\n</span><span class="s">  given as single strings: %s%s%s%s%s%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"c"</span><span class="p">,</span> <span class="s">"s"</span><span class="p">,</span> <span class="s">"o"</span><span class="p">,</span> <span class="s">"u"</span><span class="p">,</span> <span class="s">"n"</span><span class="p">,</span> <span class="s">"d"</span>
+<span class="nb">printf_i</span> <span class="s">"  but can also be given as numbers: </span><span class="si">%c%c%c%c%c%c</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">117</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">100</span> 
+S<span class="n">csound</span> <span class="nf">ToAscii</span> <span class="s">"csound"</span>
+<span class="nb">printf_i</span> <span class="s">"  in csound, the ASCII code of a character can be accessed with the opcode strchar.%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="nb">printf_i</span> <span class="s">"  the name 'csound' returns the numbers %s</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">csound</span>
+  <span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> "Characters" 0 0
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="s">"Characters"</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -113,7 +113,7 @@ Scsound ToAscii "csound"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp144001040"></a>
+        <a id="idm1501344752"></a>
         <h2>See also</h2>
         <p>
           <a class="link" href="strchark.html" title="strchark">
@@ -122,7 +122,7 @@ Scsound ToAscii "csound"
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp144002832"></a>
+        <a id="idm1501349360"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>mirror</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="minarray.html" title="minarray" />
@@ -38,21 +39,21 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp115602640"></a>
+        <a id="idm1529865968"></a>
         <h2>Description</h2>
         <p>
       Reflects the signal that exceeds the low and high thresholds.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115662128"></a>
+        <a id="idm1529866736"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>mirror</strong></span> asig, klow, khigh</pre>
         <pre class="synopsis">ires <span class="command"><strong>mirror</strong></span> isig, ilow, ihigh</pre>
         <pre class="synopsis">kres <span class="command"><strong>mirror</strong></span> ksig, klow, khigh</pre>
       </div>
       <div class="refsect1">
-        <a id="idp115667152"></a>
+        <a id="idm1529854960"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isig</em></span> -- input signal
@@ -65,7 +66,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115670448"></a>
+        <a id="idm1529860464"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xsig</em></span> -- input signal
@@ -84,75 +85,74 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115675504"></a>
+        <a id="idm1529845488"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the mirror opcode. It uses the file <a class="ulink" href="examples/mirror.csd" target="_top"><em class="citetitle">mirror.csd</em></a>.
+      Here is an example of the mirror opcode. It uses the file <a class="ulink" href="examples/mirror.csd.html" target="_top"><em class="citetitle">mirror.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp115677360"></a>
+          <a id="idm1529846000"></a>
           <p class="title">
-            <strong>Example 535. Example of the mirror opcode.</strong>
+            <strong>Example 551. Example of the mirror opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp253453568"></a>
-              <a class="ulink" href="examples/mirror.csd.html" target="_top">Play</a>
+              <a id="idm1354623856"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o mirror.wav -W  ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o mirror.wav -W  ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span>    1 <span class="comment">; Limit / Mirror / Wrap</span>
+<span class="kd">instr</span>    <span class="nf">1</span> <span class="c1">; Limit / Mirror / Wrap</span>
 
-igain    <span class="op">=</span> p4				<span class="comment">;gain</span>
-ilevl1   <span class="op">=</span> p5				<span class="comment">; + level</span>
-ilevl2   <span class="op">=</span> p6				<span class="comment">; - level</span>
-imode    <span class="op">=</span> p7				<span class="comment">;1 = limit, 2 = mirror, 3 = wrap</span>
+i<span class="n">gain</span>    <span class="o">=</span> <span class="nb">p4</span>				<span class="c1">;gain</span>
+i<span class="n">levl1</span>   <span class="o">=</span> <span class="nb">p5</span>				<span class="c1">; + level</span>
+i<span class="n">levl2</span>   <span class="o">=</span> <span class="nb">p6</span>				<span class="c1">; - level</span>
+i<span class="n">mode</span>    <span class="o">=</span> <span class="nb">p7</span>				<span class="c1">;1 = limit, 2 = mirror, 3 = wrap</span>
 
-ain   <span class="opc">soundin</span>  "fox.wav"
-ain   <span class="op">=</span> ain<span class="op">*</span>igain
+a<span class="n">in</span>   <span class="nb">soundin</span>  <span class="s">"fox.wav"</span>
+a<span class="n">in</span>   <span class="o">=</span> a<span class="n">in</span><span class="o">*</span>i<span class="n">gain</span>
 
-<span class="octrl">if</span>    imode <span class="op">=</span> 1 <span class="octrl">goto</span> <span class="olabel">limit</span>
-<span class="octrl">if</span>    imode <span class="op">=</span> 2 <span class="octrl">goto</span> <span class="olabel">mirror</span>
+<span class="k">if</span>    i<span class="n">mode</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">goto</span> <span class="nl">limit</span>
+<span class="k">if</span>    i<span class="n">mode</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">goto</span> <span class="nl">mirror</span>
 
-asig  <span class="opc">wrap</span>  ain, ilevl2, ilevl1
-<span class="octrl">goto</span>  <span class="olabel">outsignal</span>
+a<span class="n">sig</span>  <span class="nb">wrap</span>  a<span class="n">in</span><span class="p">,</span> i<span class="n">levl2</span><span class="p">,</span> i<span class="n">levl1</span>
+<span class="k">goto</span>  <span class="nl">outsignal</span>
 
-<span class="olabel">limit</span><span class="op">:</span>
-asig  <span class="olabel">limit</span>  ain, ilevl2, ilevl1
-<span class="octrl">goto</span>  <span class="olabel">outsignal</span>
+<span class="nl">limit</span><span class="p">:</span>
+a<span class="n">sig</span>  <span class="nb">limit</span>  a<span class="n">in</span><span class="p">,</span> i<span class="n">levl2</span><span class="p">,</span> i<span class="n">levl1</span>
+<span class="k">goto</span>  <span class="nl">outsignal</span>
 
-<span class="olabel">mirror</span><span class="op">:</span>
-asig  <span class="olabel">mirror</span>  ain, ilevl2, ilevl1
-<span class="olabel">outsignal</span><span class="op">:</span>
+<span class="nl">mirror</span><span class="p">:</span>
+a<span class="n">sig</span>  <span class="nb">mirror</span>  a<span class="n">in</span><span class="p">,</span> i<span class="n">levl2</span><span class="p">,</span> i<span class="n">levl1</span>
+<span class="nl">outsignal</span><span class="p">:</span>
 
-<span class="opc">outs</span>  asig<span class="op">*</span>.5, asig<span class="op">*</span>.5			<span class="comment">;mind your speakers</span>
+<span class="nb">outs</span>  a<span class="n">sig</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="mf">.5</span>			<span class="c1">;mind your speakers</span>
   
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">;           Gain  +Levl -Levl Mode</span>
-<span class="stamnt">i</span>1  0  3    4.00  .25  -1.00   1	<span class="comment">;limit</span>
-<span class="stamnt">i</span>1  4  3    4.00  .25  -1.00   2	<span class="comment">;mirror</span>
-<span class="stamnt">i</span>1  8  3    4.00  .25  -1.00   3	<span class="comment">;wrap</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">;           Gain  +Levl -Levl Mode</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">0</span>  <span class="mi">3</span>    <span class="mf">4.00</span>  <span class="mf">.25</span>  <span class="o">-</span><span class="mf">1.00</span>   <span class="mi">1</span>	<span class="c1">;limit</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">4</span>  <span class="mi">3</span>    <span class="mf">4.00</span>  <span class="mf">.25</span>  <span class="o">-</span><span class="mf">1.00</span>   <span class="mi">2</span>	<span class="c1">;mirror</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">8</span>  <span class="mi">3</span>    <span class="mf">4.00</span>  <span class="mf">.25</span>  <span class="o">-</span><span class="mf">1.00</span>   <span class="mi">3</span>	<span class="c1">;wrap</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -161,7 +161,7 @@ asig  <span class="olabel">mirror</span>  ain, ilevl2, ilevl1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115681648"></a>
+        <a id="idm1529852272"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="limit.html" title="limit"><em class="citetitle">limit</em></a>,
@@ -169,7 +169,7 @@ asig  <span class="olabel">mirror</span>  ain, ilevl2, ilevl1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115684656"></a>
+        <a id="idm1529849584"></a>
         <h2>Credits</h2>
         <p>
       </p>

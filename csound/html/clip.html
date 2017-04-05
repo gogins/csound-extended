@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>clip</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="clfilt.html" title="clfilt" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84136480"></a>
+        <a id="idm1562324800"></a>
         <h2>Description</h2>
         <p>
       Clips an a-rate signal to a predefined limit, in a <span class="quote">“<span class="quote">soft</span>”</span> manner, using one of three methods.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idp84127024"></a>
+        <a id="idm1562319552"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>clip</strong></span> asig, imeth, ilimit [, iarg]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp84129248"></a>
+        <a id="idm1562320832"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imeth</em></span> -- selects the clipping method. The default is 0. The methods are:
@@ -78,7 +79,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84206720"></a>
+        <a id="idm1562310464"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- a-rate input signal
@@ -137,67 +138,66 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp84236304"></a>
+        <a id="idm1562081008"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the clip opcode. It uses the file <a class="ulink" href="examples/clip.csd" target="_top"><em class="citetitle">clip.csd</em></a>.
+      Here is an example of the clip opcode. It uses the file <a class="ulink" href="examples/clip.csd.html" target="_top"><em class="citetitle">clip.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp84238240"></a>
+          <a id="idm1562085104"></a>
           <p class="title">
-            <strong>Example 129. Example of the clip opcode.</strong>
+            <strong>Example 130. Example of the clip opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp236978736"></a>
-              <a class="ulink" href="examples/clip.csd.html" target="_top">Play</a>
+              <a id="idm1398328560"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o clip.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o clip.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; white noise</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; white noise</span>
 
-arnd <span class="opc">rand</span> 1	<span class="comment">; full amlitude</span>
-<span class="comment">; Clip the noisy waveform's amplitude to 0.5</span>
-a1 <span class="opc">clip</span> arnd, 2, 0.5
-   <span class="opc">outs</span> a1, a1
+a<span class="n">rnd</span> <span class="nb">rand</span> <span class="mi">1</span>	<span class="c1">; full amlitude</span>
+<span class="c1">; Clip the noisy waveform's amplitude to 0.5</span>
+a<span class="n">1</span> <span class="nb">clip</span> a<span class="n">rnd</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span>
+   <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">; white noise</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">; white noise</span>
 
-arnd <span class="opc">rand</span> 1	<span class="comment">; full amlitude</span>
-<span class="comment">; Clip the noisy waveform's amplitude to 0.1</span>
-a1 <span class="opc">clip</span> arnd, 2, 0.1
-   <span class="opc">outs</span> a1, a1
+a<span class="n">rnd</span> <span class="nb">rand</span> <span class="mi">1</span>	<span class="c1">; full amlitude</span>
+<span class="c1">; Clip the noisy waveform's amplitude to 0.1</span>
+a<span class="n">1</span> <span class="nb">clip</span> a<span class="n">rnd</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.1</span>
+   <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="comment">; Play Instrument #2 for one second.</span>
-<span class="stamnt">i</span> 2 1 1
-<span class="stamnt">e</span>
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="c1">; Play Instrument #2 for one second.</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -206,7 +206,7 @@ a1 <span class="opc">clip</span> arnd, 2, 0.1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84241648"></a>
+        <a id="idm1562087536"></a>
         <h2>Credits</h2>
         <p>
       </p>

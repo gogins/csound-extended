@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>STKFlute</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="STKDrummer.html" title="STKDrummer" />
@@ -38,19 +39,19 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idp142852576"></a>
+        <a id="idm1502252656"></a>
         <h2>Description</h2>
         <p>
       STKFlute uses a simple flute physical model. The jet model uses a polynomial, a la Cook.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142853872"></a>
+        <a id="idm1502255600"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKFlute</strong></span> ifrequency, iamplitude, [kjet, kv1[, knoise, kv2[, klfo, kv3[, klfodepth, kv4[, kbreath, kv5]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp142915216"></a>
+        <a id="idm1502252528"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142917520"></a>
+        <a id="idm1502257008"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kjet</em></span> -- controller 2, jet delay. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>knoise</em></span> -- controller 4, gain of noise. Value range of kv2 is 0-127.</p>
@@ -69,7 +70,7 @@
         <p><span class="emphasis"><em>kbreath</em></span> -- controller 128, breath pressure. Value range of kv5 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idp142922112"></a>
+        <a id="idm1502241904"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -95,54 +96,53 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp142926592"></a>
+        <a id="idm1502249584"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the STKFlute opcode. It uses the file <a class="ulink" href="examples/STKFlute.csd" target="_top"><em class="citetitle">STKFlute.csd</em></a>.
+      Here is an example of the STKFlute opcode. It uses the file <a class="ulink" href="examples/STKFlute.csd.html" target="_top"><em class="citetitle">STKFlute.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idp142928448"></a>
+          <a id="idm1502249072"></a>
           <p class="title">
-            <strong>Example 882. Example of the STKFlute opcode.</strong>
+            <strong>Example 908. Example of the STKFlute opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp266171136"></a>
-              <a class="ulink" href="examples/STKFlute.csd.html" target="_top">Play</a>
+              <a id="idm1322969328"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o STKFlute.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o STKFlute.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifrq	<span class="op">=</span>	p4
-kv1	<span class="opc">line</span>	p5, p3, p6				<span class="comment">;jet delay</span>
-kv4	<span class="opc">line</span>	0, p3, 100				<span class="comment">;vibrato depth</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
+k<span class="n">v1</span>	<span class="nb">line</span>	<span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>				<span class="c1">;jet delay</span>
+k<span class="n">v4</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span>				<span class="c1">;vibrato depth</span>
 
-asig	<span class="opc">STKFlute</span> <span class="opc">cpspch</span>(ifrq), 1, 2, kv1, 4, 100, 11, 100, 1, kv4, 128, 100
-	<span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span>	<span class="nb">STKFlute</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">frq</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">v4</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span>
+	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 5 8.00 0 0
-<span class="stamnt">i</span> 1 7 3 9.00 20 120 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span> <span class="mf">8.00</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">7</span> <span class="mi">3</span> <span class="mf">9.00</span> <span class="mi">20</span> <span class="mi">120</span> 
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -151,14 +151,14 @@ asig	<span class="opc">STKFlute</span> <span class="opc">cpspch</span>(ifrq), 1,
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142930368"></a>
+        <a id="idm1502239856"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="STKClarinet.html" title="STKClarinet"><em class="citetitle">STKClarinet</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142932448"></a>
+        <a id="idm1502236400"></a>
         <h2>Credits</h2>
         <p>
       </p>

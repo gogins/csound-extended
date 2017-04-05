@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>cos</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="copyf2array.html" title="copyf2array" />
@@ -38,77 +39,78 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp85181040"></a>
+        <a id="idm1561011824"></a>
         <h2>Description</h2>
         <p>
       Returns the cosine of <span class="emphasis"><em>x</em></span> (<span class="emphasis"><em>x</em></span> in radians).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85183072"></a>
+        <a id="idm1561013488"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>cos</strong></span>(x) (no rate restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>cos</strong></span>(x) (no rate
+    restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>cos</strong></span>(k/i[]) (k- or i-arrays )</pre>
       </div>
       <div class="refsect1">
-        <a id="idp85245536"></a>
+        <a id="idm1561017712"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the cos opcode. It uses the file <a class="ulink" href="examples/cos.csd" target="_top"><em class="citetitle">cos.csd</em></a>.
+      Here is an example of the cos opcode. It uses the file <a class="ulink" href="examples/cos.csd.html" target="_top"><em class="citetitle">cos.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp85247184"></a>
+          <a id="idm1561017200"></a>
           <p class="title">
-            <strong>Example 145. Example of the cos opcode.</strong>
+            <strong>Example 147. Example of the cos opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp238081984"></a>
-              <a class="ulink" href="examples/cos.csd.html" target="_top">Play</a>
+              <a id="idm1396586080"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o cos.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o cos.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-icos1     <span class="op">=</span>          <span class="opc">cos</span>(0) <span class="comment">;cosine of 0 is 1</span>
-icos2     <span class="op">=</span>          <span class="opc">cos</span>($M_PI_2) <span class="comment">;cosine of pi/2 (1.5707...) is 0</span>
-icos3     <span class="op">=</span>          <span class="opc">cos</span>($M_PI) <span class="comment">;cosine of pi (3.1415...) is -1</span>
-icos4     <span class="op">=</span>          <span class="opc">cos</span>($M_PI_2 <span class="op">*</span> 3) <span class="comment">;cosine of 3/2pi (4.7123...) is 0</span>
-icos5     <span class="op">=</span>          <span class="opc">cos</span>($M_PI <span class="op">*</span> 2) <span class="comment">;cosine of 2pi (6.2831...) is 1</span>
-icos6     <span class="op">=</span>          <span class="opc">cos</span>($M_PI <span class="op">*</span> 4) <span class="comment">;cosine of 4pi is also 1 as it is periodically to 2pi</span>
-          <span class="opc">print</span>      icos1, icos2, icos3, icos4, icos5, icos6
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">cos1</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">;cosine of 0 is 1</span>
+i<span class="n">cos2</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span><span class="cp">$M_PI_2</span><span class="p">)</span> <span class="c1">;cosine of pi/2 (1.5707...) is 0</span>
+i<span class="n">cos3</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span><span class="cp">$M_PI</span><span class="p">)</span> <span class="c1">;cosine of pi (3.1415...) is -1</span>
+i<span class="n">cos4</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span><span class="cp">$M_PI_2</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">;cosine of 3/2pi (4.7123...) is 0</span>
+i<span class="n">cos5</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span><span class="cp">$M_PI</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">;cosine of 2pi (6.2831...) is 1</span>
+i<span class="n">cos6</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span><span class="cp">$M_PI</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">;cosine of 4pi is also 1 as it is periodically to 2pi</span>
+          <span class="nb">print</span>      i<span class="n">cos1</span><span class="p">,</span> i<span class="n">cos2</span><span class="p">,</span> i<span class="n">cos3</span><span class="p">,</span> i<span class="n">cos4</span><span class="p">,</span> i<span class="n">cos5</span><span class="p">,</span> i<span class="n">cos6</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2 <span class="comment">;cos used in panning, after an example from Hans Mikelson</span>
-aout      <span class="opc">vco2</span>       0.8, 220 <span class="comment">; sawtooth</span>
-kpan      <span class="opc">linseg</span>     p4, p3, p5 <span class="comment">;0 = left, 1 = right</span>
-kpan      <span class="op">=</span>          kpan<span class="op">*</span>$M_PI_2 <span class="comment">;range 0-1 becomes 0-pi/2</span>
-kpanl     <span class="op">=</span>          <span class="opc">cos</span>(kpan)
-kpanr     <span class="op">=</span>          <span class="opc">sin</span>(kpan)
-          <span class="opc">outs</span>       aout<span class="op">*</span>kpanl, aout<span class="op">*</span>kpanr
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;cos used in panning, after an example from Hans Mikelson</span>
+a<span class="n">out</span>      <span class="nb">vco2</span>       <span class="mf">0.8</span><span class="p">,</span> <span class="mi">220</span> <span class="c1">; sawtooth</span>
+k<span class="n">pan</span>      <span class="nb">linseg</span>     <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> <span class="c1">;0 = left, 1 = right</span>
+k<span class="n">pan</span>      <span class="o">=</span>          k<span class="n">pan</span><span class="o">*</span><span class="cp">$M_PI_2</span> <span class="c1">;range 0-1 becomes 0-pi/2</span>
+k<span class="n">panl</span>     <span class="o">=</span>          <span class="nb">cos</span><span class="p">(</span>k<span class="n">pan</span><span class="p">)</span>
+k<span class="n">panr</span>     <span class="o">=</span>          <span class="nb">sin</span><span class="p">(</span>k<span class="n">pan</span><span class="p">)</span>
+          <span class="nb">outs</span>       a<span class="n">out</span><span class="o">*</span>k<span class="n">panl</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span>k<span class="n">panr</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 0
-<span class="stamnt">i</span> 2 0 5 0 1 <span class="comment">;move left to right</span>
-<span class="stamnt">i</span> 2 6 5 1 0 <span class="comment">;move right to left</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">5</span> <span class="mi">0</span> <span class="mi">1</span> <span class="c1">;move left to right</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">1</span> <span class="mi">0</span> <span class="c1">;move right to left</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -117,7 +119,7 @@ kpanr     <span class="op">=</span>          <span class="opc">sin</span>(kpan)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85251504"></a>
+        <a id="idm1561006448"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cosh.html" title="cosh"><em class="citetitle">cosh</em></a>,

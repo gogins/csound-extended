@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>schedkwhennamed</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="schedkwhen.html" title="schedkwhen" />
@@ -38,27 +39,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp135100896"></a>
+        <a id="idm1510049008"></a>
         <h2>Description</h2>
         <p>
       Similar to <a class="link" href="schedkwhen.html" title="schedkwhen"><em class="citetitle">schedkwhen</em></a> but uses a named instrument at init-time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp135146192"></a>
+        <a id="idm1510056048"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>schedkwhennamed</strong></span> ktrigger, kmintim, kmaxnum, "name", kwhen, kdur \
       [, ip4] [, ip5] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp135148432"></a>
+        <a id="idm1510053232"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ip4, ip5, ...</em></span> -- Equivalent to p4, p5, etc., in a score <a class="link" href="i.html" title="i Statement (Instrument or Note Statement)"><em class="citetitle">i statement</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp135150992"></a>
+        <a id="idm1510045552"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrigger</em></span> -- triggers a new score event. If <span class="emphasis"><em>ktrigger</em></span> is 0, no new event is triggered.
@@ -110,66 +111,65 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp135170320"></a>
+        <a id="idm1510028400"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the schedkwhennamed opcode. It uses the file <a class="ulink" href="examples/schedkwhennamed.csd" target="_top"><em class="citetitle">schedkwhennamed.csd</em></a>.
+      Here is an example of the schedkwhennamed opcode. It uses the file <a class="ulink" href="examples/schedkwhennamed.csd.html" target="_top"><em class="citetitle">schedkwhennamed.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp135172208"></a>
+          <a id="idm1510031856"></a>
           <p class="title">
-            <strong>Example 815. Example of the schedkwhennamed opcode.</strong>
+            <strong>Example 836. Example of the schedkwhennamed opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp263425888"></a>
-              <a class="ulink" href="examples/schedkwhennamed.csd.html" target="_top">Play</a>
+              <a id="idm1330263152"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
 -odac           -iadc     -d
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o schedkwhennamed.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o schedkwhennamed.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-  <span class="ohdr">sr</span>	    <span class="op">=</span>  48000
-  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  16
-  <span class="ohdr">nchnls</span>    <span class="op">=</span>  2
-  <span class="ohdr">0dbfs</span>	    <span class="op">=</span>  1
+  <span class="vg">sr</span>	    <span class="o">=</span>  <span class="mi">48000</span>
+  <span class="vg">ksmps</span>	    <span class="o">=</span>  <span class="mi">16</span>
+  <span class="vg">nchnls</span>    <span class="o">=</span>  <span class="mi">2</span>
+  <span class="vg">0dbfs</span>	    <span class="o">=</span>  <span class="mi">1</span>
 
-<span class="comment">; Example by Jonathan Murphy 2007</span>
+<span class="c1">; Example by Jonathan Murphy 2007</span>
 
-  gSinstr2  <span class="op">=</span>  "printer"
+  gS<span class="n">instr2</span>  <span class="o">=</span>  <span class="s">"printer"</span>
 
-    <span class="oblock">instr</span> 1
+    <span class="kd">instr</span> <span class="nf">1</span>
 
-  ktrig	    <span class="opc">metro</span>     1
-<span class="octrl">if</span> (ktrig <span class="op">==</span> 1) then
-  <span class="comment">;Call instrument "printer" once per second</span>
-	    <span class="opc">schedkwhennamed</span>   ktrig, 0, 1, gSinstr2, 0, 1
+  k<span class="n">trig</span>	    <span class="nb">metro</span>     <span class="mi">1</span>
+<span class="k">if</span> <span class="p">(</span>k<span class="n">trig</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
+  <span class="c1">;Call instrument "printer" once per second</span>
+	    <span class="nb">schedkwhennamed</span>   k<span class="n">trig</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> gS<span class="n">instr2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="octrl">endif</span>
+<span class="k">endif</span>
 
-    <span class="oblock">endin</span>
+    <span class="kd">endin</span>
 
-    <span class="oblock">instr</span> printer
+    <span class="kd">instr</span> <span class="nf">printer</span>
 
-  ktime	    <span class="opc">timeinsts</span>
-	    <span class="opc">printk2</span>   ktime
+  k<span class="n">time</span>	    <span class="nb">timeinsts</span>
+	    <span class="nb">printk2</span>   k<span class="n">time</span>
 
-    <span class="oblock">endin</span>
+    <span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 10
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -178,7 +178,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp135176496"></a>
+        <a id="idm1510031984"></a>
         <h2>See also</h2>
         <p><a class="link" href="event.html" title="event"><em class="citetitle">event</em></a>,
     <a class="link" href="event_i.html" title="event_i"><em class="citetitle">event_i</em></a>,
@@ -189,7 +189,7 @@
     <a class="link" href="scoreline_i.html" title="scoreline_i"><em class="citetitle">scoreline_i</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idp135184048"></a>
+        <a id="idm1510023792"></a>
         <h2>Credits</h2>
         <p>
       </p>

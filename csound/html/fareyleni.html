@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>fareyleni</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fareylen.html" title="fareylen" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92247792"></a>
+        <a id="idm1553822960"></a>
         <h2>Description</h2>
         <p>
 This opcode can be used in conjunction with <a class="link" href="GENfarey.html" title="GENfarey"><em class="citetitle">GENfarey</em></a>.
@@ -50,7 +51,7 @@ where phi(m) is Euler's totient function, which gives the number of integers ≤
       Some values for the length of F<sub>n</sub> given n:
       </p>
         <div class="informaltable">
-          <table border="1">
+          <table class="informaltable" border="1">
             <colgroup>
               <col />
               <col />
@@ -149,12 +150,12 @@ where phi(m) is Euler's totient function, which gives the number of integers ≤
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92278464"></a>
+        <a id="idm1553792240"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ifl <span class="command"><strong>fareyleni</strong></span> ifn</pre>
       </div>
       <div class="refsect1">
-        <a id="idp92280704"></a>
+        <a id="idm1553790576"></a>
         <h2>Initialisation</h2>
         <p>
       The length of the identified Farey sequence is returned.
@@ -164,110 +165,110 @@ where phi(m) is Euler's totient function, which gives the number of integers ≤
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92282976"></a>
+        <a id="idm1553790192"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the fareyleni opcode. It uses the file <a class="ulink" href="examples/fareyleni.csd" target="_top"><em class="citetitle">fareyleni.csd</em></a>.
+      Here is an example of the fareyleni opcode. It uses the file <a class="ulink" href="examples/fareyleni.csd.html" target="_top"><em class="citetitle">fareyleni.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp92284752"></a>
+          <a id="idm1553789808"></a>
           <p class="title">
-            <strong>Example 260. Example of the fareyleni opcode.</strong>
+            <strong>Example 262. Example of the fareyleni opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp241346736"></a>
-              <a class="ulink" href="examples/fareyleni.csd.html" target="_top">Play</a>
+              <a id="idm1388200944"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc for RT audio input as well </span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o fareyleni.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc for RT audio input as well </span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o fareyleni.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-      <span class="comment">; initialise integer n for Farey Sequence F_8</span>
-      gifarn <span class="opc">init</span> 8	
+      <span class="c1">; initialise integer n for Farey Sequence F_8</span>
+      gi<span class="n">farn</span> <span class="nb">init</span> <span class="mi">8</span>	
 
-      <span class="comment">; calculate length of F_8, it should return 23 for |F_8|</span>
-      gires <span class="opc">fareyleni</span> gifarn  
+      <span class="c1">; calculate length of F_8, it should return 23 for |F_8|</span>
+      gi<span class="n">res</span> <span class="nb">fareyleni</span> gi<span class="n">farn</span>  
 
-      <span class="comment">; convert to negative number for the GEN routine because</span>
-      <span class="comment">; the table length won't be a power of 2 </span>
-      <span class="comment">; (The length of a Farey Sequence of n &gt; 1 is always an odd number)</span>
-      gilen <span class="opc">init</span> gires <span class="op">*</span> <span class="op">-</span>1 
+      <span class="c1">; convert to negative number for the GEN routine because</span>
+      <span class="c1">; the table length won't be a power of 2 </span>
+      <span class="c1">; (The length of a Farey Sequence of n &gt; 1 is always an odd number)</span>
+      gi<span class="n">len</span> <span class="nb">init</span> gi<span class="n">res</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span> 
       	   	       	               
-      <span class="comment">; create F_8 with GENfarey, the negative table number prevents </span>
-      <span class="comment">; unnecessary normalisation (F_8 IS already normalised)</span>
-      <span class="comment">; 	         	    n  	   mode: </span>
-      gifarey <span class="ohdr">ftgen</span> 100, 0, gilen, "farey", gifarn, 4
-      <span class="comment">; if mode=4 then 1 is added to each element of F_n.</span>
-      <span class="comment">; Useful for creating just tuning tables that can be read by the cps2pch opcode.</span>
+      <span class="c1">; create F_8 with GENfarey, the negative table number prevents </span>
+      <span class="c1">; unnecessary normalisation (F_8 IS already normalised)</span>
+      <span class="c1">; 	         	    n  	   mode: </span>
+      gi<span class="n">farey</span> <span class="nb">ftgen</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">len</span><span class="p">,</span> <span class="s">"farey"</span><span class="p">,</span> gi<span class="n">farn</span><span class="p">,</span> <span class="mi">4</span>
+      <span class="c1">; if mode=4 then 1 is added to each element of F_n.</span>
+      <span class="c1">; Useful for creating just tuning tables that can be read by the cps2pch opcode.</span>
 
-<span class="oblock">instr</span> 1
-      <span class="comment">; the very last element of F_n is not needed in the case of tuning tables</span>
-      ires <span class="op">=</span> gires <span class="op">-</span> 1 
-      <span class="comment">; read out and print to file</span>
-      kndx <span class="opc">init</span> 0 
-      <span class="octrl">if</span> (kndx <span class="op">&lt;</span> ires) then    
-      	 kelem <span class="opc">tab</span> kndx, gifarey
-      	 <span class="opc">fprintks</span> "farey8_tuning.txt", "<span class="op">%</span>2.6f\\n", kelem
-      	 kndx <span class="op">=</span> kndx<span class="op">+</span>1
-      <span class="octrl">endif</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+      <span class="c1">; the very last element of F_n is not needed in the case of tuning tables</span>
+      i<span class="n">res</span> <span class="o">=</span> gi<span class="n">res</span> <span class="o">-</span> <span class="mi">1</span> 
+      <span class="c1">; read out and print to file</span>
+      k<span class="n">ndx</span> <span class="nb">init</span> <span class="mi">0</span> 
+      <span class="k">if</span> <span class="p">(</span>k<span class="n">ndx</span> <span class="o">&lt;</span> i<span class="n">res</span><span class="p">)</span> <span class="k">then</span>    
+      	 k<span class="n">elem</span> <span class="nb">tab</span> k<span class="n">ndx</span><span class="p">,</span> gi<span class="n">farey</span>
+      	 <span class="nb">fprintks</span> <span class="s">"farey8_tuning.txt"</span><span class="p">,</span> <span class="s">"%2.6f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">elem</span>
+      	 k<span class="n">ndx</span> <span class="o">=</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span>
+      <span class="k">endif</span>
       
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-ip   <span class="opc">cps2pch</span> p4, <span class="op">-</span>100
-asig <span class="opc">poscil</span> .5, ip, 1
-aenv <span class="opc">linseg</span> 0, 0.1, 1, p3<span class="op">-</span>0.2, 1, 0.1, 0
-     <span class="opc">outs</span> asig <span class="op">*</span> aenv, asig <span class="op">*</span> aenv
+i<span class="n">p</span>   <span class="nb">cps2pch</span> <span class="nb">p4</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span>
+a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> i<span class="n">p</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span>
+     <span class="nb">outs</span> a<span class="n">sig</span> <span class="o">*</span> a<span class="n">env</span><span class="p">,</span> a<span class="n">sig</span> <span class="o">*</span> a<span class="n">env</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 8192 10 1	<span class="comment">;sine wave</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave</span>
 
-<span class="stamnt">i</span>1	0     .1
+<span class="nb">i</span><span class="mi">1</span>	<span class="mi">0</span>     <span class="mf">.1</span>
 
-<span class="stamnt">i</span>2	1	.5	8.00
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	.	&gt;
-<span class="stamnt">i</span>2	+	1	8.22
+<span class="nb">i</span><span class="mi">2</span>	<span class="mi">1</span>	<span class="mf">.5</span>	<span class="mf">8.00</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="o">.</span>	<span class="o">&gt;</span>
+<span class="nb">i</span><span class="mi">2</span>	<span class="o">+</span>	<span class="mi">1</span>	<span class="mf">8.22</span>
 
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+ 
 </pre>
             </div>
           </div>
@@ -276,7 +277,7 @@ aenv <span class="opc">linseg</span> 0, 0.1, 1, p3<span class="op">-</span>0.2, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92288944"></a>
+        <a id="idm1553779824"></a>
         <h2>Credits</h2>
         <p>
       </p>

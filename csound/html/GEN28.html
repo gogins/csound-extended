@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN28</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN27.html" title="GEN27" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206938912"></a>
+        <a id="idm1437521776"></a>
         <h2>Description</h2>
         <p>
       This function generator reads a text file which contains sets of three values representing the xy coordinates and a time-tag for when the signal should be placed at that location, allowing the user to define a time-tagged trajectory. The file format is in the form:
@@ -79,12 +80,12 @@ time3    X3      Y3<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207015232"></a>
+        <a id="idm1437518320"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 28 ifilcod</pre>
       </div>
       <div class="refsect1">
-        <a id="idp207017248"></a>
+        <a id="idm1437516528"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be 0. <span class="emphasis"><em>GEN28</em></span> takes 0 as the size and automatically allocates memory.
@@ -94,7 +95,7 @@ time3    X3      Y3<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207020464"></a>
+        <a id="idm1437507952"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -122,79 +123,78 @@ time3    X3      Y3<br />
       Since <span class="emphasis"><em>GEN28</em></span> creates values to 10 milliseconds of resolution, there will be 500 values created by interpolating X1 to X2 to X3 and so on, and Y1 to Y2 to Y3 and so on, over the appropriate number of values that are stored in the function table. The sound will begin in the left front, over 1 second it will move to the right front, over another second it move further into the distance but still in the right front, then in just 1/10th of a second it moves to the left rear, a bit distant. Finally over the last .9 seconds the sound will move to the right rear, moderately distant, and it comes to rest between the two left channels (due west!), quite distant.
     </p>
         <p>
-      Here is an example of the GEN28 routine. It uses the file <a class="ulink" href="examples/gen28.csd" target="_top"><em class="citetitle">gen28.csd</em></a>.
+      Here is an example of the GEN28 routine. It uses the file <a class="ulink" href="examples/gen28.csd.html" target="_top"><em class="citetitle">gen28.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp207027024"></a>
+          <a id="idm1437504752"></a>
           <p class="title">
-            <strong>Example 1150. Example of the gen28 generator.</strong>
+            <strong>Example 1178. Example of the gen28 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp275922320"></a>
-              <a class="ulink" href="examples/gen28.csd.html" target="_top">Play</a>
+              <a id="idm1295231600"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen28.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen28.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span> 
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 4
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">4</span>
   
-ga1	<span class="opc">init</span>	0
-ga2	<span class="opc">init</span>	0
-ga3	<span class="opc">init</span>	0
-ga4	<span class="opc">init</span>	0
+ga<span class="n">1</span>	<span class="nb">init</span>	<span class="mi">0</span>
+ga<span class="n">2</span>	<span class="nb">init</span>	<span class="mi">0</span>
+ga<span class="n">3</span>	<span class="nb">init</span>	<span class="mi">0</span>
+ga<span class="n">4</span>	<span class="nb">init</span>	<span class="mi">0</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">;uses GEN28 file "move", as found in /manual/examples</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;uses GEN28 file "move", as found in /manual/examples</span>
 
-kx    <span class="opc">init</span> 0
-ky    <span class="opc">init</span> 0
-ktime <span class="opc">line</span>  0, 5, 5				<span class="comment">;same time as in table 1 (="move")</span>
-asig  <span class="opc">diskin2</span> "beats.wav", 1, 0, 1		<span class="comment">;sound source is looped</span>
-a1, a2, a3, a4 <span class="opc">space</span> asig, 1, ktime, .1, kx, ky	<span class="comment">;use table 1 = GEN28</span>
-ar1, ar2, ar3, ar4 <span class="opc">spsend</span>			<span class="comment">;send to reverb</span>
+k<span class="n">x</span>    <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">y</span>    <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">time</span> <span class="nb">line</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span>				<span class="c1">;same time as in table 1 (="move")</span>
+a<span class="n">sig</span>  <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;sound source is looped</span>
+a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> a<span class="n">4</span> <span class="nb">space</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">time</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span>	<span class="c1">;use table 1 = GEN28</span>
+a<span class="n">r1</span><span class="p">,</span> a<span class="n">r2</span><span class="p">,</span> a<span class="n">r3</span><span class="p">,</span> a<span class="n">r4</span> <span class="nb">spsend</span>			<span class="c1">;send to reverb</span>
 
-ga1  <span class="op">=</span> ga1<span class="op">+</span>ar1
-ga2  <span class="op">=</span> ga2<span class="op">+</span>ar2
-ga3  <span class="op">=</span> ga3<span class="op">+</span>ar3
-ga4  <span class="op">=</span> ga4<span class="op">+</span>ar4
-     <span class="opc">outq</span> a1, a2, a3, a4
+ga<span class="n">1</span>  <span class="o">=</span> ga<span class="n">1</span><span class="o">+</span>a<span class="n">r1</span>
+ga<span class="n">2</span>  <span class="o">=</span> ga<span class="n">2</span><span class="o">+</span>a<span class="n">r2</span>
+ga<span class="n">3</span>  <span class="o">=</span> ga<span class="n">3</span><span class="o">+</span>a<span class="n">r3</span>
+ga<span class="n">4</span>  <span class="o">=</span> ga<span class="n">4</span><span class="o">+</span>a<span class="n">r4</span>
+     <span class="nb">outq</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> a<span class="n">4</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 99 <span class="comment">; reverb instrument</span>
+<span class="kd">instr</span> <span class="nf">99</span> <span class="c1">; reverb instrument</span>
 
-a1 <span class="opc">reverb2</span> ga1, 2.5, .5
-a2 <span class="opc">reverb2</span> ga2, 2.5, .5
-a3 <span class="opc">reverb2</span> ga3, 2.5, .5
-a4 <span class="opc">reverb2</span> ga4, 2.5, .5
-   <span class="opc">outq</span>	a1, a2, a3, a4
+a<span class="n">1</span> <span class="nb">reverb2</span> ga<span class="n">1</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">.5</span>
+a<span class="n">2</span> <span class="nb">reverb2</span> ga<span class="n">2</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">.5</span>
+a<span class="n">3</span> <span class="nb">reverb2</span> ga<span class="n">3</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">.5</span>
+a<span class="n">4</span> <span class="nb">reverb2</span> ga<span class="n">4</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">.5</span>
+   <span class="nb">outq</span>	a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> a<span class="n">4</span>
 
-ga1<span class="op">=</span>0	
-ga2<span class="op">=</span>0
-ga3<span class="op">=</span>0
-ga4<span class="op">=</span>0
+ga<span class="n">1</span><span class="o">=</span><span class="mi">0</span>	
+ga<span class="n">2</span><span class="o">=</span><span class="mi">0</span>
+ga<span class="n">3</span><span class="o">=</span><span class="mi">0</span>
+ga<span class="n">4</span><span class="o">=</span><span class="mi">0</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 0 28 "move"
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">28</span> <span class="s">"move"</span>
 
-<span class="stamnt">i</span>1 0 5		<span class="comment">;same time as ktime</span>
-<span class="stamnt">i</span> 99 0 10	<span class="comment">;keep reverb active</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>		<span class="c1">;same time as ktime</span>
+<span class="nb">i</span> <span class="mi">99</span> <span class="mi">0</span> <span class="mi">10</span>	<span class="c1">;keep reverb active</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -203,7 +203,7 @@ ga4<span class="op">=</span>0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207031312"></a>
+        <a id="idm1437132912"></a>
         <h2>Credits</h2>
         <p>
       </p>

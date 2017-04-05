@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>midiprogramchange</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="midipolyaftertouch.html" title="midipolyaftertouch" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp115104080"></a>
+        <a id="idm1530473712"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>midiprogramchange</em></span> is designed to simplify writing instruments that can be used interchangeably for either score or MIDI input, and to make it easier to adapt instruments originally written for score input to work with MIDI input.
@@ -52,12 +53,12 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115108144"></a>
+        <a id="idm1530472304"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>midiprogramchange</strong></span> xprogram</pre>
       </div>
       <div class="refsect1">
-        <a id="idp115110192"></a>
+        <a id="idm1530471792"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xprogram</em></span> -- returns the MIDI program change value during MIDI activation, remains unchanged otherwise.
@@ -85,56 +86,55 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp115116496"></a>
+        <a id="idm1530468336"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the midiprogramchange opcode. It uses the file <a class="ulink" href="examples/midiprogramchange.csd" target="_top"><em class="citetitle">midiprogramchange.csd</em></a>.
+      Here is an example of the midiprogramchange opcode. It uses the file <a class="ulink" href="examples/midiprogramchange.csd.html" target="_top"><em class="citetitle">midiprogramchange.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp115118384"></a>
+          <a id="idm1530464752"></a>
           <p class="title">
-            <strong>Example 526. Example of the midiprogramchange opcode.</strong>
+            <strong>Example 542. Example of the midiprogramchange opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp252684352"></a>
-              <a class="ulink" href="examples/midiprogramchange.csd.html" target="_top">Play</a>
+              <a id="idm1355633520"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    -M1 -Q1  <span class="comment">;;;realtime audio out and midi in and midi out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o midiprogramchange.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    -M1 -Q1  <span class="c1">;;;realtime audio out and midi in and midi out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o midiprogramchange.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">;uses external midi device</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;uses external midi device</span>
 
-kkey <span class="opc">init</span> 0					<span class="comment">;initialize key number</span>
-kvel <span class="opc">init</span> 0					<span class="comment">;initialize velocity</span>
-<span class="opc">midiprogramchange</span> 52				<span class="comment">;choose GM program number 52 = string pad</span>
-<span class="opc">midinoteonkey</span> kkey, kvel			<span class="comment">;MIDI note number value</span>
-<span class="opc">printk2</span>	kkey					<span class="comment">;display the key value when it changes and when key is pressed </span>
-<span class="opc">midion</span> 1, kkey, kvel				<span class="comment">;sent note to external device</span>
+k<span class="n">key</span> <span class="nb">init</span> <span class="mi">0</span>					<span class="c1">;initialize key number</span>
+k<span class="n">vel</span> <span class="nb">init</span> <span class="mi">0</span>					<span class="c1">;initialize velocity</span>
+<span class="nb">midiprogramchange</span> <span class="mi">52</span>				<span class="c1">;choose GM program number 52 = string pad</span>
+<span class="nb">midinoteonkey</span> k<span class="n">key</span><span class="p">,</span> k<span class="n">vel</span>			<span class="c1">;MIDI note number value</span>
+<span class="nb">printk2</span>	k<span class="n">key</span>					<span class="c1">;display the key value when it changes and when key is pressed </span>
+<span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">key</span><span class="p">,</span> k<span class="n">vel</span>				<span class="c1">;sent note to external device</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 0 30	<span class="comment">;runs for 30 seconds	</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">30</span>	<span class="c1">;runs for 30 seconds	</span>
 
-<span class="stamnt">i</span> 1 0 2 62	<span class="comment">; play these notes from score as well</span>
-<span class="stamnt">i</span> 1 + 2 65
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">62</span>	<span class="c1">; play these notes from score as well</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">65</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -143,7 +143,7 @@ kvel <span class="opc">init</span> 0					<span class="comment">;initialize veloc
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115122688"></a>
+        <a id="idm1530461936"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midichannelaftertouch.html" title="midichannelaftertouch"><em class="citetitle">midichannelaftertouch</em></a>, 
@@ -159,7 +159,7 @@ kvel <span class="opc">init</span> 0					<span class="comment">;initialize veloc
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp115133376"></a>
+        <a id="idm1530458352"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins</p>
         <p>New in version 4.20</p>

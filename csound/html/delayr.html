@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>delayr</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="delayk.html" title="delayk" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp87953120"></a>
+        <a id="idm1558427248"></a>
         <h2>Description</h2>
         <p>
       Reads from an automatically established digital delay line.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idp88017440"></a>
+        <a id="idm1558428144"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>delayr</strong></span> idlt [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp88019648"></a>
+        <a id="idm1558433264"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idlt</em></span> -- requested delay time in seconds. This can be as large as available memory will permit. The space required for n seconds of delay is 4n * <span class="emphasis"><em>sr</em></span> bytes. It is allocated at the time the instrument is first initialized, and returned to the pool at the end of a score section.
@@ -60,85 +61,84 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88023808"></a>
+        <a id="idm1558431344"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>delayr</em></span> reads from an automatically established digital delay line, in which the signal retrieved has been resident for <span class="emphasis"><em>idlt</em></span> seconds. This unit must be paired with and precede an accompanying <a class="link" href="delayw.html" title="delayw"><em class="citetitle">delayw</em></a> unit. Any other Csound statements can intervene.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88027024"></a>
+        <a id="idm1558419056"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the delayr opcode. It uses the file <a class="ulink" href="examples/delayr.csd" target="_top"><em class="citetitle">delayr.csd</em></a>.
+      Here is an example of the delayr opcode. It uses the file <a class="ulink" href="examples/delayr.csd.html" target="_top"><em class="citetitle">delayr.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp88028880"></a>
+          <a id="idm1558425456"></a>
           <p class="title">
-            <strong>Example 190. Example of the delayr opcode.</strong>
+            <strong>Example 192. Example of the delayr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp239357040"></a>
-              <a class="ulink" href="examples/delayr.csd.html" target="_top">Play</a>
+              <a id="idm1393728112"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o delayr.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o delayr.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1   
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>   
 
-gasig  <span class="opc">init</span> 0   
-gidel  <span class="op">=</span> 1		<span class="comment">;delay time in seconds</span>
+ga<span class="n">sig</span>  <span class="nb">init</span> <span class="mi">0</span>   
+gi<span class="n">del</span>  <span class="o">=</span> <span class="mi">1</span>		<span class="c1">;delay time in seconds</span>
                                                              
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 	
-ain  <span class="opc">pluck</span> .7, 440, 1000, 0, 1
-     <span class="opc">outs</span> ain, ain
+a<span class="n">in</span>  <span class="nb">pluck</span> <span class="mf">.7</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">in</span><span class="p">,</span> a<span class="n">in</span>
 
-<span class="opc">vincr</span> gasig, ain	<span class="comment">;send to global delay</span>
-<span class="oblock">endin</span>
+<span class="nb">vincr</span> ga<span class="n">sig</span><span class="p">,</span> a<span class="n">in</span>	<span class="c1">;send to global delay</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	
+<span class="kd">instr</span> <span class="nf">2</span>	
 
-ifeedback <span class="op">=</span> p4	
+i<span class="n">feedback</span> <span class="o">=</span> <span class="nb">p4</span>	
 
-abuf2	<span class="opc">delayr</span>	gidel
-adelL 	<span class="opc">deltap</span>	.4		<span class="comment">;first tap (on left channel)</span>
-adelM 	<span class="opc">deltap</span>	1		<span class="comment">;second tap (on middle channel)</span>
-	<span class="opc">delayw</span>	gasig <span class="op">+</span> (adelL <span class="op">*</span> ifeedback)
+a<span class="n">buf2</span>	<span class="nb">delayr</span>	gi<span class="n">del</span>
+a<span class="n">delL</span> 	<span class="nb">deltap</span>	<span class="mf">.4</span>		<span class="c1">;first tap (on left channel)</span>
+a<span class="n">delM</span> 	<span class="nb">deltap</span>	<span class="mi">1</span>		<span class="c1">;second tap (on middle channel)</span>
+	<span class="nb">delayw</span>	ga<span class="n">sig</span> <span class="o">+</span> <span class="p">(</span>a<span class="n">delL</span> <span class="o">*</span> i<span class="n">feedback</span><span class="p">)</span>
 
-abuf3	<span class="opc">delayr</span>	gidel
-kdel	<span class="opc">line</span>    1, p3, .01	<span class="comment">;vary delay time</span>
-adelR 	<span class="opc">deltap</span>  .65 <span class="op">*</span> kdel	<span class="comment">;one pitch changing tap (on the right chn.)</span>
-	<span class="opc">delayw</span>	gasig <span class="op">+</span> (adelR <span class="op">*</span> ifeedback)
-<span class="comment">;make a mix of all deayed signals	</span>
-	<span class="opc">outs</span>	adelL <span class="op">+</span> adelM, adelR <span class="op">+</span> adelM
+a<span class="n">buf3</span>	<span class="nb">delayr</span>	gi<span class="n">del</span>
+k<span class="n">del</span>	<span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.01</span>	<span class="c1">;vary delay time</span>
+a<span class="n">delR</span> 	<span class="nb">deltap</span>  <span class="mf">.65</span> <span class="o">*</span> k<span class="n">del</span>	<span class="c1">;one pitch changing tap (on the right chn.)</span>
+	<span class="nb">delayw</span>	ga<span class="n">sig</span> <span class="o">+</span> <span class="p">(</span>a<span class="n">delR</span> <span class="o">*</span> i<span class="n">feedback</span><span class="p">)</span>
+<span class="c1">;make a mix of all deayed signals	</span>
+	<span class="nb">outs</span>	a<span class="n">delL</span> <span class="o">+</span> a<span class="n">delM</span><span class="p">,</span> a<span class="n">delR</span> <span class="o">+</span> a<span class="n">delM</span>
 
-<span class="opc">clear</span>	gasig
-<span class="oblock">endin</span>
+<span class="nb">clear</span>	ga<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">i</span> 1 3 1
-<span class="stamnt">i</span> 2 0 3  0	<span class="comment">;no feedback</span>
-<span class="stamnt">i</span> 2 3 8 .8	<span class="comment">;lots of feedback</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">3</span>  <span class="mi">0</span>	<span class="c1">;no feedback</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">8</span> <span class="mf">.8</span>	<span class="c1">;lots of feedback</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -147,7 +147,7 @@ adelR 	<span class="opc">deltap</span>  .65 <span class="op">*</span> kdel	<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88033216"></a>
+        <a id="idm1558423024"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="delay.html" title="delay"><em class="citetitle">delay</em></a>,

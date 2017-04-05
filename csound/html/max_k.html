@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>max_k</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="maxalloc.html" title="maxalloc" />
@@ -38,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp113195472"></a>
+        <a id="idm1532399728"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>max_k</em></span> outputs the local maximum (or minimum) value of  the incoming asig signal, checked in the time interval between ktrig has become true twice.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113197232"></a>
+        <a id="idm1532389744"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">knumkout <span class="command"><strong>max_k</strong></span> asig, ktrig, itype</pre>
       </div>
       <div class="refsect1">
-        <a id="idp113199440"></a>
+        <a id="idm1532389488"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>itype</em></span> - itype determinates the behaviour of max_k (see below)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113273232"></a>
+        <a id="idm1532389360"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> - incoming (input) signal
@@ -85,75 +86,74 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113280320"></a>
+        <a id="idm1532378096"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the max_k opcode. It uses the file <a class="ulink" href="examples/max_k.csd" target="_top"><em class="citetitle">max_k.csd</em></a>.
+      Here is an example of the max_k opcode. It uses the file <a class="ulink" href="examples/max_k.csd.html" target="_top"><em class="citetitle">max_k.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp113282176"></a>
+          <a id="idm1532377072"></a>
           <p class="title">
-            <strong>Example 499. Example of the max_k opcode.</strong>
+            <strong>Example 514. Example of the max_k opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp252411104"></a>
-              <a class="ulink" href="examples/max_k.csd.html" target="_top">Play</a>
+              <a id="idm1357552624"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  -Ma   <span class="comment">;;;realtime audio out and midi in (on all inputs)</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o max_k.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  -Ma   <span class="c1">;;;realtime audio out and midi in (on all inputs)</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o max_k.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
 
-	<span class="opc">FLpanel</span>	"This Panel contains VU<span class="op">-</span>meter",300,100
-gk1,gih1 <span class="opc">FLslider</span> "VU<span class="op">-</span>meter", 0,1,0,1, <span class="op">-</span>1, 250,30, 30,30
-	<span class="opc">FLsetColor2</span> 50, 50, 255,  gih1
-	<span class="opc">FLpanel_end</span>
-	<span class="opc">FLrun</span>
+	<span class="nb">FLpanel</span>	<span class="s">"This Panel contains VU-meter"</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">100</span>
+gk<span class="n">1</span><span class="p">,</span>gi<span class="n">h1</span> <span class="nb">FLslider</span> <span class="s">"VU-meter"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+	<span class="nb">FLsetColor2</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span>  gi<span class="n">h1</span>
+	<span class="nb">FLpanel_end</span>
+	<span class="nb">FLrun</span>
 
-ga1 <span class="opc">init</span> 0
+ga<span class="n">1</span> <span class="nb">init</span> <span class="mi">0</span>
 	
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kenv	<span class="opc">linsegr</span>	0,.5,.7,.5,.5,.2,0
-ifreq	<span class="opc">cpsmidi</span>
-a1	<span class="opc">poscil</span>	<span class="ohdr">0dbfs</span><span class="op">*</span>kenv, ifreq, 1
-ga1	<span class="op">=</span>	ga1<span class="op">+</span>a1
+k<span class="n">env</span>	<span class="nb">linsegr</span>	<span class="mi">0</span><span class="p">,</span><span class="mf">.5</span><span class="p">,</span><span class="mf">.7</span><span class="p">,</span><span class="mf">.5</span><span class="p">,</span><span class="mf">.5</span><span class="p">,</span><span class="mf">.2</span><span class="p">,</span><span class="mi">0</span>
+i<span class="n">freq</span>	<span class="nb">cpsmidi</span>
+a<span class="n">1</span>	<span class="nb">poscil</span>	<span class="vg">0dbfs</span><span class="o">*</span>k<span class="n">env</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
+ga<span class="n">1</span>	<span class="o">=</span>	ga<span class="n">1</span><span class="o">+</span>a<span class="n">1</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-	<span class="opc">outs</span>	ga1, ga1
-ktrig	<span class="opc">metro</span>	25					<span class="comment">;refresh 25 times per second</span>
-kval	<span class="opc">max_k</span>	ga1, ktrig, 1
-	<span class="opc">FLsetVal</span> ktrig, kval, gih1
-ga1	<span class="op">=</span>	0
+	<span class="nb">outs</span>	ga<span class="n">1</span><span class="p">,</span> ga<span class="n">1</span>
+k<span class="n">trig</span>	<span class="nb">metro</span>	<span class="mi">25</span>					<span class="c1">;refresh 25 times per second</span>
+k<span class="n">val</span>	<span class="nb">max_k</span>	ga<span class="n">1</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">FLsetVal</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> gi<span class="n">h1</span>
+ga<span class="n">1</span>	<span class="o">=</span>	<span class="mi">0</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 1024 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span>2 0 3600
-<span class="stamnt">f</span>0 3600
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">3600</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -162,7 +162,7 @@ ga1	<span class="op">=</span>	0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113286464"></a>
+        <a id="idm1532383216"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on

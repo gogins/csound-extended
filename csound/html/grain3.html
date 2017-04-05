@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>grain3</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="grain2.html" title="grain2" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp103495936"></a>
+        <a id="idm1542846320"></a>
         <h2>Description</h2>
         <p>
       Generate granular synthesis textures. <a class="link" href="grain2.html" title="grain2"><em class="citetitle">grain2</em></a> is simpler to use but <span class="emphasis"><em>grain3</em></span> offers more control.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103498624"></a>
+        <a id="idm1542838512"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>grain3</strong></span> kcps, kphs, kfmd, kpmd, kgdur, kdens, imaxovr, kfn, iwfn, \
       kfrpow, kprpow [, iseed] [, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp103501056"></a>
+        <a id="idm1542837744"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imaxovr</em></span> -- maximum number of overlapping grains. The number of overlaps can be calculated by (<span class="emphasis"><em>kdens</em></span> * <span class="emphasis"><em>kgdur</em></span>); however, it can be overestimated at no cost in rendering time, and a single overlap uses (depending on system) 16 to 32 bytes of memory.
@@ -104,7 +105,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103520576"></a>
+        <a id="idm1542818928"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- output signal.
@@ -131,11 +132,11 @@ as a fraction (between 0 to 1) of the table length.
         <p>
       <span class="emphasis"><em>kfrpow</em></span> -- this value controls the distribution of grain frequency variation.  If <span class="emphasis"><em>kfrpow</em></span> is positive, the random distribution (x is in the range -1 to 1) is </p>
         <div class="literallayout">
-          <p>abs(x) ^ ((1 / kfrpow) - 1)</p>
+          <p>abs(x) ˆ ((1 / kfrpow) - 1)</p>
         </div>
         <p>; for negative <span class="emphasis"><em>kfrpow</em></span> values, it is </p>
         <div class="literallayout">
-          <p>(1 - abs(x)) ^ ((-1 / kfrpow) - 1)</p>
+          <p>(1 - abs(x)) ˆ ((-1 / kfrpow) - 1)</p>
         </div>
         <p>Setting <span class="emphasis"><em>kfrpow</em></span> to -1, 0, or 1 will result in uniform distribution (this is also faster to calculate). The image below shows some examples for <span class="emphasis"><em>kfrpow</em></span>. The default value of <span class="emphasis"><em>kfrpow</em></span> is 0.
     </p>
@@ -174,143 +175,142 @@ as a fraction (between 0 to 1) of the table length.
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp103546928"></a>
+        <a id="idm1542797808"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the grain3 opcode. It uses the file <a class="ulink" href="examples/grain3.csd" target="_top"><em class="citetitle">grain3.csd</em></a>.
+      Here is an example of the grain3 opcode. It uses the file <a class="ulink" href="examples/grain3.csd.html" target="_top"><em class="citetitle">grain3.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp103548784"></a>
+          <a id="idm1542795632"></a>
           <p class="title">
-            <strong>Example 378. Example of the grain3 opcode.</strong>
+            <strong>Example 384. Example of the grain3 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp246863184"></a>
-              <a class="ulink" href="examples/grain3.csd.html" target="_top">Play</a>
+              <a id="idm1373469936"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o grain3.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o grain3.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>	<span class="op">=</span>  48000
-<span class="ohdr">kr</span>	<span class="op">=</span>  1000
-<span class="ohdr">ksmps</span>   <span class="op">=</span>  48
-<span class="ohdr">nchnls</span>	<span class="op">=</span>  1
+<span class="vg">sr</span>	<span class="o">=</span>  <span class="mi">48000</span>
+<span class="vg">kr</span>	<span class="o">=</span>  <span class="mi">1000</span>
+<span class="vg">ksmps</span>   <span class="o">=</span>  <span class="mi">48</span>
+<span class="vg">nchnls</span>	<span class="o">=</span>  <span class="mi">1</span>
 
-<span class="op">/</span><span class="op">*</span> Bartlett <span class="opc">window</span> <span class="op">*</span><span class="op">/</span>
-itmp	<span class="ohdr">ftgen</span> 1, 0, 16384, 20, 3, 1
-<span class="op">/</span><span class="op">*</span> sawtooth wave <span class="op">*</span><span class="op">/</span>
-itmp	<span class="ohdr">ftgen</span> 2, 0, 16384, 7, 1, 16384, <span class="op">-</span>1
-<span class="op">/</span><span class="op">*</span> sine <span class="op">*</span><span class="op">/</span>
-itmp	<span class="ohdr">ftgen</span> 4, 0, 1024, 10, 1
-<span class="op">/</span><span class="op">*</span> <span class="opc">window</span> for "soft sync" with 1<span class="op">/</span>32 overlap <span class="op">*</span><span class="op">/</span>
-itmp	<span class="ohdr">ftgen</span> 5, 0, 16384, 7, 0, 256, 1, 7936, 1, 256, 0, 7936, 0
-<span class="op">/</span><span class="op">*</span> generate bandlimited sawtooth waves <span class="op">*</span><span class="op">/</span>
-itmp	<span class="ohdr">ftgen</span> 3, 0, 4096, <span class="op">-</span>30, 2, 1, 2048
-icnt	<span class="op">=</span>  0
-<span class="olabel">loop01</span><span class="op">:</span>
-<span class="comment">; 100 tables for 8 octaves from 30 Hz</span>
-ifrq	<span class="op">=</span>  30 <span class="op">*</span> <span class="opc">exp</span>(<span class="opc">log</span>(2) <span class="op">*</span> 8 <span class="op">*</span> icnt <span class="op">/</span> 100)
-itmp	<span class="ohdr">ftgen</span> icnt <span class="op">+</span> 100, 0, 4096, <span class="op">-</span>30, 3, 1, <span class="ohdr">sr</span> <span class="op">/</span> (2 <span class="op">*</span> ifrq)
-icnt	<span class="op">=</span>  icnt <span class="op">+</span> 1
-	<span class="octrl">if</span> (icnt <span class="op">&lt;</span> 99.5) <span class="octrl">igoto</span> <span class="olabel">loop01</span>
-<span class="op">/</span><span class="op">*</span> convert frequency to <span class="opc">table</span> number <span class="op">*</span><span class="op">/</span>
-<span class="omacro">#define</span> FRQ2FNUM(xout'xcps'xbsfn) #
+<span class="cm">/* Bartlett window */</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span>
+<span class="cm">/* sawtooth wave */</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+<span class="cm">/* sine */</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+<span class="cm">/* window for "soft sync" with 1/32 overlap */</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">7936</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7936</span><span class="p">,</span> <span class="mi">0</span>
+<span class="cm">/* generate bandlimited sawtooth waves */</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span>
+i<span class="n">cnt</span>	<span class="o">=</span>  <span class="mi">0</span>
+<span class="nl">loop01</span><span class="p">:</span>
+<span class="c1">; 100 tables for 8 octaves from 30 Hz</span>
+i<span class="n">frq</span>	<span class="o">=</span>  <span class="mi">30</span> <span class="o">*</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> i<span class="n">cnt</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> i<span class="n">cnt</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vg">sr</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> i<span class="n">frq</span><span class="p">)</span>
+i<span class="n">cnt</span>	<span class="o">=</span>  i<span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="k">if</span> <span class="p">(</span>i<span class="n">cnt</span> <span class="o">&lt;</span> <span class="mf">99.5</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">loop01</span>
+<span class="cm">/* convert frequency to table number */</span>
+<span class="cp">#define</span> <span class="cp">FRQ2FNUM</span>(<span class="cp">xout</span><span class="p">'</span><span class="cp">xcps</span><span class="p">'</span><span class="cp">xbsfn</span><span class="p">)</span> <span class="p">#</span><span class="cp">
 
-$xout	<span class="op">=</span>  <span class="opc">int</span>(($xbsfn) <span class="op">+</span> 0.5 <span class="op">+</span> (100 <span class="op">/</span> 8) <span class="op">*</span> <span class="opc">log</span>(($xcps) <span class="op">/</span> 30) <span class="op">/</span> <span class="opc">log</span>(2))
-$xout	limit $xout, $xbsfn, $xbsfn <span class="op">+</span> 99
+$xout	=  int(($xbsfn) + 0.5 + (100 / 8) * log(($xcps) / 30) / log(2))
+$xout	limit $xout, $xbsfn, $xbsfn + 99
 
-#
+</span><span class="p">#</span>
 
-<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 1<span class="op">:</span> pulse width modulated grains <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* instr 1: pulse width modulated grains */</span>
 
-	<span class="oblock">instr</span> 1
+	<span class="kd">instr</span> <span class="nf">1</span>
 
-kfrq	<span class="op">=</span>  523.25		<span class="comment">; frequency</span>
-$FRQ2FNUM(kfnum'kfrq'100)	<span class="comment">; table number</span>
-kfmd	<span class="op">=</span>  kfrq <span class="op">*</span> 0.02		<span class="comment">; random variation in frequency</span>
-kgdur	<span class="op">=</span>  0.2			<span class="comment">; grain duration</span>
-kdens	<span class="op">=</span>  200			<span class="comment">; density</span>
-iseed	<span class="op">=</span>  1			<span class="comment">; random seed</span>
+k<span class="n">frq</span>	<span class="o">=</span>  <span class="mf">523.25</span>		<span class="c1">; frequency</span>
+<span class="cp">$FRQ2FNUM</span><span class="p">(</span><span class="cp">kfnum</span><span class="p">'</span><span class="cp">kfrq</span><span class="p">'</span><span class="cp">100</span><span class="p">)</span>	<span class="c1">; table number</span>
+k<span class="n">fmd</span>	<span class="o">=</span>  k<span class="n">frq</span> <span class="o">*</span> <span class="mf">0.02</span>		<span class="c1">; random variation in frequency</span>
+k<span class="n">gdur</span>	<span class="o">=</span>  <span class="mf">0.2</span>			<span class="c1">; grain duration</span>
+k<span class="n">dens</span>	<span class="o">=</span>  <span class="mi">200</span>			<span class="c1">; density</span>
+i<span class="n">seed</span>	<span class="o">=</span>  <span class="mi">1</span>			<span class="c1">; random seed</span>
 
-kphs	<span class="opc">oscili</span> 0.45, 1, 4	<span class="comment">; phase</span>
+k<span class="n">phs</span>	<span class="nb">oscili</span> <span class="mf">0.45</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span>	<span class="c1">; phase</span>
 
-a1	<span class="opc">grain3</span>	kfrq, 0, kfmd, 0.5, kgdur, kdens, 100,		\
-		kfnum, 1, <span class="op">-</span>0.5, 0, iseed, 2
-a2	<span class="opc">grain3</span>	kfrq, 0.5 <span class="op">+</span> kphs, kfmd, 0.5, kgdur, kdens, 100,	\
-		kfnum, 1, <span class="op">-</span>0.5, 0, iseed, 2
+a<span class="n">1</span>	<span class="nb">grain3</span>	k<span class="n">frq</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">fmd</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>		\
+		k<span class="n">fnum</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">seed</span><span class="p">,</span> <span class="mi">2</span>
+a<span class="n">2</span>	<span class="nb">grain3</span>	k<span class="n">frq</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">+</span> k<span class="n">phs</span><span class="p">,</span> k<span class="n">fmd</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>	\
+		k<span class="n">fnum</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">seed</span><span class="p">,</span> <span class="mi">2</span>
 
-<span class="comment">; de-click</span>
-aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.05, 1, 0.04, 0, 1, 0
+<span class="c1">; de-click</span>
+a<span class="n">env</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
 
-	<span class="opc">out</span> aenv <span class="op">*</span> 2250 <span class="op">*</span> (a1 <span class="op">-</span> a2)
+	<span class="nb">out</span> a<span class="n">env</span> <span class="o">*</span> <span class="mi">2250</span> <span class="o">*</span> <span class="p">(</span>a<span class="n">1</span> <span class="o">-</span> a<span class="n">2</span><span class="p">)</span>
 
-	<span class="oblock">endin</span>
+	<span class="kd">endin</span>
 
-<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 2<span class="op">:</span> phase variation <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* instr 2: phase variation */</span>
 
-	<span class="oblock">instr</span> 2
+	<span class="kd">instr</span> <span class="nf">2</span>
 
-kfrq	<span class="op">=</span>  220			<span class="comment">; frequency</span>
-$FRQ2FNUM(kfnum'kfrq'100)	<span class="comment">; table number</span>
-kgdur	<span class="op">=</span>  0.2			<span class="comment">; grain duration</span>
-kdens	<span class="op">=</span>  200			<span class="comment">; density</span>
-iseed	<span class="op">=</span>  2			<span class="comment">; random seed</span>
+k<span class="n">frq</span>	<span class="o">=</span>  <span class="mi">220</span>			<span class="c1">; frequency</span>
+<span class="cp">$FRQ2FNUM</span><span class="p">(</span><span class="cp">kfnum</span><span class="p">'</span><span class="cp">kfrq</span><span class="p">'</span><span class="cp">100</span><span class="p">)</span>	<span class="c1">; table number</span>
+k<span class="n">gdur</span>	<span class="o">=</span>  <span class="mf">0.2</span>			<span class="c1">; grain duration</span>
+k<span class="n">dens</span>	<span class="o">=</span>  <span class="mi">200</span>			<span class="c1">; density</span>
+i<span class="n">seed</span>	<span class="o">=</span>  <span class="mi">2</span>			<span class="c1">; random seed</span>
 
-kprdst	<span class="opc">expon</span> 0.5, p3, 0.02	<span class="comment">; distribution</span>
+k<span class="n">prdst</span>	<span class="nb">expon</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.02</span>	<span class="c1">; distribution</span>
 
-a1	<span class="opc">grain3</span>	kfrq, 0.5, 0, 0.5, kgdur, kdens, 100,		\
-		kfnum, 1, 0, <span class="op">-</span>kprdst, iseed, 64
+a<span class="n">1</span>	<span class="nb">grain3</span>	k<span class="n">frq</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>		\
+		k<span class="n">fnum</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span>k<span class="n">prdst</span><span class="p">,</span> i<span class="n">seed</span><span class="p">,</span> <span class="mi">64</span>
 
-<span class="comment">; de-click</span>
-aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.05, 1, 0.04, 0, 1, 0
+<span class="c1">; de-click</span>
+a<span class="n">env</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
 
-	<span class="opc">out</span> aenv <span class="op">*</span> 1500 <span class="op">*</span> a1
+	<span class="nb">out</span> a<span class="n">env</span> <span class="o">*</span> <span class="mi">1500</span> <span class="o">*</span> a<span class="n">1</span>
 
-	<span class="oblock">endin</span>
+	<span class="kd">endin</span>
 
-<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 3<span class="op">:</span> "soft sync" <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* instr 3: "soft sync" */</span>
 
-	<span class="oblock">instr</span> 3
+	<span class="kd">instr</span> <span class="nf">3</span>
 
-kdens	<span class="op">=</span>  130.8		<span class="comment">; base frequency</span>
-kgdur	<span class="op">=</span>  2 <span class="op">/</span> kdens		<span class="comment">; grain duration</span>
+k<span class="n">dens</span>	<span class="o">=</span>  <span class="mf">130.8</span>		<span class="c1">; base frequency</span>
+k<span class="n">gdur</span>	<span class="o">=</span>  <span class="mi">2</span> <span class="o">/</span> k<span class="n">dens</span>		<span class="c1">; grain duration</span>
 
-kfrq	<span class="opc">expon</span> 880, p3, 220	<span class="comment">; oscillator frequency</span>
-$FRQ2FNUM(kfnum'kfrq'100)	<span class="comment">; table number</span>
+k<span class="n">frq</span>	<span class="nb">expon</span> <span class="mi">880</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">220</span>	<span class="c1">; oscillator frequency</span>
+<span class="cp">$FRQ2FNUM</span><span class="p">(</span><span class="cp">kfnum</span><span class="p">'</span><span class="cp">kfrq</span><span class="p">'</span><span class="cp">100</span><span class="p">)</span>	<span class="c1">; table number</span>
 
-a1	<span class="opc">grain3</span> kfrq, 0, 0, 0, kgdur, kdens, 3, kfnum, 5, 0, 0, 0, 2
-a2	<span class="opc">grain3</span> kfrq, 0.667, 0, 0, kgdur, kdens, 3, kfnum, 5, 0, 0, 0, 2
+a<span class="n">1</span>	<span class="nb">grain3</span> k<span class="n">frq</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">fnum</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span>
+a<span class="n">2</span>	<span class="nb">grain3</span> k<span class="n">frq</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">fnum</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span>
 
-<span class="comment">; de-click</span>
-aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.05, 1, 0.04, 0, 1, 0
+<span class="c1">; de-click</span>
+a<span class="n">env</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
 
-	<span class="opc">out</span> aenv <span class="op">*</span> 10000 <span class="op">*</span> (a1 <span class="op">-</span> a2)
+	<span class="nb">out</span> a<span class="n">env</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">*</span> <span class="p">(</span>a<span class="n">1</span> <span class="o">-</span> a<span class="n">2</span><span class="p">)</span>
 
-	<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="stamnt">t</span> 0 60
-<span class="stamnt">i</span> 1 0 3
-<span class="stamnt">i</span> 2 4 3
-<span class="stamnt">i</span> 3 8 3
-<span class="stamnt">e</span>
+	<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="nb">t</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">8</span> <span class="mi">3</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -319,14 +319,14 @@ aenv	<span class="opc">linseg</span> 0, 0.01, 1, p3 <span class="op">-</span> 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103553104"></a>
+        <a id="idm1542797552"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="grain2.html" title="grain2"><em class="citetitle">grain2</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103555216"></a>
+        <a id="idm1542799856"></a>
         <h2>Credits</h2>
         <p>
       </p>

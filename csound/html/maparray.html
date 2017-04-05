@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>maparray</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="mandol.html" title="mandol" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112666352"></a>
+        <a id="idm1532892400"></a>
         <h2>Description</h2>
         <p>
       Apply a function of one argument to every element of a vector (one-dimensional k-rate array).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112670528"></a>
+        <a id="idm1532890864"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">karray <span class="command"><strong>maparray</strong></span> kinarray, String</pre>
         <pre class="synopsis">karray <span class="command"><strong>maparray_i</strong></span> kinarray, String</pre>
       </div>
       <div class="refsect1">
-        <a id="idp112733536"></a>
+        <a id="idm1532887536"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>String</em></span> -- a string that names an opcode
@@ -59,7 +60,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112735184"></a>
+        <a id="idm1532891760"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>karray</em></span> --  array for answers.
@@ -69,106 +70,105 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112737664"></a>
+        <a id="idm1532884976"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the maparray opcode. It uses the file <a class="ulink" href="examples/maparray.csd" target="_top"><em class="citetitle">maparray.csd</em></a>.
+      Here is an example of the maparray opcode. It uses the file <a class="ulink" href="examples/maparray.csd.html" target="_top"><em class="citetitle">maparray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp112739520"></a>
+          <a id="idm1532883440"></a>
           <p class="title">
-            <strong>Example 491. Example of the maparray opcode.</strong>
+            <strong>Example 506. Example of the maparray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp251940064"></a>
-              <a class="ulink" href="examples/maparray.csd.html" target="_top">Play</a>
+              <a id="idm1358639856"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
 -n
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="comment">;create an array and fill with numbers</span>
-kArrSrc[] <span class="opc">fillarray</span> 1.01, 2.02, 3.03, 4.05, 5.08, 6.13, 7.21
+<span class="c1">;create an array and fill with numbers</span>
+k<span class="n">ArrSrc</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">2.02</span><span class="p">,</span> <span class="mf">3.03</span><span class="p">,</span> <span class="mf">4.05</span><span class="p">,</span> <span class="mf">5.08</span><span class="p">,</span> <span class="mf">6.13</span><span class="p">,</span> <span class="mf">7.21</span>
 
-<span class="comment">;print source array</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nSource <span class="opc">array</span><span class="op">:</span>\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArrSrc) do
-        <span class="opc">printf</span>  "kArrSrc[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArrSrc[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
+<span class="c1">;print source array</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">Source array:</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">ArrSrc</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArrSrc[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">ArrSrc</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;create an empty array for the results</span>
-kArrRes[] <span class="opc">init</span>  7
+<span class="c1">;create an empty array for the results</span>
+k<span class="n">ArrRes</span><span class="p">[]</span> <span class="nb">init</span>  <span class="mi">7</span>
 
-<span class="comment">;apply the sqrt() function to each element</span>
-kArrRes <span class="opc">maparray</span> kArrSrc, "sqrt"
+<span class="c1">;apply the sqrt() function to each element</span>
+k<span class="n">ArrRes</span> <span class="nb">maparray</span> k<span class="n">ArrSrc</span><span class="p">,</span> <span class="s">"sqrt"</span>
 
-<span class="comment">;print the result</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nResult after applying <span class="opc">sqrt</span>() to source array\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArrRes) do
-        <span class="opc">printf</span>  "kArrRes[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArrRes[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
+<span class="c1">;print the result</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">Result after applying sqrt() to source array</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">ArrRes</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArrRes[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">ArrRes</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;apply the log() function to each element</span>
-kArrRes <span class="opc">maparray</span> kArrSrc, "log"
+<span class="c1">;apply the log() function to each element</span>
+k<span class="n">ArrRes</span> <span class="nb">maparray</span> k<span class="n">ArrSrc</span><span class="p">,</span> <span class="s">"log"</span>
 
-<span class="comment">;print the result</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nResult after applying <span class="opc">log</span>() to source array\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArrRes) do
-        <span class="opc">printf</span>  "kArrRes[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArrRes[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
+<span class="c1">;print the result</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">Result after applying log() to source array</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">ArrRes</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArrRes[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">ArrRes</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;apply the int() function to each element</span>
-kArrRes <span class="opc">maparray</span> kArrSrc, "int"
+<span class="c1">;apply the int() function to each element</span>
+k<span class="n">ArrRes</span> <span class="nb">maparray</span> k<span class="n">ArrSrc</span><span class="p">,</span> <span class="s">"int"</span>
 
-<span class="comment">;print the result</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nResult after applying <span class="opc">int</span>() to source array\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArrRes) do
-        <span class="opc">printf</span>  "kArrRes[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArrRes[kndx]
-kndx     <span class="op">+</span><span class="op">=</span>     1
-  od
+<span class="c1">;print the result</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">Result after applying int() to source array</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">ArrRes</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArrRes[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">ArrRes</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>     <span class="o">+=</span>     <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;apply the frac() function to each element</span>
-kArrRes <span class="opc">maparray</span> kArrSrc, "frac"
+<span class="c1">;apply the frac() function to each element</span>
+k<span class="n">ArrRes</span> <span class="nb">maparray</span> k<span class="n">ArrSrc</span><span class="p">,</span> <span class="s">"frac"</span>
 
-<span class="comment">;print the result</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nResult after applying <span class="opc">frac</span>() to source array\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArrRes) do
-        <span class="opc">printf</span>  "kArrRes[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArrRes[kndx]
-kndx <span class="op">+</span><span class="op">=</span> 1
-  od
+<span class="c1">;print the result</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">Result after applying frac() to source array</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">ArrRes</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArrRes[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">ArrRes</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;turn instrument instance off</span>
-        <span class="opc">turnoff</span>
+<span class="c1">;turn instrument instance off</span>
+        <span class="nb">turnoff</span>
         
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 0.1
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">0.1</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -177,14 +177,14 @@ kndx <span class="op">+</span><span class="op">=</span> 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112743808"></a>
+        <a id="idm1532879216"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp112745856"></a>
+        <a id="idm1532883056"></a>
         <h2>Credits</h2>
         <p>
       </p>

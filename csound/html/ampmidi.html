@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ampmidi</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ampdbfs.html" title="ampdbfs" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp79153888"></a>
+        <a id="idm1567035504"></a>
         <h2>Description</h2>
         <p>
       Get the velocity of the current MIDI event.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79155232"></a>
+        <a id="idm1567033456"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iamp <span class="command"><strong>ampmidi</strong></span> iscal [, ifn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp79157472"></a>
+        <a id="idm1567023088"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iscal</em></span> -- i-time scaling factor
@@ -60,65 +61,64 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79206080"></a>
+        <a id="idm1567021552"></a>
         <h2>Performance</h2>
         <p>
       Get the velocity of the current MIDI event, optionally pass it through a normalized translation table, and return an amplitude value in the range 0 - <span class="emphasis"><em>iscal</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79207920"></a>
+        <a id="idm1567025904"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ampmidi opcode. It uses the file <a class="ulink" href="examples/ampmidi.csd" target="_top"><em class="citetitle">ampmidi.csd</em></a>.
+      Here is an example of the ampmidi opcode. It uses the file <a class="ulink" href="examples/ampmidi.csd.html" target="_top"><em class="citetitle">ampmidi.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp79209696"></a>
+          <a id="idm1567020912"></a>
           <p class="title">
             <strong>Example 53. Example of the ampmidi opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp234420880"></a>
-              <a class="ulink" href="examples/ampmidi.csd.html" target="_top">Play</a>
+              <a id="idm1406048752"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">;-o ampmidi.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">;-o ampmidi.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1  <span class="comment">;expects MIDI note inputs on channel 1</span>
+<span class="kd">instr</span> <span class="nf">1</span>  <span class="c1">;expects MIDI note inputs on channel 1</span>
 
-iamp	<span class="opc">ampmidi</span> 1	<span class="comment">; scale amplitude between 0 and 1</span>
-asig	<span class="opc">oscil</span> iamp, 220, 1
-	<span class="opc">print</span> iamp
-	<span class="opc">outs</span>  asig, asig
+i<span class="n">amp</span>	<span class="nb">ampmidi</span> <span class="mi">1</span>	<span class="c1">; scale amplitude between 0 and 1</span>
+a<span class="n">sig</span>	<span class="nb">oscil</span> i<span class="n">amp</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">print</span> i<span class="n">amp</span>
+	<span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;Dummy f-table for 1 minute</span>
-<span class="stamnt">f</span> 0 60
-<span class="comment">;sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;Dummy f-table for 1 minute</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="c1">;sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">e</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -127,7 +127,7 @@ asig	<span class="opc">oscil</span> iamp, 220, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79214016"></a>
+        <a id="idm1567016432"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
@@ -144,7 +144,7 @@ asig	<span class="opc">oscil</span> iamp, 220, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79225728"></a>
+        <a id="idm1567005552"></a>
         <h2>Credits</h2>
         <p>
       </p>

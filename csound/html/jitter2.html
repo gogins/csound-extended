@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>jitter2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="jitter.html" title="jitter" />
@@ -38,19 +39,29 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp108130416"></a>
+        <a id="idm1538037616"></a>
         <h2>Description</h2>
         <p>
       Generates a segmented line with user-controllable random segments.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp108196400"></a>
+        <a id="idm1538036336"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis">kout <span class="command"><strong>jitter2</strong></span> ktotamp, kamp1, kcps1, kamp2, kcps2, kamp3, kcps3</pre>
+        <pre class="synopsis">kout <span class="command"><strong>jitter2</strong></span> ktotamp, kamp1, kcps1,
+    kamp2, kcps2, kamp3, kcps3[ , iopt]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp108198640"></a>
+        <a id="idm1538037872"></a>
+        <h2>Initialisation</h2>
+        <p>
+      <span class="emphasis"><em>iopt</em></span> -- Optional, controls time of onset of
+      effects.  If zero (default) the output is zero until the end of
+      the shortest kcps value.  If not zero the effect starts
+    immediately</p>
+      </div>
+      <div class="refsect1">
+        <a id="idm1538038640"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktotamp</em></span> -- Resulting amplitude of jitter2
@@ -59,85 +70,99 @@
       <span class="emphasis"><em>kamp1</em></span> -- Amplitude of the first jitter component
     </p>
         <p>
-      <span class="emphasis"><em>kcps1</em></span> -- Speed of random variation of the first jitter component (expressed in cps)
+      <span class="emphasis"><em>kcps1</em></span> -- Speed of random variation of the
+      first jitter component (expressed in cps)
     </p>
         <p>
       <span class="emphasis"><em>kamp2</em></span> -- Amplitude of the second jitter component
     </p>
         <p>
-      <span class="emphasis"><em>kcps2</em></span> -- Speed of random variation of the second jitter component (expressed in cps)
+      <span class="emphasis"><em>kcps2</em></span> -- Speed of random variation of the
+      second jitter component (expressed in cps)
     </p>
         <p>
       <span class="emphasis"><em>kamp3</em></span> -- Amplitude of the third jitter component
     </p>
         <p>
-      <span class="emphasis"><em>kcps3</em></span> -- Speed of random variation of the third jitter component (expressed in cps)
+      <span class="emphasis"><em>kcps3</em></span> -- Speed of random variation of the
+      third jitter component (expressed in cps)
     </p>
         <p>
-      <span class="emphasis"><em>jitter2</em></span> also generates a segmented line such as <a class="link" href="jitter.html" title="jitter"><em class="citetitle">jitter</em></a>, but in this case the result is similar to the sum of three <span class="emphasis"><em>randi</em></span> opcodes, each one with a different amplitude and frequency value (see <a class="link" href="randi.html" title="randi"><em class="citetitle">randi</em></a> for more details), that can be varied at k-rate. Different effects can be obtained by varying the input arguments.
+      <span class="emphasis"><em>jitter2</em></span> also generates a segmented line
+      such as <a class="link" href="jitter.html" title="jitter"><em class="citetitle">jitter</em></a>, but in
+      this case the result is similar to the sum of three
+      <span class="emphasis"><em>randi</em></span> opcodes, each one with a different
+      amplitude and frequency value (see <a class="link" href="randi.html" title="randi"><em class="citetitle">randi</em></a> for more
+      details), that can be varied at k-rate. Different effects can be
+      obtained by varying the input arguments. 
     </p>
         <p>
-      <span class="emphasis"><em>jitter2</em></span> can be used to make more natural and <span class="quote">“<span class="quote">analog-sounding</span>”</span> some static, dull sound. For best results, it is suggested to keep its amplitude moderate.
+      <span class="emphasis"><em>jitter2</em></span> can be used to make more natural
+      and <span class="quote">“<span class="quote">analog-sounding</span>”</span> some static, dull sound. For
+      best results, it is suggested to keep its amplitude moderate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp108211248"></a>
+        <a id="idm1538028272"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the jitter2 opcode. It uses the file <a class="ulink" href="examples/jitter2.csd" target="_top"><em class="citetitle">jitter2.csd</em></a>.
+      Here is an example of the jitter2 opcode. It uses the file
+      <a class="ulink" href="examples/jitter2.csd.html" target="_top"><em class="citetitle">jitter2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp108213104"></a>
+          <a id="idm1537588976"></a>
           <p class="title">
-            <strong>Example 433. Example of the jitter2 opcode.</strong>
+            <strong>Example 440. Example of the jitter2 opcode.</strong>
           </p>
           <div class="example-contents">
-            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time
+        Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line
+        Flags</em></a> for more information on using command
+        line flags.</p>
             <div class="refsect1">
-              <a id="idp249237728"></a>
-              <a class="ulink" href="examples/jitter2.csd.html" target="_top">Play</a>
+              <a id="idm1367136112"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o jitter2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o jitter2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ktotamp <span class="opc">init</span> p4
-kamp1   <span class="opc">init</span> .5
-kcps1   <span class="opc">init</span> 10
-kamp2   <span class="opc">init</span> .5
-kcps2   <span class="opc">init</span> 2
-kamp3   <span class="opc">init</span> .5
-kcps3   <span class="opc">init</span> 3
+k<span class="n">totamp</span> <span class="nb">init</span> <span class="nb">p4</span>
+k<span class="n">amp1</span>   <span class="nb">init</span> <span class="mf">.5</span>
+k<span class="n">cps1</span>   <span class="nb">init</span> <span class="mi">10</span>
+k<span class="n">amp2</span>   <span class="nb">init</span> <span class="mf">.5</span>
+k<span class="n">cps2</span>   <span class="nb">init</span> <span class="mi">2</span>
+k<span class="n">amp3</span>   <span class="nb">init</span> <span class="mf">.5</span>
+k<span class="n">cps3</span>   <span class="nb">init</span> <span class="mi">3</span>
 
-kj2  <span class="opc">jitter2</span> ktotamp, kamp1, kcps1, kamp2, kcps2, kamp3, kcps3
-aout <span class="opc">pluck</span> 1, 200<span class="op">+</span>kj2, 1000, 0, 1
-aout <span class="opc">dcblock</span> aout
-     <span class="opc">outs</span> aout, aout
+k<span class="n">j2</span>  <span class="nb">jitter2</span> k<span class="n">totamp</span><span class="p">,</span> k<span class="n">amp1</span><span class="p">,</span> k<span class="n">cps1</span><span class="p">,</span> k<span class="n">amp2</span><span class="p">,</span> k<span class="n">cps2</span><span class="p">,</span> k<span class="n">amp3</span><span class="p">,</span> k<span class="n">cps3</span>
+a<span class="n">out</span> <span class="nb">pluck</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="o">+</span>k<span class="n">j2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">out</span> <span class="nb">dcblock</span> a<span class="n">out</span>
+     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 15 2	<span class="comment">;a bit jitter</span>
-<span class="stamnt">i</span> 1 8 15 10	<span class="comment">;some more</span>
-<span class="stamnt">i</span> 1 16 15 20	<span class="comment">;lots more</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">15</span> <span class="mi">2</span>	<span class="c1">;a bit jitter</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mi">15</span> <span class="mi">10</span>	<span class="c1">;some more</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">16</span> <span class="mi">15</span> <span class="mi">20</span>	<span class="c1">;lots more</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -146,7 +171,7 @@ aout <span class="opc">dcblock</span> aout
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp108217328"></a>
+        <a id="idm1537592944"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="jitter.html" title="jitter"><em class="citetitle">jitter</em></a>,
@@ -155,10 +180,11 @@ aout <span class="opc">dcblock</span> aout
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp108221360"></a>
+        <a id="idm1537588336"></a>
         <h2>Credits</h2>
-        <p>Author: Gabriel Maldonado</p>
+        <p>Author: Gabriel Maldonado, John ffitch</p>
         <p>New in Version 4.15</p>
+        <p>iopt new in version 6.08</p>
       </div>
     </div>
     <div class="navfooter">

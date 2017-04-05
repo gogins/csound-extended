@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pvsmix</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pvsmaska.html" title="pvsmaska" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp130060384"></a>
+        <a id="idm1515115888"></a>
         <h2>Description</h2>
         <p>
       Mix 'seamlessly' two pv signals.  This opcode combines the
@@ -47,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp130061744"></a>
+        <a id="idm1515109616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsmix</strong></span> fsigin1, fsigin2</pre>
       </div>
       <div class="refsect1">
-        <a id="idp130063840"></a>
+        <a id="idm1515110512"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -83,57 +84,56 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp130136368"></a>
+        <a id="idm1515106928"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pvsmix opcode. It uses the file <a class="ulink" href="examples/pvsmix.csd" target="_top"><em class="citetitle">pvsmix.csd</em></a>.
+      Here is an example of the pvsmix opcode. It uses the file <a class="ulink" href="examples/pvsmix.csd.html" target="_top"><em class="citetitle">pvsmix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp130138224"></a>
+          <a id="idm1515103856"></a>
           <p class="title">
-            <strong>Example 734. Example of the pvsmix opcode.</strong>
+            <strong>Example 754. Example of the pvsmix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp260860816"></a>
-              <a class="ulink" href="examples/pvsmix.csd.html" target="_top">Play</a>
+              <a id="idm1336522608"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvsmix.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvsmix.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gisin	<span class="ohdr">ftgen</span>	1, 0, 2048, 10, 1
+gi<span class="n">sin</span>	<span class="nb">ftgen</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig1 <span class="opc">diskin2</span> "fox.wav", 1		<span class="comment">;signal in 1</span>
-asig2 <span class="opc">oscil</span>   .3, 100, gisin		<span class="comment">;signal in 2</span>
-fsig1 <span class="opc">pvsanal</span> asig1,1024,256,1024,0	<span class="comment">;pvoc analysis </span>
-fsig2 <span class="opc">pvsanal</span> asig2,1024,256,1024,0	<span class="comment">;of both signals</span>
-fsall <span class="opc">pvsmix</span>  fsig1, fsig2 
-asig  <span class="opc">pvsynth</span> fsall
-      <span class="opc">outs</span> asig, asig 
+a<span class="n">sig1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;signal in 1</span>
+a<span class="n">sig2</span> <span class="nb">oscil</span>   <span class="mf">.3</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> gi<span class="n">sin</span>		<span class="c1">;signal in 2</span>
+<span class="n">fsig1</span> <span class="nb">pvsanal</span> a<span class="n">sig1</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;pvoc analysis </span>
+<span class="n">fsig2</span> <span class="nb">pvsanal</span> a<span class="n">sig2</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;of both signals</span>
+<span class="n">fsall</span> <span class="nb">pvsmix</span>  <span class="n">fsig1</span><span class="p">,</span> <span class="n">fsig2</span> 
+a<span class="n">sig</span>  <span class="nb">pvsynth</span> <span class="n">fsall</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span> 
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -142,7 +142,7 @@ asig  <span class="opc">pvsynth</span> fsall
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp130142512"></a>
+        <a id="idm1515097840"></a>
         <h2>Credits</h2>
         <p>
       </p>

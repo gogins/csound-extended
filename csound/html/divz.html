@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>divz</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="distort1.html" title="distort1" />
@@ -38,7 +39,7 @@
            </p>
       </div>
       <div class="refsect1">
-        <a id="idp89421824"></a>
+        <a id="idm1557239536"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>divz</strong></span> xa, xb, ksubst</pre>
         <pre class="synopsis">ires <span class="command"><strong>divz</strong></span> ia, ib, isubst</pre>
@@ -46,80 +47,79 @@
         <pre class="synopsis">...<span class="command"><strong>divz</strong></span>(ka, kb, ksubst)... (no rate restriction)</pre>
       </div>
       <div class="refsect1">
-        <a id="idp89489856"></a>
+        <a id="idm1557232624"></a>
         <h2>Description</h2>
         <p> 
       Safely divides two numbers.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89491040"></a>
+        <a id="idm1557235184"></a>
         <h2>Initialization</h2>
         <p>
       Whenever <span class="emphasis"><em>b</em></span> is not zero, set the result to the value <span class="emphasis"><em>a / b</em></span>; when <span class="emphasis"><em>b</em></span> is zero, set it to the value of <span class="emphasis"><em>subst</em></span> instead.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89494080"></a>
+        <a id="idm1557231600"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the divz opcode. It uses the file <a class="ulink" href="examples/divz.csd" target="_top"><em class="citetitle">divz.csd</em></a>.
+      Here is an example of the divz opcode. It uses the file <a class="ulink" href="examples/divz.csd.html" target="_top"><em class="citetitle">divz.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp89495936"></a>
+          <a id="idm1557238128"></a>
           <p class="title">
-            <strong>Example 214. Example of the divz opcode.</strong>
+            <strong>Example 216. Example of the divz opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240124368"></a>
-              <a class="ulink" href="examples/divz.csd.html" target="_top">Play</a>
+              <a id="idm1391789808"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o divz.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o divz.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Define the numbers to be divided.</span>
-  ka <span class="opc">init</span> 200
-  <span class="comment">; Linearly change the value of kb from 200 to 0.</span>
-  kb <span class="opc">line</span> 0, p3, 200
-  <span class="comment">; If a "divide by zero" error occurs, substitute -1.</span>
-  ksubst <span class="opc">init</span> <span class="op">-</span>1
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Define the numbers to be divided.</span>
+  k<span class="n">a</span> <span class="nb">init</span> <span class="mi">200</span>
+  <span class="c1">; Linearly change the value of kb from 200 to 0.</span>
+  k<span class="n">b</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">200</span>
+  <span class="c1">; If a "divide by zero" error occurs, substitute -1.</span>
+  k<span class="n">subst</span> <span class="nb">init</span> <span class="o">-</span><span class="mi">1</span>
   
-  <span class="comment">; Safely divide the numbers.</span>
-  kresults <span class="opc">divz</span> ka, kb, ksubst
+  <span class="c1">; Safely divide the numbers.</span>
+  k<span class="n">results</span> <span class="nb">divz</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">subst</span>
 
-  <span class="comment">; Print out the results.</span>
-  <span class="opc">printks</span> "<span class="op">%</span>f <span class="op">/</span> <span class="op">%</span>f <span class="op">=</span> <span class="op">%</span>f\\n", 0.1, ka, kb, kresults
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+  <span class="c1">; Print out the results.</span>
+  <span class="nb">printks</span> <span class="s">"%f / %f = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">results</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -136,7 +136,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89501104"></a>
+        <a id="idm1557226736"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="assign.html" title="="><em class="citetitle">=</em></a>,
@@ -145,7 +145,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89505136"></a>
+        <a id="idm1557228400"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch after an idea by Barry L. Vercoe</p>
         <p>Example written by Kevin Conder.</p>

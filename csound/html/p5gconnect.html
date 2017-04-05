@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>p5gconnect</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="outz.html" title="outz" />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122660240"></a>
+        <a id="idm1522643184"></a>
         <h2>Description</h2>
         <p>
       Opens and at control-rate polls a P5 Glove controller.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122672144"></a>
+        <a id="idm1522641392"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -54,7 +55,7 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idp122674080"></a>
+        <a id="idm1522632944"></a>
         <h2>Initialization</h2>
         <p>
      The opcode locates a P5 Glove attached to the computer by USB,
@@ -62,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122675408"></a>
+        <a id="idm1522635248"></a>
         <h2>Performance</h2>
         <p>
       Every control cycle the glove is polled for its position, and
@@ -71,91 +72,92 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122677200"></a>
+        <a id="idm1522637040"></a>
         <h2>Example</h2>
         <p>
-      Here is an example of the p5g opcodes. It uses the file <a class="ulink" href="examples/p5g.csd" target="_top"><em class="citetitle">p5g.csd</em></a>.
+      Here is an example of the p5g opcodes. It uses the file <a class="ulink" href="examples/p5g.csd.html" target="_top"><em class="citetitle">p5g.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp122725216"></a>
+          <a id="idm1522631792"></a>
           <p class="title">
-            <strong>Example 623. Example of the p5g opcodes.</strong>
+            <strong>Example 642. Example of the p5g opcodes.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp256677296"></a>
-              <a class="ulink" href="examples/p5g.csd.html" target="_top">Play</a>
+              <a id="idm1346545264"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -+rtaudio=alsa -o dac:hw:0
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
-<span class="ohdr">ksmps</span> <span class="op">=</span> 1000
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">1000</span>
 
-<span class="omacro">#define</span> P5G_BUTTONS     #0#
-<span class="omacro">#define</span> P5G_BUTTON_A    #1#
-<span class="omacro">#define</span> P5G_BUTTON_B    #2#
-<span class="omacro">#define</span> P5G_BUTTON_C    #4#
-<span class="omacro">#define</span> P5G_JUSTPUSH    #8#
-<span class="omacro">#define</span> P5G_JUSTPU_A    #9#
-<span class="omacro">#define</span> P5G_JUSTPU_B    #10#
-<span class="omacro">#define</span> P5G_JUSTPU_C    #12#
-<span class="omacro">#define</span> P5G_RELEASED    #16#
-<span class="omacro">#define</span> P5G_RELSED_A    #17#
-<span class="omacro">#define</span> P5G_RELSED_B    #18#
-<span class="omacro">#define</span> P5G_RELSED_C    #20#
-<span class="omacro">#define</span> P5G_FINGER_INDEX #32#
-<span class="omacro">#define</span> P5G_FINGER_MIDDLE #33#
-<span class="omacro">#define</span> P5G_FINGER_RING	 #34#
-<span class="omacro">#define</span> P5G_FINGER_PINKY #35#
-<span class="omacro">#define</span> P5G_FINGER_THUMB #36#
-<span class="omacro">#define</span> P5G_DELTA_X     #37#
-<span class="omacro">#define</span> P5G_DELTA_Y     #38#
-<span class="omacro">#define</span> P5G_DELTA_Z     #39#
-<span class="omacro">#define</span> P5G_DELTA_XR    #40#
-<span class="omacro">#define</span> P5G_DELTA_YR    #41#
-<span class="omacro">#define</span> P5G_DELTA_ZR    #42#
-<span class="omacro">#define</span> P5G_ANGLES      #43#
+<span class="cp">#define</span> <span class="cp">P5G_BUTTONS</span>     <span class="p">#</span><span class="cp">0</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_BUTTON_A</span>    <span class="p">#</span><span class="cp">1</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_BUTTON_B</span>    <span class="p">#</span><span class="cp">2</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_BUTTON_C</span>    <span class="p">#</span><span class="cp">4</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_JUSTPUSH</span>    <span class="p">#</span><span class="cp">8</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_JUSTPU_A</span>    <span class="p">#</span><span class="cp">9</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_JUSTPU_B</span>    <span class="p">#</span><span class="cp">10</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_JUSTPU_C</span>    <span class="p">#</span><span class="cp">12</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_RELEASED</span>    <span class="p">#</span><span class="cp">16</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_RELSED_A</span>    <span class="p">#</span><span class="cp">17</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_RELSED_B</span>    <span class="p">#</span><span class="cp">18</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_RELSED_C</span>    <span class="p">#</span><span class="cp">20</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_FINGER_INDEX</span> <span class="p">#</span><span class="cp">32</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_FINGER_MIDDLE</span> <span class="p">#</span><span class="cp">33</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_FINGER_RING</span>	 <span class="p">#</span><span class="cp">34</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_FINGER_PINKY</span> <span class="p">#</span><span class="cp">35</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_FINGER_THUMB</span> <span class="p">#</span><span class="cp">36</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_DELTA_X</span>     <span class="p">#</span><span class="cp">37</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_DELTA_Y</span>     <span class="p">#</span><span class="cp">38</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_DELTA_Z</span>     <span class="p">#</span><span class="cp">39</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_DELTA_XR</span>    <span class="p">#</span><span class="cp">40</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_DELTA_YR</span>    <span class="p">#</span><span class="cp">41</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_DELTA_ZR</span>    <span class="p">#</span><span class="cp">42</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">P5G_ANGLES</span>      <span class="p">#</span><span class="cp">43</span><span class="p">#</span>
 
-gka   <span class="opc">init</span> 0
-gkp   <span class="opc">init</span> 0
+gk<span class="n">a</span>   <span class="nb">init</span> <span class="mi">0</span>
+gk<span class="n">p</span>   <span class="nb">init</span> <span class="mi">0</span>
 
-<span class="oblock">instr</span> 1  
-      p5gconnect
-  ka  p5gdata    $P5G_JUSTPU_A.
-  kc  p5gdata    $P5G_BUTTON_C.
-<span class="comment">; If the A button is just pressed then activate a note</span>
-  <span class="octrl">if</span>  (ka<span class="op">==</span>0)    <span class="octrl">goto</span> <span class="olabel">ee</span>
-  <span class="opc">event</span>          "i", 2, 0, 2
+<span class="kd">instr</span> <span class="nf">1</span>  
+      <span class="nb">p5gconnect</span>
+  k<span class="n">a</span>  <span class="nb">p5gdata</span>    <span class="cp">$P5G_JUSTPU_A.</span>
+  k<span class="n">c</span>  <span class="nb">p5gdata</span>    <span class="cp">$P5G_BUTTON_C.</span>
+<span class="c1">; If the A button is just pressed then activate a note</span>
+  <span class="k">if</span>  <span class="p">(</span>k<span class="n">a</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">goto</span> <span class="nl">ee</span>
+  <span class="nb">event</span>          <span class="s">"i"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span>
 
-<span class="olabel">ee</span><span class="op">:</span>
-  gka p5gdata    $P5G_DELTA_X.
-  gkp p5gdata    $P5G_DELTA_Y.
-  <span class="opc">printk2</span> gka
-  <span class="opc">printk2</span> gkp
-  <span class="octrl">if</span>  (kc<span class="op">==</span>0)    <span class="octrl">goto</span> <span class="olabel">ff</span>
-  <span class="opc">printks</span> "turning off (<span class="op">%</span>d)\n", 0, kc 
-  <span class="opc">turnoff</span>
-<span class="olabel">ff</span><span class="op">:</span>
-<span class="oblock">endin</span>
+<span class="nl">ee</span><span class="p">:</span>
+  gk<span class="n">a</span> <span class="nb">p5gdata</span>    <span class="cp">$P5G_DELTA_X.</span>
+  gk<span class="n">p</span> <span class="nb">p5gdata</span>    <span class="cp">$P5G_DELTA_Y.</span>
+  <span class="nb">printk2</span> gk<span class="n">a</span>
+  <span class="nb">printk2</span> gk<span class="n">p</span>
+  <span class="k">if</span>  <span class="p">(</span>k<span class="n">c</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">goto</span> <span class="nl">ff</span>
+  <span class="nb">printks</span> <span class="s">"turning off (</span><span class="si">%d</span><span class="s">)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">c</span> 
+  <span class="nb">turnoff</span>
+<span class="nl">ff</span><span class="p">:</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-  a1 <span class="opc">oscil</span>  <span class="opc">ampdbfs</span>(gkp), 440<span class="op">+</span>100<span class="op">*</span>gka, 1
-<span class="comment">;;  a1 oscil  10000, 440, 1</span>
-     <span class="opc">out</span>   a1
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+  a<span class="n">1</span> <span class="nb">oscil</span>  <span class="nb">ampdbfs</span><span class="p">(</span>gk<span class="n">p</span><span class="p">),</span> <span class="mi">440</span><span class="o">+</span><span class="mi">100</span><span class="o">*</span>gk<span class="n">a</span><span class="p">,</span> <span class="mi">1</span>
+<span class="c1">;;  a1 oscil  10000, 440, 1</span>
+     <span class="nb">out</span>   a<span class="n">1</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 4096 10 1
-<span class="stamnt">i</span>1 0 300
+<span class="nt">&lt;/CsInstruments&gt;</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">300</span>
+
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -164,14 +166,14 @@ gkp   <span class="opc">init</span> 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122729504"></a>
+        <a id="idm1522631536"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="p5gdata.html" title="p5gdata"><em class="citetitle">p5gdata</em></a>,
      </p>
       </div>
       <div class="refsect1">
-        <a id="idp122731616"></a>
+        <a id="idm1522630640"></a>
         <h2>Credits</h2>
         <p>
       </p>

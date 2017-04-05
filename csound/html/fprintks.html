@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>fprintks</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="foutk.html" title="foutk" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp100888240"></a>
+        <a id="idm1545225456"></a>
         <h2>Description</h2>
         <p>
       Similar to <a class="link" href="printks.html" title="printks"><em class="citetitle">printks</em></a> but prints to a file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100930832"></a>
+        <a id="idm1545229296"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>fprintks</strong></span> "filename", "string", [, kval1] [, kval2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp100933008"></a>
+        <a id="idm1545221616"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>"filename"</em></span> -- name of the output file.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100935760"></a>
+        <a id="idm1545223408"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval1, kval2, ...</em></span> (optional) -- The k-rate values to be printed. These are specified in <span class="emphasis"><em><span class="quote">“<span class="quote">string</span>”</span></em></span> with the standard C value specifier (%f, %d, etc.) in the order given.
@@ -70,65 +71,64 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100940928"></a>
+        <a id="idm1545225072"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the fprintks opcode. It uses the file <a class="ulink" href="examples/fprintks.csd" target="_top"><em class="citetitle">fprintks.csd</em></a>.
+      Here is an example of the fprintks opcode. It uses the file <a class="ulink" href="examples/fprintks.csd.html" target="_top"><em class="citetitle">fprintks.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp100942784"></a>
+          <a id="idm1545213936"></a>
           <p class="title">
-            <strong>Example 336. Example of the fprintks opcode.</strong>
+            <strong>Example 339. Example of the fprintks opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp245198896"></a>
-              <a class="ulink" href="examples/fprintks.csd.html" target="_top">Play</a>
+              <a id="idm1378873968"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o fprintks.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o fprintks.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="op">/</span><span class="op">*</span> Written by Matt Ingalls, edited by Kevin Conder. <span class="op">*</span><span class="op">/</span>
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="cm">/* Written by Matt Ingalls, edited by Kevin Conder. */</span>
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1 - a score generator example.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; K-rate stuff.</span>
-  kstart <span class="opc">init</span> 0
-  kdur <span class="opc">linrand</span> 10
-  kpitch <span class="opc">linrand</span> 8
+<span class="c1">; Instrument #1 - a score generator example.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; K-rate stuff.</span>
+  k<span class="n">start</span> <span class="nb">init</span> <span class="mi">0</span>
+  k<span class="n">dur</span> <span class="nb">linrand</span> <span class="mi">10</span>
+  k<span class="n">pitch</span> <span class="nb">linrand</span> <span class="mi">8</span>
 
-  <span class="comment">; Printing to to a file called "my.sco".</span>
-  <span class="opc">fprintks</span> "my.sco", "i1\\t<span class="op">%</span>2.2f\\t<span class="op">%</span>2.2f\\t<span class="op">%</span>2.2f\\n", kstart, kdur, 4<span class="op">+</span>kpitch
+  <span class="c1">; Printing to to a file called "my.sco".</span>
+  <span class="nb">fprintks</span> <span class="s">"my.sco"</span><span class="p">,</span> <span class="s">"i1</span><span class="se">\\</span><span class="s">t%2.2f</span><span class="se">\\</span><span class="s">t%2.2f</span><span class="se">\\</span><span class="s">t%2.2f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">start</span><span class="p">,</span> k<span class="n">dur</span><span class="p">,</span> <span class="mi">4</span><span class="o">+</span>k<span class="n">pitch</span>
 
-  knext <span class="opc">linrand</span> 1
-  kstart <span class="op">=</span> kstart <span class="op">+</span> knext
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-/* Written by Matt Ingalls, edited by Kevin Conder. */
-<span class="comment">; Play Instrument #1.</span>
-<span class="stamnt">i</span> 1 0 0.001
+  k<span class="n">next</span> <span class="nb">linrand</span> <span class="mi">1</span>
+  k<span class="n">start</span> <span class="o">=</span> k<span class="n">start</span> <span class="o">+</span> k<span class="n">next</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="cm">/* Written by Matt Ingalls, edited by Kevin Conder. */</span>
+<span class="c1">; Play Instrument #1.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">0.001</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -147,59 +147,58 @@ i1      1.31    1.42    4.13
         <p>
     </p>
         <p>
-      Here is an example of the fprintks opcode, which converts a standard MIDI file to a csound score. It uses the file <a class="ulink" href="examples/fprintks-2.csd" target="_top"><em class="citetitle">fprintks-2.csd</em></a>.
+      Here is an example of the fprintks opcode, which converts a standard MIDI file to a csound score. It uses the file <a class="ulink" href="examples/fprintks-2.csd.html" target="_top"><em class="citetitle">fprintks-2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp100949680"></a>
+          <a id="idm1545211248"></a>
           <p class="title">
-            <strong>Example 337. Example of the fprintks opcode to convert a MIDI file to a csound score.</strong>
+            <strong>Example 340. Example of the fprintks opcode to convert a MIDI file to a csound score.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp244362912"></a>
-              <a class="ulink" href="examples/fprintks-2.csd.html" target="_top">Play</a>
+              <a id="idm1379049840"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
-<span class="comment">; -odac           -iadc     -d     ;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+<span class="c1">; -odac           -iadc     -d     ;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
 -n -Fmidichn_advanced.mid
-<span class="comment">;Don't write audio ouput to disk and use the file midichn_advanced.mid as MIDI input</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="c1">;Don't write audio ouput to disk and use the file midichn_advanced.mid as MIDI input</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-  <span class="ohdr">sr</span>	    <span class="op">=</span>  48000
-  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  16
-  <span class="ohdr">nchnls</span>    <span class="op">=</span>  2
+  <span class="vg">sr</span>	    <span class="o">=</span>  <span class="mi">48000</span>
+  <span class="vg">ksmps</span>	    <span class="o">=</span>  <span class="mi">16</span>
+  <span class="vg">nchnls</span>    <span class="o">=</span>  <span class="mi">2</span>
 
-  <span class="comment">;Example by Jonathan Murphy 2007</span>
+  <span class="c1">;Example by Jonathan Murphy 2007</span>
 
-	    <span class="comment">; assign all midi events to instr 1000</span>
-	    <span class="ohdr">massign</span>   0, 1000
-	    <span class="ohdr">pgmassign</span>	0, 1000
+	    <span class="c1">; assign all midi events to instr 1000</span>
+	    <span class="nb">massign</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span>
+	    <span class="nb">pgmassign</span>	<span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span>
 
-    <span class="oblock">instr</span> 1000
+    <span class="kd">instr</span> <span class="nf">1000</span>
 
-  ktim	<span class="opc">timeinsts</span>
+  k<span class="n">tim</span>	<span class="nb">timeinsts</span>
 	
-  kst, kch, kd1, kd2  <span class="opc">midiin</span>
-<span class="octrl">if</span> (kst <span class="op">!=</span> 0) then
-<span class="comment">;  p4 = MIDI event type   p5 = channel   p6= data1    p7= data2</span>
-	    <span class="opc">fprintks</span>  "MIDI2cs.sco", "i1\\t<span class="op">%</span>f\\t<span class="op">%</span>f\\t<span class="op">%</span>d\\t<span class="op">%</span>d\\t<span class="op">%</span>d\\t<span class="op">%</span>d\\n", ktim, 1<span class="op">/</span>kr, kst, kch, kd1, kd2
-<span class="octrl">endif</span>
+  k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>  <span class="nb">midiin</span>
+<span class="k">if</span> <span class="p">(</span>k<span class="n">st</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+<span class="c1">;  p4 = MIDI event type   p5 = channel   p6= data1    p7= data2</span>
+	    <span class="nb">fprintks</span>  <span class="s">"MIDI2cs.sco"</span><span class="p">,</span> <span class="s">"i1</span><span class="se">\\</span><span class="s">t%f</span><span class="se">\\</span><span class="s">t%f</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">tim</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="vg">kr</span><span class="p">,</span> k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>
+<span class="k">endif</span>
 
-    <span class="oblock">endin</span>
+    <span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1000 0 10000
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1000</span> <span class="mi">0</span> <span class="mi">10000</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -210,236 +209,236 @@ i1      1.31    1.42    4.13
 
     </p>
         <p>
-      Here is an advanced example of the fprintks opcode, which generates scores for Csound. It uses the file <a class="ulink" href="examples/scogen.csd" target="_top"><em class="citetitle">scogen-2.csd</em></a>.
+      Here is an advanced example of the fprintks opcode, which generates scores for Csound. It uses the file <a class="ulink" href="examples/scogen.csd.html" target="_top"><em class="citetitle">scogen-2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp100953328"></a>
+          <a id="idm1545204080"></a>
           <p class="title">
-            <strong>Example 338. Example of the fprintks opcode to create a Csound score file generator using Csound.</strong>
+            <strong>Example 341. Example of the fprintks opcode to create a Csound score file generator using Csound.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp244363360"></a>
-              <a class="ulink" href="examples/scogen.csd.html" target="_top">Play</a>
+              <a id="idm1376950384"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
-<span class="comment">; -odac           -iadc     -d     ;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+<span class="c1">; -odac           -iadc     -d     ;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
 -n
-<span class="comment">;Don't write audio ouput to disk</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;===========================================================</span>
-<span class="comment">;        scogen.csd       by: Matt Ingalls</span>
-<span class="comment">;</span>
-<span class="comment">;    a "port" of sorts</span>
-<span class="comment">;      of the old "mills" score generator (scogen)</span>
-<span class="comment">;</span>
-<span class="comment">;    this instrument creates a schottstaedt.sco file</span>
-<span class="comment">;    to be used with the schottstaedt.orc file</span>
-<span class="comment">;</span>
-<span class="comment">;    as long as you dont save schottstaedt.orc as a .csd</span>
-<span class="comment">;    file, you should be able to keep it open in MacCsound</span>
-<span class="comment">;    and render each newly generated .sco file.</span>
-<span class="comment">;</span>
-<span class="comment">;===========================================================</span>
+<span class="c1">;Don't write audio ouput to disk</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;===========================================================</span>
+<span class="c1">;        scogen.csd       by: Matt Ingalls</span>
+<span class="c1">;</span>
+<span class="c1">;    a "port" of sorts</span>
+<span class="c1">;      of the old "mills" score generator (scogen)</span>
+<span class="c1">;</span>
+<span class="c1">;    this instrument creates a schottstaedt.sco file</span>
+<span class="c1">;    to be used with the schottstaedt.orc file</span>
+<span class="c1">;</span>
+<span class="c1">;    as long as you dont save schottstaedt.orc as a .csd</span>
+<span class="c1">;    file, you should be able to keep it open in MacCsound</span>
+<span class="c1">;    and render each newly generated .sco file.</span>
+<span class="c1">;</span>
+<span class="c1">;===========================================================</span>
 
 
-gScoName <span class="op">=</span> "<span class="op">/</span>Users<span class="op">/</span>matt<span class="op">/</span>Desktop<span class="op">/</span>schottstaedt.sco"     <span class="comment">; the name of the file to be generated</span>
+gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users/matt/Desktop/schottstaedt.sco"</span>     <span class="c1">; the name of the file to be generated</span>
 
-    <span class="ohdr">sr</span>    <span class="op">=</span>    100     <span class="comment">; this defines our temporal resolution,</span>
-                <span class="comment">; an sr of 100 means we will generate p2 and p3 values</span>
-                <span class="comment">; to the nearest 1/100th of a second</span>
+    <span class="vg">sr</span>    <span class="o">=</span>    <span class="mi">100</span>     <span class="c1">; this defines our temporal resolution,</span>
+                <span class="c1">; an sr of 100 means we will generate p2 and p3 values</span>
+                <span class="c1">; to the nearest 1/100th of a second</span>
 
-    <span class="ohdr">ksmps</span> <span class="op">=</span>    1     <span class="comment">; set kr=sr so we can do everything at k-rate</span>
-
-
-<span class="comment">; some print opcodes</span>
-<span class="oblock">opcode</span> PrintInteger, 0, <span class="opc">k</span>
-    kval    <span class="opc">xin</span>
-        <span class="opc">fprintks</span>    gScoName, "<span class="op">%</span>d", kval
-<span class="oblock">endop</span>
-
-<span class="oblock">opcode</span> PrintFloat, 0, <span class="opc">k</span>
-    kval    <span class="opc">xin</span>
-        <span class="opc">fprintks</span>    gScoName, "<span class="op">%</span>f", kval
-<span class="oblock">endop</span>
-
-<span class="oblock">opcode</span> PrintTab, 0, 0
-    <span class="opc">fprintks</span>    gScoName, "<span class="op">%</span>n"
-<span class="oblock">endop</span>
-
-<span class="oblock">opcode</span> PrintReturn, 0, 0
-    <span class="opc">fprintks</span>    gScoName, "<span class="op">%</span>r"
-<span class="oblock">endop</span>
+    <span class="vg">ksmps</span> <span class="o">=</span>    <span class="mi">1</span>     <span class="c1">; set kr=sr so we can do everything at k-rate</span>
 
 
-<span class="comment">; recursively calling opcode to handle all the optional parameters</span>
-<span class="oblock">opcode</span> ProcessAdditionalPfields, 0, ikio
-    iPtable, kndx, iNumPfields, iPfield <span class="opc">xin</span>
+<span class="c1">; some print opcodes</span>
+<span class="kd">opcode</span> <span class="nf">PrintInteger</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">k</span>
+    k<span class="n">val</span>    <span class="nb">xin</span>
+        <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="si">%d</span><span class="s">"</span><span class="p">,</span> k<span class="n">val</span>
+<span class="kd">endop</span>
 
-    <span class="comment">; additional pfields start at 5, we use a default 0 to identify the first call</span>
-    iPfield <span class="op">=</span> (iPfield <span class="op">==</span> 0 <span class="op">?</span> 5 <span class="op">:</span> iPfield)
+<span class="kd">opcode</span> <span class="nf">PrintFloat</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">k</span>
+    k<span class="n">val</span>    <span class="nb">xin</span>
+        <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"%f"</span><span class="p">,</span> k<span class="n">val</span>
+<span class="kd">endop</span>
 
-    <span class="octrl">if</span> (iPfield <span class="op">&gt;</span> iNumPfields) <span class="octrl">goto</span> endloop
-        <span class="comment">; find our tables</span>
-        iMinTable <span class="opc">table</span>    2<span class="op">*</span>iPfield<span class="op">-</span>1, iPtable
-        iMaxTable <span class="opc">table</span>    2<span class="op">*</span>iPfield, iPtable
+<span class="kd">opcode</span> <span class="nf">PrintTab</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">0</span>
+    <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%n</span><span class="s">"</span>
+<span class="kd">endop</span>
 
-        <span class="comment">; get values from our tables</span>
-        kMin <span class="opc">tablei</span>    kndx, iMinTable
-        kMax <span class="opc">tablei</span>    kndx, iMaxTable
-
-        <span class="comment">; find a random value in the range and write it to the score</span>
-        <span class="opc">fprintks</span> gScoName, "<span class="op">%</span>t<span class="op">%</span>f", kMin <span class="op">+</span> <span class="opc">rnd</span>(kMax<span class="op">-</span>kMin)
-
-        <span class="comment">; recursively call for any additional pfields.</span>
-        ProcessAdditionalPfields iPtable, kndx, iNumPfields, iPfield <span class="op">+</span> 1
-    endloop<span class="op">:</span>
-
-<span class="oblock">endop</span>
+<span class="kd">opcode</span> <span class="nf">PrintReturn</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">0</span>
+    <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%r</span><span class="s">"</span>
+<span class="kd">endop</span>
 
 
-<span class="op">/</span><span class="op">*</span> <span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">=</span>
-    Generate <span class="opc">a</span> gesture of <span class="opc">i</span><span class="op">-</span>statements
+<span class="c1">; recursively calling opcode to handle all the optional parameters</span>
+<span class="kd">opcode</span> <span class="nf">ProcessAdditionalPfields</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">ikio</span>
+    i<span class="n">Ptable</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span><span class="p">,</span> i<span class="n">Pfield</span> <span class="nb">xin</span>
 
-    p2 <span class="op">=</span> start of the gesture
-    p3 <span class="op">=</span> duration of the gesture
-    p4 <span class="op">=</span> number of <span class="opc">a</span> function that contains <span class="opc">a</span> list of all
-        function <span class="opc">table</span> numbers used to define the
-        pfield <span class="opc">random</span> distribution
-    p5 <span class="op">=</span> <span class="opc">scale</span> generated p4 values according to density (0<span class="op">=</span>off, 1<span class="op">=</span>on) [todo]
-    p6 <span class="op">=</span> let durations overlap gesture duration (0<span class="op">=</span>off, 1<span class="op">=</span>on) [todo]
-    p7 <span class="op">=</span> <span class="ohdr">seed</span> for <span class="opc">random</span> number generator <span class="ohdr">seed</span> [todo]
-  <span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">==</span><span class="op">=</span>
-<span class="op">*</span><span class="op">/</span>
-<span class="oblock">instr</span> Gesture
+    <span class="c1">; additional pfields start at 5, we use a default 0 to identify the first call</span>
+    i<span class="n">Pfield</span> <span class="o">=</span> <span class="p">(</span>i<span class="n">Pfield</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="mi">5</span> <span class="p">:</span> i<span class="n">Pfield</span><span class="p">)</span>
 
-    <span class="comment">; initialize</span>
-    iResolution <span class="op">=</span> 1<span class="op">/</span><span class="ohdr">sr</span>
+    <span class="k">if</span> <span class="p">(</span>i<span class="n">Pfield</span> <span class="o">&gt;</span> i<span class="n">NumPfields</span><span class="p">)</span> <span class="k">goto</span> <span class="nl">endloop</span>
+        <span class="c1">; find our tables</span>
+        i<span class="n">MinTable</span> <span class="nb">table</span>    <span class="mi">2</span><span class="o">*</span>i<span class="n">Pfield</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> i<span class="n">Ptable</span>
+        i<span class="n">MaxTable</span> <span class="nb">table</span>    <span class="mi">2</span><span class="o">*</span>i<span class="n">Pfield</span><span class="p">,</span> i<span class="n">Ptable</span>
 
-    kNextStart <span class="opc">init</span> p2
-    kCurrentTime <span class="opc">init</span> p2
+        <span class="c1">; get values from our tables</span>
+        k<span class="n">Min</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">MinTable</span>
+        k<span class="n">Max</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">MaxTable</span>
 
-    iNumPfields <span class="opc">table</span>        0, p4
-    iInstrMinTable <span class="opc">table</span>    1, p4
-    iInstrMaxTable <span class="opc">table</span>    2, p4
-    iDensityMinTable <span class="opc">table</span>    3, p4
-    iDensityMaxTable <span class="opc">table</span>    4, p4
-    iDurMinTable <span class="opc">table</span>    5, p4
-    iDurMaxTable <span class="opc">table</span>    6, p4
-    iAmpMinTable <span class="opc">table</span>    7, p4
-    iAmpMaxTable <span class="opc">table</span>    8, p4
+        <span class="c1">; find a random value in the range and write it to the score</span>
+        <span class="nb">fprintks</span> gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%t</span><span class="s">%f"</span><span class="p">,</span> k<span class="n">Min</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">Max</span><span class="o">-</span>k<span class="n">Min</span><span class="p">)</span>
 
-    <span class="comment">; check to make sure there is enough data</span>
-    <span class="opc">print</span> iNumPfields
-    <span class="octrl">if</span> iNumPfields <span class="op">&lt;</span> 4 then
-        <span class="opc">prints</span> "<span class="op">%</span>dError<span class="op">:</span> At least 4 <span class="opc">p</span><span class="op">-</span>fields (8 functions) need to be specified.<span class="op">%</span>n", iNumPfields
-        <span class="opc">turnoff</span>
-    <span class="octrl">endif</span>
+        <span class="c1">; recursively call for any additional pfields.</span>
+        <span class="nf">ProcessAdditionalPfields</span> i<span class="n">Ptable</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span><span class="p">,</span> i<span class="n">Pfield</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="nl">endloop</span><span class="p">:</span>
 
-    <span class="comment">; initial comment</span>
-    <span class="opc">fprints</span>    gScoName, "<span class="op">%</span>!Generated Gesture from <span class="op">%</span>f to <span class="op">%</span>f seconds<span class="op">%</span>n <span class="op">%</span>!<span class="op">%</span>t<span class="op">%</span>twith <span class="opc">a</span> <span class="opc">p</span><span class="op">-</span><span class="opc">max</span> of <span class="op">%</span>d<span class="op">%</span>n<span class="op">%</span>n", p2, p3, iNumPfields
-
-    <span class="comment">; k-rate stuff</span>
-    <span class="octrl">if</span> (kCurrentTime <span class="op">&gt;=</span> kNextStart) then <span class="comment">; write a new note!</span>
-
-        kndx <span class="op">=</span> (kCurrentTime<span class="op">-</span>p2)<span class="op">/</span>p3
-
-        <span class="comment">; get the required pfield ranges</span>
-        kInstMin <span class="opc">tablei</span>    kndx, iInstrMinTable
-        kInstMax <span class="opc">tablei</span>    kndx, iInstrMaxTable
-        kDensMin <span class="opc">tablei</span>    kndx, iDensityMinTable
-        kDensMax <span class="opc">tablei</span>    kndx, iDensityMaxTable
-        kDurMin <span class="opc">tablei</span>    kndx, iDurMinTable
-        kDurMax <span class="opc">tablei</span>    kndx, iDurMaxTable
-        kAmpMin <span class="opc">tablei</span>    kndx, iAmpMinTable
-        kAmpMax <span class="opc">tablei</span>    kndx, iAmpMaxTable
-
-        <span class="comment">; find random values for all our required parametrs and print the i-statement</span>
-        <span class="opc">fprintks</span> gScoName, "i<span class="op">%</span>d<span class="op">%</span>t<span class="op">%</span>f<span class="op">%</span>t<span class="op">%</span>f<span class="op">%</span>t<span class="op">%</span>f", kInstMin <span class="op">+</span> <span class="opc">rnd</span>(kInstMax<span class="op">-</span>kInstMin), kNextStart, kDurMin <span class="op">+</span> <span class="opc">rnd</span>(kDurMax<span class="op">-</span>kDurMin), kAmpMin <span class="op">+</span> <span class="opc">rnd</span>(kAmpMax<span class="op">-</span>kAmpMin)
-
-        <span class="comment">; now any additional pfields</span>
-        ProcessAdditionalPfields p4, kndx, iNumPfields
-
-        PrintReturn
-
-        <span class="comment">; calculate next starttime</span>
-        kDensity <span class="op">=</span> kDensMin <span class="op">+</span> <span class="opc">rnd</span>(kDensMax<span class="op">-</span>kDensMin)
-        <span class="octrl">if</span> (kDensity <span class="op">&lt;</span> iResolution) then
-            kDensity <span class="op">=</span> iResolution
-        <span class="octrl">endif</span>
-        kNextStart <span class="op">=</span> kNextStart <span class="op">+</span> kDensity
-    <span class="octrl">endif</span>
-
-    kCurrentTime <span class="op">=</span> kCurrentTime <span class="op">+</span> iResolution
-<span class="oblock">endin</span>
+<span class="kd">endop</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-/*
+<span class="cm">/* ===========================================================
+    Generate a gesture of i-statements
+
+    p2 = start of the gesture
+    p3 = duration of the gesture
+    p4 = number of a function that contains a list of all
+        function table numbers used to define the
+        pfield random distribution
+    p5 = scale generated p4 values according to density (0=off, 1=on) [todo]
+    p6 = let durations overlap gesture duration (0=off, 1=on) [todo]
+    p7 = seed for random number generator seed [todo]
+  ===========================================================
+*/</span>
+<span class="kd">instr</span> <span class="nf">Gesture</span>
+
+    <span class="c1">; initialize</span>
+    i<span class="n">Resolution</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="vg">sr</span>
+
+    k<span class="n">NextStart</span> <span class="nb">init</span> <span class="nb">p2</span>
+    k<span class="n">CurrentTime</span> <span class="nb">init</span> <span class="nb">p2</span>
+
+    i<span class="n">NumPfields</span> <span class="nb">table</span>        <span class="mi">0</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">InstrMinTable</span> <span class="nb">table</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">InstrMaxTable</span> <span class="nb">table</span>    <span class="mi">2</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">DensityMinTable</span> <span class="nb">table</span>    <span class="mi">3</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">DensityMaxTable</span> <span class="nb">table</span>    <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">DurMinTable</span> <span class="nb">table</span>    <span class="mi">5</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">DurMaxTable</span> <span class="nb">table</span>    <span class="mi">6</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">AmpMinTable</span> <span class="nb">table</span>    <span class="mi">7</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">AmpMaxTable</span> <span class="nb">table</span>    <span class="mi">8</span><span class="p">,</span> <span class="nb">p4</span>
+
+    <span class="c1">; check to make sure there is enough data</span>
+    <span class="nb">print</span> i<span class="n">NumPfields</span>
+    <span class="k">if</span> i<span class="n">NumPfields</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="k">then</span>
+        <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">Error: At least 4 p-fields (8 functions) need to be specified.</span><span class="se">%n</span><span class="s">"</span><span class="p">,</span> i<span class="n">NumPfields</span>
+        <span class="nb">turnoff</span>
+    <span class="k">endif</span>
+
+    <span class="c1">; initial comment</span>
+    <span class="nb">fprints</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%!</span><span class="s">Generated Gesture from %f to %f seconds</span><span class="se">%n</span><span class="s"> </span><span class="se">%!%t%t</span><span class="s">with a p-max of </span><span class="si">%d</span><span class="se">%n%n</span><span class="s">"</span><span class="p">,</span> <span class="nb">p2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">NumPfields</span>
+
+    <span class="c1">; k-rate stuff</span>
+    <span class="k">if</span> <span class="p">(</span>k<span class="n">CurrentTime</span> <span class="o">&gt;=</span> k<span class="n">NextStart</span><span class="p">)</span> <span class="k">then</span> <span class="c1">; write a new note!</span>
+
+        k<span class="n">ndx</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">CurrentTime</span><span class="o">-</span><span class="nb">p2</span><span class="p">)</span><span class="o">/</span><span class="nb">p3</span>
+
+        <span class="c1">; get the required pfield ranges</span>
+        k<span class="n">InstMin</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">InstrMinTable</span>
+        k<span class="n">InstMax</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">InstrMaxTable</span>
+        k<span class="n">DensMin</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">DensityMinTable</span>
+        k<span class="n">DensMax</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">DensityMaxTable</span>
+        k<span class="n">DurMin</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">DurMinTable</span>
+        k<span class="n">DurMax</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">DurMaxTable</span>
+        k<span class="n">AmpMin</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">AmpMinTable</span>
+        k<span class="n">AmpMax</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">AmpMaxTable</span>
+
+        <span class="c1">; find random values for all our required parameters and print the i-statement</span>
+        <span class="nb">fprintks</span> gS<span class="n">coName</span><span class="p">,</span> <span class="s">"i</span><span class="si">%d</span><span class="se">%t</span><span class="s">%f</span><span class="se">%t</span><span class="s">%f</span><span class="se">%t</span><span class="s">%f"</span><span class="p">,</span> k<span class="n">InstMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">InstMax</span><span class="o">-</span>k<span class="n">InstMin</span><span class="p">),</span> k<span class="n">NextStart</span><span class="p">,</span> k<span class="n">DurMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">DurMax</span><span class="o">-</span>k<span class="n">DurMin</span><span class="p">),</span> k<span class="n">AmpMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">AmpMax</span><span class="o">-</span>k<span class="n">AmpMin</span><span class="p">)</span>
+
+        <span class="c1">; now any additional pfields</span>
+        <span class="nf">ProcessAdditionalPfields</span> <span class="nb">p4</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span>
+
+        <span class="nf">PrintReturn</span>
+
+        <span class="c1">; calculate next starttime</span>
+        k<span class="n">Density</span> <span class="o">=</span> k<span class="n">DensMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">DensMax</span><span class="o">-</span>k<span class="n">DensMin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>k<span class="n">Density</span> <span class="o">&lt;</span> i<span class="n">Resolution</span><span class="p">)</span> <span class="k">then</span>
+            k<span class="n">Density</span> <span class="o">=</span> i<span class="n">Resolution</span>
+        <span class="k">endif</span>
+        k<span class="n">NextStart</span> <span class="o">=</span> k<span class="n">NextStart</span> <span class="o">+</span> k<span class="n">Density</span>
+    <span class="k">endif</span>
+
+    k<span class="n">CurrentTime</span> <span class="o">=</span> k<span class="n">CurrentTime</span> <span class="o">+</span> i<span class="n">Resolution</span>
+<span class="kd">endin</span>
+
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="cm">/*
 ===========================================================
-  <span class="stamnt">s</span>cogen.<span class="stamnt">s</span>co
+  scogen.sco
 
-    <span class="stamnt">t</span>his csound module genera<span class="stamnt">t</span>es a score file
+    this csound module generates a score file
     you specify a gesture of notes by giving
-    <span class="stamnt">t</span>he "ges<span class="stamnt">t</span>ure" ins<span class="stamnt">t</span>rumen<span class="stamnt">t</span> a number <span class="stamnt">t</span>o a
+    the "gesture" instrument a number to a
     (negative) gen2 table.
 
-    <span class="stamnt">t</span>his <span class="stamnt">t</span>able s<span class="stamnt">t</span>ores numbers <span class="stamnt">t</span>o pairs of func<span class="stamnt">t</span>ions.
-    <span class="stamnt">e</span>ach function-pair r<span class="stamnt">e</span>pr<span class="stamnt">e</span>s<span class="stamnt">e</span>nts a rang<span class="stamnt">e</span> (min-max)
+    this table stores numbers to pairs of functions.
+    each function-pair represents a range (min-max)
     of randomness for every pfield for the notes to
-    <span class="stamnt">b</span>e generated.
+    be generated.
 ===========================================================
-*/
+*/</span>
 
 
-<span class="comment">; common tables for pfield ranges</span>
-<span class="stamnt">f</span>100    0    2    -7    0 2 0    <span class="comment">; static 0</span>
-<span class="stamnt">f</span>101    0    2    -7    1 2 1    <span class="comment">; static 1</span>
-<span class="stamnt">f</span>102    0    2    -7    0 2 1 <span class="comment">; ramp 0-&gt;1</span>
-<span class="stamnt">f</span>103    0    2    -7    1 2 0 <span class="comment">; ramp 1-&gt;0</span>
-<span class="stamnt">f</span>105    0    2    -7    10 2 10 <span class="comment">; static 10</span>
-<span class="stamnt">f</span>106    0    2    -7    .1 2 .1 <span class="comment">; static .1</span>
+<span class="c1">; common tables for pfield ranges</span>
+<span class="nb">f</span><span class="mi">100</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>    <span class="mi">0</span> <span class="mi">2</span> <span class="mi">0</span>    <span class="c1">; static 0</span>
+<span class="nb">f</span><span class="mi">101</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>    <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span>    <span class="c1">; static 1</span>
+<span class="nb">f</span><span class="mi">102</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>    <span class="mi">0</span> <span class="mi">2</span> <span class="mi">1</span> <span class="c1">; ramp 0-&gt;1</span>
+<span class="nb">f</span><span class="mi">103</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>    <span class="mi">1</span> <span class="mi">2</span> <span class="mi">0</span> <span class="c1">; ramp 1-&gt;0</span>
+<span class="nb">f</span><span class="mi">105</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>    <span class="mi">10</span> <span class="mi">2</span> <span class="mi">10</span> <span class="c1">; static 10</span>
+<span class="nb">f</span><span class="mi">106</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>    <span class="mf">.1</span> <span class="mi">2</span> <span class="mf">.1</span> <span class="c1">; static .1</span>
 
-<span class="comment">; specific pfield ranges</span>
-<span class="stamnt">f</span>10    0    2    -7       .8 2 .01 <span class="comment">; density</span>
-<span class="stamnt">f</span>11    0    2    -7       8 2 4 <span class="comment">; pitchmin</span>
-<span class="stamnt">f</span>12    0    2    -7       8 2 12 <span class="comment">; pitchmax</span>
-
-
-<span class="comment">;=== table containing the function numbers used for all the p-field distributions</span>
-<span class="comment">;</span>
-<span class="comment">;    p1 -     table number</span>
-<span class="comment">;    p2 -     time table is instantiated</span>
-<span class="comment">;    p3 -     size of table (must be &gt;= p5!)</span>
-<span class="comment">;    p4 -     gen# (should be = -2)</span>
-<span class="comment">;    p5 -     number of pfields of each note to be generated</span>
-<span class="comment">;    p6 -     table number of the function representing the minimum possible note number (p1) of a generated note</span>
-<span class="comment">;    p7 -     table number of the function representing the maximum possible note number (p1) of a generated note</span>
-<span class="comment">;    p8 -     table number of the function representing the minimum possible noteon-to-noteon time (p2 density) of a generated note</span>
-<span class="comment">;    p9 -     table number of the function representing the maximum possible noteon-to-noteon time (p2 density) of a generated note</span>
-<span class="comment">;    p10 -    table number of the function representing the minimum possible duration (p3) of a generated note</span>
-<span class="comment">;    p11 -    table number of the function representing the maximum possible duration (p3) of a generated note</span>
-<span class="comment">;    p12 -    table number of the function representing the maximum possible amplitude (p4) of a generated note</span>
-<span class="comment">;    p13 -    table number of the function representing the maximum possible amplitude (p5) of a generated note</span>
-<span class="comment">;    p14,p16.. -    table number of the function representing the minimum possible value for additional pfields (p5,p6..) of a generated note</span>
-<span class="comment">;    p15,p17.. -    table number of the function representing the maximum possible value for additional pfields (p5,p6..) of a generated note</span>
-
-<span class="comment">;        siz    2    #pds p1min    p1max p2min    p2max p3min    p3max p4min    p4max p5min    p5max p6min    p6max</span>
-<span class="stamnt">f</span>1    0    32    -2    6    101    101    10    10 101    105    100    106    11    12    100    101
+<span class="c1">; specific pfield ranges</span>
+<span class="nb">f</span><span class="mi">10</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>       <span class="mf">.8</span> <span class="mi">2</span> <span class="mf">.01</span> <span class="c1">; density</span>
+<span class="nb">f</span><span class="mi">11</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>       <span class="mi">8</span> <span class="mi">2</span> <span class="mi">4</span> <span class="c1">; pitchmin</span>
+<span class="nb">f</span><span class="mi">12</span>    <span class="mi">0</span>    <span class="mi">2</span>    <span class="o">-</span><span class="mi">7</span>       <span class="mi">8</span> <span class="mi">2</span> <span class="mi">12</span> <span class="c1">; pitchmax</span>
 
 
-<span class="comment">;gesture definitions</span>
-<span class="comment">;        start    dur    pTble    scale    overlap seed</span>
-<span class="stamnt">i</span>"Gesture"     0    60    1 <span class="comment">;todo--&gt;0    0    123</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">;=== table containing the function numbers used for all the p-field distributions</span>
+<span class="c1">;</span>
+<span class="c1">;    p1 -     table number</span>
+<span class="c1">;    p2 -     time table is instantiated</span>
+<span class="c1">;    p3 -     size of table (must be &gt;= p5!)</span>
+<span class="c1">;    p4 -     gen# (should be = -2)</span>
+<span class="c1">;    p5 -     number of pfields of each note to be generated</span>
+<span class="c1">;    p6 -     table number of the function representing the minimum possible note number (p1) of a generated note</span>
+<span class="c1">;    p7 -     table number of the function representing the maximum possible note number (p1) of a generated note</span>
+<span class="c1">;    p8 -     table number of the function representing the minimum possible noteon-to-noteon time (p2 density) of a generated note</span>
+<span class="c1">;    p9 -     table number of the function representing the maximum possible noteon-to-noteon time (p2 density) of a generated note</span>
+<span class="c1">;    p10 -    table number of the function representing the minimum possible duration (p3) of a generated note</span>
+<span class="c1">;    p11 -    table number of the function representing the maximum possible duration (p3) of a generated note</span>
+<span class="c1">;    p12 -    table number of the function representing the maximum possible amplitude (p4) of a generated note</span>
+<span class="c1">;    p13 -    table number of the function representing the maximum possible amplitude (p5) of a generated note</span>
+<span class="c1">;    p14,p16.. -    table number of the function representing the minimum possible value for additional pfields (p5,p6..) of a generated note</span>
+<span class="c1">;    p15,p17.. -    table number of the function representing the maximum possible value for additional pfields (p5,p6..) of a generated note</span>
+
+<span class="c1">;        siz    2    #pds p1min    p1max p2min    p2max p3min    p3max p4min    p4max p5min    p5max p6min    p6max</span>
+<span class="nb">f</span><span class="mi">1</span>    <span class="mi">0</span>    <span class="mi">32</span>    <span class="o">-</span><span class="mi">2</span>    <span class="mi">6</span>    <span class="mi">101</span>    <span class="mi">101</span>    <span class="mi">10</span>    <span class="mi">10</span> <span class="mi">101</span>    <span class="mi">105</span>    <span class="mi">100</span>    <span class="mi">106</span>    <span class="mi">11</span>    <span class="mi">12</span>    <span class="mi">100</span>    <span class="mi">101</span>
+
+
+<span class="c1">;gesture definitions</span>
+<span class="c1">;        start    dur    pTble    scale    overlap seed</span>
+<span class="nb">i</span><span class="s">"Gesture"</span>     <span class="mi">0</span>    <span class="mi">60</span>    <span class="mi">1</span> <span class="c1">;todo--&gt;0    0    123</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -451,14 +450,14 @@ gScoName <span class="op">=</span> "<span class="op">/</span>Users<span class="o
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100956608"></a>
+        <a id="idm1545207664"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="printks.html" title="printks"><em class="citetitle">printks</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100958752"></a>
+        <a id="idm1545208176"></a>
         <h2>Credits</h2>
         <p>
       </p>

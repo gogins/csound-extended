@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>xscans</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="xscansmap.html" title="xscansmap" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp159950400"></a>
+        <a id="idm1484704880"></a>
         <h2>Description</h2>
         <p>
       Experimental version of <a class="link" href="scans.html" title="scans"><em class="citetitle">scans</em></a>.  Allows much larger matrices and is faster and smaller but removes some (unused?) flexibility.  If liked, it will replace the older opcode as it is syntax compatible but extended.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp159952768"></a>
+        <a id="idm1484700912"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>xscans</strong></span> kamp, kfreq, ifntraj, id [, iorder]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp160018656"></a>
+        <a id="idm1484695280"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifntraj</em></span> --  table containing the scanning trajectory. This is a series of numbers that contains addresses of masses. The order of these addresses is used as the scan path. It should not contain values greater than the number of masses, or negative numbers. See the <a class="link" href="SiggenScanTop.html" title="Scanned Synthesis"><em class="citetitle">introduction to the scanned synthesis section</em></a>.
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160023744"></a>
+        <a id="idm1484695536"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span>  -- output amplitude. Note that the resulting amplitude is also dependent on instantaneous value in the wavetable. This number is effectively the scaling factor of the wavetable.
@@ -73,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160026400"></a>
+        <a id="idm1484691952"></a>
         <h2>Matrix Format</h2>
         <p>
       The new matrix format is a list of connections, one per line linking point x to point y.   There is no weight given to the link; it is assumed to be unity.  The list is preceded by the line &lt;MATRIX&gt; and ends with a &lt;/MATRIX&gt; line
@@ -107,129 +108,128 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160029616"></a>
+        <a id="idm1484683888"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the xscans opcode. It uses the file <a class="ulink" href="examples/xscans.csd" target="_top"><em class="citetitle">xscans.csd</em></a>.
+      Here is an example of the xscans opcode. It uses the file <a class="ulink" href="examples/xscans.csd.html" target="_top"><em class="citetitle">xscans.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp160031472"></a>
+          <a id="idm1484683632"></a>
           <p class="title">
-            <strong>Example 1090. Example of the xscans opcode.</strong>
+            <strong>Example 1116. Example of the xscans opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp273796336"></a>
-              <a class="ulink" href="examples/xscans.csd.html" target="_top">Play</a>
+              <a id="idm1302148080"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o xscans.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o xscans.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
-<span class="comment">;the matrices can be found in /manual/examples</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">;the matrices can be found in /manual/examples</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; Plain scanned syntnesis</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; Plain scanned syntnesis</span>
 
-  a0       <span class="op">=</span>           0
-           <span class="opc">xscanu</span>      1, .01, 6, 2, "128,8<span class="op">-</span>cylinderX", 4, 5, 2, .1, .1, <span class="op">-</span>.01, .1, .5, 0, 0, a0, 0, 0
-  a1       <span class="opc">xscans</span>      .7, <span class="opc">cpspch</span>(p4), 7, 0, 1
-           <span class="opc">outs</span>        a1, a1
-<span class="oblock">endin</span>
-
-
-<span class="oblock">instr</span> 2	<span class="comment">; Scan synthesis with audio injection and dual scan paths</span>
-	<span class="comment">; tap the mic or sing to inject audio into the resonators</span>
-
-  a0,aa    <span class="opc">ins</span>
-  a0       <span class="op">=</span>           a0<span class="op">/</span>.8
-           <span class="opc">xscanu</span>      1, .01, 6, 2, "128,8<span class="op">-</span>gridX", 14, 5, 2, .01, .05, <span class="op">-</span>.05, .1, .5, 0, 0, a0, 0, 0
-  a1       <span class="opc">xscans</span>      .5, <span class="opc">cpspch</span>(7.00), 7, 0, 1
-  a2       <span class="opc">xscans</span>      .5, <span class="opc">cpspch</span>(7.001), 77, 0, 1
-           <span class="opc">outs</span>        a1<span class="op">+</span>a2,a1<span class="op">+</span>a2
-<span class="oblock">endin</span> 
+  a<span class="n">0</span>       <span class="o">=</span>           <span class="mi">0</span>
+           <span class="nb">xscanu</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"128,8-cylinderX"</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">.01</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> a<span class="n">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="mf">.7</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+           <span class="nb">outs</span>        a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="oblock">instr</span> 3	<span class="comment">; Vibrating structure with audio injection</span>
-	<span class="comment">; Tap the MIC - to inject audio into the resonators</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">; Scan synthesis with audio injection and dual scan paths</span>
+	<span class="c1">; tap the mic or sing to inject audio into the resonators</span>
 
-  a0,aa    <span class="opc">ins</span>          
-  a0       <span class="op">=</span>          a0<span class="op">/</span>.8
-           <span class="opc">xscanu</span>     1, .01, 6, 2, "128<span class="op">-</span>stringcircularX", 14, 5, 2, .01, .05, <span class="op">-</span>.05, .25, .75, 0, 0, a0, 0, 1
-<span class="oblock">endin</span>
+  a<span class="n">0</span><span class="p">,</span>a<span class="n">a</span>    <span class="nb">ins</span>
+  a<span class="n">0</span>       <span class="o">=</span>           a<span class="n">0</span><span class="o">/</span><span class="mf">.8</span>
+           <span class="nb">xscanu</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"128,8-gridX"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">.05</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> a<span class="n">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="mf">.5</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="mf">7.00</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">2</span>       <span class="nb">xscans</span>      <span class="mf">.5</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="mf">7.001</span><span class="p">),</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+           <span class="nb">outs</span>        a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span>
+<span class="kd">endin</span> 
 
 
-<span class="oblock">instr</span> 4	<span class="comment">; Modulated scanners</span>
+<span class="kd">instr</span> <span class="nf">3</span>	<span class="c1">; Vibrating structure with audio injection</span>
+	<span class="c1">; Tap the MIC - to inject audio into the resonators</span>
 
-  i1       <span class="opc">bexprnd</span>     5
-  i2       <span class="opc">bexprnd</span>     1
-  ko       <span class="opc">oscil</span>       i1, i2, 9
-  ka1      <span class="opc">oscili</span>      .5, .15<span class="op">*</span>8, p7
-  ka2      <span class="opc">oscili</span>      .5, .15<span class="op">*</span>8, p8
-  kf       <span class="opc">oscili</span>      1, .15, p4
-  kf       <span class="op">=</span>           2^(kf<span class="op">/</span>12)<span class="op">*</span>p6<span class="op">*</span>440<span class="op">+</span>ko
-  a1       <span class="opc">xscans</span>      p9<span class="op">*</span>ka1, kf<span class="op">+</span>i1, 777, 1, 1
-  a2       <span class="opc">xscans</span>      p9<span class="op">*</span>ka2, (kf<span class="op">+</span>i1)<span class="op">*</span>2.1, 77, 1, 1
-           <span class="opc">outs</span>        a1<span class="op">+</span>a2, a1<span class="op">+</span>a2
-<span class="oblock">endin</span>
+  a<span class="n">0</span><span class="p">,</span>a<span class="n">a</span>    <span class="nb">ins</span>          
+  a<span class="n">0</span>       <span class="o">=</span>          a<span class="n">0</span><span class="o">/</span><span class="mf">.8</span>
+           <span class="nb">xscanu</span>     <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"128-stringcircularX"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">.05</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> a<span class="n">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; Initial condition</span>
-<span class="stamnt">f</span>1 0 128 7 0 64 1 64 0
-<span class="comment">; Masses</span>
-<span class="stamnt">f</span>2 0 128 -7 1 128 1
-<span class="comment">; Centering force</span>
-<span class="stamnt">f</span>4  0 128 -7 0 128 2
-<span class="stamnt">f</span>14 0 128 -7 2 64 0 64 2
-<span class="comment">; Damping</span>
-<span class="stamnt">f</span>5 0 128 -7 1 128 1
-<span class="comment">; Initial velocity</span>
-<span class="stamnt">f</span>6 0 128 -7 -.0 128 .0
-<span class="comment">; Trajectories</span>
-<span class="stamnt">f</span>7 0 128 -5 .001 128 128
-<span class="stamnt">f</span>777 0 128 -23 "128-stringcircular"
-<span class="stamnt">f</span>77 0 128 -23 "128-spiral-8,16,128,2,1over2"
-<span class="comment">; Sine</span>
-<span class="stamnt">f</span>9 0 16384 10 1
 
-<span class="comment">; Pitch tables</span>
-<span class="stamnt">f</span>100 0 1024 -7 +3 128 +3 128 -2 128 -2 128 +0 128 +0 128 -4 128 -4 128 +3
-<span class="stamnt">f</span>101 0 1024 -7 -2 128 -2 128 -2 128 -2 128 -5 128 -5 128 -4 128 -4 128 -2
-<span class="stamnt">f</span>102 0 1024 -7 +3 128 +3 128 +2 128 +2 128 +0 128 +0 128 +0 128 +0 128 +3
-<span class="stamnt">f</span>103 0 1024 -7 +7 128 +7 128 +5 128 +5 128 +3 128 +3 128 +3 128 +3 128 +7 
+<span class="kd">instr</span> <span class="nf">4</span>	<span class="c1">; Modulated scanners</span>
 
-<span class="comment">; Amplitude tables</span>
-<span class="stamnt">f</span>200 0 1024 7 1 128 0 128 0 127 0 1 1 128 0 128 0 127 0 1 1 128 0 127 0 1 1
-<span class="stamnt">f</span>201 0 1024 7 0 127 0 1 1 127 0 1 1 128 0 127 0 1 1 127 0 1 1 128 0 127 0 1 1 127 0 1 1
-<span class="stamnt">f</span>202 0 1024 7 1 127 0 1 1 127 0 1 1 127 0 1 1 127 0 1 1 127 0 1 1 127 0 1 1 127 0 1 1 127 0 1 
-<span class="stamnt">f</span>203 0 1024 7 1 1024 0
+  i<span class="n">1</span>       <span class="nb">bexprnd</span>     <span class="mi">5</span>
+  i<span class="n">2</span>       <span class="nb">bexprnd</span>     <span class="mi">1</span>
+  k<span class="n">o</span>       <span class="nb">oscil</span>       i<span class="n">1</span><span class="p">,</span> i<span class="n">2</span><span class="p">,</span> <span class="mi">9</span>
+  k<span class="n">a1</span>      <span class="nb">oscili</span>      <span class="mf">.5</span><span class="p">,</span> <span class="mf">.15</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="nb">p7</span>
+  k<span class="n">a2</span>      <span class="nb">oscili</span>      <span class="mf">.5</span><span class="p">,</span> <span class="mf">.15</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="nb">p8</span>
+  k<span class="n">f</span>       <span class="nb">oscili</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.15</span><span class="p">,</span> <span class="nb">p4</span>
+  k<span class="n">f</span>       <span class="o">=</span>           <span class="mi">2</span><span class="o">^</span><span class="p">(</span>k<span class="n">f</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="nb">p6</span><span class="o">*</span><span class="mi">440</span><span class="o">+</span>k<span class="n">o</span>
+  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="nb">p9</span><span class="o">*</span>k<span class="n">a1</span><span class="p">,</span> k<span class="n">f</span><span class="o">+</span>i<span class="n">1</span><span class="p">,</span> <span class="mi">777</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">2</span>       <span class="nb">xscans</span>      <span class="nb">p9</span><span class="o">*</span>k<span class="n">a2</span><span class="p">,</span> <span class="p">(</span>k<span class="n">f</span><span class="o">+</span>i<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mf">2.1</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+           <span class="nb">outs</span>        a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span><span class="p">,</span> a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span>
+<span class="kd">endin</span>
 
-<span class="comment">;----------------------------------</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Initial condition</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">64</span> <span class="mi">1</span> <span class="mi">64</span> <span class="mi">0</span>
+<span class="c1">; Masses</span>
+<span class="nb">f</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">1</span>
+<span class="c1">; Centering force</span>
+<span class="nb">f</span><span class="mi">4</span>  <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">2</span>
+<span class="nb">f</span><span class="mi">14</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">2</span> <span class="mi">64</span> <span class="mi">0</span> <span class="mi">64</span> <span class="mi">2</span>
+<span class="c1">; Damping</span>
+<span class="nb">f</span><span class="mi">5</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">1</span>
+<span class="c1">; Initial velocity</span>
+<span class="nb">f</span><span class="mi">6</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="o">-</span><span class="mf">.0</span> <span class="mi">128</span> <span class="mf">.0</span>
+<span class="c1">; Trajectories</span>
+<span class="nb">f</span><span class="mi">7</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">5</span> <span class="mf">.001</span> <span class="mi">128</span> <span class="mi">128</span>
+<span class="nb">f</span><span class="mi">777</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">23</span> <span class="s">"128-stringcircular"</span>
+<span class="nb">f</span><span class="mi">77</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">23</span> <span class="s">"128-spiral-8,16,128,2,1over2"</span>
+<span class="c1">; Sine</span>
+<span class="nb">f</span><span class="mi">9</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="comment">; Note list</span>
-<span class="stamnt">i</span>1 0 10 6.00                                 
-<span class="stamnt">s</span>
-<span class="stamnt">i</span>2 1 10
-<span class="stamnt">s</span>
-<span class="stamnt">i</span>3 1 23
-<span class="stamnt">i</span>4 1 23  101 1 .5  200 202 1.5
-<span class="stamnt">i</span>4 . .   102 0 .5  200 201 1
-<span class="stamnt">i</span>4 . .   103 0 .5  200 201 1 
-<span class="stamnt">i</span>4 . .   100 0 .25 200 200 2
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">; Pitch tables</span>
+<span class="nb">f</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="o">-</span><span class="mi">7</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">0</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">4</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">4</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span>
+<span class="nb">f</span><span class="mi">101</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="o">-</span><span class="mi">7</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">5</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">5</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">4</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">4</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">2</span>
+<span class="nb">f</span><span class="mi">102</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="o">-</span><span class="mi">7</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">2</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">0</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">0</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">0</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">0</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span>
+<span class="nb">f</span><span class="mi">103</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="o">-</span><span class="mi">7</span> <span class="o">+</span><span class="mi">7</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">7</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">5</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">5</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">3</span> <span class="mi">128</span> <span class="o">+</span><span class="mi">7</span> 
+
+<span class="c1">; Amplitude tables</span>
+<span class="nb">f</span><span class="mi">200</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">7</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">f</span><span class="mi">201</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">f</span><span class="mi">202</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">7</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">127</span> <span class="mi">0</span> <span class="mi">1</span> 
+<span class="nb">f</span><span class="mi">203</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">7</span> <span class="mi">1</span> <span class="mi">1024</span> <span class="mi">0</span>
+
+<span class="c1">;----------------------------------</span>
+
+<span class="c1">; Note list</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mf">6.00</span>                                 
+<span class="nb">s</span>
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">10</span>
+<span class="nb">s</span>
+<span class="nb">i</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">23</span>
+<span class="nb">i</span><span class="mi">4</span> <span class="mi">1</span> <span class="mi">23</span>  <span class="mi">101</span> <span class="mi">1</span> <span class="mf">.5</span>  <span class="mi">200</span> <span class="mi">202</span> <span class="mf">1.5</span>
+<span class="nb">i</span><span class="mi">4</span> <span class="o">.</span> <span class="o">.</span>   <span class="mi">102</span> <span class="mi">0</span> <span class="mf">.5</span>  <span class="mi">200</span> <span class="mi">201</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">4</span> <span class="o">.</span> <span class="o">.</span>   <span class="mi">103</span> <span class="mi">0</span> <span class="mf">.5</span>  <span class="mi">200</span> <span class="mi">201</span> <span class="mi">1</span> 
+<span class="nb">i</span><span class="mi">4</span> <span class="o">.</span> <span class="o">.</span>   <span class="mi">100</span> <span class="mi">0</span> <span class="mf">.25</span> <span class="mi">200</span> <span class="mi">200</span> <span class="mi">2</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -243,7 +243,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160037104"></a>
+        <a id="idm1484688880"></a>
         <h2>See Also</h2>
         <p>
 More information on Scanned Synthesis (as well as several other matrices) is available on the <a class="ulink" href="http://www.csounds.com/scanned/" target="_top"><em class="citetitle">Scanned Synthesis page</em></a> at cSounds.com.
@@ -255,7 +255,7 @@ More information on Scanned Synthesis (as well as several other matrices) is ava
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160042928"></a>
+        <a id="idm1484676720"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch.</p>
         <p>New in version 4.20</p>

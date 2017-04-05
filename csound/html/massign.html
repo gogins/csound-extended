@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>massign</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="marimba.html" title="marimba" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp112779600"></a>
+        <a id="idm1532786416"></a>
         <h2>Description</h2>
         <p>
 	    Assigns a MIDI channel number to a Csound instrument.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112855136"></a>
+        <a id="idm1532792816"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>massign</strong></span> ichnl, insnum[, ireset]</pre>
         <pre class="synopsis"><span class="command"><strong>massign</strong></span> ichnl, "insname"[, ireset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp112858432"></a>
+        <a id="idm1532790896"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ichnl</em></span> -- MIDI channel number (1-16).
@@ -69,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112863936"></a>
+        <a id="idm1532782960"></a>
         <h2>Performance</h2>
         <p>
       Assigns a MIDI channel number to a Csound instrument. Also useful to make sure a certain instrument (if its number is from 1 to 16) will not be triggered by midi noteon messages (if using something <a class="link" href="midiin.html" title="midiin"><em class="citetitle">midiin</em></a> to interpret midi information). In this case set <span class="emphasis"><em>insnum</em></span> to 0 or a negative number.
@@ -83,85 +84,84 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112871488"></a>
+        <a id="idm1532781808"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the massign opcode. It uses the file <a class="ulink" href="examples/massign.csd" target="_top"><em class="citetitle">massign.csd</em></a>.
+      Here is an example of the massign opcode. It uses the file <a class="ulink" href="examples/massign.csd.html" target="_top"><em class="citetitle">massign.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp112873344"></a>
+          <a id="idm1532771568"></a>
           <p class="title">
-            <strong>Example 493. Example of the massign opcode.</strong>
+            <strong>Example 508. Example of the massign opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp251911008"></a>
-              <a class="ulink" href="examples/massign.csd.html" target="_top">Play</a>
+              <a id="idm1372092144"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  -+rtmidi=virtual -M0    <span class="comment">;;;realtime audio out and realtime midi in </span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">;-o massign.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  -+rtmidi=virtual -M0    <span class="c1">;;;realtime audio out and realtime midi in </span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">;-o massign.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giengine <span class="opc">fluidEngine</span>
-<span class="comment">; soundfont path to manual/examples</span>
-isfnum	 <span class="opc">fluidLoad</span> "19Trumpet.sf2", giengine, 1
-	 <span class="opc">fluidProgramSelect</span> giengine, 1, isfnum, 0, 56
+gi<span class="n">engine</span> <span class="nb">fluidEngine</span>
+<span class="c1">; soundfont path to manual/examples</span>
+i<span class="n">sfnum</span>	 <span class="nb">fluidLoad</span> <span class="s">"19Trumpet.sf2"</span><span class="p">,</span> gi<span class="n">engine</span><span class="p">,</span> <span class="mi">1</span>
+	 <span class="nb">fluidProgramSelect</span> gi<span class="n">engine</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">sfnum</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">56</span>
 
-<span class="ohdr">massign</span> 0,0	<span class="comment">;disable triggering of all instruments on all channels, but</span>
-<span class="ohdr">massign</span> 12,10	<span class="comment">;assign instr. 10 to midi channel 12</span>
-<span class="ohdr">massign</span> 3,30	<span class="comment">;assign instr. 30 to midi channel 3</span>
+<span class="nb">massign</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;disable triggering of all instruments on all channels, but</span>
+<span class="nb">massign</span> <span class="mi">12</span><span class="p">,</span><span class="mi">10</span>	<span class="c1">;assign instr. 10 to midi channel 12</span>
+<span class="nb">massign</span> <span class="mi">3</span><span class="p">,</span><span class="mi">30</span>	<span class="c1">;assign instr. 30 to midi channel 3</span>
 
-<span class="oblock">instr</span> 10 <span class="comment">; soundfont only on midi channel 12</span>
+<span class="kd">instr</span> <span class="nf">10</span> <span class="c1">; soundfont only on midi channel 12</span>
 
-      <span class="opc">mididefault</span>   60, p3
-      <span class="opc">midinoteonkey</span> p4, p5	<span class="comment">; in midi notes</span>
-ikey  <span class="opc">init</span> p4
-ivel  <span class="opc">init</span> p5
-      <span class="opc">fluidNote</span> giengine, 1, ikey, ivel
-<span class="oblock">endin</span>
+      <span class="nb">mididefault</span>   <span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
+      <span class="nb">midinoteonkey</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>	<span class="c1">; in midi notes</span>
+i<span class="n">key</span>  <span class="nb">init</span> <span class="nb">p4</span>
+i<span class="n">vel</span>  <span class="nb">init</span> <span class="nb">p5</span>
+      <span class="nb">fluidNote</span> gi<span class="n">engine</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">key</span><span class="p">,</span> i<span class="n">vel</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 30 <span class="comment">; FM-oscilator only on midi channel 3</span>
+<span class="kd">instr</span> <span class="nf">30</span> <span class="c1">; FM-oscilator only on midi channel 3</span>
 
-      <span class="opc">mididefault</span>   60, p3
-      <span class="opc">midinoteoncps</span> p4, p5	<span class="comment">; in Hertz</span>
-icps  <span class="opc">init</span> p4
-iamp  <span class="opc">init</span> p5
-iamp  <span class="op">=</span> iamp<span class="op">/</span>127
-kenv  <span class="opc">madsr</span>  0.5, 0, 1, 0.5
-asig  <span class="opc">foscil</span> iamp<span class="op">*</span>kenv, icps, 1, 1.414, 2, 1
-      <span class="opc">outs</span> asig, asig 
-<span class="oblock">endin</span> 
+      <span class="nb">mididefault</span>   <span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
+      <span class="nb">midinoteoncps</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>	<span class="c1">; in Hertz</span>
+i<span class="n">cps</span>  <span class="nb">init</span> <span class="nb">p4</span>
+i<span class="n">amp</span>  <span class="nb">init</span> <span class="nb">p5</span>
+i<span class="n">amp</span>  <span class="o">=</span> i<span class="n">amp</span><span class="o">/</span><span class="mi">127</span>
+k<span class="n">env</span>  <span class="nb">madsr</span>  <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span>
+a<span class="n">sig</span>  <span class="nb">foscil</span> i<span class="n">amp</span><span class="o">*</span>k<span class="n">env</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.414</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span> 
+<span class="kd">endin</span> 
 
-<span class="oblock">instr</span> 99 <span class="comment">; output sound from fluidengine</span>
+<span class="kd">instr</span> <span class="nf">99</span> <span class="c1">; output sound from fluidengine</span>
 
-imvol <span class="opc">init</span> 7
-aL, aR <span class="opc">fluidOut</span> giengine
-      <span class="opc">outs</span> aL<span class="op">*</span>imvol, aR<span class="op">*</span>imvol
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; sine</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
+i<span class="n">mvol</span> <span class="nb">init</span> <span class="mi">7</span>
+a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span> <span class="nb">fluidOut</span> gi<span class="n">engine</span>
+      <span class="nb">outs</span> a<span class="n">L</span><span class="o">*</span>i<span class="n">mvol</span><span class="p">,</span> a<span class="n">R</span><span class="o">*</span>i<span class="n">mvol</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; sine</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 10 0 2 60 100  <span class="comment">;one note on the trumpet in midi and...</span>
-<span class="stamnt">i</span> 30 2 2 220 80  <span class="comment">;one FM note in Hz</span>
-<span class="stamnt">i</span> 99 0 60	 <span class="comment">;stay active for 60 sec.</span>
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">10</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">60</span> <span class="mi">100</span>  <span class="c1">;one note on the trumpet in midi and...</span>
+<span class="nb">i</span> <span class="mi">30</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">220</span> <span class="mi">80</span>  <span class="c1">;one FM note in Hz</span>
+<span class="nb">i</span> <span class="mi">99</span> <span class="mi">0</span> <span class="mi">60</span>	 <span class="c1">;stay active for 60 sec.</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -170,14 +170,14 @@ aL, aR <span class="opc">fluidOut</span> giengine
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112877632"></a>
+        <a id="idm1532776560"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ctrlinit.html" title="ctrlinit"><em class="citetitle">ctrlinit</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112879680"></a>
+        <a id="idm1532777200"></a>
         <h2>Credits</h2>
         <p>
       </p>

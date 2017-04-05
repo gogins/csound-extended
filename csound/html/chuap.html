@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>chuap</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="chnset.html" title="chnset" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp83827184"></a>
+        <a id="idm1562526976"></a>
         <h2>Description</h2>
         <p>
       Simulates Chua's oscillator, an LRC oscillator with an active resistor, proved capable of bifurcation and chaotic attractors, with k-rate control of circuit elements.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp83892176"></a>
+        <a id="idm1562529792"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aI3, aV2, aV1 <span class="command"><strong>chuap</strong></span> kL, kR0, kC1, kG, kGa, kGb, kE, kC2, iI3, iV2, iV1, ktime_step</pre>
       </div>
       <div class="refsect1">
-        <a id="idp83894080"></a>
+        <a id="idm1562525952"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iI3</em></span> -- Initial current at G
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp83897152"></a>
+        <a id="idm1562525696"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kL</em></span> -- Inductor L
@@ -163,73 +164,77 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp83914480"></a>
+        <a id="idm1562299072"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the chuap opcode. It uses the file <a class="ulink" href="examples/chuap.csd" target="_top"><em class="citetitle">chuap.csd</em></a>.
+      Here is an example of the chuap opcode. It uses the file <a class="ulink" href="examples/chuap.csd.html" target="_top"><em class="citetitle">chuap.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp83916128"></a>
+          <a id="idm1562293184"></a>
           <p class="title">
-            <strong>Example 123. Example of the chuap opcode.</strong>
+            <strong>Example 124. Example of the chuap opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp236791328"></a>
-              <a class="ulink" href="examples/chuap.csd.html" target="_top">Play</a>
+              <a id="idm1398570224"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o chuas_oscillator.wav.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o chuas_oscillator.wav.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>     <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span>  <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gibuzztable <span class="ohdr">ftgen</span> 1, 0, 16384, 10, 1
+gi<span class="n">buzztable</span> <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">; sys_variables = system_vars(5:12); % L,R0,C2,G,Ga,Gb,E,C1 or p8:p15</span>
-<span class="comment">; integ_variables = [system_vars(14:16),system_vars(1:2)]; % x0,y0,z0,dataset_size,step_size or p17:p19, p4:p5</span>
-istep_size    <span class="op">=</span>       p5
-iL            <span class="op">=</span>       p8
-iR0           <span class="op">=</span>       p9
-iC2           <span class="op">=</span>       p10
-iG            <span class="op">=</span>       p11
-iGa           <span class="op">=</span>       p12
-iGb           <span class="op">=</span>       p13
-iE            <span class="op">=</span>       p14
-iC1           <span class="op">=</span>       p15
-iI3           <span class="op">=</span>       p17
-iV2           <span class="op">=</span>       p18
-iV1           <span class="op">=</span>       p19
-iattack       <span class="op">=</span>       0.02
-isustain      <span class="op">=</span>       p3
-irelease      <span class="op">=</span>       0.02
-p3            <span class="op">=</span>       iattack <span class="op">+</span> isustain <span class="op">+</span> irelease
-iscale        <span class="op">=</span>       1.0
-adamping      <span class="opc">linseg</span>  0.0, iattack, iscale, isustain, iscale, irelease, 0.0
-aguide        <span class="opc">buzz</span>    0.5, 440, <span class="ohdr">sr</span><span class="op">/</span>440, gibuzztable
-aI3, aV2, aV1 <span class="opc">chuap</span>   iL, iR0, iC2, iG, iGa, iGb, iE, iC1, iI3, iV2, iV1, istep_size 
-asignal       <span class="opc">balance</span> aV2, aguide
-              <span class="opc">outs</span>    adamping <span class="op">*</span> asignal, adamping <span class="op">*</span> asignal
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;        Adapted from ABC++ MATLAB example data.</span>
-<span class="stamnt">i</span> 1 0 20 1500 .1   -1 -1 -0.00707925 0.00001647 100  1 -.99955324 -1.00028375 1 -.00222159 204.8 -2.36201596260071 3.08917625807226e-03 3.87075614929199 7 .4 .004 1 86 30<span class="comment">; torus attractor ( gallery of attractors ) </span>
-<span class="stamnt">i</span> 1 + 20 1500 .425  0 -1  1.3506168  0              -4.50746268737 -1 2.4924 .93 1 1 0 -22.28662665 .009506608 -22.2861576 32 10 2 20 86 30 <span class="comment">; heteroclinic orbit</span>
-<span class="stamnt">i</span> 1 + 20 1024 .05  -1 -1  0.00667    0.000651    10 -1 .856 1.1 1 .06 51.2 -20.200590133667 .172539323568344 -4.07686233520508 2.5 10 .2 1 66 81 <span class="comment">; periodic attractor (torus breakdown route)</span>
-<span class="stamnt">i</span> 1 + 20 1024 0.05 -1 -1 0.00667 0.000651 10 -1 0.856 1.1 1 0.1 153.6 21.12496758 0.03001749 0.515828669 2.5 10 0.2 1 66 81  <span class="comment">; torus attractor (torus breakdown route)'</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; sys_variables = system_vars(5:12); % L,R0,C2,G,Ga,Gb,E,C1 or p8:p15</span>
+<span class="c1">; integ_variables = [system_vars(14:16),system_vars(1:2)]; % x0,y0,z0,dataset_size,step_size or p17:p19, p4:p5</span>
+i<span class="n">step_size</span>    <span class="o">=</span>       <span class="nb">p5</span>
+i<span class="n">L</span>            <span class="o">=</span>       <span class="nb">p8</span>
+i<span class="n">R0</span>           <span class="o">=</span>       <span class="nb">p9</span>
+i<span class="n">C2</span>           <span class="o">=</span>       <span class="nb">p10</span>
+i<span class="n">G</span>            <span class="o">=</span>       <span class="nb">p11</span>
+i<span class="n">Ga</span>           <span class="o">=</span>       <span class="nb">p12</span>
+i<span class="n">Gb</span>           <span class="o">=</span>       <span class="nb">p13</span>
+i<span class="n">E</span>            <span class="o">=</span>       <span class="nb">p14</span>
+i<span class="n">C1</span>           <span class="o">=</span>       <span class="nb">p15</span>
+i<span class="n">I3</span>           <span class="o">=</span>       <span class="nb">p17</span>
+i<span class="n">V2</span>           <span class="o">=</span>       <span class="nb">p18</span>
+i<span class="n">V1</span>           <span class="o">=</span>       <span class="nb">p19</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p21</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p22</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p23</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p24</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p25</span>
+i<span class="n">attack</span>       <span class="o">=</span>       <span class="mf">0.02</span>
+i<span class="n">sustain</span>      <span class="o">=</span>       <span class="nb">p3</span>
+i<span class="n">release</span>      <span class="o">=</span>       <span class="mf">0.02</span>
+<span class="nb">p3</span>            <span class="o">=</span>       i<span class="n">attack</span> <span class="o">+</span> i<span class="n">sustain</span> <span class="o">+</span> i<span class="n">release</span>
+i<span class="n">scale</span>        <span class="o">=</span>       <span class="mf">1.0</span>
+a<span class="n">damping</span>      <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> i<span class="n">attack</span><span class="p">,</span> i<span class="n">scale</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> i<span class="n">scale</span><span class="p">,</span> i<span class="n">release</span><span class="p">,</span> <span class="mf">0.0</span>
+a<span class="n">guide</span>        <span class="nb">buzz</span>    <span class="mf">0.5</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="mi">440</span><span class="p">,</span> gi<span class="n">buzztable</span>
+a<span class="n">I3</span><span class="p">,</span> a<span class="n">V2</span><span class="p">,</span> a<span class="n">V1</span> <span class="nb">chuap</span>   i<span class="n">L</span><span class="p">,</span> i<span class="n">R0</span><span class="p">,</span> i<span class="n">C2</span><span class="p">,</span> i<span class="n">G</span><span class="p">,</span> i<span class="n">Ga</span><span class="p">,</span> i<span class="n">Gb</span><span class="p">,</span> i<span class="n">E</span><span class="p">,</span> i<span class="n">C1</span><span class="p">,</span> i<span class="n">I3</span><span class="p">,</span> i<span class="n">V2</span><span class="p">,</span> i<span class="n">V1</span><span class="p">,</span> i<span class="n">step_size</span> 
+a<span class="n">signal</span>       <span class="nb">balance</span> a<span class="n">V2</span><span class="p">,</span> a<span class="n">guide</span>
+              <span class="nb">outs</span>    a<span class="n">damping</span> <span class="o">*</span> a<span class="n">signal</span><span class="p">,</span> a<span class="n">damping</span> <span class="o">*</span> a<span class="n">signal</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;        Adapted from ABC++ MATLAB example data.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">20</span> <span class="mi">1500</span> <span class="mf">.1</span>   <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mf">0.00707925</span> <span class="mf">0.00001647</span> <span class="mi">100</span>  <span class="mi">1</span> <span class="o">-</span><span class="mf">.99955324</span> <span class="o">-</span><span class="mf">1.00028375</span> <span class="mi">1</span> <span class="o">-</span><span class="mf">.00222159</span> <span class="mf">204.8</span> <span class="o">-</span><span class="mf">2.36201596260071</span> <span class="mf">3.08917625807226e-03</span> <span class="mf">3.87075614929199</span> <span class="mi">7</span> <span class="mf">.4</span> <span class="mf">.004</span> <span class="mi">1</span> <span class="mi">86</span> <span class="mi">30</span><span class="c1">; torus attractor ( gallery of attractors ) </span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">20</span> <span class="mi">1500</span> <span class="mf">.425</span>  <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>  <span class="mf">1.3506168</span>  <span class="mi">0</span>              <span class="o">-</span><span class="mf">4.50746268737</span> <span class="o">-</span><span class="mi">1</span> <span class="mf">2.4924</span> <span class="mf">.93</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="o">-</span><span class="mf">22.28662665</span> <span class="mf">.009506608</span> <span class="o">-</span><span class="mf">22.2861576</span> <span class="mi">32</span> <span class="mi">10</span> <span class="mi">2</span> <span class="mi">20</span> <span class="mi">86</span> <span class="mi">30</span> <span class="c1">; heteroclinic orbit</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">20</span> <span class="mi">1024</span> <span class="mf">.05</span>  <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span>  <span class="mf">0.00667</span>    <span class="mf">0.000651</span>    <span class="mi">10</span> <span class="o">-</span><span class="mi">1</span> <span class="mf">.856</span> <span class="mf">1.1</span> <span class="mi">1</span> <span class="mf">.06</span> <span class="mf">51.2</span> <span class="o">-</span><span class="mf">20.200590133667</span> <span class="mf">.172539323568344</span> <span class="o">-</span><span class="mf">4.07686233520508</span> <span class="mf">2.5</span> <span class="mi">10</span> <span class="mf">.2</span> <span class="mi">1</span> <span class="mi">66</span> <span class="mi">81</span> <span class="c1">; periodic attractor (torus breakdown route)</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">20</span> <span class="mi">1024</span> <span class="mf">0.05</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="mf">0.00667</span> <span class="mf">0.000651</span> <span class="mi">10</span> <span class="o">-</span><span class="mi">1</span> <span class="mf">0.856</span> <span class="mf">1.1</span> <span class="mi">1</span> <span class="mf">0.1</span> <span class="mf">153.6</span> <span class="mf">21.12496758</span> <span class="mf">0.03001749</span> <span class="mf">0.515828669</span> <span class="mf">2.5</span> <span class="mi">10</span> <span class="mf">0.2</span> <span class="mi">1</span> <span class="mi">66</span> <span class="mi">81</span>  <span class="c1">; torus attractor (torus breakdown route)'</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -238,7 +243,7 @@ asignal       <span class="opc">balance</span> aV2, aguide
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp83917648"></a>
+        <a id="idm1562285504"></a>
         <h2>Credits</h2>
         <p>
       </p>

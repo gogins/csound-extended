@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>birnd</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="biquada.html" title="biquada" />
-    <link rel="next" href="bqrez.html" title="bqrez" />
+    <link rel="next" href="bpf.html" title="bpf" />
   </head>
   <body>
     <div class="navheader">
@@ -20,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="biquada.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="bqrez.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="bpf.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -38,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp81700928"></a>
+        <a id="idm1564648304"></a>
         <h2>Description</h2>
         <p>
       Returns a random number in a bi-polar range.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81702272"></a>
+        <a id="idm1564646000"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>birnd</strong></span>(x) (init- or control-rate only)</pre>
         <p>
@@ -53,65 +54,64 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81705440"></a>
+        <a id="idm1564638064"></a>
         <h2>Performance</h2>
         <p>
       Returns a random number in the bipolar range -<span class="emphasis"><em>x</em></span> to <span class="emphasis"><em>x</em></span>. <span class="emphasis"><em>rnd</em></span> and <span class="emphasis"><em>birnd</em></span> obtain values from a global pseudo-random number generator, then scale them into the requested range. The single global generator will thus distribute its sequence to these units throughout the performance, in whatever order the requests arrive.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81768672"></a>
+        <a id="idm1564643440"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the birnd opcode. It uses the file <a class="ulink" href="examples/birnd.csd" target="_top"><em class="citetitle">birnd.csd</em></a>.
+      Here is an example of the birnd opcode. It uses the file <a class="ulink" href="examples/birnd.csd.html" target="_top"><em class="citetitle">birnd.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp81770448"></a>
+          <a id="idm1564636528"></a>
           <p class="title">
             <strong>Example 94. Example of the birnd opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp235921872"></a>
-              <a class="ulink" href="examples/birnd.csd.html" target="_top">Play</a>
+              <a id="idm1401703024"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1		<span class="comment">; Generate a random number from -1 to 1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>		<span class="c1">; Generate a random number from -1 to 1.</span>
   
-kbin <span class="op">=</span>	<span class="opc">birnd</span>(1)
-	<span class="opc">printk</span> .2, kbin
+k<span class="n">bin</span> <span class="o">=</span>	<span class="nb">birnd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="nb">printk</span> <span class="mf">.2</span><span class="p">,</span> k<span class="n">bin</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">i</span> 1 + .
-<span class="stamnt">i</span> 1 + .
-<span class="stamnt">i</span> 1 + .
-<span class="stamnt">i</span> 1 + .
-<span class="stamnt">i</span> 1 + .
-<span class="stamnt">i</span> 1 + .
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>
 
-<span class="stamnt">e</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -133,14 +133,14 @@ instr 1:  i1 = 0.43364
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81775712"></a>
+        <a id="idm1564635632"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="rnd.html" title="rnd"><em class="citetitle">rnd</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81777792"></a>
+        <a id="idm1564629744"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -171,14 +171,14 @@ instr 1:  i1 = 0.43364
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="bqrez.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="bpf.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">biquada </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> bqrez</td>
+          <td width="40%" align="right" valign="top"> bpf</td>
         </tr>
       </table>
     </div>

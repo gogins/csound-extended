@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>weibull</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="websocket.html" title="websocket" />
@@ -39,21 +40,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158457504"></a>
+        <a id="idm1486115952"></a>
         <h2>Description</h2>
         <p>
       Weibull distribution random number generator (positive values only). This is an x-class noise generator
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158458960"></a>
+        <a id="idm1486119792"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>weibull</strong></span> ksigma, ktau</pre>
         <pre class="synopsis">ires <span class="command"><strong>weibull</strong></span> ksigma, ktau</pre>
         <pre class="synopsis">kres <span class="command"><strong>weibull</strong></span> ksigma, ktau</pre>
       </div>
       <div class="refsect1">
-        <a id="idp158526640"></a>
+        <a id="idm1486115184"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksigma</em></span> -- scales the spread of the distribution.
@@ -78,74 +79,73 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158533296"></a>
+        <a id="idm1486109296"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the weibull opcode. It uses the file <a class="ulink" href="examples/weibull.csd" target="_top"><em class="citetitle">weibull.csd</em></a>.
+      Here is an example of the weibull opcode. It uses the file <a class="ulink" href="examples/weibull.csd.html" target="_top"><em class="citetitle">weibull.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp158535072"></a>
+          <a id="idm1486112880"></a>
           <p class="title">
-            <strong>Example 1071. Example of the weibull opcode.</strong>
+            <strong>Example 1097. Example of the weibull opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp273108096"></a>
-              <a class="ulink" href="examples/weibull.csd.html" target="_top">Play</a>
+              <a id="idm1304197488"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o weibull.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o weibull.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1  	<span class="comment">; every run time same values</span>
+<span class="kd">instr</span> <span class="nf">1</span>  	<span class="c1">; every run time same values</span>
 
-ktri	<span class="opc">weibull</span> 100, 1
-	<span class="opc">printk</span> .2, ktri			<span class="comment">; look </span>
-aout	<span class="opc">oscili</span> 0.8, 440<span class="op">+</span>ktri, 1		<span class="comment">; &amp; listen</span>
-	<span class="opc">outs</span>	aout, aout
-<span class="oblock">endin</span>
+k<span class="n">tri</span>	<span class="nb">weibull</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">printk</span> <span class="mf">.2</span><span class="p">,</span> k<span class="n">tri</span>			<span class="c1">; look </span>
+a<span class="n">out</span>	<span class="nb">oscili</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">440</span><span class="o">+</span>k<span class="n">tri</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; &amp; listen</span>
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2		<span class="comment">; every run time different values</span>
+<span class="kd">instr</span> <span class="nf">2</span>		<span class="c1">; every run time different values</span>
 
-	<span class="ohdr">seed</span> 0
-ktri	<span class="opc">weibull</span> 100, 1
-	<span class="opc">printk</span> .2, ktri			<span class="comment">; look </span>
-aout	<span class="opc">oscili</span> 0.8, 440<span class="op">+</span>ktri, 1		<span class="comment">; &amp; listen</span>
-	<span class="opc">outs</span>	aout, aout
-<span class="oblock">endin</span>
+	<span class="nb">seed</span> <span class="mi">0</span>
+k<span class="n">tri</span>	<span class="nb">weibull</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">printk</span> <span class="mf">.2</span><span class="p">,</span> k<span class="n">tri</span>			<span class="c1">; look </span>
+a<span class="n">out</span>	<span class="nb">oscili</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">440</span><span class="o">+</span>k<span class="n">tri</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; &amp; listen</span>
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3		<span class="comment">; every run time different values</span>
+<span class="kd">instr</span> <span class="nf">3</span>		<span class="c1">; every run time different values</span>
 
-	<span class="ohdr">seed</span> 0
-ktri	<span class="opc">weibull</span> 100, 10			<span class="comment">; closer to ksigma..</span>
-	<span class="opc">printk</span> .2, ktri			<span class="comment">; look </span>
-aout	<span class="opc">oscili</span> 0.8, 440<span class="op">+</span>ktri, 1		<span class="comment">; &amp; listen</span>
-	<span class="opc">outs</span>	aout, aout
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; sine wave</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
+	<span class="nb">seed</span> <span class="mi">0</span>
+k<span class="n">tri</span>	<span class="nb">weibull</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span>			<span class="c1">; closer to ksigma..</span>
+	<span class="nb">printk</span> <span class="mf">.2</span><span class="p">,</span> k<span class="n">tri</span>			<span class="c1">; look </span>
+a<span class="n">out</span>	<span class="nb">oscili</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">440</span><span class="o">+</span>k<span class="n">tri</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; &amp; listen</span>
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; sine wave</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">i</span> 2 3 2
-<span class="stamnt">i</span> 3 6 2
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">6</span> <span class="mi">2</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -197,7 +197,7 @@ WARNING: Seeding from current time 2447542341
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158541424"></a>
+        <a id="idm1486107120"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="seed.html" title="seed"><em class="citetitle">seed</em></a>,
@@ -214,7 +214,7 @@ WARNING: Seeding from current time 2447542341
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158553168"></a>
+        <a id="idm1486357744"></a>
         <h2>Credits</h2>
         <p>
       </p>

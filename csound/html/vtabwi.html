@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vtabwi</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vtaba.html" title="vtaba" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158183472"></a>
+        <a id="idm1486739184"></a>
         <h2>Description</h2>
         <p>
       This opcode writes vectors to tables at init time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158184656"></a>
+        <a id="idm1486737648"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vtabwi</strong></span>  indx, ifn, inarg1 [, inarg2, inarg3 , .... , inargN ]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp158255520"></a>
+        <a id="idm1486737520"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>indx</em></span> - Index into f-table, a positive number range matching the table length
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158258832"></a>
+        <a id="idm1486741360"></a>
         <h2>Performance</h2>
         <p>
       This opcode is useful in all cases in which one needs to write sets of values associated to unique indexes (for example, multi-channel samples, STFT bin frames, spectral formants, p-field based scores etc.). The number of elements of each vector (length of the vector) is determined by the number of optional arguments on the right (<span class="emphasis"><em>inarg1</em></span>, <span class="emphasis"><em>inarg2</em></span>, <span class="emphasis"><em>inarg3</em></span>, ....  <span class="emphasis"><em>inargN</em></span>).
@@ -73,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158263264"></a>
+        <a id="idm1486731248"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>zir</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="zfilter2.html" title="zfilter2" />
@@ -38,97 +39,96 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp160713456"></a>
+        <a id="idm1484008304"></a>
         <h2>Description</h2>
         <p>
       Reads from a location in zk space at i-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160787200"></a>
+        <a id="idm1484003952"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>zir</strong></span> indx</pre>
       </div>
       <div class="refsect1">
-        <a id="idp160789344"></a>
+        <a id="idm1483998704"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>indx</em></span> -- points to the zk location to be read.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160791088"></a>
+        <a id="idm1483996656"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>zir</em></span> reads the signal at <span class="emphasis"><em>indx</em></span> location in zk space.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160793200"></a>
+        <a id="idm1483995376"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the zir opcode. It uses the file <a class="ulink" href="examples/zir.csd" target="_top"><em class="citetitle">zir.csd</em></a>.
+      Here is an example of the zir opcode. It uses the file <a class="ulink" href="examples/zir.csd.html" target="_top"><em class="citetitle">zir.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp160794976"></a>
+          <a id="idm1483999216"></a>
           <p class="title">
-            <strong>Example 1102. Example of the zir opcode.</strong>
+            <strong>Example 1129. Example of the zir opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp273486464"></a>
-              <a class="ulink" href="examples/zir.csd.html" target="_top">Play</a>
+              <a id="idm1300788848"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o zir.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o zir.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Initialize the ZAK space.</span>
-<span class="comment">; Create 1 a-rate variable and 1 k-rate variable.</span>
-<span class="opc">zakinit</span> 1, 1
+<span class="c1">; Initialize the ZAK space.</span>
+<span class="c1">; Create 1 a-rate variable and 1 k-rate variable.</span>
+<span class="nb">zakinit</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1 -- a simple instrument.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Set the zk variable #1 to 32.594.</span>
-  <span class="opc">ziw</span> 32.594, 1
-<span class="oblock">endin</span>
+<span class="c1">; Instrument #1 -- a simple instrument.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Set the zk variable #1 to 32.594.</span>
+  <span class="nb">ziw</span> <span class="mf">32.594</span><span class="p">,</span> <span class="mi">1</span>
+<span class="kd">endin</span>
 
-<span class="comment">; Instrument #2 -- prints out zk variable #1.</span>
-<span class="oblock">instr</span> 2
-  <span class="comment">; Read the zk variable #1 at i-rate.</span>
-  i1 <span class="opc">zir</span> 1
+<span class="c1">; Instrument #2 -- prints out zk variable #1.</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+  <span class="c1">; Read the zk variable #1 at i-rate.</span>
+  i<span class="n">1</span> <span class="nb">zir</span> <span class="mi">1</span>
 
-  <span class="comment">; Print out the value of zk variable #1.</span>
-  <span class="opc">print</span> i1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="comment">; Play Instrument #2 for one second.</span>
-<span class="stamnt">i</span> 2 0 1
-<span class="stamnt">e</span>
+  <span class="c1">; Print out the value of zk variable #1.</span>
+  <span class="nb">print</span> i<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="c1">; Play Instrument #2 for one second.</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -137,7 +137,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160799232"></a>
+        <a id="idm1483993712"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="zar.html" title="zar"><em class="citetitle">zar</em></a>,
@@ -146,7 +146,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160803136"></a>
+        <a id="idm1483992048"></a>
         <h2>Credits</h2>
         <p>
       </p>

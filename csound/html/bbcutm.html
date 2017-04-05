@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>bbcutm</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="barmodel.html" title="barmodel" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80889904"></a>
+        <a id="idm1565418992"></a>
         <h2>Description</h2>
         <p>
       The BreakBeat Cutter automatically generates cut-ups of a source audio stream in the style of drum and bass/jungle breakbeat manipulations.  There are two versions, for mono (<span class="emphasis"><em>bbcutm</em></span>) or stereo (<span class="emphasis"><em>bbcuts</em></span>) sources.  Whilst originally based on breakbeat cutting, the opcode can be applied to any type of source audio.
@@ -64,13 +65,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80966352"></a>
+        <a id="idm1565423344"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1 <span class="command"><strong>bbcutm</strong></span> asource, ibps, isubdiv, ibarlength, iphrasebars, inumrepeats \
       [, istutterspeed] [, istutterchance] [, ienvchoice ]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp80968544"></a>
+        <a id="idm1565426416"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ibps</em></span> -- Tempo to cut at, in beats per second.
@@ -98,79 +99,78 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80977088"></a>
+        <a id="idm1565415280"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asource</em></span> -- The audio signal to be cut up. This version runs in real-time without knowledge of future audio.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80978816"></a>
+        <a id="idm1565410288"></a>
         <h2>Examples</h2>
         <p>
-      Here is a simple example of the bbcutm opcode. It uses the file <a class="ulink" href="examples/bbcutm.csd" target="_top"><em class="citetitle">bbcutm.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+      Here is a simple example of the bbcutm opcode. It uses the file <a class="ulink" href="examples/bbcutm.csd.html" target="_top"><em class="citetitle">bbcutm.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idp80981520"></a>
+          <a id="idm1565402992"></a>
           <p class="title">
             <strong>Example 80. A simple example of the bbcutm opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp235462160"></a>
-              <a class="ulink" href="examples/bbcutm.csd.html" target="_top">Play</a>
+              <a id="idm1402741488"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o bbcutm.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o bbcutm.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1 - Play an audio file normally.</span>
-<span class="oblock">instr</span> 1
-  asource <span class="opc">soundin</span> "beats.wav"
-  <span class="opc">out</span> asource
-<span class="oblock">endin</span>
+<span class="c1">; Instrument #1 - Play an audio file normally.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  a<span class="n">source</span> <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
+  <span class="nb">out</span> a<span class="n">source</span>
+<span class="kd">endin</span>
 
-<span class="comment">; Instrument #2 - Cut-up an audio file.</span>
-<span class="oblock">instr</span> 2
-  asource <span class="opc">soundin</span> "beats.wav"
+<span class="c1">; Instrument #2 - Cut-up an audio file.</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+  a<span class="n">source</span> <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
 
-  ibps <span class="op">=</span> 4
-  isubdiv <span class="op">=</span> 8
-  ibarlength <span class="op">=</span> 4
-  iphrasebars <span class="op">=</span> 1
-  inumrepeats <span class="op">=</span> 2
+  i<span class="n">bps</span> <span class="o">=</span> <span class="mi">4</span>
+  i<span class="n">subdiv</span> <span class="o">=</span> <span class="mi">8</span>
+  i<span class="n">barlength</span> <span class="o">=</span> <span class="mi">4</span>
+  i<span class="n">phrasebars</span> <span class="o">=</span> <span class="mi">1</span>
+  i<span class="n">numrepeats</span> <span class="o">=</span> <span class="mi">2</span>
 
-  a1 <span class="opc">bbcutm</span> asource, ibps, isubdiv, ibarlength, iphrasebars, inumrepeats
+  a<span class="n">1</span> <span class="nb">bbcutm</span> a<span class="n">source</span><span class="p">,</span> i<span class="n">bps</span><span class="p">,</span> i<span class="n">subdiv</span><span class="p">,</span> i<span class="n">barlength</span><span class="p">,</span> i<span class="n">phrasebars</span><span class="p">,</span> i<span class="n">numrepeats</span>
 
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for two seconds.</span>
-<span class="stamnt">i</span> 1 0 2
-<span class="comment">; Play Instrument #2 for two seconds.</span>
-<span class="stamnt">i</span> 2 3 2
-<span class="stamnt">e</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="c1">; Play Instrument #2 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">2</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -182,7 +182,7 @@
 
       </p>
         <div class="example">
-          <a id="idp80986000"></a>
+          <a id="idm1565406192"></a>
           <p class="title">
             <strong>Example 81. First steps- mono and stereo versions</strong>
           </p>
@@ -231,7 +231,7 @@
         <p>
       </p>
         <div class="example">
-          <a id="idp81012832"></a>
+          <a id="idm1565380592"></a>
           <p class="title">
             <strong>Example 82. Multiple simultaneous synchronised breaks</strong>
           </p>
@@ -271,7 +271,7 @@
         <p>
       </p>
         <div class="example">
-          <a id="idp81033728"></a>
+          <a id="idm1565371248"></a>
           <p class="title">
             <strong>Example 83. Cutting up any old audio- much more interesting noises than this should be possible!</strong>
           </p>
@@ -306,7 +306,7 @@
         <p>
       </p>
         <div class="example">
-          <a id="idp81052000"></a>
+          <a id="idm1565356656"></a>
           <p class="title">
             <strong>Example 84. Constant stuttering- faked, not possible since can only stutter in last half bar could make extra stuttering option parameter</strong>
           </p>
@@ -342,14 +342,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81070272"></a>
+        <a id="idm1565339760"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="bbcuts.html" title="bbcuts"><em class="citetitle">bbcuts</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81072384"></a>
+        <a id="idm1565341808"></a>
         <h2>Credits</h2>
         <p>
       </p>

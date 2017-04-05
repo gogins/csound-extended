@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>spsend</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="sprintfk.html" title="sprintfk" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142073504"></a>
+        <a id="idm1502661616"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>spsend</em></span> depends upon the existence of a previously defined <a class="link" href="space.html" title="space"><em class="citetitle">space</em></a>. The output signals from <span class="emphasis"><em>spsend</em></span> are derived from the values given for xy and reverb in the <span class="emphasis"><em>space</em></span> and are ready to be sent to local or global reverb units (see example below).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142076992"></a>
+        <a id="idm1502664560"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1, a2, a3, a4 <span class="command"><strong>spsend</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp142143296"></a>
+        <a id="idm1502661104"></a>
         <h2>Performance</h2>
         <p>
       The configuration of the xy coordinates in space places the signal in the following way:
@@ -78,86 +79,85 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142151408"></a>
+        <a id="idm1502652656"></a>
         <h2>Examples</h2>
         <p>
-      Here is a stereo example of the spsend opcode. It uses the file <a class="ulink" href="examples/spsend.csd" target="_top"><em class="citetitle">spsend.csd</em></a>.
+      Here is a stereo example of the spsend opcode. It uses the file <a class="ulink" href="examples/spsend.csd.html" target="_top"><em class="citetitle">spsend.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp142153264"></a>
+          <a id="idm1502657648"></a>
           <p class="title">
-            <strong>Example 869. Example of the spsend opcode.</strong>
+            <strong>Example 895. Example of the spsend opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp265748240"></a>
-              <a class="ulink" href="examples/spsend.csd.html" target="_top">Play</a>
+              <a id="idm1324166768"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o spsend.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o spsend.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span> 
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2	<span class="comment">;stereo output</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>	<span class="c1">;stereo output</span>
   
-ga1 <span class="opc">init</span> 0
-ga2 <span class="opc">init</span> 0
+ga<span class="n">1</span> <span class="nb">init</span> <span class="mi">0</span>
+ga<span class="n">2</span> <span class="nb">init</span> <span class="mi">0</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">;sends different amounts to reverb</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;sends different amounts to reverb</span>
 
-irev <span class="op">=</span> p6
-asig <span class="opc">diskin2</span> "fox.wav", 1
-a1, a2, a3, a4 <span class="opc">space</span> asig, 0, 0, irev, p4, p5	<span class="comment">;take position values from p4, p5</span>
-ar1, ar2, ar3, ar4 <span class="opc">spsend</span>			<span class="comment">;send to reverb</span>
+i<span class="n">rev</span> <span class="o">=</span> <span class="nb">p6</span>
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> a<span class="n">4</span> <span class="nb">space</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">rev</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>	<span class="c1">;take position values from p4, p5</span>
+a<span class="n">r1</span><span class="p">,</span> a<span class="n">r2</span><span class="p">,</span> a<span class="n">r3</span><span class="p">,</span> a<span class="n">r4</span> <span class="nb">spsend</span>			<span class="c1">;send to reverb</span>
 
-ga1 <span class="op">=</span> ga1<span class="op">+</span>ar1
-ga2 <span class="op">=</span> ga2<span class="op">+</span>ar2
-    <span class="opc">outs</span> a1, a2
+ga<span class="n">1</span> <span class="o">=</span> ga<span class="n">1</span><span class="o">+</span>a<span class="n">r1</span>
+ga<span class="n">2</span> <span class="o">=</span> ga<span class="n">2</span><span class="o">+</span>a<span class="n">r2</span>
+    <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 99 <span class="comment">; reverb instrument</span>
+<span class="kd">instr</span> <span class="nf">99</span> <span class="c1">; reverb instrument</span>
 
-a1 <span class="opc">reverb2</span> ga1, 2.5, .5
-a2 <span class="opc">reverb2</span> ga2, 2.5, .5
-   <span class="opc">outs</span>	a1, a2
+a<span class="n">1</span> <span class="nb">reverb2</span> ga<span class="n">1</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">.5</span>
+a<span class="n">2</span> <span class="nb">reverb2</span> ga<span class="n">2</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">.5</span>
+   <span class="nb">outs</span>	a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>
 
-ga1<span class="op">=</span>0
-ga2<span class="op">=</span>0
+ga<span class="n">1</span><span class="o">=</span><span class="mi">0</span>
+ga<span class="n">2</span><span class="o">=</span><span class="mi">0</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;WITH REVERB</span>
-<span class="comment">;place the sound in the left speaker and near</span>
-<span class="stamnt">i</span>1 0 1 -1 1 .1
-<span class="comment">;place the sound in the right speaker and far</span>
-<span class="stamnt">i</span>1 1 1 45 45 .1
-<span class="comment">;place the sound equally between left and right and in the middle ground distance</span>
-<span class="stamnt">i</span>1 2 1 0 12 .1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;WITH REVERB</span>
+<span class="c1">;place the sound in the left speaker and near</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span> <span class="mf">.1</span>
+<span class="c1">;place the sound in the right speaker and far</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">45</span> <span class="mi">45</span> <span class="mf">.1</span>
+<span class="c1">;place the sound equally between left and right and in the middle ground distance</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">12</span> <span class="mf">.1</span>
 
-<span class="comment">;NO REVERB</span>
-<span class="comment">;place the sound in the left speaker and near</span>
-<span class="stamnt">i</span>1 6 1 -1 1 0
-<span class="comment">;place the sound in the right speaker and far</span>
-<span class="stamnt">i</span>1 7 1 45 45 0
-<span class="comment">;place the sound equally between left and right and in the middle ground distance</span>
-<span class="stamnt">i</span>1 8 1 0 12 0
+<span class="c1">;NO REVERB</span>
+<span class="c1">;place the sound in the left speaker and near</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">6</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="c1">;place the sound in the right speaker and far</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">7</span> <span class="mi">1</span> <span class="mi">45</span> <span class="mi">45</span> <span class="mi">0</span>
+<span class="c1">;place the sound equally between left and right and in the middle ground distance</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">8</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">12</span> <span class="mi">0</span>
 
-<span class="stamnt">i</span> 99 0 12	<span class="comment">;keep reverb active all the time</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">99</span> <span class="mi">0</span> <span class="mi">12</span>	<span class="c1">;keep reverb active all the time</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -166,7 +166,7 @@ ga2<span class="op">=</span>0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142157552"></a>
+        <a id="idm1502651376"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="space.html" title="space"><em class="citetitle">space</em></a>,
@@ -174,7 +174,7 @@ ga2<span class="op">=</span>0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp142160560"></a>
+        <a id="idm1502649328"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ptable</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pset.html" title="pset" />
@@ -38,21 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126941904"></a>
+        <a id="idm1518523760"></a>
         <h2>Description</h2>
         <p>
       Accesses table values by direct indexing.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126954048"></a>
+        <a id="idm1518515568"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>ptable</strong></span> andx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">ires <span class="command"><strong>ptable</strong></span> indx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">kres <span class="command"><strong>ptable</strong></span> kndx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp126998656"></a>
+        <a id="idm1518520560"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- function table number.
@@ -92,78 +93,77 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127006512"></a>
+        <a id="idm1518510448"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ptable</em></span> invokes table lookup on behalf of init, control or audio indices. These indices can be raw entry numbers (0, 1, 2,... size - 1) or scaled values (0 to 1). Indices are first modified by the offset value then checked for range before table lookup (see <span class="emphasis"><em>iwrap</em></span>). If index is likely to be full scale, or if interpolation is being used, the table should have an extended guard point. <span class="emphasis"><em>table</em></span> indexed by a periodic phasor ( see <a class="link" href="phasor.html" title="phasor"><em class="citetitle">phasor</em></a>) will simulate an oscillator.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127010384"></a>
+        <a id="idm1518510576"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ptable opcode. It uses the file <a class="ulink" href="examples/ptable.csd" target="_top"><em class="citetitle">ptable.csd</em></a>.
+      Here is an example of the ptable opcode. It uses the file <a class="ulink" href="examples/ptable.csd.html" target="_top"><em class="citetitle">ptable.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp127012240"></a>
+          <a id="idm1518499056"></a>
           <p class="title">
-            <strong>Example 688. Example of the ptable opcode.</strong>
+            <strong>Example 708. Example of the ptable opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259508560"></a>
-              <a class="ulink" href="examples/ptable.csd.html" target="_top">Play</a>
+              <a id="idm1339568240"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o table.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o table.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Vary our index linearly from 0 to 1.</span>
-  kndx <span class="opc">line</span> 0, p3, 1
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Vary our index linearly from 0 to 1.</span>
+  k<span class="n">ndx</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
 
-  <span class="comment">; Read Table #1 with our index.</span>
-  ifn <span class="op">=</span> 1
-  ixmode <span class="op">=</span> 1
-  kfreq <span class="opc">ptable</span> kndx, ifn, ixmode
+  <span class="c1">; Read Table #1 with our index.</span>
+  i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+  i<span class="n">xmode</span> <span class="o">=</span> <span class="mi">1</span>
+  k<span class="n">freq</span> <span class="nb">ptable</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">fn</span><span class="p">,</span> i<span class="n">xmode</span>
 
-  <span class="comment">; Generate a sine waveform, use our table values </span>
-  <span class="comment">; to vary its frequency.</span>
-  a1 <span class="opc">oscil</span> 20000, kfreq, 2
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1, a line from 200 to 2,000.</span>
-<span class="stamnt">f</span> 1 0 1025 -7 200 1024 2000
-<span class="comment">; Table #2, a sine wave.</span>
-<span class="stamnt">f</span> 2 0 16384 10 1
-
-<span class="comment">; Play Instrument #1 for 2 seconds.</span>
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">e</span>
+  <span class="c1">; Generate a sine waveform, use our table values </span>
+  <span class="c1">; to vary its frequency.</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">20000</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">2</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1, a line from 200 to 2,000.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1025</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">200</span> <span class="mi">1024</span> <span class="mi">2000</span>
+<span class="c1">; Table #2, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for 2 seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -172,7 +172,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127016528"></a>
+        <a id="idm1518502512"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="table.html" title="table"><em class="citetitle">table</em></a>, 
@@ -186,7 +186,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127025296"></a>
+        <a id="idm1518495344"></a>
         <h2>Credits</h2>
         <p>
       </p>

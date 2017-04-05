@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pvinterp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pvcross.html" title="pvcross" />
@@ -38,27 +39,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127854896"></a>
+        <a id="idm1517325936"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>pvinterp</em></span> interpolates between the amplitudes and frequencies, on a bin by bin basis, of two phase vocoder analysis files (one from a previously called <span class="emphasis"><em>pvbufread</em></span> unit and the other from within its own argument list), allowing for user defined transitions between analyzed sounds. It also allows for general scaling of the amplitudes and frequencies of each file separately before the interpolated values are calculated and sent to the resynthesis routines. The <span class="emphasis"><em>kfmod</em></span> argument in <span class="emphasis"><em>pvinterp</em></span> performs its frequency scaling on the frequency values after their derivation from the separate scaling and subsequent interpolation is performed so that this acts as an overall scaling value of the new frequency components.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127858400"></a>
+        <a id="idm1517330544"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>pvinterp</strong></span> ktimpnt, kfmod, ifile, kfreqscale1, kfreqscale2, \
       kampscale1, kampscale2, kfreqinterp, kampinterp</pre>
       </div>
       <div class="refsect1">
-        <a id="idp127860704"></a>
+        <a id="idm1517324528"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifile</em></span> -- the <span class="emphasis"><em>pvoc</em></span> number (n in pvoc.n) or the name in quotes of the analysis file made using pvanal. (See <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>.)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127863824"></a>
+        <a id="idm1517320432"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktimpnt</em></span> -- the passage of time, in seconds, through this file. <span class="emphasis"><em>ktimpnt</em></span> must always be positive, but can move forwards or backwards in time, be stationary or discontinuous, as a pointer into the analysis file.
@@ -80,7 +81,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127881984"></a>
+        <a id="idm1517309296"></a>
         <h2>Examples</h2>
         <p>
       The example below shows an example using <span class="emphasis"><em>pvbufread</em></span> with <span class="emphasis"><em>pvinterp</em></span> to interpolate between the sound of an oboe and the sound of a clarinet. The value of <span class="emphasis"><em>kinterp</em></span> returned by a <span class="emphasis"><em>linseg</em></span> is used to determine the timing of the transitions between the two sounds. The interpolation of frequencies and amplitudes are controlled by the same factor in this example, but for other effects it might be interesting to not have them synchronized in this way. In this example the sound will begin as a clarinet, transform into the oboe and then return again to the clarinet sound. The value of <span class="emphasis"><em>kfreqscale2</em></span> is 1.065 because the oboe in this case is a semitone higher in pitch than the clarinet and this brings them approximately to the same pitch. The value of <span class="emphasis"><em>kampscale2</em></span> is 0.75 because the analyzed clarinet was somewhat louder than the analyzed oboe. The setting of these two parameters make the transition quite smooth in this case, but such adjustments are by no means necessary or even advocated.
@@ -98,52 +99,51 @@ apv     <span class="opc">pvinterp</span>  ktime2,1,"clar.pvoc", 1, 1.065, 1, 0.
         <p>
     </p>
         <p>
-      Here is a complete example of the pvinterp opcode. It uses the file <a class="ulink" href="examples/pvinterp.csd" target="_top"><em class="citetitle">pvinterp.csd</em></a>
+      Here is a complete example of the pvinterp opcode. It uses the file <a class="ulink" href="examples/pvinterp.csd.html" target="_top"><em class="citetitle">pvinterp.csd</em></a>
       </p>
         <div class="example">
-          <a id="idp127898896"></a>
+          <a id="idm1517295088"></a>
           <p class="title">
-            <strong>Example 695. Example of the pvinterp opcode.</strong>
+            <strong>Example 715. Example of the pvinterp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259799680"></a>
-              <a class="ulink" href="examples/pvinterp.csd.html" target="_top">Play</a>
+              <a id="idm1339696240"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvinterp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvinterp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">; analyze "fox.wav" and "flute.aiff" with PVANAL first</span>
-ktime1 <span class="opc">line</span> 0, p3, 2.8		 <span class="comment">; used as index in the "fox.pvx" file</span>
-ktime2 <span class="opc">line</span> 0, p3, 3		 <span class="comment">; used as index in the "flute.pvx" file</span>
-kinterp <span class="opc">line</span> 1, p3, 0
-	<span class="opc">pvbufread</span> ktime1, "fox.pvx"
-asig	<span class="opc">pvinterp</span> ktime2,1,"flute.pvx",.9, 3, .6, 1, kinterp,1<span class="op">-</span>kinterp
-        <span class="opc">outs</span> asig, asig
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; analyze "fox.wav" and "flute.aiff" with PVANAL first</span>
+k<span class="n">time1</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">2.8</span>		 <span class="c1">; used as index in the "fox.pvx" file</span>
+k<span class="n">time2</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">3</span>		 <span class="c1">; used as index in the "flute.pvx" file</span>
+k<span class="n">interp</span> <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>
+	<span class="nb">pvbufread</span> k<span class="n">time1</span><span class="p">,</span> <span class="s">"fox.pvx"</span>
+a<span class="n">sig</span>	<span class="nb">pvinterp</span> k<span class="n">time2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">"flute.pvx"</span><span class="p">,</span><span class="mf">.9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">.6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">interp</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span>k<span class="n">interp</span>
+        <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 3
-<span class="stamnt">i</span> 1 + 10
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -152,7 +152,7 @@ asig	<span class="opc">pvinterp</span> ktime2,1,"flute.pvx",.9, 3, .6, 1, kinter
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127903184"></a>
+        <a id="idm1517294576"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvbufread.html" title="pvbufread"><em class="citetitle">pvbufread</em></a>,
@@ -163,7 +163,7 @@ asig	<span class="opc">pvinterp</span> ktime2,1,"flute.pvx",.9, 3, .6, 1, kinter
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp127909072"></a>
+        <a id="idm1517289456"></a>
         <h2>Credits</h2>
         <p>
       </p>

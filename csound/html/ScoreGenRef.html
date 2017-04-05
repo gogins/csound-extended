@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN Routines</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="rightbrace.html" title="} Statement" />
@@ -34,7 +35,7 @@
         </div>
       </div>
       <p>GEN routines are used as data generators for function tables. When a function table is created using the <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f score statement</em></a> the GEN function is given as its fourth argument. A negative GEN number implies that the function is not rescaled, and maintains its original values.</p>
-      <h3><a id="idp204810720"></a>Sine/Cosine Generators: </h3>
+      <h3><a id="idm1439444464"></a>Sine/Cosine Generators: </h3>
       <div class="itemizedlist">
         <ul class="itemizedlist" style="list-style-type: disc; ">
           <li class="listitem"><a class="link" href="GEN09.html" title="GEN09"><em class="citetitle">GEN09</em></a> - Composite waveforms made up of weighted sums of simple sinusoids.</li>
@@ -46,7 +47,7 @@
           <li class="listitem"><a class="link" href="GEN34.html" title="GEN34"><em class="citetitle">GEN34</em></a> - Generate composite waveforms by mixing simple sinusoids.</li>
         </ul>
       </div>
-      <h3><a id="idp204823184"></a>
+      <h3><a id="idm1439431664"></a>
       Line/Exponential Segment Generators:
     </h3>
       <div class="itemizedlist">
@@ -60,7 +61,7 @@
           <li class="listitem"><a class="link" href="GEN27.html" title="GEN27"><em class="citetitle">GEN27</em></a> - Construct functions from segments of straight lines in breakpoint fashion.</li>
         </ul>
       </div>
-      <h3><a id="idp204858608"></a>
+      <h3><a id="idm1439427568"></a>
       File Access GEN Routines:
     </h3>
       <div class="itemizedlist">
@@ -68,11 +69,12 @@
           <li class="listitem"><a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a> -  Transfers data from a soundfile into a function table.</li>
           <li class="listitem"><a class="link" href="GEN23.html" title="GEN23"><em class="citetitle">GEN23</em></a> - Reads numeric values from a text file.</li>
           <li class="listitem"><a class="link" href="GEN28.html" title="GEN28"><em class="citetitle">GEN28</em></a> -  Reads a text file which contains a time-tagged trajectory.</li>
+          <li class="listitem"><a class="link" href="GEN43.html" title="GEN43"><em class="citetitle">GEN43</em></a> - Loads a PVOCEX file containing a PV analysis.</li>
           <li class="listitem"><a class="link" href="GEN49.html" title="GEN49"><em class="citetitle">GEN49</em></a>
       -  Transfers data from an MP3 soundfile into a function table.</li>
         </ul>
       </div>
-      <h3><a id="idp204866000"></a>
+      <h3><a id="idm1439420912"></a>
       Numeric Value Access GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -82,7 +84,7 @@
           <li class="listitem"><a class="link" href="GEN52.html" title="GEN52"><em class="citetitle">GEN52</em></a> - Creates an interleaved multichannel table from the specified source tables, in the format expected by the <span class="emphasis"><em>ftconv</em></span> opcode.</li>
         </ul>
       </div>
-      <h3><a id="idp204872432"></a>
+      <h3><a id="idm1439415024"></a>
       Window Function GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -90,7 +92,7 @@
           <li class="listitem"><a class="link" href="GEN20.html" title="GEN20"><em class="citetitle">GEN20</em></a> -  Generates functions of different windows.</li>
         </ul>
       </div>
-      <h3><a id="idp204874896"></a>
+      <h3><a id="idm1439409776"></a>
       Random Function GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -99,10 +101,9 @@
           <li class="listitem"><a class="link" href="GEN40.html" title="GEN40"><em class="citetitle">GEN40</em></a> - Generates a random distribution using a distribution histogram.</li>
           <li class="listitem"><a class="link" href="GEN41.html" title="GEN41"><em class="citetitle">GEN41</em></a> -  Generates a random list of numerical pairs.</li>
           <li class="listitem"><a class="link" href="GEN42.html" title="GEN42"><em class="citetitle">GEN42</em></a> - Generates a random distribution of discrete ranges of values.</li>
-          <li class="listitem"><a class="link" href="GEN43.html" title="GEN43"><em class="citetitle">GEN43</em></a> - Loads a PVOCEX file containing a PV analysis.</li>
         </ul>
       </div>
-      <h3><a id="idp204884096"></a>
+      <h3><a id="idm1439407856"></a>
       Waveshaping GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -113,7 +114,7 @@
           <li class="listitem"><a class="link" href="GEN15.html" title="GEN15"><em class="citetitle">GEN15</em></a> - Creates two tables of stored polynomial functions.</li>
         </ul>
       </div>
-      <h3><a id="idp204892016"></a>
+      <h3><a id="idm1439402608"></a>
       Amplitude Scaling GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -123,7 +124,7 @@
           <li class="listitem"><a class="link" href="GEN24.html" title="GEN24"><em class="citetitle">GEN24</em></a> -  Reads numeric values from another allocated function-table and rescales them.</li>
         </ul>
       </div>
-      <h3><a id="idp204898304"></a>
+      <h3><a id="idm1439394800"></a>
       Mixing GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -133,7 +134,7 @@
           <li class="listitem"><a class="link" href="GEN32.html" title="GEN32"><em class="citetitle">GEN32</em></a> -   Mixes any waveform, resampled with either FFT or linear interpolation.</li>
         </ul>
       </div>
-      <h3><a id="idp204904400"></a>
+      <h3><a id="idm1439392752"></a>
       Pitch and Tuning GEN Routines
     </h3>
       <div class="itemizedlist">
@@ -141,16 +142,25 @@
           <li class="listitem"><a class="link" href="GEN51.html" title="GEN51"><em class="citetitle">GEN51</em></a> - fills a table with a fully customized micro-tuning scale, in the manner of Csound opcodes <span class="emphasis"><em>cpstun</em></span>, <span class="emphasis"><em>cpstuni</em></span> and <span class="emphasis"><em>cpstmid</em></span>.</li>
         </ul>
       </div>
-      <h3><a id="idp204908368"></a>
+      <h3><a id="idm1439381488"></a>
       Named GEN Routines
     </h3>
-      <p>Csound's GEN routines can be extended with GEN function plugins. There is currently a simple GEN plugin that provides exponential and hyperbolic tangent functions, and the sone function. There is also a generator called farey for the Farey sequence operations. These GEN functions are not called by number, but by name.</p>
+      <p>Csound's GEN routines can be extended with GEN function
+    plugins. There is currently a simple GEN plugin that provides
+    exponential and hyperbolic tangent functions, and the sone
+    function. There is also a generator called farey for the Farey
+    sequence operations, and a Bézier curve generator. These GEN
+    functions are not called by number, but by name.</p>
       <div class="itemizedlist">
         <ul class="itemizedlist" style="list-style-type: disc; ">
           <li class="listitem"><a class="link" href="GENtanh.html" title="GENtanh"><em class="citetitle">"tanh"</em></a> - fills a table from a hyperbolic tangent formula.</li>
           <li class="listitem"><a class="link" href="GENexp.html" title="GENexp"><em class="citetitle">"exp"</em></a> - fills a table from an exponential formula.</li>
           <li class="listitem"><a class="link" href="GENsone.html" title="GENsone"><em class="citetitle">"sone"</em></a> - fills a table from a sone function formula.</li>
-          <li class="listitem"><a class="link" href="GENfarey.html" title="GENfarey"><em class="citetitle">"farey"</em></a> - fills a table from a Farey sequence.</li>
+          <li class="listitem"><a class="link" href="GENfarey.html" title="GENfarey"><em class="citetitle">"farey"</em></a>
+        - fills a table from a Farey sequence.</li>
+          <li class="listitem">
+          <a class="link" href="GENquadbezier.html" title="GENquadbezier"><em class="citetitle">"quadbezier"</em></a>
+        - fills a table with a quadratic Bézier curve.</li>
           <li class="listitem"><a class="link" href="GENwave.html" title="GENwave"><em class="citetitle">"wave"</em></a>
         - fills a table from a wavelet transform.</li>
           <li class="listitem"><a class="link" href="GENpadsynth.html" title="GENpadsynth"><em class="citetitle">"padsynth"</em></a>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Csbeats</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="PartReference.html" title="Part III. Reference" />
     <link rel="prev" href="CscoreAdvancd.html" title="More Advanced Examples" />
@@ -47,7 +48,7 @@
     standard output.
   </p>
       <div class="refsect1">
-        <a id="idp217523552"></a>
+        <a id="idm1426752368"></a>
         <p>
     The <span class="emphasis"><em>csbeats</em></span> language is very simple, having
     only 5  kinds of statement, and only one of them has any
@@ -153,7 +154,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp217515760"></a>
+        <a id="idm1426715376"></a>
         <p>
       The opening of Bach's Goldberg variation number 3 can be coded
       as:
@@ -270,133 +271,133 @@ quit
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp217604464"></a>
+        <a id="idm1426686192"></a>
         <h2>A Complete Example</h2>
         <p>
       Here is a simple example of the <span class="emphasis"><em>csbeats</em></span>
-      score generator. It uses the file <a class="ulink" href="examples/csbeats.csd" target="_top"><em class="citetitle">csbeats.csd</em></a>.
+      score generator. It uses the file <a class="ulink" href="examples/csbeats.csd.html" target="_top"><em class="citetitle">csbeats.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp217606768"></a>
+          <a id="idm1426689904"></a>
           <p class="title">
-            <strong>Example 1178. A simple example of csbeats.</strong>
+            <strong>Example 1207. A simple example of csbeats.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp277845584"></a>
-              <a class="ulink" href="examples/csbeats.csd.html" target="_top">Play</a>
+              <a id="idm1290421488"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span>      <span class="op">=</span>           44100
-<span class="ohdr">nchnls</span> 	<span class="op">=</span> 		2
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span>      <span class="o">=</span>           <span class="mi">44100</span>
+<span class="vg">nchnls</span> 	<span class="o">=</span> 		<span class="mi">2</span>
 
-gi1 <span class="ohdr">ftgen</span> 1, 0, 4096, 10, 1
-gi2 <span class="ohdr">ftgen</span> 2, 0, 4096, 7, <span class="op">-</span>1, 4096, 1    <span class="comment">; sawtooth</span>
-gi3 <span class="ohdr">ftgen</span> 3, 0, 4096, 7,  0, 1024, 1, 2048, <span class="op">-</span>1, 1024, 0  <span class="comment">;triangle</span>
+gi<span class="n">1</span> <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">2</span> <span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">1</span>    <span class="c1">; sawtooth</span>
+gi<span class="n">3</span> <span class="nb">ftgen</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span>  <span class="c1">;triangle</span>
 
-<span class="oblock">instr</span> 101,102,103
-  iamp <span class="op">=</span>      <span class="opc">ampdbfs</span>(p5)
-  a1   <span class="opc">oscil</span>  iamp, p4, p1<span class="op">-</span>100
-  kenv <span class="opc">expseg</span> 1, p3, .01
-  a1   <span class="op">=</span>      a1 <span class="op">*</span> kenv
-       <span class="opc">outs</span>   a1, a1
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">101</span><span class="p">,</span><span class="nf">102</span><span class="p">,</span><span class="nf">103</span>
+  i<span class="n">amp</span> <span class="o">=</span>      <span class="nb">ampdbfs</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
+  a<span class="n">1</span>   <span class="nb">oscil</span>  i<span class="n">amp</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p1</span><span class="o">-</span><span class="mi">100</span>
+  k<span class="n">env</span> <span class="nb">expseg</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.01</span>
+  a<span class="n">1</span>   <span class="o">=</span>      a<span class="n">1</span> <span class="o">*</span> k<span class="n">env</span>
+       <span class="nb">outs</span>   a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
+<span class="kd">endin</span>
  
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; by Brian Baughn 3-14-05</span>
-<span class="comment">; bbaughn@berklee.net</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore</span> <span class="na">bin=</span><span class="s">"csbeats"</span><span class="nt">&gt;</span>
+<span class="c1">; by Brian Baughn 3-14-05</span>
+<span class="c1">; bbaughn@berklee.net</span>
 
-<span class="stamnt">b</span>eats = 100
-permeasure = 4
+<span class="nb">b</span><span class="cp">eats</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="err">p</span><span class="nb">e</span><span class="cp">rmeasure</span> <span class="o">=</span> <span class="mi">4</span>
 
-<span class="stamnt">i</span>101    m1 b1   q    mp   D3
-<span class="stamnt">i</span>101                      F3
-<span class="stamnt">i</span>101                      D3
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m1</span> <span class="cp">b1</span>   <span class="cp">q</span>    <span class="cp">mp</span>   <span class="cp">D3</span>
+<span class="nb">i</span><span class="mi">101</span>                      <span class="cp">F3</span>
+<span class="nb">i</span><span class="mi">101</span>                      <span class="cp">D3</span>
 
-<span class="stamnt">i</span>101    m2 b1             D3
-<span class="stamnt">i</span>101       b3             D3
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m2</span> <span class="cp">b1</span>             <span class="cp">D3</span>
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b3</span>             <span class="cp">D3</span>
 
-<span class="stamnt">i</span>101    m3 b1             D3
-<span class="stamnt">i</span>101                      F3
-<span class="stamnt">i</span>101                      D3
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m3</span> <span class="cp">b1</span>             <span class="cp">D3</span>
+<span class="nb">i</span><span class="mi">101</span>                      <span class="cp">F3</span>
+<span class="nb">i</span><span class="mi">101</span>                      <span class="cp">D3</span>
 
-<span class="stamnt">i</span>101    m4 b1             D3
-<span class="stamnt">i</span>101       b3             D3
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m4</span> <span class="cp">b1</span>             <span class="cp">D3</span>
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b3</span>             <span class="cp">D3</span>
 
-<span class="stamnt">i</span>101    m5 b1              D3
-<span class="stamnt">i</span>101       b4              G5
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m5</span> <span class="cp">b1</span>              <span class="cp">D3</span>
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b4</span>              <span class="cp">G5</span>
 
-<span class="stamnt">i</span>101    m6 b1              E5
-<span class="stamnt">i</span>101       b2              F5
-<span class="stamnt">i</span>101       b3     e      Eb5
-<span class="stamnt">i</span>101       b3.5   e          
-<span class="stamnt">i</span>101       b4     q          
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m6</span> <span class="cp">b1</span>              <span class="cp">E5</span>
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b2</span>              <span class="cp">F5</span>
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b3</span>     <span class="cp">e</span>      <span class="cp">Eb5</span>
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b3</span><span class="mf">.5</span>   <span class="cp">e</span>          
+<span class="nb">i</span><span class="mi">101</span>       <span class="cp">b4</span>     <span class="cp">q</span>          
 
-<span class="stamnt">i</span>101    m7 b1     e       D5
-<span class="stamnt">i</span>101                            
-<span class="stamnt">i</span>101                q          
-<span class="stamnt">i</span>101                e      Db5
-<span class="stamnt">i</span>101                            
-<span class="stamnt">i</span>101                q          
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m7</span> <span class="cp">b1</span>     <span class="cp">e</span>       <span class="cp">D5</span>
+<span class="nb">i</span><span class="mi">101</span>                            
+<span class="nb">i</span><span class="mi">101</span>                <span class="cp">q</span>          
+<span class="nb">i</span><span class="mi">101</span>                <span class="cp">e</span>      <span class="cp">Db5</span>
+<span class="nb">i</span><span class="mi">101</span>                            
+<span class="nb">i</span><span class="mi">101</span>                <span class="cp">q</span>          
 
-<span class="stamnt">i</span>101    m8 b1     q       D5
-<span class="stamnt">i</span>101                         E5
-<span class="stamnt">i</span>101                         D5
+<span class="nb">i</span><span class="mi">101</span>    <span class="cp">m8</span> <span class="cp">b1</span>     <span class="cp">q</span>       <span class="cp">D5</span>
+<span class="nb">i</span><span class="mi">101</span>                         <span class="cp">E5</span>
+<span class="nb">i</span><span class="mi">101</span>                         <span class="cp">D5</span>
 
-<span class="stamnt">i</span>102    m1 b2      q      D4
-<span class="stamnt">i</span>102       b4              E4
-<span class="stamnt">i</span>102       b4             Bb3
+<span class="nb">i</span><span class="mi">102</span>    <span class="cp">m1</span> <span class="cp">b2</span>      <span class="cp">q</span>      <span class="cp">D4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>              <span class="cp">E4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>             <span class="cp">Bb3</span>
 
-<span class="stamnt">i</span>102    m2 b2              F4
-<span class="stamnt">i</span>102       b2              B3
-<span class="stamnt">i</span>102       b4             C#4
-<span class="stamnt">i</span>102       b4             Bb3
+<span class="nb">i</span><span class="mi">102</span>    <span class="cp">m2</span> <span class="cp">b2</span>              <span class="cp">F4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b2</span>              <span class="cp">B3</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>             <span class="cp">C</span><span class="o">#</span><span class="mi">4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>             <span class="cp">Bb3</span>
 
-<span class="stamnt">i</span>102    m3 b2      q      D4
-<span class="stamnt">i</span>102       b4              E4
-<span class="stamnt">i</span>102       b4             Bb3
+<span class="nb">i</span><span class="mi">102</span>    <span class="cp">m3</span> <span class="cp">b2</span>      <span class="cp">q</span>      <span class="cp">D4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>              <span class="cp">E4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>             <span class="cp">Bb3</span>
 
-<span class="stamnt">i</span>102    m4 b2              F4
-<span class="stamnt">i</span>102       b2              B3
-<span class="stamnt">i</span>102       b4             C#4
-<span class="stamnt">i</span>102       b4             Bb3
+<span class="nb">i</span><span class="mi">102</span>    <span class="cp">m4</span> <span class="cp">b2</span>              <span class="cp">F4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b2</span>              <span class="cp">B3</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>             <span class="cp">C</span><span class="o">#</span><span class="mi">4</span>
+<span class="nb">i</span><span class="mi">102</span>       <span class="cp">b4</span>             <span class="cp">Bb3</span>
 
-<span class="stamnt">i</span>103    m5 b2      e     F6
-<span class="stamnt">i</span>103       b2      e     A5
-<span class="stamnt">i</span>103       b2.5    e     D6
-<span class="stamnt">i</span>103       b3      e     F6
-<span class="stamnt">i</span>103       b3      e     A5
-<span class="stamnt">i</span>103       b4      e     E6
+<span class="nb">i</span><span class="mi">103</span>    <span class="cp">m5</span> <span class="cp">b2</span>      <span class="cp">e</span>     <span class="cp">F6</span>
+<span class="nb">i</span><span class="mi">103</span>       <span class="cp">b2</span>      <span class="cp">e</span>     <span class="cp">A5</span>
+<span class="nb">i</span><span class="mi">103</span>       <span class="cp">b2</span><span class="mf">.5</span>    <span class="cp">e</span>     <span class="cp">D6</span>
+<span class="nb">i</span><span class="mi">103</span>       <span class="cp">b3</span>      <span class="cp">e</span>     <span class="cp">F6</span>
+<span class="nb">i</span><span class="mi">103</span>       <span class="cp">b3</span>      <span class="cp">e</span>     <span class="cp">A5</span>
+<span class="nb">i</span><span class="mi">103</span>       <span class="cp">b4</span>      <span class="cp">e</span>     <span class="cp">E6</span>
 
-<span class="stamnt">i</span>103    m6 b1      q     C#6
-<span class="stamnt">i</span>103               q     D6
-<span class="stamnt">i</span>103               e     C6
-<span class="stamnt">i</span>103                           
-<span class="stamnt">i</span>103               q        
+<span class="nb">i</span><span class="mi">103</span>    <span class="cp">m6</span> <span class="cp">b1</span>      <span class="cp">q</span>     <span class="cp">C</span><span class="o">#</span><span class="mi">6</span>
+<span class="nb">i</span><span class="mi">103</span>               <span class="cp">q</span>     <span class="cp">D6</span>
+<span class="nb">i</span><span class="mi">103</span>               <span class="cp">e</span>     <span class="cp">C6</span>
+<span class="nb">i</span><span class="mi">103</span>                           
+<span class="nb">i</span><span class="mi">103</span>               <span class="cp">q</span>        
 
-<span class="stamnt">i</span>103    m7 b1      e     B5
-<span class="stamnt">i</span>103                            
-<span class="stamnt">i</span>103                 q         
-<span class="stamnt">i</span>103                 e    Bb5
-<span class="stamnt">i</span>103                            
-<span class="stamnt">i</span>103                 q         
+<span class="nb">i</span><span class="mi">103</span>    <span class="cp">m7</span> <span class="cp">b1</span>      <span class="cp">e</span>     <span class="cp">B5</span>
+<span class="nb">i</span><span class="mi">103</span>                            
+<span class="nb">i</span><span class="mi">103</span>                 <span class="cp">q</span>         
+<span class="nb">i</span><span class="mi">103</span>                 <span class="cp">e</span>    <span class="cp">Bb5</span>
+<span class="nb">i</span><span class="mi">103</span>                            
+<span class="nb">i</span><span class="mi">103</span>                 <span class="cp">q</span>         
 
-<span class="stamnt">i</span>103     m8 b1     e     F5
-<span class="stamnt">i</span>103        b1     e     A5
-<span class="stamnt">i</span>103        b1.5   e     D6
-<span class="stamnt">i</span>103        b2     e    Bb5
-<span class="stamnt">i</span>103        b2.5   e     D6
-<span class="stamnt">i</span>103        b3     q     F5
-<span class="stamnt">i</span>103        b3           A5
-<span class="stamnt">e</span>nd
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">103</span>     <span class="cp">m8</span> <span class="cp">b1</span>     <span class="cp">e</span>     <span class="cp">F5</span>
+<span class="nb">i</span><span class="mi">103</span>        <span class="cp">b1</span>     <span class="cp">e</span>     <span class="cp">A5</span>
+<span class="nb">i</span><span class="mi">103</span>        <span class="cp">b1</span><span class="mf">.5</span>   <span class="cp">e</span>     <span class="cp">D6</span>
+<span class="nb">i</span><span class="mi">103</span>        <span class="cp">b2</span>     <span class="cp">e</span>    <span class="cp">Bb5</span>
+<span class="nb">i</span><span class="mi">103</span>        <span class="cp">b2</span><span class="mf">.5</span>   <span class="cp">e</span>     <span class="cp">D6</span>
+<span class="nb">i</span><span class="mi">103</span>        <span class="cp">b3</span>     <span class="cp">q</span>     <span class="cp">F5</span>
+<span class="nb">i</span><span class="mi">103</span>        <span class="cp">b3</span>           <span class="cp">A5</span>
+<span class="nb">e</span><span class="cp">nd</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>

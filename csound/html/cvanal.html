@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>cvanal</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="UtilitySoundfile.html#UtilityAnalysis" title="Analysis File Generation (ATSA, CVANAL, HETRO, LPANAL, PVANAL)" />
     <link rel="prev" href="UtilityAtsa.html" title="atsa" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp213935440"></a>
+        <a id="idm1430607216"></a>
         <h2>Description</h2>
         <p>
       Impulse Response Fourier Analysis for <a class="link" href="convolve.html" title="convolve"><em class="citetitle">convolve</em></a> operator
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp213937584"></a>
+        <a id="idm1430605936"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>csound -U cvanal</strong></span> [flags] infilename outfilename</pre>
         <pre class="synopsis"><span class="command"><strong>cvanal</strong></span> [flags] infilename outfilename</pre>
       </div>
       <div class="refsect1">
-        <a id="idp213940912"></a>
+        <a id="idm1430609136"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>cvanal</em></span> -- converts a soundfile into a single Fourier transform frame. The output file can be used by the <span class="emphasis"><em>convolve</em></span> operator to perform Fast Convolution between an input signal and the original impulse response. Analysis is conditioned by the flags below. A space is optional between the flag and its argument.
@@ -74,7 +75,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp213947872"></a>
+        <a id="idm1430596720"></a>
         <h2>Examples</h2>
         <p>
 
@@ -89,7 +90,7 @@
       To use data that is not already contained in a soundfile, a soundfile converter that accepts text files may be used to create a standard audio file, e.g., the .DAT format for SOX. This is useful for implementing FIR filters.
     </p>
         <div class="refsect2">
-          <a id="idp213952368"></a>
+          <a id="idm1430586480"></a>
           <h3>Files</h3>
           <p>
         The output file has a special <span class="emphasis"><em>convolve</em></span> header, containing details of the source audio file. The analysis data is stored as <span class="quote">“<span class="quote">float</span>”</span>, in rectangular (real/imaginary) form.
@@ -114,7 +115,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp213956496"></a>
+        <a id="idm1430588784"></a>
         <h2>Credits</h2>
         <p>Author: Greg Sullivan</p>
         <p>Based on algorithm given in <span class="emphasis"><em>Elements Of Computer Music</em></span>, by F. Richard Moore.</p>

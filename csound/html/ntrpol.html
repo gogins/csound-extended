@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ntrpol</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="nstrnum.html" title="nstrnum" />
@@ -38,21 +39,21 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp118505392"></a>
+        <a id="idm1526522608"></a>
         <h2>Description</h2>
         <p>
       Calculates the weighted mean value (i.e. linear interpolation) of two input signals
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118506688"></a>
+        <a id="idm1526519920"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>ntrpol</strong></span> asig1, asig2, kpoint [, imin] [, imax]</pre>
         <pre class="synopsis">ires <span class="command"><strong>ntrpol</strong></span> isig1, isig2, ipoint [, imin] [, imax]</pre>
         <pre class="synopsis">kres <span class="command"><strong>ntrpol</strong></span> ksig1, ksig2, kpoint [, imin] [, imax]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp118573712"></a>
+        <a id="idm1526513136"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imin</em></span> -- minimum xpoint value (optional, default 0)
@@ -62,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118576240"></a>
+        <a id="idm1526507632"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xsig1</em></span>, <span class="emphasis"><em>xsig2</em></span> -- input signals
@@ -78,55 +79,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118584816"></a>
+        <a id="idm1526505072"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ntrpol opcode. It uses the file <a class="ulink" href="examples/ntrpol.csd" target="_top"><em class="citetitle">ntrpol.csd</em></a>.
+      Here is an example of the ntrpol opcode. It uses the file <a class="ulink" href="examples/ntrpol.csd.html" target="_top"><em class="citetitle">ntrpol.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp118586672"></a>
+          <a id="idm1526505200"></a>
           <p class="title">
-            <strong>Example 577. Example of the ntrpol opcode.</strong>
+            <strong>Example 596. Example of the ntrpol opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp254850896"></a>
-              <a class="ulink" href="examples/ntrpol.csd.html" target="_top">Play</a>
+              <a id="idm1351051376"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if real audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ntrpol.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if real audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ntrpol.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giSin <span class="ohdr">ftgen</span> 1, 0, 1024, 10, 1
+gi<span class="n">Sin</span> <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-avco <span class="opc">vco2</span>   .5, 110			<span class="comment">;sawtootyh wave</span>
-asin <span class="opc">poscil</span> .5, 220, giSin		<span class="comment">;sine wave but octave higher</span>
-kx   <span class="opc">linseg</span> 0, p3<span class="op">*</span>.4, 1, p3<span class="op">*</span>.6, 1	<span class="comment">;crossfade between saw and sine</span>
-asig <span class="opc">ntrpol</span> avco, asin, kx
-     <span class="opc">outs</span>   asig, asig
+a<span class="n">vco</span> <span class="nb">vco2</span>   <span class="mf">.5</span><span class="p">,</span> <span class="mi">110</span>			<span class="c1">;sawtootyh wave</span>
+a<span class="n">sin</span> <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> gi<span class="n">Sin</span>		<span class="c1">;sine wave but octave higher</span>
+k<span class="n">x</span>   <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.6</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;crossfade between saw and sine</span>
+a<span class="n">sig</span> <span class="nb">ntrpol</span> a<span class="n">vco</span><span class="p">,</span> a<span class="n">sin</span><span class="p">,</span> k<span class="n">x</span>
+     <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -135,7 +135,7 @@ asig <span class="opc">ntrpol</span> avco, asin, kx
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118590960"></a>
+        <a id="idm1526496752"></a>
         <h2>Credits</h2>
         <p>
       </p>

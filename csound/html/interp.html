@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>interp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="integ.html" title="integ" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp107124400"></a>
+        <a id="idm1538965744"></a>
         <h2>Description</h2>
         <p>
       Converts a control signal to an audio signal using linear interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107125808"></a>
+        <a id="idm1538966384"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>interp</strong></span> ksig [, iskip] [, imode]
     [, ivalue]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp107128000"></a>
+        <a id="idm1538966256"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- if non zero
@@ -62,9 +63,9 @@
 
       </p>
         <div class="example">
-          <a id="idp107193968"></a>
+          <a id="idm1538962800"></a>
           <p class="title">
-            <strong>Example 424. iskip=0, imode=0</strong>
+            <strong>Example 431. iskip=0, imode=0</strong>
           </p>
           <div class="example-contents">
             <div class="literallayout">
@@ -84,9 +85,9 @@
 
       </p>
         <div class="example">
-          <a id="idp107195904"></a>
+          <a id="idm1538956272"></a>
           <p class="title">
-            <strong>Example 425. iskip=1, imode=0</strong>
+            <strong>Example 432. iskip=1, imode=0</strong>
           </p>
           <div class="example-contents">
             <div class="literallayout">
@@ -107,9 +108,9 @@
 
       </p>
         <div class="example">
-          <a id="idp107197808"></a>
+          <a id="idm1538956656"></a>
           <p class="title">
-            <strong>Example 426. iskip=0, imode=1</strong>
+            <strong>Example 433. iskip=0, imode=1</strong>
           </p>
           <div class="example-contents">
             <div class="literallayout">
@@ -133,7 +134,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107200928"></a>
+        <a id="idm1538953968"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> -- input k-rate signal.
@@ -143,78 +144,77 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107203696"></a>
+        <a id="idm1538954224"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the interp opcode. It uses the file <a class="ulink" href="examples/interp.csd" target="_top"><em class="citetitle">interp.csd</em></a>.
+      Here is an example of the interp opcode. It uses the file <a class="ulink" href="examples/interp.csd.html" target="_top"><em class="citetitle">interp.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp107205472"></a>
+          <a id="idm1538612096"></a>
           <p class="title">
-            <strong>Example 427. Example of the interp opcode.</strong>
+            <strong>Example 434. Example of the interp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp248917040"></a>
-              <a class="ulink" href="examples/interp.csd.html" target="_top">Play</a>
+              <a id="idm1367449456"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o interp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o interp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 8000
-<span class="ohdr">kr</span> <span class="op">=</span> 8
-<span class="ohdr">ksmps</span> <span class="op">=</span> 1000
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">8000</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1 - a simple instrument.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Create an amplitude envelope.</span>
-  kamp <span class="opc">linseg</span> 0, p3<span class="op">/</span>2, 20000, p3<span class="op">/</span>2, 0
+<span class="c1">; Instrument #1 - a simple instrument.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Create an amplitude envelope.</span>
+  k<span class="n">amp</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
 
-  <span class="comment">; The amplitude envelope will sound rough because it</span>
-  <span class="comment">; jumps every ksmps period, 1000.</span>
-  a1 <span class="opc">oscil</span> kamp, 440, 1
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
+  <span class="c1">; The amplitude envelope will sound rough because it</span>
+  <span class="c1">; jumps every ksmps period, 1000.</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> k<span class="n">amp</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
-<span class="comment">; Instrument #2 - a smoother sounding instrument.</span>
-<span class="oblock">instr</span> 2
-  <span class="comment">; Create an amplitude envelope.</span>
-  kamp <span class="opc">linseg</span> 0, p3<span class="op">/</span>2, 25000, p3<span class="op">/</span>2, 0
-  aamp <span class="opc">interp</span> kamp
+<span class="c1">; Instrument #2 - a smoother sounding instrument.</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+  <span class="c1">; Create an amplitude envelope.</span>
+  k<span class="n">amp</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25000</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
+  a<span class="n">amp</span> <span class="nb">interp</span> k<span class="n">amp</span>
 
-  <span class="comment">; The amplitude envelope will sound smoother due to</span>
-  <span class="comment">; linear interpolation at the higher a-rate, 8000.</span>
-  a1 <span class="opc">oscil</span> aamp, 440, 1
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1, a sine wave.</span>
-<span class="stamnt">f</span> 1 0 256 10 1
-
-<span class="comment">; Play Instrument #1 for two seconds.</span>
-<span class="stamnt">i</span> 1 0 2
-<span class="comment">; Play Instrument #2 for two seconds.</span>
-<span class="stamnt">i</span> 2 2 2
-<span class="stamnt">e</span>
+  <span class="c1">; The amplitude envelope will sound smoother due to</span>
+  <span class="c1">; linear interpolation at the higher a-rate, 8000.</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> a<span class="n">amp</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">256</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="c1">; Play Instrument #2 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -223,7 +223,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107209760"></a>
+        <a id="idm1538611968"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diff.html" title="diff"><em class="citetitle">diff</em></a>,
@@ -235,7 +235,7 @@
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue10/CsoundRates.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue10/CsoundRates.html</em></a>  , written by Andrés Cabrera </p>
       </div>
       <div class="refsect1">
-        <a id="idp107217104"></a>
+        <a id="idm1538599808"></a>
         <h2>Credits</h2>
         <p>Updated November 2002, thanks to a note from both Rasmus Ekman and Istvan Varga.</p>
       </div>

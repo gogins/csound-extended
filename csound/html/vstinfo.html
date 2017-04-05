@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vstinfo</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vstinit.html" title="vstinit" />
@@ -37,12 +38,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157160080"></a>
+        <a id="idm1487780464"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vstinfo</strong></span> instance</pre>
       </div>
       <div class="refsect1">
-        <a id="idp157173136"></a>
+        <a id="idm1487778032"></a>
         <h2>Description</h2>
         <p><span class="emphasis"><em>vstinfo</em></span> displays the parameters and the programs of a
       VST plugin.</p>
@@ -51,94 +52,93 @@
       the plugin changes parameters dynamically.</p>
       </div>
       <div class="refsect1">
-        <a id="idp157218816"></a>
+        <a id="idm1487779312"></a>
         <h2>Initialization</h2>
         <p><span class="emphasis"><em>instance</em></span> - the number which identifies the
       plugin, to be passed to other vst4cs opcodes.</p>
       </div>
       <div class="refsect1">
-        <a id="idp157220480"></a>
+        <a id="idm1487776240"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the use of the <span class="emphasis"><em>vstinfo</em></span> opcode. It uses the file <a class="ulink" href="examples/vst4cs.csd" target="_top"><em class="citetitle">vst4cs.csd</em></a>.
+      Here is an example of the use of the <span class="emphasis"><em>vstinfo</em></span> opcode. It uses the file <a class="ulink" href="examples/vst4cs.csd.html" target="_top"><em class="citetitle">vst4cs.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp157222736"></a>
+          <a id="idm1487770992"></a>
           <p class="title">
-            <strong>Example 1058. Example of the <span class="emphasis"><em>vstinfo</em></span> opcode.</strong>
+            <strong>Example 1084. Example of the <span class="emphasis"><em>vstinfo</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp272867024"></a>
-              <a class="ulink" href="examples/vst4cs.csd.html" target="_top">Play</a>
+              <a id="idm1305950832"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Credits: Adapted by Michael Gogins </span>
-<span class="comment">; from code by David Horowitz and Lian Cheung. </span>
-<span class="comment">; The "--displays" option is required in order for </span>
-<span class="comment">; the Pianoteq GUI to dispatch events and display properly.</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Credits: Adapted by Michael Gogins </span>
+<span class="c1">; from code by David Horowitz and Lian Cheung. </span>
+<span class="c1">; The "--displays" option is required in order for </span>
+<span class="c1">; the Pianoteq GUI to dispatch events and display properly.</span>
 -m3 --displays -odac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span>     <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span>  <span class="op">=</span> 20
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-                <span class="comment">; Load the Pianoteq into memory.</span>
-gipianoteq      vstinit         "C<span class="op">:</span>\\Program Files\\Steinberg\\VstPlugins\\Pianoteq 3.0 Trial\\Pianoteq30 Trial.dll", 1
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">20</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="c1">; Load the Pianoteq into memory.</span>
+gi<span class="n">pianoteq</span>      <span class="n">vstinit</span>         <span class="s">"C:</span><span class="se">\\</span><span class="s">Program Files</span><span class="se">\\</span><span class="s">Steinberg</span><span class="se">\\</span><span class="s">VstPlugins</span><span class="se">\\</span><span class="s">Pianoteq 3.0 Trial</span><span class="se">\\</span><span class="s">Pianoteq30 Trial.dll"</span><span class="p">,</span> <span class="mi">1</span>
                 
-                <span class="comment">; Print information about the Pianoteq, such as parameter names and numbers.</span>
-                vstinfo         gipianoteq
+                <span class="c1">; Print information about the Pianoteq, such as parameter names and numbers.</span>
+                <span class="n">vstinfo</span>         gi<span class="n">pianoteq</span>
                 
-                <span class="comment">; Open the Pianoteq's GUI.</span>
-                vstedit         gipianoteq
+                <span class="c1">; Open the Pianoteq's GUI.</span>
+                <span class="n">vstedit</span>         gi<span class="n">pianoteq</span>
 
-                <span class="comment">; Send notes from the score to the Pianoteq.</span>
-                <span class="oblock">instr</span> 1 
-                <span class="comment">; MIDI channels are numbered starting at 0.</span>
-                <span class="comment">; p3 always contains the duration of the note.</span>
-                <span class="comment">; p4 contains the MIDI key number (pitch),</span>
-                <span class="comment">; p5 contains the MIDI velocity number (loudness),</span>
-imidichannel    <span class="opc">init</span>            0
-                vstnote         gipianoteq, imidichannel, p4, p5, p3
-                <span class="oblock">endin</span>
+                <span class="c1">; Send notes from the score to the Pianoteq.</span>
+                <span class="kd">instr</span> <span class="nf">1</span> 
+                <span class="c1">; MIDI channels are numbered starting at 0.</span>
+                <span class="c1">; p3 always contains the duration of the note.</span>
+                <span class="c1">; p4 contains the MIDI key number (pitch),</span>
+                <span class="c1">; p5 contains the MIDI velocity number (loudness),</span>
+i<span class="n">midichannel</span>    <span class="nb">init</span>            <span class="mi">0</span>
+                <span class="n">vstnote</span>         gi<span class="n">pianoteq</span><span class="p">,</span> i<span class="n">midichannel</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span>
+                <span class="kd">endin</span>
 
-                <span class="comment">; Send parameter changes to the Pianoteq.</span>
-                <span class="oblock">instr</span> 2 
-                <span class="comment">; p4 is the parameter number.</span>
-                <span class="comment">; p5 is the parameter value.</span>
-                vstparamset     gipianoteq, p4, p5 
-                <span class="oblock">endin</span>
+                <span class="c1">; Send parameter changes to the Pianoteq.</span>
+                <span class="kd">instr</span> <span class="nf">2</span> 
+                <span class="c1">; p4 is the parameter number.</span>
+                <span class="c1">; p5 is the parameter value.</span>
+                <span class="n">vstparamset</span>     gi<span class="n">pianoteq</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span> 
+                <span class="kd">endin</span>
 
-                <span class="comment">; Send audio from the Pianoteq to the output.</span>
-                <span class="oblock">instr</span> 3 
-ablankinput     <span class="opc">init</span>            0
-aleft, aright   vstaudio        gipianoteq, ablankinput, ablankinput
-                <span class="opc">outs</span>            aleft, aright
-                <span class="oblock">endin</span>
+                <span class="c1">; Send audio from the Pianoteq to the output.</span>
+                <span class="kd">instr</span> <span class="nf">3</span> 
+a<span class="n">blankinput</span>     <span class="nb">init</span>            <span class="mi">0</span>
+a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>   <span class="n">vstaudio</span>        gi<span class="n">pianoteq</span><span class="p">,</span> a<span class="n">blankinput</span><span class="p">,</span> a<span class="n">blankinput</span>
+                <span class="nb">outs</span>            a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>
+                <span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; Turn on the instrument that receives audio from the Pianoteq indefinitely.</span>
-<span class="stamnt">i</span> 3 0 -1
-<span class="comment">; Send parameter changes to Pianoteq before sending any notes.</span>
-<span class="comment">; NOTE: All parameters must be between 0.0 and 1.0.</span>
-<span class="comment">; Length of piano strings:</span>
-<span class="stamnt">i</span> 2 0 1 33 0.5
-<span class="comment">; Hammer noise:</span>
-<span class="stamnt">i</span> 2 0 1 25 0.1
-<span class="comment">; Send a C major 7th arpeggio to the Pianoteq.</span>
-<span class="stamnt">i</span> 1 1 10 60 76
-<span class="stamnt">i</span> 1 2 10 64 73
-<span class="stamnt">i</span> 1 3 10 67 70 
-<span class="stamnt">i</span> 1 4 10 71 67
-<span class="comment">; End the performance, leaving some time </span>
-<span class="comment">; for the Pianoteq to finish sending out its audio,</span>
-<span class="comment">; or for the user to play with the Pianoteq virtual keyboard.</span>
-<span class="stamnt">e</span> 20
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Turn on the instrument that receives audio from the Pianoteq indefinitely.</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>
+<span class="c1">; Send parameter changes to Pianoteq before sending any notes.</span>
+<span class="c1">; NOTE: All parameters must be between 0.0 and 1.0.</span>
+<span class="c1">; Length of piano strings:</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">33</span> <span class="mf">0.5</span>
+<span class="c1">; Hammer noise:</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">25</span> <span class="mf">0.1</span>
+<span class="c1">; Send a C major 7th arpeggio to the Pianoteq.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">10</span> <span class="mi">60</span> <span class="mi">76</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">10</span> <span class="mi">64</span> <span class="mi">73</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">10</span> <span class="mi">67</span> <span class="mi">70</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">10</span> <span class="mi">71</span> <span class="mi">67</span>
+<span class="c1">; End the performance, leaving some time </span>
+<span class="c1">; for the Pianoteq to finish sending out its audio,</span>
+<span class="c1">; or for the user to play with the Pianoteq virtual keyboard.</span>
+<span class="nb">e</span> <span class="mi">20</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -147,7 +147,7 @@ aleft, aright   vstaudio        gipianoteq, ablankinput, ablankinput
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp157227456"></a>
+        <a id="idm1487768944"></a>
         <h2>Credits</h2>
         <p>By: Andrés Cabrera and Michael Gogins</p>
         <p>Uses code from Hermann Seib's VSTHost and Thomas Grill's vst~

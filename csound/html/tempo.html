@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tempo</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tempest.html" title="tempest" />
@@ -38,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp148846528"></a>
+        <a id="idm1495594736"></a>
         <h2>Description</h2>
         <p>
       Apply tempo control to an uninterpreted score.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148847872"></a>
+        <a id="idm1495601392"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tempo</strong></span> ktempo, istartempo</pre>
       </div>
       <div class="refsect1">
-        <a id="idp148849952"></a>
+        <a id="idm1495590512"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istartempo</em></span> -- initial tempo (in beats per minute). Typically 60.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148851712"></a>
+        <a id="idm1495590384"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktempo</em></span> -- The tempo to which the score will be adjusted.
@@ -67,86 +68,85 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148857696"></a>
+        <a id="idm1495591152"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tempo opcode. Remember, it only works if you use the <a class="link" href="CommandFlags.html#FlagsMinusLowerT"><em class="citetitle">-t</em></a> flag with Csound. The example uses the file <a class="ulink" href="examples/tempo.csd" target="_top"><em class="citetitle">tempo.csd</em></a>.
+      Here is an example of the tempo opcode. Remember, it only works if you use the <a class="link" href="CommandFlags.html#FlagsMinusLowerT"><em class="citetitle">-t</em></a> flag with Csound. The example uses the file <a class="ulink" href="examples/tempo.csd.html" target="_top"><em class="citetitle">tempo.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp148860528"></a>
+          <a id="idm1495580272"></a>
           <p class="title">
-            <strong>Example 954. Example of the tempo opcode.</strong>
+            <strong>Example 980. Example of the tempo opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268307056"></a>
-              <a class="ulink" href="examples/tempo.csd.html" target="_top">Play</a>
+              <a id="idm1316544368"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    -t60 <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tempo.wav -W -t60 ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    -t60 <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tempo.wav -W -t60 ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  kval <span class="opc">tempoval</span>
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  k<span class="n">val</span> <span class="nb">tempoval</span>
 
-  <span class="opc">printk</span> 0.1, kval
+  <span class="nb">printk</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">val</span>
 
-  <span class="comment">; If the fourth p-field is 1, increase the tempo.</span>
-  <span class="octrl">if</span> (p4 <span class="op">==</span> 1) <span class="octrl">kgoto</span> <span class="olabel">speedup</span>
-    <span class="octrl">kgoto</span> <span class="olabel">playit</span>
+  <span class="c1">; If the fourth p-field is 1, increase the tempo.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">p4</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">kgoto</span> <span class="nl">speedup</span>
+    <span class="k">kgoto</span> <span class="nl">playit</span>
 
-<span class="olabel">speedup</span><span class="op">:</span>
-  <span class="comment">; Increase the tempo to 150 beats per minute.</span>
-  <span class="opc">tempo</span> 150, 60
+<span class="nl">speedup</span><span class="p">:</span>
+  <span class="c1">; Increase the tempo to 150 beats per minute.</span>
+  <span class="nb">tempo</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">60</span>
 
-<span class="olabel">playit</span><span class="op">:</span>
+<span class="nl">playit</span><span class="p">:</span>
 
-  a1 <span class="opc">oscil</span> 10000, 440, 1
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Table #1, a sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
+<span class="c1">; Table #1, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="comment">; p4 = plays at a faster tempo (when p4=1).</span>
-<span class="comment">; Play Instrument #1 at the normal tempo, repeat 3 times.</span>
-<span class="stamnt">r</span>3
-<span class="stamnt">i</span> 1 00.00 00.25 0
-<span class="stamnt">i</span> 1 00.25 00.25 0
-<span class="stamnt">i</span> 1 00.50 00.25 0
-<span class="stamnt">i</span> 1 00.75 00.25 0
-<span class="stamnt">s</span>
+<span class="c1">; p4 = plays at a faster tempo (when p4=1).</span>
+<span class="c1">; Play Instrument #1 at the normal tempo, repeat 3 times.</span>
+<span class="nb">r</span><span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.00</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.25</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.50</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.75</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">s</span>
 
-<span class="comment">; Play Instrument #1 at a faster tempo, repeat 3 times.</span>
-<span class="stamnt">r</span>3
-<span class="stamnt">i</span> 1 00.00 00.25 1
-<span class="stamnt">i</span> 1 00.25 00.25 0
-<span class="stamnt">i</span> 1 00.50 00.25 0
-<span class="stamnt">i</span> 1 00.75 00.25 0
-<span class="stamnt">s</span>
+<span class="c1">; Play Instrument #1 at a faster tempo, repeat 3 times.</span>
+<span class="nb">r</span><span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.00</span> <span class="mf">00.25</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.25</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.50</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.75</span> <span class="mf">00.25</span> <span class="mi">0</span>
+<span class="nb">s</span>
 
-<span class="stamnt">e</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -155,14 +155,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148864848"></a>
+        <a id="idm1495580528"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tempoval.html" title="tempoval"><em class="citetitle">tempoval</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148866960"></a>
+        <a id="idm1495580912"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

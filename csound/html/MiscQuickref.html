@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Opcode Quick Reference</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="pt04.html" title="Part IV. Opcode Quick Reference" />
     <link rel="prev" href="pt04.html" title="Part IV. Opcode Quick Reference" />
@@ -41,6 +42,10 @@
 </p>
       <pre class="synopsis"><a class="link" href="Zerodbfs.html" title="0dbfs">0dbfs</a> = iarg</pre>
       <pre class="synopsis"><a class="link" href="Zerodbfs.html" title="0dbfs">0dbfs</a> </pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis"><a class="link" href="A4.html" title="A4">A4</a> = iarg</pre>
       <p></p>
       <p>
 </p>
@@ -460,6 +465,10 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">ky <a class="link" href="bpf.html" title="bpf">bpf</a> kx, kx1, ky1, kx2, ..., kxn, kyn</pre>
+      <p></p>
+      <p>
+</p>
       <pre class="synopsis">ares <a class="link" href="cosseg.html" title="cosseg">cosseg</a> ia, idur1, ib [, idur2] [, ic] [...]</pre>
       <pre class="synopsis">kres <a class="link" href="cosseg.html" title="cosseg">cosseg</a> ia, idur1, ib [, idur2] [, ic] [...]</pre>
       <p></p>
@@ -513,6 +522,10 @@
 </p>
       <pre class="synopsis">ares <a class="link" href="line.html" title="line">line</a> ia, idur, ib</pre>
       <pre class="synopsis">kres <a class="link" href="line.html" title="line">line</a> ia, idur, ib</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">kout <a class="link" href="linlin.html" title="linlin">linlin</a> kin, ksrclo, ksrchi, kdstlo, kdsthi</pre>
       <p></p>
       <p>
 </p>
@@ -580,6 +593,10 @@
 </p>
       <pre class="synopsis">ares <a class="link" href="transegr.html" title="transegr">transegr</a> ia, idur, itype, ib [, idur2] [, itype] [, ic] ...</pre>
       <pre class="synopsis">kres <a class="link" href="transegr.html" title="transegr">transegr</a> ia, idur, itype, ib [, idur2] [, itype] [, ic] ...</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">kout <a class="link" href="xyscale.html" title="xyscale">xyscale</a> kx, ky, k00, k10, k01, k11</pre>
       <p></p>
       <p>
 </p>
@@ -779,6 +796,12 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">aindex <a class="link" href="sc_phasor.html" title="sc_phasor">sc_phasor</a> xtrig, xrate, kstart, kend [, kresetPos] </pre>
+      <pre class="synopsis">kindex <a class="link" href="sc_phasor.html" title="sc_phasor">sc_phasor</a> xtrig, xrate, kstart, kend [, kresetPos] </pre>
+      <pre class="synopsis">(end - start) * freq / sr</pre>
+      <p></p>
+      <p>
+</p>
       <pre class="synopsis">aphase, asyncout <a class="link" href="syncphasor.html" title="syncphasor">syncphasor</a> xcps, asyncin, [, iphs]</pre>
       <p></p>
       <p>
@@ -878,7 +901,8 @@
       <p></p>
       <p>
 </p>
-      <pre class="synopsis">kout <a class="link" href="jitter2.html" title="jitter2">jitter2</a> ktotamp, kamp1, kcps1, kamp2, kcps2, kamp3, kcps3</pre>
+      <pre class="synopsis">kout <a class="link" href="jitter2.html" title="jitter2">jitter2</a> ktotamp, kamp1, kcps1,
+    kamp2, kcps2, kamp3, kcps3[ , iopt]</pre>
       <p></p>
       <p>
 </p>
@@ -1415,7 +1439,7 @@
       <p></p>
       <p>
 </p>
-      <pre class="synopsis">ares <a class="link" href="streson.html" title="streson">streson</a> asig, kfr, ifdbgain</pre>
+      <pre class="synopsis">ares <a class="link" href="streson.html" title="streson">streson</a> asig, kfr, kfdbgain</pre>
       <p></p>
       <p>
 </p>
@@ -1647,6 +1671,7 @@
       <p>
 </p>
       <pre class="synopsis">aout1 [,aout2 ... aoutX] <a class="link" href="monitor.html" title="monitor">monitor</a> </pre>
+      <pre class="synopsis">aarra <a class="link" href="monitor.html" title="monitor">monitor</a> </pre>
       <p></p>
       <p>
 </p>
@@ -1951,6 +1976,11 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">ares <a class="link" href="">tvconv</a> asig1, asig2, xfreez1,
+    xfreez2, iparts, ifils</pre>
+      <p></p>
+      <p>
+</p>
       <p></p>
       <p></p>
       <p><strong>Signal Modifiers:Delay. </strong>
@@ -2004,6 +2034,10 @@
       <p>
 </p>
       <pre class="synopsis">ares <a class="link" href="multitap.html" title="multitap">multitap</a> asig [, itime1, igain1] [, itime2, igain2] [...]</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">outarg1, outarg2 <a class="link" href="">newopcodename</a> inarg1, inarg2</pre>
       <p></p>
       <p>
 </p>
@@ -2331,6 +2365,7 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="opi.html" title="i">i</a>(x) (control-rate or init-rate arg)</pre>
+      <pre class="synopsis"><a class="link" href="opi.html" title="i">i</a>(karray,index1, ...) (k-array with indices)</pre>
       <p></p>
       <p>
 </p>
@@ -2665,6 +2700,21 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">aout <a class="link" href="sc_lag.html" title="sc_lag">sc_lag</a> ain, klagtime [, initialvalue=0]</pre>
+      <pre class="synopsis">kout <a class="link" href="sc_lag.html" title="sc_lag">sc_lag</a> kin, klagtime [, initialvalue=0]</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">aout <a class="link" href="sc_lagud.html" title="sc_lagud">sc_lagud</a> ain, klagup, klagdown</pre>
+      <pre class="synopsis">kout <a class="link" href="sc_lagud.html" title="sc_lagud">sc_lagud</a> kin, klagup, klagdown</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">aout <a class="link" href="sc_trig.html" title="sc_trig">sc_trig</a> ain, kdur</pre>
+      <pre class="synopsis">kout <a class="link" href="sc_trig.html" title="sc_trig">sc_trig</a> kin, kdur</pre>
+      <p></p>
+      <p>
+</p>
       <pre class="synopsis">kres <a class="link" href="tlineto.html" title="tlineto">tlineto</a> ksig, ktime, ktrig</pre>
       <p></p>
       <p>
@@ -2697,11 +2747,19 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">am, af <a class="link" href="fmanal.html" title="fmanal">fmanal</a> are, aim</pre>
+      <p></p>
+      <p>
+</p>
       <pre class="synopsis">asig <a class="link" href="fofilter.html" title="fofilter">fofilter</a> ain, xcf, xris, xdec[, istor]</pre>
       <p></p>
       <p>
 </p>
       <pre class="synopsis">ar1, ar2 <a class="link" href="hilbert.html" title="hilbert">hilbert</a> asig</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">ar1, ar2 <a class="link" href="hilbert2.html" title="hilbert2">hilbert2</a> asig, ifftsize, ihopsize</pre>
       <p></p>
       <p>
 </p>
@@ -2773,6 +2831,10 @@
       <p></p>
       <p><strong>Signal Modifiers:Comparators and Accumulators. </strong>
 </p>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">aout <a class="link" href="cmp.html" title="cmp">cmp</a> aL, S_operator, aR</pre>
       <p></p>
       <p>
 </p>
@@ -3580,10 +3642,15 @@
       <p>
 </p>
       <pre class="synopsis">gir <a class="link" href="ftgen.html" title="ftgen">ftgen</a> ifn, itime, isize, igen, iarga [, iargb ] [...]</pre>
+      <pre class="synopsis">gir <a class="link" href="ftgen.html" title="ftgen">ftgen</a> ifn, itime, isize, igen, iarray</pre>
       <p></p>
       <p>
 </p>
       <pre class="synopsis">ifno <a class="link" href="ftgentmp.html" title="ftgentmp">ftgentmp</a> ip1, ip2dummy, isize, igen, iarga, iargb, ...</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">Sdst <a class="link" href="getftargs.html" title="getftargs">getftargs</a> iftno, ktrig</pre>
       <p></p>
       <p>
 </p>
@@ -4028,6 +4095,7 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="FLslidBnk2.html" title="FLslidBnk2">FLslidBnk2</a> "names", inumsliders, ioutable, iconfigtable [,iwidth, iheight, ix, iy, istart_index] </pre>
+      <pre class="synopsis"><a class="link" href="FLslidBnk2.html" title="FLslidBnk2">FLslidBnk2</a> istring, inumsliders, ioutable, iconfigtable [,iwidth, iheight, ix, iy, istart_index] </pre>
       <p></p>
       <p>
 </p>
@@ -4220,7 +4288,7 @@
       <p></p>
       <p>
 </p>
-      <pre class="synopsis">a <a class="link" href="raises.html" title="^">^</a> b  (b not audio-rate)</pre>
+      <pre class="synopsis">a <a class="link" href="raises.html" title="ˆ">ˆ</a> b  (b not audio-rate)</pre>
       <p>
 </p>
       <p></p>
@@ -4254,23 +4322,30 @@
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="abs.html" title="abs">abs</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="abs.html" title="abs">abs</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="abs.html" title="abs">abs</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="ceil.html" title="ceil">ceil</a>(x) (init-, control-, or audio-rate arg allowed)</pre>
+      <pre class="synopsis"><a class="link" href="ceil.html" title="ceil">ceil</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="exp.html" title="exp">exp</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="exp.html" title="exp">exp</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="exp.html" title="exp">exp</a>(k/i[]) (k- or i-arrays)</pre>
       <p></p>
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="floor.html" title="floor">floor</a>(x) (init-, control-, or audio-rate arg allowed)</pre>
+      <pre class="synopsis"><a class="link" href="floor.html" title="floor">floor</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="frac.html" title="frac">frac</a>(x) (init-rate or control-rate args; also works at audio rate in Csound5)</pre>
+      <pre class="synopsis"><a class="link" href="frac.html" title="frac">frac</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
@@ -4279,10 +4354,13 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="log10.html" title="log10">log10</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="log10.html" title="log10">log10</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="log2.html" title="log2">log2</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="log2.html" title="log2">log2</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="log2.html" title="log2">log2</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
@@ -4303,10 +4381,12 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="round.html" title="round">round</a>(x) (init-, control-, or audio-rate arg allowed)</pre>
+      <pre class="synopsis"><a class="link" href="round.html" title="round">round</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="sqrt.html" title="sqrt">sqrt</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="sqrt.html" title="sqrt">sqrt</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
@@ -4317,15 +4397,21 @@
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="cos.html" title="cos">cos</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="cos.html" title="cos">cos</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="cos.html" title="cos">cos</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="cosh.html" title="cosh">cosh</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="cosh.html" title="cosh">cosh</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="cosh.html" title="cosh">cosh</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="cosinv.html" title="cosinv">cosinv</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="cosinv.html" title="cosinv">cosinv</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="cosinv.html" title="cosinv">cosinv</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
@@ -4334,26 +4420,37 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="sin.html" title="sin">sin</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="sin.html" title="sin">sin</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="sinh.html" title="sinh">sinh</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="sinh.html" title="sinh">sinh</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="sinh.html" title="sinh">sinh</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="sininv.html" title="sininv">sininv</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="sininv.html" title="sininv">sininv</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="sininv.html" title="sininv">sininv</a>(k/i[]) (k- or i-arrays)</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="tan.html" title="tan">tan</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="tan.html" title="tan">tan</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="tan.html" title="tan">tan</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="tanh.html" title="tanh">tanh</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="tanh.html" title="tanh">tanh</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="tanh.html" title="tanh">tanh</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
-      <pre class="synopsis"><a class="link" href="taninv.html" title="taninv">taninv</a>(x) (no rate restriction)</pre>
+      <pre class="synopsis"><a class="link" href="taninv.html" title="taninv">taninv</a>(x) (no rate
+    restriction)</pre>
+      <pre class="synopsis"><a class="link" href="taninv.html" title="taninv">taninv</a>(k/i[]) (k- or i-arrays )</pre>
       <p></p>
       <p>
 </p>
@@ -4469,6 +4566,26 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">imidi <a class="link" href="ftom.html" title="ftom">ftom</a> ifreq</pre>
+      <pre class="synopsis">kmidi <a class="link" href="ftom.html" title="ftom">ftom</a> kfreq</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">ifreq <a class="link" href="mtof.html" title="mtof">mtof</a> imidi</pre>
+      <pre class="synopsis">kfreq <a class="link" href="mtof.html" title="mtof">mtof</a> kmidi</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">Snote <a class="link" href="mton.html" title="mton">mton</a> kmidi</pre>
+      <pre class="synopsis">Snote <a class="link" href="mton.html" title="mton">mton</a> imidi</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">kmidi <a class="link" href="ntom.html" title="ntom">ntom</a> Snote</pre>
+      <pre class="synopsis">imidi <a class="link" href="ntom.html" title="ntom">ntom</a> Snote</pre>
+      <p></p>
+      <p>
+</p>
       <pre class="synopsis"><a class="link" href="octave.html" title="octave">octave</a>(x)</pre>
       <p></p>
       <p>
@@ -4490,6 +4607,11 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="pchoct.html" title="pchoct">pchoct</a> (oct)  (init- or control-rate args only)</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">imidi <a class="link" href="pchtom.html" title="pchtom">pchtom</a> ipch</pre>
+      <pre class="synopsis">kmidi <a class="link" href="pchtom.html" title="pchtom">pchtom</a> kpch</pre>
       <p></p>
       <p>
 </p>
@@ -5183,6 +5305,7 @@
       <p>
 </p>
       <pre class="synopsis">kframe <a class="link" href="pvs2tab.html" title="pvs2tab">pvs2tab</a> tvar|kvar[], fsig</pre>
+      <pre class="synopsis">kframe <a class="link" href="pvs2tab.html" title="pvs2tab">pvs2tab</a> kmags[], kfreqs[], fsig</pre>
       <p></p>
       <p>
 </p>
@@ -5345,6 +5468,10 @@
       <p></p>
       <p>
 </p>
+      <pre class="synopsis">fsig <a class="link" href="pvstrace.html" title="pvstrace">pvstrace</a> fsigin, kn </pre>
+      <p></p>
+      <p>
+</p>
       <pre class="synopsis">fsig <a class="link" href="pvsvoc.html" title="pvsvoc">pvsvoc</a> famp, fexc, kdepth, kgain [,kcoefs]</pre>
       <p></p>
       <p>
@@ -5366,6 +5493,7 @@
       <p>
 </p>
       <pre class="synopsis">fsig <a class="link" href="tab2pvs.html" title="tab2pvs">tab2pvs</a> tvar|karr[][,ihopsize, iwinsize, iwintype]</pre>
+      <pre class="synopsis">fsig <a class="link" href="tab2pvs.html" title="tab2pvs">tab2pvs</a> kmags[], kfreqs[][,ihopsize, iwinsize, iwintype]</pre>
       <p></p>
       <p>
 </p>
@@ -6109,6 +6237,7 @@
       <pre class="synopsis">asig <a class="link" href="sockrecv.html" title="sockrecv">sockrecv</a> iport, ilength</pre>
       <pre class="synopsis">ksig <a class="link" href="sockrecv.html" title="sockrecv">sockrecv</a> iport, ilength</pre>
       <pre class="synopsis">asigl, asigr <a class="link" href="sockrecv.html" title="sockrecv">sockrecvs</a> iport, ilength</pre>
+      <pre class="synopsis">String <a class="link" href="sockrecv.html" title="sockrecv">sockrecv</a> iport, ilength</pre>
       <pre class="synopsis">asig <a class="link" href="sockrecv.html" title="sockrecv">strecv</a> Sipaddr, iport</pre>
       <p></p>
       <p>
@@ -6172,6 +6301,53 @@
       <p>
 </p>
       <pre class="synopsis"><a class="link" href="MixerSetLevel_i.html" title="MixerSetLevel_i">MixerSetLevel_i</a> isend, ibuss, igain</pre>
+      <p></p>
+      <p>
+</p>
+      <p></p>
+      <p></p>
+      <p><strong>Ableton Link Opcodes. </strong>
+</p>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis"><a class="link" href="opcodeslinkbeatforce.html" title="link_beat_force">link_beat_force</a>  i_peer, k_beat [, k_at_time_seconds  [, k_quantum ]] </pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">k_beat_number, k_phase, k_current_time_seconds <a class="link" href="opcodeslinkbeatget.html" title="link_beat_get">link_beat_get</a> i_peer [, k_quantum]</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis"><a class="link" href="opcodeslinkbeatrequest.html" title="link_beat_request">link_beat_request</a>  i_peer, k_beat [, k_at_time_seconds  [, k_quantum ]] </pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">i_peer <a class="link" href="opcodeslinkcreate.html" title="link_create">link_create</a> [i_bpm]</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis"> <a class="link" href="opcodeslinkenable.html" title="link_enable">ableton_link_enable</a> i_peer [, k_enable]</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">k_is_enabled <a class="link" href="opcodeslinkisenabled.html" title="link_is_enabled">link_is_enabled</a> i_peer</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">k_trigger, k_beat, k_phase, k_current_time_seconds <a class="link" href="opcodeslinkmetro.html" title="link_metro">link_metro</a> i_peer [, k_quantum]</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">k_count <a class="link" href="opcodeslinkpeers.html" title="link_peers">link_peers</a> i_peer</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">k_bpm <a class="link" href="opcodeslinktempoget.html" title="link_tempo_get">link_tempo_get</a> i_peer</pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis"><a class="link" href="opcodeslinktemposet.html" title="link_tempo_set">link_tempo_set</a> i_peer, k_bpm [, k_at_time_seconds]</pre>
       <p></p>
       <p>
 </p>
@@ -6466,6 +6642,10 @@ inum_parm, kupdate</pre>
 
 </p>
       <pre class="synopsis">Sres <a class="link" href="pwd.html" title="pwd">pwd</a> </pre>
+      <p></p>
+      <p>
+</p>
+      <pre class="synopsis">aout <a class="link" href="select.html" title="select">select</a> a1, a2, aless, aequal, amore</pre>
       <p></p>
       <p>
 

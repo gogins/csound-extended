@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pow</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="poscil.html" title="poscil" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp126060992"></a>
+        <a id="idm1519269744"></a>
         <h2>Description</h2>
         <p>
       Computes <span class="emphasis"><em>xarg</em></span> to the power of <span class="emphasis"><em>kpow</em></span> (or <span class="emphasis"><em>ipow</em></span>) and scales the result by <span class="emphasis"><em>inorm</em></span>.
@@ -47,21 +48,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126064464"></a>
+        <a id="idm1519266928"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>pow</strong></span> aarg, kpow [, inorm]</pre>
         <pre class="synopsis">ires <span class="command"><strong>pow</strong></span> iarg, ipow [, inorm]</pre>
         <pre class="synopsis">kres <span class="command"><strong>pow</strong></span> karg, kpow [, inorm]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp126069488"></a>
+        <a id="idm1519257712"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inorm</em></span> (optional, default=1) -- The number to divide the result (default to 1). This is especially useful if you are doing powers of a- or k- signals where samples out of range are extremely common!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126071536"></a>
+        <a id="idm1519256816"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aarg</em></span>, <span class="emphasis"><em>iarg</em></span>, <span class="emphasis"><em>karg</em></span> -- the base.
@@ -80,7 +81,7 @@
             <tr>
               <td align="left" valign="top">
                 <p>
-        Use <span class="emphasis"><em>^</em></span> with caution in arithmetical statements, as the precedence may not be correct. New in Csound version 3.493.
+        Use <span class="emphasis"><em>ˆ</em></span> with caution in arithmetical statements, as the precedence may not be correct. New in Csound version 3.493.
       </p>
               </td>
             </tr>
@@ -88,57 +89,56 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp126076848"></a>
+        <a id="idm1519262960"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pow opcode. It uses the file <a class="ulink" href="examples/pow.csd" target="_top"><em class="citetitle">pow.csd</em></a>.
+      Here is an example of the pow opcode. It uses the file <a class="ulink" href="examples/pow.csd.html" target="_top"><em class="citetitle">pow.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp126078624"></a>
+          <a id="idm1519258352"></a>
           <p class="title">
-            <strong>Example 673. Example of the pow opcode.</strong>
+            <strong>Example 693. Example of the pow opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp258674432"></a>
-              <a class="ulink" href="examples/pow.csd.html" target="_top">Play</a>
+              <a id="idm1340785776"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">;-o pow.wav        ; output to audio file</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">;-o pow.wav        ; output to audio file</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
     
-<span class="oblock">instr</span> 1	<span class="comment">; Lo-Fi sound</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; Lo-Fi sound</span>
 
-kpow	  <span class="op">=</span> 10						<span class="comment">;exponent</span>
-kbase	  <span class="opc">line</span> 1, p3, 1.4				<span class="comment">;vary the base</span>
-kQuantize <span class="opc">pow</span> kbase, kpow
-kQuantize <span class="op">=</span> kQuantize<span class="op">*</span>0.5				<span class="comment">;half the number of steps for each side of a bipolar signal</span>
-<span class="opc">printk2</span>	  kQuantize
-asig	  <span class="opc">diskin2</span> "fox.wav", 1, 0, 1			<span class="comment">;loop the fox</span>
-asig	  <span class="op">=</span> <span class="opc">round</span>(asig <span class="op">*</span> kQuantize) <span class="op">/</span> kQuantize		<span class="comment">;quantize and scale audio signal</span>
-    	  <span class="opc">outs</span> asig, asig  
+k<span class="n">pow</span>	  <span class="o">=</span> <span class="mi">10</span>						<span class="c1">;exponent</span>
+k<span class="n">base</span>	  <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">1.4</span>				<span class="c1">;vary the base</span>
+k<span class="n">Quantize</span> <span class="nb">pow</span> k<span class="n">base</span><span class="p">,</span> k<span class="n">pow</span>
+k<span class="n">Quantize</span> <span class="o">=</span> k<span class="n">Quantize</span><span class="o">*</span><span class="mf">0.5</span>				<span class="c1">;half the number of steps for each side of a bipolar signal</span>
+<span class="nb">printk2</span>	  k<span class="n">Quantize</span>
+a<span class="n">sig</span>	  <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop the fox</span>
+a<span class="n">sig</span>	  <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>a<span class="n">sig</span> <span class="o">*</span> k<span class="n">Quantize</span><span class="p">)</span> <span class="o">/</span> k<span class="n">Quantize</span>		<span class="c1">;quantize and scale audio signal</span>
+    	  <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>  
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 19.2
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mf">19.2</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -158,7 +158,7 @@ asig	  <span class="op">=</span> <span class="opc">round</span>(asig <span class
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126083840"></a>
+        <a id="idm1519250928"></a>
         <h2>Credits</h2>
         <p>
       </p>

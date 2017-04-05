@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vbap</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vaset.html" title="vaset" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151758704"></a>
+        <a id="idm1492889328"></a>
         <h2>Description</h2>
         <p>
       Distributes an audio signal amongmany channels, up to 64 in the
@@ -46,7 +47,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151831056"></a>
+        <a id="idm1492890480"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1[, ar2...] <span class="command"><strong>vbap</strong></span> asig, kazim [,
     kelev] [, kspread] [, ilayout]</pre>
@@ -54,7 +55,7 @@
     kelev] [, kspread] [, ilayout]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp151834672"></a>
+        <a id="idm1492876656"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ilayout</em></span> -- index of the speaker layout in
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151836832"></a>
+        <a id="idm1492879728"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- audio signal to be panned
@@ -115,70 +116,69 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp151848496"></a>
+        <a id="idm1492868592"></a>
         <h2>Examples</h2>
         <p>
       See the entry for <a class="link" href="vbap8.html" title="vbap8"><em class="citetitle">vbap8</em></a> for an example of usage of the <span class="emphasis"><em>vbap</em></span> opcodes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151851152"></a>
+        <a id="idm1492874096"></a>
         <h2>Reference</h2>
         <p>
       Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151853328"></a>
+        <a id="idm1492860656"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vbap opcode. It uses the file <a class="ulink" href="examples/vbap.csd" target="_top"><em class="citetitle">vbap.csd</em></a>.
+      Here is an example of the vbap opcode. It uses the file <a class="ulink" href="examples/vbap.csd.html" target="_top"><em class="citetitle">vbap.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp151855184"></a>
+          <a id="idm1492861424"></a>
           <p class="title">
-            <strong>Example 1002. Example of the vbap opcode.</strong>
+            <strong>Example 1028. Example of the vbap opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp270200080"></a>
-              <a class="ulink" href="examples/vbap.csd.html" target="_top">Play</a>
+              <a id="idm1311183728"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vbap.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vbap.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 4	<span class="comment">;quad</span>
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">4</span>	<span class="c1">;quad</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">vbaplsinit</span> 2, 4, 0, 90, 180, 270
+<span class="nb">vbaplsinit</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">270</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">diskin2</span> "beats.wav", 1, 0, 1			<span class="comment">;loop beats.wav</span>
-kaz  <span class="opc">line</span> 0, p3, p4					<span class="comment">;come from right rear speaker &amp;	</span>
-a1,a2,a3,a4 <span class="opc">vbap</span>  asig, 180, 100, kaz			<span class="comment">;change spread of soundsource</span>
-     <span class="opc">printks</span> "spread of source <span class="op">=</span> <span class="op">%</span>d\n", 1, kaz		<span class="comment">;print spread value</span>
-     <span class="opc">outq</span> a1,a2,a3,a4
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop beats.wav</span>
+k<span class="n">az</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p4</span>					<span class="c1">;come from right rear speaker &amp;	</span>
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span> <span class="nb">vbap</span>  a<span class="n">sig</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> k<span class="n">az</span>			<span class="c1">;change spread of soundsource</span>
+     <span class="nb">printks</span> <span class="s">"spread of source = </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">az</span>		<span class="c1">;print spread value</span>
+     <span class="nb">outq</span> a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span>
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 12 100
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">12</span> <span class="mi">100</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -205,7 +205,7 @@ spread of source = 100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151860480"></a>
+        <a id="idm1492865776"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vbapmove.html" title="vbapmove"><em class="citetitle">vbapmove</em></a>,
@@ -221,7 +221,7 @@ spread of source = 100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151871264"></a>
+        <a id="idm1492855536"></a>
         <h2>Credits</h2>
         <p>
       </p>

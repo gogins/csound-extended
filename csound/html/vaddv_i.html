@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vaddv_i</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vaddv.html" title="vaddv" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151537088"></a>
+        <a id="idm1493057520"></a>
         <h2>Description</h2>
         <p>
       Performs addition between two vectorial control signals at init time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151581296"></a>
+        <a id="idm1493056880"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vaddv_i</strong></span>  ifn1, ifn2, ielements [, idstoffset] [, isrcoffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp151583376"></a>
+        <a id="idm1493062512"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn1</em></span>  - number of the table hosting the first vector to be processed
@@ -69,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151588480"></a>
+        <a id="idm1493050480"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>vaddv_i</em></span> adds two vectorial control signals, that is, each element of the first vector is processed (only) with the corresponding element of the other vector. Each vectorial signal is hosted by a table (ifn1 and ifn2). The number of elements contained in both vectors must be the same.
@@ -105,7 +106,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151608768"></a>
+        <a id="idm1493030128"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado. Optional arguments added by Andres Cabrera and Istvan Varga.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

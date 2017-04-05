@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>until</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="unirand.html" title="unirand" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp150928896"></a>
+        <a id="idm1493885296"></a>
         <h2>Description</h2>
         <p>
       A syntactic looping construction.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idp150971232"></a>
+        <a id="idm1493882736"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>until</strong></span>  condition <span class="command"><strong>do</strong></span>
     ... <span class="command"><strong>od</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp150974464"></a>
+        <a id="idm1493874544"></a>
         <h2>Performance</h2>
         <p>
       The statements between the <span class="emphasis"><em>do</em></span> and
@@ -60,60 +61,59 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp150976592"></a>
+        <a id="idm1493875184"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the until construction. It uses the file <a class="ulink" href="examples/until.csd" target="_top"><em class="citetitle">until.csd</em></a>.
+      Here is an example of the until construction. It uses the file <a class="ulink" href="examples/until.csd.html" target="_top"><em class="citetitle">until.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp150978368"></a>
+          <a id="idm1493875440"></a>
           <p class="title">
-            <strong>Example 988. Example of the until opcode.</strong>
+            <strong>Example 1014. Example of the until opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp269783776"></a>
-              <a class="ulink" href="examples/until.csd.html" target="_top">Play</a>
+              <a id="idm1312927472"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ifthen.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ifthen.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-<span class="olabel">lab99</span><span class="op">:</span>
-<span class="octrl">if</span> p4<span class="op">&lt;</span>0 <span class="octrl">goto</span> <span class="olabel">lab100</span>
-  p4 <span class="op">=</span> p4<span class="op">-</span>1
-  <span class="opc">print</span> p4
-  <span class="octrl">goto</span> <span class="olabel">lab99</span>
-<span class="olabel">lab100</span><span class="op">:</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="nl">lab99</span><span class="p">:</span>
+<span class="k">if</span> <span class="nb">p4</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">goto</span> <span class="nl">lab100</span>
+  <span class="nb">p4</span> <span class="o">=</span> <span class="nb">p4</span><span class="o">-</span><span class="mi">1</span>
+  <span class="nb">print</span> <span class="nb">p4</span>
+  <span class="k">goto</span> <span class="nl">lab99</span>
+<span class="nl">lab100</span><span class="p">:</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-  until p4<span class="op">&lt;</span>0 do
-    p4 <span class="op">=</span> p4<span class="op">-</span>1
-    <span class="opc">print</span> p4
-  od
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 1 1 4
-<span class="stamnt">i</span> 2 2 1 4
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+  <span class="k">until</span> <span class="nb">p4</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">do</span>
+    <span class="nb">p4</span> <span class="o">=</span> <span class="nb">p4</span><span class="o">-</span><span class="mi">1</span>
+    <span class="nb">print</span> <span class="nb">p4</span>
+  <span class="k">od</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">4</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">4</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -142,7 +142,7 @@ B  2.000 ..  3.000 T  3.000 TT  3.000 M:      0.0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp150983792"></a>
+        <a id="idm1493874928"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="loop_ge.html" title="loop_ge"><em class="citetitle">loop_ge</em></a>,
@@ -153,7 +153,7 @@ B  2.000 ..  3.000 T  3.000 TT  3.000 M:      0.0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp150989744"></a>
+        <a id="idm1493867376"></a>
         <h2>Credits</h2>
         <p>John ffitch.</p>
         <p>New in Csound version 5.14 with new parser</p>

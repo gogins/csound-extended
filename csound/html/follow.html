@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>follow</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fold.html" title="fold" />
@@ -38,93 +39,92 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp100220416"></a>
+        <a id="idm1545791920"></a>
         <h2>Description</h2>
         <p>
       Envelope follower unit generator.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100221744"></a>
+        <a id="idm1545790640"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>follow</strong></span> asig, idt</pre>
       </div>
       <div class="refsect1">
-        <a id="idp100295984"></a>
+        <a id="idm1545780912"></a>
         <h2>Initialization</h2>
         <p>
 <span class="emphasis"><em>idt</em></span> -- This is the period, in seconds, that the average amplitude of <span class="emphasis"><em>asig</em></span> is reported. If the frequency of <span class="emphasis"><em>asig</em></span> is low then <span class="emphasis"><em>idt</em></span> must be large (more than half the period of <span class="emphasis"><em>asig</em></span> )
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100299440"></a>
+        <a id="idm1545779888"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- This is the signal from which to extract the envelope.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100301216"></a>
+        <a id="idm1545782320"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the follow opcode. It uses the file <a class="ulink" href="examples/follow.csd" target="_top"><em class="citetitle">follow.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+      Here is an example of the follow opcode. It uses the file <a class="ulink" href="examples/follow.csd.html" target="_top"><em class="citetitle">follow.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idp100303920"></a>
+          <a id="idm1545780016"></a>
           <p class="title">
-            <strong>Example 328. Example of the follow opcode.</strong>
+            <strong>Example 331. Example of the follow opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp244844864"></a>
-              <a class="ulink" href="examples/follow.csd.html" target="_top">Play</a>
+              <a id="idm1377430256"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o follow.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o follow.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">soundin</span> "beats.wav"
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">;envelope follower</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;envelope follower</span>
 
-as   <span class="opc">soundin</span> "beats.wav"
-as   <span class="op">=</span> as<span class="op">*</span>.7		<span class="comment">;reduce volume a bit</span>
-at   <span class="opc">tone</span>    as, 500	<span class="comment">;smooth estimated envelope</span>
-af   <span class="opc">follow</span>  at, p4
-asin <span class="opc">poscil3</span> .5, 440, 1
-<span class="comment">; "beats.wav" provides amplitude for poscil</span>
-asig <span class="opc">balance</span> asin, af
-     <span class="opc">outs</span>    asig, asig
+a<span class="n">s</span>   <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
+a<span class="n">s</span>   <span class="o">=</span> a<span class="n">s</span><span class="o">*</span><span class="mf">.7</span>		<span class="c1">;reduce volume a bit</span>
+a<span class="n">t</span>   <span class="nb">tone</span>    a<span class="n">s</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">;smooth estimated envelope</span>
+a<span class="n">f</span>   <span class="nb">follow</span>  a<span class="n">t</span><span class="p">,</span> <span class="nb">p4</span>
+a<span class="n">sin</span> <span class="nb">poscil3</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+<span class="c1">; "beats.wav" provides amplitude for poscil</span>
+a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">sin</span><span class="p">,</span> a<span class="n">f</span>
+     <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;sine wave.</span>
-<span class="stamnt">f</span> 1 0 32768 10 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32768</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">i</span> 2 2 2 0.001 <span class="comment">;follow quickly</span>
-<span class="stamnt">i</span> 2 5 3 0.2   <span class="comment">;follow slowly</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mf">0.001</span> <span class="c1">;follow quickly</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">3</span> <span class="mf">0.2</span>   <span class="c1">;follow slowly</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -136,7 +136,7 @@ asig <span class="opc">balance</span> asin, af
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp100308928"></a>
+        <a id="idm1545773744"></a>
         <h2>Credits</h2>
         <p>
       </p>

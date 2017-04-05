@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLbutton</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLbutBank.html" title="FLbutBank" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp93691200"></a>
+        <a id="idm1552500592"></a>
         <h2>Description</h2>
         <p>
       A FLTK widget opcode that creates a button.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp93692544"></a>
+        <a id="idm1552502256"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout, ihandle <span class="command"><strong>FLbutton</strong></span> "label", ion, ioff, itype, iwidth, iheight, ix, \
       iy, iopcode [, kp1] [, kp2] [, kp3] [, kp4] [, kp5] [....] [, kpN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp93694896"></a>
+        <a id="idm1552499440"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> -- a handle value (an integer number) that unequivocally references a corresponding widget. This is used by other opcodes that modify a widget's properties (see <a class="link" href="ControlFltkAppearance.html" title="Modifying FLTK Widget Appearance"><em class="citetitle">Modifying FLTK Widget Appearance</em></a>). It is automatically output by <span class="emphasis"><em>FLbutton</em></span> and must not be set by the user label. (The user label is a double-quoted string containing some user-provided text placed near the widget.)
@@ -154,7 +155,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp93727584"></a>
+        <a id="idm1552465008"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout</em></span> -- output value
@@ -176,104 +177,103 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp93739872"></a>
+        <a id="idm1552458224"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLbutton opcode. It uses the file <a class="ulink" href="examples/FLbutton.csd" target="_top"><em class="citetitle">FLbutton.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+      Here is an example of the FLbutton opcode. It uses the file <a class="ulink" href="examples/FLbutton.csd.html" target="_top"><em class="citetitle">FLbutton.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idp93742576"></a>
+          <a id="idm1552454768"></a>
           <p class="title">
-            <strong>Example 280. Example of the FLbutton opcode.</strong>
+            <strong>Example 282. Example of the FLbutton opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp241979280"></a>
-              <a class="ulink" href="examples/FLbutton.csd.html" target="_top">Play</a>
+              <a id="idm1386343024"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLbutton.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLbutton.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Using FLbuttons to create on screen controls for play, </span>
-<span class="comment">; stop, fast forward and fast rewind of a sound file</span>
-<span class="comment">; This example also makes use of a preset graphic for buttons.</span>
+<span class="c1">; Using FLbuttons to create on screen controls for play, </span>
+<span class="c1">; stop, fast forward and fast rewind of a sound file</span>
+<span class="c1">; This example also makes use of a preset graphic for buttons.</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 1
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="opc">FLpanel</span> "Buttons", 240, 400, 100, 100
-    ion <span class="op">=</span> 0
-    ioff <span class="op">=</span> 0
-    itype <span class="op">=</span> 1
-    iwidth <span class="op">=</span> 50
-    iheight <span class="op">=</span> 50
-    ix <span class="op">=</span> 10
-    iy <span class="op">=</span> 10
-    iopcode <span class="op">=</span> 0
-    istarttim <span class="op">=</span> 0
-    idur <span class="op">=</span> <span class="op">-</span>1  <span class="comment">;Turn instruments on idefinitely</span>
+<span class="nb">FLpanel</span> <span class="s">"Buttons"</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span>
+    i<span class="n">on</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">off</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">type</span> <span class="o">=</span> <span class="mi">1</span>
+    i<span class="n">width</span> <span class="o">=</span> <span class="mi">50</span>
+    i<span class="n">height</span> <span class="o">=</span> <span class="mi">50</span>
+    i<span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+    i<span class="n">y</span> <span class="o">=</span> <span class="mi">10</span>
+    i<span class="n">opcode</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">starttim</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">dur</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1">;Turn instruments on idefinitely</span>
 
-    <span class="comment">; Normal speed forwards</span>
-    gkplay, ihb1 <span class="opc">FLbutton</span> "@<span class="op">&gt;</span>", ion, ioff, itype, iwidth, iheight, ix, iy, iopcode, 1, istarttim, idur, 1 
-    <span class="comment">; Stationary </span>
-    gkstop, ihb2 <span class="opc">FLbutton</span> "@square", ion,ioff, itype, iwidth, iheight, ix<span class="op">+</span>55, iy, iopcode, 2, istarttim, idur
-    <span class="comment">; Double speed backwards</span>
-    gkrew, ihb3 <span class="opc">FLbutton</span> "@<span class="op">&lt;</span><span class="op">&lt;</span>", ion, ioff, itype, iwidth, iheight, ix <span class="op">+</span> 110, iy, iopcode, 1, istarttim, idur, <span class="op">-</span>2
-    <span class="comment">; Double speed forward</span>
-    gkff, ihb4 <span class="opc">FLbutton</span> "@<span class="op">&gt;</span><span class="op">&gt;</span>", ion, ioff, itype, iwidth, iheight, ix<span class="op">+</span>165, iy, iopcode, 1, istarttim, idur, 2
-    <span class="comment">; Type 1</span>
-    gkt1, iht1 <span class="opc">FLbutton</span> "1<span class="op">-</span>Normal Button", ion, ioff, 1, 200, 40, ix, iy <span class="op">+</span> 65, <span class="op">-</span>1 
-    <span class="comment">; Type 2</span>
-    gkt2, iht2 <span class="opc">FLbutton</span> "2<span class="op">-</span>Light Button", ion, ioff, 2, 200, 40, ix, iy <span class="op">+</span> 110, <span class="op">-</span>1 
-    <span class="comment">; Type 3</span>
-    gkt3, iht3 <span class="opc">FLbutton</span> "3<span class="op">-</span>Check Button", ion, ioff, 3, 200, 40, ix, iy <span class="op">+</span> 155, <span class="op">-</span>1 
-    <span class="comment">; Type 4</span>
-    gkt4, iht4 <span class="opc">FLbutton</span> "4<span class="op">-</span>Round Button", ion, ioff, 4, 200, 40, ix, iy <span class="op">+</span> 200, <span class="op">-</span>1 
-    <span class="comment">; Type 21</span>
-    gkt5, iht5 <span class="opc">FLbutton</span> "21<span class="op">-</span>Plastic Button", ion, ioff, 21, 200, 40, ix, iy <span class="op">+</span> 245, <span class="op">-</span>1 
-    <span class="comment">; Type 22</span>
-    gkt6, iht6 <span class="opc">FLbutton</span> "22<span class="op">-</span>Plastic Light Button", ion, ioff, 22, 200, 40, ix, iy <span class="op">+</span> 290, <span class="op">-</span>1
-    <span class="comment">; Type 23</span>
-    gkt7, iht7 <span class="opc">FLbutton</span> "23<span class="op">-</span>Plastic Check Button", ion, ioff, 23, 200, 40, ix, iy <span class="op">+</span> 335, <span class="op">-</span>1 
-<span class="opc">FLpanelEnd</span>
-<span class="opc">FLrun</span>
+    <span class="c1">; Normal speed forwards</span>
+    gk<span class="n">play</span><span class="p">,</span> i<span class="n">hb1</span> <span class="nb">FLbutton</span> <span class="s">"@&gt;"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> i<span class="n">type</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> i<span class="n">opcode</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">starttim</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">1</span> 
+    <span class="c1">; Stationary </span>
+    gk<span class="n">stop</span><span class="p">,</span> i<span class="n">hb2</span> <span class="nb">FLbutton</span> <span class="s">"@square"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span>i<span class="n">off</span><span class="p">,</span> i<span class="n">type</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span><span class="o">+</span><span class="mi">55</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> i<span class="n">opcode</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> i<span class="n">starttim</span><span class="p">,</span> i<span class="n">dur</span>
+    <span class="c1">; Double speed backwards</span>
+    gk<span class="n">rew</span><span class="p">,</span> i<span class="n">hb3</span> <span class="nb">FLbutton</span> <span class="s">"@&lt;&lt;"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> i<span class="n">type</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">110</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> i<span class="n">opcode</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">starttim</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span>
+    <span class="c1">; Double speed forward</span>
+    gk<span class="n">ff</span><span class="p">,</span> i<span class="n">hb4</span> <span class="nb">FLbutton</span> <span class="s">"@&gt;&gt;"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> i<span class="n">type</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span><span class="o">+</span><span class="mi">165</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> i<span class="n">opcode</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">starttim</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="c1">; Type 1</span>
+    gk<span class="n">t1</span><span class="p">,</span> i<span class="n">ht1</span> <span class="nb">FLbutton</span> <span class="s">"1-Normal Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">65</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> 
+    <span class="c1">; Type 2</span>
+    gk<span class="n">t2</span><span class="p">,</span> i<span class="n">ht2</span> <span class="nb">FLbutton</span> <span class="s">"2-Light Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">110</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> 
+    <span class="c1">; Type 3</span>
+    gk<span class="n">t3</span><span class="p">,</span> i<span class="n">ht3</span> <span class="nb">FLbutton</span> <span class="s">"3-Check Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">155</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> 
+    <span class="c1">; Type 4</span>
+    gk<span class="n">t4</span><span class="p">,</span> i<span class="n">ht4</span> <span class="nb">FLbutton</span> <span class="s">"4-Round Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> 
+    <span class="c1">; Type 21</span>
+    gk<span class="n">t5</span><span class="p">,</span> i<span class="n">ht5</span> <span class="nb">FLbutton</span> <span class="s">"21-Plastic Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">245</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> 
+    <span class="c1">; Type 22</span>
+    gk<span class="n">t6</span><span class="p">,</span> i<span class="n">ht6</span> <span class="nb">FLbutton</span> <span class="s">"22-Plastic Light Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">290</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">; Type 23</span>
+    gk<span class="n">t7</span><span class="p">,</span> i<span class="n">ht7</span> <span class="nb">FLbutton</span> <span class="s">"23-Plastic Check Button"</span><span class="p">,</span> i<span class="n">on</span><span class="p">,</span> i<span class="n">off</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">335</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> 
+<span class="nb">FLpanelEnd</span>
+<span class="nb">FLrun</span>
 
-<span class="comment">; Ensure that only 1 instance of instr 1</span>
-<span class="comment">; plays even if the play button is clicked repeatedly</span>
-insnum <span class="op">=</span> 1
-icount <span class="op">=</span> 1
-<span class="opc">maxalloc</span> insnum, icount
+<span class="c1">; Ensure that only 1 instance of instr 1</span>
+<span class="c1">; plays even if the play button is clicked repeatedly</span>
+i<span class="n">nsnum</span> <span class="o">=</span> <span class="mi">1</span>
+i<span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">maxalloc</span> i<span class="n">nsnum</span><span class="p">,</span> i<span class="n">count</span>
 
-<span class="oblock">instr</span> 1
-    asig <span class="opc">diskin2</span> "beats.wav", p4, 0, 1
-    <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-    <span class="opc">turnoff2</span> 1, 0, 0   <span class="comment">;Turn off instr 1</span>
-    <span class="opc">turnoff</span>   <span class="comment">;Turn off this instrument</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+    <span class="nb">turnoff2</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>   <span class="c1">;Turn off instr 1</span>
+    <span class="nb">turnoff</span>   <span class="c1">;Turn off this instrument</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Real-time performance for 1 hour.</span>
-<span class="stamnt">f</span> 0 3600
-<span class="stamnt">e</span>
+<span class="c1">; Real-time performance for 1 hour.</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">e</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -282,7 +282,7 @@ icount <span class="op">=</span> 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp93746864"></a>
+        <a id="idm1552458608"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLbox.html" title="FLbox"><em class="citetitle">FLbox</em></a>,
@@ -293,7 +293,7 @@ icount <span class="op">=</span> 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp93752816"></a>
+        <a id="idm1552448752"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

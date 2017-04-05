@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tablefilteri</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tablefilter.html" title="tablefilter" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146132544"></a>
+        <a id="idm1499104240"></a>
         <h2>Description</h2>
         <p>
       This opcode can be used in order to filter values from function
@@ -48,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146195984"></a>
+        <a id="idm1499102064"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">inumpassed <span class="command"><strong>tablefilteri</strong></span> iouttable, iintatble, imode, iparam</pre>
       </div>
       <div class="refsect1">
-        <a id="idp146198176"></a>
+        <a id="idm1499095024"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inumpassed</em></span> -- the number of elements that
@@ -98,89 +99,88 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146205392"></a>
+        <a id="idm1499094256"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tablefilteri opcode. It uses the file <a class="ulink" href="examples/tablefilter.csd" target="_top"><em class="citetitle">tablefilter.csd</em></a>.
+      Here is an example of the tablefilteri opcode. It uses the file <a class="ulink" href="examples/tablefilter.csd.html" target="_top"><em class="citetitle">tablefilter.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp146207264"></a>
+          <a id="idm1499100016"></a>
           <p class="title">
-            <strong>Example 929. Example of the tablefilteri opcode.</strong>
+            <strong>Example 955. Example of the tablefilteri opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp267866688"></a>
-              <a class="ulink" href="examples/tablefilter.csd.html" target="_top">Play</a>
+              <a id="idm1318718576"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">ksmps</span><span class="op">=</span>10
-<span class="ohdr">nchnls</span><span class="op">=</span>1
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">10</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">1</span>
 
-      gifarn <span class="opc">init</span> 8     <span class="comment">; initialise integer for Farey Sequence F_8</span>
-      gires <span class="opc">fareyleni</span> gifarn  <span class="comment">; calculate length of F_8, returns 23</span>
-      <span class="comment">; the table length won't be a power of 2</span>
-      <span class="comment">; (The length of a Farey Sequence with n &gt; 1 is always odd)</span>
-      gilen <span class="opc">init</span> gires <span class="op">*</span> <span class="op">-</span>1
+      gi<span class="n">farn</span> <span class="nb">init</span> <span class="mi">8</span>     <span class="c1">; initialise integer for Farey Sequence F_8</span>
+      gi<span class="n">res</span> <span class="nb">fareyleni</span> gi<span class="n">farn</span>  <span class="c1">; calculate length of F_8, returns 23</span>
+      <span class="c1">; the table length won't be a power of 2</span>
+      <span class="c1">; (The length of a Farey Sequence with n &gt; 1 is always odd)</span>
+      gi<span class="n">len</span> <span class="nb">init</span> gi<span class="n">res</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
 
-      gifarey <span class="ohdr">ftgen</span> 200, 0, gilen, "farey", gifarn, 0
+      gi<span class="n">farey</span> <span class="nb">ftgen</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">len</span><span class="p">,</span> <span class="s">"farey"</span><span class="p">,</span> gi<span class="n">farn</span><span class="p">,</span> <span class="mi">0</span>
 
-      <span class="comment">; initialize destiniation table with 0s</span>
-      gifiltered <span class="ohdr">ftgen</span> 0, 0, gilen, 21, 1, 0
+      <span class="c1">; initialize destiniation table with 0s</span>
+      gi<span class="n">filtered</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">len</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
 
-      <span class="comment">; initialize second destiniation table with 0s</span>
-      gifiltered2 <span class="ohdr">ftgen</span> 0, 0, gilen, 21, 1, 0
+      <span class="c1">; initialize second destiniation table with 0s</span>
+      gi<span class="n">filtered2</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">len</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
 
-      <span class="comment">; table filtering opcode:   dest.         source,         mode,   threshold</span>
-      ginumpassed <span class="opc">tablefilteri</span>    gifiltered,   gifarey,        1,      6
-      <span class="comment">; the threshold parameter indicates that denominators whose weights are heavier</span>
-      <span class="comment">; than 6 are not passing through the filter. The weight is calculated using</span>
-      <span class="comment">; Clarence Barlow's function of indigestibility of a number. According to this function,</span>
-      <span class="comment">; higher prime numbers contribute to an increased weight of any natural integer they divide.</span>
-      <span class="comment">; ginumpassed is the number of elements from the source table 'gifarey'</span>
-      <span class="comment">; that have passed the test and which have been copied to the destination table 'gifiltered'</span>
+      <span class="c1">; table filtering opcode:   dest.         source,         mode,   threshold</span>
+      gi<span class="n">numpassed</span> <span class="nb">tablefilteri</span>    gi<span class="n">filtered</span><span class="p">,</span>   gi<span class="n">farey</span><span class="p">,</span>        <span class="mi">1</span><span class="p">,</span>      <span class="mi">6</span>
+      <span class="c1">; the threshold parameter indicates that denominators whose weights are heavier</span>
+      <span class="c1">; than 6 are not passing through the filter. The weight is calculated using</span>
+      <span class="c1">; Clarence Barlow's function of indigestibility of a number. According to this function,</span>
+      <span class="c1">; higher prime numbers contribute to an increased weight of any natural integer they divide.</span>
+      <span class="c1">; ginumpassed is the number of elements from the source table 'gifarey'</span>
+      <span class="c1">; that have passed the test and which have been copied to the destination table 'gifiltered'</span>
 
-      <span class="comment">; apply a different filter:</span>
-      ginumpassed2 <span class="opc">tablefilteri</span>   gifiltered2,  gifarey,        2,      5
-      <span class="comment">; In mode=2 we again test the digestibility of the denominators of the</span>
-      <span class="comment">; fractions in the source table.</span>
-      <span class="comment">; The difference to mode=1 is that we now let pass only vaules from the</span>
-      <span class="comment">; source that are as heavy as the threshold or greater.</span>
+      <span class="c1">; apply a different filter:</span>
+      gi<span class="n">numpassed2</span> <span class="nb">tablefilteri</span>   gi<span class="n">filtered2</span><span class="p">,</span>  gi<span class="n">farey</span><span class="p">,</span>        <span class="mi">2</span><span class="p">,</span>      <span class="mi">5</span>
+      <span class="c1">; In mode=2 we again test the digestibility of the denominators of the</span>
+      <span class="c1">; fractions in the source table.</span>
+      <span class="c1">; The difference to mode=1 is that we now let pass only vaules from the</span>
+      <span class="c1">; source that are as heavy as the threshold or greater.</span>
 
 
-<span class="oblock">instr</span> 4
-      kndx <span class="opc">init</span> 0 <span class="comment">; read out elements of now filtered F_8 sequentially and print to file</span>
-      <span class="octrl">if</span> (kndx <span class="op">&lt;</span> ginumpassed) then
-         kelem <span class="opc">tab</span> kndx, gifiltered
-         <span class="opc">fprintks</span> "fareyfilter_lp.txt", "<span class="op">%</span>2.6f\\n", kelem
-         kndx <span class="op">=</span> kndx<span class="op">+</span>1
-      <span class="octrl">endif</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">4</span>
+      k<span class="n">ndx</span> <span class="nb">init</span> <span class="mi">0</span> <span class="c1">; read out elements of now filtered F_8 sequentially and print to file</span>
+      <span class="k">if</span> <span class="p">(</span>k<span class="n">ndx</span> <span class="o">&lt;</span> gi<span class="n">numpassed</span><span class="p">)</span> <span class="k">then</span>
+         k<span class="n">elem</span> <span class="nb">tab</span> k<span class="n">ndx</span><span class="p">,</span> gi<span class="n">filtered</span>
+         <span class="nb">fprintks</span> <span class="s">"fareyfilter_lp.txt"</span><span class="p">,</span> <span class="s">"%2.6f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">elem</span>
+         k<span class="n">ndx</span> <span class="o">=</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span>
+      <span class="k">endif</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 5
-      kndx <span class="opc">init</span> 0 <span class="comment">; read out elements and print to file</span>
-      <span class="octrl">if</span> (kndx <span class="op">&lt;</span> ginumpassed2) then
-         kelem <span class="opc">tab</span> kndx, gifiltered2
-         <span class="opc">fprintks</span> "fareyfilter_hp.txt", "<span class="op">%</span>2.6f\\n", kelem
-         kndx <span class="op">=</span> kndx<span class="op">+</span>1
-      <span class="octrl">endif</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">5</span>
+      k<span class="n">ndx</span> <span class="nb">init</span> <span class="mi">0</span> <span class="c1">; read out elements and print to file</span>
+      <span class="k">if</span> <span class="p">(</span>k<span class="n">ndx</span> <span class="o">&lt;</span> gi<span class="n">numpassed2</span><span class="p">)</span> <span class="k">then</span>
+         k<span class="n">elem</span> <span class="nb">tab</span> k<span class="n">ndx</span><span class="p">,</span> gi<span class="n">filtered2</span>
+         <span class="nb">fprintks</span> <span class="s">"fareyfilter_hp.txt"</span><span class="p">,</span> <span class="s">"%2.6f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">elem</span>
+         k<span class="n">ndx</span> <span class="o">=</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span>
+      <span class="k">endif</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>4      0     1
-<span class="stamnt">i</span>5      0     1
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">4</span>      <span class="mi">0</span>     <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">5</span>      <span class="mi">0</span>     <span class="mi">1</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -189,7 +189,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146211552"></a>
+        <a id="idm1499085936"></a>
         <h2>Credits</h2>
         <p>
       </p>

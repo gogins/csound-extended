@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Real-time MIDI Support</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="PartOpcodesOverview.html" title="Part II. Opcodes Overview" />
     <link rel="prev" href="PitchTuning.html" title="Tuning Opcodes" />
@@ -241,12 +242,12 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
     The ASCII keyboard MIDI note values are given in the following table.
   </p>
         <div class="table">
-          <a id="idp74038800"></a>
+          <a id="idm1572563440"></a>
           <p class="title">
             <strong>Table 5. ASCII Keyboard MIDI Note Values</strong>
           </p>
           <div class="table-contents">
-            <table summary="ASCII Keyboard MIDI Note Values" border="1">
+            <table class="table" summary="ASCII Keyboard MIDI Note Values" border="1">
               <colgroup>
                 <col />
                 <col />
@@ -380,58 +381,58 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
         </div>
         <br class="table-break" />
         <p>
-      Here's an example of usage of the virtual MIDI keyboard. It uses the file <a class="ulink" href="examples/virtual.csd" target="_top"><em class="citetitle">virtual.csd</em></a>.
+      Here's an example of usage of the virtual MIDI keyboard. It uses the file <a class="ulink" href="examples/virtual.csd.html" target="_top"><em class="citetitle">virtual.csd</em></a>.
  </p>
         <div class="refsect1">
-          <a id="idp54935072"></a>
-          <a class="ulink" href="examples/virtual.csd.html" target="_top">Play</a>
+          <a id="idm1410901616"></a>
           <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in     Virtual MIDI    -M0 is needed anyway</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span><span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in     Virtual MIDI    -M0 is needed anyway</span>
 -odac           -iadc    -+rtmidi=virtual -M0
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">; By Mark Jamerson 2007</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">ksmps</span><span class="op">=</span>10
-<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">; By Mark Jamerson 2007</span>
 
-<span class="ohdr">massign</span> 1,1
-<span class="opc">prealloc</span> 1,10
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">10</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
-<span class="oblock">instr</span> 1  <span class="comment">;Midi FM synth </span>
+<span class="nb">massign</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+<span class="nb">prealloc</span> <span class="mi">1</span><span class="p">,</span><span class="mi">10</span>
 
-inote <span class="opc">cpsmidi</span>
-iveloc <span class="opc">ampmidi</span> 10000
-idur <span class="op">=</span> 2
-    <span class="opc">xtratim</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>  <span class="c1">;Midi FM synth </span>
 
-kgate <span class="opc">oscil</span> 1,10,2
-anoise <span class="opc">noise</span> 100<span class="op">*</span>inote,.99
-acps  <span class="opc">samphold</span> anoise,kgate
-aosc <span class="opc">oscili</span> 1000,acps,1
-aout <span class="op">=</span> aosc
+i<span class="n">note</span> <span class="nb">cpsmidi</span>
+i<span class="n">veloc</span> <span class="nb">ampmidi</span> <span class="mi">10000</span>
+i<span class="n">dur</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="nb">xtratim</span> <span class="mi">1</span>
 
-<span class="comment">; Use controller 7 to control volume</span>
-kvol <span class="opc">ctrl7</span> 1, 7, 0.2, 1
+k<span class="n">gate</span> <span class="nb">oscil</span> <span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span>
+a<span class="n">noise</span> <span class="nb">noise</span> <span class="mi">100</span><span class="o">*</span>i<span class="n">note</span><span class="p">,</span><span class="mf">.99</span>
+a<span class="n">cps</span>  <span class="nb">samphold</span> a<span class="n">noise</span><span class="p">,</span>k<span class="n">gate</span>
+a<span class="n">osc</span> <span class="nb">oscili</span> <span class="mi">1000</span><span class="p">,</span>a<span class="n">cps</span><span class="p">,</span><span class="mi">1</span>
+a<span class="n">out</span> <span class="o">=</span> a<span class="n">osc</span>
 
-<span class="opc">outs</span> kvol <span class="op">*</span> aout, kvol <span class="op">*</span> aout
+<span class="c1">; Use controller 7 to control volume</span>
+k<span class="n">vol</span> <span class="nb">ctrl7</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">endin</span>
+<span class="nb">outs</span> k<span class="n">vol</span> <span class="o">*</span> a<span class="n">out</span><span class="p">,</span> k<span class="n">vol</span> <span class="o">*</span> a<span class="n">out</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0 3600
-<span class="stamnt">f</span>1 0 1024 10 1 
-<span class="stamnt">f</span>2 0 16 7 1 8 0 8
-<span class="stamnt">f</span>3 0 1024 10 1 .5 .6 .3 .2 .5
+<span class="kd">endin</span>
 
-<span class="stamnt">e</span> 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span> 
+<span class="nb">f</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">16</span> <span class="mi">7</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mi">0</span> <span class="mi">8</span>
+<span class="nb">f</span><span class="mi">3</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mf">.5</span> <span class="mf">.6</span> <span class="mf">.3</span> <span class="mf">.2</span> <span class="mf">.5</span>
+
+<span class="nb">e</span> 
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
         </div>
         <p>

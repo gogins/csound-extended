@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>{ Statement</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="y.html" title="y Statement (or Seed Statement)" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204674736"></a>
+        <a id="idm1439302384"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span> can be used to repeat a group of score statements.  These loops do not constitute independent score sections and thus may repeat events within the same section.  Multiple loops may overlap in time or be nested within each other.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204728064"></a>
+        <a id="idm1439557616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>{</strong></span> p1 p2</pre>
       </div>
       <div class="refsect1">
-        <a id="idp204730016"></a>
+        <a id="idm1439557232"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>p1</em></span> -- Number of times to repeat the loop.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204732640"></a>
+        <a id="idm1439558256"></a>
         <h2>Performance</h2>
         <p>
       The <span class="emphasis"><em>{ statement</em></span> is used in conjunction with the <a class="link" href="rightbrace.html" title="} Statement"><em class="citetitle">} statement</em></a> to define repeating groups of other score events.  A score loop begins with the <span class="emphasis"><em>{ statement</em></span> which defines the number of repetitions and a unique macro name that will contain the current loop counter.  The body of a loop can contain any number of other events (including sectional breaks) and is terminated by a <span class="emphasis"><em>} statement</em></span> on its own line.  The <span class="emphasis"><em>} statement</em></span> takes no parameters.
@@ -90,16 +91,16 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp204742512"></a>
+        <a id="idm1439544688"></a>
         <h2>Examples</h2>
         <p>
       Here are some examples of the <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span>.
 
       </p>
         <div class="example">
-          <a id="idp204744352"></a>
+          <a id="idm1439546608"></a>
           <p class="title">
-            <strong>Example 1122. Sequentially repeat a three-note phrase four times.</strong>
+            <strong>Example 1150. Sequentially repeat a three-note phrase four times.</strong>
           </p>
           <div class="example-contents"><pre class="programlisting">
 <span class="stamnt">{</span> 4 CNT
@@ -134,9 +135,9 @@
         <p>
       </p>
         <div class="example">
-          <a id="idp204758656"></a>
+          <a id="idm1439536368"></a>
           <p class="title">
-            <strong>Example 1123. Create a group of simultaneous harmonic partials.</strong>
+            <strong>Example 1151. Create a group of simultaneous harmonic partials.</strong>
           </p>
           <div class="example-contents">
         In this example, <span class="emphasis"><em>p4</em></span> is assumed to be the frequency of the note event.
@@ -161,66 +162,65 @@
         <p><br class="example-break" />
     </p>
         <p>
-       Here is a full example of the <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span>. It uses the file <a class="ulink" href="examples/leftbrace.csd" target="_top"><em class="citetitle">leftbrace.csd</em></a>.
+       Here is a full example of the <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span>. It uses the file <a class="ulink" href="examples/leftbrace.csd.html" target="_top"><em class="citetitle">leftbrace.csd</em></a>.
 
      </p>
         <div class="example">
-          <a id="idp204770976"></a>
+          <a id="idm1439527792"></a>
           <p class="title">
-            <strong>Example 1124. An example of nested loops to create several inharmonic sine clusters.</strong>
+            <strong>Example 1152. An example of nested loops to create several inharmonic sine clusters.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp274163904"></a>
-              <a class="ulink" href="examples/leftbrace.csd.html" target="_top">Play</a>
+              <a id="idm1298596848"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o abs.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o abs.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-gaReverbSend <span class="opc">init</span> 0
+ga<span class="n">ReverbSend</span> <span class="nb">init</span> <span class="mi">0</span>
 
-<span class="comment">; a simple sine wave partial</span>
-<span class="oblock">instr</span> 1
-    idur   <span class="op">=</span>       p3
-    iamp   <span class="op">=</span>       p4
-    ifreq  <span class="op">=</span>       p5
-    aenv   <span class="opc">linseg</span>  0.0, 0.1<span class="op">*</span>idur, iamp, 0.6<span class="op">*</span>idur, iamp, 0.3<span class="op">*</span>idur, 0.0
-    aosc   <span class="opc">oscili</span>  aenv, ifreq, 1
-           <span class="opc">vincr</span>   gaReverbSend, aosc
-<span class="oblock">endin</span>
+<span class="c1">; a simple sine wave partial</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">dur</span>   <span class="o">=</span>       <span class="nb">p3</span>
+    i<span class="n">amp</span>   <span class="o">=</span>       <span class="nb">p4</span>
+    i<span class="n">freq</span>  <span class="o">=</span>       <span class="nb">p5</span>
+    a<span class="n">env</span>   <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span>i<span class="n">dur</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.6</span><span class="o">*</span>i<span class="n">dur</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.3</span><span class="o">*</span>i<span class="n">dur</span><span class="p">,</span> <span class="mf">0.0</span>
+    a<span class="n">osc</span>   <span class="nb">oscili</span>  a<span class="n">env</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
+           <span class="nb">vincr</span>   ga<span class="n">ReverbSend</span><span class="p">,</span> a<span class="n">osc</span>
+<span class="kd">endin</span>
 
-<span class="comment">; global reverb instrument</span>
-<span class="oblock">instr</span> 2
-    al, ar <span class="opc">reverbsc</span> gaReverbSend, gaReverbSend, 0.85, 12000
-           <span class="opc">outs</span>     gaReverbSend<span class="op">+</span>al, gaReverbSend<span class="op">+</span>ar
-           <span class="opc">clear</span>    gaReverbSend
-<span class="oblock">endin</span>
+<span class="c1">; global reverb instrument</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+    a<span class="n">l</span><span class="p">,</span> a<span class="n">r</span> <span class="nb">reverbsc</span> ga<span class="n">ReverbSend</span><span class="p">,</span> ga<span class="n">ReverbSend</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mi">12000</span>
+           <span class="nb">outs</span>     ga<span class="n">ReverbSend</span><span class="o">+</span>a<span class="n">l</span><span class="p">,</span> ga<span class="n">ReverbSend</span><span class="o">+</span>a<span class="n">r</span>
+           <span class="nb">clear</span>    ga<span class="n">ReverbSend</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 4096 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-{ 4 CNT
-  { 8 PARTIAL
-      <span class="comment">;   start time     duration            amplitude          frequency</span>
+<span class="p">{</span> <span class="mi">4</span> <span class="cp">CNT</span>
+  <span class="p">{</span> <span class="mi">8</span> <span class="cp">PARTIAL</span>
+      <span class="c1">;   start time     duration            amplitude          frequency</span>
       
-      <span class="stamnt">i</span>1  [0.5 * $CNT.]  [1 + ($CNT * 0.2)]  [500 + (~ * 200)]  [800 + (200 * $CNT.) + ($PARTIAL. * 20)]
-  }
-}
+      <span class="nb">i</span><span class="mi">1</span>  <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="cp">$CNT.</span><span class="p">]</span>  <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="cp">$CNT</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)]</span>  <span class="p">[</span><span class="mi">500</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)]</span>  <span class="p">[</span><span class="mi">800</span> <span class="o">+</span> <span class="p">(</span><span class="mi">200</span> <span class="o">*</span> <span class="cp">$CNT.</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="cp">$PARTIAL.</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-<span class="stamnt">i</span>2 0 6
-<span class="stamnt">e</span>
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">6</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -229,7 +229,7 @@ gaReverbSend <span class="opc">init</span> 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204772928"></a>
+        <a id="idm1439526512"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>initc14</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="init.html" title="init" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp106175072"></a>
+        <a id="idm1539596144"></a>
         <h2>Description</h2>
         <p>
       Initializes the controllers used to create a 14-bit MIDI value.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106216368"></a>
+        <a id="idm1539593840"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>initc14</strong></span> ichan, ictlno1, ictlno2, ivalue</pre>
       </div>
       <div class="refsect1">
-        <a id="idp106218256"></a>
+        <a id="idm1539593328"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ichan</em></span> -- MIDI channel (1-16)
@@ -66,7 +67,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106222448"></a>
+        <a id="idm1539600112"></a>
         <h2>Performance</h2>
         <p>
      <span class="emphasis"><em>initc14</em></span> can be used together with both <a class="link" href="midic14.html" title="midic14"><em class="citetitle">midic14</em></a> and <a class="link" href="ctrl14.html" title="ctrl14"><em class="citetitle">ctrl14</em></a> opcodes for initializing the first controller's value. <span class="emphasis"><em>ivalue</em></span> argument must be set with a number within 0 to 1. An error occurs if it is not. Use the following formula to set <span class="emphasis"><em>ivalue</em></span> according with <span class="emphasis"><em>midic14</em></span> and <span class="emphasis"><em>ctrl14</em></span> min and max range:
@@ -81,7 +82,7 @@ ivalue = (initial_value - min) / (max - min)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106228960"></a>
+        <a id="idm1539592176"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ctrl7.html" title="ctrl7"><em class="citetitle">ctrl7</em></a>,
@@ -96,7 +97,7 @@ ivalue = (initial_value - min) / (max - min)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106238752"></a>
+        <a id="idm1539577456"></a>
         <h2>Credits</h2>
         <p>
       </p>

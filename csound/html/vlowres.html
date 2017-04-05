@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vlowres</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vlinseg.html" title="vlinseg" />
@@ -38,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp155509168"></a>
+        <a id="idm1489430256"></a>
         <h2>Description</h2>
         <p>
       A bank of filters in which the cutoff frequency can be separated under user control
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155510528"></a>
+        <a id="idm1489434608"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>vlowres</strong></span> asig, kfco, kres, iord, ksep</pre>
       </div>
       <div class="refsect1">
-        <a id="idp155512752"></a>
+        <a id="idm1489433968"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iord</em></span> -- total number of filters (1 to 10)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155514480"></a>
+        <a id="idm1489432432"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -76,65 +77,64 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155521264"></a>
+        <a id="idm1489427184"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vlowres opcode. It uses the file <a class="ulink" href="examples/vlowres.csd" target="_top"><em class="citetitle">vlowres.csd</em></a>.
+      Here is an example of the vlowres opcode. It uses the file <a class="ulink" href="examples/vlowres.csd.html" target="_top"><em class="citetitle">vlowres.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp155523040"></a>
+          <a id="idm1489425776"></a>
           <p class="title">
-            <strong>Example 1038. Example of the vlowres opcode.</strong>
+            <strong>Example 1064. Example of the vlowres opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp271148272"></a>
-              <a class="ulink" href="examples/vlowres.csd.html" target="_top">Play</a>
+              <a id="idm1307527408"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vlowres.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vlowres.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kamp <span class="opc">init</span> p4
-asig <span class="opc">vco2</span>  kamp, 110			<span class="comment">;saw wave</span>
-kfco <span class="opc">line</span> 30, p3, 300			<span class="comment">;vary the cutoff frequency from 30 to 300 Hz.</span>
-kres <span class="op">=</span> 20	
-ksep <span class="op">=</span> p5				<span class="comment">;different resonance values</span>
-iord <span class="op">=</span> p6				<span class="comment">;and different number of filters</span>
-aout <span class="opc">vlowres</span> asig, kfco, kres, iord, ksep
-aclp <span class="opc">clip</span> aout, 1, 1			<span class="comment">;avoid distortion</span>
-     <span class="opc">outs</span> aclp, aclp
+k<span class="n">amp</span> <span class="nb">init</span> <span class="nb">p4</span>
+a<span class="n">sig</span> <span class="nb">vco2</span>  k<span class="n">amp</span><span class="p">,</span> <span class="mi">110</span>			<span class="c1">;saw wave</span>
+k<span class="n">fco</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">300</span>			<span class="c1">;vary the cutoff frequency from 30 to 300 Hz.</span>
+k<span class="n">res</span> <span class="o">=</span> <span class="mi">20</span>	
+k<span class="n">sep</span> <span class="o">=</span> <span class="nb">p5</span>				<span class="c1">;different resonance values</span>
+i<span class="n">ord</span> <span class="o">=</span> <span class="nb">p6</span>				<span class="c1">;and different number of filters</span>
+a<span class="n">out</span> <span class="nb">vlowres</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">fco</span><span class="p">,</span> k<span class="n">res</span><span class="p">,</span> i<span class="n">ord</span><span class="p">,</span> k<span class="n">sep</span>
+a<span class="n">clp</span> <span class="nb">clip</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;avoid distortion</span>
+     <span class="nb">outs</span> a<span class="n">clp</span><span class="p">,</span> a<span class="n">clp</span>
      
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 10 1	<span class="comment">;sine</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine</span>
 
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 1 0 10 .1 5  2	<span class="comment">;compensate volume and </span>
-<span class="stamnt">i</span> 1 + 10 .1 25 2	<span class="comment">;number of filters = 2</span>
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 1 0 10 .01 5  6	<span class="comment">;compensate volume and </span>
-<span class="stamnt">i</span> 1 + 10 .04 15 6	<span class="comment">;number of filters = 6</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mf">.1</span> <span class="mi">5</span>  <span class="mi">2</span>	<span class="c1">;compensate volume and </span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">.1</span> <span class="mi">25</span> <span class="mi">2</span>	<span class="c1">;number of filters = 2</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mf">.01</span> <span class="mi">5</span>  <span class="mi">6</span>	<span class="c1">;compensate volume and </span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">.04</span> <span class="mi">15</span> <span class="mi">6</span>	<span class="c1">;number of filters = 6</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -143,7 +143,7 @@ aclp <span class="opc">clip</span> aout, 1, 1			<span class="comment">;avoid dis
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155527328"></a>
+        <a id="idm1489427568"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>monitor</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="modmatrix.html" title="modmatrix" />
@@ -35,101 +36,105 @@
         </h2>
         <p>monitor — 
       Returns the audio spout frame.
-          </p>
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idp116296320"></a>
+        <a id="idm1528855536"></a>
         <h2>Description</h2>
         <p>
       Returns the audio spout frame (if active), otherwise it returns zero.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116340768"></a>
+        <a id="idm1528858352"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout1 [,aout2 ... aoutX] <span class="command"><strong>monitor</strong></span></pre>
+        <pre class="synopsis">aarra <span class="command"><strong>monitor</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp116342800"></a>
+        <a id="idm1528859376"></a>
         <h2>Performance</h2>
+        <p>In the array form it reads all chanels to a one dimensional
+    array.</p>
         <p>
-      This opcode can be used for monitoring the output signal from csound. It should not be used for processing the signal further.
+      This opcode can be used for monitoring the output signal from
+      csound. It should not be used for processing the signal
+      further.
     </p>
         <p>
       See the entry for the <a class="link" href="fout.html" title="fout"><em class="citetitle">fout</em></a> opcode for an example of usage of <span class="emphasis"><em>monitor</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116346000"></a>
+        <a id="idm1528852848"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the monitor opcode. It uses the file <a class="ulink" href="examples/monitor.csd" target="_top"><em class="citetitle">monitor.csd</em></a>.
+      Here is an example of the monitor opcode. It uses the file <a class="ulink" href="examples/monitor.csd.html" target="_top"><em class="citetitle">monitor.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp116347776"></a>
+          <a id="idm1528847216"></a>
           <p class="title">
-            <strong>Example 543. Example of the monitor opcode.</strong>
+            <strong>Example 559. Example of the monitor opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp254072464"></a>
-              <a class="ulink" href="examples/monitor.csd.html" target="_top">Play</a>
+              <a id="idm1353405552"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o monitor.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o monitor.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giSine <span class="ohdr">ftgen</span> 0, 0, 2^10, 10, 1
+gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">^</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">poscil3</span> .5, 880, giSine
-<span class="comment">;write a raw file: 32 bits with header</span>
-     <span class="opc">fout</span> "fout_880.wav", 15, asig	
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> gi<span class="n">Sine</span>
+<span class="c1">;write a raw file: 32 bits with header</span>
+     <span class="nb">fout</span> <span class="s">"fout_880.wav"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> a<span class="n">sig</span>	
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-klfo <span class="opc">lfo</span> 1, 2, 0
-asig <span class="opc">poscil3</span> .5<span class="op">*</span>klfo, 220, giSine
-<span class="comment">;write an aiff file: 32 bits with header</span>
-     <span class="opc">fout</span> "fout_aif.aiff", 25, asig	
-<span class="comment">;        fout "fout_all3.wav", 14, asig</span>
-     <span class="opc">outs</span> asig, asig
+k<span class="n">lfo</span> <span class="nb">lfo</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.5</span><span class="o">*</span>k<span class="n">lfo</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> gi<span class="n">Sine</span>
+<span class="c1">;write an aiff file: 32 bits with header</span>
+     <span class="nb">fout</span> <span class="s">"fout_aif.aiff"</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> a<span class="n">sig</span>	
+<span class="c1">;        fout "fout_all3.wav", 14, asig</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 99 <span class="comment">;read the stereo csound output buffer</span>
+<span class="kd">instr</span> <span class="nf">99</span> <span class="c1">;read the stereo csound output buffer</span>
 
-allL, allR <span class="opc">monitor</span>
-<span class="comment">;write the output of csound to an audio file</span>
-<span class="comment">;to a wav file: 16 bits with header</span>
-           <span class="opc">fout</span> "fout_all.wav", 14, allL, allR
+a<span class="n">llL</span><span class="p">,</span> a<span class="n">llR</span> <span class="nb">monitor</span>
+<span class="c1">;write the output of csound to an audio file</span>
+<span class="c1">;to a wav file: 16 bits with header</span>
+           <span class="nb">fout</span> <span class="s">"fout_all.wav"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> a<span class="n">llL</span><span class="p">,</span> a<span class="n">llR</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">i</span> 2 0 3
-<span class="stamnt">i</span> 99 0 3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">99</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -138,7 +143,7 @@ allL, allR <span class="opc">monitor</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116352064"></a>
+        <a id="idm1528851440"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="fout.html" title="fout"><em class="citetitle">fout</em></a>, 
@@ -146,9 +151,10 @@ allL, allR <span class="opc">monitor</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116356192"></a>
+        <a id="idm1528838640"></a>
         <h2>Credits</h2>
         <p>Istvan Varga 2006</p>
+        <p>John ffitch 2016 for array form, new in 6.08</p>
       </div>
     </div>
     <div class="navfooter">

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN18</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN17.html" title="GEN17" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206320112"></a>
+        <a id="idm1437860592"></a>
         <h2>Description</h2>
         <p>
       Writes composite waveforms made up of pre-existing waveforms. Each contributing waveform requires 4 pfields and can overlap with other waveforms.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206384592"></a>
+        <a id="idm1437863024"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 18 fna ampa starta finisha fnb ampb startb finishb ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idp206386480"></a>
+        <a id="idm1437848944"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power-of-2 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)">f</a> statement).
@@ -69,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206392560"></a>
+        <a id="idm1437849712"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -83,62 +84,61 @@
       f2 consists of two copies of f1 written in to locations 0-511 and 512-1023.
     </p>
         <p>
-	    Here is an example of the GEN18 routine. It uses the files <a class="ulink" href="examples/gen18.csd" target="_top"><em class="citetitle">gen18.csd</em></a>.
+	    Here is an example of the GEN18 routine. It uses the files <a class="ulink" href="examples/gen18.csd.html" target="_top"><em class="citetitle">gen18.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp206397360"></a>
+          <a id="idm1437847024"></a>
           <p class="title">
-            <strong>Example 1142. An example of the GEN18 routine.</strong>
+            <strong>Example 1170. An example of the GEN18 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp276001360"></a>
-              <a class="ulink" href="examples/gen18.csd.html" target="_top">Play</a>
+              <a id="idm1295880176"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen18.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen18.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifn   <span class="op">=</span> p4  
-ilen  <span class="op">=</span> <span class="opc">ftlen</span>(ifn)
-aphase  <span class="opc">phasor</span> 220 
-asig    <span class="opc">tablei</span> aphase<span class="op">*</span>ilen, ifn
-        <span class="opc">outs</span>   asig, asig
+i<span class="n">fn</span>   <span class="o">=</span> <span class="nb">p4</span>  
+i<span class="n">len</span>  <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span>
+a<span class="n">phase</span>  <span class="nb">phasor</span> <span class="mi">220</span> 
+a<span class="n">sig</span>    <span class="nb">tablei</span> a<span class="n">phase</span><span class="o">*</span>i<span class="n">len</span><span class="p">,</span> i<span class="n">fn</span>
+        <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
       
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">f</span> 1 0 4096 10 1                                         <span class="comment">;sine</span>
-<span class="stamnt">f</span> 2 0 4096 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111  <span class="comment">;sawtooth</span>
-<span class="stamnt">f</span> 3 0 4096 11 10 5 2                                    <span class="comment">;cosine partials</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>                                         <span class="c1">;sine</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mf">0.5</span> <span class="mf">0.3</span> <span class="mf">0.25</span> <span class="mf">0.2</span> <span class="mf">0.167</span> <span class="mf">0.14</span> <span class="mf">0.125</span> <span class="mf">.111</span>  <span class="c1">;sawtooth</span>
+<span class="nb">f</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">5</span> <span class="mi">2</span>                                    <span class="c1">;cosine partials</span>
 
-<span class="stamnt">f</span> 11 0 8192  18 1 1 0 4095 2 1 4096 8191    <span class="comment">;sine+sawtooth</span>
-<span class="stamnt">f</span> 12 0 8192  18 1 1 0 4095 3 1 4096 8191    <span class="comment">;sine+cosine partials</span>
-<span class="stamnt">f</span> 13 0 1024  18 1 0.7 0 767 3 0.7 512 1023  <span class="comment">;sine+cosine partials overlapped, shorter table</span>
+<span class="nb">f</span> <span class="mi">11</span> <span class="mi">0</span> <span class="mi">8192</span>  <span class="mi">18</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4095</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">4096</span> <span class="mi">8191</span>    <span class="c1">;sine+sawtooth</span>
+<span class="nb">f</span> <span class="mi">12</span> <span class="mi">0</span> <span class="mi">8192</span>  <span class="mi">18</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4095</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4096</span> <span class="mi">8191</span>    <span class="c1">;sine+cosine partials</span>
+<span class="nb">f</span> <span class="mi">13</span> <span class="mi">0</span> <span class="mi">1024</span>  <span class="mi">18</span> <span class="mi">1</span> <span class="mf">0.7</span> <span class="mi">0</span> <span class="mi">767</span> <span class="mi">3</span> <span class="mf">0.7</span> <span class="mi">512</span> <span class="mi">1023</span>  <span class="c1">;sine+cosine partials overlapped, shorter table</span>
 
-<span class="stamnt">i</span> 1 0 2 2    <span class="comment">;play sawtooth </span>
-<span class="stamnt">i</span> 1 + 2 3    <span class="comment">;then cosine partials</span>
-<span class="stamnt">i</span> 1 5 2 11   <span class="comment">;now sine+sawtooth</span>
-<span class="stamnt">i</span> 1 + 2 12   <span class="comment">;and sine+cosine partials</span>
-<span class="stamnt">i</span> 1 + 2 13   <span class="comment">;and sine+cosine partials overlapped, shorter table</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">2</span>    <span class="c1">;play sawtooth </span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">3</span>    <span class="c1">;then cosine partials</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">5</span> <span class="mi">2</span> <span class="mi">11</span>   <span class="c1">;now sine+sawtooth</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">12</span>   <span class="c1">;and sine+cosine partials</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">13</span>   <span class="c1">;and sine+cosine partials overlapped, shorter table</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -176,14 +176,14 @@ asig    <span class="opc">tablei</span> aphase<span class="op">*</span>ilen, ifn
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206410032"></a>
+        <a id="idm1437833712"></a>
         <h2>Deprecated Names</h2>
         <p>
       <span class="emphasis"><em>GEN18</em></span> was called <span class="emphasis"><em>GEN22</em></span> in version 4.18. The name was changed due to a conflict with DirectCsound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206412176"></a>
+        <a id="idm1437833456"></a>
         <h2>Credits</h2>
         <p>
       </p>

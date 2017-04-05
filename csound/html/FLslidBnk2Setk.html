@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLslidBnk2Setk</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLslidBnk2Set.html" title="FLslidBnk2Set" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp97764416"></a>
+        <a id="idm1548521968"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLslidBnk2Setk</em></span> modifies the values of a slider bank according to an array of values stored in a table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp97808336"></a>
+        <a id="idm1548519280"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>FLslidBnk2Setk</strong></span>  ktrig, ihandle, ifn [, istartIndex, istartSlid, inumSlid]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp97810288"></a>
+        <a id="idm1548520688"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> - handle of the sliderBnk (to be used to set its values).
@@ -69,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp97815568"></a>
+        <a id="idm1548509040"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig</em></span> – the output of <span class="emphasis"><em>FLslidBnk2Setk</em></span> consists of a trigger that informs if sliders have to be updated or not. A non-zero value forces the slider to be updated.
@@ -82,94 +83,95 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp97836064"></a>
+        <a id="idm1548370480"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLslidBnk2Setk opcode. It uses the file <a class="ulink" href="examples/FLslidBnk2Setk.csd" target="_top"><em class="citetitle">FLslidBnk2Setk.csd</em></a>.
+      Here is an example of the FLslidBnk2Setk opcode. It uses the file <a class="ulink" href="examples/FLslidBnk2Setk.csd.html" target="_top"><em class="citetitle">FLslidBnk2Setk.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp97837952"></a>
+          <a id="idm1548367280"></a>
           <p class="title">
-            <strong>Example 302. Example of the FLslidBnk2Setk opcode.</strong>
+            <strong>Example 304. Example of the FLslidBnk2Setk opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp242421168"></a>
-              <a class="ulink" href="examples/FLslidBnk2Setk.csd.html" target="_top">Play</a>
+              <a id="idm1385790960"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>     <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span>  <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">;Example by Gabriel Maldonado 2007</span>
-giElem	<span class="opc">init</span>	8
-giOutTab	<span class="ohdr">ftgen</span>	1,0,128, 2, 	0
-giSine	<span class="ohdr">ftgen</span>	3,0,256,10,	1
-giOutTab2	<span class="ohdr">ftgen</span>	4,0,128, 2, 	0
-itab	<span class="ohdr">ftgen</span>	29, 0, 129, 5,  .002, 128, 1		<span class="comment">;** exponential ascending curve for slider mapping</span>
-giExpTab	<span class="ohdr">ftgen</span>	30, 0, 129, <span class="op">-</span>24, itab, 0, 1                    <span class="comment">;** rescaled curve for slider mapping</span>
-giConfigTab <span class="ohdr">ftgen</span>	2,0,128,<span class="op">-</span>2,         	1, 	500,	<span class="op">-</span>1, 	13, \
-				     	1, 	500,	<span class="op">-</span>1,  	13, \
-				          1, 	500,	<span class="op">-</span>1, 	13, \
- 					1, 	5000,	<span class="op">-</span>1, 	13, \
+<span class="c1">;Example by Gabriel Maldonado 2007</span>
+gi<span class="n">Elem</span>	<span class="nb">init</span>	<span class="mi">8</span>
+gi<span class="n">OutTab</span>	<span class="nb">ftgen</span>	<span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> 	<span class="mi">0</span>
+gi<span class="n">Sine</span>	<span class="nb">ftgen</span>	<span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span>	<span class="mi">1</span>
+gi<span class="n">OutTab2</span>	<span class="nb">ftgen</span>	<span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> 	<span class="mi">0</span>
+i<span class="n">tab</span>	<span class="nb">ftgen</span>	<span class="mi">29</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">129</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span>  <span class="mf">.002</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;** exponential ascending curve for slider mapping</span>
+gi<span class="n">ExpTab</span>	<span class="nb">ftgen</span>	<span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">129</span><span class="p">,</span> <span class="o">-</span><span class="mi">24</span><span class="p">,</span> i<span class="n">tab</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>                    <span class="c1">;** rescaled curve for slider mapping</span>
+gi<span class="n">ConfigTab</span> <span class="nb">ftgen</span>	<span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span>         	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">500</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span> 	<span class="mi">13</span><span class="p">,</span> \
+				     	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">500</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>  	<span class="mi">13</span><span class="p">,</span> \
+				          <span class="mi">1</span><span class="p">,</span> 	<span class="mi">500</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span> 	<span class="mi">13</span><span class="p">,</span> \
+ 					<span class="mi">1</span><span class="p">,</span> 	<span class="mi">5000</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span> 	<span class="mi">13</span><span class="p">,</span> \
 \
-					1, 	1000, 	<span class="op">-</span>1,  	5, \
-					1, 	1000, 	<span class="op">-</span>1,  	5, \
-					1, 	1000, 	<span class="op">-</span>1,  	5, \
-					1, 	5000, 	<span class="op">-</span>1,  	5
+					<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span> 	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>  	<span class="mi">5</span><span class="p">,</span> \
+					<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span> 	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>  	<span class="mi">5</span><span class="p">,</span> \
+					<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span> 	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>  	<span class="mi">5</span><span class="p">,</span> \
+					<span class="mi">1</span><span class="p">,</span> 	<span class="mi">5000</span><span class="p">,</span> 	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>  	<span class="mi">5</span>
 
-	<span class="opc">FLpanel</span>	"Multiple FM",600,600
-	<span class="opc">FLslidBnk2</span> "mod1@mod2@mod3@amp@freq1@freq2@freq3@freqPo", giElem, giOutTab2, giConfigTab, 400, 500, 100, 10
-giHandle	<span class="opc">FLslidBnkGetHandle</span> 
-	<span class="opc">FLpanel_end</span>
+	<span class="nb">FLpanel</span>	<span class="s">"Multiple FM"</span><span class="p">,</span><span class="mi">600</span><span class="p">,</span><span class="mi">600</span>
+	<span class="nb">FLslidBnk2</span> <span class="s">"mod1@mod2@mod3@amp@freq1@freq2@freq3@freqPo"</span><span class="p">,</span> gi<span class="n">Elem</span><span class="p">,</span> gi<span class="n">OutTab2</span><span class="p">,</span> gi<span class="n">ConfigTab</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span>
+gi<span class="n">Handle</span>	<span class="nb">FLslidBnkGetHandle</span> 
+	<span class="nb">FLpanel_end</span>
 
-	<span class="opc">FLrun</span>
-	<span class="oblock">instr</span> 1
-ktrig <span class="opc">slider8table</span>  1, giOutTab, 0, \ <span class="comment">;	ctl	min	max	init	func</span>
-	27,	1, 	500,	3,	<span class="op">-</span>1,	\ <span class="comment">;1 repeat rate</span>
-	28,	1, 	500,	4,	<span class="op">-</span>1,	\ <span class="comment">;2 random freq. amount</span>
-	29,	1, 	500,	1,	<span class="op">-</span>1,	\ <span class="comment">;3 random amp. amount</span>
-	30,	1,	5000,	1,	<span class="op">-</span>1,	\ <span class="comment">;4 number of concurrent loop points</span>
+	<span class="nb">FLrun</span>
+	<span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">trig</span> <span class="nb">slider8table</span>  <span class="mi">1</span><span class="p">,</span> gi<span class="n">OutTab</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="err">\</span> <span class="c1">;	ctl	min	max	init	func</span>
+	<span class="mi">27</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">500</span><span class="p">,</span>	<span class="mi">3</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span> <span class="c1">;1 repeat rate</span>
+	<span class="mi">28</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">500</span><span class="p">,</span>	<span class="mi">4</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span> <span class="c1">;2 random freq. amount</span>
+	<span class="mi">29</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">500</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span> <span class="c1">;3 random amp. amount</span>
+	<span class="mi">30</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="mi">5000</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span> <span class="c1">;4 number of concurrent loop points</span>
 \
-	31,	1, 	1000,	1,	<span class="op">-</span>1,	\<span class="comment">;5 kloop1</span>
-	32,	1, 	1000,	1,	<span class="op">-</span>1,	\<span class="comment">;6 kloop2</span>
-	33,	1, 	1000,	1,	<span class="op">-</span>1,	\<span class="comment">;7 kloop3</span>
-	34,	1, 	1000,	1,	<span class="op">-</span>1	<span class="comment">;8 kloop4</span>
-kmodindex1	<span class="opc">init</span>	0
-kmodindex2	<span class="opc">init</span>	0
-kmodindex3	<span class="opc">init</span>	0
-kamp	<span class="opc">init</span>	0
-kfreq1	<span class="opc">init</span>	0
-kfreq2	<span class="opc">init</span>	0
-kfreq3	<span class="opc">init</span>	0
-kfreq4	<span class="opc">init</span>	0
-          <span class="opc">vtable1k</span>  giOutTab2, kmodindex1, kmodindex2, kmodindex3, kamp, kfreq1, kfreq2, kfreq3, kfreq4
-<span class="comment">;	 *kflag, *ihandle, *ifn, *startInd, *startSlid, *numSlid;</span>
-	<span class="opc">FLslidBnk2Setk</span>  ktrig, giHandle, giOutTab, 0, 0, giElem
-<span class="opc">printk2</span> kmodindex1
-<span class="opc">printk2</span> kmodindex2,10
-<span class="opc">printk2</span> kmodindex3,20
-<span class="opc">printk2</span> kamp,30
-amod1	<span class="opc">oscili</span>	kmodindex1, kfreq1, giSine
-amod2	<span class="opc">oscili</span>	kmodindex2, kfreq2, giSine
-amod3	<span class="opc">oscili</span>	kmodindex3, kfreq3, giSine
-aout	<span class="opc">oscili</span>	kamp,       kfreq4<span class="op">+</span>amod1<span class="op">+</span>amod2<span class="op">+</span>amod3, giSine
-	<span class="opc">outs</span>	aout, aout
-	<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 3600
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+	<span class="mi">31</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span><span class="c1">;5 kloop1</span>
+	<span class="mi">32</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span><span class="c1">;6 kloop2</span>
+	<span class="mi">33</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span><span class="p">,</span>	<span class="err">\</span><span class="c1">;7 kloop3</span>
+	<span class="mi">34</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span> 	<span class="mi">1000</span><span class="p">,</span>	<span class="mi">1</span><span class="p">,</span>	<span class="o">-</span><span class="mi">1</span>	<span class="c1">;8 kloop4</span>
+k<span class="n">modindex1</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">modindex2</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">modindex3</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">amp</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">freq1</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">freq2</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">freq3</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">freq4</span>	<span class="nb">init</span>	<span class="mi">0</span>
+          <span class="nb">vtable1k</span>  gi<span class="n">OutTab2</span><span class="p">,</span> k<span class="n">modindex1</span><span class="p">,</span> k<span class="n">modindex2</span><span class="p">,</span> k<span class="n">modindex3</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq1</span><span class="p">,</span> k<span class="n">freq2</span><span class="p">,</span> k<span class="n">freq3</span><span class="p">,</span> k<span class="n">freq4</span>
+<span class="c1">;	 *kflag, *ihandle, *ifn, *startInd, *startSlid, *numSlid;</span>
+	<span class="nb">FLslidBnk2Setk</span>  k<span class="n">trig</span><span class="p">,</span> gi<span class="n">Handle</span><span class="p">,</span> gi<span class="n">OutTab</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">Elem</span>
+<span class="nb">printk2</span> k<span class="n">modindex1</span>
+<span class="nb">printk2</span> k<span class="n">modindex2</span><span class="p">,</span><span class="mi">10</span>
+<span class="nb">printk2</span> k<span class="n">modindex3</span><span class="p">,</span><span class="mi">20</span>
+<span class="nb">printk2</span> k<span class="n">amp</span><span class="p">,</span><span class="mi">30</span>
+a<span class="n">mod1</span>	<span class="nb">oscili</span>	k<span class="n">modindex1</span><span class="p">,</span> k<span class="n">freq1</span><span class="p">,</span> gi<span class="n">Sine</span>
+a<span class="n">mod2</span>	<span class="nb">oscili</span>	k<span class="n">modindex2</span><span class="p">,</span> k<span class="n">freq2</span><span class="p">,</span> gi<span class="n">Sine</span>
+a<span class="n">mod3</span>	<span class="nb">oscili</span>	k<span class="n">modindex3</span><span class="p">,</span> k<span class="n">freq3</span><span class="p">,</span> gi<span class="n">Sine</span>
+a<span class="n">out</span>	<span class="nb">oscili</span>	k<span class="n">amp</span><span class="p">,</span>       k<span class="n">freq4</span><span class="o">+</span>a<span class="n">mod1</span><span class="o">+</span>a<span class="n">mod2</span><span class="o">+</span>a<span class="n">mod3</span><span class="p">,</span> gi<span class="n">Sine</span>
+	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+	<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -178,7 +180,7 @@ aout	<span class="opc">oscili</span>	kamp,       kfreq4<span class="op">+</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp97842240"></a>
+        <a id="idm1548366000"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLslider.html" title="FLslider"><em class="citetitle">FLslider</em></a>,
@@ -193,7 +195,7 @@ aout	<span class="opc">oscili</span>	kamp,       kfreq4<span class="op">+</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp97851936"></a>
+        <a id="idm1548357808"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

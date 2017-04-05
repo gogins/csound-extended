@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>oscilikts</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="osciliktp.html" title="osciliktp" />
@@ -38,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119980288"></a>
+        <a id="idm1525365360"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>oscilikts</em></span> is the same as <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a>. Except it has a sync input that can be used to re-initialize the oscillator to a k-rate phase value. It is slower than <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a> and <a class="link" href="osciliktp.html" title="osciliktp"><em class="citetitle">osciliktp</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120056272"></a>
+        <a id="idm1525355632"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>oscilikts</strong></span> xamp, xcps, kfn, async, kphs [, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp120058496"></a>
+        <a id="idm1525358064"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> (optional, defaults to 0) -- skip initialization.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120060256"></a>
+        <a id="idm1525356272"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- amplitude.
@@ -76,72 +77,71 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120069360"></a>
+        <a id="idm1525355376"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the oscilikts opcode. It uses the file <a class="ulink" href="examples/oscilikts.csd" target="_top"><em class="citetitle">oscilikts.csd</em></a>.
+      Here is an example of the oscilikts opcode. It uses the file <a class="ulink" href="examples/oscilikts.csd.html" target="_top"><em class="citetitle">oscilikts.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp120071216"></a>
+          <a id="idm1525354480"></a>
           <p class="title">
-            <strong>Example 594. Example of the oscilikts opcode.</strong>
+            <strong>Example 613. Example of the oscilikts opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255793728"></a>
-              <a class="ulink" href="examples/oscilikts.csd.html" target="_top">Play</a>
+              <a id="idm1348873200"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o oscilikts.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o oscilikts.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1: oscilikts example.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Frequency envelope.</span>
-  kfrq <span class="opc">expon</span> 400, p3, 1200
-  <span class="comment">; Phase.</span>
-  kphs <span class="opc">line</span> 0.1, p3, 0.9
+<span class="c1">; Instrument #1: oscilikts example.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Frequency envelope.</span>
+  k<span class="n">frq</span> <span class="nb">expon</span> <span class="mi">400</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1200</span>
+  <span class="c1">; Phase.</span>
+  k<span class="n">phs</span> <span class="nb">line</span> <span class="mf">0.1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.9</span>
 
-  <span class="comment">; Sync 1</span>
-  atmp1 <span class="opc">phasor</span> 100
-  <span class="comment">; Sync 2</span>
-  atmp2 <span class="opc">phasor</span> 150
-  async <span class="opc">diff</span> 1 <span class="op">-</span> (atmp1 <span class="op">+</span> atmp2)
+  <span class="c1">; Sync 1</span>
+  a<span class="n">tmp1</span> <span class="nb">phasor</span> <span class="mi">100</span>
+  <span class="c1">; Sync 2</span>
+  a<span class="n">tmp2</span> <span class="nb">phasor</span> <span class="mi">150</span>
+  a<span class="n">sync</span> <span class="nb">diff</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span>a<span class="n">tmp1</span> <span class="o">+</span> a<span class="n">tmp2</span><span class="p">)</span>
 
-  a1 <span class="opc">oscilikts</span> 14000, kfrq, 1, async, 0
-  a2 <span class="opc">oscilikts</span> 14000, kfrq, 1, async, <span class="op">-</span>kphs
+  a<span class="n">1</span> <span class="nb">oscilikts</span> <span class="mi">14000</span><span class="p">,</span> k<span class="n">frq</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> <span class="mi">0</span>
+  a<span class="n">2</span> <span class="nb">oscilikts</span> <span class="mi">14000</span><span class="p">,</span> k<span class="n">frq</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> <span class="o">-</span>k<span class="n">phs</span>
 
-  <span class="opc">out</span> a1 <span class="op">-</span> a2
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1: Sawtooth wave</span>
-<span class="stamnt">f</span> 1 0 3 -2 1 0 -1
-
-<span class="comment">; Play Instrument #1 for four seconds.</span>
-<span class="stamnt">i</span> 1 0 4
-<span class="stamnt">e</span>
+  <span class="nb">out</span> a<span class="n">1</span> <span class="o">-</span> a<span class="n">2</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1: Sawtooth wave</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for four seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -150,7 +150,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120075504"></a>
+        <a id="idm1525344752"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a> and
@@ -158,7 +158,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120078608"></a>
+        <a id="idm1525345264"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga</p>
         <p>New in version 4.22</p>

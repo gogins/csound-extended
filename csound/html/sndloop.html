@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>sndloop</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="sliderKawai.html" title="sliderKawai" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp139871520"></a>
+        <a id="idm1504970224"></a>
         <h2>Description</h2>
         <p>
    This opcode records input audio and plays it back in a loop with user-defined
@@ -47,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp139875936"></a>
+        <a id="idm1504970864"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig, krec <span class="command"><strong>sndloop</strong></span> ain, kpitch, ktrig, idur, ifad</pre>
       </div>
       <div class="refsect1">
-        <a id="idp139878160"></a>
+        <a id="idm1504972656"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idur </em></span> -- loop duration in seconds
@@ -62,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp139952048"></a>
+        <a id="idm1504957808"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- output sig
@@ -81,59 +82,58 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp139956560"></a>
+        <a id="idm1504963824"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the sndloop opcode. It uses the file <a class="ulink" href="examples/sndloop.csd" target="_top"><em class="citetitle">sndloop.csd</em></a>.
+      Here is an example of the sndloop opcode. It uses the file <a class="ulink" href="examples/sndloop.csd.html" target="_top"><em class="citetitle">sndloop.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp139958336"></a>
+          <a id="idm1504963568"></a>
           <p class="title">
-            <strong>Example 856. Example of the sndloop opcode.</strong>
+            <strong>Example 882. Example of the sndloop opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp264895552"></a>
-              <a class="ulink" href="examples/sndloop.csd.html" target="_top">Play</a>
+              <a id="idm1325725424"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o sndloop.wav -W  ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o sndloop.wav -W  ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-itrig  <span class="op">=</span> p4
-asig   <span class="opc">diskin2</span> "beats.wav", 1, 0, 1		<span class="comment">;get the signal in, loop it</span>
-ktrig  <span class="opc">line</span> 0, itrig, 1				<span class="comment">;when to trigger signal = p4</span>
-kpitch <span class="opc">line</span> 1.2, p3, .5				<span class="comment">;vary pitch of recorded signal</span>
-aout,krec <span class="opc">sndloop</span> asig, kpitch, ktrig, .4, 0.05	<span class="comment">;rec starts at p4 sec, for .4 secs and 0.05 crossfade</span>
-       <span class="opc">printk2</span> krec               	  	<span class="comment">; prints the recording signal</span>
-       <span class="opc">outs</span>    aout, aout
+i<span class="n">trig</span>  <span class="o">=</span> <span class="nb">p4</span>
+a<span class="n">sig</span>   <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;get the signal in, loop it</span>
+k<span class="n">trig</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">trig</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">;when to trigger signal = p4</span>
+k<span class="n">pitch</span> <span class="nb">line</span> <span class="mf">1.2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.5</span>				<span class="c1">;vary pitch of recorded signal</span>
+a<span class="n">out</span><span class="p">,</span>k<span class="n">rec</span> <span class="nb">sndloop</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">pitch</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> <span class="mf">.4</span><span class="p">,</span> <span class="mf">0.05</span>	<span class="c1">;rec starts at p4 sec, for .4 secs and 0.05 crossfade</span>
+       <span class="nb">printk2</span> k<span class="n">rec</span>               	  	<span class="c1">; prints the recording signal</span>
+       <span class="nb">outs</span>    a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 5 .5	<span class="comment">;trigger in seconds (=p4)</span>
-<span class="stamnt">i</span>1 + 5 .8
-<span class="stamnt">i</span>1 + 10 1.2
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span> <span class="mf">.5</span>	<span class="c1">;trigger in seconds (=p4)</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mf">.8</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">1.2</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -148,7 +148,7 @@ aout,krec <span class="opc">sndloop</span> asig, kpitch, ktrig, .4, 0.05	<span c
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp139963280"></a>
+        <a id="idm1504954992"></a>
         <h2>Credits</h2>
         <p>
       </p>

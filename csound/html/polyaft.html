@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>polyaft</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pol2rect.html" title="pol2rect" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp125567200"></a>
+        <a id="idm1519699952"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>polyaft</em></span> returns the polyphonic pressure of the selected note number, optionally mapped to an user-specified range.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125641520"></a>
+        <a id="idm1519950320"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ires <span class="command"><strong>polyaft</strong></span> inote [, ilow] [, ihigh]</pre>
         <pre class="synopsis">kres <span class="command"><strong>polyaft</strong></span> inote [, ilow] [, ihigh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp125645232"></a>
+        <a id="idm1519956336"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inote</em></span> -- note number. Normally set to the value returned by <a class="link" href="notnum.html" title="notnum"><em class="citetitle">notnum</em></a>
@@ -64,17 +65,17 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125649760"></a>
+        <a id="idm1519948912"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kres</em></span> -- polyphonic pressure (aftertouch).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125651488"></a>
+        <a id="idm1519943920"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the polyaft opcode. It uses the file <a class="ulink" href="examples/polyaft.csd" target="_top"><em class="citetitle">polyaft.csd</em></a>.
+      Here is an example of the polyaft opcode. It uses the file <a class="ulink" href="examples/polyaft.csd.html" target="_top"><em class="citetitle">polyaft.csd</em></a>.
     </p>
         <p>
       Don't forget that you must include the <a class="link" href="CommandFlags.html#FlagsMinusUpperF"><em class="citetitle">-F flag</em></a> when using an external MIDI file like <span class="quote">“<span class="quote">polyaft.mid</span>”</span>.
@@ -82,62 +83,61 @@
         <p>
       </p>
         <div class="example">
-          <a id="idp125655584"></a>
+          <a id="idm1519945072"></a>
           <p class="title">
-            <strong>Example 666. Example of the polyaft opcode.</strong>
+            <strong>Example 686. Example of the polyaft opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp258410512"></a>
-              <a class="ulink" href="examples/polyaft.csd.html" target="_top">Play</a>
+              <a id="idm1341634928"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in   No messages  MIDI in</span>
--odac           -iadc     -d         -M0  <span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o polyaft.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in   No messages  MIDI in</span>
+-odac           -iadc     -d         -M0  <span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o polyaft.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>	<span class="op">=</span>  44100
-<span class="ohdr">ksmps</span>	<span class="op">=</span>  10
-<span class="ohdr">nchnls</span>	<span class="op">=</span>  1
+<span class="vg">sr</span>	<span class="o">=</span>  <span class="mi">44100</span>
+<span class="vg">ksmps</span>	<span class="o">=</span>  <span class="mi">10</span>
+<span class="vg">nchnls</span>	<span class="o">=</span>  <span class="mi">1</span>
 
-	<span class="ohdr">massign</span> 1, 1
-itmp	<span class="ohdr">ftgen</span> 1, 0, 1024, 10, 1		<span class="comment">; sine wave</span>
+	<span class="nb">massign</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+i<span class="n">tmp</span>	<span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; sine wave</span>
 
-	<span class="oblock">instr</span> 1
+	<span class="kd">instr</span> <span class="nf">1</span>
 
-kcps	<span class="opc">cpsmidib</span> 2		<span class="comment">; note frequency</span>
-inote	<span class="opc">notnum</span>			<span class="comment">; note number</span>
-kaft	<span class="opc">polyaft</span> inote, 0, 127	<span class="comment">; aftertouch</span>
-<span class="comment">; interpolate aftertouch to eliminate clicks</span>
-ktmp	<span class="opc">phasor</span> 40
-ktmp	<span class="opc">trigger</span> 1 <span class="op">-</span> ktmp, 0.5, 0
-kaft	<span class="opc">tlineto</span> kaft, 0.025, ktmp
-<span class="comment">; map to sine curve for crossfade</span>
-kaft	<span class="op">=</span>  <span class="opc">sin</span>(kaft <span class="op">*</span> 3.14159 <span class="op">/</span> 254) <span class="op">*</span> 22000
+k<span class="n">cps</span>	<span class="nb">cpsmidib</span> <span class="mi">2</span>		<span class="c1">; note frequency</span>
+i<span class="n">note</span>	<span class="nb">notnum</span>			<span class="c1">; note number</span>
+k<span class="n">aft</span>	<span class="nb">polyaft</span> i<span class="n">note</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span>	<span class="c1">; aftertouch</span>
+<span class="c1">; interpolate aftertouch to eliminate clicks</span>
+k<span class="n">tmp</span>	<span class="nb">phasor</span> <span class="mi">40</span>
+k<span class="n">tmp</span>	<span class="nb">trigger</span> <span class="mi">1</span> <span class="o">-</span> k<span class="n">tmp</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span>
+k<span class="n">aft</span>	<span class="nb">tlineto</span> k<span class="n">aft</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> k<span class="n">tmp</span>
+<span class="c1">; map to sine curve for crossfade</span>
+k<span class="n">aft</span>	<span class="o">=</span>  <span class="nb">sin</span><span class="p">(</span>k<span class="n">aft</span> <span class="o">*</span> <span class="mf">3.14159</span> <span class="o">/</span> <span class="mi">254</span><span class="p">)</span> <span class="o">*</span> <span class="mi">22000</span>
 
-asnd	<span class="opc">oscili</span> kaft, kcps, 1
+a<span class="n">snd</span>	<span class="nb">oscili</span> k<span class="n">aft</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
 
-	<span class="opc">out</span> asnd
+	<span class="nb">out</span> a<span class="n">snd</span>
 
-	<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="stamnt">t</span> 0 120
-<span class="stamnt">f</span> 0 9 2 -2 0
-<span class="stamnt">e</span>
+	<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="nb">t</span> <span class="mi">0</span> <span class="mi">120</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">9</span> <span class="mi">2</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">0</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -146,7 +146,7 @@ asnd	<span class="opc">oscili</span> kaft, kcps, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125659904"></a>
+        <a id="idm1519945840"></a>
         <h2>Credits</h2>
         <p>Added thanks to an email from Istvan Varga</p>
         <p>New in version 4.12</p>

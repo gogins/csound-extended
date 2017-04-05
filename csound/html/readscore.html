@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>readscore</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="readk4.html" title="readk4" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132542880"></a>
+        <a id="idm1512668272"></a>
         <h2>Description</h2>
         <p>
       Readscore will issue one or more score events. 
@@ -48,65 +49,64 @@ Multi-line strings are accepted, using {{  }} to enclose the string.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132544304"></a>
+        <a id="idm1512671088"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>readscore</strong></span> Sin </pre>
       </div>
       <div class="refsect1">
-        <a id="idp132546288"></a>
+        <a id="idm1512665584"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">Sin</span>”</span></em></span> --  a string (in double-quotes or enclosed by {{ }}) containing one or more score events.
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp132548144"></a>
+        <a id="idm1512662256"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the readscore opcode. It uses the file <a class="ulink" href="examples/readscore.csd" target="_top"><em class="citetitle">readscore.csd</em></a>.
+      Here is an example of the readscore opcode. It uses the file <a class="ulink" href="examples/readscore.csd.html" target="_top"><em class="citetitle">readscore.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp132550000"></a>
+          <a id="idm1512663152"></a>
           <p class="title">
-            <strong>Example 777. Example of the readscore opcode.</strong>
+            <strong>Example 798. Example of the readscore opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp261830464"></a>
-              <a class="ulink" href="examples/readscore.csd.html" target="_top">Play</a>
+              <a id="idm1333665008"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>  
+<span class="nt">&lt;CsOptions&gt;</span>
 -d -o dac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-   
+<span class="nt">&lt;/CsOptions&gt;</span> 
+<span class="nt">&lt;CsInstruments&gt;</span>   
  
-<span class="oblock">instr</span> 1
-a1 <span class="opc">flooper2</span> 1000,p4,2,5,0.1,1 
-   <span class="opc">out</span> a1
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+a<span class="n">1</span> <span class="nb">flooper2</span> <span class="mi">1000</span><span class="p">,</span><span class="nb">p4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span> 
+   <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-ires <span class="opc">readscore</span> {{
+<span class="kd">instr</span> <span class="nf">2</span>
+i<span class="n">res</span> <span class="nb">readscore</span> <span class="s">{{
 {12  COUNT 
-i1 $COUNT 1 [1 <span class="op">+</span> $COUNT<span class="op">/</span>12]
+i1 $COUNT 1 [1 + $COUNT/12]
 }
-}}
-<span class="oblock">endin</span>
+}}</span>
+<span class="kd">endin</span>
  
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0 12
-<span class="stamnt">f</span> 1 0 0 1 "<span class="stamnt">f</span>ox.wav" 0 0 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">12</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"fox.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span>2 0 1
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span>
 
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
+ 
 </pre>
             </div>
             <p>
@@ -125,7 +125,7 @@ String  <span class="opc">sprintfk</span> {{i 2 0 %f "%s" %f %f %f %f}}, idur, S
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132558864"></a>
+        <a id="idm1512652400"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="event.html" title="event"><em class="citetitle">event</em></a>,
@@ -137,7 +137,7 @@ String  <span class="opc">sprintfk</span> {{i 2 0 %f "%s" %f %f %f %f}}, idur, S
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132565776"></a>
+        <a id="idm1512656752"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini, 2013 </p>
       </div>

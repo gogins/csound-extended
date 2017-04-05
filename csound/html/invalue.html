@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>invalue</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="interp.html" title="interp" />
@@ -38,21 +39,21 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp107190528"></a>
+        <a id="idm1538830720"></a>
         <h2>Description</h2>
         <p>
       Reads a k-rate or i-rate signal or string from a user-defined channel.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107261024"></a>
+        <a id="idm1538834688"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ivalue <span class="command"><strong>invalue</strong></span> "channel name"</pre>
         <pre class="synopsis">kvalue <span class="command"><strong>invalue</strong></span> "channel name"</pre>
         <pre class="synopsis">Sname <span class="command"><strong>invalue</strong></span> "channel name"</pre>
       </div>
       <div class="refsect1">
-        <a id="idp107266032"></a>
+        <a id="idm1538835200"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ivalue, kvalue</em></span> -- The value that is read from the channel.
@@ -65,49 +66,47 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107269504"></a>
+        <a id="idm1538824064"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the invalue opcode. It uses the file <a class="ulink" href="examples/invalue.csd" target="_top"><em class="citetitle">invalue.csd</em></a>.
+      Here is an example of the invalue opcode. It uses the file <a class="ulink" href="examples/invalue.csd.html" target="_top"><em class="citetitle">invalue.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp107271360"></a>
+          <a id="idm1538827904"></a>
           <p class="title">
-            <strong>Example 428. Example of the invalue opcode.</strong>
+            <strong>Example 435. Example of the invalue opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp249093680"></a>
-              <a class="ulink" href="examples/invalue.csd.html" target="_top">Play</a>
+              <a id="idm1367026800"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;run this example in CsoundQt, a Csound editor that provides widgets</span>
+<span class="c1">;make the Widgets-panel visible, by clicking the Widgets symbol in the menu or pressing (Alt+1).</span>
 
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;run this example in CsoundQt, a Csound editor that provides widgets</span>
-<span class="comment">;make the Widgets-panel visible, by clicking the Widgets symbol in the menu or pressing (Alt+1).</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">; written by Andres Cabrera</span>
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
-<span class="comment">; written by Andres Cabrera</span>
-<span class="oblock">instr</span> 1
+k<span class="n">freq</span> <span class="nb">invalue</span> <span class="s">"freq"</span> <span class="c1">; Quotes are needed here</span>
+a<span class="n">sig</span>  <span class="nb">oscil</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-kfreq <span class="opc">invalue</span> "freq" <span class="comment">; Quotes are needed here</span>
-asig  <span class="opc">oscil</span> 0.1, kfreq, 1
-      <span class="opc">outs</span> asig, asig
-
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 1024 10 1 <span class="comment">;sine</span>
-<span class="stamnt">i</span> 1 0 300 	<span class="comment">;play for 300 seconds</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span> <span class="c1">;sine</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">300</span> 	<span class="c1">;play for 300 seconds</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -116,14 +115,14 @@ asig  <span class="opc">oscil</span> 0.1, kfreq, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107275648"></a>
+        <a id="idm1538821760"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="outvalue.html" title="outvalue"><em class="citetitle">outvalue</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp107277696"></a>
+        <a id="idm1538820480"></a>
         <h2>Credits</h2>
         <p>
       </p>

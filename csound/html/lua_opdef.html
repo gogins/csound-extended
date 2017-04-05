@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>lua_opdef</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="lua_exec.html" title="lua_exec" />
@@ -45,7 +46,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp112140464"></a>
+        <a id="idm1533406576"></a>
         <h2>
             Description
         </h2>
@@ -87,14 +88,14 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp112144032"></a>
+        <a id="idm1533410928"></a>
         <h2>
             Syntax
         </h2>
         <pre class="synopsis"><span class="command"><strong>lua_opdef</strong></span> Sname, Sluacode</pre>
       </div>
       <div class="refsect1">
-        <a id="idp112193088"></a>
+        <a id="idm1533396464"></a>
         <h2>
             Initialization
         </h2>
@@ -148,7 +149,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp112204400"></a>
+        <a id="idm1533395440"></a>
         <h2>
             Example
         </h2>
@@ -157,283 +158,284 @@
             ladder filter. For purposes of comparison, a user-defined 
             opcode and the native Csound opcode that compute the same 
             sound using the same algorithm also are shown, and timed. 
-            The example uses the file <a class="ulink" href="examples/luamoog.csd" target="_top">
+            The example uses the file <a class="ulink" href="examples/luamoog.csd.html" target="_top">
             <em class="citetitle">luamoog.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idp112207920"></a>
+          <a id="idm1533394160"></a>
           <p class="title">
-            <strong>Example 482. 
+            <strong>Example 497. 
                     Example of a Lua opcode.
                 </strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp249939808"></a>
-              <a class="ulink" href="examples/luamoog.csd.html" target="_top">Play</a>
+              <a id="idm1360905584"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span> <span class="op">=</span>    48000
-<span class="ohdr">ksmps</span> <span class="op">=</span>   100
-<span class="ohdr">nchnls</span> <span class="op">=</span>    1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span> <span class="o">=</span>    <span class="mi">48000</span>
+<span class="vg">ksmps</span> <span class="o">=</span>   <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span>    <span class="mi">1</span>
 
-    gibegan     <span class="opc">rtclock</span>
+    gi<span class="n">began</span>     <span class="nb">rtclock</span>
 
-    <span class="opc">lua_opdef</span>   "moogladder", {{
-local ffi <span class="op">=</span> require("ffi")
-local math <span class="op">=</span> require("math")
-local string <span class="op">=</span> require("string")
-local csoundApi <span class="op">=</span> ffi.load('csound64.dll.5.2')
-ffi.cdef[[
-    <span class="opc">int</span> csoundGetKsmps(void <span class="op">*</span>)<span class="comment">;</span>
-    double csoundGetSr(void <span class="op">*</span>)<span class="comment">;</span>
-    struct moogladder_t {
-      double <span class="op">*</span><span class="opc">out</span><span class="comment">;</span>
-      double <span class="op">*</span>inp<span class="comment">;</span>
-      double <span class="op">*</span>freq<span class="comment">;</span>
-      double <span class="op">*</span>res<span class="comment">;</span>
-      double <span class="op">*</span>istor<span class="comment">;</span>
-      double <span class="ohdr">sr</span><span class="comment">;</span>
-      double <span class="ohdr">ksmps</span><span class="comment">;</span>
-      double thermal<span class="comment">;</span>
-      double f<span class="comment">;</span>
-      double fc<span class="comment">;</span>
-      double fc2<span class="comment">;</span>
-      double fc3<span class="comment">;</span>
-      double fcr<span class="comment">;</span>
-      double acr<span class="comment">;</span>
-      double tune<span class="comment">;</span>
-      double res4<span class="comment">;</span>
-      double input<span class="comment">;</span>
-      double <span class="opc">i</span><span class="comment">;</span>
-      double j<span class="comment">;</span>
-      double <span class="opc">k</span><span class="comment">;</span>
-      double kk<span class="comment">;</span>
-      double stg[6]<span class="comment">;</span>
-      double delay[6]<span class="comment">;</span>
-      double tanhstg[6]<span class="comment">;</span>
-    }<span class="comment">;</span>
-]]
+    <span class="nb">lua_opdef</span>   <span class="s">"moogladder"</span><span class="p">,</span> <span class="s">{{</span>
+<span class="kd">local</span> <span class="n">ffi</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">ffi"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">math</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">math"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">string</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">string"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">csoundApi</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'</span><span class="s">csound64.dll.5.2'</span><span class="p">)</span>
+<span class="n">ffi</span><span class="p">.</span><span class="n">cdef</span><span class="p">[[</span>
+    <span class="n">int</span> <span class="n">csoundGetKsmps</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span><span class="p">);</span>
+    <span class="n">double</span> <span class="n">csoundGetSr</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span><span class="p">);</span>
+    <span class="n">struct</span> <span class="n">moogladder_t</span> <span class="p">{</span>
+      <span class="n">double</span> <span class="o">*</span><span class="n">out</span><span class="p">;</span>
+      <span class="n">double</span> <span class="o">*</span><span class="n">inp</span><span class="p">;</span>
+      <span class="n">double</span> <span class="o">*</span><span class="n">freq</span><span class="p">;</span>
+      <span class="n">double</span> <span class="o">*</span><span class="n">res</span><span class="p">;</span>
+      <span class="n">double</span> <span class="o">*</span><span class="n">istor</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">sr</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">ksmps</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">thermal</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">f</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">fc</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">fc2</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">fc3</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">fcr</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">acr</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">tune</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">res4</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">input</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">i</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">j</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">k</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">kk</span><span class="p">;</span>
+      <span class="n">double</span> <span class="n">stg</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+      <span class="n">double</span> <span class="n">delay</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+      <span class="n">double</span> <span class="n">tanhstg</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+    <span class="p">};</span>
+<span class="p">]]</span>
 
-local moogladder_ct <span class="op">=</span> ffi.typeof('struct moogladder_t <span class="op">*</span>')
+<span class="kd">local</span> <span class="n">moogladder_ct</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">typeof</span><span class="p">(</span><span class="s1">'</span><span class="s">struct moogladder_t *'</span><span class="p">)</span>
 
-function moogladder_init(csound, opcode, carguments)
-    local <span class="opc">p</span> <span class="op">=</span> ffi.cast(moogladder_ct, carguments)
-    p.sr <span class="op">=</span> csoundApi.csoundGetSr(csound)
-    p.ksmps <span class="op">=</span> csoundApi.csoundGetKsmps(csound)
-    <span class="octrl">if</span> p.istor[0] <span class="op">==</span> 0 then
-        for <span class="opc">i</span> <span class="op">=</span> 0, 5 do
-            p.delay[i] <span class="op">=</span> 0.0
-        end
-        for <span class="opc">i</span> <span class="op">=</span> 0, 3 do
-            p.tanhstg[i] <span class="op">=</span> 0.0
-        end
-    end
-    <span class="opc">return</span> 0
-end
+<span class="k">function</span> <span class="nf">moogladder_init</span><span class="p">(</span><span class="n">csound</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="n">moogladder_ct</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">sr</span> <span class="o">=</span> <span class="n">csoundApi</span><span class="p">.</span><span class="n">csoundGetSr</span><span class="p">(</span><span class="n">csound</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">ksmps</span> <span class="o">=</span> <span class="n">csoundApi</span><span class="p">.</span><span class="n">csoundGetKsmps</span><span class="p">(</span><span class="n">csound</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">istor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">then</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span> <span class="k">do</span>
+            <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">end</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="k">do</span>
+            <span class="n">p</span><span class="p">.</span><span class="n">tanhstg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="k">end</span>
 
-function moogladder_kontrol(csound, opcode, carguments)
-    local <span class="opc">p</span> <span class="op">=</span> ffi.cast(moogladder_ct, carguments)
-    <span class="op">-</span><span class="op">-</span> transistor thermal voltage
-    p.thermal <span class="op">=</span> 1.0 <span class="op">/</span> 40000.0
-    <span class="octrl">if</span> p.res[0] <span class="op">&lt;</span> 0.0 then
-        p.res[0] <span class="op">=</span> 0.0
-    end
-    <span class="op">-</span><span class="op">-</span> <span class="ohdr">sr</span> is half the actual filter sampling rate
-    p.fc <span class="op">=</span> p.freq[0] <span class="op">/</span> p.sr
-    p.f <span class="op">=</span> p.fc <span class="op">/</span> 2.0
-    p.fc2 <span class="op">=</span> p.fc <span class="op">*</span> p.fc
-    p.fc3 <span class="op">=</span> p.fc2 <span class="op">*</span> p.fc
-    <span class="op">-</span><span class="op">-</span> frequency <span class="op">&amp;</span> amplitude correction
-    p.fcr <span class="op">=</span> 1.873 <span class="op">*</span> p.fc3 <span class="op">+</span> 0.4955 <span class="op">*</span> p.fc2 <span class="op">-</span> 0.6490 <span class="op">*</span> p.fc <span class="op">+</span> 0.9988
-    p.acr <span class="op">=</span> <span class="op">-</span>3.9364 <span class="op">*</span> p.fc2 <span class="op">+</span> 1.8409 <span class="op">*</span> p.fc <span class="op">+</span> 0.9968
-    <span class="op">-</span><span class="op">-</span> filter tuning
-    p.tune <span class="op">=</span> (1.0 <span class="op">-</span> math.exp(<span class="op">-</span>(2.0 <span class="op">*</span> math.pi <span class="op">*</span> p.f <span class="op">*</span> p.fcr))) <span class="op">/</span> p.thermal
-    p.res4 <span class="op">=</span> 4.0 <span class="op">*</span> p.res[0] <span class="op">*</span> p.acr
-    <span class="op">-</span><span class="op">-</span> Nested 'for' loops crash, not sure why.
-    <span class="op">-</span><span class="op">-</span> Local loop variables also are problematic.
-    <span class="op">-</span><span class="op">-</span> Lower<span class="op">-</span>level loop constructs don't crash.
-    p.i <span class="op">=</span> 0
-    while p.i <span class="op">&lt;</span> p.ksmps do
-        p.j <span class="op">=</span> 0
-        while p.j <span class="op">&lt;</span> 2 do
-            p.k <span class="op">=</span> 0
-            while p.k <span class="op">&lt;</span> 4 do
-                <span class="octrl">if</span> p.k <span class="op">==</span> 0 then
-                    p.input <span class="op">=</span> p.inp[p.i] <span class="op">-</span> p.res4 <span class="op">*</span> p.delay[5]
-                    p.stg[p.k] <span class="op">=</span> p.delay[p.k] <span class="op">+</span> p.tune <span class="op">*</span> (math.tanh(p.input <span class="op">*</span> p.thermal) <span class="op">-</span> p.tanhstg[p.k])
-                <span class="octrl">else</span>
-                    p.input <span class="op">=</span> p.stg[p.k <span class="op">-</span> 1]
-                    p.tanhstg[p.k <span class="op">-</span> 1] <span class="op">=</span> math.tanh(p.input <span class="op">*</span> p.thermal)
-                    <span class="octrl">if</span> p.k <span class="op">&lt;</span> 3 then
-                        p.kk <span class="op">=</span> p.tanhstg[p.k]
-                    <span class="octrl">else</span>
-                        p.kk <span class="op">=</span> math.tanh(p.delay[p.k] <span class="op">*</span> p.thermal)
-                    end
-                    p.stg[p.k] <span class="op">=</span> p.delay[p.k] <span class="op">+</span> p.tune <span class="op">*</span> (p.tanhstg[p.k <span class="op">-</span> 1] <span class="op">-</span> p.kk)
-                end
-                p.delay[p.k] <span class="op">=</span> p.stg[p.k]
-                p.k <span class="op">=</span> p.k <span class="op">+</span> 1
-            end
-            <span class="op">-</span><span class="op">-</span> 1<span class="op">/</span>2<span class="op">-</span>sample <span class="opc">delay</span> for phase compensation
-            p.delay[5] <span class="op">=</span> (p.stg[3] <span class="op">+</span> p.delay[4]) <span class="op">*</span> 0.5
-            p.delay[4] <span class="op">=</span> p.stg[3]
-            p.j <span class="op">=</span> p.j <span class="op">+</span> 1
-        end
-        p.out[p.i] <span class="op">=</span> p.delay[5]
-        p.i <span class="op">=</span> p.i <span class="op">+</span> 1
-    end
-    <span class="opc">return</span> 0
-end
-}}
+<span class="k">function</span> <span class="nf">moogladder_kontrol</span><span class="p">(</span><span class="n">csound</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="n">moogladder_ct</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="c1">-- transistor thermal voltage</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">thermal</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">40000.0</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="k">then</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">end</span>
+    <span class="c1">-- sr is half the actual filter sampling rate</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">freq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">p</span><span class="p">.</span><span class="n">sr</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">fc</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">fc</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">fc2</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc</span>
+    <span class="c1">-- frequency &amp; amplitude correction</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">fcr</span> <span class="o">=</span> <span class="mf">1.873</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc3</span> <span class="o">+</span> <span class="mf">0.4955</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc2</span> <span class="o">-</span> <span class="mf">0.6490</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc</span> <span class="o">+</span> <span class="mf">0.9988</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">acr</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.9364</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc2</span> <span class="o">+</span> <span class="mf">1.8409</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fc</span> <span class="o">+</span> <span class="mf">0.9968</span>
+    <span class="c1">-- filter tuning</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">tune</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">math.exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="nb">math.pi</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">f</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">fcr</span><span class="p">)))</span> <span class="o">/</span> <span class="n">p</span><span class="p">.</span><span class="n">thermal</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">res4</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">acr</span>
+    <span class="c1">-- Nested 'for' loops crash, not sure why.</span>
+    <span class="c1">-- Local loop variables also are problematic.</span>
+    <span class="c1">-- Lower-level loop constructs don't crash.</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">p</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">.</span><span class="n">ksmps</span> <span class="k">do</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">p</span><span class="p">.</span><span class="n">j</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">do</span>
+            <span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="k">do</span>
+                <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">then</span>
+                    <span class="n">p</span><span class="p">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">inp</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">res4</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                    <span class="n">p</span><span class="p">.</span><span class="n">stg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">tune</span> <span class="o">*</span> <span class="p">(</span><span class="nb">math.tanh</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">input</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">thermal</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">tanhstg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">])</span>
+                <span class="k">else</span>
+                    <span class="n">p</span><span class="p">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">stg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">p</span><span class="p">.</span><span class="n">tanhstg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">math.tanh</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">input</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">thermal</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="k">then</span>
+                        <span class="n">p</span><span class="p">.</span><span class="n">kk</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">tanhstg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span>
+                    <span class="k">else</span>
+                        <span class="n">p</span><span class="p">.</span><span class="n">kk</span> <span class="o">=</span> <span class="nb">math.tanh</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">thermal</span><span class="p">)</span>
+                    <span class="k">end</span>
+                    <span class="n">p</span><span class="p">.</span><span class="n">stg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">tune</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">tanhstg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">kk</span><span class="p">)</span>
+                <span class="k">end</span>
+                <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">stg</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">end</span>
+            <span class="c1">-- 1/2-sample delay for phase compensation</span>
+            <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">stg</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">stg</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">p</span><span class="p">.</span><span class="n">j</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">end</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">out</span><span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">delay</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="k">end</span>
+<span class="s">}}</span>
 
-<span class="op">/</span><span class="op">*</span>
-Moogladder <span class="op">-</span> An improved implementation of the Moog ladder filter
+<span class="cm">/*
+Moogladder - An improved implementation of the Moog ladder filter
 
 DESCRIPTION
 This is an new digital implementation of the Moog ladder filter based on the work of Antti Huovilainen,
-described <span class="opc">in</span> the paper \"Non<span class="op">-</span>Linear Digital Implementation of the Moog Ladder Filter\" (Proceedings of DaFX04, Univ of Napoli).
-This implementation is probably <span class="opc">a</span> more accurate digital representation of the original analogue filter.
-This is version 2 (revised 14<span class="op">/</span>DEC<span class="op">/</span>04), with improved amplitude<span class="op">/</span>resonance scaling and frequency correction using <span class="opc">a</span> couple of polynomials,as suggested by Antti.
+described in the paper \"Non-Linear Digital Implementation of the Moog Ladder Filter\" (Proceedings of DaFX04, Univ of Napoli).
+This implementation is probably a more accurate digital representation of the original analogue filter.
+This is version 2 (revised 14/DEC/04), with improved amplitude/resonance scaling and frequency correction using a couple of polynomials,as suggested by Antti.
 
 SYNTAX
 ar  Moogladder  asig, kcf, kres
 
 PERFORMANCE
-asig <span class="op">-</span> input signal
-kcf <span class="op">-</span> cutoff frequency (Hz)
-kres <span class="op">-</span> resonance (0 <span class="op">-</span> 1).
+asig - input signal
+kcf - cutoff frequency (Hz)
+kres - resonance (0 - 1).
 
 CREDITS
 Victor Lazzarini
-<span class="op">*</span><span class="op">/</span>
+*/</span>
 
-                    <span class="oblock">opcode</span>  moogladderu, a, akk
-asig, kcf, kres     <span class="opc">xin</span>
-                    <span class="opc">setksmps</span>    1
-ipi                 <span class="op">=</span>           4 <span class="op">*</span> <span class="opc">taninv</span>(1)
-<span class="op">/</span><span class="op">*</span> filter delays <span class="op">*</span><span class="op">/</span>
-az1                 <span class="opc">init</span>        0
-az2                 <span class="opc">init</span>        0
-az3                 <span class="opc">init</span>        0
-az4                 <span class="opc">init</span>        0
-az5                 <span class="opc">init</span>        0
-ay4                 <span class="opc">init</span>        0
-amf                 <span class="opc">init</span>        0
-                    <span class="octrl">if</span>          kres <span class="op">&gt;</span> 1 then
-kres                <span class="op">=</span>           1
-                    <span class="octrl">elseif</span>      kres <span class="op">&lt;</span> 0 then
-kres                <span class="op">=</span>           0
-                    <span class="octrl">endif</span>
-<span class="op">/</span><span class="op">*</span> twice the \'thermal voltage of <span class="opc">a</span> transistor\' <span class="op">*</span><span class="op">/</span>
-i2v                 <span class="op">=</span>           40000
-<span class="op">/</span><span class="op">*</span> <span class="ohdr">sr</span> is half the actual filter sampling rate  <span class="op">*</span><span class="op">/</span>
-kfc                 <span class="op">=</span>           kcf<span class="op">/</span><span class="ohdr">sr</span>
-kf                  <span class="op">=</span>           kcf<span class="op">/</span>(<span class="ohdr">sr</span><span class="op">*</span>2)
-<span class="op">/</span><span class="op">*</span> frequency <span class="op">&amp;</span> amplitude correction  <span class="op">*</span><span class="op">/</span>
-kfcr                <span class="op">=</span>           1.8730 <span class="op">*</span> (kfc^3) <span class="op">+</span> 0.4955 <span class="op">*</span> (kfc^2) <span class="op">-</span> 0.6490 <span class="op">*</span> kfc <span class="op">+</span> 0.9988
-kacr                <span class="op">=</span>           <span class="op">-</span>3.9364 <span class="op">*</span> (kfc^2) <span class="op">+</span> 1.8409 <span class="op">*</span> kfc <span class="op">+</span> 0.9968<span class="comment">;</span>
-<span class="op">/</span><span class="op">*</span> filter tuning  <span class="op">*</span><span class="op">/</span>
-k2vg                <span class="op">=</span>           i2v <span class="op">*</span> (1 <span class="op">-</span> <span class="opc">exp</span>(<span class="op">-</span>2 <span class="op">*</span> ipi <span class="op">*</span> kfcr <span class="op">*</span> kf))
-<span class="op">/</span><span class="op">*</span> cascade of 4 1st order sections         <span class="op">*</span><span class="op">/</span>
-ay1                 <span class="op">=</span>           az1 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>((asig <span class="op">-</span> 4 <span class="op">*</span> kres <span class="op">*</span> amf <span class="op">*</span> kacr) <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az1 <span class="op">/</span> i2v))
-az1                 <span class="op">=</span>           ay1
-ay2                 <span class="op">=</span>           az2 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay1 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az2 <span class="op">/</span> i2v ))
-az2                 <span class="op">=</span>           ay2
-ay3                 <span class="op">=</span>           az3 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay2 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az3 <span class="op">/</span> i2v))
-az3                 <span class="op">=</span>           ay3
-ay4                 <span class="op">=</span>           az4 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay3 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az4 <span class="op">/</span> i2v))
-az4                 <span class="op">=</span>           ay4
-<span class="op">/</span><span class="op">*</span> 1<span class="op">/</span>2<span class="op">-</span>sample <span class="opc">delay</span> for phase compensation  <span class="op">*</span><span class="op">/</span>
-amf                 <span class="op">=</span>           (ay4 <span class="op">+</span> az5) <span class="op">*</span>0.5
-az5                 <span class="op">=</span>           ay4
-<span class="op">/</span><span class="op">*</span> oversampling  <span class="op">*</span><span class="op">/</span>
-ay1                 <span class="op">=</span>           az1 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>((asig <span class="op">-</span> 4 <span class="op">*</span> kres <span class="op">*</span> amf <span class="op">*</span> kacr) <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az1 <span class="op">/</span> i2v))
-az1                 <span class="op">=</span>           ay1
-ay2                 <span class="op">=</span>           az2 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay1 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az2 <span class="op">/</span> i2v ))
-az2                 <span class="op">=</span>           ay2
-ay3                 <span class="op">=</span>           az3 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay2 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az3 <span class="op">/</span> i2v))
-az3                 <span class="op">=</span>           ay3
-ay4                 <span class="op">=</span>           az4 <span class="op">+</span> k2vg <span class="op">*</span> (<span class="opc">tanh</span>(ay3 <span class="op">/</span> i2v) <span class="op">-</span> <span class="opc">tanh</span>(az4 <span class="op">/</span> i2v))
-az4                 <span class="op">=</span>           ay4
-amf                 <span class="op">=</span>           (ay4 <span class="op">+</span> az5) <span class="op">*</span> 0.5
-az5                 <span class="op">=</span>           ay4
-                    <span class="opc">xout</span>        amf
-                    <span class="oblock">endop</span>
+                    <span class="kd">opcode</span>  <span class="nf">moogladderu</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">akk</span>
+a<span class="n">sig</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">res</span>     <span class="nb">xin</span>
+                    <span class="nb">setksmps</span>    <span class="mi">1</span>
+i<span class="n">pi</span>                 <span class="o">=</span>           <span class="mi">4</span> <span class="o">*</span> <span class="nb">taninv</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="cm">/* filter delays */</span>
+a<span class="n">z1</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+a<span class="n">z2</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+a<span class="n">z3</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+a<span class="n">z4</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+a<span class="n">z5</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+a<span class="n">y4</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+a<span class="n">mf</span>                 <span class="nb">init</span>        <span class="mi">0</span>
+                    <span class="k">if</span>          k<span class="n">res</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">then</span>
+k<span class="n">res</span>                <span class="o">=</span>           <span class="mi">1</span>
+                    <span class="k">elseif</span>      k<span class="n">res</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">then</span>
+k<span class="n">res</span>                <span class="o">=</span>           <span class="mi">0</span>
+                    <span class="k">endif</span>
+<span class="cm">/* twice the \'thermal voltage of a transistor\' */</span>
+i<span class="n">2v</span>                 <span class="o">=</span>           <span class="mi">40000</span>
+<span class="cm">/* sr is half the actual filter sampling rate  */</span>
+k<span class="n">fc</span>                 <span class="o">=</span>           k<span class="n">cf</span><span class="o">/</span><span class="vg">sr</span>
+k<span class="n">f</span>                  <span class="o">=</span>           k<span class="n">cf</span><span class="o">/</span><span class="p">(</span><span class="vg">sr</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="cm">/* frequency &amp; amplitude correction  */</span>
+k<span class="n">fcr</span>                <span class="o">=</span>           <span class="mf">1.8730</span> <span class="o">*</span> <span class="p">(</span>k<span class="n">fc</span><span class="o">^</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.4955</span> <span class="o">*</span> <span class="p">(</span>k<span class="n">fc</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.6490</span> <span class="o">*</span> k<span class="n">fc</span> <span class="o">+</span> <span class="mf">0.9988</span>
+k<span class="n">acr</span>                <span class="o">=</span>           <span class="o">-</span><span class="mf">3.9364</span> <span class="o">*</span> <span class="p">(</span>k<span class="n">fc</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.8409</span> <span class="o">*</span> k<span class="n">fc</span> <span class="o">+</span> <span class="mf">0.9968</span><span class="c1">;</span>
+<span class="cm">/* filter tuning  */</span>
+k<span class="n">2vg</span>                <span class="o">=</span>           i<span class="n">2v</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> i<span class="n">pi</span> <span class="o">*</span> k<span class="n">fcr</span> <span class="o">*</span> k<span class="n">f</span><span class="p">))</span>
+<span class="cm">/* cascade of 4 1st order sections         */</span>
+a<span class="n">y1</span>                 <span class="o">=</span>           a<span class="n">z1</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">((</span>a<span class="n">sig</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> k<span class="n">res</span> <span class="o">*</span> a<span class="n">mf</span> <span class="o">*</span> k<span class="n">acr</span><span class="p">)</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z1</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">))</span>
+a<span class="n">z1</span>                 <span class="o">=</span>           a<span class="n">y1</span>
+a<span class="n">y2</span>                 <span class="o">=</span>           a<span class="n">z2</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">(</span>a<span class="n">y1</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z2</span> <span class="o">/</span> i<span class="n">2v</span> <span class="p">))</span>
+a<span class="n">z2</span>                 <span class="o">=</span>           a<span class="n">y2</span>
+a<span class="n">y3</span>                 <span class="o">=</span>           a<span class="n">z3</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">(</span>a<span class="n">y2</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z3</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">))</span>
+a<span class="n">z3</span>                 <span class="o">=</span>           a<span class="n">y3</span>
+a<span class="n">y4</span>                 <span class="o">=</span>           a<span class="n">z4</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">(</span>a<span class="n">y3</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z4</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">))</span>
+a<span class="n">z4</span>                 <span class="o">=</span>           a<span class="n">y4</span>
+<span class="cm">/* 1/2-sample delay for phase compensation  */</span>
+a<span class="n">mf</span>                 <span class="o">=</span>           <span class="p">(</span>a<span class="n">y4</span> <span class="o">+</span> a<span class="n">z5</span><span class="p">)</span> <span class="o">*</span><span class="mf">0.5</span>
+a<span class="n">z5</span>                 <span class="o">=</span>           a<span class="n">y4</span>
+<span class="cm">/* oversampling  */</span>
+a<span class="n">y1</span>                 <span class="o">=</span>           a<span class="n">z1</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">((</span>a<span class="n">sig</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> k<span class="n">res</span> <span class="o">*</span> a<span class="n">mf</span> <span class="o">*</span> k<span class="n">acr</span><span class="p">)</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z1</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">))</span>
+a<span class="n">z1</span>                 <span class="o">=</span>           a<span class="n">y1</span>
+a<span class="n">y2</span>                 <span class="o">=</span>           a<span class="n">z2</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">(</span>a<span class="n">y1</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z2</span> <span class="o">/</span> i<span class="n">2v</span> <span class="p">))</span>
+a<span class="n">z2</span>                 <span class="o">=</span>           a<span class="n">y2</span>
+a<span class="n">y3</span>                 <span class="o">=</span>           a<span class="n">z3</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">(</span>a<span class="n">y2</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z3</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">))</span>
+a<span class="n">z3</span>                 <span class="o">=</span>           a<span class="n">y3</span>
+a<span class="n">y4</span>                 <span class="o">=</span>           a<span class="n">z4</span> <span class="o">+</span> k<span class="n">2vg</span> <span class="o">*</span> <span class="p">(</span><span class="nb">tanh</span><span class="p">(</span>a<span class="n">y3</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">)</span> <span class="o">-</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">z4</span> <span class="o">/</span> i<span class="n">2v</span><span class="p">))</span>
+a<span class="n">z4</span>                 <span class="o">=</span>           a<span class="n">y4</span>
+a<span class="n">mf</span>                 <span class="o">=</span>           <span class="p">(</span>a<span class="n">y4</span> <span class="o">+</span> a<span class="n">z5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+a<span class="n">z5</span>                 <span class="o">=</span>           a<span class="n">y4</span>
+                    <span class="nb">xout</span>        a<span class="n">mf</span>
+                    <span class="kd">endop</span>
 
-<span class="oblock">instr</span> 1
-                <span class="opc">prints</span>      "No filter.\n"
-	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
-    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
-    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
-    <span class="comment">; afil      moogladder  asig, kfe, 1</span>
-                <span class="opc">out</span>         asig
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+                <span class="nb">prints</span>      <span class="s">"No filter.</span><span class="se">\n</span><span class="s">"</span>
+	k<span class="n">fe</span>         <span class="nb">expseg</span>      <span class="mi">500</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3000</span>
+    k<span class="n">env</span>        <span class="nb">linen</span>       <span class="mi">10000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.05</span>
+    a<span class="n">sig</span>        <span class="nb">buzz</span>        k<span class="n">env</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="mi">1</span>
+    <span class="c1">; afil      moogladder  asig, kfe, 1</span>
+                <span class="nb">out</span>         a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-                <span class="opc">prints</span>      "Native moogladder.\n"
-	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
-    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
-    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
-    afil        <span class="opc">moogladder</span>  asig, kfe, 1
-                <span class="opc">out</span>         afil
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+                <span class="nb">prints</span>      <span class="s">"Native moogladder.</span><span class="se">\n</span><span class="s">"</span>
+	k<span class="n">fe</span>         <span class="nb">expseg</span>      <span class="mi">500</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3000</span>
+    k<span class="n">env</span>        <span class="nb">linen</span>       <span class="mi">10000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.05</span>
+    a<span class="n">sig</span>        <span class="nb">buzz</span>        k<span class="n">env</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="mi">1</span>
+    a<span class="n">fil</span>        <span class="nb">moogladder</span>  a<span class="n">sig</span><span class="p">,</span> k<span class="n">fe</span><span class="p">,</span> <span class="mi">1</span>
+                <span class="nb">out</span>         a<span class="n">fil</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3
-                <span class="opc">prints</span>      "UDO moogladder.\n"
-	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
-    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
-    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
-    afil        moogladderu asig, kfe, 1
-                <span class="opc">out</span>         afil
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">3</span>
+                <span class="nb">prints</span>      <span class="s">"UDO moogladder.</span><span class="se">\n</span><span class="s">"</span>
+	k<span class="n">fe</span>         <span class="nb">expseg</span>      <span class="mi">500</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3000</span>
+    k<span class="n">env</span>        <span class="nb">linen</span>       <span class="mi">10000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.05</span>
+    a<span class="n">sig</span>        <span class="nb">buzz</span>        k<span class="n">env</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="mi">1</span>
+    a<span class="n">fil</span>        <span class="nf">moogladderu</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">fe</span><span class="p">,</span> <span class="mi">1</span>
+                <span class="nb">out</span>         a<span class="n">fil</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 4
-                <span class="opc">prints</span>      "Lua moogladder.\n"
-    kres        <span class="opc">init</span>        1
-    istor       <span class="opc">init</span>        0
-	kfe         <span class="opc">expseg</span>      500, p3<span class="op">*</span>0.9, 1800, p3<span class="op">*</span>0.1, 3000
-    kenv        <span class="opc">linen</span>       10000, 0.05, p3, 0.05
-    asig        <span class="opc">buzz</span>        kenv, 100, <span class="ohdr">sr</span><span class="op">/</span>(200), 1
-    afil        <span class="opc">init</span>        0
-                <span class="opc">lua_ikopcall</span>    "moogladder", afil, asig, kfe, kres, istor
-                <span class="opc">out</span>         afil
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">4</span>
+                <span class="nb">prints</span>      <span class="s">"Lua moogladder.</span><span class="se">\n</span><span class="s">"</span>
+    k<span class="n">res</span>        <span class="nb">init</span>        <span class="mi">1</span>
+    i<span class="n">stor</span>       <span class="nb">init</span>        <span class="mi">0</span>
+	k<span class="n">fe</span>         <span class="nb">expseg</span>      <span class="mi">500</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3000</span>
+    k<span class="n">env</span>        <span class="nb">linen</span>       <span class="mi">10000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.05</span>
+    a<span class="n">sig</span>        <span class="nb">buzz</span>        k<span class="n">env</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="mi">1</span>
+    a<span class="n">fil</span>        <span class="nb">init</span>        <span class="mi">0</span>
+                <span class="nb">lua_ikopcall</span>    <span class="s">"moogladder"</span><span class="p">,</span> a<span class="n">fil</span><span class="p">,</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">fe</span><span class="p">,</span> k<span class="n">res</span><span class="p">,</span> i<span class="n">stor</span>
+                <span class="nb">out</span>         a<span class="n">fil</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 5
-    giended     <span class="opc">rtclock</span>
-    ielapsed    <span class="op">=</span>           giended <span class="op">-</span> gibegan
-                <span class="opc">print</span>       ielapsed
-    gibegan     <span class="opc">rtclock</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">5</span>
+    gi<span class="n">ended</span>     <span class="nb">rtclock</span>
+    i<span class="n">elapsed</span>    <span class="o">=</span>           gi<span class="n">ended</span> <span class="o">-</span> gi<span class="n">began</span>
+                <span class="nb">print</span>       i<span class="n">elapsed</span>
+    gi<span class="n">began</span>     <span class="nb">rtclock</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1     0 65536 10 1
-<span class="stamnt">i</span> 5.1   0   1
-<span class="stamnt">i</span> 4     1   20
-<span class="stamnt">i</span> 5.2   21  1
-<span class="stamnt">i</span> 4     22  20
-<span class="stamnt">i</span> 5.3   42  1
-<span class="stamnt">i</span> 2     43  20
-<span class="stamnt">i</span> 5.4   63  1
-<span class="stamnt">i</span> 2     64  20
-<span class="stamnt">i</span> 5.5   84  1
-<span class="stamnt">i</span> 3     85  20
-<span class="stamnt">i</span> 5.6   105 1
-<span class="stamnt">i</span> 3     106 20
-<span class="stamnt">i</span> 5.7   126 1
-<span class="stamnt">i</span> 1     127 20
-<span class="stamnt">i</span> 5.8   147 1
-<span class="stamnt">i</span> 1     148 20
-<span class="stamnt">i</span> 5.9   168 1
-<span class="stamnt">i</span> 4     169 20
-<span class="stamnt">i</span> 4     170 20
-<span class="stamnt">i</span> 4     171 20
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span>     <span class="mi">0</span> <span class="mi">65536</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mf">5.1</span>   <span class="mi">0</span>   <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">4</span>     <span class="mi">1</span>   <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.2</span>   <span class="mi">21</span>  <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">4</span>     <span class="mi">22</span>  <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.3</span>   <span class="mi">42</span>  <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span>     <span class="mi">43</span>  <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.4</span>   <span class="mi">63</span>  <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span>     <span class="mi">64</span>  <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.5</span>   <span class="mi">84</span>  <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">3</span>     <span class="mi">85</span>  <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.6</span>   <span class="mi">105</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">3</span>     <span class="mi">106</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.7</span>   <span class="mi">126</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span>     <span class="mi">127</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.8</span>   <span class="mi">147</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span>     <span class="mi">148</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mf">5.9</span>   <span class="mi">168</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">4</span>     <span class="mi">169</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mi">4</span>     <span class="mi">170</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mi">4</span>     <span class="mi">171</span> <span class="mi">20</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -442,7 +444,7 @@ az5                 <span class="op">=</span>           ay4
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp112209632"></a>
+        <a id="idm1533388784"></a>
         <h2>
             See Also
         </h2>
@@ -452,7 +454,7 @@ az5                 <span class="op">=</span>           ay4
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp112212688"></a>
+        <a id="idm1533394416"></a>
         <h2>
             Credits
         </h2>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>planet</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pitchamdf.html" title="pitchamdf" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125172688"></a>
+        <a id="idm1520110576"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>planet</em></span> simulates a planet orbiting in a binary star system. The outputs are the x, y and z coordinates of the orbiting planet. It is possible for the planet to achieve escape velocity by a close encounter with a star. This makes this system somewhat unstable.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125215120"></a>
+        <a id="idm1520116464"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ax, ay, az <span class="command"><strong>planet</strong></span> kmass1, kmass2, ksep, ix, iy, iz, ivx, ivy, ivz, idelta \
       [, ifriction] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp125217312"></a>
+        <a id="idm1520109040"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ix, iy, iz</em></span> -- the initial x, y and z coordinates of the planet
@@ -72,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125222624"></a>
+        <a id="idm1520100592"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ax, ay, az</em></span> -- the output x, y, and z coodinates of the planet
@@ -85,94 +86,93 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125226000"></a>
+        <a id="idm1520104816"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the planet opcode. It uses the file <a class="ulink" href="examples/planet.csd" target="_top"><em class="citetitle">planet.csd</em></a>.
+      Here is an example of the planet opcode. It uses the file <a class="ulink" href="examples/planet.csd.html" target="_top"><em class="citetitle">planet.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp125227856"></a>
+          <a id="idm1520102128"></a>
           <p class="title">
-            <strong>Example 660. Example of the planet opcode.</strong>
+            <strong>Example 680. Example of the planet opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp257738144"></a>
-              <a class="ulink" href="examples/planet.csd.html" target="_top">Play</a>
+              <a id="idm1341842672"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o planet.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o planet.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 1
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Instrument #1 - a planet oribiting in 3D space.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Create a basic tone.</span>
-  kamp <span class="opc">init</span> 5000
-  kcps <span class="opc">init</span> 440
-  ifn <span class="op">=</span> 1
-  asnd <span class="opc">oscil</span> kamp, kcps, ifn
+<span class="c1">; Instrument #1 - a planet oribiting in 3D space.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Create a basic tone.</span>
+  k<span class="n">amp</span> <span class="nb">init</span> <span class="mi">5000</span>
+  k<span class="n">cps</span> <span class="nb">init</span> <span class="mi">440</span>
+  i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+  a<span class="n">snd</span> <span class="nb">oscil</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> i<span class="n">fn</span>
 
-  <span class="comment">; Figure out its X, Y, Z coordinates.</span>
-  km1 <span class="opc">init</span> 0.5
-  km2 <span class="opc">init</span> 0.35
-  ksep <span class="opc">init</span> 2.2
-  ix <span class="op">=</span> 0
-  iy <span class="op">=</span> 0.1
-  iz <span class="op">=</span> 0
-  ivx <span class="op">=</span> 0.5
-  ivy <span class="op">=</span> 0
-  ivz <span class="op">=</span> 0
-  ih <span class="op">=</span> 0.0003
-  ifric <span class="op">=</span> <span class="op">-</span>0.1
-  ax1, ay1, az1 <span class="opc">planet</span> km1, km2, ksep, ix, iy, iz, \
-                       ivx, ivy, ivz, ih, ifric
+  <span class="c1">; Figure out its X, Y, Z coordinates.</span>
+  k<span class="n">m1</span> <span class="nb">init</span> <span class="mf">0.5</span>
+  k<span class="n">m2</span> <span class="nb">init</span> <span class="mf">0.35</span>
+  k<span class="n">sep</span> <span class="nb">init</span> <span class="mf">2.2</span>
+  i<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+  i<span class="n">y</span> <span class="o">=</span> <span class="mf">0.1</span>
+  i<span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+  i<span class="n">vx</span> <span class="o">=</span> <span class="mf">0.5</span>
+  i<span class="n">vy</span> <span class="o">=</span> <span class="mi">0</span>
+  i<span class="n">vz</span> <span class="o">=</span> <span class="mi">0</span>
+  i<span class="n">h</span> <span class="o">=</span> <span class="mf">0.0003</span>
+  i<span class="n">fric</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>
+  a<span class="n">x1</span><span class="p">,</span> a<span class="n">y1</span><span class="p">,</span> a<span class="n">z1</span> <span class="nb">planet</span> k<span class="n">m1</span><span class="p">,</span> k<span class="n">m2</span><span class="p">,</span> k<span class="n">sep</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> i<span class="n">z</span><span class="p">,</span> \
+                       i<span class="n">vx</span><span class="p">,</span> i<span class="n">vy</span><span class="p">,</span> i<span class="n">vz</span><span class="p">,</span> i<span class="n">h</span><span class="p">,</span> i<span class="n">fric</span>
 
-  <span class="comment">; Place the basic tone within 3D space.</span>
-  kx <span class="opc">downsamp</span> ax1
-  ky <span class="opc">downsamp</span> ay1
-  kz <span class="opc">downsamp</span> az1
-  idist <span class="op">=</span> 1
-  ift <span class="op">=</span> 0
-  imode <span class="op">=</span> 1
-  imdel <span class="op">=</span> 1.018853416
-  iovr <span class="op">=</span> 2
-  aw2, ax2, ay2, az2 <span class="opc">spat3d</span> asnd, kx, ky, kz, idist, \
-                            ift, imode, imdel, iovr
+  <span class="c1">; Place the basic tone within 3D space.</span>
+  k<span class="n">x</span> <span class="nb">downsamp</span> a<span class="n">x1</span>
+  k<span class="n">y</span> <span class="nb">downsamp</span> a<span class="n">y1</span>
+  k<span class="n">z</span> <span class="nb">downsamp</span> a<span class="n">z1</span>
+  i<span class="n">dist</span> <span class="o">=</span> <span class="mi">1</span>
+  i<span class="n">ft</span> <span class="o">=</span> <span class="mi">0</span>
+  i<span class="n">mode</span> <span class="o">=</span> <span class="mi">1</span>
+  i<span class="n">mdel</span> <span class="o">=</span> <span class="mf">1.018853416</span>
+  i<span class="n">ovr</span> <span class="o">=</span> <span class="mi">2</span>
+  a<span class="n">w2</span><span class="p">,</span> a<span class="n">x2</span><span class="p">,</span> a<span class="n">y2</span><span class="p">,</span> a<span class="n">z2</span> <span class="nb">spat3d</span> a<span class="n">snd</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> k<span class="n">z</span><span class="p">,</span> i<span class="n">dist</span><span class="p">,</span> \
+                            i<span class="n">ft</span><span class="p">,</span> i<span class="n">mode</span><span class="p">,</span> i<span class="n">mdel</span><span class="p">,</span> i<span class="n">ovr</span>
 
-  <span class="comment">; Convert the 3D sound to stereo.</span>
-  aleft <span class="op">=</span> aw2 <span class="op">+</span> ay2
-  aright <span class="op">=</span> aw2 <span class="op">-</span> ay2
+  <span class="c1">; Convert the 3D sound to stereo.</span>
+  a<span class="n">left</span> <span class="o">=</span> a<span class="n">w2</span> <span class="o">+</span> a<span class="n">y2</span>
+  a<span class="n">right</span> <span class="o">=</span> a<span class="n">w2</span> <span class="o">-</span> a<span class="n">y2</span>
 
-  <span class="opc">outs</span> aleft, aright
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1 a sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
-
-<span class="comment">; Play Instrument #1 for 10 seconds.</span>
-<span class="stamnt">i</span> 1 0 10
-<span class="stamnt">e</span>
+  <span class="nb">outs</span> a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1 a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for 10 seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -181,12 +181,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125232144"></a>
+        <a id="idm1520093936"></a>
         <h2>See Also</h2>
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue9/FlutesInOrbit.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue9/FlutesInOrbit.html</em></a>  , written by Brian Redfern. </p>
       </div>
       <div class="refsect1">
-        <a id="idp125234272"></a>
+        <a id="idm1520097264"></a>
         <h2>Credits</h2>
         <p>
       </p>

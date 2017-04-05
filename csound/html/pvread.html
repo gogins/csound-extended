@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pvread</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pvoc.html" title="pvoc" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128067280"></a>
+        <a id="idm1517058032"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>pvread</em></span> reads from a <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a> file and returns the frequency and amplitude from a single analysis channel or bin. The returned values can be used anywhere else in the Csound instrument. For example, one can use them as arguments to an oscillator to synthesize a single component from an analyzed signal or a bank of <span class="emphasis"><em>pvreads</em></span> can be used to resynthesize the analyzed sound using additive synthesis by passing the frequency and magnitude values to a bank of oscillators.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128070720"></a>
+        <a id="idm1517061744"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kfreq, kamp <span class="command"><strong>pvread</strong></span> ktimpnt, ifile, ibin</pre>
       </div>
       <div class="refsect1">
-        <a id="idp128072928"></a>
+        <a id="idm1517058416"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifile</em></span> -- the <span class="emphasis"><em>pvoc</em></span> number (n in pvoc.n) or the name in quotes of the analysis file made using <span class="emphasis"><em>pvanal</em></span>. (See <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>.)
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128077392"></a>
+        <a id="idm1517056112"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kfreq, kamp</em></span> -- outputs of the <span class="emphasis"><em>pvread</em></span> unit. These values, retrieved from a phase vocoder analysis file, represent the values of frequency and amplitude from a single analysis channel specified in the <span class="emphasis"><em>ibin</em></span> argument. Interpolation between analysis frames is performed at k-rate resolution and dependent of course upon the rate and direction of <span class="emphasis"><em>ktimpnt</em></span>. 
@@ -70,57 +71,56 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128082016"></a>
+        <a id="idm1517055600"></a>
         <h2>Examples</h2>
         <p>
       The example below shows the use <span class="emphasis"><em>pvread</em></span> to synthesize a single component at a time from a phase vocoder analysis file. It should be noted that the <span class="emphasis"><em>kfreq</em></span> and <span class="emphasis"><em>kamp</em></span> outputs can be used for any kind of synthesis, filtering, processing, and so on.
       </p>
         <div class="example">
-          <a id="idp128084512"></a>
+          <a id="idm1517045488"></a>
           <p class="title">
-            <strong>Example 697. Example of the pvread opcode.</strong>
+            <strong>Example 717. Example of the pvread opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259787120"></a>
-              <a class="ulink" href="examples/pvread.csd.html" target="_top">Play</a>
+              <a id="idm1339069552"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvread.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvread.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">; analyze "fox.wav" with PVANAL first</span>
-ibin  <span class="op">=</span> p4
-ktime <span class="opc">line</span> 0, p3, 2.8
-kfreq, kamp <span class="opc">pvread</span> ktime, "fox.pvx", ibin	<span class="comment">;read data from 7th analysis bin.</span>
-asig  <span class="opc">poscil</span> kamp, kfreq, 1 			<span class="comment">;function 1 is a stored sine</span>
-      <span class="opc">outs</span> asig<span class="op">*</span>5, asig<span class="op">*</span>5			<span class="comment">;compensate loss of volume</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; analyze "fox.wav" with PVANAL first</span>
+i<span class="n">bin</span>  <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">time</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">2.8</span>
+k<span class="n">freq</span><span class="p">,</span> k<span class="n">amp</span> <span class="nb">pvread</span> k<span class="n">time</span><span class="p">,</span> <span class="s">"fox.pvx"</span><span class="p">,</span> i<span class="n">bin</span>	<span class="c1">;read data from 7th analysis bin.</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span> 			<span class="c1">;function 1 is a stored sine</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">5</span>			<span class="c1">;compensate loss of volume</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;sine wave</span>
-<span class="stamnt">f</span>1 0 4096 10 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;sine wave</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 6 7
-<span class="stamnt">i</span> 1 + 6 15
-<span class="stamnt">i</span> 1 + 2 25
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">7</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">6</span> <span class="mi">15</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">25</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -129,7 +129,7 @@ asig  <span class="opc">poscil</span> kamp, kfreq, 1 			<span class="comment">;f
      </p>
       </div>
       <div class="refsect1">
-        <a id="idp128088800"></a>
+        <a id="idm1517041520"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvbufread.html" title="pvbufread"><em class="citetitle">pvbufread</em></a>, 
@@ -140,7 +140,7 @@ asig  <span class="opc">poscil</span> kamp, kfreq, 1 			<span class="comment">;f
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128094688"></a>
+        <a id="idm1517047408"></a>
         <h2>Credits</h2>
         <p>
       </p>

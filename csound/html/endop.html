@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>endop</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="endin.html" title="endin" />
@@ -38,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp90631600"></a>
+        <a id="idm1555473392"></a>
         <h2>Description</h2>
         <p>
       Marks the end of an user-defined opcode block.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90643888"></a>
+        <a id="idm1555463920"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -54,7 +55,7 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idp90645664"></a>
+        <a id="idm1555465584"></a>
         <h2>Performance</h2>
         <p>
       The syntax of a user-defined opcode block is as follows:
@@ -79,103 +80,102 @@ xinarg1 [, xinarg2] [, xinarg3] ... [xinargN]  <span class="opc">xin</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90709136"></a>
+        <a id="idm1555467632"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the endop opcode. It uses the file <a class="ulink" href="examples/endop.csd" target="_top"><em class="citetitle">endop.csd</em></a>.
+      Here is an example of the endop opcode. It uses the file <a class="ulink" href="examples/endop.csd.html" target="_top"><em class="citetitle">endop.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idp90710992"></a>
+          <a id="idm1555457008"></a>
           <p class="title">
-            <strong>Example 235. Example of the endop opcode.</strong>
+            <strong>Example 237. Example of the endop opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240545808"></a>
-              <a class="ulink" href="examples/endop.csd.html" target="_top">Play</a>
+              <a id="idm1390025840"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o endop.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o endop.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="op">/</span><span class="op">*</span> example <span class="oblock">opcode</span> 1<span class="op">:</span> simple oscillator <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* example opcode 1: simple oscillator */</span>
 
-        <span class="oblock">opcode</span> Oscillator, a, kk
+        <span class="kd">opcode</span> <span class="nf">Oscillator</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">kk</span>
 
-kamp, kcps      <span class="opc">xin</span>             <span class="comment">; read input parameters</span>
-a1      <span class="opc">vco2</span> kamp, kcps         <span class="comment">; sawtooth oscillator</span>
-        <span class="opc">xout</span> a1                 <span class="comment">; write output</span>
+k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span>      <span class="nb">xin</span>             <span class="c1">; read input parameters</span>
+a<span class="n">1</span>      <span class="nb">vco2</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span>         <span class="c1">; sawtooth oscillator</span>
+        <span class="nb">xout</span> a<span class="n">1</span>                 <span class="c1">; write output</span>
 
-        <span class="oblock">endop</span>
+        <span class="kd">endop</span>
 
-<span class="op">/</span><span class="op">*</span> example <span class="oblock">opcode</span> 2<span class="op">:</span> lowpass filter with local <span class="ohdr">ksmps</span> <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* example opcode 2: lowpass filter with local ksmps */</span>
 
-        <span class="oblock">opcode</span> Lowpass, a, akk
+        <span class="kd">opcode</span> <span class="nf">Lowpass</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">akk</span>
 
-        <span class="opc">setksmps</span> 1              <span class="comment">; need sr=kr</span>
-ain, ka1, ka2   <span class="opc">xin</span>             <span class="comment">; read input parameters</span>
-aout    <span class="opc">init</span> 0                  <span class="comment">; initialize output</span>
-aout    <span class="op">=</span>  ain<span class="op">*</span>ka1 <span class="op">+</span> aout<span class="op">*</span>ka2   <span class="comment">; simple tone-like filter</span>
-        <span class="opc">xout</span> aout               <span class="comment">; write output</span>
+        <span class="nb">setksmps</span> <span class="mi">1</span>              <span class="c1">; need sr=kr</span>
+a<span class="n">in</span><span class="p">,</span> k<span class="n">a1</span><span class="p">,</span> k<span class="n">a2</span>   <span class="nb">xin</span>             <span class="c1">; read input parameters</span>
+a<span class="n">out</span>    <span class="nb">init</span> <span class="mi">0</span>                  <span class="c1">; initialize output</span>
+a<span class="n">out</span>    <span class="o">=</span>  a<span class="n">in</span><span class="o">*</span>k<span class="n">a1</span> <span class="o">+</span> a<span class="n">out</span><span class="o">*</span>k<span class="n">a2</span>   <span class="c1">; simple tone-like filter</span>
+        <span class="nb">xout</span> a<span class="n">out</span>               <span class="c1">; write output</span>
 
-        <span class="oblock">endop</span>
+        <span class="kd">endop</span>
 
-<span class="op">/</span><span class="op">*</span> example <span class="oblock">opcode</span> 3<span class="op">:</span> recursive call <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* example opcode 3: recursive call */</span>
 
-        <span class="oblock">opcode</span> RecursiveLowpass, a, akkpp
+        <span class="kd">opcode</span> <span class="nf">RecursiveLowpass</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">akkpp</span>
 
-ain, ka1, ka2, idep, icnt       <span class="opc">xin</span>     <span class="comment">; read input parameters</span>
-        <span class="octrl">if</span> (icnt <span class="op">&gt;=</span> idep) <span class="octrl">goto</span> <span class="olabel">skip1</span>    <span class="comment">; check if max depth reached</span>
-ain     RecursiveLowpass ain, ka1, ka2, idep, icnt <span class="op">+</span> 1
-<span class="olabel">skip1</span><span class="op">:</span>
-aout    Lowpass ain, ka1, ka2           <span class="comment">; call filter</span>
-        <span class="opc">xout</span> aout                       <span class="comment">; write output</span>
+a<span class="n">in</span><span class="p">,</span> k<span class="n">a1</span><span class="p">,</span> k<span class="n">a2</span><span class="p">,</span> i<span class="n">dep</span><span class="p">,</span> i<span class="n">cnt</span>       <span class="nb">xin</span>     <span class="c1">; read input parameters</span>
+        <span class="k">if</span> <span class="p">(</span>i<span class="n">cnt</span> <span class="o">&gt;=</span> i<span class="n">dep</span><span class="p">)</span> <span class="k">goto</span> <span class="nl">skip1</span>    <span class="c1">; check if max depth reached</span>
+a<span class="n">in</span>     <span class="nf">RecursiveLowpass</span> a<span class="n">in</span><span class="p">,</span> k<span class="n">a1</span><span class="p">,</span> k<span class="n">a2</span><span class="p">,</span> i<span class="n">dep</span><span class="p">,</span> i<span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="nl">skip1</span><span class="p">:</span>
+a<span class="n">out</span>    <span class="nf">Lowpass</span> a<span class="n">in</span><span class="p">,</span> k<span class="n">a1</span><span class="p">,</span> k<span class="n">a2</span>           <span class="c1">; call filter</span>
+        <span class="nb">xout</span> a<span class="n">out</span>                       <span class="c1">; write output</span>
 
-        <span class="oblock">endop</span>
+        <span class="kd">endop</span>
 
-<span class="op">/</span><span class="op">*</span> example <span class="oblock">opcode</span> 4<span class="op">:</span> de<span class="op">-</span>click envelope <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* example opcode 4: de-click envelope */</span>
 
-        <span class="oblock">opcode</span> DeClick, a, <span class="opc">a</span>
+        <span class="kd">opcode</span> <span class="nf">DeClick</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">a</span>
 
-ain     <span class="opc">xin</span>
-aenv    <span class="opc">linseg</span> 0, 0.02, 1, p3 <span class="op">-</span> 0.05, 1, 0.02, 0, 0.01, 0
-        <span class="opc">xout</span> ain <span class="op">*</span> aenv         <span class="comment">; apply envelope and write output</span>
+a<span class="n">in</span>     <span class="nb">xin</span>
+a<span class="n">env</span>    <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="nb">xout</span> a<span class="n">in</span> <span class="o">*</span> a<span class="n">env</span>         <span class="c1">; apply envelope and write output</span>
 
-        <span class="oblock">endop</span>
+        <span class="kd">endop</span>
 
-<span class="op">/</span><span class="op">*</span> <span class="oblock">instr</span> 1 uses the example opcodes <span class="op">*</span><span class="op">/</span>
+<span class="cm">/* instr 1 uses the example opcodes */</span>
 
-        <span class="oblock">instr</span> 1
+        <span class="kd">instr</span> <span class="nf">1</span>
 
-kamp    <span class="op">=</span>  .6                <span class="comment">; amplitude</span>
-kcps    <span class="opc">expon</span> 50, p3, 500       <span class="comment">; pitch</span>
-a1      Oscillator kamp, kcps                   <span class="comment">; call oscillator</span>
-kflt    <span class="opc">linseg</span> 0.4, 1.5, 0.4, 1, 0.8, 1.5, 0.8  <span class="comment">; filter envelope</span>
-a1      RecursiveLowpass a1, kflt, 1 <span class="op">-</span> kflt, 10 <span class="comment">; 10th order lowpass</span>
-a1      DeClick a1
-        <span class="opc">outs</span> a1, a1
+k<span class="n">amp</span>    <span class="o">=</span>  <span class="mf">.6</span>                <span class="c1">; amplitude</span>
+k<span class="n">cps</span>    <span class="nb">expon</span> <span class="mi">50</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">500</span>       <span class="c1">; pitch</span>
+a<span class="n">1</span>      <span class="nf">Oscillator</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span>                   <span class="c1">; call oscillator</span>
+k<span class="n">flt</span>    <span class="nb">linseg</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.8</span>  <span class="c1">; filter envelope</span>
+a<span class="n">1</span>      <span class="nf">RecursiveLowpass</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">flt</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> k<span class="n">flt</span><span class="p">,</span> <span class="mi">10</span> <span class="c1">; 10th order lowpass</span>
+a<span class="n">1</span>      <span class="nf">DeClick</span> a<span class="n">1</span>
+        <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 4
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -184,7 +184,7 @@ a1      DeClick a1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90715280"></a>
+        <a id="idm1555457264"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="opcode.html" title="opcode"><em class="citetitle">opcode</em></a>, 
@@ -196,7 +196,7 @@ a1      DeClick a1
         <p> The user-defined opcode page: <a class="ulink" href="http://www.csounds.com/udo/" target="_top"><em class="citetitle">http://www.csounds.com/udo/</em></a>  , maintained by Steven Yi </p>
       </div>
       <div class="refsect1">
-        <a id="idp90722912"></a>
+        <a id="idm1555444720"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga, 2002; based on code by Matt J. Ingalls</p>
         <p>New in version 4.22</p>

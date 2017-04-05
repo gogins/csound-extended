@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>strcmp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="strcatk.html" title="strcatk" />
@@ -38,80 +39,79 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp144161856"></a>
+        <a id="idm1500731248"></a>
         <h2>Description</h2>
         <p>
       Compare strings and set the result to -1, 0, or 1 if the first string is less than, equal to, or greater than the second, respectively. strcmp compares at i-time only.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp144174304"></a>
+        <a id="idm1500733296"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ires <span class="command"><strong>strcmp</strong></span> S1, S2</pre>
       </div>
       <div class="refsect1">
-        <a id="idp144176512"></a>
+        <a id="idm1500733936"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the strcmp opcode. It uses the file <a class="ulink" href="examples/strcmp.csd" target="_top"><em class="citetitle">strcmp.csd</em></a>.
+      Here is an example of the strcmp opcode. It uses the file <a class="ulink" href="examples/strcmp.csd.html" target="_top"><em class="citetitle">strcmp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp144178288"></a>
+          <a id="idm1500725232"></a>
           <p class="title">
-            <strong>Example 905. Example of the strcmp opcode.</strong>
+            <strong>Example 931. Example of the strcmp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp266674400"></a>
-              <a class="ulink" href="examples/strcmp.csd.html" target="_top">Play</a>
+              <a id="idm1321156208"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o strcmp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;modified example from Joachim Heintz</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o strcmp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;modified example from Joachim Heintz</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-   <span class="oblock">opcode</span> Triad, iii, <span class="opc">S</span>				<span class="comment">;define UDO</span>
-Sname      <span class="opc">xin</span>
-iMaj       <span class="opc">strcmp</span>     "maj", Sname
-iMin       <span class="opc">strcmp</span>     "min", Sname
-iPrim      <span class="op">=</span>          8.00			<span class="comment">;notes in pitch notattion</span>
-iQuint     <span class="op">=</span>          8.05
-  <span class="octrl">if</span> iMaj <span class="op">==</span> 0 then
-iTer       <span class="op">=</span>          8.03
-  <span class="octrl">elseif</span> iMin <span class="op">==</span> 0 then
-iTer       <span class="op">=</span>          8.02
-  <span class="octrl">endif</span>
-            <span class="opc">xout</span>       iPrim, iTer, iQuint
-   <span class="oblock">endop</span>
+   <span class="kd">opcode</span> <span class="nf">Triad</span><span class="p">,</span> <span class="kt">iii</span><span class="p">,</span> <span class="kt">S</span>				<span class="c1">;define UDO</span>
+S<span class="n">name</span>      <span class="nb">xin</span>
+i<span class="n">Maj</span>       <span class="nb">strcmp</span>     <span class="s">"maj"</span><span class="p">,</span> S<span class="n">name</span>
+i<span class="n">Min</span>       <span class="nb">strcmp</span>     <span class="s">"min"</span><span class="p">,</span> S<span class="n">name</span>
+i<span class="n">Prim</span>      <span class="o">=</span>          <span class="mf">8.00</span>			<span class="c1">;notes in pitch notattion</span>
+i<span class="n">Quint</span>     <span class="o">=</span>          <span class="mf">8.05</span>
+  <span class="k">if</span> i<span class="n">Maj</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">then</span>
+i<span class="n">Ter</span>       <span class="o">=</span>          <span class="mf">8.03</span>
+  <span class="k">elseif</span> i<span class="n">Min</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">then</span>
+i<span class="n">Ter</span>       <span class="o">=</span>          <span class="mf">8.02</span>
+  <span class="k">endif</span>
+            <span class="nb">xout</span>       i<span class="n">Prim</span><span class="p">,</span> i<span class="n">Ter</span><span class="p">,</span> i<span class="n">Quint</span>
+   <span class="kd">endop</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-Sname <span class="opc">strget</span> p4
-ia, ib, ic Triad Sname				<span class="comment">;apply UDO</span>
-      <span class="opc">print</span> ia, ib, ic
-asig1 <span class="opc">pluck</span> 0.7, <span class="opc">cpspch</span>(ia), 220, 0, 1
-asig2 <span class="opc">pluck</span> 0.7, <span class="opc">cpspch</span>(ib), 220, 0, 1
-asig3 <span class="opc">pluck</span> 0.7, <span class="opc">cpspch</span>(ic), 220, 0, 1
-asig  <span class="op">=</span> (asig1<span class="op">+</span>asig2<span class="op">+</span>asig3)<span class="op">*</span>.5
-      <span class="opc">outs</span> asig, asig
+S<span class="n">name</span> <span class="nb">strget</span> <span class="nb">p4</span>
+i<span class="n">a</span><span class="p">,</span> i<span class="n">b</span><span class="p">,</span> i<span class="n">c</span> <span class="nf">Triad</span> S<span class="n">name</span>				<span class="c1">;apply UDO</span>
+      <span class="nb">print</span> i<span class="n">a</span><span class="p">,</span> i<span class="n">b</span><span class="p">,</span> i<span class="n">c</span>
+a<span class="n">sig1</span> <span class="nb">pluck</span> <span class="mf">0.7</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">a</span><span class="p">),</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig2</span> <span class="nb">pluck</span> <span class="mf">0.7</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">b</span><span class="p">),</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig3</span> <span class="nb">pluck</span> <span class="mf">0.7</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">c</span><span class="p">),</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig</span>  <span class="o">=</span> <span class="p">(</span>a<span class="n">sig1</span><span class="o">+</span>a<span class="n">sig2</span><span class="o">+</span>a<span class="n">sig3</span><span class="p">)</span><span class="o">*</span><span class="mf">.5</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 3 "maj"
-<span class="stamnt">i</span>1 4 3 "m<span class="stamnt">i</span>n"
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="s">"maj"</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="s">"min"</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -120,7 +120,7 @@ asig  <span class="op">=</span> (asig1<span class="op">+</span>asig2<span class=
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp144221392"></a>
+        <a id="idm1500721136"></a>
         <h2>See also</h2>
         <p>
           <a class="link" href="strcmpk.html" title="strcmpk">
@@ -129,7 +129,7 @@ asig  <span class="op">=</span> (asig1<span class="op">+</span>asig2<span class=
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp144223184"></a>
+        <a id="idm1500721904"></a>
         <h2>Credits</h2>
         <p>
       </p>

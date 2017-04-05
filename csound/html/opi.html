@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>i</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="hvs3.html" title="hvs3" />
@@ -38,16 +39,18 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp105154432"></a>
+        <a id="idm1540617488"></a>
         <h2>Description</h2>
         <p>
-      Returns an init-type equivalent of a k-rate argument, or directly returns an i-rate argument.
+      Returns an init-type equivalent of a k-rate argument or array
+      element or directly returns an i-rate argument.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105198992"></a>
+        <a id="idm1540613136"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>i</strong></span>(x) (control-rate or init-rate arg)</pre>
+        <pre class="synopsis"><span class="command"><strong>i</strong></span>(karray,index1, ...) (k-array with indices)</pre>
         <p>
       Value converters perform arithmetic translation from units of one kind to units of another. The result can then be a term in a further expression.
       </p>
@@ -61,7 +64,10 @@
             </tr>
             <tr>
               <td align="left" valign="top">
-                <p>Using i() with a k-rate expression argument is not recommended, and can produce unexpected results.</p>
+                <p>Using i() with a k-rate expression argument is not
+        recommended, and can produce unexpected results.</p>
+                <p>To get the value from an array element reliably the
+        second form should be used.</p>
               </td>
             </tr>
           </table>
@@ -70,7 +76,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105202816"></a>
+        <a id="idm1540615184"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="opa.html" title="a"><em class="citetitle">a</em></a>,
@@ -86,9 +92,10 @@
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue10/CsoundRates.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue10/CsoundRates.html</em></a>  , written by Andrés Cabrera </p>
       </div>
       <div class="refsect1">
-        <a id="idp105213616"></a>
+        <a id="idm1540603920"></a>
         <h2>Credits</h2>
         <p>i-rate arg version of function new since 5.14</p>
+        <p>Array format new in version 6.08</p>
       </div>
     </div>
     <div class="navfooter">

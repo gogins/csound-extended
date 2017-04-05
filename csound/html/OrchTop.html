@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Syntax of the Orchestra</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="PartOverview.html" title="Part I. Overview" />
     <link rel="prev" href="Configuring.html" title="Configuring" />
@@ -73,7 +74,9 @@ a2  <span class="opc">oscbnk</span> kcps, 1.0, kfmd1, 0.0, 40, 203, 0.1, 0.2, ka
       <p>
   </p>
       <p>
-     Comments are optional and are for the purpose of letting the user document his orchestra code. Comments begin with a semicolon (;) and extend to the end of the line. Comments can optionally be in C-style, spanning multiple lines like this:
+     Comments are optional and are for the purpose of letting the user
+     document his orchestra code. Comments begin with a semicolon (;)
+     or // and extend to the end of the line. Comments can optionally be in C-style, spanning multiple lines like this:
      </p>
       <pre class="programlisting">
 <span class="comment">/* Anything in here --------
@@ -125,6 +128,13 @@ a2  <span class="opc">oscbnk</span> kcps, 1.0, kfmd1, 0.0, 40, 203, 0.1, 0.2, ka
               <p>
                 <a class="link" href="Zerodbfs.html" title="0dbfs">
                   <em class="citetitle">0dbfs</em>
+                </a>
+              </p>
+            </li>
+            <li class="listitem">
+              <p>
+                <a class="link" href="A4.html" title="A4">
+                  <em class="citetitle">A4</em>
                 </a>
               </p>
             </li>
@@ -211,7 +221,7 @@ a2  <span class="opc">oscbnk</span> kcps, 1.0, kfmd1, 0.0, 40, 203, 0.1, 0.2, ka
     For example, a Csound header may look like:
     </p>
         <pre class="programlisting">
-<span class="ohdr">sr</span> = 44100
+xx<span class="ohdr">sr</span> = 44100
 <span class="ohdr">kr</span> = 4410
 <span class="ohdr">ksmps</span> = 10
 <span class="ohdr">nchnls</span> = 2

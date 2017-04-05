@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLsetColor</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLsetBox.html" title="FLsetBox" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp96298528"></a>
+        <a id="idm1549947296"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLsetColor</em></span> sets the primary color of the target widget.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96300272"></a>
+        <a id="idm1549952928"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>FLsetColor</strong></span> ired, igreen, iblue, ihandle</pre>
       </div>
       <div class="refsect1">
-        <a id="idp96302368"></a>
+        <a id="idm1549949088"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ired</em></span> -- The red color of the target widget. The range for each RGB component is 0-255
@@ -66,77 +67,76 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96307920"></a>
+        <a id="idm1549941536"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLsetcolor opcode. It uses the file <a class="ulink" href="examples/FLsetcolor.csd" target="_top"><em class="citetitle">FLsetcolor.csd</em></a>.
+      Here is an example of the FLsetcolor opcode. It uses the file <a class="ulink" href="examples/FLsetcolor.csd.html" target="_top"><em class="citetitle">FLsetcolor.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp96309696"></a>
+          <a id="idm1549946272"></a>
           <p class="title">
-            <strong>Example 298. Example of the FLsetcolor opcode.</strong>
+            <strong>Example 300. Example of the FLsetcolor opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp243024400"></a>
-              <a class="ulink" href="examples/FLsetcolor.csd.html" target="_top">Play</a>
+              <a id="idm1383698928"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLsetcolor.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLsetcolor.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Using the opcode flsetcolor to change from the</span>
-<span class="comment">; default colours for widgets</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Using the opcode flsetcolor to change from the</span>
+<span class="c1">; default colours for widgets</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">FLpanel</span> "Coloured Sliders", 900, 360, 50, 50
-    gkfreq, ihandle <span class="opc">FLslider</span> "A Red Slider", 200, 5000, <span class="op">-</span>1, 5, <span class="op">-</span>1, 750, 30, 85, 50
-    ired1 <span class="op">=</span> 255
-    igreen1 <span class="op">=</span> 0
-    iblue1 <span class="op">=</span> 0
-    <span class="opc">FLsetColor</span> ired1, igreen1, iblue1, ihandle
+<span class="nb">FLpanel</span> <span class="s">"Coloured Sliders"</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    gk<span class="n">freq</span><span class="p">,</span> i<span class="n">handle</span> <span class="nb">FLslider</span> <span class="s">"A Red Slider"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">750</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">50</span>
+    i<span class="n">red1</span> <span class="o">=</span> <span class="mi">255</span>
+    i<span class="n">green1</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">blue1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">FLsetColor</span> i<span class="n">red1</span><span class="p">,</span> i<span class="n">green1</span><span class="p">,</span> i<span class="n">blue1</span><span class="p">,</span> i<span class="n">handle</span>
 
-    gkfreq, ihandle <span class="opc">FLslider</span> "A Green Slider", 200, 5000, <span class="op">-</span>1, 5, <span class="op">-</span>1, 750, 30, 85, 150
-    ired1 <span class="op">=</span> 0
-    igreen1 <span class="op">=</span> 255
-    iblue1 <span class="op">=</span> 0
-    <span class="opc">FLsetColor</span> ired1, igreen1, iblue1, ihandle
+    gk<span class="n">freq</span><span class="p">,</span> i<span class="n">handle</span> <span class="nb">FLslider</span> <span class="s">"A Green Slider"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">750</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">150</span>
+    i<span class="n">red1</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">green1</span> <span class="o">=</span> <span class="mi">255</span>
+    i<span class="n">blue1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">FLsetColor</span> i<span class="n">red1</span><span class="p">,</span> i<span class="n">green1</span><span class="p">,</span> i<span class="n">blue1</span><span class="p">,</span> i<span class="n">handle</span>
 
-    gkfreq, ihandle <span class="opc">FLslider</span> "A Blue Slider", 200, 5000, <span class="op">-</span>1, 5, <span class="op">-</span>1, 750, 30, 85, 250
-    ired1 <span class="op">=</span> 0
-    igreen1 <span class="op">=</span> 0
-    iblue1 <span class="op">=</span> 255
-    <span class="opc">FLsetColor</span> ired1, igreen1, iblue1, ihandle
-<span class="comment">; End of panel contents</span>
-<span class="opc">FLpanelEnd</span>
-<span class="comment">; Run the widget thread!</span>
-<span class="opc">FLrun</span>
+    gk<span class="n">freq</span><span class="p">,</span> i<span class="n">handle</span> <span class="nb">FLslider</span> <span class="s">"A Blue Slider"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">750</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">250</span>
+    i<span class="n">red1</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">green1</span> <span class="o">=</span> <span class="mi">0</span>
+    i<span class="n">blue1</span> <span class="o">=</span> <span class="mi">255</span>
+    <span class="nb">FLsetColor</span> i<span class="n">red1</span><span class="p">,</span> i<span class="n">green1</span><span class="p">,</span> i<span class="n">blue1</span><span class="p">,</span> i<span class="n">handle</span>
+<span class="c1">; End of panel contents</span>
+<span class="nb">FLpanelEnd</span>
+<span class="c1">; Run the widget thread!</span>
+<span class="nb">FLrun</span>
 
-<span class="oblock">instr</span> 1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; 'Dummy' score event for 1 hour.</span>
-<span class="stamnt">f</span> 0 3600
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; 'Dummy' score event for 1 hour.</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -145,7 +145,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96314016"></a>
+        <a id="idm1549937824"></a>
         <h2>See Also</h2>
         <p>
         <a class="link" href="FLcolor2.html" title="FLcolor2"><em class="citetitle">FLcolor2</em></a>, 
@@ -168,7 +168,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96331488"></a>
+        <a id="idm1549923616"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

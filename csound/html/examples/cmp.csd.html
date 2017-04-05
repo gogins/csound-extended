@@ -1,0 +1,84 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title
+<link rel="stylesheet" type="text/css" href="csound.css" />
+</head>
+<h1>cmp.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 128
+nchnls = 2 ; Changed for PNaCl output from: = 6
+0dbfs = 1.0
+
+instr 1
+    a0 linseg 0, p3, 1
+    a1 linseg 1, p3, 0
+    aout cmp a0, "<", a1
+    outch 1, a0
+	outch 2, a1
+    outch 3, aout
+endin
+
+instr 2
+    a0 linseg 0, p3, 1
+    aout cmp a0, "<=", 0.5
+    outch 4, aout
+endin
+
+instr 3
+    a0 linseg 0, p3, 1
+    aout cmp a0, "!=", 0.5
+    outch 5, aout
+endin
+
+</CsInstruments>
+<CsScore>
+i 1 0 2
+i 2 0 2
+i 3 0 2
+
+</CsScore>
+</CsoundSynthesizer>
+
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+console.log(message);
+var messages_textarea = document.getElementById("console");
+var existing = messages_textarea.value;
+messages_textarea.value = existing + message.data;
+messages_textarea.scrollTop = messages_textarea.scrollHeight;
+}
+function sleep (time) {
+return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+csound.stop();
+sleep(500).then(() => {
+    var csd = document.getElementById('csd').value;
+    csound.compileCsdText(csd);
+})
+}
+function stop_onclick () {
+csound.stop();
+}
+</script>
+<div id="engine"></div>
+</body>
+</html>

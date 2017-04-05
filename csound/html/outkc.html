@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>outkc</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="outkc14.html" title="outkc14" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp121287440"></a>
+        <a id="idm1524042352"></a>
         <h2>Description</h2>
         <p>
       Sends MIDI controller messages at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121362544"></a>
+        <a id="idm1524046960"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outkc</strong></span> kchn, knum, kvalue, kmin, kmax</pre>
       </div>
       <div class="refsect1">
-        <a id="idp121364576"></a>
+        <a id="idm1524036592"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kchn</em></span> -- MIDI channel number (1-16)
@@ -76,54 +77,53 @@ When the <span class="emphasis"><em>kvalue</em></span> argument receives a 2.0 v
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121374624"></a>
+        <a id="idm1524031472"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the outkc opcode. It uses the file <a class="ulink" href="examples/outkc.csd" target="_top"><em class="citetitle">outkc.csd</em></a>.
+      Here is an example of the outkc opcode. It uses the file <a class="ulink" href="examples/outkc.csd.html" target="_top"><em class="citetitle">outkc.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp121376480"></a>
+          <a id="idm1524028784"></a>
           <p class="title">
-            <strong>Example 607. Example of the outkc opcode.</strong>
+            <strong>Example 626. Example of the outkc opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp256068064"></a>
-              <a class="ulink" href="examples/outkc.csd.html" target="_top">Play</a>
+              <a id="idm1348044400"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac -Q1 -M0  <span class="comment">;;;realtime audio out and midi in and out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outkc.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac -Q1 -M0  <span class="c1">;;;realtime audio out and midi in and out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outkc.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ikey <span class="opc">notnum</span> 
-ivel  <span class="opc">veloc</span>
+i<span class="n">key</span> <span class="nb">notnum</span> 
+i<span class="n">vel</span>  <span class="nb">veloc</span>
 
-kcut <span class="opc">linseg</span> 100, .5, 20		<span class="comment">;vary controller in .5 second</span>
-kbrt <span class="op">=</span> <span class="opc">int</span>(kcut)		<span class="comment">;whole numbers only</span>
-<span class="opc">outkc</span> 1, 74, kbrt, 0, 127	<span class="comment">;controller 74 (= brightness)</span>
-<span class="opc">midion</span> 1, ikey, ivel		<span class="comment">;of external synth</span>
+k<span class="n">cut</span> <span class="nb">linseg</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">20</span>		<span class="c1">;vary controller in .5 second</span>
+k<span class="n">brt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>k<span class="n">cut</span><span class="p">)</span>		<span class="c1">;whole numbers only</span>
+<span class="nb">outkc</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> k<span class="n">brt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span>	<span class="c1">;controller 74 (= brightness)</span>
+<span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">key</span><span class="p">,</span> i<span class="n">vel</span>		<span class="c1">;of external synth</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0 30	<span class="comment">;runs 30 seconds</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">30</span>	<span class="c1">;runs 30 seconds</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -132,7 +132,7 @@ kbrt <span class="op">=</span> <span class="opc">int</span>(kcut)		<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121380768"></a>
+        <a id="idm1524030960"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="outiat.html" title="outiat"><em class="citetitle">outiat</em></a>,
@@ -149,7 +149,7 @@ kbrt <span class="op">=</span> <span class="opc">int</span>(kcut)		<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121392416"></a>
+        <a id="idm1524019184"></a>
         <h2>Credits</h2>
         <p>
       </p>

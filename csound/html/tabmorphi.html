@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tabmorphi</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tabmorphak.html" title="tabmorphak" />
@@ -38,27 +39,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148097312"></a>
+        <a id="idm1496303872"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>tabmorphi</em></span> allows morphing between a set of tables of the same size, by means of a weighted average between two currently selected tables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148139280"></a>
+        <a id="idm1496301568"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout <span class="command"><strong>tabmorphi</strong></span> kindex, kweightpoint, ktabnum1, ktabnum2, \
       ifn1, ifn2 [, ifn3, ifn4, ..., ifnN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp148141520"></a>
+        <a id="idm1496306048"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn1, ifn2 [, ifn3, ifn4, ..., ifnN]</em></span> - function table numbers. This is a set of chosen tables the user want to use in the morphing. All tables must have the same length. Be aware that only two of these tables can be chosen for the morphing at one time. Since it is possible to use non-integer numbers for the <span class="emphasis"><em>ktabnum1</em></span> and <span class="emphasis"><em>ktabnum2</em></span> arguments, the morphing is the result from the interpolation between adjacent consecutive tables of the set.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148144416"></a>
+        <a id="idm1496298112"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout</em></span> - The output value for index <span class="emphasis"><em>kindex</em></span>, resulting from morphing two tables (see below).
@@ -83,63 +84,62 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148159600"></a>
+        <a id="idm1496289024"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tabmorphi opcode. It uses the file <a class="ulink" href="examples/tabmorphi.csd" target="_top"><em class="citetitle">tabmorphi.csd</em></a>.
+      Here is an example of the tabmorphi opcode. It uses the file <a class="ulink" href="examples/tabmorphi.csd.html" target="_top"><em class="citetitle">tabmorphi.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp148161456"></a>
+          <a id="idm1496284544"></a>
           <p class="title">
-            <strong>Example 944. Example of the tabmorphi opcode.</strong>
+            <strong>Example 970. Example of the tabmorphi opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268337392"></a>
-              <a class="ulink" href="examples/tabmorphi.csd.html" target="_top">Play</a>
+              <a id="idm1316874736"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tabmorphi.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tabmorphi.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giSine   <span class="ohdr">ftgen</span> 0, 0, 8193, 10, 1				<span class="comment">;sine wave</span>
-giSquare <span class="ohdr">ftgen</span> 0, 0, 8193, 7, 1, 4096, 1, 0, <span class="op">-</span>1, 4096, <span class="op">-</span>1	<span class="comment">;square wave</span>
-giTri    <span class="ohdr">ftgen</span> 0, 0, 8193, 7, 0, 2048, 1, 4096, <span class="op">-</span>1, 2048, 0	<span class="comment">;triangle wave</span>
-giSaw    <span class="ohdr">ftgen</span> 0, 0, 8193, 7, 1, 8192, <span class="op">-</span>1			<span class="comment">;sawtooth wave, downward slope</span>
+gi<span class="n">Sine</span>   <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8193</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">;sine wave</span>
+gi<span class="n">Square</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8193</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>	<span class="c1">;square wave</span>
+gi<span class="n">Tri</span>    <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8193</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;triangle wave</span>
+gi<span class="n">Saw</span>    <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8193</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>			<span class="c1">;sawtooth wave, downward slope</span>
 
-<span class="oblock">instr</span>    1
+<span class="kd">instr</span>    <span class="nf">1</span>
 
-iamp   <span class="op">=</span> .7
-kindex <span class="opc">phasor</span> 440			<span class="comment">;read table value at this index</span>
-kindex <span class="op">=</span> kindex<span class="op">*</span>8192			<span class="comment">;for all 8192 index points</span>
-kweightpoint <span class="op">=</span> 0.5			<span class="comment">;set weightpoint</span>
-ktabnum1 <span class="opc">line</span> 0, p3, 3			<span class="comment">;morph through all tables</span>
-ktabnum2 <span class="op">=</span> 2				<span class="comment">;set to triangle wave</span>
-ksig <span class="opc">tabmorphi</span> kindex, kweightpoint, ktabnum1, ktabnum2, giSine, giSquare, giTri, giSaw
-ksig <span class="op">=</span> ksig<span class="op">*</span>iamp
-asig <span class="opc">interp</span> ksig			<span class="comment">;convert to audio signal</span>
-<span class="opc">outs</span> asig, asig
+i<span class="n">amp</span>   <span class="o">=</span> <span class="mf">.7</span>
+k<span class="n">index</span> <span class="nb">phasor</span> <span class="mi">440</span>			<span class="c1">;read table value at this index</span>
+k<span class="n">index</span> <span class="o">=</span> k<span class="n">index</span><span class="o">*</span><span class="mi">8192</span>			<span class="c1">;for all 8192 index points</span>
+k<span class="n">weightpoint</span> <span class="o">=</span> <span class="mf">0.5</span>			<span class="c1">;set weightpoint</span>
+k<span class="n">tabnum1</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">3</span>			<span class="c1">;morph through all tables</span>
+k<span class="n">tabnum2</span> <span class="o">=</span> <span class="mi">2</span>				<span class="c1">;set to triangle wave</span>
+k<span class="n">sig</span> <span class="nb">tabmorphi</span> k<span class="n">index</span><span class="p">,</span> k<span class="n">weightpoint</span><span class="p">,</span> k<span class="n">tabnum1</span><span class="p">,</span> k<span class="n">tabnum2</span><span class="p">,</span> gi<span class="n">Sine</span><span class="p">,</span> gi<span class="n">Square</span><span class="p">,</span> gi<span class="n">Tri</span><span class="p">,</span> gi<span class="n">Saw</span>
+k<span class="n">sig</span> <span class="o">=</span> k<span class="n">sig</span><span class="o">*</span>i<span class="n">amp</span>
+a<span class="n">sig</span> <span class="nb">interp</span> k<span class="n">sig</span>			<span class="c1">;convert to audio signal</span>
+<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -148,7 +148,7 @@ asig <span class="opc">interp</span> ksig			<span class="comment">;convert to au
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148165744"></a>
+        <a id="idm1496277632"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="table.html" title="table"><em class="citetitle">table</em></a>,
@@ -159,7 +159,7 @@ asig <span class="opc">interp</span> ksig			<span class="comment">;convert to au
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148171664"></a>
+        <a id="idm1496275712"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

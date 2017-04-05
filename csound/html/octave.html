@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>octave</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ntrpol.html" title="ntrpol" />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118563136"></a>
+        <a id="idm1526461680"></a>
         <h2>Description</h2>
         <p>
       Calculates a factor to raise/lower a frequency by a given amount of octaves.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118564544"></a>
+        <a id="idm1526464496"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>octave</strong></span>(x)</pre>
         <p>
@@ -53,73 +54,72 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118636656"></a>
+        <a id="idm1526461936"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>x</em></span> -- a value expressed in octaves.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118638352"></a>
+        <a id="idm1526464624"></a>
         <h2>Performance</h2>
         <p>
       The value returned by the <span class="emphasis"><em>octave</em></span> function is a factor. You can multiply a frequency by this factor to raise/lower it by the given amount of octaves. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118640288"></a>
+        <a id="idm1526463344"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the octave opcode. It uses the file <a class="ulink" href="examples/octave.csd" target="_top"><em class="citetitle">octave.csd</em></a>.
+      Here is an example of the octave opcode. It uses the file <a class="ulink" href="examples/octave.csd.html" target="_top"><em class="citetitle">octave.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp118642064"></a>
+          <a id="idm1526450416"></a>
           <p class="title">
-            <strong>Example 578. Example of the octave opcode.</strong>
+            <strong>Example 597. Example of the octave opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255031344"></a>
-              <a class="ulink" href="examples/octave.csd.html" target="_top">Play</a>
+              <a id="idm1351008496"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o octave.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o octave.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-iroot <span class="op">=</span> 440		<span class="comment">; root note is A above middle-C (440 Hz)</span>
-koct  <span class="opc">lfo</span> 5, 1, 5	<span class="comment">; generate sawtooth, go from 5 octaves higher to root</span>
-koc <span class="op">=</span> <span class="opc">int</span>(koct)		<span class="comment">; produce only whole numbers</span>
-kfactor <span class="op">=</span> <span class="opc">octave</span>(koc)	<span class="comment">; for octave</span>
-knew <span class="op">=</span> iroot <span class="op">*</span> kfactor
-<span class="opc">printk2</span> knew
+i<span class="n">root</span> <span class="o">=</span> <span class="mi">440</span>		<span class="c1">; root note is A above middle-C (440 Hz)</span>
+k<span class="n">oct</span>  <span class="nb">lfo</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span>	<span class="c1">; generate sawtooth, go from 5 octaves higher to root</span>
+k<span class="n">oc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>k<span class="n">oct</span><span class="p">)</span>		<span class="c1">; produce only whole numbers</span>
+k<span class="n">factor</span> <span class="o">=</span> <span class="nb">octave</span><span class="p">(</span>k<span class="n">oc</span><span class="p">)</span>	<span class="c1">; for octave</span>
+k<span class="n">new</span> <span class="o">=</span> i<span class="n">root</span> <span class="o">*</span> k<span class="n">factor</span>
+<span class="nb">printk2</span> k<span class="n">new</span>
 
-asig <span class="opc">pluck</span> 1, knew, 1000, 0, 1 
-asig <span class="opc">dcblock</span> asig	<span class="comment">;remove DC</span>
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">pluck</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">new</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> 
+a<span class="n">sig</span> <span class="nb">dcblock</span> a<span class="n">sig</span>	<span class="c1">;remove DC</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -143,7 +143,7 @@ asig <span class="opc">dcblock</span> asig	<span class="comment">;remove DC</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118647216"></a>
+        <a id="idm1526449904"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cent.html" title="cent"><em class="citetitle">cent</em></a>,
@@ -152,7 +152,7 @@ asig <span class="opc">dcblock</span> asig	<span class="comment">;remove DC</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118651216"></a>
+        <a id="idm1526451952"></a>
         <h2>Credits</h2>
         <p>New in version 4.16</p>
       </div>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLsetText</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLsetSnapGroup.html" title="FLsetSnapGroup" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp96714416"></a>
+        <a id="idm1549581424"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLsetText</em></span> sets the label of the target widget to the double-quoted text string provided with the <span class="emphasis"><em>itext</em></span> argument.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96716624"></a>
+        <a id="idm1549581552"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>FLsetText</strong></span> "itext", ihandle</pre>
       </div>
       <div class="refsect1">
-        <a id="idp96782624"></a>
+        <a id="idm1549581040"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">itext</span>”</span></em></span> -- a double-quoted string denoting the text of the label of the widget.
@@ -60,83 +61,81 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96786208"></a>
+        <a id="idm1549579376"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLsetText opcode. It uses the file <a class="ulink" href="examples/FLsetText.csd" target="_top"><em class="citetitle">FLsetText.csd</em></a>.
+      Here is an example of the FLsetText opcode. It uses the file <a class="ulink" href="examples/FLsetText.csd.html" target="_top"><em class="citetitle">FLsetText.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp96787984"></a>
+          <a id="idm1549574256"></a>
           <p class="title">
-            <strong>Example 299. Example of the FLsetText opcode.</strong>
+            <strong>Example 301. Example of the FLsetText opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp242735424"></a>
-              <a class="ulink" href="examples/FLsetText.csd.html" target="_top">Play</a>
+              <a id="idm1383713520"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLsetText.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLsetText.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 128
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Example by Giorgio Zucco and Andres Cabrera 2007</span>
+<span class="c1">; Example by Giorgio Zucco and Andres Cabrera 2007</span>
 
-<span class="opc">FLpanel</span> "FLsetText",250,100,50,50
+<span class="nb">FLpanel</span> <span class="s">"FLsetText"</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span>
 
-gk1,giha <span class="opc">FLcount</span> "", 1, 20, 1, 20, 1, 200, 40, 20, 20, 0, 1, 0, 1
+gk<span class="n">1</span><span class="p">,</span>gi<span class="n">ha</span> <span class="nb">FLcount</span> <span class="s">""</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="opc">FLpanelEnd</span>
-<span class="opc">FLrun</span>
-
-
-    <span class="oblock">instr</span> 1
-<span class="comment">; This instrument is triggered by FLcount above each time</span>
-<span class="comment">; its value changes</span>
-iname <span class="op">=</span> <span class="opc">i</span>(gk1)
-<span class="opc">print</span> iname
-<span class="comment">; Must use FLsetText on the init pass!</span>
-<span class="octrl">if</span> (iname <span class="op">==</span> 1) <span class="octrl">igoto</span> <span class="olabel">text1</span>
-<span class="octrl">if</span> (iname <span class="op">==</span> 2) <span class="octrl">igoto</span> <span class="olabel">text2</span>
-<span class="octrl">if</span> (iname <span class="op">==</span> 3) <span class="octrl">igoto</span> <span class="olabel">text3</span>
-
-<span class="octrl">igoto</span> <span class="olabel">end</span>
-
-<span class="olabel">text1</span><span class="op">:</span>
-<span class="opc">FLsetText</span> "FM",giha
-<span class="octrl">igoto</span> <span class="olabel">end</span>
-
-<span class="olabel">text2</span><span class="op">:</span>
-<span class="opc">FLsetText</span> "GRANUL",giha
-<span class="octrl">igoto</span> <span class="olabel">end</span>
-
-<span class="olabel">text3</span><span class="op">:</span>
-<span class="opc">FLsetText</span> "PLUCK",giha
-<span class="octrl">igoto</span> <span class="olabel">end</span>
-
-<span class="olabel">end</span><span class="op">:</span>
-    <span class="oblock">endin</span>
+<span class="nb">FLpanelEnd</span>
+<span class="nb">FLrun</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+    <span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; This instrument is triggered by FLcount above each time</span>
+<span class="c1">; its value changes</span>
+i<span class="n">name</span> <span class="o">=</span> <span class="nb">i</span><span class="p">(</span>gk<span class="n">1</span><span class="p">)</span>
+<span class="nb">print</span> i<span class="n">name</span>
+<span class="c1">; Must use FLsetText on the init pass!</span>
+<span class="k">if</span> <span class="p">(</span>i<span class="n">name</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">text1</span>
+<span class="k">if</span> <span class="p">(</span>i<span class="n">name</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">text2</span>
+<span class="k">if</span> <span class="p">(</span>i<span class="n">name</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">text3</span>
 
-<span class="stamnt">f</span> 0 3600
+<span class="k">igoto</span> <span class="nl">end</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nl">text1</span><span class="p">:</span>
+<span class="nb">FLsetText</span> <span class="s">"FM"</span><span class="p">,</span>gi<span class="n">ha</span>
+<span class="k">igoto</span> <span class="nl">end</span>
+
+<span class="nl">text2</span><span class="p">:</span>
+<span class="nb">FLsetText</span> <span class="s">"GRANUL"</span><span class="p">,</span>gi<span class="n">ha</span>
+<span class="k">igoto</span> <span class="nl">end</span>
+
+<span class="nl">text3</span><span class="p">:</span>
+<span class="nb">FLsetText</span> <span class="s">"PLUCK"</span><span class="p">,</span>gi<span class="n">ha</span>
+<span class="k">igoto</span> <span class="nl">end</span>
+
+<span class="nl">end</span><span class="p">:</span>
+    <span class="kd">endin</span>
+
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">3600</span>
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -145,7 +144,7 @@ iname <span class="op">=</span> <span class="opc">i</span>(gk1)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96792256"></a>
+        <a id="idm1549575408"></a>
         <h2>See Also</h2>
         <p>
         <a class="link" href="FLcolor2.html" title="FLcolor2"><em class="citetitle">FLcolor2</em></a>, 
@@ -168,7 +167,7 @@ iname <span class="op">=</span> <span class="opc">i</span>(gk1)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp96809696"></a>
+        <a id="idm1549566832"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

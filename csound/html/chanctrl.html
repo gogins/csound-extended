@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>chanctrl</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="cggoto.html" title="cggoto" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp82906608"></a>
+        <a id="idm1563363440"></a>
         <h2>Description</h2>
         <p>
       Get the current value of a controller and optionally map it onto specified range.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp82907904"></a>
+        <a id="idm1563363952"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ival <span class="command"><strong>chanctrl</strong></span> ichnl, ictlno [, ilow] [, ihigh]</pre>
         <pre class="synopsis">kval <span class="command"><strong>chanctrl</strong></span> ichnl, ictlno [, ilow] [, ihigh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp82975984"></a>
+        <a id="idm1563361904"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ichnl</em></span> -- the MIDI channel (1-16).
@@ -64,60 +65,59 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp82979680"></a>
+        <a id="idm1563351920"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the chanctrl opcode. It uses the file <a class="ulink" href="examples/chanctrl.csd" target="_top"><em class="citetitle">chanctrl.csd</em></a>.
+      Here is an example of the chanctrl opcode. It uses the file <a class="ulink" href="examples/chanctrl.csd.html" target="_top"><em class="citetitle">chanctrl.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp82981536"></a>
+          <a id="idm1563355888"></a>
           <p class="title">
-            <strong>Example 113. Example of the chanctrl opcode.</strong>
+            <strong>Example 114. Example of the chanctrl opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp236748464"></a>
-              <a class="ulink" href="examples/chanctrl.csd.html" target="_top">Play</a>
+              <a id="idm1400004464"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   No messages  MIDI in</span>
--odac            -d         -M0  <span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o chanctrl.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   No messages  MIDI in</span>
+-odac            -d         -M0  <span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o chanctrl.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; press your midi keyboard and move your midi controller to see result</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; press your midi keyboard and move your midi controller to see result</span>
 
-ichnl  <span class="op">=</span> 1		<span class="comment">;MIDI note inputs on channel 1</span>
-ictlno <span class="op">=</span> 7		<span class="comment">;use midi volume controller </span>
-kch  <span class="opc">chanctrl</span> ichnl, 7	<span class="comment">;to control amplitude of oscil</span>
-     <span class="opc">printk2</span>  kch
+i<span class="n">chnl</span>  <span class="o">=</span> <span class="mi">1</span>		<span class="c1">;MIDI note inputs on channel 1</span>
+i<span class="n">ctlno</span> <span class="o">=</span> <span class="mi">7</span>		<span class="c1">;use midi volume controller </span>
+k<span class="n">ch</span>  <span class="nb">chanctrl</span> i<span class="n">chnl</span><span class="p">,</span> <span class="mi">7</span>	<span class="c1">;to control amplitude of oscil</span>
+     <span class="nb">printk2</span>  k<span class="n">ch</span>
 
-asig <span class="opc">oscil</span> kch<span class="op">*</span>(1<span class="op">/</span>127), 220, 1
-     <span class="opc">outs</span>  asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span> <span class="nb">oscil</span> k<span class="n">ch</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">127</span><span class="p">),</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;Dummy f-table to give time for real-time MIDI events</span>
-<span class="stamnt">f</span> 0 30
-<span class="comment">;sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
-<span class="stamnt">e</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;Dummy f-table to give time for real-time MIDI events</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="c1">;sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -126,7 +126,7 @@ asig <span class="opc">oscil</span> kch<span class="op">*</span>(1<span class="o
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp82985824"></a>
+        <a id="idm1563352432"></a>
         <h2>Credits</h2>
         <p>
       </p>

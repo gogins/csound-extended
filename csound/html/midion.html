@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>midion</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="midion2.html" title="midion2" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114733040"></a>
+        <a id="idm1530847984"></a>
         <h2>Description</h2>
         <p>
       Generates MIDI note messages at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114734288"></a>
+        <a id="idm1530840304"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>midion</strong></span> kchn, knum, kvel</pre>
       </div>
       <div class="refsect1">
-        <a id="idp114808256"></a>
+        <a id="idm1530837488"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kchn</em></span> -- MIDI channel number (1-16)
@@ -69,123 +70,119 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114815968"></a>
+        <a id="idm1530835312"></a>
         <h2>Examples</h2>
         <p>
-      Here is a simple example of the midion opcode. It uses the file <a class="ulink" href="examples/midion_simple.csd" target="_top"><em class="citetitle">midion_simple.csd</em></a>.
+      Here is a simple example of the midion opcode. It uses the file <a class="ulink" href="examples/midion_simple.csd.html" target="_top"><em class="citetitle">midion_simple.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp114817760"></a>
+          <a id="idm1530826096"></a>
           <p class="title">
-            <strong>Example 521. Simple Example of the midion opcode.</strong>
+            <strong>Example 537. Simple Example of the midion opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <p>This example generates a minor chord over every note received on the MIDI input. It generates MIDI notes on csound's MIDI output, so be sure to connect something.</p>
             <div class="refsect1">
-              <a id="idp252686192"></a>
-              <a class="ulink" href="examples/midion_simple.csd.html" target="_top">Play</a>
+              <a id="idm1356373360"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d         -M0  -Q1 <span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d         -M0  -Q1 <span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Example by Giorgio Zucco 2007</span>
-
-
-<span class="oblock">instr</span> 1 <span class="comment">;Triggered by MIDI notes on channel 1</span>
-
-  ifund <span class="opc">notnum</span>
-  ivel  <span class="opc">veloc</span>
-
-  knote1 <span class="opc">init</span> ifund
-  knote2 <span class="opc">init</span> ifund <span class="op">+</span> 3
-  knote3 <span class="opc">init</span> ifund <span class="op">+</span> 5
-
-  <span class="comment">;minor chord on MIDI out channel 1</span>
-  <span class="comment">;Needs something plugged to csound's MIDI output</span>
-  <span class="opc">midion</span> 1, knote1,ivel
-  <span class="opc">midion</span> 1, knote2,ivel
-  <span class="opc">midion</span> 1, knote3,ivel
-
-<span class="oblock">endin</span>
+<span class="c1">; Example by Giorgio Zucco 2007</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; Dummy ftable</span>
-<span class="stamnt">f</span>0 60
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;Triggered by MIDI notes on channel 1</span>
+
+  i<span class="n">fund</span> <span class="nb">notnum</span>
+  i<span class="n">vel</span>  <span class="nb">veloc</span>
+
+  k<span class="n">note1</span> <span class="nb">init</span> i<span class="n">fund</span>
+  k<span class="n">note2</span> <span class="nb">init</span> i<span class="n">fund</span> <span class="o">+</span> <span class="mi">3</span>
+  k<span class="n">note3</span> <span class="nb">init</span> i<span class="n">fund</span> <span class="o">+</span> <span class="mi">5</span>
+
+  <span class="c1">;minor chord on MIDI out channel 1</span>
+  <span class="c1">;Needs something plugged to csound's MIDI output</span>
+  <span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">note1</span><span class="p">,</span>i<span class="n">vel</span>
+  <span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">note2</span><span class="p">,</span>i<span class="n">vel</span>
+  <span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">note3</span><span class="p">,</span>i<span class="n">vel</span>
+
+<span class="kd">endin</span>
+
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Dummy ftable</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">60</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
         </div>
         <p><br class="example-break" />
-      Here is another example of the midion opcode. It uses the file <a class="ulink" href="examples/midion_scale.csd" target="_top"><em class="citetitle">midion_scale.csd</em></a>.
+      Here is another example of the midion opcode. It uses the file <a class="ulink" href="examples/midion_scale.csd.html" target="_top"><em class="citetitle">midion_scale.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp114823232"></a>
+          <a id="idm1530825840"></a>
           <p class="title">
-            <strong>Example 522. Example of the midion opcode to generate random notes from a scale.</strong>
+            <strong>Example 538. Example of the midion opcode to generate random notes from a scale.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <p>This example generates random notes from a given scale for every note received on the MIDI input. It generates MIDI notes on csound's MIDI output, so be sure to connect something.</p>
             <div class="refsect1">
-              <a id="idp253134288"></a>
-              <a class="ulink" href="examples/midion_scale.csd.html" target="_top">Play</a>
+              <a id="idm1355700592"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d        -M0  -Q1 <span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d        -M0  -Q1 <span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Example by Giorgio Zucco 2007</span>
+<span class="c1">; Example by Giorgio Zucco 2007</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">; Triggered by MIDI notes on channel 1</span>
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">; Triggered by MIDI notes on channel 1</span>
 
-  ivel 	<span class="opc">veloc</span>
+  i<span class="n">vel</span> 	<span class="nb">veloc</span>
 
-  krate <span class="op">=</span> 8
-  iscale <span class="op">=</span> 100 <span class="comment">;f</span>
+  k<span class="n">rate</span> <span class="o">=</span> <span class="mi">8</span>
+  i<span class="n">scale</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1">;f</span>
 
-  <span class="comment">; Random sequence from table f100</span>
-  krnd  <span class="opc">randh</span> <span class="opc">int</span>(14),krate,<span class="op">-</span>1
-  knote <span class="opc">table</span> <span class="opc">abs</span>(krnd),iscale
-  <span class="comment">; Generates random notes from the scale on ftable 100</span>
-  <span class="comment">; on channel 1 of csound's MIDI output</span>
-  <span class="opc">midion</span> 1,knote,ivel
+  <span class="c1">; Random sequence from table f100</span>
+  k<span class="n">rnd</span>  <span class="nb">randh</span> <span class="nb">int</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span>k<span class="n">rate</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span>
+  k<span class="n">note</span> <span class="nb">table</span> <span class="nb">abs</span><span class="p">(</span>k<span class="n">rnd</span><span class="p">),</span>i<span class="n">scale</span>
+  <span class="c1">; Generates random notes from the scale on ftable 100</span>
+  <span class="c1">; on channel 1 of csound's MIDI output</span>
+  <span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span>k<span class="n">note</span><span class="p">,</span>i<span class="n">vel</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>100 0 32 -2  40 50 60 70 80 44 54 65 74 84 39 49 69 69
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">32</span> <span class="o">-</span><span class="mi">2</span>  <span class="mi">40</span> <span class="mi">50</span> <span class="mi">60</span> <span class="mi">70</span> <span class="mi">80</span> <span class="mi">44</span> <span class="mi">54</span> <span class="mi">65</span> <span class="mi">74</span> <span class="mi">84</span> <span class="mi">39</span> <span class="mi">49</span> <span class="mi">69</span> <span class="mi">69</span>
 
-<span class="comment">; Dummy ftable</span>
-<span class="stamnt">f</span>0 60
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">; Dummy ftable</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">60</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -194,7 +191,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114828128"></a>
+        <a id="idm1530820848"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="moscil.html" title="moscil"><em class="citetitle">moscil</em></a>,
@@ -206,7 +203,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114834976"></a>
+        <a id="idm1530815472"></a>
         <h2>Credits</h2>
         <p>
       </p>

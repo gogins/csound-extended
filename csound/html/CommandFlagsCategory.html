@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Command-line Flags (by Category)</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="CommandTop.html" title="The Csound Command" />
     <link rel="prev" href="CommandFlags.html" title="Csound command line" />
@@ -1306,33 +1307,33 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-                  <span class="emphasis"><em>Note that this option has no affect in
-                  csound6.</em></span>
+          <span class="emphasis"><em>Note that this option has no affect in
+          csound6.</em></span>
 
-              <span class="emphasis"><em>In Csound 5 only.</em></span>
+          <span class="emphasis"><em>In Csound 5 only.</em></span>
           Turns on some optimizations in expressions:
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
                 <li class="listitem">
                   <p>Redundant assignment operations are eliminated whenever
-                possible. This means that for example this line
-                a1 = a2 + a3
-                will compile as
-                a1 Add a2, a3
-                instead of
-                #a0 Add a2, a3
-                a1 = #a0
-                saving a temporary variable and an opcode call. Less opcode
-                calls result in reduced CPU usage (an average orchestra may
-                compile about 10% faster with --expression-opt, but it
-                depends largely on how many expressions are used, what the
-                control rate is (see also below), etc.; thus, the difference
-                may be less, but also much more).</p>
+            possible. This means that for example this line
+            a1 = a2 + a3
+            will compile as
+            a1 Add a2, a3
+            instead of
+            #a0 Add a2, a3
+            a1 = #a0
+            saving a temporary variable and an opcode call. Less opcode
+            calls result in reduced CPU usage (an average orchestra may
+            compile about 10% faster with --expression-opt, but it
+            depends largely on how many expressions are used, what the
+            control rate is (see also below), etc.; thus, the difference
+            may be less, but also much more).</p>
                 </li>
                 <li class="listitem">
-                  <p>number of a- and k-rate temporary variables is significantly
-                reduced. This expression</p>
+                  <p>number of a- and k-rate temporary
+            variables is significantly reduced. This expression</p>
                   <pre class="programlisting">
 (a1 + a2 + a3 + a4)</pre>
                   <p>will compile as</p>
@@ -1367,7 +1368,6 @@ csound5:output2             (playback right)</pre>
               </ul>
             </div>
             <p>
-
           </p>
             <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
               <table border="0" summary="Warning: Warning">
@@ -1392,12 +1392,22 @@ csound5:output2             (playback right)</pre>
         </p>
           </dd>
           <dt>
+            <a id="FlagsCatMinusVersion"></a>
+            <span class="term">--version<a id="IndexCatMinusVersion" class="indexterm"></a></span>
+          </dt>
+          <dd>
+            <p>
+          Exits after printing version information.
+        </p>
+          </dd>
+          <dt>
             <a id="CatFlagsMinusMinusGetSR"></a>
             <span class="term">--get-system-sr<a id="IndexCatMinusMinusGetSR" class="indexterm"></a></span>
           </dt>
           <dd>
             <p>
-          PObtain the machine's sample rate.
+          prints system sr and exits, requires previous -o dac.
+              If the audio does not support this request then -1 is reported.
         </p>
           </dd>
           <dt>

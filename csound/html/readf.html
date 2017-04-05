@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>readf</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="readclock.html" title="readclock" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132039360"></a>
+        <a id="idm1512754816"></a>
         <h2>Description</h2>
         <p>
       Read a line of text from an external file once each k-cycle.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132040640"></a>
+        <a id="idm1512745472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">Sres, kline <span class="command"><strong>readf</strong></span> ifilname</pre>
       </div>
       <div class="refsect1">
-        <a id="idp132042736"></a>
+        <a id="idm1512745216"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilname</em></span> -- an integer N denoting a file
@@ -62,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132109936"></a>
+        <a id="idm1512747392"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>Sres</em></span> -- output of the line read from
@@ -79,46 +80,48 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132113872"></a>
+        <a id="idm1512746496"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the readf opcode. It uses the file <a class="ulink" href="examples/readf.csd" target="_top"><em class="citetitle">readf.csd</em></a>.
+      Here is an example of the readf opcode. It uses the file <a class="ulink" href="examples/readf.csd.html" target="_top"><em class="citetitle">readf.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp132115728"></a>
+          <a id="idm1512735360"></a>
           <p class="title">
-            <strong>Example 770. Example of the readf opcode.</strong>
+            <strong>Example 791. Example of the readf opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp261547504"></a>
-              <a class="ulink" href="examples/readf.csd.html" target="_top">Play</a>
+              <a id="idm1334416112"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -n
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="oblock">instr</span> 1
-  Swd           <span class="opc">pwd</span>
-                <span class="opc">printf_i</span>      "Working <span class="opc">directory</span> is '<span class="op">%</span>s'\n", 1, Swd
-                <span class="opc">prints</span>        "Reading myself <span class="op">=</span>)<span class="op">:</span>\n"
-<span class="olabel">read</span><span class="op">:</span>
-  Sline, kLinNum <span class="opc">readf</span> "readf.csd"
-                <span class="opc">printf</span> "Line <span class="op">%</span>d<span class="op">:</span> <span class="op">%</span>s", kLinNum, kLinNum, Sline
-  <span class="octrl">if</span> kLinNum <span class="op">!=</span> <span class="op">-</span>1 then
-                <span class="octrl">kgoto</span> <span class="olabel">read</span>
-  <span class="octrl">else</span> 
-                <span class="opc">turnoff</span>
-  <span class="octrl">endif</span>
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 1
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  S<span class="n">wd</span>           <span class="nb">pwd</span>
+                <span class="nb">printf_i</span>      <span class="s">"Working directory is '%s'</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">wd</span>
+                <span class="nb">prints</span>        <span class="s">"Reading myself =):</span><span class="se">\n</span><span class="s">"</span>
+<span class="nl">read</span><span class="p">:</span>
+  S<span class="n">line</span><span class="p">,</span> k<span class="n">LinNum</span> <span class="nb">readf</span> <span class="s">"readf.csd"</span>
+                <span class="nb">printf</span> <span class="s">"Line </span><span class="si">%d</span><span class="s">: %s"</span><span class="p">,</span> k<span class="n">LinNum</span><span class="p">,</span> k<span class="n">LinNum</span><span class="p">,</span> S<span class="n">line</span>
+  <span class="k">if</span> k<span class="n">LinNum</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">then</span>
+                <span class="k">kgoto</span> <span class="nl">read</span>
+  <span class="k">else</span> 
+                <span class="nb">turnoff</span>
+  <span class="k">endif</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -127,14 +130,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132120016"></a>
+        <a id="idm1512734720"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="readfi.html" title="readfi"><em class="citetitle">readfi</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132122096"></a>
+        <a id="idm1512735872"></a>
         <h2>Credits</h2>
         <p>John ffitch and Joachim Heintz</p>
         <p>2012; new in 5.17.12</p>

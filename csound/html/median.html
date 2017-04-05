@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>median</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="mdelay.html" title="mdelay" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113410080"></a>
+        <a id="idm1532048368"></a>
         <h2>Description</h2>
         <p>
       Implementation of a median filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113472272"></a>
+        <a id="idm1532055792"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>median</strong></span> asig, ksize, imaxsize [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp113474464"></a>
+        <a id="idm1532055664"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imaxsize</em></span> -- the maximun  size of the window used to
@@ -64,7 +65,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idp113477168"></a>
+        <a id="idm1532048752"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal to be filtered
@@ -82,43 +83,45 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113481216"></a>
+        <a id="idm1532047216"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the median opcode. It uses the file <a class="ulink" href="examples/median.csd" target="_top"><em class="citetitle">median.csd</em></a>.
+      Here is an example of the median opcode. It uses the file <a class="ulink" href="examples/median.csd.html" target="_top"><em class="citetitle">median.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp113483072"></a>
+          <a id="idm1532042352"></a>
           <p class="title">
-            <strong>Example 503. Example of the median opcode.</strong>
+            <strong>Example 518. Example of the median opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp252529568"></a>
-              <a class="ulink" href="examples/median.csd.html" target="_top">Play</a>
+              <a id="idm1357463664"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
-<span class="oblock">instr</span> 1
-  a1  <span class="opc">oscil</span>  30000, 10, 1
-  a2  <span class="opc">median</span> a1, 5, 8
-  <span class="opc">out</span> a2
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 4096 10 1
-<span class="stamnt">i</span> 1 0 0.1 
-<span class="stamnt">e</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  a<span class="n">1</span>  <span class="nb">oscil</span>  <span class="mi">30000</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">2</span>  <span class="nb">median</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span>
+  <span class="nb">out</span> a<span class="n">2</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">0.1</span> 
+<span class="nb">e</span>
+
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -127,7 +130,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp113487360"></a>
+        <a id="idm1532041712"></a>
         <h2>Credits</h2>
         <p>
       </p>

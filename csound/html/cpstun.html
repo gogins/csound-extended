@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>cpstun</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="cpstmid.html" title="cpstmid" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86213840"></a>
+        <a id="idm1559998576"></a>
         <h2>Description</h2>
         <p>
       Returns micro-tuning values at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86255120"></a>
+        <a id="idm1559997552"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kcps <span class="command"><strong>cpstun</strong></span> ktrig, kindex, kfn</pre>
       </div>
       <div class="refsect1">
-        <a id="idp86257360"></a>
+        <a id="idm1559999600"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kcps</em></span> -- Return value in cycles per second.
@@ -118,76 +119,75 @@ to the key-number 48, and a repetition interval of 1.5:
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86279248"></a>
+        <a id="idm1559977200"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the cpstun opcode. It uses the file <a class="ulink" href="examples/cpstun.csd" target="_top"><em class="citetitle">cpstun.csd</em></a>.
+      Here is an example of the cpstun opcode. It uses the file <a class="ulink" href="examples/cpstun.csd.html" target="_top"><em class="citetitle">cpstun.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp86281104"></a>
+          <a id="idm1559971568"></a>
           <p class="title">
-            <strong>Example 161. Example of the cpstun opcode.</strong>
+            <strong>Example 163. Example of the cpstun opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp238534560"></a>
-              <a class="ulink" href="examples/cpstun.csd.html" target="_top">Play</a>
+              <a id="idm1395649136"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o cpstun.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o cpstun.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Table #1, a normal 12-tone equal temperament scale.</span>
-<span class="comment">; numgrades = 12 (twelve tones)</span>
-<span class="comment">; interval = 2 (one octave)</span>
-<span class="comment">; basefreq = 261.659 (Middle C)</span>
-<span class="comment">; basekeymidi = 60 (Middle C)</span>
-gitemp <span class="ohdr">ftgen</span> 1, 0, 64, <span class="op">-</span>2, 12, 2, 261.659, 60, 1.00, \
-             1.059, 1.122, 1.189, 1.260, 1.335, 1.414, \
-             1.498, 1.588, 1.682, 1.782, 1.888, 2.000
+<span class="c1">; Table #1, a normal 12-tone equal temperament scale.</span>
+<span class="c1">; numgrades = 12 (twelve tones)</span>
+<span class="c1">; interval = 2 (one octave)</span>
+<span class="c1">; basefreq = 261.659 (Middle C)</span>
+<span class="c1">; basekeymidi = 60 (Middle C)</span>
+gi<span class="n">temp</span> <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">261.659</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> \
+             <span class="mf">1.059</span><span class="p">,</span> <span class="mf">1.122</span><span class="p">,</span> <span class="mf">1.189</span><span class="p">,</span> <span class="mf">1.260</span><span class="p">,</span> <span class="mf">1.335</span><span class="p">,</span> <span class="mf">1.414</span><span class="p">,</span> \
+             <span class="mf">1.498</span><span class="p">,</span> <span class="mf">1.588</span><span class="p">,</span> <span class="mf">1.682</span><span class="p">,</span> <span class="mf">1.782</span><span class="p">,</span> <span class="mf">1.888</span><span class="p">,</span> <span class="mf">2.000</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Set the trigger.</span>
-  ktrig <span class="opc">init</span> 1
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Set the trigger.</span>
+  k<span class="n">trig</span> <span class="nb">init</span> <span class="mi">1</span>
 
-  <span class="comment">; Use Table #1.</span>
-  kfn <span class="opc">init</span> 1
+  <span class="c1">; Use Table #1.</span>
+  k<span class="n">fn</span> <span class="nb">init</span> <span class="mi">1</span>
 
-  <span class="comment">; If the base key (note #60) is C, then 9 notes </span>
-  <span class="comment">; above it (note #60 + 9 = note #69) should be A.</span>
-  kindex <span class="opc">init</span> 69
+  <span class="c1">; If the base key (note #60) is C, then 9 notes </span>
+  <span class="c1">; above it (note #60 + 9 = note #69) should be A.</span>
+  k<span class="n">index</span> <span class="nb">init</span> <span class="mi">69</span>
 
-  k1 <span class="opc">cpstun</span> ktrig, kindex, kfn
+  k<span class="n">1</span> <span class="nb">cpstun</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">index</span><span class="p">,</span> k<span class="n">fn</span>
 
-  <span class="opc">printk2</span> k1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+  <span class="nb">printk2</span> k<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -201,7 +201,7 @@ gitemp <span class="ohdr">ftgen</span> 1, 0, 64, <span class="op">-</span>2, 12,
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86286160"></a>
+        <a id="idm1559978608"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpstmid.html" title="cpstmid"><em class="citetitle">cpstmid</em></a>,
@@ -210,7 +210,7 @@ gitemp <span class="ohdr">ftgen</span> 1, 0, 64, <span class="op">-</span>2, 12,
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86290224"></a>
+        <a id="idm1559966832"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

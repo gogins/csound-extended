@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>loopsegp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="loopseg.html" title="loopseg" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp110228304"></a>
+        <a id="idm1535414256"></a>
         <h2>Description</h2>
         <p>
     Generate control signal consisiting of linear segments delimited
@@ -48,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp110309456"></a>
+        <a id="idm1535413488"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ksig <span class="command"><strong>loopsegp</strong></span>  kphase, kvalue0, kdur0, kvalue1 \
       [, kdur1, ... , kdurN-1, kvalueN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp110312176"></a>
+        <a id="idm1535403632"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> - output signal
@@ -73,71 +74,70 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp110322528"></a>
+        <a id="idm1535394288"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the loopsegp opcode. It uses the file <a class="ulink" href="examples/loopsegp.csd" target="_top"><em class="citetitle">loopsegp.csd</em></a>.
+      Here is an example of the loopsegp opcode. It uses the file <a class="ulink" href="examples/loopsegp.csd.html" target="_top"><em class="citetitle">loopsegp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp110324384"></a>
+          <a id="idm1535397616"></a>
           <p class="title">
-            <strong>Example 457. Example of the loopsegp opcode.</strong>
+            <strong>Example 472. Example of the loopsegp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp249937312"></a>
-              <a class="ulink" href="examples/loopsegp.csd.html" target="_top">Play</a>
+              <a id="idm1363386480"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o loopsegp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o loopsegp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-ktrig <span class="opc">metro</span> 22<span class="op">/</span>8 <span class="comment">; triggers used to generate new direction values</span>
-kdir  <span class="opc">trandom</span> ktrig,<span class="op">-</span>2.99,2.99
-kdir  <span class="op">=</span>       0.5<span class="op">*</span><span class="opc">int</span>(kdir) <span class="comment">; kdir will either -1, -0.5, 0, 0.5 or 1</span>
-<span class="comment">; kphase - looping pointer</span>
-kphase <span class="opc">phasor</span> kdir
-<span class="comment">; a loop sequence of midi note numbers and durations</span>
-knote <span class="opc">loopsegp</span>  kphase, 40,1,40,0, 43,1,43,0, 49,2,48,0, \
- 47,1,47,0, 46,1,46,0, 46,1,47,0, 49,1,49,0, 43,1,43,0, 46,1,46,0, 40,1,39,0    
-kmul  <span class="opc">rspline</span> 0.1,0.8,0.5,5                         <span class="comment">; modulation of buzz tone</span>
-asig  <span class="opc">gbuzz</span>   0.2, <span class="opc">cpsmidinn</span>(knote), 30, 3, kmul, 1 <span class="comment">; buzz tone</span>
-      <span class="opc">outs</span>    asig, asig
+<span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">trig</span> <span class="nb">metro</span> <span class="mi">22</span><span class="o">/</span><span class="mi">8</span> <span class="c1">; triggers used to generate new direction values</span>
+k<span class="n">dir</span>  <span class="nb">trandom</span> k<span class="n">trig</span><span class="p">,</span><span class="o">-</span><span class="mf">2.99</span><span class="p">,</span><span class="mf">2.99</span>
+k<span class="n">dir</span>  <span class="o">=</span>       <span class="mf">0.5</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span>k<span class="n">dir</span><span class="p">)</span> <span class="c1">; kdir will either -1, -0.5, 0, 0.5 or 1</span>
+<span class="c1">; kphase - looping pointer</span>
+k<span class="n">phase</span> <span class="nb">phasor</span> k<span class="n">dir</span>
+<span class="c1">; a loop sequence of midi note numbers and durations</span>
+k<span class="n">note</span> <span class="nb">loopsegp</span>  k<span class="n">phase</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">48</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> \
+ <span class="mi">47</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">47</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">46</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">47</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">49</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">46</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="mi">0</span>    
+k<span class="n">mul</span>  <span class="nb">rspline</span> <span class="mf">0.1</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">5</span>                         <span class="c1">; modulation of buzz tone</span>
+a<span class="n">sig</span>  <span class="nb">gbuzz</span>   <span class="mf">0.2</span><span class="p">,</span> <span class="nb">cpsmidinn</span><span class="p">(</span>k<span class="n">note</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">mul</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; buzz tone</span>
+      <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
       
-      <span class="opc">schedkwhen</span> ktrig,0,0,2,0,0.1 <span class="comment">; play metronome</span>
-<span class="oblock">endin</span>
+      <span class="nb">schedkwhen</span> k<span class="n">trig</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span> <span class="c1">; play metronome</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2 <span class="comment">; metronome</span>
-acps  <span class="opc">expon</span>   180<span class="op">+</span><span class="opc">rnd</span>(40),p3,50
-aamp  <span class="opc">expon</span>   0.05<span class="op">+</span><span class="opc">rnd</span>(0.05),p3,0.001
-asig  <span class="opc">poscil</span>  aamp<span class="op">-</span>0.001,acps,2
-      <span class="opc">outs</span>    asig,asig
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span> <span class="c1">; metronome</span>
+a<span class="n">cps</span>  <span class="nb">expon</span>   <span class="mi">180</span><span class="o">+</span><span class="nb">rnd</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span><span class="nb">p3</span><span class="p">,</span><span class="mi">50</span>
+a<span class="n">amp</span>  <span class="nb">expon</span>   <span class="mf">0.05</span><span class="o">+</span><span class="nb">rnd</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span><span class="nb">p3</span><span class="p">,</span><span class="mf">0.001</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span>  a<span class="n">amp</span><span class="o">-</span><span class="mf">0.001</span><span class="p">,</span>a<span class="n">cps</span><span class="p">,</span><span class="mi">2</span>
+      <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; cosine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 11 1
-<span class="comment">; sine wave.</span>
-<span class="stamnt">f</span> 2 0 16384 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; cosine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">11</span> <span class="mi">1</span>
+<span class="c1">; sine wave.</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 360 0.25
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">360</span> <span class="mf">0.25</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -146,7 +146,7 @@ asig  <span class="opc">poscil</span>  aamp<span class="op">-</span>0.001,acps,2
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp110326304"></a>
+        <a id="idm1535396976"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5. (Previously available only on CsoundAV)</p>

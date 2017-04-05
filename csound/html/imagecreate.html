@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>imagecreate</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ihold.html" title="ihold" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105455808"></a>
+        <a id="idm1540618384"></a>
         <h2>Description</h2>
         <p>
       Create an empty image of a given size. Individual pixel values can then be set with. <a class="link" href="imagesetpixel.html" title="imagesetpixel"><em class="citetitle">imagegetpixel</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105458096"></a>
+        <a id="idm1540625680"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iimagenum <span class="command"><strong>imagecreate</strong></span> iwidth, iheight</pre>
       </div>
       <div class="refsect1">
-        <a id="idp105524896"></a>
+        <a id="idm1540622352"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iimagenum</em></span> -- number assigned to the created image.
@@ -63,72 +64,72 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105528368"></a>
+        <a id="idm1540510064"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the imagecreate opcode. It uses the file <a class="ulink" href="examples/imageopcodes.csd" target="_top"><em class="citetitle">imageopcodes.csd</em></a>.
+      Here is an example of the imagecreate opcode. It uses the file <a class="ulink" href="examples/imageopcodes.csd.html" target="_top"><em class="citetitle">imageopcodes.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp105530160"></a>
+          <a id="idm1540513904"></a>
           <p class="title">
-            <strong>Example 405. Example of the imageload opcode.</strong>
+            <strong>Example 412. Example of the imageload opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp248321536"></a>
-              <a class="ulink" href="examples/imageopcodes.csd.html" target="_top">Play</a>
+              <a id="idm1369781488"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--n <span class="comment">;no sound output</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-n <span class="c1">;no sound output</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>48000
-<span class="ohdr">ksmps</span><span class="op">=</span>1
-<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="vg">sr</span><span class="o">=</span><span class="mi">48000</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">1</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
-<span class="comment">; this test .csd copies image.png into a new file 'imageout.png'</span>
+<span class="c1">; this test .csd copies image.png into a new file 'imageout.png'</span>
 
-giimage1 <span class="opc">imageload</span> "image.png"
-giimagew, giimageh <span class="opc">imagesize</span> giimage1
-giimage2 <span class="opc">imagecreate</span> giimagew,giimageh
+gi<span class="n">image1</span> <span class="nb">imageload</span> <span class="s">"image.png"</span>
+gi<span class="n">imagew</span><span class="p">,</span> gi<span class="n">imageh</span> <span class="nb">imagesize</span> gi<span class="n">image1</span>
+gi<span class="n">image2</span> <span class="nb">imagecreate</span> gi<span class="n">imagew</span><span class="p">,</span>gi<span class="n">imageh</span>
 
-    <span class="oblock">instr</span> 1
+    <span class="kd">instr</span> <span class="nf">1</span>
 
-kndx <span class="op">=</span> 0
-kx_ <span class="opc">linseg</span> 0, p3, 1
-<span class="comment">;print imagewidth and imageheigth of image.png</span>
-<span class="opc">prints</span> "imagewidth <span class="op">=</span> <span class="op">%</span>f pixels, imageheigth <span class="op">=</span> <span class="op">%</span>f pixels\\n", giimagew, giimageh
+k<span class="n">ndx</span> <span class="o">=</span> <span class="mi">0</span>
+k<span class="n">x_</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
+<span class="c1">;print imagewidth and imageheigth of image.png</span>
+<span class="nb">prints</span> <span class="s">"imagewidth = %f pixels, imageheigth = %f pixels</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> gi<span class="n">imagew</span><span class="p">,</span> gi<span class="n">imageh</span>
 
-<span class="olabel">myloop</span><span class="op">:</span>
-ky_ <span class="op">=</span> kndx<span class="op">/</span>(giimageh)
-kr_, kg_, kb_ <span class="opc">imagegetpixel</span> giimage1, kx_, ky_
-<span class="opc">imagesetpixel</span> giimage2, kx_, ky_, kr_, kg_, kb_
-<span class="octrl">loop_lt</span> kndx, 0.5, giimageh, <span class="olabel">myloop</span>
-    <span class="oblock">endin</span>
+<span class="nl">myloop</span><span class="p">:</span>
+k<span class="n">y_</span> <span class="o">=</span> k<span class="n">ndx</span><span class="o">/</span><span class="p">(</span>gi<span class="n">imageh</span><span class="p">)</span>
+k<span class="n">r_</span><span class="p">,</span> k<span class="n">g_</span><span class="p">,</span> k<span class="n">b_</span> <span class="nb">imagegetpixel</span> gi<span class="n">image1</span><span class="p">,</span> k<span class="n">x_</span><span class="p">,</span> k<span class="n">y_</span>
+<span class="nb">imagesetpixel</span> gi<span class="n">image2</span><span class="p">,</span> k<span class="n">x_</span><span class="p">,</span> k<span class="n">y_</span><span class="p">,</span> k<span class="n">r_</span><span class="p">,</span> k<span class="n">g_</span><span class="p">,</span> k<span class="n">b_</span>
+<span class="k">loop_lt</span> k<span class="n">ndx</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> gi<span class="n">imageh</span><span class="p">,</span> <span class="nl">myloop</span>
+    <span class="kd">endin</span>
 
-    <span class="oblock">instr</span> 2
+    <span class="kd">instr</span> <span class="nf">2</span>
 
-<span class="opc">imagesave</span> giimage2, "imageout.png"
-    <span class="oblock">endin</span>
+<span class="nb">imagesave</span> gi<span class="n">image2</span><span class="p">,</span> <span class="s">"imageout.png"</span>
+    <span class="kd">endin</span>
 
-    <span class="oblock">instr</span> 3
-<span class="opc">imagefree</span> giimage1
-<span class="opc">imagefree</span> giimage2
-    <span class="oblock">endin</span>
+    <span class="kd">instr</span> <span class="nf">3</span>
+<span class="nb">imagefree</span> gi<span class="n">image1</span>
+<span class="nb">imagefree</span> gi<span class="n">image2</span>
+    <span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 1 1
-<span class="stamnt">i</span>2 2 1
-<span class="stamnt">i</span>3 3 1
-<span class="stamnt">e</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">3</span> <span class="mi">3</span> <span class="mi">1</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+ 
 </pre>
             </div>
           </div>
@@ -137,7 +138,7 @@ kr_, kg_, kb_ <span class="opc">imagegetpixel</span> giimage1, kx_, ky_
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105532080"></a>
+        <a id="idm1540507120"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="imageload.html" title="imageload"><em class="citetitle">imageload</em></a>,
@@ -149,7 +150,7 @@ kr_, kg_, kb_ <span class="opc">imagegetpixel</span> giimage1, kx_, ky_
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105538992"></a>
+        <a id="idm1540502512"></a>
         <h2>Credits</h2>
         <p>
       </p>

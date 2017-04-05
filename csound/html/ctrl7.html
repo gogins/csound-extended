@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ctrl7</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ctrl21.html" title="ctrl21" />
@@ -38,21 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86990608"></a>
+        <a id="idm1559410672"></a>
         <h2>Description</h2>
         <p>
       Allows a floating-point 7-bit MIDI signal scaled with a minimum and a maximum range.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87034736"></a>
+        <a id="idm1559411440"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">idest <span class="command"><strong>ctrl7</strong></span> ichan, ictlno, imin, imax [, ifn]</pre>
         <pre class="synopsis">kdest <span class="command"><strong>ctrl7</strong></span> ichan, ictlno, kmin, kmax [, ifn]</pre>
         <pre class="synopsis">adest <span class="command"><strong>ctrl7</strong></span> ichan, ictlno, kmin, kmax [, ifn] [, icutoff]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp87039728"></a>
+        <a id="idm1559407600"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idest</em></span> -- output signal
@@ -77,7 +78,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87047424"></a>
+        <a id="idm1559399408"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kdest, adest</em></span> -- output signal
@@ -99,61 +100,60 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87055728"></a>
+        <a id="idm1559390064"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ctrl7 opcode. It uses the file <a class="ulink" href="examples/ctrl7.csd" target="_top"><em class="citetitle">ctrl7.csd</em></a>.
+      Here is an example of the ctrl7 opcode. It uses the file <a class="ulink" href="examples/ctrl7.csd.html" target="_top"><em class="citetitle">ctrl7.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp87057584"></a>
+          <a id="idm1559389296"></a>
           <p class="title">
-            <strong>Example 173. Example of the ctrl7 opcode.</strong>
+            <strong>Example 175. Example of the ctrl7 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp238889184"></a>
-              <a class="ulink" href="examples/ctrl7.csd.html" target="_top">Play</a>
+              <a id="idm1395336432"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   -M0  <span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   -M0  <span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; expects MIDI controller input on channel 1</span>
-<span class="comment">; run and move your midi controller to see result</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; expects MIDI controller input on channel 1</span>
+<span class="c1">; run and move your midi controller to see result</span>
 
-imax <span class="op">=</span> 1
-imin <span class="op">=</span> 0
-ichan <span class="op">=</span> 1 
-ictlno <span class="op">=</span> 7
+i<span class="n">max</span> <span class="o">=</span> <span class="mi">1</span>
+i<span class="n">min</span> <span class="o">=</span> <span class="mi">0</span>
+i<span class="n">chan</span> <span class="o">=</span> <span class="mi">1</span> 
+i<span class="n">ctlno</span> <span class="o">=</span> <span class="mi">7</span>
  
-	<span class="opc">initc7</span>	1, 7, 1			<span class="comment">; start at max. volume</span>
-kamp	<span class="opc">ctrl7</span>	ichan, ictlno, imin, imax	<span class="comment">; controller 7</span>
-	<span class="opc">printk2</span>	kamp
-asig	<span class="opc">oscil</span>	kamp, 220, 1
-	<span class="opc">outs</span>	asig, asig
+	<span class="nb">initc7</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; start at max. volume</span>
+k<span class="n">amp</span>	<span class="nb">ctrl7</span>	i<span class="n">chan</span><span class="p">,</span> i<span class="n">ctlno</span><span class="p">,</span> i<span class="n">min</span><span class="p">,</span> i<span class="n">max</span>	<span class="c1">; controller 7</span>
+	<span class="nb">printk2</span>	k<span class="n">amp</span>
+a<span class="n">sig</span>	<span class="nb">oscil</span>	k<span class="n">amp</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">outs</span>	a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 4096 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span>1 0 20
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">20</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -179,7 +179,7 @@ asig	<span class="opc">oscil</span>	kamp, 220, 1
         </table>
       </div>
       <div class="refsect1">
-        <a id="idp87062448"></a>
+        <a id="idm1559385200"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ctrl14.html" title="ctrl14"><em class="citetitle">ctrl14</em></a>,
@@ -193,7 +193,7 @@ asig	<span class="opc">oscil</span>	kamp, 220, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87071216"></a>
+        <a id="idm1559383152"></a>
         <h2>Credits</h2>
         <p>
       </p>

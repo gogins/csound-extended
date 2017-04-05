@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>downsamp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="doppler.html" title="doppler" />
@@ -38,85 +39,84 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp89523728"></a>
+        <a id="idm1556804336"></a>
         <h2>Description</h2>
         <p>
       Modify a signal by down-sampling.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89525056"></a>
+        <a id="idm1556797424"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>downsamp</strong></span> asig [, iwlen]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp89600384"></a>
+        <a id="idm1556799856"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iwlen</em></span> (optional) -- window length in samples over which the audio signal is averaged to determine a downsampled value. Maximum length is <span class="emphasis"><em>ksmps</em></span>; 0 and 1 imply no window averaging. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89602720"></a>
+        <a id="idm1556802544"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>downsamp</em></span> converts an audio signal to a control signal by downsampling. It produces one kval for each audio control period. The optional window invokes a simple averaging process to suppress foldover.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89604768"></a>
+        <a id="idm1556798832"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the downsamp opcode. It uses the file <a class="ulink" href="examples/downsamp.csd" target="_top"><em class="citetitle">downsamp.csd</em></a>.
+      Here is an example of the downsamp opcode. It uses the file <a class="ulink" href="examples/downsamp.csd.html" target="_top"><em class="citetitle">downsamp.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp89606544"></a>
+          <a id="idm1556796272"></a>
           <p class="title">
-            <strong>Example 216. Example of the downsamp opcode.</strong>
+            <strong>Example 218. Example of the downsamp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240196272"></a>
-              <a class="ulink" href="examples/downsamp.csd.html" target="_top">Play</a>
+              <a id="idm1391739760"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o downsamp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o downsamp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span>	1
+<span class="kd">instr</span>	<span class="nf">1</span>
 
-ifrq	<span class="op">=</span> <span class="opc">cpspch</span>(p4)
-ain	<span class="opc">diskin2</span> "beats.wav", 1
-aenv	<span class="opc">follow</span>	ain, .001	<span class="comment">;take the amplitude every 1/1000th of a second</span>
-alow	<span class="opc">tone</span>	aenv, 25	<span class="comment">;lowpass-filter (25 Hz) for a clean signal</span>
-kenv	<span class="opc">downsamp</span> alow
-asig    <span class="opc">pluck</span>   kenv, ifrq, 15, 0, 1
-	<span class="opc">outs</span>	asig, asig
-	<span class="oblock">endin</span>
+i<span class="n">frq</span>	<span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+a<span class="n">in</span>	<span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">env</span>	<span class="nb">follow</span>	a<span class="n">in</span><span class="p">,</span> <span class="mf">.001</span>	<span class="c1">;take the amplitude every 1/1000th of a second</span>
+a<span class="n">low</span>	<span class="nb">tone</span>	a<span class="n">env</span><span class="p">,</span> <span class="mi">25</span>	<span class="c1">;lowpass-filter (25 Hz) for a clean signal</span>
+k<span class="n">env</span>	<span class="nb">downsamp</span> a<span class="n">low</span>
+a<span class="n">sig</span>    <span class="nb">pluck</span>   k<span class="n">env</span><span class="p">,</span> i<span class="n">frq</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">outs</span>	a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+	<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2	 9
-<span class="stamnt">i</span> 1 + .	 7
-<span class="stamnt">i</span> 1 + .	 5
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>	 <span class="mi">9</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>	 <span class="mi">7</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span>	 <span class="mi">5</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -125,7 +125,7 @@ asig    <span class="opc">pluck</span>   kenv, ifrq, 15, 0, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89610864"></a>
+        <a id="idm1556790512"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diff.html" title="diff"><em class="citetitle">diff</em></a>,

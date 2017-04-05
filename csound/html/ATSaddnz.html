@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ATSaddnz</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ATSadd.html" title="ATSadd" />
@@ -37,19 +38,19 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp79836960"></a>
+        <a id="idm1566843136"></a>
         <h2>Description</h2>
         <p>
             <span class="emphasis"><em>ATSaddnz</em></span> reads from an ATS analysis file and uses the data to perform additive synthesis using a modified randi function.
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp79838640"></a>
+        <a id="idm1566841472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>ATSaddnz</strong></span> ktimepnt, iatsfile, ibands[, ibandoffset, ibandincr]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp79840848"></a>
+        <a id="idm1566839552"></a>
         <h2>Initialization</h2>
         <p>
             <span class="emphasis"><em>iatsfile</em></span> – the ATS number (n in ats.n) or the name in quotes of the analysis file made using <a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">ATS</em></a>.
@@ -62,7 +63,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp79846496"></a>
+        <a id="idm1566834176"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>ktimepnt</em></span> – The time pointer in seconds used to index the ATS file. Used for <span class="emphasis"><em>ATSaddnz</em></span> exactly the same as for <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a> and <a class="link" href="ATSadd.html" title="ATSadd"><em class="citetitle">ATSadd</em></a>.</p>
         <p><span class="emphasis"><em>ATSaddnz</em></span> and <a class="link" href="ATSadd.html" title="ATSadd"><em class="citetitle">ATSadd</em></a> are based on <a class="link" href="pvadd.html" title="pvadd"><em class="citetitle">pvadd</em></a> by Richard Karpen and use files created by Juan Pampin's ATS (<a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">Analysis - Transformation - Synthesis</em></a>).
@@ -71,7 +72,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp79855136"></a>
+        <a id="idm1566824576"></a>
         <h2>Examples</h2>
         <pre class="programlisting">  ktime <span class="opc">line</span>     0, p3, 2.5
   asig  <span class="opc">ATSaddnz</span> ktime, "clarinet.ats", 25
@@ -80,52 +81,51 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp79858624"></a>
+        <a id="idm1566823552"></a>
         <h2>Examples</h2>
         <p>
-      Here is a complete example of the ATSaddnz opcode. It uses the file <a class="ulink" href="examples/ATSaddnz.csd" target="_top"><em class="citetitle">ATSaddnz.csd</em></a>.
+      Here is a complete example of the ATSaddnz opcode. It uses the file <a class="ulink" href="examples/ATSaddnz.csd.html" target="_top"><em class="citetitle">ATSaddnz.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp79860496"></a>
+          <a id="idm1566822784"></a>
           <p class="title">
             <strong>Example 62. Example of the ATSaddnz opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp234464080"></a>
-              <a class="ulink" href="examples/ATSaddnz.csd.html" target="_top">Play</a>
+              <a id="idm1404930416"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc for RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ATSaddnzwav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc for RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ATSaddnzwav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; "beats.ats" is created by atsa</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; "beats.ats" is created by atsa</span>
 
-ktime	<span class="opc">line</span>     0, p3, 2
-asig	<span class="opc">ATSaddnz</span> ktime, "cage.ats", 1, 24
-	<span class="opc">outs</span>	asig<span class="op">*</span>10, asig<span class="op">*</span>10	<span class="comment">;amplify</span>
-<span class="oblock">endin</span>
+k<span class="n">time</span>	<span class="nb">line</span>     <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>
+a<span class="n">sig</span>	<span class="nb">ATSaddnz</span> k<span class="n">time</span><span class="p">,</span> <span class="s">"cage.ats"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">24</span>
+	<span class="nb">outs</span>	a<span class="n">sig</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">10</span>	<span class="c1">;amplify</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2 
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> 
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -135,62 +135,61 @@ asig	<span class="opc">ATSaddnz</span> ktime, "cage.ats", 1, 24
         <p>Here we synthesize only the 25th noise band (<span class="emphasis"><em>ibandoffset</em></span> of 24 and <span class="emphasis"><em>ibands</em></span> of 1).
         </p>
         <p>
-      Here is another example of the ATSaddnz opcode. It uses the file <a class="ulink" href="examples/ATSaddnz-2.csd" target="_top"><em class="citetitle">ATSaddnz-2.csd</em></a>.
+      Here is another example of the ATSaddnz opcode. It uses the file <a class="ulink" href="examples/ATSaddnz-2.csd.html" target="_top"><em class="citetitle">ATSaddnz-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp79864816"></a>
+          <a id="idm1566827136"></a>
           <p class="title">
             <strong>Example 63. Example 2 of the ATSaddnz opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp234835024"></a>
-              <a class="ulink" href="examples/ATSaddnz-2.csd.html" target="_top">Play</a>
+              <a id="idm1404856048"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac -d -m1
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;example by joachim heintz</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;example by joachim heintz</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> AllTheNoise
-Sfile    <span class="op">=</span>        "fox.ats"
-         <span class="opc">prints</span>   "Resynthesizing with all the noise.\n"
-iDur     <span class="opc">ATSinfo</span>  Sfile, 7
-p3       <span class="op">=</span>        iDur
-ktime    <span class="opc">line</span>     0, iDur, iDur
-asig     <span class="opc">ATSaddnz</span> ktime, Sfile, 25
-         <span class="opc">outs</span>     asig, asig
+<span class="kd">instr</span> <span class="nf">AllTheNoise</span>
+S<span class="n">file</span>    <span class="o">=</span>        <span class="s">"fox.ats"</span>
+         <span class="nb">prints</span>   <span class="s">"Resynthesizing with all the noise.</span><span class="se">\n</span><span class="s">"</span>
+i<span class="n">Dur</span>     <span class="nb">ATSinfo</span>  S<span class="n">file</span><span class="p">,</span> <span class="mi">7</span>
+<span class="nb">p3</span>       <span class="o">=</span>        i<span class="n">Dur</span>
+k<span class="n">time</span>    <span class="nb">line</span>     <span class="mi">0</span><span class="p">,</span> i<span class="n">Dur</span><span class="p">,</span> i<span class="n">Dur</span>
+a<span class="n">sig</span>     <span class="nb">ATSaddnz</span> k<span class="n">time</span><span class="p">,</span> S<span class="n">file</span><span class="p">,</span> <span class="mi">25</span>
+         <span class="nb">outs</span>     a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="comment">;start next instr</span>
-         <span class="opc">event_i</span>  "i", "NoiseInBandsOfFive", iDur<span class="op">+</span>1, 1, 0
-<span class="oblock">endin</span>
+<span class="c1">;start next instr</span>
+         <span class="nb">event_i</span>  <span class="s">"i"</span><span class="p">,</span> <span class="s">"NoiseInBandsOfFive"</span><span class="p">,</span> i<span class="n">Dur</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> NoiseInBandsOfFive
-Sfile    <span class="op">=</span>        "fox.ats"
-         <span class="opc">prints</span>   "Resynthesizing with <span class="opc">noise</span> bands <span class="op">%</span>d <span class="op">-</span> <span class="op">%</span>d.\n", p4, p4<span class="op">+</span>5
-iDur     <span class="opc">ATSinfo</span>  Sfile, 7
-p3       <span class="op">=</span>        iDur
-ktime    <span class="opc">line</span>     0, iDur, iDur
-asig     <span class="opc">ATSaddnz</span> ktime, Sfile, 5, p4
-         <span class="opc">outs</span>     asig, asig
+<span class="kd">instr</span> <span class="nf">NoiseInBandsOfFive</span>
+S<span class="n">file</span>    <span class="o">=</span>        <span class="s">"fox.ats"</span>
+         <span class="nb">prints</span>   <span class="s">"Resynthesizing with noise bands </span><span class="si">%d</span><span class="s"> - </span><span class="si">%d</span><span class="s">.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p4</span><span class="o">+</span><span class="mi">5</span>
+i<span class="n">Dur</span>     <span class="nb">ATSinfo</span>  S<span class="n">file</span><span class="p">,</span> <span class="mi">7</span>
+<span class="nb">p3</span>       <span class="o">=</span>        i<span class="n">Dur</span>
+k<span class="n">time</span>    <span class="nb">line</span>     <span class="mi">0</span><span class="p">,</span> i<span class="n">Dur</span><span class="p">,</span> i<span class="n">Dur</span>
+a<span class="n">sig</span>     <span class="nb">ATSaddnz</span> k<span class="n">time</span><span class="p">,</span> S<span class="n">file</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">p4</span>
+         <span class="nb">outs</span>     a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="comment">;start next instr</span>
-<span class="octrl">if</span> p4 <span class="op">&lt;</span> 20 then
-         <span class="opc">event_i</span>  "i", "NoiseInBandsOfFive", iDur<span class="op">+</span>1, 1, p4<span class="op">+</span>5
-<span class="octrl">endif</span>
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> "AllTheNo<span class="stamnt">i</span>se" 0 1
-<span class="stamnt">e</span> 25
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">;start next instr</span>
+<span class="k">if</span> <span class="nb">p4</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="k">then</span>
+         <span class="nb">event_i</span>  <span class="s">"i"</span><span class="p">,</span> <span class="s">"NoiseInBandsOfFive"</span><span class="p">,</span> i<span class="n">Dur</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p4</span><span class="o">+</span><span class="mi">5</span>
+<span class="k">endif</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="s">"AllTheNoise"</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span> <span class="mi">25</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -199,7 +198,7 @@ asig     <span class="opc">ATSaddnz</span> ktime, Sfile, 5, p4
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp79866832"></a>
+        <a id="idm1566367088"></a>
         <h2>See also</h2>
         <p><a class="link" href="ATSread.html" title="ATSread"><em class="citetitle">ATSread</em></a>, 
             <a class="link" href="ATSreadnz.html" title="ATSreadnz"><em class="citetitle">ATSreadnz</em></a>, 
@@ -212,7 +211,7 @@ asig     <span class="opc">ATSaddnz</span> ktime, Sfile, 5, p4
             <a class="link" href="ATSsinnoi.html" title="ATSsinnoi"><em class="citetitle">ATSsinnoi</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idp79876304"></a>
+        <a id="idm1566372080"></a>
         <h2>Credits</h2>
         <p>
             </p>

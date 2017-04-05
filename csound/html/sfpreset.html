@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>sfpreset</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="sfplist.html" title="sfplist" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp137739328"></a>
+        <a id="idm1506877552"></a>
         <h2>Description</h2>
         <p>
       Assigns an existing preset of a previously loaded SoundFont2 (SF2) sample file to an index number. These opcodes allow management the sample-structure of SF2 files. In order to understand the usage of these opcodes, the user must have some knowledge of the SF2 format, so a brief description of this format can be found in the <a class="link" href="MiscSf2.html" title="Appendix G. SoundFont2 File Format"><em class="citetitle">SoundFont2 File Format Appendix</em></a>.
@@ -48,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp137823152"></a>
+        <a id="idm1506873200"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>sfpreset</strong></span> iprog, ibank, ifilhandle, ipreindex</pre>
       </div>
       <div class="refsect1">
-        <a id="idp137825344"></a>
+        <a id="idm1506871920"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ir</em></span> -- output to be used by other SF2 opcodes. For <span class="emphasis"><em>sfpreset</em></span>, <span class="emphasis"><em>ir</em></span> is <span class="emphasis"><em>ipreindex</em></span>.
@@ -72,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp137832240"></a>
+        <a id="idm1506869360"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>sfpreset</em></span> assigns an existing preset of a previously loaded SF2 file to an index number, to be used later with the opcodes <span class="emphasis"><em>sfplay</em></span> and <span class="emphasis"><em>sfplaym</em></span>. The user must previously know the program and the bank numbers of the preset in order to fill the corresponding arguments. Any number of <span class="emphasis"><em>sfpreset</em></span> instances can be placed in the header section of an orchestra, each one assigning a different preset belonging to the same (or different) SF2 file to different index numbers.
@@ -82,77 +83,76 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp137836288"></a>
+        <a id="idm1506854000"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the sfpreset opcode. It uses the file <a class="ulink" href="examples/sfpreset.csd" target="_top"><em class="citetitle">sfpreset.csd</em></a>.
+      Here is an example of the sfpreset opcode. It uses the file <a class="ulink" href="examples/sfpreset.csd.html" target="_top"><em class="citetitle">sfpreset.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp137838144"></a>
+          <a id="idm1506859632"></a>
           <p class="title">
-            <strong>Example 845. Example of the sfpreset opcode.</strong>
+            <strong>Example 871. Example of the sfpreset opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp264425360"></a>
-              <a class="ulink" href="examples/sfpreset.csd.html" target="_top">Play</a>
+              <a id="idm1326879472"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac -+rtmidi=virtual -M0  <span class="comment">;;;realtime audio out, virtual midi in</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o sfpreset.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac -+rtmidi=virtual -M0  <span class="c1">;;;realtime audio out, virtual midi in</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o sfpreset.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gisf1	<span class="opc">sfload</span>	 "sf_GMbank.sf2"
-	<span class="opc">sfplist</span>	 gisf1						<span class="comment">;list presets of first soundfont</span>
-gisf2	<span class="opc">sfload</span>	 "07AcousticGuitar.sf2"
-	<span class="opc">sfplist</span>	 gisf2						<span class="comment">;list presets of second soundfont</span>
-gir	<span class="opc">sfpreset</span> 50, 0, gisf1, 0 				<span class="comment">;assign Synth Strings to index 0</span>
-giv	<span class="opc">sfpreset</span> 0, 0, gisf2, 1					<span class="comment">;assign AcousticGuitar to index 1</span>
-<span class="opc">print</span> gir
-<span class="opc">print</span> giv
+gi<span class="n">sf1</span>	<span class="nb">sfload</span>	 <span class="s">"sf_GMbank.sf2"</span>
+	<span class="nb">sfplist</span>	 gi<span class="n">sf1</span>						<span class="c1">;list presets of first soundfont</span>
+gi<span class="n">sf2</span>	<span class="nb">sfload</span>	 <span class="s">"07AcousticGuitar.sf2"</span>
+	<span class="nb">sfplist</span>	 gi<span class="n">sf2</span>						<span class="c1">;list presets of second soundfont</span>
+gi<span class="n">r</span>	<span class="nb">sfpreset</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">sf1</span><span class="p">,</span> <span class="mi">0</span> 				<span class="c1">;assign Synth Strings to index 0</span>
+gi<span class="n">v</span>	<span class="nb">sfpreset</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">sf2</span><span class="p">,</span> <span class="mi">1</span>					<span class="c1">;assign AcousticGuitar to index 1</span>
+<span class="nb">print</span> gi<span class="n">r</span>
+<span class="nb">print</span> gi<span class="n">v</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; play from score and midi keyboard</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; play from score and midi keyboard</span>
 
-	<span class="opc">mididefault</span>	60, p3
-	<span class="opc">midinoteonkey</span>	p4, p5
-inum	<span class="opc">init</span>	p4
-ivel	<span class="opc">init</span>	p5
-ivel	<span class="opc">init</span>	ivel<span class="op">/</span>127					<span class="comment">;make velocity dependent</span>
-kamp	<span class="opc">linsegr</span>	1, 1, 1, .1, 0
-kamp	<span class="op">=</span> kamp<span class="op">/</span>5000						<span class="comment">;scale amplitude</span>
-kfreq	<span class="opc">init</span>	1						<span class="comment">;do not change freq from sf</span>
-a1,a2	<span class="opc">sfplay3</span>	ivel, inum, kamp<span class="op">*</span>ivel, kfreq, p6
-	<span class="opc">outs</span>	a1, a2
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
+k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
+k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">5000</span>						<span class="c1">;scale amplitude</span>
+k<span class="n">freq</span>	<span class="nb">init</span>	<span class="mi">1</span>						<span class="c1">;do not change freq from sf</span>
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span class="nb">sfplay3</span>	i<span class="n">vel</span><span class="p">,</span> i<span class="n">num</span><span class="p">,</span> k<span class="n">amp</span><span class="o">*</span>i<span class="n">vel</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="nb">p6</span>
+	<span class="nb">outs</span>	a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>
 	
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 	
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0  60		<span class="comment">; stay active for 1 minute</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span>  <span class="mi">60</span>		<span class="c1">; stay active for 1 minute</span>
 
-<span class="stamnt">i</span>1 0 1 60 127 0	<span class="comment">;= Synth Strings I from first soundfont</span>
-<span class="stamnt">i</span>1 + 1 62 &lt;   .
-<span class="stamnt">i</span>1 + 1 65 &lt;   .
-<span class="stamnt">i</span>1 + 1 69 10  .
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">60</span> <span class="mi">127</span> <span class="mi">0</span>	<span class="c1">;= Synth Strings I from first soundfont</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">62</span> <span class="o">&lt;</span>   <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">65</span> <span class="o">&lt;</span>   <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">69</span> <span class="mi">10</span>  <span class="o">.</span>
 
-<span class="stamnt">i</span>1 5 1 60 127 1	<span class="comment">;= AcousticGuitar from second soundfont</span>
-<span class="stamnt">i</span>1 + 1 62 &lt;   .
-<span class="stamnt">i</span>1 + 1 65 &lt;   .
-<span class="stamnt">i</span>1 + 1 69 10  .
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">5</span> <span class="mi">1</span> <span class="mi">60</span> <span class="mi">127</span> <span class="mi">1</span>	<span class="c1">;= AcousticGuitar from second soundfont</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">62</span> <span class="o">&lt;</span>   <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">65</span> <span class="o">&lt;</span>   <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">69</span> <span class="mi">10</span>  <span class="o">.</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -161,7 +161,7 @@ a1,a2	<span class="opc">sfplay3</span>	ivel, inum, kamp<span class="op">*</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp137842432"></a>
+        <a id="idm1506859888"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sfilist.html" title="sfilist"><em class="citetitle">sfilist</em></a>,
@@ -175,7 +175,7 @@ a1,a2	<span class="opc">sfplay3</span>	ivel, inum, kamp<span class="op">*</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp137851200"></a>
+        <a id="idm1506853360"></a>
         <h2>Credits</h2>
         <p>
       </p>

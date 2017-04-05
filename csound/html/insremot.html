@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>insremot</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ins.html" title="ins" />
@@ -40,7 +41,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106887696"></a>
+        <a id="idm1538927344"></a>
         <h2>Description</h2>
         <p>
       With the <span class="emphasis"><em>insremot</em></span> and <a class="link" href="insglobal.html" title="insglobal"><em class="citetitle">insglobal</em></a>
@@ -57,12 +58,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106892160"></a>
+        <a id="idm1538932720"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>insremot</strong></span> idestination, isource, instrnum [,instrnum...] </pre>
       </div>
       <div class="refsect1">
-        <a id="idp106894240"></a>
+        <a id="idm1538921456"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idestination</em></span>
@@ -78,7 +79,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106897952"></a>
+        <a id="idm1538923248"></a>
         <h2>Performance</h2>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note">
@@ -138,82 +139,88 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp106900816"></a>
+        <a id="idm1538918256"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the insremot opcode. It uses the files <a class="ulink" href="examples/insremot.csd" target="_top"><em class="citetitle">insremot.csd</em></a> and <a class="ulink" href="examples/insremotM.csd" target="_top"><em class="citetitle">insremotM.csd</em></a>.
+      Here is an example of the insremot opcode. It uses the files <a class="ulink" href="examples/insremot.csd.html" target="_top"><em class="citetitle">insremot.csd</em></a> and <a class="ulink" href="examples/insremotM.csd.html" target="_top"><em class="citetitle">insremotM.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp106903440"></a>
+          <a id="idm1538922224"></a>
           <p class="title">
-            <strong>Example 420. Example of the insremot opcode.</strong>
+            <strong>Example 427. Example of the insremot opcode.</strong>
           </p>
           <div class="example-contents">
             <p>The simple example below shows the bilbar example played on a remote machine. The master machine is named "192.168.1.100" and the client "192.168.1.101". Start the client on the machine (it will wait to receive the events from the master machine) and then start the master. Here is the command on linux to start a client (csound -+rtaudio=alsa -odac -dm0 insremot.csd), and the command on the master machine will look like this (csound -+rtaudio=alsa -odac -dm0 insremotM.csd).</p>
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp248917872"></a>
-              <a class="ulink" href="examples/insremot.csd.html" target="_top">Play</a>
+              <a id="idm1368190576"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o insremot.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
-<span class="opc">insremot</span> "192.168.1.100", "192.168.1.101", 1
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o insremot.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-<span class="oblock">instr</span> 1
-  aq <span class="opc">barmodel</span> 1, 1, p4, 0.001, 0.23, 5, p5, p6, p7
-     <span class="opc">out</span>      aq
-<span class="oblock">endin</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0 360
+<span class="nb">insremot</span> <span class="s">"192.168.1.100"</span><span class="p">,</span> <span class="s">"192.168.1.101"</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  a<span class="n">q</span> <span class="nb">barmodel</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="nb">p7</span>
+     <span class="nb">out</span>      a<span class="n">q</span>
+<span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">360</span>
+
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
             <div class="refsect1">
-              <a id="idp249008480"></a>
-              <a class="ulink" href="examples/insremotM.csd.html" target="_top">Play</a>
+              <a id="idm1368011504"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o insremotM.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
-<span class="opc">insremot</span> "192.168.1.100", "192.168.1.101", 1
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o insremotM.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-<span class="oblock">instr</span> 1
-  aq <span class="opc">barmodel</span> 1, 1, p4, 0.001, 0.23, 5, p5, p6, p7
-     <span class="opc">out</span>      aq
-<span class="oblock">endin</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 0.5 3 0.2 500 0.05
-<span class="stamnt">i</span>1 0.5 0.5 -3 0.3 1000 0.05
-<span class="stamnt">i</span>1 1.0 0.5 -3 0.4 1000 0.1
-<span class="stamnt">i</span>1 1.5 4.0 -3 0.5 800 0.05
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">insremot</span> <span class="s">"192.168.1.100"</span><span class="p">,</span> <span class="s">"192.168.1.101"</span><span class="p">,</span> <span class="mi">1</span>
+
+<span class="kd">instr</span> <span class="nf">1</span>
+  a<span class="n">q</span> <span class="nb">barmodel</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="nb">p7</span>
+     <span class="nb">out</span>      a<span class="n">q</span>
+<span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mf">0.5</span> <span class="mi">3</span> <span class="mf">0.2</span> <span class="mi">500</span> <span class="mf">0.05</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">0.5</span> <span class="mf">0.5</span> <span class="o">-</span><span class="mi">3</span> <span class="mf">0.3</span> <span class="mi">1000</span> <span class="mf">0.05</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">1.0</span> <span class="mf">0.5</span> <span class="o">-</span><span class="mi">3</span> <span class="mf">0.4</span> <span class="mi">1000</span> <span class="mf">0.1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">1.5</span> <span class="mf">4.0</span> <span class="o">-</span><span class="mi">3</span> <span class="mf">0.5</span> <span class="mi">800</span> <span class="mf">0.05</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -222,14 +229,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106909872"></a>
+        <a id="idm1538917104"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="insglobal.html" title="insglobal"><em class="citetitle">insglobal</em></a>, <a class="link" href="midglobal.html" title="midglobal"><em class="citetitle">midglobal</em></a>, <a class="link" href="midremot.html" title="midremot"><em class="citetitle">midremot</em></a>, <a class="link" href="remoteport.html" title="remoteport"><em class="citetitle">remoteport</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106914704"></a>
+        <a id="idm1538916080"></a>
         <h2>Credits</h2>
         <p>
       </p>

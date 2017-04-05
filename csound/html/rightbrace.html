@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>} Statement</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="leftbrace.html" title="{ Statement" />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204793760"></a>
+        <a id="idm1439474928"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span> can be used to repeat a group of score statements.  These loops do not constitute independent score sections and thus may repeat events within the same section.  Multiple loops may overlap in time or be nested within each other.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204838960"></a>
+        <a id="idm1439470960"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -54,14 +55,14 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idp204840816"></a>
+        <a id="idm1439477488"></a>
         <h2>Initialization</h2>
         <p>
       All pfields are ignored.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204842000"></a>
+        <a id="idm1439478512"></a>
         <h2>Performance</h2>
         <p>
       The <span class="emphasis"><em>} statement</em></span> is used in conjunction with the <a class="link" href="leftbrace.html" title="{ Statement"><em class="citetitle">{ statement</em></a> to define repeating groups of other score events.  A score loop begins with the <span class="emphasis"><em>{ statement</em></span> which defines the number of repetitions and a unique macro name that will contain the current loop counter.  The body of a loop can contain any number of other events (including sectional breaks) and is terminated by a <span class="emphasis"><em>} statement</em></span> on its own line.  The <span class="emphasis"><em>} statement</em></span> takes no parameters.
@@ -71,14 +72,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204847680"></a>
+        <a id="idm1439464944"></a>
         <h2>Examples</h2>
         <p>
       See the examples in the entry for the <a class="link" href="leftbrace.html" title="{ Statement"><em class="citetitle">{ statement</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp204849888"></a>
+        <a id="idm1439465712"></a>
         <h2>Credits</h2>
         <p>
       </p>

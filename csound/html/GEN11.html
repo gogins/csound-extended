@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN11</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN10.html" title="GEN10" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp205747744"></a>
+        <a id="idm1438632304"></a>
         <h2>Description</h2>
         <p>
       This subroutine generates an additive set of cosine partials, in the manner of Csound generators <a class="link" href="buzz.html" title="buzz"><em class="citetitle">buzz</em></a> and <a class="link" href="gbuzz.html" title="gbuzz"><em class="citetitle">gbuzz</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp205792176"></a>
+        <a id="idm1438626032"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 11 nh [lh] [r]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp205794240"></a>
+        <a id="idm1438618864"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 or power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>).
@@ -98,56 +99,55 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp205810704"></a>
+        <a id="idm1438614896"></a>
         <h2>Examples</h2>
         <p>
-	    Here is an example of the GEN11 routine. It uses the files <a class="ulink" href="examples/gen01.csd" target="_top"><em class="citetitle">gen11.csd</em></a>.
+	    Here is an example of the GEN11 routine. It uses the files <a class="ulink" href="examples/gen01.csd.html" target="_top"><em class="citetitle">gen11.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp205812560"></a>
+          <a id="idm1438607344"></a>
           <p class="title">
-            <strong>Example 1135. An example of the GEN11 routine.</strong>
+            <strong>Example 1163. An example of the GEN11 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp275773312"></a>
-              <a class="ulink" href="examples/gen11.csd.html" target="_top">Play</a>
+              <a id="idm1297365632"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen11.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen11.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifn  <span class="op">=</span> p4
-asig <span class="opc">oscil</span> .8, 220, ifn
-     <span class="opc">outs</span> asig,asig
+i<span class="n">fn</span>  <span class="o">=</span> <span class="nb">p4</span>
+a<span class="n">sig</span> <span class="nb">oscil</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> i<span class="n">fn</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span>
     
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 11 1 1	<span class="comment">;number of harmonics = 1</span>
-<span class="stamnt">f</span> 2 0 16384 11 10 1 .7	<span class="comment">;number of harmonics = 10</span>
-<span class="stamnt">f</span> 3 0 16384 11 10 5 2	<span class="comment">;number of harmonics = 10, 5th harmonic is amplified 2 times</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">11</span> <span class="mi">1</span> <span class="mi">1</span>	<span class="c1">;number of harmonics = 1</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mf">.7</span>	<span class="c1">;number of harmonics = 10</span>
+<span class="nb">f</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">5</span> <span class="mi">2</span>	<span class="c1">;number of harmonics = 10, 5th harmonic is amplified 2 times</span>
 
 
-<span class="stamnt">i</span> 1 0 2 1
-<span class="stamnt">i</span> 1 + 2 2
-<span class="stamnt">i</span> 1 + 2 3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -186,7 +186,7 @@ asig <span class="opc">oscil</span> .8, 220, ifn
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp205825072"></a>
+        <a id="idm1438595312"></a>
         <h2>See Also</h2>
         <p>
        <a class="link" href="GEN10.html" title="GEN10"><em class="citetitle">GEN10</em></a>

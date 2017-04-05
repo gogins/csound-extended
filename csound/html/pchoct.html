@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pchoct</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pchmidinn.html" title="pchmidinn" />
-    <link rel="next" href="pconvolve.html" title="pconvolve" />
+    <link rel="next" href="pchtom.html" title="pchtom" />
   </head>
   <body>
     <div class="navheader">
@@ -20,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="pchmidinn.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="pconvolve.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="pchtom.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123830240"></a>
+        <a id="idm1521588144"></a>
         <h2>Description</h2>
         <p>
       Converts an octave-point-decimal value to pitch-class.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123874720"></a>
+        <a id="idm1521579952"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>pchoct</strong></span> (oct)  (init- or control-rate args only)</pre>
         <p>
@@ -53,7 +54,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123877280"></a>
+        <a id="idm1521578032"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>pchoct</em></span> and its related opcodes are really <span class="emphasis"><em>value converters</em></span> with a special function of manipulating pitch data.
@@ -62,12 +63,12 @@
       Data concerning pitch and frequency can exist in any of the following forms:
     </p>
         <div class="table">
-          <a id="idp123879792"></a>
+          <a id="idm1521577520"></a>
           <p class="title">
             <strong>Table 20. Pitch and Frequency Values</strong>
           </p>
           <div class="table-contents">
-            <table summary="Pitch and Frequency Values" border="0">
+            <table class="table" summary="Pitch and Frequency Values" border="0">
               <colgroup>
                 <col />
                 <col />
@@ -128,60 +129,59 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp123899648"></a>
+        <a id="idm1521563184"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pchoct opcode. It uses the file <a class="ulink" href="examples/pchoct.csd" target="_top"><em class="citetitle">pchoct.csd</em></a>.
+      Here is an example of the pchoct opcode. It uses the file <a class="ulink" href="examples/pchoct.csd.html" target="_top"><em class="citetitle">pchoct.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp123901504"></a>
+          <a id="idm1521559216"></a>
           <p class="title">
-            <strong>Example 639. Example of the pchoct opcode.</strong>
+            <strong>Example 658. Example of the pchoct opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp257612096"></a>
-              <a class="ulink" href="examples/pchoct.csd.html" target="_top">Play</a>
+              <a id="idm1345047024"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pchoct.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pchoct.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Convert an octave-point-decimal value into a </span>
-  <span class="comment">; pitch-class value.</span>
-  ioct <span class="op">=</span> 8.75
-  ipch <span class="op">=</span> <span class="opc">pchoct</span>(ioct)
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Convert an octave-point-decimal value into a </span>
+  <span class="c1">; pitch-class value.</span>
+  i<span class="n">oct</span> <span class="o">=</span> <span class="mf">8.75</span>
+  i<span class="n">pch</span> <span class="o">=</span> <span class="nb">pchoct</span><span class="p">(</span>i<span class="n">oct</span><span class="p">)</span>
 
-  <span class="opc">print</span> ipch
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+  <span class="nb">print</span> i<span class="n">pch</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -195,7 +195,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123906496"></a>
+        <a id="idm1521549872"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpsoct.html" title="cpsoct"><em class="citetitle">cpsoct</em></a>,
@@ -208,7 +208,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123914368"></a>
+        <a id="idm1521553712"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>
@@ -221,14 +221,14 @@
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="pconvolve.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="pchtom.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">pchmidinn </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> pconvolve</td>
+          <td width="40%" align="right" valign="top"> pchtom</td>
         </tr>
       </table>
     </div>

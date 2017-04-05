@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>rbjeq</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="randomi.html" title="randomi" />
@@ -39,7 +40,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp131958912"></a>
+        <a id="idm1513183984"></a>
         <h2>Description</h2>
         <p>
     	Parametric equalizer and filter opcode with 7 filter types,
@@ -47,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131960416"></a>
+        <a id="idm1513183600"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>rbjeq</strong></span> asig, kfco, klvl, kQ, kS[, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp131962640"></a>
+        <a id="idm1513186672"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode (</em></span>
@@ -187,7 +188,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131977584"></a>
+        <a id="idm1513168112"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ar</em></span>
@@ -254,57 +255,56 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131987456"></a>
+        <a id="idm1513170032"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the <span class="emphasis"><em>rbjeq</em></span> opcode. It uses the file <a class="ulink" href="examples/rbjeq.csd" target="_top"><em class="citetitle">rbjeq.csd</em></a>.
+      Here is an example of the <span class="emphasis"><em>rbjeq</em></span> opcode. It uses the file <a class="ulink" href="examples/rbjeq.csd.html" target="_top"><em class="citetitle">rbjeq.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp131989744"></a>
+          <a id="idm1513164400"></a>
           <p class="title">
-            <strong>Example 768. An example of the rbjeq opcode.</strong>
+            <strong>Example 789. An example of the rbjeq opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp261551024"></a>
-              <a class="ulink" href="examples/rbjeq.csd.html" target="_top">Play</a>
+              <a id="idm1334730736"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o rbjeq.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o rbjeq.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-imode <span class="op">=</span> p4
-a1    <span class="opc">vco2</span>    .3, 155.6			<span class="comment">; sawtooth wave</span>
-kfco  <span class="opc">expon</span>   8000, p3, 200		<span class="comment">; filter frequency</span>
-asig  <span class="opc">rbjeq</span>   a1, kfco, 1, kfco <span class="op">*</span> 0.005, 1, imode
-      <span class="opc">outs</span> asig, asig
+i<span class="n">mode</span> <span class="o">=</span> <span class="nb">p4</span>
+a<span class="n">1</span>    <span class="nb">vco2</span>    <span class="mf">.3</span><span class="p">,</span> <span class="mf">155.6</span>			<span class="c1">; sawtooth wave</span>
+k<span class="n">fco</span>  <span class="nb">expon</span>   <span class="mi">8000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">200</span>		<span class="c1">; filter frequency</span>
+a<span class="n">sig</span>  <span class="nb">rbjeq</span>   a<span class="n">1</span><span class="p">,</span> k<span class="n">fco</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">fco</span> <span class="o">*</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">mode</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0  5 0	<span class="comment">;lowpass</span>
-<span class="stamnt">i</span> 1 6  5 2	<span class="comment">;highpass</span>
-<span class="stamnt">i</span> 1 12 5 4	<span class="comment">;bandpass</span>
-<span class="stamnt">i</span> 1 18 5 8	<span class="comment">;equalizer</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span>  <span class="mi">5</span> <span class="mi">0</span>	<span class="c1">;lowpass</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">6</span>  <span class="mi">5</span> <span class="mi">2</span>	<span class="c1">;highpass</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">12</span> <span class="mi">5</span> <span class="mi">4</span>	<span class="c1">;bandpass</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">18</span> <span class="mi">5</span> <span class="mi">8</span>	<span class="c1">;equalizer</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -313,7 +313,7 @@ asig  <span class="opc">rbjeq</span>   a1, kfco, 1, kfco <span class="op">*</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131994064"></a>
+        <a id="idm1513159792"></a>
         <h2>Credits</h2>
         <p>
 	  </p>

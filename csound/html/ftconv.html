@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ftconv</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ftchnls.html" title="ftchnls" />
@@ -39,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101279888"></a>
+        <a id="idm1544809840"></a>
         <h2>Description</h2>
         <p>
 	Low latency multichannel convolution, using a function table as impulse
@@ -52,13 +53,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101282384"></a>
+        <a id="idm1544807792"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1[, a2[, a3[, ... a8]]] <span class="command"><strong>ftconv</strong></span> ain, ift, iplen[, iskipsamples \
       [, iirlen[, iskipinit]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101284528"></a>
+        <a id="idm1545064944"></a>
         <h2>Initialization</h2>
         <p>
 	<span class="emphasis"><em>ift</em></span>
@@ -94,7 +95,7 @@
 	</p>
       </div>
       <div class="refsect1">
-        <a id="idp101356720"></a>
+        <a id="idm1545060848"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span>
@@ -106,112 +107,111 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101359184"></a>
+        <a id="idm1545049328"></a>
         <h2>Example</h2>
         <p>
-      Here is an example of the ftconv opcode. It uses the file <a class="ulink" href="examples/ftconv.csd" target="_top"><em class="citetitle">ftconv.csd</em></a>.
+      Here is an example of the ftconv opcode. It uses the file <a class="ulink" href="examples/ftconv.csd.html" target="_top"><em class="citetitle">ftconv.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp101361040"></a>
+          <a id="idm1545054832"></a>
           <p class="title">
-            <strong>Example 345. Example of the ftconv opcode.</strong>
+            <strong>Example 348. Example of the ftconv opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp245510960"></a>
-              <a class="ulink" href="examples/ftconv.csd.html" target="_top">Play</a>
+              <a id="idm1376309872"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ftconv.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span>      <span class="op">=</span>  48000
-<span class="ohdr">ksmps</span>   <span class="op">=</span>  32
-<span class="ohdr">nchnls</span>  <span class="op">=</span>  2
-<span class="ohdr">0dbfs</span>   <span class="op">=</span>  1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ftconv.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span>      <span class="o">=</span>  <span class="mi">48000</span>
+<span class="vg">ksmps</span>   <span class="o">=</span>  <span class="mi">32</span>
+<span class="vg">nchnls</span>  <span class="o">=</span>  <span class="mi">2</span>
+<span class="vg">0dbfs</span>   <span class="o">=</span>  <span class="mi">1</span>
 
-garvb   <span class="opc">init</span> 0
-gaW     <span class="opc">init</span> 0
-gaX     <span class="opc">init</span> 0
-gaY     <span class="opc">init</span> 0
+ga<span class="n">rvb</span>   <span class="nb">init</span> <span class="mi">0</span>
+ga<span class="n">W</span>     <span class="nb">init</span> <span class="mi">0</span>
+ga<span class="n">X</span>     <span class="nb">init</span> <span class="mi">0</span>
+ga<span class="n">Y</span>     <span class="nb">init</span> <span class="mi">0</span>
 
-itmp    <span class="ohdr">ftgen</span>   1, 0, 64, <span class="op">-</span>2, 2, 40, <span class="op">-</span>1, <span class="op">-</span>1, <span class="op">-</span>1, 123,           \
-               1, 13.000, 0.05, 0.85, 20000.0, 0.0, 0.50, 2,   \
-               1,  2.000, 0.05, 0.85, 20000.0, 0.0, 0.25, 2,   \
-               1, 16.000, 0.05, 0.85, 20000.0, 0.0, 0.35, 2,   \
-               1,  9.000, 0.05, 0.85, 20000.0, 0.0, 0.35, 2,   \
-               1, 12.000, 0.05, 0.85, 20000.0, 0.0, 0.35, 2,   \
-               1,  8.000, 0.05, 0.85, 20000.0, 0.0, 0.35, 2
+i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>           \
+               <span class="mi">1</span><span class="p">,</span> <span class="mf">13.000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>   \
+               <span class="mi">1</span><span class="p">,</span>  <span class="mf">2.000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>   \
+               <span class="mi">1</span><span class="p">,</span> <span class="mf">16.000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>   \
+               <span class="mi">1</span><span class="p">,</span>  <span class="mf">9.000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>   \
+               <span class="mi">1</span><span class="p">,</span> <span class="mf">12.000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>   \
+               <span class="mi">1</span><span class="p">,</span>  <span class="mf">8.000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mi">2</span>
 
-itmp    <span class="ohdr">ftgen</span> 2, 0, 262144, <span class="op">-</span>2, 0
-       <span class="opc">spat3dt</span> 2, <span class="op">-</span>0.2, 1, 0, 1, 1, 2, 0.005
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">262144</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
+       <span class="nb">spat3dt</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.005</span>
 
-itmp    <span class="ohdr">ftgen</span> 3, 0, 262144, <span class="op">-</span>52, 3, 2, 0, 4, 2, 1, 4, 2, 2, 4
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">262144</span><span class="p">,</span> <span class="o">-</span><span class="mi">52</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span>
 
-       <span class="oblock">instr</span> 1
+       <span class="kd">instr</span> <span class="nf">1</span>
 
-a1      <span class="opc">vco2</span> 1, 440, 10
-kfrq    <span class="opc">port</span> 100, 0.008, 20000
-a1      <span class="opc">butterlp</span> a1, kfrq
-a2      <span class="opc">linseg</span> 0, 0.003, 1, 0.01, 0.7, 0.005, 0, 1, 0
-a1      <span class="op">=</span>  a1 <span class="op">*</span> a2 <span class="op">*</span> 2
-       <span class="opc">denorm</span> a1
-       <span class="opc">vincr</span> garvb, a1
-aw, ax, ay, az  <span class="opc">spat3di</span> a1, p4, p5, p6, 1, 1, 2
-       <span class="opc">vincr</span> gaW, aw
-       <span class="opc">vincr</span> gaX, ax
-       <span class="opc">vincr</span> gaY, ay
+a<span class="n">1</span>      <span class="nb">vco2</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">10</span>
+k<span class="n">frq</span>    <span class="nb">port</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">,</span> <span class="mi">20000</span>
+a<span class="n">1</span>      <span class="nb">butterlp</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">frq</span>
+a<span class="n">2</span>      <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">1</span>      <span class="o">=</span>  a<span class="n">1</span> <span class="o">*</span> a<span class="n">2</span> <span class="o">*</span> <span class="mi">2</span>
+       <span class="nb">denorm</span> a<span class="n">1</span>
+       <span class="nb">vincr</span> ga<span class="n">rvb</span><span class="p">,</span> a<span class="n">1</span>
+a<span class="n">w</span><span class="p">,</span> a<span class="n">x</span><span class="p">,</span> a<span class="n">y</span><span class="p">,</span> a<span class="n">z</span>  <span class="nb">spat3di</span> a<span class="n">1</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+       <span class="nb">vincr</span> ga<span class="n">W</span><span class="p">,</span> a<span class="n">w</span>
+       <span class="nb">vincr</span> ga<span class="n">X</span><span class="p">,</span> a<span class="n">x</span>
+       <span class="nb">vincr</span> ga<span class="n">Y</span><span class="p">,</span> a<span class="n">y</span>
 
-       <span class="oblock">endin</span>
+       <span class="kd">endin</span>
 
-       <span class="oblock">instr</span> 2
+       <span class="kd">instr</span> <span class="nf">2</span>
 
-       <span class="opc">denorm</span> garvb
-<span class="comment">; skip as many samples as possible without truncating the IR</span>
-arW, arX, arY   <span class="opc">ftconv</span> garvb, 3, 2048, 2048, (65536 <span class="op">-</span> 2048)
-aW      <span class="op">=</span>  gaW <span class="op">+</span> arW
-aX      <span class="op">=</span>  gaX <span class="op">+</span> arX
-aY      <span class="op">=</span>  gaY <span class="op">+</span> arY
-garvb   <span class="op">=</span>  0
-gaW     <span class="op">=</span>  0
-gaX     <span class="op">=</span>  0
-gaY     <span class="op">=</span>  0
+       <span class="nb">denorm</span> ga<span class="n">rvb</span>
+<span class="c1">; skip as many samples as possible without truncating the IR</span>
+a<span class="n">rW</span><span class="p">,</span> a<span class="n">rX</span><span class="p">,</span> a<span class="n">rY</span>   <span class="nb">ftconv</span> ga<span class="n">rvb</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="p">(</span><span class="mi">65536</span> <span class="o">-</span> <span class="mi">2048</span><span class="p">)</span>
+a<span class="n">W</span>      <span class="o">=</span>  ga<span class="n">W</span> <span class="o">+</span> a<span class="n">rW</span>
+a<span class="n">X</span>      <span class="o">=</span>  ga<span class="n">X</span> <span class="o">+</span> a<span class="n">rX</span>
+a<span class="n">Y</span>      <span class="o">=</span>  ga<span class="n">Y</span> <span class="o">+</span> a<span class="n">rY</span>
+ga<span class="n">rvb</span>   <span class="o">=</span>  <span class="mi">0</span>
+ga<span class="n">W</span>     <span class="o">=</span>  <span class="mi">0</span>
+ga<span class="n">X</span>     <span class="o">=</span>  <span class="mi">0</span>
+ga<span class="n">Y</span>     <span class="o">=</span>  <span class="mi">0</span>
 
-aWre, aWim      <span class="opc">hilbert</span> aW
-aXre, aXim      <span class="opc">hilbert</span> aX
-aYre, aYim      <span class="opc">hilbert</span> aY
-aWXr    <span class="op">=</span>  0.0928<span class="op">*</span>aXre <span class="op">+</span> 0.4699<span class="op">*</span>aWre
-aWXiYr  <span class="op">=</span>  0.2550<span class="op">*</span>aXim <span class="op">-</span> 0.1710<span class="op">*</span>aWim <span class="op">+</span> 0.3277<span class="op">*</span>aYre
-aL      <span class="op">=</span>  aWXr <span class="op">+</span> aWXiYr
-aR      <span class="op">=</span>  aWXr <span class="op">-</span> aWXiYr
+a<span class="n">Wre</span><span class="p">,</span> a<span class="n">Wim</span>      <span class="nb">hilbert</span> a<span class="n">W</span>
+a<span class="n">Xre</span><span class="p">,</span> a<span class="n">Xim</span>      <span class="nb">hilbert</span> a<span class="n">X</span>
+a<span class="n">Yre</span><span class="p">,</span> a<span class="n">Yim</span>      <span class="nb">hilbert</span> a<span class="n">Y</span>
+a<span class="n">WXr</span>    <span class="o">=</span>  <span class="mf">0.0928</span><span class="o">*</span>a<span class="n">Xre</span> <span class="o">+</span> <span class="mf">0.4699</span><span class="o">*</span>a<span class="n">Wre</span>
+a<span class="n">WXiYr</span>  <span class="o">=</span>  <span class="mf">0.2550</span><span class="o">*</span>a<span class="n">Xim</span> <span class="o">-</span> <span class="mf">0.1710</span><span class="o">*</span>a<span class="n">Wim</span> <span class="o">+</span> <span class="mf">0.3277</span><span class="o">*</span>a<span class="n">Yre</span>
+a<span class="n">L</span>      <span class="o">=</span>  a<span class="n">WXr</span> <span class="o">+</span> a<span class="n">WXiYr</span>
+a<span class="n">R</span>      <span class="o">=</span>  a<span class="n">WXr</span> <span class="o">-</span> a<span class="n">WXiYr</span>
 
-       <span class="opc">outs</span> aL, aR
+       <span class="nb">outs</span> a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
 
-       <span class="oblock">endin</span>
+       <span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 0.5  0.0  2.0 -0.8
-<span class="stamnt">i</span> 1 1 0.5  1.4  1.4 -0.6
-<span class="stamnt">i</span> 1 2 0.5  2.0  0.0 -0.4
-<span class="stamnt">i</span> 1 3 0.5  1.4 -1.4 -0.2
-<span class="stamnt">i</span> 1 4 0.5  0.0 -2.0  0.0
-<span class="stamnt">i</span> 1 5 0.5 -1.4 -1.4  0.2
-<span class="stamnt">i</span> 1 6 0.5 -2.0  0.0  0.4
-<span class="stamnt">i</span> 1 7 0.5 -1.4  1.4  0.6
-<span class="stamnt">i</span> 1 8 0.5  0.0  2.0  0.8
-<span class="stamnt">i</span> 2 0 10
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">0.5</span>  <span class="mf">0.0</span>  <span class="mf">2.0</span> <span class="o">-</span><span class="mf">0.8</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mf">0.5</span>  <span class="mf">1.4</span>  <span class="mf">1.4</span> <span class="o">-</span><span class="mf">0.6</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mf">0.5</span>  <span class="mf">2.0</span>  <span class="mf">0.0</span> <span class="o">-</span><span class="mf">0.4</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mf">0.5</span>  <span class="mf">1.4</span> <span class="o">-</span><span class="mf">1.4</span> <span class="o">-</span><span class="mf">0.2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mf">0.5</span>  <span class="mf">0.0</span> <span class="o">-</span><span class="mf">2.0</span>  <span class="mf">0.0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">5</span> <span class="mf">0.5</span> <span class="o">-</span><span class="mf">1.4</span> <span class="o">-</span><span class="mf">1.4</span>  <span class="mf">0.2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">6</span> <span class="mf">0.5</span> <span class="o">-</span><span class="mf">2.0</span>  <span class="mf">0.0</span>  <span class="mf">0.4</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">7</span> <span class="mf">0.5</span> <span class="o">-</span><span class="mf">1.4</span>  <span class="mf">1.4</span>  <span class="mf">0.6</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mf">0.5</span>  <span class="mf">0.0</span>  <span class="mf">2.0</span>  <span class="mf">0.8</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -220,7 +220,7 @@ aR      <span class="op">=</span>  aWXr <span class="op">-</span> aWXiYr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101365328"></a>
+        <a id="idm1545051888"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="pconvolve.html" title="pconvolve"><em class="citetitle">pconvolve</em></a>,
@@ -229,7 +229,7 @@ aR      <span class="op">=</span>  aWXr <span class="op">-</span> aWXiYr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101369328"></a>
+        <a id="idm1545046640"></a>
         <h2>Credits</h2>
         <p>
       </p>

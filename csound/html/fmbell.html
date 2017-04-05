@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>fmbell</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fmb3.html" title="fmb3" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp99409056"></a>
+        <a id="idm1546865904"></a>
         <h2>Description</h2>
         <p>
       Uses FM synthesis to create a tublar bell sound. It comes from a family of FM sounds, all using 4 basic oscillators and various architectures, as used in the TX81Z synthesizer.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp99410608"></a>
+        <a id="idm1546864624"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>fmbell</strong></span> kamp, kfreq, kc1, kc2, kvdepth, kvrate[, ifn1, ifn2, ifn3, \
       ifn4, ivfn, isus]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp99412976"></a>
+        <a id="idm1546863600"></a>
         <h2>Initialization</h2>
         <p>
       All these opcodes take 5 tables for initialization. The first 4
@@ -86,7 +87,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp99419760"></a>
+        <a id="idm1546856688"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -120,79 +121,78 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp99427920"></a>
+        <a id="idm1546850416"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the fmbell opcode. It uses the file <a class="ulink" href="examples/fmbell.csd" target="_top"><em class="citetitle">fmbell.csd</em></a>.
+      Here is an example of the fmbell opcode. It uses the file <a class="ulink" href="examples/fmbell.csd.html" target="_top"><em class="citetitle">fmbell.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp99429696"></a>
+          <a id="idm1546855152"></a>
           <p class="title">
-            <strong>Example 316. Example of the fmbell opcode.</strong>
+            <strong>Example 319. Example of the fmbell opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp244266320"></a>
-              <a class="ulink" href="examples/fmbell.csd.html" target="_top">Play</a>
+              <a id="idm1380309120"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o fmbell.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o fmbell.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32  
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>  
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kamp <span class="op">=</span> p4
-kfreq <span class="op">=</span> 880
-kc1 <span class="op">=</span> p5
-kc2 <span class="op">=</span> p6
-kvdepth <span class="op">=</span> 0.005
-kvrate <span class="op">=</span> 6
+k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">freq</span> <span class="o">=</span> <span class="mi">880</span>
+k<span class="n">c1</span> <span class="o">=</span> <span class="nb">p5</span>
+k<span class="n">c2</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">vdepth</span> <span class="o">=</span> <span class="mf">0.005</span>
+k<span class="n">vrate</span> <span class="o">=</span> <span class="mi">6</span>
 
-asig <span class="opc">fmbell</span> kamp, kfreq, kc1, kc2, kvdepth, kvrate
-     <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">c1</span><span class="p">,</span> k<span class="n">c2</span><span class="p">,</span> k<span class="n">vdepth</span><span class="p">,</span> k<span class="n">vrate</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-kamp <span class="op">=</span> p4
-kfreq <span class="op">=</span> 880
-kc1 <span class="op">=</span> p5
-kc2 <span class="op">=</span> p6
-kvdepth <span class="op">=</span> 0.005
-kvrate <span class="op">=</span> 6
+k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">freq</span> <span class="o">=</span> <span class="mi">880</span>
+k<span class="n">c1</span> <span class="o">=</span> <span class="nb">p5</span>
+k<span class="n">c2</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">vdepth</span> <span class="o">=</span> <span class="mf">0.005</span>
+k<span class="n">vrate</span> <span class="o">=</span> <span class="mi">6</span>
 
-asig <span class="opc">fmbell</span> kamp, kfreq, kc1, kc2, kvdepth, kvrate, 1, 1, 1, 1, 1, p7
-     <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">c1</span><span class="p">,</span> k<span class="n">c2</span><span class="p">,</span> k<span class="n">vdepth</span><span class="p">,</span> k<span class="n">vrate</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p7</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; sine wave.</span>
-<span class="stamnt">f</span> 1 0 32768 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32768</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 3 .2  5 5 
-<span class="stamnt">i</span> 1 + 4 .3 .5 1
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 2 0 12 .2  5 5 16
-<span class="stamnt">i</span> 2 + 12 .3 .5 1 12
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mf">.2</span>  <span class="mi">5</span> <span class="mi">5</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="mf">.3</span> <span class="mf">.5</span> <span class="mi">1</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">12</span> <span class="mf">.2</span>  <span class="mi">5</span> <span class="mi">5</span> <span class="mi">16</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">12</span> <span class="mf">.3</span> <span class="mf">.5</span> <span class="mi">1</span> <span class="mi">12</span>
 
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -201,7 +201,7 @@ asig <span class="opc">fmbell</span> kamp, kfreq, kc1, kc2, kvdepth, kvrate, 1, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp99434016"></a>
+        <a id="idm1546852336"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fmb3.html" title="fmb3"><em class="citetitle">fmb3</em></a>,
@@ -212,7 +212,7 @@ asig <span class="opc">fmbell</span> kamp, kfreq, kc1, kc2, kvdepth, kvrate, 1, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp99439968"></a>
+        <a id="idm1546840560"></a>
         <h2>Credits</h2>
         <p>
       </p>

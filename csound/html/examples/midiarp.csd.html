@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title
+<link rel="stylesheet" type="text/css" href="csound.css" />
+</head>
+<h1>midiarp.html</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac 	-d    -m0d     -M0  -+rtmidi=virtual ;;;RT audio I/O with MIDI in
+; For Non-realtime ouput leave only the line below:
+; -o midiin.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2 ; Changed for PNaCl output from: = 2
+0dbfs = 1
+
+massign 1, -1; prevent triggering of instrument with MIDI
+
+instr 100
+kMode = 3
+kTempo = 6
+kNote, kCounter midiarp kTempo
+
+kFilterFreq oscil 2000, .05
+;if kCounter is 1 trigger instrument 2 to play
+if kCounter==1 then 	
+	event "i", 200, 0, 2, kNote, kFilterFreq+2200
+endif
+
+endin
+
+instr 200
+kEnv expon .4, p3, .001
+aOut vco2 kEnv, cpsmidinn(p4)*2		;convert note number to cps
+aFilter moogladder aOut, p5, 0
+outs aFilter, aFilter
+endin
+
+</CsInstruments>
+<CsScore>
+i100 0 1000
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+console.log(message);
+var messages_textarea = document.getElementById("console");
+var existing = messages_textarea.value;
+messages_textarea.value = existing + message.data;
+messages_textarea.scrollTop = messages_textarea.scrollHeight;
+}
+function sleep (time) {
+return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+csound.stop();
+sleep(500).then(() => {
+    var csd = document.getElementById('csd').value;
+    csound.compileCsdText(csd);
+})
+}
+function stop_onclick () {
+csound.stop();
+}
+</script>
+<div id="engine"></div>
+</body>
+</html>

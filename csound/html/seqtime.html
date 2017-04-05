@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>seqtime</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="seqtime2.html" title="seqtime2" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp136266816"></a>
+        <a id="idm1508714480"></a>
         <h2>Description</h2>
         <p>
       Generates a trigger signal according to the values stored in a table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136268064"></a>
+        <a id="idm1508717936"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktrig_out <span class="command"><strong>seqtime</strong></span> ktime_unit, kstart, kloop, kinitndx, kfn_times</pre>
       </div>
       <div class="refsect1">
-        <a id="idp136270240"></a>
+        <a id="idm1508705392"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig_out</em></span> -- output trigger signal
@@ -116,93 +117,96 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136291744"></a>
+        <a id="idm1508690032"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the seqtime opcode. It uses the file <a class="ulink" href="examples/seqtime.csd" target="_top"><em class="citetitle">seqtime.csd</em></a>.
+      Here is an example of the seqtime opcode. It uses the file <a class="ulink" href="examples/seqtime.csd.html" target="_top"><em class="citetitle">seqtime.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp136293600"></a>
+          <a id="idm1508694640"></a>
           <p class="title">
-            <strong>Example 830. Example of the seqtime opcode.</strong>
+            <strong>Example 856. Example of the seqtime opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp263955008"></a>
-              <a class="ulink" href="examples/seqtime.csd.html" target="_top">Play</a>
+              <a id="idm1328711664"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o seqtime.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
- <span class="ohdr">sr</span> <span class="op">=</span> 44100
- <span class="ohdr">ksmps</span> <span class="op">=</span> 64
- <span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o seqtime.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-<span class="comment">; By Tim Mortimer and Andres Cabrera 2007</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+ <span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+ <span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">64</span>
+ <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-gisine         <span class="ohdr">ftgen</span>    0, 0, 8192, 10,    1
-<span class="comment">;;; table defining an integer pitch set</span>
-gipset    <span class="ohdr">ftgen</span>     0, 0, 4, <span class="op">-</span>2, 8.00, 8.04, 8.07, 8.10
-<span class="comment">;;;DELTA times for seqtime</span>
-gidelta    <span class="ohdr">ftgen</span>    0, 0, 4, <span class="op">-</span>2, .5, 1, .25, 1.25
+<span class="c1">; By Tim Mortimer and Andres Cabrera 2007</span>
 
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-  <span class="oblock">instr</span> 1
-
-kndx <span class="opc">init</span> 0
-ktrigger <span class="opc">init</span> 0
-
-ktime_unit <span class="opc">init</span> 1
-kstart <span class="opc">init</span> p4
-kloop <span class="opc">init</span> p5
-kinitndx <span class="opc">init</span> 0
-kfn_times <span class="opc">init</span> gidelta
-
-ktrigger <span class="opc">seqtime</span> ktime_unit, kstart, kloop, kinitndx, kfn_times
-
-<span class="opc">printk2</span> ktrigger
+gi<span class="n">sine</span>         <span class="nb">ftgen</span>    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>    <span class="mi">1</span>
+<span class="c1">;;; table defining an integer pitch set</span>
+gi<span class="n">pset</span>    <span class="nb">ftgen</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">8.00</span><span class="p">,</span> <span class="mf">8.04</span><span class="p">,</span> <span class="mf">8.07</span><span class="p">,</span> <span class="mf">8.10</span>
+<span class="c1">;;;DELTA times for seqtime</span>
+gi<span class="n">delta</span>    <span class="nb">ftgen</span>    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">1.25</span>
 
 
-<span class="octrl">if</span> (ktrigger <span class="op">&gt;</span> 0) then
-   kpitch <span class="opc">table</span> kndx, gipset
-   <span class="opc">event</span> "i", 2, 0, 1, kpitch
-   kndx <span class="op">=</span> kndx <span class="op">+</span> 1
-   kndx <span class="op">=</span> kndx <span class="op">%</span> kloop
-<span class="octrl">endif</span>
+  <span class="kd">instr</span> <span class="nf">1</span>
 
-  <span class="oblock">endin</span>
+k<span class="n">ndx</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">trigger</span> <span class="nb">init</span> <span class="mi">0</span>
+
+k<span class="n">time_unit</span> <span class="nb">init</span> <span class="mi">1</span>
+k<span class="n">start</span> <span class="nb">init</span> <span class="nb">p4</span>
+k<span class="n">loop</span> <span class="nb">init</span> <span class="nb">p5</span>
+k<span class="n">initndx</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">fn_times</span> <span class="nb">init</span> gi<span class="n">delta</span>
+
+k<span class="n">trigger</span> <span class="nb">seqtime</span> k<span class="n">time_unit</span><span class="p">,</span> k<span class="n">start</span><span class="p">,</span> k<span class="n">loop</span><span class="p">,</span> k<span class="n">initndx</span><span class="p">,</span> k<span class="n">fn_times</span>
+
+<span class="nb">printk2</span> k<span class="n">trigger</span>
 
 
-  <span class="oblock">instr</span> 2
-icps <span class="op">=</span> <span class="opc">cpspch</span> (p4)
-a1    <span class="opc">buzz</span>    1, icps, 7, gisine
-aamp <span class="opc">expseg</span>    0.00003,.02,1,p3<span class="op">-</span>.02,0.00003
+<span class="k">if</span> <span class="p">(</span>k<span class="n">trigger</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+   k<span class="n">pitch</span> <span class="nb">table</span> k<span class="n">ndx</span><span class="p">,</span> gi<span class="n">pset</span>
+   <span class="nb">event</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">pitch</span>
+   k<span class="n">ndx</span> <span class="o">=</span> k<span class="n">ndx</span> <span class="o">+</span> <span class="mi">1</span>
+   k<span class="n">ndx</span> <span class="o">=</span> k<span class="n">ndx</span> <span class="o">%</span> k<span class="n">loop</span>
+<span class="k">endif</span>
 
-a1 <span class="op">=</span> a1 <span class="op">*</span> aamp <span class="op">*</span> 0.5
+  <span class="kd">endin</span>
 
-<span class="opc">out</span> a1
-  <span class="oblock">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">;      start    dur   kstart  kloop</span>
-<span class="stamnt">i</span> 1	0	7	0	4
-<span class="stamnt">i</span> 1	8	10	0	3
-<span class="stamnt">i</span> 1	19	10	4	4
+  <span class="kd">instr</span> <span class="nf">2</span>
+i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span> <span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+a<span class="n">1</span>    <span class="nb">buzz</span>    <span class="mi">1</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> gi<span class="n">sine</span>
+a<span class="n">amp</span> <span class="nb">expseg</span>    <span class="mf">0.00003</span><span class="p">,</span><span class="mf">.02</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">p3</span><span class="o">-</span><span class="mf">.02</span><span class="p">,</span><span class="mf">0.00003</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+a<span class="n">1</span> <span class="o">=</span> a<span class="n">1</span> <span class="o">*</span> a<span class="n">amp</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+<span class="nb">out</span> a<span class="n">1</span>
+  <span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">;      start    dur   kstart  kloop</span>
+<span class="nb">i</span> <span class="mi">1</span>	<span class="mi">0</span>	<span class="mi">7</span>	<span class="mi">0</span>	<span class="mi">4</span>
+<span class="nb">i</span> <span class="mi">1</span>	<span class="mi">8</span>	<span class="mi">10</span>	<span class="mi">0</span>	<span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">1</span>	<span class="mi">19</span>	<span class="mi">10</span>	<span class="mi">4</span>	<span class="mi">4</span>
+
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -211,7 +215,7 @@ a1 <span class="op">=</span> a1 <span class="op">*</span> aamp <span class="op">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136297888"></a>
+        <a id="idm1508696816"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GEN02.html" title="GEN02"><em class="citetitle">GEN02</em></a>,
@@ -221,7 +225,7 @@ a1 <span class="op">=</span> a1 <span class="op">*</span> aamp <span class="op">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136302784"></a>
+        <a id="idm1508687856"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>November 2002. Added a note about the <span class="emphasis"><em>kinitndx</em></span> parameter, thanks to Rasmus Ekman.</p>

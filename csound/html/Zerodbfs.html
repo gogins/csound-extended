@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>0dbfs</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="opor.html" title="||" />
-    <link rel="next" href="opbitshl.html" title="&lt;&lt;" />
+    <link rel="next" href="A4.html" title="A4" />
   </head>
   <body>
     <div class="navheader">
@@ -20,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="opor.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="opbitshl.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="A4.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -38,27 +39,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78087136"></a>
+        <a id="idm1568422128"></a>
         <h2>Description</h2>
         <p>
       Sets the value of 0 decibels using full scale amplitude.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78169088"></a>
+        <a id="idm1568421744"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>0dbfs</strong></span> = iarg</pre>
         <pre class="synopsis"><span class="command"><strong>0dbfs</strong></span> </pre>
       </div>
       <div class="refsect1">
-        <a id="idp78172288"></a>
+        <a id="idm1568412528"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iarg</em></span> -- the value of 0 decibels using full scale amplitude.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78174064"></a>
+        <a id="idm1568409968"></a>
         <h2>Performance</h2>
         <p>
       The default is 32767, so all existing orcs <span class="emphasis"><em>should</em></span> work.
@@ -93,83 +94,83 @@ asig <span class="opc">oscil</span> <span class="ohdr">0dbfs</span>, freq, 1
         <p>For more details on amplitude values in Csound, see the section <a class="link" href="UsingDesign.html#AmplitudeCsound" title="Amplitude values in Csound"><em class="citetitle">Amplitude values in Csound</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idp78190896"></a>
+        <a id="idm1568402544"></a>
         <h2>Example</h2>
         <p>
-      Here is an example of the 0dbfs opcode. It uses the file <a class="ulink" href="examples/0dbfs.csd" target="_top"><em class="citetitle">0dbfs.csd</em></a>.
+      Here is an example of the 0dbfs opcode. It uses the file <a class="ulink" href="examples/0dbfs.csd.html" target="_top"><em class="citetitle">0dbfs.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp78193392"></a>
+          <a id="idm1568407536"></a>
           <p class="title">
             <strong>Example 36. Example of the 0dbfs opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp233635344"></a>
-              <a class="ulink" href="examples/0dbfs.csd.html" target="_top">Play</a>
+              <a id="idm1407702768"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o 0dbfs.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o 0dbfs.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Set the 0dbfs to 1.</span>
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="c1">; Set the 0dbfs to 1.</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1  <span class="comment">; from linear amplitude (0-1 range)</span>
-<span class="opc">print</span> p4
-a1 <span class="opc">oscil</span> p4, 440, 1
-<span class="opc">outs</span> a1, a1
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>  <span class="c1">; from linear amplitude (0-1 range)</span>
+<span class="nb">print</span> <span class="nb">p4</span>
+a<span class="n">1</span> <span class="nb">oscil</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+<span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2  <span class="comment">; from linear amplitude (0-32767 range)</span>
-iamp <span class="op">=</span> p4 <span class="op">/</span> 32767
-<span class="opc">print</span> iamp
-a1 <span class="opc">oscil</span> iamp, 440, 1
-<span class="opc">outs</span> a1, a1
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span>  <span class="c1">; from linear amplitude (0-32767 range)</span>
+i<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span> <span class="o">/</span> <span class="mi">32767</span>
+<span class="nb">print</span> i<span class="n">amp</span>
+a<span class="n">1</span> <span class="nb">oscil</span> i<span class="n">amp</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+<span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3  <span class="comment">; from dB FS</span>
-iamp <span class="op">=</span> <span class="opc">ampdbfs</span>(p4)
-<span class="opc">print</span> iamp
-a1 <span class="opc">oscil</span> iamp, 440, 1
-<span class="opc">outs</span> a1, a1
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">3</span>  <span class="c1">; from dB FS</span>
+i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdbfs</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+<span class="nb">print</span> i<span class="n">amp</span>
+a<span class="n">1</span> <span class="nb">oscil</span> i<span class="n">amp</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+<span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Table #1, a sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
+<span class="c1">; Table #1, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 1   1
-<span class="stamnt">i</span> 1 + 1   0.5
-<span class="stamnt">i</span> 1 + 1   0.1
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 2 0 1   32767
-<span class="stamnt">i</span> 2 + 1   [32767/2]
-<span class="stamnt">i</span> 2 + 1   [3276.7]
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 3 0 1   0
-<span class="stamnt">i</span> 3 + 1   -6
-<span class="stamnt">i</span> 3 + 1   -20
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>   <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>   <span class="mf">0.5</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>   <span class="mf">0.1</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span>   <span class="mi">32767</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>   <span class="p">[</span><span class="mi">32767</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>   <span class="p">[</span><span class="mf">3276.7</span><span class="p">]</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">1</span>   <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span>   <span class="o">-</span><span class="mi">6</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span>   <span class="o">-</span><span class="mi">20</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+ 
 </pre>
             </div>
           </div>
@@ -178,7 +179,7 @@ a1 <span class="opc">oscil</span> iamp, 440, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78197712"></a>
+        <a id="idm1568398576"></a>
         <h2>See also</h2>
         <p>
           <a class="link" href="ampdbfs.html" title="ampdbfs">
@@ -187,7 +188,7 @@ a1 <span class="opc">oscil</span> iamp, 440, 1
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp78199536"></a>
+        <a id="idm1568399728"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -212,14 +213,14 @@ a1 <span class="opc">oscil</span> iamp, 440, 1
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="opbitshl.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="A4.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">|| </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> &lt;&lt;</td>
+          <td width="40%" align="right" valign="top"> A4</td>
         </tr>
       </table>
     </div>

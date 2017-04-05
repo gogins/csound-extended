@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>dates</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="date.html" title="date" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87319088"></a>
+        <a id="idm1559202288"></a>
         <h2>Description</h2>
         <p>
       Returns as a string the date and time specified.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87385200"></a>
+        <a id="idm1559201392"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">Sir <span class="command"><strong>dates</strong></span> [ itime]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp87387408"></a>
+        <a id="idm1559194736"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>itime</em></span> -- the time is seconds since the
@@ -62,68 +63,67 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87389968"></a>
+        <a id="idm1559190512"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the dates opcode. It uses the file <a class="ulink" href="examples/dates.csd" target="_top"><em class="citetitle">dates.csd</em></a>.
+      Here is an example of the dates opcode. It uses the file <a class="ulink" href="examples/dates.csd.html" target="_top"><em class="citetitle">dates.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp87391824"></a>
+          <a id="idm1559196528"></a>
           <p class="title">
-            <strong>Example 178. Example of the dates opcode.</strong>
+            <strong>Example 180. Example of the dates opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp239107216"></a>
-              <a class="ulink" href="examples/dates.csd.html" target="_top">Play</a>
+              <a id="idm1394273008"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o dates.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o dates.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="ohdr">seed</span>     0 <span class="comment">;each time different seed</span>
+<span class="nb">seed</span>     <span class="mi">0</span> <span class="c1">;each time different seed</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">;;generating a different filename each time csound renders</span>
-itim     <span class="opc">date</span>
-Stim     <span class="opc">dates</span>     itim
-Syear    <span class="opc">strsub</span>    Stim, 20, 24
-Smonth   <span class="opc">strsub</span>    Stim, 4, 7
-Sday     <span class="opc">strsub</span>    Stim, 8, 10
-iday     <span class="opc">strtod</span>    Sday
-Shor     <span class="opc">strsub</span>    Stim, 11, 13
-Smin     <span class="opc">strsub</span>    Stim, 14, 16
-Ssec     <span class="opc">strsub</span>    Stim, 17, 19
-Sfilnam  <span class="opc">sprintf</span>  "<span class="op">%</span>s_<span class="op">%</span>s_<span class="op">%</span>02d_<span class="op">%</span>s_<span class="op">%</span>s_<span class="op">%</span>s.wav", Syear, Smonth, iday, Shor,Smin, Ssec
-<span class="comment">;;rendering with random frequency, amp and pan, and writing to disk</span>
-ifreq    <span class="opc">random</span>    400, 1000
-iamp     <span class="opc">random</span>    .1, 1
-ipan     <span class="opc">random</span>    0, 1
-asin     <span class="opc">oscils</span>    iamp, ifreq, 0
-aL, aR   <span class="opc">pan2</span>      asin, ipan
-         <span class="opc">fout</span>      Sfilnam, 14, aL, aR
-         <span class="opc">outs</span>      aL, aR
-         <span class="opc">printf_i</span>  "File '<span class="op">%</span>s' written to the same <span class="opc">directory</span> as this CSD file is!\n", 1, Sfilnam
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">;;generating a different filename each time csound renders</span>
+i<span class="n">tim</span>     <span class="nb">date</span>
+S<span class="n">tim</span>     <span class="nb">dates</span>     i<span class="n">tim</span>
+S<span class="n">year</span>    <span class="nb">strsub</span>    S<span class="n">tim</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">24</span>
+S<span class="n">month</span>   <span class="nb">strsub</span>    S<span class="n">tim</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span>
+S<span class="n">day</span>     <span class="nb">strsub</span>    S<span class="n">tim</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span>
+i<span class="n">day</span>     <span class="nb">strtod</span>    S<span class="n">day</span>
+S<span class="n">hor</span>     <span class="nb">strsub</span>    S<span class="n">tim</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span>
+S<span class="n">min</span>     <span class="nb">strsub</span>    S<span class="n">tim</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span>
+S<span class="n">sec</span>     <span class="nb">strsub</span>    S<span class="n">tim</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span>
+S<span class="n">filnam</span>  <span class="nb">sprintf</span>  <span class="s">"%s_%s_</span><span class="si">%02d</span><span class="s">_%s_%s_%s.wav"</span><span class="p">,</span> S<span class="n">year</span><span class="p">,</span> S<span class="n">month</span><span class="p">,</span> i<span class="n">day</span><span class="p">,</span> S<span class="n">hor</span><span class="p">,</span>S<span class="n">min</span><span class="p">,</span> S<span class="n">sec</span>
+<span class="c1">;;rendering with random frequency, amp and pan, and writing to disk</span>
+i<span class="n">freq</span>    <span class="nb">random</span>    <span class="mi">400</span><span class="p">,</span> <span class="mi">1000</span>
+i<span class="n">amp</span>     <span class="nb">random</span>    <span class="mf">.1</span><span class="p">,</span> <span class="mi">1</span>
+i<span class="n">pan</span>     <span class="nb">random</span>    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sin</span>     <span class="nb">oscils</span>    i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>   <span class="nb">pan2</span>      a<span class="n">sin</span><span class="p">,</span> i<span class="n">pan</span>
+         <span class="nb">fout</span>      S<span class="n">filnam</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
+         <span class="nb">outs</span>      a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
+         <span class="nb">printf_i</span>  <span class="s">"File '%s' written to the same directory as this CSD file is!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">filnam</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -140,14 +140,14 @@ Closing file '/home/user/csound/Output/2011_Jan_05_19_14_46.wav'...
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87394624"></a>
+        <a id="idm1559194352"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="date.html" title="date"><em class="citetitle">date</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87396704"></a>
+        <a id="idm1559186288"></a>
         <h2>Credits</h2>
         <p>
       </p>

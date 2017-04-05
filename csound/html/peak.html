@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>peak</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pdhalfy.html" title="pdhalfy" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp124358688"></a>
+        <a id="idm1521280896"></a>
         <h2>Description</h2>
         <p>
       These opcodes maintain the output k-rate variable as the peak absolute level so far received.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124360064"></a>
+        <a id="idm1521280256"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>peak</strong></span> asig</pre>
         <pre class="synopsis">kres <span class="command"><strong>peak</strong></span> ksig</pre>
       </div>
       <div class="refsect1">
-        <a id="idp124363744"></a>
+        <a id="idm1521279872"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kres</em></span> -- Output equal to the highest absolute value received so far. This is effectively an input to the opcode as well, since it reads <span class="emphasis"><em>kres</em></span> in order to decide whether to write something higher into it.
@@ -64,61 +65,60 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124367904"></a>
+        <a id="idm1521274752"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the peak opcode. It uses the file <a class="ulink" href="examples/peak.csd" target="_top"><em class="citetitle">peak.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+      Here is an example of the peak opcode. It uses the file <a class="ulink" href="examples/peak.csd.html" target="_top"><em class="citetitle">peak.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idp124370528"></a>
+          <a id="idm1521266944"></a>
           <p class="title">
-            <strong>Example 645. Example of the peak opcode.</strong>
+            <strong>Example 665. Example of the peak opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp257940368"></a>
-              <a class="ulink" href="examples/peak.csd.html" target="_top">Play</a>
+              <a id="idm1343684080"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o peak.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o peak.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 1
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1 - play an audio file.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Capture the highest amplitude in the "beats.wav" file.</span>
-  asig <span class="opc">soundin</span> "beats.wav"
-  kp <span class="opc">peak</span> asig
+<span class="c1">; Instrument #1 - play an audio file.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Capture the highest amplitude in the "beats.wav" file.</span>
+  a<span class="n">sig</span> <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
+  k<span class="n">p</span> <span class="nb">peak</span> a<span class="n">sig</span>
 
-  <span class="comment">; Print out the peak value once per second.</span>
-  <span class="opc">printk</span> 1, kp
+  <span class="c1">; Print out the peak value once per second.</span>
+  <span class="nb">printk</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">p</span>
   
-  <span class="opc">out</span> asig
-<span class="oblock">endin</span>
+  <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Play Instrument #1, the audio file, for three seconds.</span>
-<span class="stamnt">i</span> 1 0 3
-<span class="stamnt">e</span>
+<span class="c1">; Play Instrument #1, the audio file, for three seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">e</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -136,7 +136,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124375680"></a>
+        <a id="idm1521266304"></a>
         <h2>Credits</h2>
         <p>
       </p>

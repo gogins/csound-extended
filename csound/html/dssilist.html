@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>dssilist</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="dssiinit.html" title="dssiinit" />
@@ -50,7 +51,7 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idp89933600"></a>
+        <a id="idm1556097120"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -59,7 +60,7 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idp89935488"></a>
+        <a id="idm1556087648"></a>
         <h2>Description</h2>
         <p><span class="emphasis"><em>dssilist</em></span> checks the variables DSSI_PATH and LADSPA_PATH and lists all plugins available in all plugin libraries there.</p>
         <p>LADSPA and DSSI libraries may contain more than one plugin which must be referenced by the index provided by <span class="emphasis"><em>dssilist</em></span>.</p>
@@ -67,46 +68,45 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89938544"></a>
+        <a id="idm1556089312"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the dssilist opcode. It uses the file <a class="ulink" href="examples/dssilist.csd" target="_top"><em class="citetitle">dssilist.csd</em></a>.
+      Here is an example of the dssilist opcode. It uses the file <a class="ulink" href="examples/dssilist.csd.html" target="_top"><em class="citetitle">dssilist.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp89940320"></a>
+          <a id="idm1556085600"></a>
           <p class="title">
-            <strong>Example 222. Example of the dssilist opcode. (Remember to change the Library name)</strong>
+            <strong>Example 224. Example of the dssilist opcode. (Remember to change the Library name)</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp240435632"></a>
-              <a class="ulink" href="examples/dssilist.csd.html" target="_top">Play</a>
+              <a id="idm1390841712"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out  </span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out  </span>
 -odac  
 
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; list all DSSI and LADSPA plugins</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; list all DSSI and LADSPA plugins</span>
 
-<span class="opc">dssilist</span>
+<span class="nb">dssilist</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 0
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -115,7 +115,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89942272"></a>
+        <a id="idm1556087136"></a>
         <h2>Credits</h2>
         <p>2005</p>
         <p>By: Andrés Cabrera</p>

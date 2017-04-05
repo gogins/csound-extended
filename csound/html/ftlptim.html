@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ftlptim</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ftloadk.html" title="ftloadk" />
@@ -38,73 +39,72 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101793904"></a>
+        <a id="idm1544257904"></a>
         <h2>Description</h2>
         <p>
       Returns the loop segment start-time of a stored function table number.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101795184"></a>
+        <a id="idm1544255088"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftlptim</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101797248"></a>
+        <a id="idm1544247536"></a>
         <h2>Performance</h2>
         <p>
       Returns the loop segment start-time (in seconds) of stored function table number <span class="emphasis"><em>x</em></span>. This reports the duration of the direct recorded attack and decay parts of a sound sample, prior to its looped segment. Returns zero (and a warning message) if the sample does not contain loop points.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101859792"></a>
+        <a id="idm1544249200"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ftlptim opcode. It uses the files <a class="ulink" href="examples/ftlptim.csd" target="_top"><em class="citetitle">ftlptim.csd</em></a>, and <a class="ulink" href="examples/Church.wav" target="_top"><em class="citetitle">Church.wav</em></a>.
+      Here is an example of the ftlptim opcode. It uses the files <a class="ulink" href="examples/ftlptim.csd.html" target="_top"><em class="citetitle">ftlptim.csd</em></a>, and <a class="ulink" href="examples/Church.wav" target="_top"><em class="citetitle">Church.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp101862384"></a>
+          <a id="idm1544247664"></a>
           <p class="title">
-            <strong>Example 353. Example of the ftlptim opcode.</strong>
+            <strong>Example 356. Example of the ftlptim opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp245985104"></a>
-              <a class="ulink" href="examples/ftlptim.csd.html" target="_top">Play</a>
+              <a id="idm1375691632"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ftlptim.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ftlptim.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>   <span class="op">=</span>1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>   <span class="o">=</span><span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-itim <span class="op">=</span> <span class="opc">ftlptim</span>(1)
-     <span class="opc">print</span> itim
-aout <span class="opc">loscil3</span> .8, 40, 1
-     <span class="opc">outs</span> aout, aout
+i<span class="n">tim</span> <span class="o">=</span> <span class="nb">ftlptim</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+     <span class="nb">print</span> i<span class="n">tim</span>
+a<span class="n">out</span> <span class="nb">loscil3</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 0 1 "Church.wav" 0 0 0 <span class="comment">;Csound computes tablesize</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"Church.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="c1">;Csound computes tablesize</span>
 
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -127,7 +127,7 @@ start     : 0	end       : 0	count  :0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101868048"></a>
+        <a id="idm1544239728"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftchnls.html" title="ftchnls"><em class="citetitle">ftchnls</em></a>,
@@ -137,7 +137,7 @@ start     : 0	end       : 0	count  :0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101873040"></a>
+        <a id="idm1544238448"></a>
         <h2>Credits</h2>
         <p>
       </p>

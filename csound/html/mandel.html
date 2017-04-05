@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>mandel</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="mags.html" title="mags" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp112539360"></a>
+        <a id="idm1533077360"></a>
         <h2>Description</h2>
         <p>
 	Returns the number of iterations corresponding to a given point of complex plane by applying the Mandelbrot set formula.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112540688"></a>
+        <a id="idm1533079152"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kiter, koutrig <span class="command"><strong>mandel</strong></span>  ktrig, kx, ky, kmaxIter</pre>
       </div>
       <div class="refsect1">
-        <a id="idp112614160"></a>
+        <a id="idm1533076080"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kiter</em></span> - number of iterations
@@ -72,123 +73,122 @@
      </p>
       </div>
       <div class="refsect1">
-        <a id="idp112623536"></a>
+        <a id="idm1533070960"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the mandel opcode. It uses the file <a class="ulink" href="examples/mandel.csd" target="_top"><em class="citetitle">mandel.csd</em></a>.
+      Here is an example of the mandel opcode. It uses the file <a class="ulink" href="examples/mandel.csd.html" target="_top"><em class="citetitle">mandel.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp112625392"></a>
+          <a id="idm1533068400"></a>
           <p class="title">
-            <strong>Example 489. Example of the mandel opcode.</strong>
+            <strong>Example 504. Example of the mandel opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp251786864"></a>
-              <a class="ulink" href="examples/mandel.csd.html" target="_top">Play</a>
+              <a id="idm1358814960"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o mandel.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;example by Brian Evans</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o mandel.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;example by Brian Evans</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ipitchtable <span class="op">=</span> 1						<span class="comment">; pitch table in score      </span>
-ipitchndx <span class="op">=</span> p5						<span class="comment">; p5=pitch index from table</span>
+i<span class="n">pitchtable</span> <span class="o">=</span> <span class="mi">1</span>						<span class="c1">; pitch table in score      </span>
+i<span class="n">pitchndx</span> <span class="o">=</span> <span class="nb">p5</span>						<span class="c1">; p5=pitch index from table</span>
     
-ipitch <span class="opc">table</span>  ipitchndx, ipitchtable   
-kenv   <span class="opc">expseg</span> 1.0, 1.0, 1.0, 11.5, .0001              
-asig   <span class="opc">pluck</span>  <span class="opc">ampdb</span>(p4)<span class="op">*</span>kenv, <span class="opc">cpspch</span>(ipitch), <span class="opc">cpspch</span>(ipitch), 0, 1
-       <span class="opc">outs</span>   asig, asig
+i<span class="n">pitch</span> <span class="nb">table</span>  i<span class="n">pitchndx</span><span class="p">,</span> i<span class="n">pitchtable</span>   
+k<span class="n">env</span>   <span class="nb">expseg</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">11.5</span><span class="p">,</span> <span class="mf">.0001</span>              
+a<span class="n">sig</span>   <span class="nb">pluck</span>  <span class="nb">ampdb</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span><span class="o">*</span>k<span class="n">env</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">pitch</span><span class="p">),</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">pitch</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+       <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
        
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">f</span>1 0 32 -2 6.00 6.02 6.04 6.05 6.07 6.09 6.11		<span class="comment">; f1 is a pitch table defining a four octave C major scale starting </span>
-           7.00 7.02 7.04 7.05 7.07 7.09 7.11		<span class="comment">; on C two octaves below middle C</span>
-           8.00 8.02 8.04 8.05 8.07 8.09 8.11
-           9.00 9.02 9.04 9.05 9.07 9.09 9.11
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">32</span> <span class="o">-</span><span class="mi">2</span> <span class="mf">6.00</span> <span class="mf">6.02</span> <span class="mf">6.04</span> <span class="mf">6.05</span> <span class="mf">6.07</span> <span class="mf">6.09</span> <span class="mf">6.11</span>		<span class="c1">; f1 is a pitch table defining a four octave C major scale starting </span>
+           <span class="err">7.00</span> <span class="err">7.02</span> <span class="err">7.04</span> <span class="err">7.05</span> <span class="err">7.07</span> <span class="err">7.09</span> <span class="err">7.11</span>		<span class="c1">; on C two octaves below middle C</span>
+           <span class="err">8.00</span> <span class="err">8.02</span> <span class="err">8.04</span> <span class="err">8.05</span> <span class="err">8.07</span> <span class="err">8.09</span> <span class="err">8.11</span>
+           <span class="err">9.00</span> <span class="err">9.02</span> <span class="err">9.04</span> <span class="err">9.05</span> <span class="err">9.07</span> <span class="err">9.09</span> <span class="err">9.11</span>
 
-<span class="comment">;ins start   dur ampdb(p4) pitchndx(p5)</span>
+<span class="c1">;ins start   dur ampdb(p4) pitchndx(p5)</span>
 
-<span class="stamnt">i</span>1   0       12.0   75     3 
-<span class="stamnt">i</span>1   1.5999  12.0   75     4 
-<span class="stamnt">i</span>1   3.4000  12.0   75     5 
-<span class="stamnt">i</span>1   4.2000  12.0   75     6 
-<span class="stamnt">i</span>1   4.4000  12.0   75     7 
-<span class="stamnt">i</span>1   4.6000  12.0   75     9 
-<span class="stamnt">i</span>1   4.8000  12.0   75     10 
-<span class="stamnt">i</span>1   5.0000  12.0   75     5 
-<span class="stamnt">i</span>1   5.2000  12.0   75     27 
-<span class="stamnt">i</span>1   5.4000  12.0   75     5 
-<span class="stamnt">i</span>1   5.6000  12.0   75     20 
-<span class="stamnt">i</span>1   6.0000  12.0   75     24 
-<span class="stamnt">i</span>1   6.2000  12.0   75     2 
-<span class="stamnt">i</span>1   6.4000  12.0   75     27 
-<span class="stamnt">i</span>1   6.6000  12.0   75     20 
-<span class="stamnt">i</span>1   6.8000  12.0   75     15 
-<span class="stamnt">i</span>1   7.0000  12.0   75     3 
-<span class="stamnt">i</span>1   7.2000  12.0   75     3 
-<span class="stamnt">i</span>1   7.4000  12.0   75     23 
-<span class="stamnt">i</span>1   7.6000  12.0   75     9 
-<span class="stamnt">i</span>1   7.8000  12.0   75     17 
-<span class="stamnt">i</span>1   8.0000  12.0   75     18 
-<span class="stamnt">i</span>1   8.2000  12.0   75     3 
-<span class="stamnt">i</span>1   8.4000  12.0   75     26 
-<span class="stamnt">i</span>1   8.6000  12.0   75     15 
-<span class="stamnt">i</span>1   8.8     12.0   75     2 
-<span class="stamnt">i</span>1   9       12.0   75     26 
-<span class="stamnt">i</span>1   9.2     12.0   75     8 
-<span class="stamnt">i</span>1   9.3999  12.0   75     22 
-<span class="stamnt">i</span>1   9.5999  12.0   75     22 
-<span class="stamnt">i</span>1   9.7999  12.0   75     20 
-<span class="stamnt">i</span>1   9.9999  12.0   75     19 
-<span class="stamnt">i</span>1   10.399  12.0   75     20 
-<span class="stamnt">i</span>1   10.799  12.0   75     22 
-<span class="stamnt">i</span>1   10.999  12.0   75     27 
-<span class="stamnt">i</span>1   11.199  12.0   75     25 
-<span class="stamnt">i</span>1   11.399  12.0   75     20 
-<span class="stamnt">i</span>1   11.599  12.0   75     21 
-<span class="stamnt">i</span>1   11.799  12.0   75     24 
-<span class="stamnt">i</span>1   11.999  12.0   75     24 
-<span class="stamnt">i</span>1   12.199  12.0   75     4 
-<span class="stamnt">i</span>1   12.399  12.0   75     13 
-<span class="stamnt">i</span>1   12.599  12.0   75     15 
-<span class="stamnt">i</span>1   12.799  12.0   75     14 
-<span class="stamnt">i</span>1   12.999  12.0   75     3 
-<span class="stamnt">i</span>1   13.199  12.0   75     21 
-<span class="stamnt">i</span>1   13.399  12.0   75     6 
-<span class="stamnt">i</span>1   13.599  12.0   75     3 
-<span class="stamnt">i</span>1   13.799  12.0   75     10 
-<span class="stamnt">i</span>1   13.999  12.0   75     25 
-<span class="stamnt">i</span>1   14.199  12.0   75     21 
-<span class="stamnt">i</span>1   14.399  12.0   75     20 
-<span class="stamnt">i</span>1   14.599  12.0   75     19 
-<span class="stamnt">i</span>1   14.799  12.0   75     18 
-<span class="stamnt">i</span>1   15.199  12.0   75     17 
-<span class="stamnt">i</span>1   15.599  12.0   75     16 
-<span class="stamnt">i</span>1   15.999  12.0   75     15 
-<span class="stamnt">i</span>1   16.599  12.0   75     14 
-<span class="stamnt">i</span>1   17.199  12.0   75     13 
-<span class="stamnt">i</span>1   18.399  12.0   75     12 
-<span class="stamnt">i</span>1   18.599  12.0   75     11 
-<span class="stamnt">i</span>1   19.199  12.0   75     10 
-<span class="stamnt">i</span>1   19.799  12.0   75     9 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span>   <span class="mi">0</span>       <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">3</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">1.5999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">4</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">3.4000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">5</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">4.2000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">6</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">4.4000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">7</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">4.6000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">9</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">4.8000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">10</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">5.0000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">5</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">5.2000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">27</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">5.4000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">5</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">5.6000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">20</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">6.0000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">24</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">6.2000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">2</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">6.4000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">27</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">6.6000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">20</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">6.8000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">15</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">7.0000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">3</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">7.2000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">3</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">7.4000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">23</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">7.6000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">9</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">7.8000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">17</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">8.0000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">18</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">8.2000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">3</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">8.4000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">26</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">8.6000</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">15</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">8.8</span>     <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">2</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mi">9</span>       <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">26</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">9.2</span>     <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">8</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">9.3999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">22</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">9.5999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">22</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">9.7999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">20</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">9.9999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">19</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">10.399</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">20</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">10.799</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">22</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">10.999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">27</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">11.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">25</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">11.399</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">20</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">11.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">21</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">11.799</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">24</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">11.999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">24</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">12.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">4</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">12.399</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">13</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">12.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">15</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">12.799</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">14</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">12.999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">3</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">13.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">21</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">13.399</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">6</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">13.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">3</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">13.799</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">10</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">13.999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">25</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">14.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">21</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">14.399</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">20</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">14.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">19</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">14.799</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">18</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">15.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">17</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">15.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">16</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">15.999</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">15</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">16.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">14</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">17.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">13</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">18.399</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">12</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">18.599</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">11</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">19.199</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">10</span> 
+<span class="nb">i</span><span class="mi">1</span>   <span class="mf">19.799</span>  <span class="mf">12.0</span>   <span class="mi">75</span>     <span class="mi">9</span> 
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -197,14 +197,14 @@ asig   <span class="opc">pluck</span>  <span class="opc">ampdb</span>(p4)<span c
      </p>
       </div>
       <div class="refsect1">
-        <a id="idp112629680"></a>
+        <a id="idm1533058288"></a>
         <h2>See Also</h2>
         <p>
       More information on this opcode: <a class="ulink" href="http://mymbs.mbs.net/~pfisher/FOV2-0010016C/FOV2-0010016E/FOV2-001001A3/chapters/35evans/intro.html" target="_top"><em class="citetitle">Composing Fractal Music with Csound</em></a>, by Brian Evans
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112631808"></a>
+        <a id="idm1533056496"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

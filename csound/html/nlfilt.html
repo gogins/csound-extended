@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>nlfilt</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="nestedap.html" title="nestedap" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp117698448"></a>
+        <a id="idm1527663088"></a>
         <h2>Description</h2>
         <p>
       Implements the filter:
@@ -53,12 +54,12 @@ Y{n} =a Y{n-1} + b Y{n-2} + d Y^2{n-L} + X{n} - C <br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117743600"></a>
+        <a id="idm1527661552"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>nlfilt</strong></span> ain, ka, kb, kd, kC, kL</pre>
       </div>
       <div class="refsect1">
-        <a id="idp117745824"></a>
+        <a id="idm1527660784"></a>
         <h2>Performance</h2>
         <p>
       </p>
@@ -153,71 +154,70 @@ Y{n} =a Y{n-1} + b Y{n-2} + d Y^2{n-L} + X{n} - C <br />
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp117758528"></a>
+        <a id="idm1527650288"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the nlfilt opcode. It uses the file <a class="ulink" href="examples/nlfilt.csd" target="_top"><em class="citetitle">nlfilt.csd</em></a>.
+      Here is an example of the nlfilt opcode. It uses the file <a class="ulink" href="examples/nlfilt.csd.html" target="_top"><em class="citetitle">nlfilt.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp117760384"></a>
+          <a id="idm1527653360"></a>
           <p class="title">
-            <strong>Example 565. Example of the nlfilt opcode.</strong>
+            <strong>Example 583. Example of the nlfilt opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp254580688"></a>
-              <a class="ulink" href="examples/nlfilt.csd.html" target="_top">Play</a>
+              <a id="idm1351521904"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o nlfilt.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o nlfilt.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">;unfiltered noise</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;unfiltered noise</span>
 
-asig <span class="opc">rand</span> .7
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">rand</span> <span class="mf">.7</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">;filtered noise</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;filtered noise</span>
 
-ka <span class="op">=</span> p4
-kb <span class="op">=</span> p5
-kd <span class="op">=</span> p6
-kC <span class="op">=</span> p7
-kL <span class="op">=</span> p8
-asig  <span class="opc">rand</span> .3
-afilt <span class="opc">nlfilt</span> asig, ka, kb, kd, kC, kL
-asig  <span class="opc">clip</span> afilt, 2, .9
-      <span class="opc">outs</span> asig, asig
+k<span class="n">a</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">b</span> <span class="o">=</span> <span class="nb">p5</span>
+k<span class="n">d</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">C</span> <span class="o">=</span> <span class="nb">p7</span>
+k<span class="n">L</span> <span class="o">=</span> <span class="nb">p8</span>
+a<span class="n">sig</span>  <span class="nb">rand</span> <span class="mf">.3</span>
+a<span class="n">filt</span> <span class="nb">nlfilt</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">d</span><span class="p">,</span> k<span class="n">C</span><span class="p">,</span> k<span class="n">L</span>
+a<span class="n">sig</span>  <span class="nb">clip</span> a<span class="n">filt</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.9</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2				<span class="comment">; unfiltersd</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>				<span class="c1">; unfiltersd</span>
 
-<span class="comment">;        a    b    d    C    L</span>
-<span class="stamnt">i</span> 2 2 2  0    0   0.8  0.5  20	<span class="comment">; non-linear effect</span>
-<span class="stamnt">i</span> 2 + 2 .4   0.2  0.7  0.11 200	<span class="comment">; low=paas with non-linear</span>
-<span class="stamnt">i</span> 2 + 2 0.35 -0.3 0.95 0.1  200	<span class="comment">; high-pass with non-linear</span>
-<span class="stamnt">i</span> 2 + 2 0.7 -0.2  0.9  0.2  20 	<span class="comment">; high-pass with non-linear</span>
+<span class="c1">;        a    b    d    C    L</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span>  <span class="mi">0</span>    <span class="mi">0</span>   <span class="mf">0.8</span>  <span class="mf">0.5</span>  <span class="mi">20</span>	<span class="c1">; non-linear effect</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">.4</span>   <span class="mf">0.2</span>  <span class="mf">0.7</span>  <span class="mf">0.11</span> <span class="mi">200</span>	<span class="c1">; low=paas with non-linear</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">0.35</span> <span class="o">-</span><span class="mf">0.3</span> <span class="mf">0.95</span> <span class="mf">0.1</span>  <span class="mi">200</span>	<span class="c1">; high-pass with non-linear</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">0.7</span> <span class="o">-</span><span class="mf">0.2</span>  <span class="mf">0.9</span>  <span class="mf">0.2</span>  <span class="mi">20</span> 	<span class="c1">; high-pass with non-linear</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -226,7 +226,7 @@ asig  <span class="opc">clip</span> afilt, 2, .9
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117764672"></a>
+        <a id="idm1527648880"></a>
         <h2>Credits</h2>
         <p>
       </p>

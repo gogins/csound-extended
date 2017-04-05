@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>directory</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="diff.html" title="diff" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88787040"></a>
+        <a id="idm1557472624"></a>
         <h2>Description</h2>
         <p>
       Reads a directory for files and passes them to a string array. Users can set the file type by passing a file extension as a string.  
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88791216"></a>
+        <a id="idm1557473904"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">SFiles[] <span class="command"><strong>directory</strong></span> SDirectory[, SExtention]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp88793392"></a>
+        <a id="idm1557472240"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>SDirectory</em></span> -- a string that identifies the directory to browse for files
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88795904"></a>
+        <a id="idm1557471856"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>SFiles[]</em></span> -- a string array that holds the names of all files of a given type found in the directory.
@@ -84,44 +85,43 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idp88857808"></a>
+        <a id="idm1557468016"></a>
         <h2>Example</h2>
         <p>
-      This example shows how directory can be used to browse for .wav files in a fixed location. <span class="emphasis"><em>printf_i</em></span> is then used to print the file names. It uses the file <a class="ulink" href="examples/directory.csd" target="_top"><em class="citetitle">directory.csd</em></a>.
+      This example shows how directory can be used to browse for .wav files in a fixed location. <span class="emphasis"><em>printf_i</em></span> is then used to print the file names. It uses the file <a class="ulink" href="examples/directory.csd.html" target="_top"><em class="citetitle">directory.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp88860192"></a>
+          <a id="idm1557464432"></a>
           <p class="title">
-            <strong>Example 206. Example of the directory opcode.</strong>
+            <strong>Example 208. Example of the directory opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp239526976"></a>
-              <a class="ulink" href="examples/directory.csd.html" target="_top">Play</a>
+              <a id="idm1392354032"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -n
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">;browse for text files in current directory</span>
-<span class="oblock">instr</span> 1
-iCnt <span class="opc">init</span> 0
-SFilenames[] <span class="opc">directory</span> ".", ".txt"
-iNumberOfFiles <span class="opc">lenarray</span> SFilenames
+<span class="c1">;browse for text files in current directory</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">Cnt</span> <span class="nb">init</span> <span class="mi">0</span>
+S<span class="n">Filenames</span><span class="p">[]</span> <span class="nb">directory</span> <span class="s">"."</span><span class="p">,</span> <span class="s">".txt"</span>
+i<span class="n">NumberOfFiles</span> <span class="nb">lenarray</span> S<span class="n">Filenames</span>
 
-until iCnt<span class="op">&gt;=</span>iNumberOfFiles do
-	<span class="opc">printf_i</span> "Filename <span class="op">=</span> <span class="op">%</span>s \n", 1, SFilenames[iCnt]
-	iCnt <span class="op">=</span> iCnt<span class="op">+</span>1
-od
-<span class="oblock">endin</span>
+<span class="k">until</span> i<span class="n">Cnt</span><span class="o">&gt;=</span>i<span class="n">NumberOfFiles</span> <span class="k">do</span>
+	<span class="nb">printf_i</span> <span class="s">"Filename = %s </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">Filenames</span><span class="p">[</span>i<span class="n">Cnt</span><span class="p">]</span>
+	i<span class="n">Cnt</span> <span class="o">=</span> i<span class="n">Cnt</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">od</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -130,7 +130,7 @@ od
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88862112"></a>
+        <a id="idm1557466736"></a>
         <h2>Credits</h2>
         <p>
       </p>

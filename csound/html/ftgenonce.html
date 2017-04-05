@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ftgenonce</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ftgen.html" title="ftgen" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101584000"></a>
+        <a id="idm1544595440"></a>
         <h2>Description</h2>
         <p>
       Enables the creation of function tables entirely inside 
@@ -61,12 +62,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101586944"></a>
+        <a id="idm1544594672"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ifno <span class="command"><strong>ftgenonce</strong></span> ip1, ip2dummy, isize, igen, iarga, iargb, ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101588960"></a>
+        <a id="idm1544590704"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifno</em></span> --  an automatically
@@ -106,57 +107,54 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp101598480"></a>
+        <a id="idm1544581616"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ftgenonce opcode. It uses the file <a class="ulink" href="examples/ftgenonce.csd" target="_top"><em class="citetitle">ftgenonce.csd</em></a>.
+      Here is an example of the ftgenonce opcode. It uses the file <a class="ulink" href="examples/ftgenonce.csd.html" target="_top"><em class="citetitle">ftgenonce.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp101600256"></a>
+          <a id="idm1544575344"></a>
           <p class="title">
-            <strong>Example 350. Example of the ftgenonce opcode.</strong>
+            <strong>Example 353. Example of the ftgenonce opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp245880576"></a>
-              <a class="ulink" href="examples/ftgenonce.csd.html" target="_top">Play</a>
+              <a id="idm1377284208"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ftgenonce.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
- 
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ftgenonce.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span> 
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 
-<span class="comment">; Use ftgenonce instead of ftgen, ftgentmp, or f statement</span>
-iHz	<span class="op">=</span> p4
-isine	<span class="opc">ftgenonce</span> 0, 0, 1024, 10, 1 
-aoscili	<span class="opc">pluck</span> .7, iHz, 100, isine, 1 
-aadsr 	<span class="opc">adsr</span> 0.015, 0.07, 0.6, 0.3
-asig 	<span class="op">=</span> aoscili <span class="op">*</span> aadsr
-        <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span> 
+<span class="kd">instr</span> <span class="nf">1</span> 
+<span class="c1">; Use ftgenonce instead of ftgen, ftgentmp, or f statement</span>
+i<span class="n">Hz</span>	<span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">sine</span>	<span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span> 
+a<span class="n">oscili</span>	<span class="nb">pluck</span> <span class="mf">.7</span><span class="p">,</span> i<span class="n">Hz</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">sine</span><span class="p">,</span> <span class="mi">1</span> 
+a<span class="n">adsr</span> 	<span class="nb">adsr</span> <span class="mf">0.015</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.3</span>
+a<span class="n">sig</span> 	<span class="o">=</span> a<span class="n">oscili</span> <span class="o">*</span> a<span class="n">adsr</span>
+        <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span> 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
 
-<span class="stamnt">i</span> 1 0 1 220 
-<span class="stamnt">i</span> 1 2 1 261 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">220</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">261</span> 
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -165,7 +163,7 @@ asig 	<span class="op">=</span> aoscili <span class="op">*</span> aadsr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101602176"></a>
+        <a id="idm1544580720"></a>
         <h2>Credits</h2>
         <p>
       </p>

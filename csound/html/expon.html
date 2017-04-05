@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>expon</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="expcurve.html" title="expcurve" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91438960"></a>
+        <a id="idm1554772336"></a>
         <h2>Description</h2>
         <p>
       Trace an exponential curve between specified points.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91440256"></a>
+        <a id="idm1554760816"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>expon</strong></span> ia, idur, ib</pre>
         <pre class="synopsis">kres <span class="command"><strong>expon</strong></span> ia, idur, ib</pre>
       </div>
       <div class="refsect1">
-        <a id="idp91443872"></a>
+        <a id="idm1554764400"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ia</em></span> -- starting value. Zero is illegal for exponentials.
@@ -64,74 +65,72 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91448432"></a>
+        <a id="idm1554767728"></a>
         <h2>Performance</h2>
         <p>
       These units generate control or audio signals whose values can pass through 2 specified points. The <span class="emphasis"><em>idur</em></span> value may or may not equal the instrument's performance time: a shorter performance will truncate the specified pattern, while a longer one will cause the defined segment to continue on in the same direction.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91450640"></a>
+        <a id="idm1554756208"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the expon opcode. It uses the file <a class="ulink" href="examples/expon.csd" target="_top"><em class="citetitle">expon.csd</em></a>.
+      Here is an example of the expon opcode. It uses the file <a class="ulink" href="examples/expon.csd.html" target="_top"><em class="citetitle">expon.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp91452416"></a>
+          <a id="idm1554755440"></a>
           <p class="title">
-            <strong>Example 248. Example of the expon opcode.</strong>
+            <strong>Example 250. Example of the expon opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp241270432"></a>
-              <a class="ulink" href="examples/expon.csd.html" target="_top">Play</a>
+              <a id="idm1388850800"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o expon.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o expon.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 
+<span class="kd">instr</span> <span class="nf">1</span> 
 
-kpitch <span class="op">=</span> p6
-<span class="comment">;choose between expon or line</span>
-<span class="octrl">if</span> (kpitch <span class="op">==</span> 0) then 	
-  kpitch <span class="opc">expon</span> p4, p3, p5 
-<span class="octrl">elseif</span> (kpitch <span class="op">==</span> 1) then
-  kpitch <span class="opc">line</span> p4, p3, p5 
-<span class="octrl">endif</span>
+k<span class="n">pitch</span> <span class="o">=</span> <span class="nb">p6</span>
+<span class="c1">;choose between expon or line</span>
+<span class="k">if</span> <span class="p">(</span>k<span class="n">pitch</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span> 	
+  k<span class="n">pitch</span> <span class="nb">expon</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> 
+<span class="k">elseif</span> <span class="p">(</span>k<span class="n">pitch</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
+  k<span class="n">pitch</span> <span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> 
+<span class="k">endif</span>
 
-asig   <span class="opc">vco2</span> .6, kpitch 
-       <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.6</span><span class="p">,</span> k<span class="n">pitch</span> 
+       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
 
-<span class="stamnt">i</span> 1 0 2 300 600    0	<span class="comment">;if p6=0 then expon is used</span>
-<span class="stamnt">i</span> 1 3 2 300 600    1	<span class="comment">;if p6=1 then line is used</span>
-<span class="stamnt">i</span> 1 6 2 600 1200   0
-<span class="stamnt">i</span> 1 9 2 600 1200   1
-<span class="stamnt">i</span> 1 12 2 1200 2400 0
-<span class="stamnt">i</span> 1 15 2 1200 2400 1
-<span class="stamnt">i</span> 1 18 2 2400 30   0
-<span class="stamnt">i</span> 1 21 2 2400 30   1
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">300</span> <span class="mi">600</span>    <span class="mi">0</span>	<span class="c1">;if p6=0 then expon is used</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">300</span> <span class="mi">600</span>    <span class="mi">1</span>	<span class="c1">;if p6=1 then line is used</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">6</span> <span class="mi">2</span> <span class="mi">600</span> <span class="mi">1200</span>   <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">9</span> <span class="mi">2</span> <span class="mi">600</span> <span class="mi">1200</span>   <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">12</span> <span class="mi">2</span> <span class="mi">1200</span> <span class="mi">2400</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">15</span> <span class="mi">2</span> <span class="mi">1200</span> <span class="mi">2400</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">18</span> <span class="mi">2</span> <span class="mi">2400</span> <span class="mi">30</span>   <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">21</span> <span class="mi">2</span> <span class="mi">2400</span> <span class="mi">30</span>   <span class="mi">1</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -140,7 +139,7 @@ asig   <span class="opc">vco2</span> .6, kpitch
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91456704"></a>
+        <a id="idm1554759792"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="expseg.html" title="expseg"><em class="citetitle">expseg</em></a>,

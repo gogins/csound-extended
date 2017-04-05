@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>mxadsr</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="mvclpf4.html" title="mvclpf4" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117350608"></a>
+        <a id="idm1528077680"></a>
         <h2>Description</h2>
         <p>
       Calculates the classical ADSR envelope using the <a class="link" href="expsegr.html" title="expsegr"><em class="citetitle">expsegr</em></a> mechanism.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idp117352784"></a>
+        <a id="idm1528073968"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>mxadsr</strong></span> iatt, idec, islev, irel [, idel] [, ireltim]</pre>
         <pre class="synopsis">kres <span class="command"><strong>mxadsr</strong></span> iatt, idec, islev, irel [, idel] [, ireltim]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp117356464"></a>
+        <a id="idm1528074096"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iatt</em></span> -- duration of attack phase
@@ -73,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117423376"></a>
+        <a id="idm1528067952"></a>
         <h2>Performance</h2>
         <p>
       The envelope is in the range 0 to 1 and may need to be scaled further. The envelope may be described as:
@@ -97,55 +98,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117438944"></a>
+        <a id="idm1528052464"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the mxadsr opcode. It uses the file <a class="ulink" href="examples/mxadsr.csd" target="_top"><em class="citetitle">mxadsr.csd</em></a>.
+      Here is an example of the mxadsr opcode. It uses the file <a class="ulink" href="examples/mxadsr.csd.html" target="_top"><em class="citetitle">mxadsr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp117440800"></a>
+          <a id="idm1528052336"></a>
           <p class="title">
-            <strong>Example 561. Example of the mxadsr opcode.</strong>
+            <strong>Example 579. Example of the mxadsr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp254581024"></a>
-              <a class="ulink" href="examples/mxadsr.csd.html" target="_top">Play</a>
+              <a id="idm1352391152"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  -+rtmidi=virtual -M0   <span class="comment">;;;realtime audio out and realtime midi in</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o mxadsr.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  -+rtmidi=virtual -M0   <span class="c1">;;;realtime audio out and realtime midi in</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o mxadsr.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
  	 
-icps	<span class="opc">cpsmidi</span>	 	 
-iamp	<span class="opc">ampmidi</span>	.5	 
+i<span class="n">cps</span>	<span class="nb">cpsmidi</span>	 	 
+i<span class="n">amp</span>	<span class="nb">ampmidi</span>	<span class="mf">.5</span>	 
  	 	 	 
-kenv	<span class="opc">mxadsr</span>	0.5, 0, 1, 0.5
-asig	<span class="opc">pluck</span>	kenv, icps, icps, 2, 1	 
-	<span class="opc">outs</span>	asig, asig
+k<span class="n">env</span>	<span class="nb">mxadsr</span>	<span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span>
+a<span class="n">sig</span>	<span class="nb">pluck</span>	k<span class="n">env</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>	 
+	<span class="nb">outs</span>	a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 	 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 2 0 4096 10 1	
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>	
 
-<span class="stamnt">f</span>0 30	<span class="comment">;runs 30 seconds</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">30</span>	<span class="c1">;runs 30 seconds</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -154,7 +154,7 @@ asig	<span class="opc">pluck</span>	kenv, icps, icps, 2, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117445088"></a>
+        <a id="idm1528053744"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="expsegr.html" title="expsegr"><em class="citetitle">linsegr</em></a>,
@@ -172,7 +172,7 @@ asig	<span class="opc">pluck</span>	kenv, icps, icps, 2, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp117457664"></a>
+        <a id="idm1528042480"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>November 2002. Thanks to Rasmus Ekman, added documentation for the <span class="emphasis"><em>ireltim</em></span> parameter.</p>

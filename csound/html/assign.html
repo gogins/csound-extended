@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>=</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="divides.html" title="/" />
@@ -38,7 +39,7 @@
            </p>
       </div>
       <div class="refsect1">
-        <a id="idp77814816"></a>
+        <a id="idm1568731888"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>=</strong></span> xarg</pre>
         <pre class="synopsis">ires <span class="command"><strong>=</strong></span> iarg</pre>
@@ -48,14 +49,14 @@
         <pre class="synopsis">table [ kval] <span class="command"><strong>=</strong></span> karg</pre>
       </div>
       <div class="refsect1">
-        <a id="idp77823872"></a>
+        <a id="idm1568722160"></a>
         <h2>Description</h2>
         <p> 
       Performs a simple assignment.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77825216"></a>
+        <a id="idm1568719344"></a>
         <h2>Initialization</h2>
         <p> 
       <span class="emphasis"><em>=</em></span> (simple assignment) - Put the value of the expression <span class="emphasis"><em>iarg</em></span> (<span class="emphasis"><em>karg, xarg</em></span>) into the named result. This provides a means of saving an evaluated result for later use.
@@ -72,55 +73,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77829248"></a>
+        <a id="idm1568721648"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the assign opcode. It uses the file <a class="ulink" href="examples/assign.csd" target="_top"><em class="citetitle">assign.csd</em></a>.
+      Here is an example of the assign opcode. It uses the file <a class="ulink" href="examples/assign.csd.html" target="_top"><em class="citetitle">assign.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp77831024"></a>
+          <a id="idm1568720880"></a>
           <p class="title">
             <strong>Example 31. Example of the assign opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp233274400"></a>
-              <a class="ulink" href="examples/assign.csd.html" target="_top">Play</a>
+              <a id="idm1407847024"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o assign.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o assign.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
-  <span class="comment">; Assign a value to the variable i1.</span>
-  i1 <span class="op">=</span> 1234
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Assign a value to the variable i1.</span>
+  i<span class="n">1</span> <span class="o">=</span> <span class="mi">1234</span>
 
-  <span class="comment">; Print the value of the i1 variable.</span>
-  <span class="opc">print</span> i1
-<span class="oblock">endin</span>
+  <span class="c1">; Print the value of the i1 variable.</span>
+  <span class="nb">print</span> i<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -135,7 +135,7 @@ instr 1:  i1 = 1234.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77836096"></a>
+        <a id="idm1568710768"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="divz.html" title="divz"><em class="citetitle">divz</em></a>, 
@@ -145,7 +145,7 @@ instr 1:  i1 = 1234.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp77841120"></a>
+        <a id="idm1568714992"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
         <p>

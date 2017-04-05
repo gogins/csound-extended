@@ -1,15 +1,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>adsr</title>
+<title>adsr</title
 <link rel="stylesheet" type="text/css" href="csound.css" />
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
-<link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
-<link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-<link rel="prev" href="active.html" title="active" />
-<link rel="next" href="adsyn.html" title="adsyn" />
 </head>
-<h1>examples/oscil.csd.html</h1>
+<h1>oscil.html</h1>
 <p>
 This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
 </p>
@@ -29,7 +24,7 @@ This example will play if your Web browser is a desktop version of Google Chrome
 
 sr = 44100
 ksmps = 32
-nchnls = 2
+nchnls = 2 ; Changed for PNaCl output from: = 2
 0dbfs  = 1
 
 instr 1
@@ -64,26 +59,26 @@ e
 <script type="text/javascript" src="../../csound.js"></script>
 <script>
 function handleMessage(message) {
-    console.log(message);
-    var messages_textarea = document.getElementById("console");
-    var existing = messages_textarea.value;
-    messages_textarea.value = existing + message.data;
-    messages_textarea.scrollTop = messages_textarea.scrollHeight;    
+console.log(message);
+var messages_textarea = document.getElementById("console");
+var existing = messages_textarea.value;
+messages_textarea.value = existing + message.data;
+messages_textarea.scrollTop = messages_textarea.scrollHeight;
 }
 function sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
+return new Promise((resolve) => setTimeout(resolve, time));
 }
 function start_onclick() {
-    csound.stop();
-    sleep(500).then(() => {
-        var csd = document.getElementById('csd').value;
-        csound.compileCsdText(csd);
-    })    
+csound.stop();
+sleep(500).then(() => {
+    var csd = document.getElementById('csd').value;
+    csound.compileCsdText(csd);
+})
 }
 function stop_onclick () {
-    csound.stop();
+csound.stop();
 }
 </script>
- <div id="engine"></div>
+<div id="engine"></div>
 </body>
 </html>

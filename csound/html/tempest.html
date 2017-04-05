@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tempest</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tbvcf.html" title="tbvcf" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148699824"></a>
+        <a id="idm1495652720"></a>
         <h2>Description</h2>
         <p>
       Estimate the tempo of beat patterns in a control signal.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148773920"></a>
+        <a id="idm1495657584"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktemp <span class="command"><strong>tempest</strong></span> kin, iprd, imindur, imemdur, ihp, ithresh, ihtim, ixfdbak, \
       istartempo, ifn [, idisprd] [, itweek]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp148776224"></a>
+        <a id="idm1495650544"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iprd</em></span> -- period between analyses (in seconds). Typically about .02 seconds.
@@ -88,7 +89,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148790688"></a>
+        <a id="idm1495642224"></a>
         <h2>Performance</h2>
         <p>
 <span class="emphasis"><em>tempest</em></span> examines <span class="emphasis"><em>kin</em></span> for amplitude periodicity, and estimates a current tempo. The input is first low-pass filtered, then center-clipped, and the residue placed in a short-term memory buffer (attenuated over time) where it is analyzed for periodicity using a form of autocorrelation. The period, expressed as a <span class="emphasis"><em>tempo</em></span> in beats per minute, is output as <span class="emphasis"><em>ktemp</em></span>. The period is also used internally to make predictions about future amplitude patterns, and these are placed in a buffer adjacent to that of the input. The two adjacent buffers can be periodically displayed, and the predicted values optionally mixed with the incoming signal to simulate expectation.
@@ -98,76 +99,75 @@ This unit is useful for sensing the metric implications of any k-signal (e.g.- t
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148795744"></a>
+        <a id="idm1495630064"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tempest opcode. It uses the file <a class="ulink" href="examples/tempest.csd" target="_top"><em class="citetitle">tempest.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
+      Here is an example of the tempest opcode. It uses the file <a class="ulink" href="examples/tempest.csd.html" target="_top"><em class="citetitle">tempest.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idp148798448"></a>
+          <a id="idm1495629680"></a>
           <p class="title">
-            <strong>Example 953. Example of the tempest opcode.</strong>
+            <strong>Example 979. Example of the tempest opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268307536"></a>
-              <a class="ulink" href="examples/tempest.csd.html" target="_top">Play</a>
+              <a id="idm1316327920"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tempest.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tempest.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Use the "beats.wav" sound file.</span>
-  asig <span class="opc">soundin</span> "beats.wav"
-  <span class="comment">; Extract the pitch and the envelope.</span>
-  kcps, krms <span class="opc">pitchamdf</span> asig, 150, 500, 200
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Use the "beats.wav" sound file.</span>
+  a<span class="n">sig</span> <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
+  <span class="c1">; Extract the pitch and the envelope.</span>
+  k<span class="n">cps</span><span class="p">,</span> k<span class="n">rms</span> <span class="nb">pitchamdf</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span>
 
-  iprd <span class="op">=</span> 0.01
-  imindur <span class="op">=</span> 0.1
-  imemdur <span class="op">=</span> 3
-  ihp <span class="op">=</span> 1
-  ithresh <span class="op">=</span> 30
-  ihtim <span class="op">=</span> 0.005
-  ixfdbak <span class="op">=</span> 0.05
-  istartempo <span class="op">=</span> 110
-  ifn <span class="op">=</span> 1
+  i<span class="n">prd</span> <span class="o">=</span> <span class="mf">0.01</span>
+  i<span class="n">mindur</span> <span class="o">=</span> <span class="mf">0.1</span>
+  i<span class="n">memdur</span> <span class="o">=</span> <span class="mi">3</span>
+  i<span class="n">hp</span> <span class="o">=</span> <span class="mi">1</span>
+  i<span class="n">thresh</span> <span class="o">=</span> <span class="mi">30</span>
+  i<span class="n">htim</span> <span class="o">=</span> <span class="mf">0.005</span>
+  i<span class="n">xfdbak</span> <span class="o">=</span> <span class="mf">0.05</span>
+  i<span class="n">startempo</span> <span class="o">=</span> <span class="mi">110</span>
+  i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
 
-  <span class="comment">; Estimate its tempo.</span>
-  k1 <span class="opc">tempest</span> krms, iprd, imindur, imemdur, ihp, ithresh, ihtim, ixfdbak, istartempo, ifn
-  <span class="opc">printk2</span> k1
+  <span class="c1">; Estimate its tempo.</span>
+  k<span class="n">1</span> <span class="nb">tempest</span> k<span class="n">rms</span><span class="p">,</span> i<span class="n">prd</span><span class="p">,</span> i<span class="n">mindur</span><span class="p">,</span> i<span class="n">memdur</span><span class="p">,</span> i<span class="n">hp</span><span class="p">,</span> i<span class="n">thresh</span><span class="p">,</span> i<span class="n">htim</span><span class="p">,</span> i<span class="n">xfdbak</span><span class="p">,</span> i<span class="n">startempo</span><span class="p">,</span> i<span class="n">fn</span>
+  <span class="nb">printk2</span> k<span class="n">1</span>
 
-  <span class="opc">out</span> asig
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1, a declining line.</span>
-<span class="stamnt">f</span> 1 0 128 16 1 128 1
-
-<span class="comment">; Play Instrument #1 for two seconds.</span>
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">e</span>
+  <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1, a declining line.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">16</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>

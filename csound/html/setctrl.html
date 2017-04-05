@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>setctrl</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="seqtime.html" title="seqtime" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp136355136"></a>
+        <a id="idm1508646128"></a>
         <h2>Description</h2>
         <p>
       Configurable slider controls for realtime user input. Requires Winsound or TCL/TK. <span class="emphasis"><em>setctrl</em></span> sets a slider to a specific value, or sets a minimum or maximum range.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136356992"></a>
+        <a id="idm1508640112"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>setctrl</strong></span> inum, ival, itype</pre>
       </div>
       <div class="refsect1">
-        <a id="idp136359072"></a>
+        <a id="idm1508644592"></a>
         <h2>Initialization</h2>
         <p>
       Note that this opcode is not available on Windows due to the implimentation of pipes on that system 
@@ -84,78 +85,77 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136366016"></a>
+        <a id="idm1508633200"></a>
         <h2>Performance</h2>
         <p>
       Calling <span class="emphasis"><em>setctrl</em></span> will create a new slider on the screen. There is no theoretical limit to the number of sliders. Windows and TCL/TK use only integers for slider values, so the values may need rescaling. GUIs usually pass values at a fairly slow rate, so it may be advisable to pass the output of control through <span class="emphasis"><em>port</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136368448"></a>
+        <a id="idm1508632048"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the setctrl opcode. It uses the file <a class="ulink" href="examples/setctrl.csd" target="_top"><em class="citetitle">setctrl.csd</em></a>.
+      Here is an example of the setctrl opcode. It uses the file <a class="ulink" href="examples/setctrl.csd.html" target="_top"><em class="citetitle">setctrl.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp136370304"></a>
+          <a id="idm1508634608"></a>
           <p class="title">
-            <strong>Example 831. Example of the setctrl opcode.</strong>
+            <strong>Example 857. Example of the setctrl opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp263210592"></a>
-              <a class="ulink" href="examples/setctrl.csd.html" target="_top">Play</a>
+              <a id="idm1328482800"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o setctrl.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o setctrl.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Display the label "Volume" on Slider #1.</span>
-  <span class="opc">setctrl</span> 1, "Volume", 4
-  <span class="comment">; Set Slider #1's initial value to 20.</span>
-  <span class="opc">setctrl</span> 1, 20, 1
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Display the label "Volume" on Slider #1.</span>
+  <span class="nb">setctrl</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Volume"</span><span class="p">,</span> <span class="mi">4</span>
+  <span class="c1">; Set Slider #1's initial value to 20.</span>
+  <span class="nb">setctrl</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span>
   
-  <span class="comment">; Capture and display the values for Slider #1.</span>
-  k1 <span class="opc">control</span> 1
-  <span class="opc">printk2</span> k1
+  <span class="c1">; Capture and display the values for Slider #1.</span>
+  k<span class="n">1</span> <span class="nb">control</span> <span class="mi">1</span>
+  <span class="nb">printk2</span> k<span class="n">1</span>
 
-  <span class="comment">; Play a simple oscillator.</span>
-  <span class="comment">; Use the values from Slider #1 for amplitude.</span>
-  kamp <span class="op">=</span> k1 <span class="op">*</span> 128
-  a1 <span class="opc">oscil</span> kamp, 440, 1
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1, a sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
-
-<span class="comment">; Play Instrument #1 for thirty seconds.</span>
-<span class="stamnt">i</span> 1 0 30
-<span class="stamnt">e</span>
+  <span class="c1">; Play a simple oscillator.</span>
+  <span class="c1">; Use the values from Slider #1 for amplitude.</span>
+  k<span class="n">amp</span> <span class="o">=</span> k<span class="n">1</span> <span class="o">*</span> <span class="mi">128</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> k<span class="n">amp</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for thirty seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -173,14 +173,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136375360"></a>
+        <a id="idm1508627952"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="control.html" title="control"><em class="citetitle">control</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136377504"></a>
+        <a id="idm1508627568"></a>
         <h2>Credits</h2>
         <p>
       </p>

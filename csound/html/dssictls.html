@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>dssictls</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="dssiaudio.html" title="dssiaudio" />
@@ -50,17 +51,17 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idp89762112"></a>
+        <a id="idm1556882288"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>dssictls</strong></span> ihandle, iport, kvalue, ktrigger </pre>
       </div>
       <div class="refsect1">
-        <a id="idp89826928"></a>
+        <a id="idm1556882416"></a>
         <h2>Description</h2>
         <p><span class="emphasis"><em>dssictls</em></span> sends control values to a plugin's control port</p>
       </div>
       <div class="refsect1">
-        <a id="idp89828464"></a>
+        <a id="idm1556881520"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span>  - handle for the plugin returned by <a class="link" href="dssiinit.html" title="dssiinit"><em class="citetitle">dssiinit</em></a>
@@ -70,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89831888"></a>
+        <a id="idm1556873968"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kvalue</em></span> - value to be assigned to the port
@@ -83,86 +84,85 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89837584"></a>
+        <a id="idm1556875120"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the dssictls opcode. It uses the file <a class="ulink" href="examples/dssictls.csd" target="_top"><em class="citetitle">dssictls.csd</em></a>.
+      Here is an example of the dssictls opcode. It uses the file <a class="ulink" href="examples/dssictls.csd.html" target="_top"><em class="citetitle">dssictls.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idp89839440"></a>
+          <a id="idm1556877936"></a>
           <p class="title">
-            <strong>Example 220. Example of the dssictls opcode.</strong>
+            <strong>Example 222. Example of the dssictls opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240279280"></a>
-              <a class="ulink" href="examples/dssictls.csd.html" target="_top">Play</a>
+              <a id="idm1391200112"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o dssictls.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o dssictls.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-gihandle <span class="opc">dssiinit</span> "caps.so", 1, 1	<span class="comment">; = equaliser and</span>
-gaoutl <span class="opc">init</span>  0				<span class="comment">; verbose about all ports</span>
-gaoutr <span class="opc">init</span>  0
+gi<span class="n">handle</span> <span class="nb">dssiinit</span> <span class="s">"caps.so"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; = equaliser and</span>
+ga<span class="n">outl</span> <span class="nb">init</span>  <span class="mi">0</span>				<span class="c1">; verbose about all ports</span>
+ga<span class="n">outr</span> <span class="nb">init</span>  <span class="mi">0</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; activate DSSI</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; activate DSSI</span>
 
-<span class="opc">dssiactivate</span> gihandle, 1
-<span class="oblock">endin</span>
+<span class="nb">dssiactivate</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">1</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-ain1	<span class="opc">diskin2</span> "beats.wav", 1,0,1	<span class="comment">; loop</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+a<span class="n">in1</span>	<span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span>	<span class="c1">; loop</span>
 
-gaoutl <span class="op">=</span> gaoutl<span class="op">+</span>(ain1<span class="op">*</span>.1)		<span class="comment">; temper input</span>
-gaoutr <span class="op">=</span> gaoutr<span class="op">+</span>(ain1<span class="op">*</span>.1)
-<span class="oblock">endin</span>
+ga<span class="n">outl</span> <span class="o">=</span> ga<span class="n">outl</span><span class="o">+</span><span class="p">(</span>a<span class="n">in1</span><span class="o">*</span><span class="mf">.1</span><span class="p">)</span>		<span class="c1">; temper input</span>
+ga<span class="n">outr</span> <span class="o">=</span> ga<span class="n">outr</span><span class="o">+</span><span class="p">(</span>a<span class="n">in1</span><span class="o">*</span><span class="mf">.1</span><span class="p">)</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3
+<span class="kd">instr</span> <span class="nf">3</span>
 
-<span class="opc">dssictls</span> gihandle, 2, <span class="op">-</span>48, 1	<span class="comment">; 31 Hz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 3, <span class="op">-</span>48, 1	<span class="comment">; 63 Hz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 4, <span class="op">-</span>48, 1	<span class="comment">; 125 Hz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 5, 20, 1	<span class="comment">; 250 Hz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 6, <span class="op">-</span>48, 1	<span class="comment">; 500 Hz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 7, <span class="op">-</span>48, 1	<span class="comment">; 1 kHz Hz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 8, <span class="op">-</span>48, 1	<span class="comment">; 2 kHz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 9, 24, 1	<span class="comment">; 4 kHz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 10, 24, 1	<span class="comment">; 8 kHz range -48 to 24</span>
-<span class="opc">dssictls</span> gihandle, 11, 24, 1	<span class="comment">; 16 kHz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 31 Hz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 63 Hz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 125 Hz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 250 Hz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 500 Hz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 1 kHz Hz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 2 kHz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 4 kHz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 8 kHz range -48 to 24</span>
+<span class="nb">dssictls</span> gi<span class="n">handle</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; 16 kHz range -48 to 24</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 4
+<span class="kd">instr</span> <span class="nf">4</span>
 
-aout1, aout2	<span class="opc">dssiaudio</span> gihandle, gaoutl, gaoutr	<span class="comment">;get beats.wav, mono out</span>
-		<span class="opc">outs</span> aout1,aout2
+a<span class="n">out1</span><span class="p">,</span> a<span class="n">out2</span>	<span class="nb">dssiaudio</span> gi<span class="n">handle</span><span class="p">,</span> ga<span class="n">outl</span><span class="p">,</span> ga<span class="n">outr</span>	<span class="c1">;get beats.wav, mono out</span>
+		<span class="nb">outs</span> a<span class="n">out1</span><span class="p">,</span>a<span class="n">out2</span>
 
-gaoutl <span class="op">=</span> 0
-gaoutr <span class="op">=</span> 0
-<span class="oblock">endin</span>
+ga<span class="n">outl</span> <span class="o">=</span> <span class="mi">0</span>
+ga<span class="n">outr</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 20 
-<span class="stamnt">i</span> 2 1 20
-<span class="stamnt">i</span> 3 1 20
-<span class="stamnt">i</span> 4 0 20
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">20</span> 
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mi">4</span> <span class="mi">0</span> <span class="mi">20</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -171,7 +171,7 @@ gaoutr <span class="op">=</span> 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89843728"></a>
+        <a id="idm1556158688"></a>
         <h2>Credits</h2>
         <p>2005</p>
         <p>By: Andrés Cabrera</p>

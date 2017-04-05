@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ins</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="inrg.html" title="inrg" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp106767232"></a>
+        <a id="idm1539443696"></a>
         <h2>Description</h2>
         <p>
       Reads stereo audio data from an external device or stream.
@@ -64,64 +65,63 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp106834304"></a>
+        <a id="idm1539439344"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1, ar2 <span class="command"><strong>ins</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp106836288"></a>
+        <a id="idm1539444848"></a>
         <h2>Performance</h2>
         <p>
       Reads stereo audio data from an external device or stream. If the command-line <a class="link" href="CommandFlags.html#FlagsMinusLowerI"><em class="citetitle">-i</em></a> flag is set, sound is read continuously from the audio input stream (e.g. <span class="emphasis"><em>stdin</em></span> or a soundfile) into an internal buffer. Any number of these opcodes can read freely from this buffer.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106839104"></a>
+        <a id="idm1539441136"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ins opcode. It uses the file <a class="ulink" href="examples/ins.csd" target="_top"><em class="citetitle">ins.csd</em></a>.
+      Here is an example of the ins opcode. It uses the file <a class="ulink" href="examples/ins.csd.html" target="_top"><em class="citetitle">ins.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp106840960"></a>
+          <a id="idm1539431280"></a>
           <p class="title">
-            <strong>Example 419. Example of the ins opcode.</strong>
+            <strong>Example 426. Example of the ins opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp248791888"></a>
-              <a class="ulink" href="examples/ins.csd.html" target="_top">Play</a>
+              <a id="idm1368175344"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   -idac   <span class="comment">;;;realtime audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; ins.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   -idac   <span class="c1">;;;realtime audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; ins.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2				<span class="comment">;two channels out</span>
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>				<span class="c1">;two channels out</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 
+<span class="kd">instr</span> <span class="nf">1</span> 
 
-ain1, ainr <span class="opc">ins</span>				<span class="comment">;grab your mic and sing</span>
-adel  <span class="opc">linseg</span> 0, p3<span class="op">*</span>.5, 0.02, p3<span class="op">*</span>.5, 0	<span class="comment">;max delay time = 20ms</span>
-aoutl <span class="opc">flanger</span> ain1, adel, .7
-aoutr <span class="opc">flanger</span> ain1, adel<span class="op">*</span>2, .8
-      <span class="opc">fout</span> "in_s.wav", 14, aoutl, aoutr <span class="comment">;write to stereo file,</span>
-      <span class="opc">outs</span> aoutl, aoutr			<span class="comment">;16 bits with header</span>
+a<span class="n">in1</span><span class="p">,</span> a<span class="n">inr</span> <span class="nb">ins</span>				<span class="c1">;grab your mic and sing</span>
+a<span class="n">del</span>  <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;max delay time = 20ms</span>
+a<span class="n">outl</span> <span class="nb">flanger</span> a<span class="n">in1</span><span class="p">,</span> a<span class="n">del</span><span class="p">,</span> <span class="mf">.7</span>
+a<span class="n">outr</span> <span class="nb">flanger</span> a<span class="n">in1</span><span class="p">,</span> a<span class="n">del</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.8</span>
+      <span class="nb">fout</span> <span class="s">"in_s.wav"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> a<span class="n">outl</span><span class="p">,</span> a<span class="n">outr</span> <span class="c1">;write to stereo file,</span>
+      <span class="nb">outs</span> a<span class="n">outl</span><span class="p">,</span> a<span class="n">outr</span>			<span class="c1">;16 bits with header</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 10
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -130,7 +130,7 @@ aoutr <span class="opc">flanger</span> ain1, adel<span class="op">*</span>2, .8
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106842880"></a>
+        <a id="idm1539437296"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diskin.html" title="diskin"><em class="citetitle">diskin</em></a>,
@@ -144,7 +144,7 @@ aoutr <span class="opc">flanger</span> ain1, adel<span class="op">*</span>2, .8
      </p>
       </div>
       <div class="refsect1">
-        <a id="idp106851360"></a>
+        <a id="idm1539422832"></a>
         <h2>Credits</h2>
         <p>
       </p>

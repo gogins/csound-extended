@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>bpf</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="birnd.html" title="birnd" />
+    <link rel="next" href="bqrez.html" title="bqrez" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">bpf</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="birnd.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="bqrez.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="bpf"></a>
+      <div class="titlepage"></div>
+      <a id="IndexBpf" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">bpf</span>
+        </h2>
+        <p>bpf — 
+	  Break point function with linear interpolation
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm1564604400"></a>
+        <h2>Description</h2>
+        <p>
+	  Break-point function with linear interpolation. Useful when
+	  defining a table with GEN27 and scaling the x value would be
+	  overkill.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm1564600304"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis">ky <span class="command"><strong>bpf</strong></span> kx, kx1, ky1, kx2, ..., kxn, kyn</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idm1564598896"></a>
+        <h2>Performance</h2>
+        <p>
+	  <span class="strong"><strong>kx</strong></span> -- Input value
+	</p>
+        <p>
+      <span class="strong"><strong>kxn, kyn</strong></span> -- Defines a breakpoint. Can be
+	  changed at krate, but all <span class="emphasis"><em>kx</em></span>s must be sorted
+    </p>
+        <p>
+	  The points (kx1, ky1), (kx2, ky2), etc, define a linearly
+	  interpolated function. This function is evaluated at point
+	  <span class="emphasis"><em>kx</em></span>. This function extends to both -inf
+	  and +inf, so if kx &lt; kx1 then ky = ky1 and the same holds true
+	  the other end.
+	</p>
+        <p>These are equivalent:
+	</p>
+        <pre class="programlisting">
+	  ky bpf kx, 0, 0, 0.5, 10, 1.02, 200
+
+	  itab ftgenonce 0, 0, -27, 0, 0, 50, 10, 102, 200
+	  ky = tablei(limit(kx, 0, 1.02)*100, itab)
+	</pre>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>
+		x values need to be sorted. Both x and y values can change but
+		x values must stay sorted.
+	  </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="refsect1">
+        <a id="idm1564587248"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the bpf opcode. It uses the file <a class="ulink" href="examples/bpf.csd.html" target="_top"><em class="citetitle">bpf.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idm1564591984"></a>
+          <p class="title">
+            <strong>Example 95. Example of the bpf opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idm1401623536"></a>
+              <pre class="programlisting">
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="kd">instr</span> <span class="nf">1</span>
+  k<span class="n">x</span> <span class="nb">line</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">2.5</span>
+  
+  k<span class="n">y</span> <span class="nb">bpf</span> k<span class="n">x</span><span class="p">,</span>        \
+         <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>   \
+         <span class="mf">1.01</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>  \
+         <span class="mi">2</span><span class="p">,</span>    <span class="mf">0.5</span><span class="p">,</span> \
+         <span class="mf">2.5</span><span class="p">,</span>  <span class="o">-</span><span class="mi">1</span>
+
+  <span class="c1">; the same expressed as a table (notice that we need to scale and</span>
+  <span class="c1">; limit kx). It gets even more complicated with breakpoints with</span>
+  <span class="c1">; negative x</span>
+  i<span class="n">tab</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">27</span><span class="p">,</span>  \
+         <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>    <span class="err">\</span>  
+       <span class="mi">101</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>   \
+       <span class="mi">200</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span>  \
+       <span class="mi">250</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>   \
+      <span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+
+  k<span class="n">y2</span> <span class="nb">tablei</span> <span class="nb">limit</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> i<span class="n">tab</span>
+
+  <span class="nb">printks</span> <span class="s">"kx: %f   ky: %f   ky2: %f </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="vg">kr</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> k<span class="n">y2</span>
+
+<span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm1564587760"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="scale.html" title="scale"><em class="citetitle">scale</em></a>, 
+	  <a class="link" href="ntrpol.html" title="ntrpol"><em class="citetitle">ntrpol</em></a>, 
+	  <a class="link" href="xyscale.html" title="xyscale"><em class="citetitle">xyscale</em></a>, 
+	  <a class="link" href="linlin.html" title="linlin"><em class="citetitle">linlin</em></a>
+	  
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm1564594672"></a>
+        <h2>Credits</h2>
+        <p>By: Eduardo Moguillansky 2017</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="birnd.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="bqrez.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">birnd </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> bqrez</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

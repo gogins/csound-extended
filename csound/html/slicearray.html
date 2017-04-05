@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>slicearray</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="sleighbells.html" title="sleighbells" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp138337920"></a>
+        <a id="idm1506542192"></a>
         <h2>Description</h2>
         <p>
       Take a slice of a vector (one-dimensional k-rate array).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp138379104"></a>
+        <a id="idm1506541552"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">karray <span class="command"><strong>slicearray</strong></span> kinarray, istart, iend</pre>
       </div>
       <div class="refsect1">
-        <a id="idp138381312"></a>
+        <a id="idm1506543472"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istart</em></span> -- index of the first part of the answer.
@@ -60,78 +61,77 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp138383840"></a>
+        <a id="idm1506540784"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the slicearray opcode. It uses the file <a class="ulink" href="examples/slicearray.csd" target="_top"><em class="citetitle">slicearray.csd</em></a>.
+      Here is an example of the slicearray opcode. It uses the file <a class="ulink" href="examples/slicearray.csd.html" target="_top"><em class="citetitle">slicearray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp138385696"></a>
+          <a id="idm1506794224"></a>
           <p class="title">
-            <strong>Example 855. Example of the slicearray opcode.</strong>
+            <strong>Example 881. Example of the slicearray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp264289840"></a>
-              <a class="ulink" href="examples/slicearray.csd.html" target="_top">Play</a>
+              <a id="idm1326181232"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
 -n
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="comment">;create and fill an array</span>
-kArr[]  <span class="opc">genarray_i</span> 1, 9
+<span class="c1">;create and fill an array</span>
+k<span class="n">Arr</span><span class="p">[]</span>  <span class="nb">genarray_i</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span>
 
-<span class="comment">;print the content</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "kArr <span class="op">=</span> whole array\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArr) do
-        <span class="opc">printf</span>  "kArr[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArr[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
+<span class="c1">;print the content</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"kArr = whole array</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Arr</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">Arr</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;build new arrays for the slices</span>
-kArr1[] <span class="opc">init</span>    5
-kArr2[] <span class="opc">init</span>    4
+<span class="c1">;build new arrays for the slices</span>
+k<span class="n">Arr1</span><span class="p">[]</span> <span class="nb">init</span>    <span class="mi">5</span>
+k<span class="n">Arr2</span><span class="p">[]</span> <span class="nb">init</span>    <span class="mi">4</span>
 
-<span class="comment">;put in first five and last four elements</span>
-kArr1   <span class="opc">slicearray</span> kArr, 0, 4
-kArr2   <span class="opc">slicearray</span> kArr, 5, 8
+<span class="c1">;put in first five and last four elements</span>
+k<span class="n">Arr1</span>   <span class="nb">slicearray</span> k<span class="n">Arr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span>
+k<span class="n">Arr2</span>   <span class="nb">slicearray</span> k<span class="n">Arr</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span>
 
-<span class="comment">;print the content</span>
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nkArr1 <span class="op">=</span> slice from index 0 to index 4\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArr1) do
-        <span class="opc">printf</span>  "kArr1[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArr1[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
-        <span class="opc">printf</span>  "<span class="op">%</span>s", 1, "\nkArr2 <span class="op">=</span> slice from index 5 to index 8\n"
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArr2) do
-        <span class="opc">printf</span>  "kArr2[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArr2[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
+<span class="c1">;print the content</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">kArr1 = slice from index 0 to index 4</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Arr1</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArr1[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">Arr1</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">kArr2 = slice from index 5 to index 8</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Arr2</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArr2[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">Arr2</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
 
-        <span class="opc">turnoff</span>
-<span class="oblock">endin</span>
+        <span class="nb">turnoff</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -140,14 +140,14 @@ kndx    <span class="op">+</span><span class="op">=</span>      1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp138389984"></a>
+        <a id="idm1506473328"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp138392032"></a>
+        <a id="idm1506478064"></a>
         <h2>Credits</h2>
         <p>
       </p>

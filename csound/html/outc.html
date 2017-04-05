@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>outc</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="out.html" title="out" />
@@ -38,75 +39,74 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120508112"></a>
+        <a id="idm1524695664"></a>
         <h2>Description</h2>
         <p>
       Writes audio data with an arbitrary number of channels to an external device or stream.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120582368"></a>
+        <a id="idm1524694384"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outc</strong></span> asig1 [, asig2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp120584384"></a>
+        <a id="idm1524682224"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>outc</em></span> outputs as many channels as provided.  Any channels greater than <a class="link" href="nchnls.html" title="nchnls"><em class="citetitle">nchnls</em></a> are ignored. Zeros are added as necessary
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120586976"></a>
+        <a id="idm1524687216"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the outc opcode. It uses the file <a class="ulink" href="examples/outc.csd" target="_top"><em class="citetitle">outc.csd</em></a>.
+      Here is an example of the outc opcode. It uses the file <a class="ulink" href="examples/outc.csd.html" target="_top"><em class="citetitle">outc.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp120588832"></a>
+          <a id="idm1524681968"></a>
           <p class="title">
-            <strong>Example 599. Example of the outc opcode.</strong>
+            <strong>Example 618. Example of the outc opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255952944"></a>
-              <a class="ulink" href="examples/outc.csd.html" target="_top">Play</a>
+              <a id="idm1348362736"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outc.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outc.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 5
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">vco2</span> .05, 30	<span class="comment">; sawtooth waveform at low volume</span>
+a<span class="n">sig</span> <span class="nb">vco2</span> <span class="mf">.05</span><span class="p">,</span> <span class="mi">30</span>	<span class="c1">; sawtooth waveform at low volume</span>
 
-kcut <span class="opc">line</span> 100, p3, 30	<span class="comment">; Vary cutoff frequency</span>
-kresonance <span class="op">=</span> 7
-inumlayer <span class="op">=</span> 2
-asig <span class="opc">lowresx</span> asig, kcut, kresonance, inumlayer
-<span class="comment">; output same sound to 5 channels</span>
-     <span class="opc">outc</span> asig,asig,asig,asig,asig	
+k<span class="n">cut</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span>	<span class="c1">; Vary cutoff frequency</span>
+k<span class="n">resonance</span> <span class="o">=</span> <span class="mi">7</span>
+i<span class="n">numlayer</span> <span class="o">=</span> <span class="mi">2</span>
+a<span class="n">sig</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut</span><span class="p">,</span> k<span class="n">resonance</span><span class="p">,</span> i<span class="n">numlayer</span>
+<span class="c1">; output same sound to 5 channels</span>
+     <span class="nb">outc</span> a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span>	
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 30
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -115,7 +115,7 @@ asig <span class="opc">lowresx</span> asig, kcut, kresonance, inumlayer
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120593120"></a>
+        <a id="idm1524687088"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="out32.html" title="out32"><em class="citetitle">out32</em></a>,
@@ -125,7 +125,7 @@ asig <span class="opc">lowresx</span> asig, kcut, kresonance, inumlayer
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120598048"></a>
+        <a id="idm1524672880"></a>
         <h2>Credits</h2>
         <p>
       </p>

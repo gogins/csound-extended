@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ftcps</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ftconv.html" title="ftconv" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp101345504"></a>
+        <a id="idm1545010416"></a>
         <h2>Description</h2>
         <p>
       Returns the base frequency of a stored function table in Hz..
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101412816"></a>
+        <a id="idm1545010544"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftcps</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101414880"></a>
+        <a id="idm1545012592"></a>
         <h2>Performance</h2>
         <p>
       Returns the base frequency of stored function table, number <span class="emphasis"><em>x</em></span>.  <span class="emphasis"><em>ftcps</em></span> is designed for tables storing audio waveforms read from files (see <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a>). 
@@ -60,65 +61,68 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101418992"></a>
+        <a id="idm1545008240"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftcps opcode. 
       </p>
         <div class="example">
-          <a id="idp101420048"></a>
+          <a id="idm1545001200"></a>
           <p class="title">
-            <strong>Example 346. Example of the ftcps opcode.</strong>
+            <strong>Example 349. Example of the ftcps opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
-            <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ftlen.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+            <div class="refsect1">
+              <a id="idm1375769584"></a>
+              <pre class="programlisting">
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ftlen.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Print out the base frequency of Table #1.</span>
-  <span class="comment">; if it has been set in the original file.</span>
-  icps <span class="op">=</span> <span class="opc">ftcps</span>(1)
-  <span class="opc">print</span> icps
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1: Use an audio file, Csound will determine its base frequency, if set.</span>
-<span class="stamnt">f</span> 1 0 0 1 "sample.wav" 0 0 0
-
-<span class="comment">; Play Instrument #1 for 1 second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Print out the base frequency of Table #1.</span>
+  <span class="c1">; if it has been set in the original file.</span>
+  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">ftcps</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="nb">print</span> i<span class="n">cps</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1: Use an audio file, Csound will determine its base frequency, if set.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"sample.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+
+<span class="c1">; Play Instrument #1 for 1 second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
+            </div>
           </div>
         </div>
         <p><br class="example-break" />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101424336"></a>
+        <a id="idm1545000304"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftchnls.html" title="ftchnls"><em class="citetitle">ftchnls</em></a>, 
@@ -128,7 +132,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101429328"></a>
+        <a id="idm1545005808"></a>
         <h2>Credits</h2>
         <p>
       </p>

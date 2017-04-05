@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>lphasor</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="lpfreson.html" title="lpfreson" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp111352480"></a>
+        <a id="idm1533982704"></a>
         <h2>Description</h2>
         <p>
       This opcode can be used to generate table index for sample playback (e.g. <a class="link" href="tablexkt.html" title="tablexkt">tablexkt</a>).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111354624"></a>
+        <a id="idm1533987312"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>lphasor</strong></span> xtrns [, ilps] [, ilpe] [, imode] [, istrt] [, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp111356896"></a>
+        <a id="idm1533981808"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ilps</em></span> -- loop start.
@@ -87,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111369552"></a>
+        <a id="idm1533977968"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- a raw table index in samples (same unit for loop points). Can be used as index with the table opcodes.
@@ -97,64 +98,66 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111373040"></a>
+        <a id="idm1533969776"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the lphasor opcode. It uses the file <a class="ulink" href="examples/lphasor.csd" target="_top"><em class="citetitle">lphasor.csd</em></a>.
+      Here is an example of the lphasor opcode. It uses the file <a class="ulink" href="examples/lphasor.csd.html" target="_top"><em class="citetitle">lphasor.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp111374896"></a>
+          <a id="idm1533972720"></a>
           <p class="title">
-            <strong>Example 472. Example of the lphasor opcode.</strong>
+            <strong>Example 487. Example of the lphasor opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp250342112"></a>
-              <a class="ulink" href="examples/lphasor.csd.html" target="_top">Play</a>
+              <a id="idm1361474416"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o lphashor.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">; Example by Jonathan Murphy Dec 2006</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o lphashor.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-  <span class="ohdr">sr</span>	    <span class="op">=</span>  44100
-  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  10
-  <span class="ohdr">nchnls</span>    <span class="op">=</span>  1
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">; Example by Jonathan Murphy Dec 2006</span>
 
-    <span class="oblock">instr</span> 1
+  <span class="vg">sr</span>	    <span class="o">=</span>  <span class="mi">44100</span>
+  <span class="vg">ksmps</span>	    <span class="o">=</span>  <span class="mi">10</span>
+  <span class="vg">nchnls</span>    <span class="o">=</span>  <span class="mi">1</span>
 
-  ifn	    <span class="op">=</span>  1   <span class="comment">; table number</span>
-  ilen	    <span class="op">=</span>  <span class="opc">nsamp</span>(ifn)    <span class="comment">; return actual number of samples in table</span>
-  itrns	    <span class="op">=</span>  1   <span class="comment">; no transposition</span>
-  ilps	    <span class="op">=</span>  0   <span class="comment">; loop starts at index 0</span>
-  ilpe	    <span class="op">=</span>  ilen <span class="comment">; ends at value returned by nsamp above</span>
-  imode	    <span class="op">=</span>  3    <span class="comment">; loop forwards &amp; backwards</span>
-  istrt	    <span class="op">=</span>  10000  <span class="comment">; commence playback at index 10000 samples</span>
-  <span class="comment">; lphasor provides index into f1 </span>
-  alphs	    <span class="opc">lphasor</span>   itrns, ilps, ilpe, imode, istrt
-  atab	    <span class="opc">tablei</span>    alphs, ifn
-	    <span class="comment">; amplify signal</span>
-  atab	    <span class="op">=</span>  atab <span class="op">*</span> 10000
+    <span class="kd">instr</span> <span class="nf">1</span>
 
-	    <span class="opc">out</span>	      atab
+  i<span class="n">fn</span>	    <span class="o">=</span>  <span class="mi">1</span>   <span class="c1">; table number</span>
+  i<span class="n">len</span>	    <span class="o">=</span>  <span class="nb">nsamp</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span>    <span class="c1">; return actual number of samples in table</span>
+  i<span class="n">trns</span>	    <span class="o">=</span>  <span class="mi">1</span>   <span class="c1">; no transposition</span>
+  i<span class="n">lps</span>	    <span class="o">=</span>  <span class="mi">0</span>   <span class="c1">; loop starts at index 0</span>
+  i<span class="n">lpe</span>	    <span class="o">=</span>  i<span class="n">len</span> <span class="c1">; ends at value returned by nsamp above</span>
+  i<span class="n">mode</span>	    <span class="o">=</span>  <span class="mi">3</span>    <span class="c1">; loop forwards &amp; backwards</span>
+  i<span class="n">strt</span>	    <span class="o">=</span>  <span class="mi">10000</span>  <span class="c1">; commence playback at index 10000 samples</span>
+  <span class="c1">; lphasor provides index into f1 </span>
+  a<span class="n">lphs</span>	    <span class="nb">lphasor</span>   i<span class="n">trns</span><span class="p">,</span> i<span class="n">lps</span><span class="p">,</span> i<span class="n">lpe</span><span class="p">,</span> i<span class="n">mode</span><span class="p">,</span> i<span class="n">strt</span>
+  a<span class="n">tab</span>	    <span class="nb">tablei</span>    a<span class="n">lphs</span><span class="p">,</span> i<span class="n">fn</span>
+	    <span class="c1">; amplify signal</span>
+  a<span class="n">tab</span>	    <span class="o">=</span>  a<span class="n">tab</span> <span class="o">*</span> <span class="mi">10000</span>
 
-    <span class="oblock">endin</span>
+	    <span class="nb">out</span>	      a<span class="n">tab</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 262144 1 "beats.wav" 0 4 1
-<span class="stamnt">i</span>1 0 60
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+    <span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">262144</span> <span class="mi">1</span> <span class="s">"beats.wav"</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -163,7 +166,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111379216"></a>
+        <a id="idm1533971312"></a>
         <h2>Credits</h2>
         <p>
       </p>

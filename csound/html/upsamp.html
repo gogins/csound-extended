@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>upsamp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="unwrap.html" title="unwrap" />
@@ -38,107 +39,106 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151006320"></a>
+        <a id="idm1493309936"></a>
         <h2>Description</h2>
         <p>
       Modify a signal by up-sampling.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151007568"></a>
+        <a id="idm1493308272"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>upsamp</strong></span> ksig</pre>
       </div>
       <div class="refsect1">
-        <a id="idp151009776"></a>
+        <a id="idm1493304304"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>upsamp</em></span> converts a control signal to an audio signal. It does it by simple repetition of the kval. <span class="emphasis"><em>upsamp</em></span> is a slightly more efficient form of the assignment, <span class="emphasis"><em>asig</em></span> = <span class="emphasis"><em>ksig</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151077296"></a>
+        <a id="idm1493295344"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the upsamp opcode. It uses the file <a class="ulink" href="examples/upsamp.csd" target="_top"><em class="citetitle">upsamp.csd</em></a>.
+      Here is an example of the upsamp opcode. It uses the file <a class="ulink" href="examples/upsamp.csd.html" target="_top"><em class="citetitle">upsamp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp151079072"></a>
+          <a id="idm1493300592"></a>
           <p class="title">
-            <strong>Example 990. Example of the upsamp opcode.</strong>
+            <strong>Example 1016. Example of the upsamp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp269971088"></a>
-              <a class="ulink" href="examples/upsamp.csd.html" target="_top">Play</a>
+              <a id="idm1312697584"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o upsamp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;;with code from Steven Cook / David Akbari, Menno Knevel and Joachim Heintz</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o upsamp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;;with code from Steven Cook / David Akbari, Menno Knevel and Joachim Heintz</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="ohdr">seed</span>      0
+<span class="nb">seed</span>      <span class="mi">0</span>
 
-  <span class="oblock">opcode</span> Decimator, a, akk	<span class="comment">;UDO Sample rate / Bit depth reducer</span>
-  <span class="comment">;see http://www.csounds.com/udo/displayOpcode.php?opcode_id=73</span>
-         <span class="opc">setksmps</span>   1
-ain, kbit, ksrate <span class="opc">xin</span>
+  <span class="kd">opcode</span> <span class="nf">Decimator</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">akk</span>	<span class="c1">;UDO Sample rate / Bit depth reducer</span>
+  <span class="c1">;see http://www.csounds.com/udo/displayOpcode.php?opcode_id=73</span>
+         <span class="nb">setksmps</span>   <span class="mi">1</span>
+a<span class="n">in</span><span class="p">,</span> k<span class="n">bit</span><span class="p">,</span> k<span class="n">srate</span> <span class="nb">xin</span>
 
-kbits    <span class="op">=</span>        2^kbit                <span class="comment">;bit depth (1 to 16)</span>
-kfold    <span class="op">=</span>        (<span class="ohdr">sr</span><span class="op">/</span>ksrate)           <span class="comment">;sample rate</span>
-kin      <span class="opc">downsamp</span> ain                   <span class="comment">;convert to kr</span>
-kin      <span class="op">=</span>        (kin<span class="op">+</span>0dbfs)           <span class="comment">;add DC to avoid (-)</span>
-kin      <span class="op">=</span>        kin<span class="op">*</span>(kbits<span class="op">/</span>(<span class="ohdr">0dbfs</span><span class="op">*</span>2)) <span class="comment">;scale signal level</span>
-kin      <span class="op">=</span>        <span class="opc">int</span>(kin)              <span class="comment">;quantise</span>
-aout     <span class="opc">upsamp</span>   kin                   <span class="comment">;convert to sr</span>
-aout     <span class="op">=</span>        aout<span class="op">*</span>(2<span class="op">/</span>kbits)<span class="op">-</span><span class="ohdr">0dbfs</span>  <span class="comment">;rescale and remove DC</span>
-a0ut     <span class="opc">fold</span>     aout, kfold           <span class="comment">;resample</span>
-         <span class="opc">xout</span>     a0ut
-  <span class="oblock">endop</span>
+k<span class="n">bits</span>    <span class="o">=</span>        <span class="mi">2</span><span class="o">^</span>k<span class="n">bit</span>                <span class="c1">;bit depth (1 to 16)</span>
+k<span class="n">fold</span>    <span class="o">=</span>        <span class="p">(</span><span class="vg">sr</span><span class="o">/</span>k<span class="n">srate</span><span class="p">)</span>           <span class="c1">;sample rate</span>
+k<span class="n">in</span>      <span class="nb">downsamp</span> a<span class="n">in</span>                   <span class="c1">;convert to kr</span>
+k<span class="n">in</span>      <span class="o">=</span>        <span class="p">(</span>k<span class="n">in</span><span class="o">+</span><span class="vg">0dbfs</span><span class="p">)</span>           <span class="c1">;add DC to avoid (-)</span>
+k<span class="n">in</span>      <span class="o">=</span>        k<span class="n">in</span><span class="o">*</span><span class="p">(</span>k<span class="n">bits</span><span class="o">/</span><span class="p">(</span><span class="vg">0dbfs</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="c1">;scale signal level</span>
+k<span class="n">in</span>      <span class="o">=</span>        <span class="nb">int</span><span class="p">(</span>k<span class="n">in</span><span class="p">)</span>              <span class="c1">;quantise</span>
+a<span class="n">out</span>     <span class="nb">upsamp</span>   k<span class="n">in</span>                   <span class="c1">;convert to sr</span>
+a<span class="n">out</span>     <span class="o">=</span>        a<span class="n">out</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span>k<span class="n">bits</span><span class="p">)</span><span class="o">-</span><span class="vg">0dbfs</span>  <span class="c1">;rescale and remove DC</span>
+a<span class="n">0ut</span>     <span class="nb">fold</span>     a<span class="n">out</span><span class="p">,</span> k<span class="n">fold</span>           <span class="c1">;resample</span>
+         <span class="nb">xout</span>     a<span class="n">0ut</span>
+  <span class="kd">endop</span>
 	
 		
-<span class="oblock">instr</span> 1	<span class="comment">;avoid playing this too loud</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;avoid playing this too loud</span>
 
-kbit     <span class="op">=</span>        p4
-ksr      <span class="op">=</span>        44100
-asig     <span class="opc">diskin</span>   "fox.wav", 1
-aout     Decimator asig, kbit, ksr
-         <span class="opc">printks</span>  "bitrate <span class="op">=</span> <span class="op">%</span>d, ", 3, kbit
-         <span class="opc">printks</span>  "with samplerate <span class="op">=</span> <span class="op">%</span>d\\n", 3, ksr
-         <span class="opc">outs</span>     aout<span class="op">*</span>.7, aout<span class="op">*</span>.7
-<span class="oblock">endin</span>
+k<span class="n">bit</span>     <span class="o">=</span>        <span class="nb">p4</span>
+k<span class="n">sr</span>      <span class="o">=</span>        <span class="mi">44100</span>
+a<span class="n">sig</span>     <span class="nb">diskin</span>   <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">out</span>     <span class="nf">Decimator</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">bit</span><span class="p">,</span> k<span class="n">sr</span>
+         <span class="nb">printks</span>  <span class="s">"bitrate = </span><span class="si">%d</span><span class="s">, "</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">bit</span>
+         <span class="nb">printks</span>  <span class="s">"with samplerate = </span><span class="si">%d</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">sr</span>
+         <span class="nb">outs</span>     a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span>
+<span class="kd">endin</span>
 
 
-<span class="oblock">instr</span> 2	<span class="comment">;moving randomly between different bit values (1 - 6)</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;moving randomly between different bit values (1 - 6)</span>
 
-kbit     <span class="opc">randomi</span>  1, 6, .5, 1
-asig     <span class="opc">diskin</span>   "fox.wav", 1, 0, 1 <span class="comment">;loop play</span>
-aout     Decimator asig, kbit, 44100
-         <span class="opc">printks</span>  "bitrate <span class="op">=</span> <span class="op">%</span>f\n", .3, kbit
-         <span class="opc">outs</span>     aout<span class="op">*</span>.7, aout<span class="op">*</span>.7
+k<span class="n">bit</span>     <span class="nb">randomi</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig</span>     <span class="nb">diskin</span>   <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;loop play</span>
+a<span class="n">out</span>     <span class="nf">Decimator</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">bit</span><span class="p">,</span> <span class="mi">44100</span>
+         <span class="nb">printks</span>  <span class="s">"bitrate = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> k<span class="n">bit</span>
+         <span class="nb">outs</span>     a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0	3 16		<span class="comment">;sounds allright but</span>
-<span class="stamnt">i</span> 1 +	3 5		<span class="comment">;it's getting worse</span>
-<span class="stamnt">i</span> 1 +	3 2		<span class="comment">;and worse...</span>
-<span class="stamnt">i</span> 2 9  22		<span class="comment">;or quality moves randomly</span>
-<span class="stamnt">e</span>	
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span>	<span class="mi">3</span> <span class="mi">16</span>		<span class="c1">;sounds allright but</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span>	<span class="mi">3</span> <span class="mi">5</span>		<span class="c1">;it's getting worse</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span>	<span class="mi">3</span> <span class="mi">2</span>		<span class="c1">;and worse...</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">9</span>  <span class="mi">22</span>		<span class="c1">;or quality moves randomly</span>
+<span class="nb">e</span>	
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -147,7 +147,7 @@ aout     Decimator asig, kbit, 44100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp151080992"></a>
+        <a id="idm1493298928"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diff.html" title="diff"><em class="citetitle">diff</em></a>,

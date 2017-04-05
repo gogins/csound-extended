@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>evalstr</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="eqfil.html" title="eqfil" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91043024"></a>
+        <a id="idm1555111936"></a>
         <h2>Description</h2>
         <p>
       Evalstr compiles and runs Csound code and returns a value from the global space (instr 0). This opcode can be
@@ -46,35 +47,35 @@ also used to compile new instruments (as compilestr).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91044368"></a>
+        <a id="idm1555107712"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ires <span class="command"><strong>evalstr</strong></span> Scode </pre>
         <pre class="synopsis">kres <span class="command"><strong>evalstr</strong></span> Scode, ktrig </pre>
       </div>
       <div class="refsect1">
-        <a id="idp91047952"></a>
+        <a id="idm1555360384"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">Scode</span>”</span></em></span> --  a string to be compiled and evaluated.
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp91049792"></a>
+        <a id="idm1555363712"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">ktrig</span>”</span></em></span> -- triggers the compilation/evaluation if non-zero.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91051520"></a>
+        <a id="idm1555363840"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the evalstr opcode in conjunction with return:
       </p>
         <div class="example">
-          <a id="idp91052544"></a>
+          <a id="idm1555366528"></a>
           <p class="title">
-            <strong>Example 240. </strong>
+            <strong>Example 242. </strong>
           </p>
           <div class="example-contents">
             <p>   
@@ -91,7 +92,7 @@ ival <span class="op">evalstr</span> "return 2 + 2"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp91055680"></a>
+        <a id="idm1555358208"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini, 2013 </p>
       </div>

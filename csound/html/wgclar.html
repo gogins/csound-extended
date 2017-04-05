@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>wgclar</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="wgbrass.html" title="wgbrass" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp158716192"></a>
+        <a id="idm1485884784"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone similar to a clarinet, using a physical model developed from Perry Cook, but re-coded for Csound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158717808"></a>
+        <a id="idm1485889008"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>wgclar</strong></span> kamp, kfreq, kstiff, \
     iatt, idetk, kngain, kvibf, kvamp [, ifn] [, iminfreq]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp158788144"></a>
+        <a id="idm1485881456"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iatt</em></span> -- time in seconds to reach full blowing pressure. 0.1 seems to correspond to reasonable playing. A longer time gives a definite initial wind sound.
@@ -68,7 +69,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158794016"></a>
+        <a id="idm1485880304"></a>
         <h2>Performance</h2>
         <p>
       A note is played on a clarinet-like instrument, with the arguments as below.
@@ -93,62 +94,61 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158801200"></a>
+        <a id="idm1485869296"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the wgclar opcode. It uses the file <a class="ulink" href="examples/wgclar.csd" target="_top"><em class="citetitle">wgclar.csd</em></a>.
+      Here is an example of the wgclar opcode. It uses the file <a class="ulink" href="examples/wgclar.csd.html" target="_top"><em class="citetitle">wgclar.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp158802976"></a>
+          <a id="idm1485868400"></a>
           <p class="title">
-            <strong>Example 1075. Example of the wgclar opcode.</strong>
+            <strong>Example 1101. Example of the wgclar opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp273404560"></a>
-              <a class="ulink" href="examples/wgclar.csd.html" target="_top">Play</a>
+              <a id="idm1303921008"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o wgclar.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o wgclar.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kfreq <span class="op">=</span> 330
-kstiff <span class="op">=</span> <span class="op">-</span>0.3
-iatt <span class="op">=</span> 0.1
-idetk <span class="op">=</span> 0.1
-kngain <span class="opc">init</span> p4		<span class="comment">;vary breath</span>
-kvibf <span class="op">=</span> 5.735
-kvamp <span class="op">=</span> 0.1
+k<span class="n">freq</span> <span class="o">=</span> <span class="mi">330</span>
+k<span class="n">stiff</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span>
+i<span class="n">att</span> <span class="o">=</span> <span class="mf">0.1</span>
+i<span class="n">detk</span> <span class="o">=</span> <span class="mf">0.1</span>
+k<span class="n">ngain</span> <span class="nb">init</span> <span class="nb">p4</span>		<span class="c1">;vary breath</span>
+k<span class="n">vibf</span> <span class="o">=</span> <span class="mf">5.735</span>
+k<span class="n">vamp</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-asig <span class="opc">wgclar</span> .9, kfreq, kstiff, iatt, idetk, kngain, kvibf, kvamp, 1
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">wgclar</span> <span class="mf">.9</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">stiff</span><span class="p">,</span> i<span class="n">att</span><span class="p">,</span> i<span class="n">detk</span><span class="p">,</span> k<span class="n">ngain</span><span class="p">,</span> k<span class="n">vibf</span><span class="p">,</span> k<span class="n">vamp</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
       
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 10 1	<span class="comment">;sine wave</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave</span>
 
-<span class="stamnt">i</span> 1 0 2 0.2
-<span class="stamnt">i</span> 1 + 2 0.5		<span class="comment">;more breath</span>
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">0.2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">0.5</span>		<span class="c1">;more breath</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -157,7 +157,7 @@ asig <span class="opc">wgclar</span> .9, kfreq, kstiff, iatt, idetk, kngain, kvi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158807296"></a>
+        <a id="idm1485864560"></a>
         <h2>Credits</h2>
         <p>
       </p>

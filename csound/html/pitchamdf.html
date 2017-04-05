@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pitchamdf</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pitch.html" title="pitch" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp125093472"></a>
+        <a id="idm1520178672"></a>
         <h2>Description</h2>
         <p>
       Follows the pitch of a signal based on the AMDF method (Average Magnitude Difference Function). Outputs pitch and amplitude tracking signals. The method is quite fast and should run in realtime. This technique usually works best for monophonic signals.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125135232"></a>
+        <a id="idm1520179696"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kcps, krms <span class="command"><strong>pitchamdf</strong></span> asig, imincps, imaxcps [, icps] [, imedi] \
       [, idowns] [, iexcps] [, irmsmedi]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp125137632"></a>
+        <a id="idm1520173680"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imincps</em></span> -- estimated minimum frequency (expressed in Hz) present in the signal
@@ -76,7 +77,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125150144"></a>
+        <a id="idm1520157680"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kcps</em></span> -- pitch tracking output
@@ -98,66 +99,65 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125158928"></a>
+        <a id="idm1520153712"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pitchamdf opcode. It uses the file <a class="ulink" href="examples/pitchamdf.csd" target="_top"><em class="citetitle">pitchamdf.csd</em></a>.
+      Here is an example of the pitchamdf opcode. It uses the file <a class="ulink" href="examples/pitchamdf.csd.html" target="_top"><em class="citetitle">pitchamdf.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp125160784"></a>
+          <a id="idm1520151280"></a>
           <p class="title">
-            <strong>Example 659. Example of the pitchamdf opcode.</strong>
+            <strong>Example 679. Example of the pitchamdf opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp257736512"></a>
-              <a class="ulink" href="examples/pitchamdf.csd.html" target="_top">Play</a>
+              <a id="idm1343311344"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if real audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pitchamdf.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if real audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pitchamdf.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">;clean audio</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;clean audio</span>
 
-asig <span class="opc">soundin</span> p4
-     <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span> <span class="nb">soundin</span> <span class="nb">p4</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">;use pitch</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;use pitch</span>
 
-asig <span class="opc">soundin</span> p4
-asig <span class="opc">tone</span> asig, 1000		<span class="comment">;lowpass-filter</span>
-kcps, krms <span class="opc">pitchamdf</span> asig, 100, 500, 200
-asig <span class="opc">poscil</span> krms, kcps, 1	<span class="comment">;re-synthesize with sawtooth</span>
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">soundin</span> <span class="nb">p4</span>
+a<span class="n">sig</span> <span class="nb">tone</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">1000</span>		<span class="c1">;lowpass-filter</span>
+k<span class="n">cps</span><span class="p">,</span> k<span class="n">rms</span> <span class="nb">pitchamdf</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span>
+a<span class="n">sig</span> <span class="nb">poscil</span> k<span class="n">rms</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;re-synthesize with sawtooth</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   <span class="comment">;sawtooth</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mf">0.5</span> <span class="mf">0.3</span> <span class="mf">0.25</span> <span class="mf">0.2</span> <span class="mf">0.167</span> <span class="mf">0.14</span> <span class="mf">0.125</span> <span class="mf">.111</span>   <span class="c1">;sawtooth</span>
 
-<span class="stamnt">i</span> 1 0  3 "fox.wav"
-<span class="stamnt">i</span> 2 3  3 "fox.wav"
-<span class="stamnt">i</span> 1 6  3 "mary.wav"
-<span class="stamnt">i</span> 2 9  3 "mary.wav"
-<span class="stamnt">i</span> 1 12 3 "beats.wav"
-<span class="stamnt">i</span> 2 15 3 "beats.wav"
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span>  <span class="mi">3</span> <span class="s">"fox.wav"</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">3</span>  <span class="mi">3</span> <span class="s">"fox.wav"</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">6</span>  <span class="mi">3</span> <span class="s">"mary.wav"</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">9</span>  <span class="mi">3</span> <span class="s">"mary.wav"</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">12</span> <span class="mi">3</span> <span class="s">"beats.wav"</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">15</span> <span class="mi">3</span> <span class="s">"beats.wav"</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -166,7 +166,7 @@ asig <span class="opc">poscil</span> krms, kcps, 1	<span class="comment">;re-syn
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125165104"></a>
+        <a id="idm1520154352"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>plltrack</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="platerev.html" title="platerev" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125272336"></a>
+        <a id="idm1520015088"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>plltrack</em></span>, a pitch tracker based on a phase-locked loop algorithm, described in Zolzer, U, Sankarababu, S.V. and Moller, S, "PLL-based Pitch Detection and Tracking for Audio Signals. Proc. of IIH-MSP 2012".
       </p>
       </div>
       <div class="refsect1">
-        <a id="idp125274400"></a>
+        <a id="idm1520014832"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">acps, alock <span class="command"><strong>plltrack</strong></span> asig, kd [, kloopf, kloopq, klf, khf, kthresh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp125276672"></a>
+        <a id="idm1520010224"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>acps</em></span> -- estimated pitch in Hz.
@@ -83,58 +84,57 @@ indicate good tracking
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125346160"></a>
+        <a id="idm1520003312"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the plltrack operator. It uses the file <a class="ulink" href="examples/plltrack.csd" target="_top"><em class="citetitle">plltrack.csd</em></a>.
+      Here is an example of the plltrack operator. It uses the file <a class="ulink" href="examples/plltrack.csd.html" target="_top"><em class="citetitle">plltrack.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp125347936"></a>
+          <a id="idm1520004592"></a>
           <p class="title">
-            <strong>Example 662. Example of the plltrack operator.</strong>
+            <strong>Example 682. Example of the plltrack operator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp258585856"></a>
-              <a class="ulink" href="examples/plltrack.csd.html" target="_top">Play</a>
+              <a id="idm1341969904"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o plltrack.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o plltrack.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kd <span class="op">=</span> p4
-a1 <span class="opc">diskin2</span> "fox.wav", 1,0,1
-apitch, aloc <span class="opc">plltrack</span> a1, kd
-krms <span class="opc">rms</span> a1
-krms <span class="opc">port</span> krms, 0.01
-asig <span class="opc">buzz</span> krms, apitch, 10, 1
-     <span class="opc">outs</span> asig, asig		<span class="comment">;mix in some dry signal as well</span>
+k<span class="n">d</span> <span class="o">=</span> <span class="nb">p4</span>
+a<span class="n">1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span>
+a<span class="n">pitch</span><span class="p">,</span> a<span class="n">loc</span> <span class="nb">plltrack</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">d</span>
+k<span class="n">rms</span> <span class="nb">rms</span> a<span class="n">1</span>
+k<span class="n">rms</span> <span class="nb">port</span> k<span class="n">rms</span><span class="p">,</span> <span class="mf">0.01</span>
+a<span class="n">sig</span> <span class="nb">buzz</span> k<span class="n">rms</span><span class="p">,</span> a<span class="n">pitch</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>		<span class="c1">;mix in some dry signal as well</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 65536 10 1	<span class="comment">;sine wave</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">65536</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave</span>
 
-<span class="stamnt">i</span> 1 0 6 0.1
-<span class="stamnt">i</span> 1 7 6 0.3	<span class="comment">;more feedback</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mf">0.1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">7</span> <span class="mi">6</span> <span class="mf">0.3</span>	<span class="c1">;more feedback</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -143,7 +143,7 @@ asig <span class="opc">buzz</span> krms, apitch, 10, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125352224"></a>
+        <a id="idm1520001264"></a>
         <h2>Credits</h2>
         <p>
       </p>

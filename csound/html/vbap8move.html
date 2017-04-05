@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vbap8move</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vbap8.html" title="vbap8" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp152661664"></a>
+        <a id="idm1491915632"></a>
         <h2>Description</h2>
         <p>
       Distributes an audio signal among 8 channels with moving virtual sources.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152705856"></a>
+        <a id="idm1491910000"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1, ..., ar8 <span class="command"><strong>vbap8move</strong></span> asig, idur, ispread, ifldnum, ifld1 \
       [, ifld2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp152707968"></a>
+        <a id="idm1491902576"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idur</em></span> -- the duration over which the
@@ -72,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152714096"></a>
+        <a id="idm1491905648"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- audio signal to be panned
@@ -100,73 +101,72 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp152725600"></a>
+        <a id="idm1491899120"></a>
         <h2>Example</h2>
         <p>
-      Here is a simple example of the <span class="emphasis"><em>vbap8move</em></span> opcode. It uses the file <a class="ulink" href="examples/vbap8move.csd" target="_top"><em class="citetitle">vbap8move.csd</em></a>.
+      Here is a simple example of the <span class="emphasis"><em>vbap8move</em></span> opcode. It uses the file <a class="ulink" href="examples/vbap8move.csd.html" target="_top"><em class="citetitle">vbap8move.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp152727888"></a>
+          <a id="idm1491887856"></a>
           <p class="title">
-            <strong>Example 1009. Example of the vbap8move opcode.</strong>
+            <strong>Example 1035. Example of the vbap8move opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp270878576"></a>
-              <a class="ulink" href="examples/vbap8move.csd.html" target="_top">Play</a>
+              <a id="idm1310553328"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vbap4move.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vbap4move.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 48000
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 8
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">48000</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">8</span>
 
-<span class="comment">;Example by Hector Centeno 2007</span>
+<span class="c1">;Example by Hector Centeno 2007</span>
 
-<span class="opc">vbaplsinit</span>    2, 8, 15, 65, 115, 165, 195, 245, 295, 345
+<span class="nb">vbaplsinit</span>    <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">195</span><span class="p">,</span> <span class="mi">245</span><span class="p">,</span> <span class="mi">295</span><span class="p">,</span> <span class="mi">345</span>
 
-    <span class="oblock">instr</span> 1
-ifldnum <span class="op">=</span> 9
-ispread <span class="op">=</span> 30
-idur <span class="op">=</span> p3
+    <span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">fldnum</span> <span class="o">=</span> <span class="mi">9</span>
+i<span class="n">spread</span> <span class="o">=</span> <span class="mi">30</span>
+i<span class="n">dur</span> <span class="o">=</span> <span class="nb">p3</span>
 
-<span class="comment">;; Generate a sound source</span>
-kenv <span class="opc">loopseg</span> 10, 0, 0, 0, 0.5, 1, 10, 0
-a1 <span class="opc">pinkish</span> 3000<span class="op">*</span>kenv
+<span class="c1">;; Generate a sound source</span>
+k<span class="n">env</span> <span class="nb">loopseg</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">1</span> <span class="nb">pinkish</span> <span class="mi">3000</span><span class="o">*</span>k<span class="n">env</span>
 
-<span class="comment">;; Move circling around once all the speakers</span>
-aout1, aout2, aout3, aout4, aout5, aout6, aout7, aout8 <span class="opc">vbap8move</span> a1, idur, ispread, ifldnum, 15, 65, 115, 165, 195, 245, 295, 345, 15
+<span class="c1">;; Move circling around once all the speakers</span>
+a<span class="n">out1</span><span class="p">,</span> a<span class="n">out2</span><span class="p">,</span> a<span class="n">out3</span><span class="p">,</span> a<span class="n">out4</span><span class="p">,</span> a<span class="n">out5</span><span class="p">,</span> a<span class="n">out6</span><span class="p">,</span> a<span class="n">out7</span><span class="p">,</span> a<span class="n">out8</span> <span class="nb">vbap8move</span> a<span class="n">1</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> i<span class="n">spread</span><span class="p">,</span> i<span class="n">fldnum</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">195</span><span class="p">,</span> <span class="mi">245</span><span class="p">,</span> <span class="mi">295</span><span class="p">,</span> <span class="mi">345</span><span class="p">,</span> <span class="mi">15</span>
 
-<span class="comment">;; Speaker mapping</span>
-aFL <span class="op">=</span> aout8 <span class="comment">; Front Left</span>
-aFR <span class="op">=</span> aout1 <span class="comment">; Front Right</span>
-aMFL <span class="op">=</span> aout7 <span class="comment">; Mid Front Left</span>
-aMFR <span class="op">=</span> aout2 <span class="comment">; Mid Front Right</span>
-aMBL <span class="op">=</span> aout6 <span class="comment">; Mid Back Left</span>
-aMBR <span class="op">=</span> aout3 <span class="comment">; Mid Back Right</span>
-aBL <span class="op">=</span> aout5 <span class="comment">; Back Left</span>
-aBR <span class="op">=</span> aout4 <span class="comment">; Back Right</span>
+<span class="c1">;; Speaker mapping</span>
+a<span class="n">FL</span> <span class="o">=</span> a<span class="n">out8</span> <span class="c1">; Front Left</span>
+a<span class="n">FR</span> <span class="o">=</span> a<span class="n">out1</span> <span class="c1">; Front Right</span>
+a<span class="n">MFL</span> <span class="o">=</span> a<span class="n">out7</span> <span class="c1">; Mid Front Left</span>
+a<span class="n">MFR</span> <span class="o">=</span> a<span class="n">out2</span> <span class="c1">; Mid Front Right</span>
+a<span class="n">MBL</span> <span class="o">=</span> a<span class="n">out6</span> <span class="c1">; Mid Back Left</span>
+a<span class="n">MBR</span> <span class="o">=</span> a<span class="n">out3</span> <span class="c1">; Mid Back Right</span>
+a<span class="n">BL</span> <span class="o">=</span> a<span class="n">out5</span> <span class="c1">; Back Left</span>
+a<span class="n">BR</span> <span class="o">=</span> a<span class="n">out4</span> <span class="c1">; Back Right</span>
 
-<span class="opc">outo</span> aFL, aFR, aMFL, aMFR, aMBL, aMBR, aBL, aBR
+<span class="nb">outo</span> a<span class="n">FL</span><span class="p">,</span> a<span class="n">FR</span><span class="p">,</span> a<span class="n">MFL</span><span class="p">,</span> a<span class="n">MFR</span><span class="p">,</span> a<span class="n">MBL</span><span class="p">,</span> a<span class="n">MBR</span><span class="p">,</span> a<span class="n">BL</span><span class="p">,</span> a<span class="n">BR</span>
 
-    <span class="oblock">endin</span>
+    <span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 30
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -175,14 +175,14 @@ aBR <span class="op">=</span> aout4 <span class="comment">; Back Right</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152732176"></a>
+        <a id="idm1491889904"></a>
         <h2>Reference</h2>
         <p>
       Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152734288"></a>
+        <a id="idm1491884400"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vbap16.html" title="vbap16"><em class="citetitle">vbap16</em></a>,
@@ -196,7 +196,7 @@ aBR <span class="op">=</span> aout4 <span class="comment">; Back Right</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp152743120"></a>
+        <a id="idm1491875440"></a>
         <h2>Credits</h2>
         <p>
       </p>

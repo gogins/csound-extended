@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>abs</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="opa.html" title="a" />
@@ -38,69 +39,70 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp78464832"></a>
+        <a id="idm1567912560"></a>
         <h2>Description</h2>
         <p>
       Returns the absolute value of <span class="emphasis"><em>x</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78466432"></a>
+        <a id="idm1567550592"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>abs</strong></span>(x) (no rate restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>abs</strong></span>(x) (no rate
+    restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>abs</strong></span>(k/i[]) (k- or i-arrays )</pre>
         <p>
       where the argument within the parentheses may be an expression. Value converters perform arithmetic translation from units of one kind to units of another. The result can then be a term in a further expression.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78469376"></a>
+        <a id="idm1567552896"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the abs opcode. It uses the file <a class="ulink" href="examples/abs.csd" target="_top"><em class="citetitle">abs.csd</em></a>.
+      Here is an example of the abs opcode. It uses the file <a class="ulink" href="examples/abs.csd.html" target="_top"><em class="citetitle">abs.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp78471152"></a>
+          <a id="idm1567549440"></a>
           <p class="title">
             <strong>Example 40. Example of the abs opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp233941280"></a>
-              <a class="ulink" href="examples/abs.csd.html" target="_top">Play</a>
+              <a id="idm1407411696"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o abs.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o abs.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
-ix <span class="op">=</span> p4
-iabs <span class="op">=</span> <span class="opc">abs</span>(ix)
-<span class="opc">print</span> iabs
+<span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">x</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">abs</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span>i<span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span> i<span class="n">abs</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 1 0
-<span class="stamnt">i</span> 1 + 1 -.15
-<span class="stamnt">i</span> 1 + 1 -13
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span><span class="mf">.15</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">13</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -118,7 +120,7 @@ instr 1:  iabs = 13.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp78519504"></a>
+        <a id="idm1567544960"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="exp.html" title="exp"><em class="citetitle">exp</em></a>,

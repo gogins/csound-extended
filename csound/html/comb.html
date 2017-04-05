@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>comb</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="cngoto.html" title="cngoto" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp84453104"></a>
+        <a id="idm1561706736"></a>
         <h2>Description</h2>
         <p>
       Reverberates an input signal with a <span class="quote">“<span class="quote">colored</span>”</span> frequency response.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84454864"></a>
+        <a id="idm1561695472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>comb</strong></span> asig, krvt, ilpt [, iskip] [, insmps]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp84520096"></a>
+        <a id="idm1561697264"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ilpt</em></span> -- loop time in seconds, which
@@ -75,7 +76,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84529968"></a>
+        <a id="idm1561690480"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>krvt</em></span> -- the reverberation time (defined as the time in seconds for a signal to decay to 1/1000, or 60dB down from its original amplitude).
@@ -85,73 +86,72 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84533888"></a>
+        <a id="idm1561686640"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the comb opcode. It uses the file <a class="ulink" href="examples/comb.csd" target="_top"><em class="citetitle">comb.csd</em></a>.
+      Here is an example of the comb opcode. It uses the file <a class="ulink" href="examples/comb.csd.html" target="_top"><em class="citetitle">comb.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp84535744"></a>
+          <a id="idm1561686256"></a>
           <p class="title">
-            <strong>Example 134. Example of the comb opcode.</strong>
+            <strong>Example 136. Example of the comb opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp237586480"></a>
-              <a class="ulink" href="examples/comb.csd.html" target="_top">Play</a>
+              <a id="idm1398007280"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o comb.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o comb.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-gamix <span class="opc">init</span> 0 
+ga<span class="n">mix</span> <span class="nb">init</span> <span class="mi">0</span> 
 
-<span class="oblock">instr</span> 1 
+<span class="kd">instr</span> <span class="nf">1</span> 
 
-kcps    <span class="opc">expon</span> p5, p3, p4
-asig	<span class="opc">vco2</span>  0.3, kcps
-	<span class="opc">outs</span>  asig, asig 
+k<span class="n">cps</span>    <span class="nb">expon</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p4</span>
+a<span class="n">sig</span>	<span class="nb">vco2</span>  <span class="mf">0.3</span><span class="p">,</span> k<span class="n">cps</span>
+	<span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span> 
 
-gamix <span class="op">=</span> gamix <span class="op">+</span> asig 
+ga<span class="n">mix</span> <span class="o">=</span> ga<span class="n">mix</span> <span class="o">+</span> a<span class="n">sig</span> 
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 99 
+<span class="kd">instr</span> <span class="nf">99</span> 
 
-krvt <span class="op">=</span>  3.5
-ilpt <span class="op">=</span>  0.1
-aleft	<span class="opc">comb</span> gamix, krvt, ilpt
-aright	<span class="opc">comb</span> gamix, krvt, ilpt<span class="op">*</span>.2
-	<span class="opc">outs</span>   aleft, aright
+k<span class="n">rvt</span> <span class="o">=</span>  <span class="mf">3.5</span>
+i<span class="n">lpt</span> <span class="o">=</span>  <span class="mf">0.1</span>
+a<span class="n">left</span>	<span class="nb">comb</span> ga<span class="n">mix</span><span class="p">,</span> k<span class="n">rvt</span><span class="p">,</span> i<span class="n">lpt</span>
+a<span class="n">right</span>	<span class="nb">comb</span> ga<span class="n">mix</span><span class="p">,</span> k<span class="n">rvt</span><span class="p">,</span> i<span class="n">lpt</span><span class="o">*</span><span class="mf">.2</span>
+	<span class="nb">outs</span>   a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>
 
-<span class="opc">clear</span> gamix	<span class="comment">; clear mixer</span>
+<span class="nb">clear</span> ga<span class="n">mix</span>	<span class="c1">; clear mixer</span>
  
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 3 20 2000
-<span class="stamnt">i</span> 1 5 .01 440 440
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mi">20</span> <span class="mi">2000</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">5</span> <span class="mf">.01</span> <span class="mi">440</span> <span class="mi">440</span>
 
-<span class="stamnt">i</span> 99 0 8
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">99</span> <span class="mi">0</span> <span class="mi">8</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -160,7 +160,7 @@ aright	<span class="opc">comb</span> gamix, krvt, ilpt<span class="op">*</span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84540064"></a>
+        <a id="idm1561681520"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="alpass.html" title="alpass"><em class="citetitle">alpass</em></a>,
@@ -170,7 +170,7 @@ aright	<span class="opc">comb</span> gamix, krvt, ilpt<span class="op">*</span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84545056"></a>
+        <a id="idm1561675760"></a>
         <h2>Credits</h2>
         <p>
       </p>

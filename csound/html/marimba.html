@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>marimba</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="maparray.html" title="maparray" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp112781424"></a>
+        <a id="idm1532848240"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone related to the striking of a wooden block as found in a marimba. The method is a physical model developed from Perry Cook but re-coded for Csound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112782992"></a>
+        <a id="idm1532844784"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>marimba</strong></span> kamp, kfreq, ihrd, ipos, imp, kvibf, kvamp, ivibfn, idec \
       [, idoubles] [, itriples]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp112785088"></a>
+        <a id="idm1532847728"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihrd</em></span> -- the hardness of the stick used in the strike. A range of 0 to 1 is used. 0.5 is a suitable value.
@@ -76,7 +77,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112795424"></a>
+        <a id="idm1532835696"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -92,88 +93,87 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112799920"></a>
+        <a id="idm1532838128"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the marimba opcode. It uses the file <a class="ulink" href="examples/marimba.csd" target="_top"><em class="citetitle">marimba.csd</em></a>, and <a class="ulink" href="examples/marmstk1.wav" target="_top"><em class="citetitle">marmstk1.wav</em></a>.
+      Here is an example of the marimba opcode. It uses the file <a class="ulink" href="examples/marimba.csd.html" target="_top"><em class="citetitle">marimba.csd</em></a>, and <a class="ulink" href="examples/marmstk1.wav" target="_top"><em class="citetitle">marmstk1.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp112802624"></a>
+          <a id="idm1532829040"></a>
           <p class="title">
-            <strong>Example 492. Example of the marimba opcode.</strong>
+            <strong>Example 507. Example of the marimba opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp251678912"></a>
-              <a class="ulink" href="examples/marimba.csd.html" target="_top">Play</a>
+              <a id="idm1358349040"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o marimba.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o marimba.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 128
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  ifreq <span class="op">=</span> <span class="opc">cpspch</span>(p4)
-  ihrd <span class="op">=</span> 0.1
-  ipos <span class="op">=</span> 0.561
-  imp <span class="op">=</span> 1
-  kvibf <span class="op">=</span> 6.0
-  kvamp <span class="op">=</span> 0.05
-  ivibfn <span class="op">=</span> 2
-  idec <span class="op">=</span> 0.6
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  i<span class="n">freq</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+  i<span class="n">hrd</span> <span class="o">=</span> <span class="mf">0.1</span>
+  i<span class="n">pos</span> <span class="o">=</span> <span class="mf">0.561</span>
+  i<span class="n">mp</span> <span class="o">=</span> <span class="mi">1</span>
+  k<span class="n">vibf</span> <span class="o">=</span> <span class="mf">6.0</span>
+  k<span class="n">vamp</span> <span class="o">=</span> <span class="mf">0.05</span>
+  i<span class="n">vibfn</span> <span class="o">=</span> <span class="mi">2</span>
+  i<span class="n">dec</span> <span class="o">=</span> <span class="mf">0.6</span>
 
-  a1 <span class="opc">marimba</span> 20000, ifreq, ihrd, ipos, imp, kvibf, kvamp, ivibfn, idec, 20, 10
+  a<span class="n">1</span> <span class="nb">marimba</span> <span class="mi">20000</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> i<span class="n">hrd</span><span class="p">,</span> i<span class="n">pos</span><span class="p">,</span> i<span class="n">mp</span><span class="p">,</span> k<span class="n">vibf</span><span class="p">,</span> k<span class="n">vamp</span><span class="p">,</span> i<span class="n">vibfn</span><span class="p">,</span> i<span class="n">dec</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span>
 
-  <span class="opc">outs</span> a1, a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1, the "marmstk1.wav" audio file.</span>
-<span class="stamnt">f</span> 1 0 256 1 "marmstk1.wav" 0 0 0
-<span class="comment">; Table #2, a sine wave for the vibrato.</span>
-<span class="stamnt">f</span> 2 0 128 10 1
-
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1 8.09
-<span class="stamnt">i</span> 1 + 0.5 8.00
-<span class="stamnt">i</span> 1 + 0.5 7.00
-<span class="stamnt">i</span> 1 + 0.25 8.02
-<span class="stamnt">i</span> 1 + 0.25 8.01
-<span class="stamnt">i</span> 1 + 0.25 7.09
-<span class="stamnt">i</span> 1 + 0.25 8.02
-<span class="stamnt">i</span> 1 + 0.25 8.01
-<span class="stamnt">i</span> 1 + 0.25 7.09
-<span class="stamnt">i</span> 1 + 0.3333 8.09
-<span class="stamnt">i</span> 1 + 0.3333 8.02
-<span class="stamnt">i</span> 1 + 0.3334 8.01
-<span class="stamnt">i</span> 1 + 0.25 8.00
-<span class="stamnt">i</span> 1 + 0.3333 8.09
-<span class="stamnt">i</span> 1 + 0.3333 8.02
-<span class="stamnt">i</span> 1 + 0.25 8.01
-<span class="stamnt">i</span> 1 + 0.3333 7.00
-<span class="stamnt">i</span> 1 + 0.3334 6.00
-
-<span class="stamnt">e</span>
+  <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1, the "marmstk1.wav" audio file.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">256</span> <span class="mi">1</span> <span class="s">"marmstk1.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="c1">; Table #2, a sine wave for the vibrato.</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">8.09</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="mf">8.00</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="mf">7.00</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">8.02</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">8.01</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">7.09</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">8.02</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">8.01</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">7.09</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3333</span> <span class="mf">8.09</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3333</span> <span class="mf">8.02</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3334</span> <span class="mf">8.01</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">8.00</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3333</span> <span class="mf">8.09</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3333</span> <span class="mf">8.02</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="mf">8.01</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3333</span> <span class="mf">7.00</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.3334</span> <span class="mf">6.00</span>
+
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -182,14 +182,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112806944"></a>
+        <a id="idm1532828912"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vibes.html" title="vibes"><em class="citetitle">vibes</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112809056"></a>
+        <a id="idm1532832624"></a>
         <h2>Credits</h2>
         <p>
       </p>

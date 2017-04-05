@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLjoy</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLhvsBoxSetValue.html" title="FLhvsBoxSetValue" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp94515776"></a>
+        <a id="idm1551527920"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLjoy</em></span> is a squared area that allows the user to modify two output values at the same time. It acts like a joystick. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94517664"></a>
+        <a id="idm1551519216"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">koutx, kouty, ihandlex, ihandley <span class="command"><strong>FLjoy</strong></span> "label", iminx, imaxx, iminy, \
       imaxy, iexpx, iexpy, idispx, idispy, iwidth, iheight, ix, iy</pre>
       </div>
       <div class="refsect1">
-        <a id="idp94591648"></a>
+        <a id="idm1551513712"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandlex</em></span> -- a handle value (an integer number) that unequivocally references a corresponding widget. Used by further opcodes that changes some valuator's properties. It is automatically set by the corresponding valuator.
@@ -147,7 +148,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94619312"></a>
+        <a id="idm1551502320"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>koutx</em></span> -- x output value
@@ -157,96 +158,95 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94621904"></a>
+        <a id="idm1551495664"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLjoy opcode. It uses the file <a class="ulink" href="examples/FLjoy.csd" target="_top"><em class="citetitle">FLjoy.csd</em></a>.
+      Here is an example of the FLjoy opcode. It uses the file <a class="ulink" href="examples/FLjoy.csd.html" target="_top"><em class="citetitle">FLjoy.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp94623760"></a>
+          <a id="idm1551496048"></a>
           <p class="title">
-            <strong>Example 283. Example of the FLjoy opcode.</strong>
+            <strong>Example 285. Example of the FLjoy opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp242399824"></a>
-              <a class="ulink" href="examples/FLjoy.csd.html" target="_top">Play</a>
+              <a id="idm1386121712"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLjoy.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLjoy.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Demonstration of the flpanel opcode</span>
-<span class="comment">; Horizontal click-dragging controls the frequency of the oscillator</span>
-<span class="comment">; Vertical click-dragging controls the amplitude of the oscillator</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Demonstration of the flpanel opcode</span>
+<span class="c1">; Horizontal click-dragging controls the frequency of the oscillator</span>
+<span class="c1">; Vertical click-dragging controls the amplitude of the oscillator</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">FLpanel</span> "X Y Panel", 900, 400, 50, 50
-    <span class="comment">; Minimum value output by x movement (frequency)</span>
-    iminx <span class="op">=</span> 200
-    <span class="comment">; Maximum value output by x movement (frequency)</span>
-    imaxx <span class="op">=</span> 5000 
-    <span class="comment">; Minimum value output by y movement (amplitude)</span>
-    iminy <span class="op">=</span> 0
-    <span class="comment">; Maximum value output by y movement (amplitude)</span>
-    imaxy <span class="op">=</span> 15000
-    <span class="comment">; Logarithmic change in x direction</span>
-    iexpx <span class="op">=</span> <span class="op">-</span>1
-    <span class="comment">; Linear change in y direction</span>
-    iexpy <span class="op">=</span> 0
-    <span class="comment">; Display handle x direction (-1=not used)</span>
-    idispx <span class="op">=</span> <span class="op">-</span>1
-    <span class="comment">; Display handle y direction (-1=not used)</span>
-    idispy <span class="op">=</span> <span class="op">-</span>1
-    <span class="comment">; Width of the x y panel in pixels</span>
-    iwidth <span class="op">=</span> 800
-    <span class="comment">; Height of the x y panel in pixels</span>
-    iheight <span class="op">=</span> 300
-    <span class="comment">; Distance of the left edge of the x y panel from </span>
-    <span class="comment">; the left edge of the panel</span>
-    ix <span class="op">=</span> 50
-    <span class="comment">; Distance of the top edge of the x y </span>
-    <span class="comment">; panel from the top edge of the panel</span>
-    iy <span class="op">=</span> 50
+<span class="nb">FLpanel</span> <span class="s">"X Y Panel"</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="c1">; Minimum value output by x movement (frequency)</span>
+    i<span class="n">minx</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="c1">; Maximum value output by x movement (frequency)</span>
+    i<span class="n">maxx</span> <span class="o">=</span> <span class="mi">5000</span> 
+    <span class="c1">; Minimum value output by y movement (amplitude)</span>
+    i<span class="n">miny</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">; Maximum value output by y movement (amplitude)</span>
+    i<span class="n">maxy</span> <span class="o">=</span> <span class="mi">15000</span>
+    <span class="c1">; Logarithmic change in x direction</span>
+    i<span class="n">expx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">; Linear change in y direction</span>
+    i<span class="n">expy</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">; Display handle x direction (-1=not used)</span>
+    i<span class="n">dispx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">; Display handle y direction (-1=not used)</span>
+    i<span class="n">dispy</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">; Width of the x y panel in pixels</span>
+    i<span class="n">width</span> <span class="o">=</span> <span class="mi">800</span>
+    <span class="c1">; Height of the x y panel in pixels</span>
+    i<span class="n">height</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="c1">; Distance of the left edge of the x y panel from </span>
+    <span class="c1">; the left edge of the panel</span>
+    i<span class="n">x</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="c1">; Distance of the top edge of the x y </span>
+    <span class="c1">; panel from the top edge of the panel</span>
+    i<span class="n">y</span> <span class="o">=</span> <span class="mi">50</span>
 
-    gkfreqx, gkampy, ihandlex, ihandley <span class="opc">FLjoy</span> "X <span class="op">-</span> Frequency Y <span class="op">-</span> Amplitude", iminx, imaxx, iminy, imaxy, iexpx, iexpy, idispx, idispy, iwidth, iheight, ix, iy
-<span class="comment">; End of panel contents</span>
-<span class="opc">FLpanelEnd</span>
-<span class="comment">; Run the widget thread!</span>
-<span class="opc">FLrun</span>
+    gk<span class="n">freqx</span><span class="p">,</span> gk<span class="n">ampy</span><span class="p">,</span> i<span class="n">handlex</span><span class="p">,</span> i<span class="n">handley</span> <span class="nb">FLjoy</span> <span class="s">"X - Frequency Y - Amplitude"</span><span class="p">,</span> i<span class="n">minx</span><span class="p">,</span> i<span class="n">maxx</span><span class="p">,</span> i<span class="n">miny</span><span class="p">,</span> i<span class="n">maxy</span><span class="p">,</span> i<span class="n">expx</span><span class="p">,</span> i<span class="n">expy</span><span class="p">,</span> i<span class="n">dispx</span><span class="p">,</span> i<span class="n">dispy</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span>
+<span class="c1">; End of panel contents</span>
+<span class="nb">FLpanelEnd</span>
+<span class="c1">; Run the widget thread!</span>
+<span class="nb">FLrun</span>
 
-<span class="oblock">instr</span> 1
-    ifn <span class="op">=</span> 1
-    asig <span class="opc">oscili</span> gkampy, gkfreqx, ifn
-    <span class="opc">out</span> asig
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Function table that defines a single cycle</span>
-<span class="comment">; of a sine wave.</span>
-<span class="stamnt">f</span> 1 0 1024 10 1
-
-<span class="comment">; Instrument 1 will play a note for 1 hour.</span>
-<span class="stamnt">i</span> 1 0 3600
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+    a<span class="n">sig</span> <span class="nb">oscili</span> gk<span class="n">ampy</span><span class="p">,</span> gk<span class="n">freqx</span><span class="p">,</span> i<span class="n">fn</span>
+    <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Function table that defines a single cycle</span>
+<span class="c1">; of a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Instrument 1 will play a note for 1 hour.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -255,7 +255,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94628080"></a>
+        <a id="idm1551495920"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLcount.html" title="FLcount"><em class="citetitle">FLcount</em></a>,
@@ -266,7 +266,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94634032"></a>
+        <a id="idm1551486448"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>#define</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="notequal.html" title="!=" />
@@ -40,7 +41,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp76576048"></a>
+        <a id="idm1569683440"></a>
         <h2>Description</h2>
         <p>
       Macros are textual replacements which are made in the orchestra as it is being read.  The macro system in Csound is a very simple one, and uses the characters # and $ to define and call macros. This can save typing, and can lead to a coherent structure and consistent style.  This is similar to, but independent of, the <a class="link" href="ScoreMacros.html" title="Score Macros"><em class="citetitle">macro system in the score language</em></a>.
@@ -70,88 +71,87 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp76581920"></a>
+        <a id="idm1569683184"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>#define</strong></span> NAME # replacement text #</pre>
         <pre class="synopsis"><span class="command"><strong>#define</strong></span> NAME(a' b' c') # replacement text #</pre>
       </div>
       <div class="refsect1">
-        <a id="idp76585280"></a>
+        <a id="idm1569685104"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em># replacement text #</em></span> --  The replacement text is any character string (not containing a #) and can extend over multiple lines. The replacement text is enclosed within the # characters, which ensure that additional characters are not inadvertently captured.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp76587104"></a>
+        <a id="idm1569680240"></a>
         <h2>Performance</h2>
         <p>
       Some care is needed with textual replacement macros, as they can sometimes do strange things.  They take no notice of any meaning, so spaces are significant. This is why, unlike the C programming language, the definition has the replacement text surrounded by # characters. Used carefully, this simple macro system is a powerful concept, but it can be abused.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp76588128"></a>
+        <a id="idm1569679856"></a>
         <h2>Examples</h2>
         <p>
-      Here is a simple example of the defining a macro. It uses the file <a class="ulink" href="examples/define.csd" target="_top"><em class="citetitle">define.csd</em></a>.
+      Here is a simple example of the defining a macro. It uses the file <a class="ulink" href="examples/define.csd.html" target="_top"><em class="citetitle">define.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp76590512"></a>
+          <a id="idm1569678832"></a>
           <p class="title">
             <strong>Example 14. Simple example of the define macro.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp232964144"></a>
-              <a class="ulink" href="examples/define.csd.html" target="_top">Play</a>
+              <a id="idm1408953584"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o define.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o define.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Define the macros.</span>
-<span class="omacro">#define</span> VOLUME #5000#
-<span class="omacro">#define</span> FREQ #440#
-<span class="omacro">#define</span> TABLE #1#
+<span class="c1">; Define the macros.</span>
+<span class="cp">#define</span> <span class="cp">VOLUME</span> <span class="p">#</span><span class="cp">5000</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">FREQ</span> <span class="p">#</span><span class="cp">440</span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">TABLE</span> <span class="p">#</span><span class="cp">1</span><span class="p">#</span>
 
-<span class="comment">; Instrument #1</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Use the macros.</span>
-  <span class="comment">; This will be expanded to "a1 oscil 5000, 440, 1".</span>
-  a1 <span class="opc">oscil</span> $VOLUME, $FREQ, $TABLE
+<span class="c1">; Instrument #1</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Use the macros.</span>
+  <span class="c1">; This will be expanded to "a1 oscil 5000, 440, 1".</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> <span class="cp">$VOLUME</span><span class="p">,</span> <span class="cp">$FREQ</span><span class="p">,</span> <span class="cp">$TABLE</span>
 
-  <span class="comment">; Send it to the output.</span>
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
+  <span class="c1">; Send it to the output.</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Define Table #1 with an ordinary sine wave.</span>
-<span class="stamnt">f</span> 1 0 32768 10 1 
+<span class="c1">; Define Table #1 with an ordinary sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32768</span> <span class="mi">10</span> <span class="mi">1</span> 
          
-<span class="comment">; Play Instrument #1 for two seconds.</span>
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">e</span>
+<span class="c1">; Play Instrument #1 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">e</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -167,62 +167,61 @@ Macro definition for TABLE</pre>
         <p>
     </p>
         <p>
-      Here is an example of the defining a macro with arguments. It uses the file <a class="ulink" href="examples/define_args.csd" target="_top"><em class="citetitle">define_args.csd</em></a>.
+      Here is an example of the defining a macro with arguments. It uses the file <a class="ulink" href="examples/define_args.csd.html" target="_top"><em class="citetitle">define_args.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp76596624"></a>
+          <a id="idm1569674352"></a>
           <p class="title">
             <strong>Example 15. Example of the define macro with arguments.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp233023072"></a>
-              <a class="ulink" href="examples/define_args.csd.html" target="_top">Play</a>
+              <a id="idm1409100656"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o define_args.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o define_args.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Define the oscillator macro.</span>
-<span class="omacro">#define</span> OSCMACRO(VOLUME'FREQ'TABLE) #oscil $VOLUME, $FREQ, $TABLE#
+<span class="c1">; Define the oscillator macro.</span>
+<span class="cp">#define</span> <span class="cp">OSCMACRO</span>(<span class="cp">VOLUME</span><span class="p">'</span><span class="cp">FREQ</span><span class="p">'</span><span class="cp">TABLE</span><span class="p">)</span> <span class="p">#</span><span class="cp">oscil $VOLUME, $FREQ, $TABLE</span><span class="p">#</span>
 
-<span class="comment">; Instrument #1</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Use the oscillator macro.</span>
-  <span class="comment">; This will be expanded to "a1 oscil 5000, 440, 1".</span>
-  a1 $OSCMACRO(5000'440'1)
+<span class="c1">; Instrument #1</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Use the oscillator macro.</span>
+  <span class="c1">; This will be expanded to "a1 oscil 5000, 440, 1".</span>
+  a<span class="n">1</span> <span class="cp">$OSCMACRO</span><span class="p">(</span><span class="cp">5000</span><span class="p">'</span><span class="cp">440</span><span class="p">'</span><span class="cp">1</span><span class="p">)</span>
 
-  <span class="comment">; Send it to the output.</span>
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
+  <span class="c1">; Send it to the output.</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Define Table #1 with an ordinary sine wave.</span>
-<span class="stamnt">f</span> 1 0 32768 10 1 
+<span class="c1">; Define Table #1 with an ordinary sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32768</span> <span class="mi">10</span> <span class="mi">1</span> 
          
-<span class="comment">; Play Instrument #1 for two seconds.</span>
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">e</span>
+<span class="c1">; Play Instrument #1 for two seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">e</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -243,7 +242,7 @@ Macro definition for OSCMACRO</pre>
     defined are those found in the C header math.h, and are automatically
     defined when Csound starts and available for use in orchestras.</p>
         <div class="informaltable">
-          <table border="1">
+          <table class="informaltable" border="1">
             <colgroup>
               <col />
               <col />
@@ -327,7 +326,7 @@ Macro definition for OSCMACRO</pre>
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp76626448"></a>
+        <a id="idm1569649520"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dollar.html" title="$NAME"><em class="citetitle">$NAME</em></a>,
@@ -335,7 +334,7 @@ Macro definition for OSCMACRO</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp76629520"></a>
+        <a id="idm1569643376"></a>
         <h2>Credits</h2>
         <p>
       </p>

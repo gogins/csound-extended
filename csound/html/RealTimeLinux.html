@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Realtime I/O on Linux</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="Using.html" title="Using Csound" />
     <link rel="prev" href="UsingRealTime.html" title="Real-Time Audio" />
-    <link rel="next" href="RealTimeWindows.html" title="Windows" />
+    <link rel="next" href="RealTimeMac.html" title="Mac OSX" />
   </head>
   <body>
     <div class="navheader">
@@ -20,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="UsingRealTime.html">Prev</a> </td>
           <th width="60%" align="center">Using Csound</th>
-          <td width="20%" align="right"> <a accesskey="n" href="RealTimeWindows.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="RealTimeMac.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -34,16 +35,14 @@
         </div>
       </div>
       <p>
-    Under Linux, the default PortAudio/PortMidi settings will result in
-    higher latency than that which can be achieved using ALSA and/or JACK.
-    The PortMusic plugins are audio and MIDI servers, which provide an
+    Under Linux, the default portaudio/portmidi settings will result in
+    higher latency than that which can be achieved using ALSA and/or
+    JACK (see a separate manual section on this).
+    The portaudio/portmidi plugins are audio and MIDI servers, which provide an
     interface to the ALSA drivers, in a manner which is in some respects
-    similar but fundamentally different from that provided by JACK. For a
-    more detailed comparison please refer to:
+    similar but fundamentally different from that provided by JACK.
   </p>
-      <p><a class="ulink" href="http://jackaudio.org/faq" target="_top">http://jackaudio.org/faq</a>
-  </p>
-      <h3><a id="idp66220192"></a>Using ALSA</h3>
+      <h3><a id="idm1587449200"></a>Using ALSA</h3>
       <p>
     The highest level of control and the lowest possible level of latency
     are to be achieved using the ALSA plugins in combination with the <a class="link" href="CommandFlagsCategory.html#IndexCatMinusSched"><em class="citetitle">--sched</em></a>
@@ -79,7 +78,7 @@
           </tr>
         </table>
       </div>
-      <h3><a id="idp66270032"></a>Audio Output</h3>
+      <h3><a id="idm1587448688"></a>Audio Output</h3>
       <p>Running the following command:</p>
       <pre class="screen">
           aplay -l</pre>
@@ -103,7 +102,7 @@ card 0: A5451 [ALI 5451], device 0: ALI 5451 [ALI 5451]<br />
     </p>
       <pre class="screen">
           -+rtaudio=alsa -o dac</pre>
-      <h3><a id="idp66275088"></a>Output with dmix</h3>
+      <h3><a id="idm1587442544"></a>Output with dmix</h3>
       <p>
     If you would like to use Csound with dmix and your soundcard does not
     support hardware mixing of audio streams, special care is needed in setting
@@ -184,7 +183,7 @@ pcm.!default {
           </tr>
         </table>
       </div>
-      <h3><a id="idp66283088"></a>Audio Input</h3>
+      <h3><a id="idm1587438192"></a>Audio Input</h3>
       <p>
       Typically the same card will be used for both input and output, so to
       continue using the foregoing example, the flag:
@@ -216,7 +215,7 @@ pcm.!default {
     </p>
       <pre class="screen">
           -+rtaudio=alsa -i adc:hw:0,0 -o dac:hw:1,1</pre>
-      <h3><a id="idp66289952"></a>MIDI</h3>
+      <h3><a id="idm1587429488"></a>MIDI</h3>
       <p>2 Midi drivers are available:
 </p>
       <div class="itemizedlist">
@@ -233,7 +232,7 @@ pcm.!default {
       </div>
       <p>
     </p>
-      <h3><a id="idp66293184"></a>MIDI Input (Raw Midi driver)</h3>
+      <h3><a id="idm1587427056"></a>MIDI Input (Raw Midi driver)</h3>
       <p>In order to enable your orchestra to receive MIDI input you can use VirMIDI or MIDIThru, whichever you prefer. Setting up these
       virtual MIDI ports is a topic that has been covered extensively
       elsewhere, see 
@@ -323,14 +322,14 @@ client 24: 'PCR' [type=kernel]<br />
       <pre class="screen">
           aconnect 24:1 20:0</pre>
       <p>Remember that Csound acts as a raw MIDI device and is not an ALSA sequencer client. This means that Csound will not appear in MIDI device listings and will not be available for use directly with <span class="emphasis"><em>aconnect</em></span>, so you must connect to a virtual device (like 'virtual raw MIDI' or 'MIDI through') for persistent connections, or conect directly to the destination using command line flags.</p>
-      <h3><a id="idp66307488"></a>MIDI Output (Raw Midi driver)</h3>
+      <h3><a id="idm1587418352"></a>MIDI Output (Raw Midi driver)</h3>
       <p>Csound can be connected to any device which shows up on the ALSA
       sequencer list of output ports, obtained by "amidi -l" as above. In
       order to connect a Csound synthesizer to the MIDI out port of the
       keyboard listed above, the following flag would be used:</p>
       <pre class="screen">
           -Qhw:2,0,0</pre>
-      <h3><a id="idp66309280"></a>MIDI Input and Output (Midi Sequencer driver)</h3>
+      <h3><a id="idm1587416432"></a>MIDI Input and Output (Midi Sequencer driver)</h3>
       <p>This driver is to be preferred over the Raw Midi driver. It has these advantages:
 </p>
       <div class="itemizedlist">
@@ -378,7 +377,7 @@ ALSASEQ: connected from 20:0<br />
 .............. <br />
     </p>
       </div>
-      <h3><a id="idp66319040"></a>Scheduling</h3>
+      <h3><a id="idm1587410544"></a>Scheduling</h3>
       <p>If you are able to run Csound as the root user, using the "--sched"
       flag will dramatically improve realtime performance, when using ALSA,
       however you may hang your system if you do something stupid. DO NOT
@@ -387,114 +386,7 @@ ALSASEQ: connected from 20:0<br />
       to run at the highest possible priority. If the "--sched" flag is
       used, Csound and JACK will be competing rather than cooperating,
       resulting in extremely poor performance. </p>
-      <h3><a id="idp66320416"></a>Using JACK</h3>
-      <p>The simplest way to use the JACK plugin enabling input and output is as follows:
-        </p>
-      <pre class="screen">
-          -+rtaudio=jack -i adc -o dac</pre>
-      <p>
-        Additionally, there are some command line options specific to JACK:
-        </p>
-      <div class="variablelist">
-        <p class="title">
-          <strong>JACK Command-line Flags</strong>
-        </p>
-        <dl class="variablelist">
-          <dt>
-            <span class="term">-+jack_client=[client_name]</span>
-          </dt>
-          <dd>
-            <p>
-                The client name used by Csound, defaults to 'csound5'.
-                If multiple instances of Csound connect to the JACK server,
-                different client names need to be used to avoid name
-                conflicts.
-              </p>
-          </dd>
-          <dt>
-            <span class="term">-+jack_inportname=[input port name prefix], -+jack_outportname=[output port name prefix]
-            </span>
-          </dt>
-          <dd>
-            <p>
-                Name prefix of Csound JACK input/output ports; the default is
-                'input' and 'output'. The actual port name is the channel number
-                appended to the name prefix.
-                Example: with the above default settings, a stereo orchestra will
-                create these ports in full duplex operation:
-                </p>
-            <pre class="screen">
-csound5:input1              (record left)
-csound5:input2              (record right)
-csound5:output1             (playback left)
-csound5:output2             (playback right)</pre>
-            <p>
-              </p>
-          </dd>
-          <dt>
-            <span class="term">-+jack_sleep_time=[sleep time in microseconds]</span>
-          </dt>
-          <dd>
-            <p>
-                As of Csound version 5.01, this option is deprecated and
-                ignored.
-              </p>
-          </dd>
-        </dl>
-      </div>
-      <p>
-      </p>
-      <h3><a id="idp66329392"></a>Connecting Csound to other JACK clients</h3>
-      <p>
-        By default, no connections are made (you need to use jack_connect,
-        qjackctl, or a similar utility); however, the plugin can connect to
-        ports specified as '-iadc:portname_prefix' or
-        '-odac:portname_prefix', where portname_prefix is the full name of
-        a port without a channel number, such as 'alsa_pcm:capture_' (for
-        -i adc), or 'alsa_pcm:playback_' (for -o dac).
-      </p>
-      <h3><a id="idp66330640"></a>Notes on buffer sizes</h3>
-      <p>
-        Audio data is received from and sent to the JACK server by Csound
-        using a ring buffer that is controlled by the -b and -B flags.
-        -B is the total size of the buffer, while -b is the size of a
-        single period. These values are rounded so that the total size is
-        an integer multiple of, and greater than the period size.
-        The difference of the Csound buffer and period size must be greater
-        than or equal to the JACK period size.
-      </p>
-      <p>
-	If both -iadc and -odac are used at the same time, the -b option
-	should be set to an integer multiple of ksmps.
-      </p>
-      <p>
-	An example of buffer settings for low latency on a fast system:
-	</p>
-      <pre class="screen">
-          jackd -d alsa -P -r 48000 -p 64 -n 4 -zt &amp;
-          csound -+rtaudio=jack -b 64 -B 256 [...]</pre>
-      <p>
-	with real time scheduling (as root):
-	</p>
-      <pre class="screen">
-          jackd -R -P 90 -d alsa -P -r 48000 -p 64 -n 2 -zt &amp;
-          csound --sched=80,90,10 -d -+rtaudio=jack -b 64 -B 192 [...]</pre>
-      <p>
-	To improve performance, use ksmps values like 32 and 64.
-      </p>
-      <p>
-	The sample rate of the orchestra must be the same as that of the
-	JACK server.
-      </p>
-      <p>
-	Jack can also be used for MIDI IO. For this -+rtmidi=jack is
-	needed. For input -M followed by the requested jack MIDI port name is
-	used to connect directly to an input stream. For output -Q
-	followed by the jack port name is used. The options
-	-+jack_midi_inportname= and -+jack_midi_outportname= can be
-	used to rename Csound's MIDI IO ports.
-      </p>
-      <h3><a id="idp66336160"></a>Using Pulseaudio</h3>
+      <h3><a id="idm1587407984"></a>Using Pulseaudio</h3>
       <p>Support for <a class="ulink" href="http://www.pulseaudio.org/" target="_top">Pulseaudio</a> was added in Csound 5.09. You can specify the following settings:</p>
       <div class="orderedlist">
         <ol class="orderedlist" type="1">
@@ -525,14 +417,14 @@ csound5:output2             (playback right)</pre>
           <td width="20%" align="center">
             <a accesskey="u" href="Using.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="RealTimeWindows.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="RealTimeMac.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">Real-Time Audio </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> Windows</td>
+          <td width="40%" align="right" valign="top"> Mac OSX</td>
         </tr>
       </table>
     </div>

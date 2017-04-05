@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>outkat</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="outipc.html" title="outipc" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp121171328"></a>
+        <a id="idm1524157680"></a>
         <h2>Description</h2>
         <p>
       Sends MIDI aftertouch messages at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121212512"></a>
+        <a id="idm1524161008"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outkat</strong></span> kchn, kvalue, kmin, kmax</pre>
       </div>
       <div class="refsect1">
-        <a id="idp121214480"></a>
+        <a id="idm1524159856"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kchn</em></span> -- MIDI channel number (1-16)
@@ -72,55 +73,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121223600"></a>
+        <a id="idm1524154224"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the outkat opcode. It uses the file <a class="ulink" href="examples/outkat.csd" target="_top"><em class="citetitle">outkat.csd</em></a>.
+      Here is an example of the outkat opcode. It uses the file <a class="ulink" href="examples/outkat.csd.html" target="_top"><em class="citetitle">outkat.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp121225456"></a>
+          <a id="idm1524150000"></a>
           <p class="title">
-            <strong>Example 606. Example of the outkat opcode.</strong>
+            <strong>Example 625. Example of the outkat opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp256104256"></a>
-              <a class="ulink" href="examples/outkat.csd.html" target="_top">Play</a>
+              <a id="idm1348048880"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac -Q1 -M0  <span class="comment">;;;realtime audio out and midi in and out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outkat.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac -Q1 -M0  <span class="c1">;;;realtime audio out and midi in and out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outkat.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ikey <span class="opc">notnum</span> 
-ivel  <span class="opc">veloc</span>
+i<span class="n">key</span> <span class="nb">notnum</span> 
+i<span class="n">vel</span>  <span class="nb">veloc</span>
 
-kvib <span class="opc">linseg</span> 100, .5, 120	<span class="comment">;vary aftertouch in .5 second</span>
-kvbr <span class="op">=</span> <span class="opc">int</span>(kvib)		<span class="comment">;whole numbers only</span>
-<span class="opc">outkat</span> 1, kvbr, 0, 127		<span class="comment">;assign aftertouch on</span>
-<span class="opc">printk2</span> kvbr			<span class="comment">;external synth for example to</span>
-<span class="opc">midion</span> 1, ikey, ivel		<span class="comment">;change depth of filter modulation</span>
+k<span class="n">vib</span> <span class="nb">linseg</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">120</span>	<span class="c1">;vary aftertouch in .5 second</span>
+k<span class="n">vbr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>k<span class="n">vib</span><span class="p">)</span>		<span class="c1">;whole numbers only</span>
+<span class="nb">outkat</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">vbr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span>		<span class="c1">;assign aftertouch on</span>
+<span class="nb">printk2</span> k<span class="n">vbr</span>			<span class="c1">;external synth for example to</span>
+<span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">key</span><span class="p">,</span> i<span class="n">vel</span>		<span class="c1">;change depth of filter modulation</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0 30 				<span class="comment">;play for 30 seconds</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">30</span> 				<span class="c1">;play for 30 seconds</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -129,7 +129,7 @@ kvbr <span class="op">=</span> <span class="opc">int</span>(kvib)		<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121229744"></a>
+        <a id="idm1524143088"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="outiat.html" title="outiat"><em class="citetitle">outiat</em></a>,
@@ -146,7 +146,7 @@ kvbr <span class="op">=</span> <span class="opc">int</span>(kvib)		<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp121241392"></a>
+        <a id="idm1524133232"></a>
         <h2>Credits</h2>
         <p>
       </p>

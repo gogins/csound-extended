@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN20</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN19.html" title="GEN19" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206448496"></a>
+        <a id="idm1437747056"></a>
         <h2>Description</h2>
         <p>
       This subroutine generates functions of different windows. These windows are usually used for spectrum analysis or for grain envelopes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206449840"></a>
+        <a id="idm1437734896"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 20 window max [opt]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp206532208"></a>
+        <a id="idm1437741552"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 ( + 1).
@@ -104,7 +105,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206544112"></a>
+        <a id="idm1437731568"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -163,67 +164,63 @@
       For all diagrams, see <a class="link" href="MiscWindows.html" title="Appendix F. Window Functions"><em class="citetitle">Window Functions</em></a>
     </p>
         <p>
-      Here is an example of the GEN20 routine. It uses the file <a class="ulink" href="examples/gen20.csd" target="_top"><em class="citetitle">gen20.csd</em></a>.
+      Here is an example of the GEN20 routine. It uses the file <a class="ulink" href="examples/gen20.csd.html" target="_top"><em class="citetitle">gen20.csd</em></a>.
 
            </p>
         <div class="example">
-          <a id="idp206559648"></a>
+          <a id="idm1437710704"></a>
           <p class="title">
-            <strong>Example 1144. Example of the GEN20 routine.</strong>
+            <strong>Example 1172. Example of the GEN20 routine.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp276159040"></a>
-              <a class="ulink" href="examples/gen20.csd.html" target="_top">Play</a>
+              <a id="idm1295447536"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform </span>
--odac     <span class="comment">;;;realtime audio out </span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too </span>
-<span class="comment">; For Non-realtime ouput leave only the line below: </span>
-<span class="comment">; -o gen20.wav -W ;;; for file output any platform </span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
- 
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform </span>
+-odac     <span class="c1">;;;realtime audio out </span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too </span>
+<span class="c1">; For Non-realtime ouput leave only the line below: </span>
+<span class="c1">; -o gen20.wav -W ;;; for file output any platform </span>
+<span class="nt">&lt;/CsOptions&gt;</span> 
+<span class="nt">&lt;CsInstruments&gt;</span> 
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
 
-<span class="oblock">instr</span> 1 
+<span class="kd">instr</span> <span class="nf">1</span> 
 
-insnd   <span class="op">=</span> 10 				<span class="comment">;"fox.wav"</span>
-ibasfrq <span class="op">=</span> 44100 <span class="op">/</span> <span class="opc">ftlen</span>(insnd)		<span class="comment">;use original sample rate of insnd file </span>
+i<span class="n">nsnd</span>   <span class="o">=</span> <span class="mi">10</span> 				<span class="c1">;"fox.wav"</span>
+i<span class="n">basfrq</span> <span class="o">=</span> <span class="mi">44100</span> <span class="o">/</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">nsnd</span><span class="p">)</span>		<span class="c1">;use original sample rate of insnd file </span>
 
-kamp   <span class="opc">expseg</span> .001, p3<span class="op">/</span>2, .7, p3<span class="op">/</span>2, .8	<span class="comment">;envelope</span>
-kpitch <span class="opc">line</span> ibasfrq, p3, ibasfrq <span class="op">*</span> .8 
-kdens  <span class="opc">line</span> 600, p3, 10 
-kaoff  <span class="opc">line</span> 0, p3, .1
-kpoff  <span class="opc">line</span> 0, p3, ibasfrq <span class="op">*</span> .5 
-kgdur  <span class="opc">line</span> .04, p3, .001		<span class="comment">;shorten duration of grain during note</span>
-imaxgdur <span class="op">=</span>  .5 
-igfn <span class="op">=</span> p4 				<span class="comment">;different windows</span>
-asigL  <span class="opc">grain</span> kamp, kpitch, kdens, kaoff, kpoff, kgdur, insnd, igfn, imaxgdur, 0.0 
-asigR  <span class="opc">grain</span> kamp, kpitch, kdens, kaoff, kpoff, kgdur, insnd, igfn, imaxgdur, 0.0 
-       <span class="opc">outs</span> asigL, asigR
+k<span class="n">amp</span>   <span class="nb">expseg</span> <span class="mf">.001</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.7</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.8</span>	<span class="c1">;envelope</span>
+k<span class="n">pitch</span> <span class="nb">line</span> i<span class="n">basfrq</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">basfrq</span> <span class="o">*</span> <span class="mf">.8</span> 
+k<span class="n">dens</span>  <span class="nb">line</span> <span class="mi">600</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10</span> 
+k<span class="n">aoff</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.1</span>
+k<span class="n">poff</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">basfrq</span> <span class="o">*</span> <span class="mf">.5</span> 
+k<span class="n">gdur</span>  <span class="nb">line</span> <span class="mf">.04</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.001</span>		<span class="c1">;shorten duration of grain during note</span>
+i<span class="n">maxgdur</span> <span class="o">=</span>  <span class="mf">.5</span> 
+i<span class="n">gfn</span> <span class="o">=</span> <span class="nb">p4</span> 				<span class="c1">;different windows</span>
+a<span class="n">sigL</span>  <span class="nb">grain</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">pitch</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> k<span class="n">aoff</span><span class="p">,</span> k<span class="n">poff</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> i<span class="n">nsnd</span><span class="p">,</span> i<span class="n">gfn</span><span class="p">,</span> i<span class="n">maxgdur</span><span class="p">,</span> <span class="mf">0.0</span> 
+a<span class="n">sigR</span>  <span class="nb">grain</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">pitch</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> k<span class="n">aoff</span><span class="p">,</span> k<span class="n">poff</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> i<span class="n">nsnd</span><span class="p">,</span> i<span class="n">gfn</span><span class="p">,</span> i<span class="n">maxgdur</span><span class="p">,</span> <span class="mf">0.0</span> 
+       <span class="nb">outs</span> a<span class="n">sigL</span><span class="p">,</span> a<span class="n">sigR</span>
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
-<span class="stamnt">f</span>1  0 512  20 2		<span class="comment">;Hanning window </span>
-<span class="stamnt">f</span>2  0 512  20 6 1	<span class="comment">;Gaussian window </span>
-<span class="stamnt">f</span>10 0 16384 1 "<span class="stamnt">f</span>ox.wav" 0 0 0 
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
+<span class="nb">f</span><span class="mi">1</span>  <span class="mi">0</span> <span class="mi">512</span>  <span class="mi">20</span> <span class="mi">2</span>		<span class="c1">;Hanning window </span>
+<span class="nb">f</span><span class="mi">2</span>  <span class="mi">0</span> <span class="mi">512</span>  <span class="mi">20</span> <span class="mi">6</span> <span class="mi">1</span>	<span class="c1">;Gaussian window </span>
+<span class="nb">f</span><span class="mi">10</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">1</span> <span class="s">"fox.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> 
 
-<span class="stamnt">i</span>1 0 5 1		<span class="comment">;use Hanning window </span>
-<span class="stamnt">i</span>1 + 5 2		<span class="comment">;use Gaussian window</span>
-<span class="stamnt">e</span> 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span> <span class="mi">1</span>		<span class="c1">;use Hanning window </span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mi">2</span>		<span class="c1">;use Gaussian window</span>
+<span class="nb">e</span> 
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -252,7 +249,7 @@ asigR  <span class="opc">grain</span> kamp, kpitch, kdens, kaoff, kpoff, kgdur, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206571072"></a>
+        <a id="idm1437701616"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>bamboo</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="balance.html" title="balance" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp80757248"></a>
+        <a id="idm1565563376"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>bamboo</em></span> is a semi-physical model of a bamboo sound. It is one of the PhISEM percussion opcodes. PhISEM (Physically Informed Stochastic Event Modeling) is an algorithmic approach for simulating collisions of multiple independent sound producing objects.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80825168"></a>
+        <a id="idm1565561968"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>bamboo</strong></span> kamp, idettack [, inum] [, idamp] [, imaxshake] [, ifreq] \
       [, ifreq1] [, ifreq2]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp80827456"></a>
+        <a id="idm1565567216"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idettack</em></span> -- period of time over which all sound is stopped
@@ -87,59 +88,58 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80838816"></a>
+        <a id="idm1565551728"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of output.  Note: As these instruments are stochastic, this is only an approximation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80840544"></a>
+        <a id="idm1565546224"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the bamboo opcode. It uses the file <a class="ulink" href="examples/bamboo.csd" target="_top"><em class="citetitle">bamboo.csd</em></a>.
+      Here is an example of the bamboo opcode. It uses the file <a class="ulink" href="examples/bamboo.csd.html" target="_top"><em class="citetitle">bamboo.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp80842400"></a>
+          <a id="idm1565548912"></a>
           <p class="title">
             <strong>Example 78. Example of the bamboo opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp235538512"></a>
-              <a class="ulink" href="examples/bamboo.csd.html" target="_top">Play</a>
+              <a id="idm1402827376"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o bamboo.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o bamboo.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
-asig  <span class="opc">bamboo</span> p4, 0.01,0, 0, 0, 8000
-      <span class="opc">outs</span> asig, asig
+<span class="kd">instr</span> <span class="nf">1</span>
+a<span class="n">sig</span>  <span class="nb">bamboo</span> <span class="nb">p4</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8000</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 1 20000
-<span class="stamnt">i</span>1 2 1 20000
-<span class="stamnt">e</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">20000</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">20000</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -148,7 +148,7 @@ asig  <span class="opc">bamboo</span> p4, 0.01,0, 0, 0, 8000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80846688"></a>
+        <a id="idm1565547504"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dripwater.html" title="dripwater"><em class="citetitle">dripwater</em></a>,
@@ -158,7 +158,7 @@ asig  <span class="opc">bamboo</span> p4, 0.01,0, 0, 0, 8000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp80851616"></a>
+        <a id="idm1565539440"></a>
         <h2>Credits</h2>
         <p>
       </p>

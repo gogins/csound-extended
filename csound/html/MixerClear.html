@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>MixerClear</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="MixerReceive.html" title="MixerReceive" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116009120"></a>
+        <a id="idm1529253616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -47,13 +48,13 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idp116054048"></a>
+        <a id="idm1529255280"></a>
         <h2>Description</h2>
         <p>Resets all channels of a buss to 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116055296"></a>
+        <a id="idm1529258608"></a>
         <h2>Performance</h2>
         <p>
 Use of the mixer requires that instruments setting gains have smaller numbers than instruments sending signals, 
@@ -63,7 +64,7 @@ However, an instrument may have any number of sends or receives. After the final
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp116057696"></a>
+        <a id="idm1529244912"></a>
         <h2>Examples</h2>
         <pre class="programlisting">
 <span class="oblock">instr</span> 220 <span class="comment">; Master output</span>
@@ -95,71 +96,70 @@ However, an instrument may have any number of sends or receives. After the final
   <span class="opc">MixerClear</span>
 <span class="oblock">endin</span></pre>
         <p>
-      Here is a complete example of the Mixerclear opcode. It uses the file <a class="ulink" href="examples/Mixer.csd" target="_top"><em class="citetitle">Mixer.csd</em></a>
+      Here is a complete example of the Mixerclear opcode. It uses the file <a class="ulink" href="examples/Mixer.csd.html" target="_top"><em class="citetitle">Mixer.csd</em></a>
       </p>
         <div class="example">
-          <a id="idp116083232"></a>
+          <a id="idm1529231728"></a>
           <p class="title">
-            <strong>Example 540. Complete example of the Mixerclear opcode.</strong>
+            <strong>Example 556. Complete example of the Mixerclear opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp253915280"></a>
-              <a class="ulink" href="examples/Mixer.csd.html" target="_top">Play</a>
+              <a id="idm1353931376"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac       <span class="comment">;   -iadc    ;;;RT audio out</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o Mixer.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac       <span class="c1">;   -iadc    ;;;RT audio out</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o Mixer.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span>	32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span>	<span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-katt	<span class="opc">expon</span> 0.01, p3, 1		<span class="comment">;create an attack</span>
-aout	<span class="opc">poscil</span> .7, 440,1
-	<span class="opc">MixerSetLevel</span>	1, 3, katt	<span class="comment">;impose attack on the gain level</span>
-	<span class="opc">MixerSend</span> aout, 1, 3, 0		<span class="comment">;send to channel 0</span>
-<span class="oblock">endin</span>
+k<span class="n">att</span>	<span class="nb">expon</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;create an attack</span>
+a<span class="n">out</span>	<span class="nb">poscil</span> <span class="mf">.7</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span><span class="mi">1</span>
+	<span class="nb">MixerSetLevel</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">att</span>	<span class="c1">;impose attack on the gain level</span>
+	<span class="nb">MixerSend</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span>		<span class="c1">;send to channel 0</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-aout	<span class="opc">vco2</span> .5, 110			<span class="comment">;saw wave</span>
-	<span class="opc">MixerSetLevel</span> 2, 3, .25		<span class="comment">;set level to .25 of vco2</span>
-	<span class="opc">MixerSend</span> aout, 2, 3, 1		<span class="comment">;send to channel 1</span>
-<span class="oblock">endin</span>
+a<span class="n">out</span>	<span class="nb">vco2</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">110</span>			<span class="c1">;saw wave</span>
+	<span class="nb">MixerSetLevel</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">.25</span>		<span class="c1">;set level to .25 of vco2</span>
+	<span class="nb">MixerSend</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;send to channel 1</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3	<span class="comment">;mix instr.1 and 2 with reverb</span>
+<span class="kd">instr</span> <span class="nf">3</span>	<span class="c1">;mix instr.1 and 2 with reverb</span>
 	
-kgain1	<span class="opc">MixerGetLevel</span>	1,3		<span class="comment">;get level form buss 3</span>
-kgain2	<span class="opc">MixerGetLevel</span>	2,3		<span class="comment">;get level form buss 3</span>
-a1	<span class="opc">MixerReceive</span>	3,0		<span class="comment">;receive channel 0</span>
-a2	<span class="opc">MixerReceive</span>	3,1		<span class="comment">;receive channel 1</span>
-aout	<span class="op">=</span> a1<span class="op">*</span>kgain1<span class="op">+</span>a2<span class="op">*</span>kgain2		<span class="comment">;mix them</span>
-aoutL, aoutR <span class="opc">reverbsc</span> aout, aout,  0.85, 12000	<span class="comment">;add a nice reverb</span>
-	<span class="opc">outs</span>  aoutL, aoutR
-	<span class="opc">MixerClear</span>
-<span class="oblock">endin</span>
+k<span class="n">gain1</span>	<span class="nb">MixerGetLevel</span>	<span class="mi">1</span><span class="p">,</span><span class="mi">3</span>		<span class="c1">;get level form buss 3</span>
+k<span class="n">gain2</span>	<span class="nb">MixerGetLevel</span>	<span class="mi">2</span><span class="p">,</span><span class="mi">3</span>		<span class="c1">;get level form buss 3</span>
+a<span class="n">1</span>	<span class="nb">MixerReceive</span>	<span class="mi">3</span><span class="p">,</span><span class="mi">0</span>		<span class="c1">;receive channel 0</span>
+a<span class="n">2</span>	<span class="nb">MixerReceive</span>	<span class="mi">3</span><span class="p">,</span><span class="mi">1</span>		<span class="c1">;receive channel 1</span>
+a<span class="n">out</span>	<span class="o">=</span> a<span class="n">1</span><span class="o">*</span>k<span class="n">gain1</span><span class="o">+</span>a<span class="n">2</span><span class="o">*</span>k<span class="n">gain2</span>		<span class="c1">;mix them</span>
+a<span class="n">outL</span><span class="p">,</span> a<span class="n">outR</span> <span class="nb">reverbsc</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span><span class="p">,</span>  <span class="mf">0.85</span><span class="p">,</span> <span class="mi">12000</span>	<span class="c1">;add a nice reverb</span>
+	<span class="nb">outs</span>  a<span class="n">outL</span><span class="p">,</span> a<span class="n">outR</span>
+	<span class="nb">MixerClear</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 4096 10 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span>1 0 2
-<span class="stamnt">i</span>2 0 2
-<span class="stamnt">i</span>3 0 8	<span class="comment">;reverb stays on for 8 sec.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span><span class="mi">3</span> <span class="mi">0</span> <span class="mi">8</span>	<span class="c1">;reverb stays on for 8 sec.</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -168,7 +168,7 @@ aoutL, aoutR <span class="opc">reverbsc</span> aout, aout,  0.85, 12000	<span cl
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116085168"></a>
+        <a id="idm1529232240"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins (gogins at pipeline dot com).</p>
       </div>

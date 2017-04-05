@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>platerev</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="planet.html" title="planet" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125198464"></a>
+        <a id="idm1520062832"></a>
         <h2>Description</h2>
         <p>
       Models the reverberation of a rectangular metal plate with
@@ -46,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125202624"></a>
+        <a id="idm1520064880"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1[, a2, ...] <span class="command"><strong>platerev</strong></span> itabexcite. itabouts, kbndry, iaspect, istiff, idecay, iloss, aexcite1[, aexcite2, ...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp125204912"></a>
+        <a id="idm1520061808"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>itabexcite</em></span> -- number of a table that
@@ -90,7 +91,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125283824"></a>
+        <a id="idm1520051952"></a>
         <h2>Performance</h2>
         <p>
       A metal plate is excited by a stereo signal and the resulting
@@ -102,55 +103,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125285920"></a>
+        <a id="idm1520053616"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the platerev opcode. It uses the file <a class="ulink" href="examples/plate.csd" target="_top"><em class="citetitle">plate.csd</em></a>.
+      Here is an example of the platerev opcode. It uses the file <a class="ulink" href="examples/plate.csd.html" target="_top"><em class="citetitle">plate.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp125287776"></a>
+          <a id="idm1520052720"></a>
           <p class="title">
-            <strong>Example 661. Example of the platerev opcode.</strong>
+            <strong>Example 681. Example of the platerev opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp258291744"></a>
-              <a class="ulink" href="examples/plate.csd.html" target="_top">Play</a>
+              <a id="idm1341963504"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">;-odac    ;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
- -o plate.wav -W <span class="comment">;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">; Note: this example is heavy on CPU</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">;-odac    ;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+ -o plate.wav -W <span class="c1">;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">; Note: this example is heavy on CPU</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ab    <span class="opc">diskin2</span>  "beats.wav", 1
-al,ar <span class="opc">platerev</span> 1, 2, p4, 0.73, 1.0, 5.0, 0.001, ab,ab
-      <span class="opc">outs</span>      al<span class="op">*</span>.25,ar<span class="op">*</span>.25
+a<span class="n">b</span>    <span class="nb">diskin2</span>  <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">l</span><span class="p">,</span>a<span class="n">r</span> <span class="nb">platerev</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mf">0.73</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> a<span class="n">b</span><span class="p">,</span>a<span class="n">b</span>
+      <span class="nb">outs</span>      a<span class="n">l</span><span class="o">*</span><span class="mf">.25</span><span class="p">,</span>a<span class="n">r</span><span class="o">*</span><span class="mf">.25</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 8 -2   0.3   0.3875    0.39274  0.32   0.85714 0.78548
-<span class="stamnt">f</span>2 0 8 -2   0.2   0.666667  1.57097  0.24   0.75    0.78548
-<span class="stamnt">i</span>1 0 4 1
-<span class="stamnt">i</span>1 + 4 2
-<span class="stamnt">e</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">8</span> <span class="o">-</span><span class="mi">2</span>   <span class="mf">0.3</span>   <span class="mf">0.3875</span>    <span class="mf">0.39274</span>  <span class="mf">0.32</span>   <span class="mf">0.85714</span> <span class="mf">0.78548</span>
+<span class="nb">f</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">8</span> <span class="o">-</span><span class="mi">2</span>   <span class="mf">0.2</span>   <span class="mf">0.666667</span>  <span class="mf">1.57097</span>  <span class="mf">0.24</span>   <span class="mf">0.75</span>    <span class="mf">0.78548</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="mi">2</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -159,7 +159,7 @@ al,ar <span class="opc">platerev</span> 1, 2, p4, 0.73, 1.0, 5.0, 0.001, ab,ab
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125292064"></a>
+        <a id="idm1520042992"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN19</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN18.html" title="GEN18" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206420400"></a>
+        <a id="idm1437797488"></a>
         <h2>Description</h2>
         <p>
       These subroutines generate composite waveforms made up of weighted sums of simple sinusoids. The specification of each contributing partial requires 4 p-fields using <span class="emphasis"><em>GEN19</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206463600"></a>
+        <a id="idm1437794928"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size  19  pna   stra  phsa  dcoa  pnb strb  phsb  dcob  ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idp206465616"></a>
+        <a id="idm1437793264"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 or power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>).
@@ -99,58 +100,57 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp206479728"></a>
+        <a id="idm1437782256"></a>
         <h2>Examples</h2>
         <p>
-	    Here is an example of the GEN19 routine. It uses the files <a class="ulink" href="examples/gen19.csd" target="_top"><em class="citetitle">gen19.csd</em></a>.
+	    Here is an example of the GEN19 routine. It uses the files <a class="ulink" href="examples/gen19.csd.html" target="_top"><em class="citetitle">gen19.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp206481584"></a>
+          <a id="idm1437782000"></a>
           <p class="title">
-            <strong>Example 1143. An example of the GEN19 routine.</strong>
+            <strong>Example 1171. An example of the GEN19 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp276017536"></a>
-              <a class="ulink" href="examples/gen19.csd.html" target="_top">Play</a>
+              <a id="idm1295892976"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen19.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen19.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="comment">;p4 = transposition factor</span>
-<span class="comment">;p5 = speed factor</span>
-<span class="comment">;p6 = function table for grain data</span>
-i1    <span class="op">=</span>	<span class="ohdr">sr</span><span class="op">/</span><span class="opc">ftlen</span>(1)							<span class="comment">;scaling to reflect sample rate and table length</span>
-a1    <span class="opc">phasor</span> i1<span class="op">*</span>p5							<span class="comment">;index for speed</span>
-asigl <span class="opc">fog</span>    .5, 15, p4, a1, 1, 0, .01, .5, .01, 30, 1, 2, p3 		<span class="comment">;left channel</span>
-asigr <span class="opc">fog</span>    .4, 25, p4<span class="op">+</span>.2, a1, 1, 0, .01, .5, .01, 30, 1, 2, p3, .5	<span class="comment">;right channel</span>
-      <span class="opc">outs</span>   asigl, asigr
-<span class="oblock">endin</span>
+<span class="c1">;p4 = transposition factor</span>
+<span class="c1">;p5 = speed factor</span>
+<span class="c1">;p6 = function table for grain data</span>
+i<span class="n">1</span>    <span class="o">=</span>	<span class="vg">sr</span><span class="o">/</span><span class="nb">ftlen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>							<span class="c1">;scaling to reflect sample rate and table length</span>
+a<span class="n">1</span>    <span class="nb">phasor</span> i<span class="n">1</span><span class="o">*</span><span class="nb">p5</span>							<span class="c1">;index for speed</span>
+a<span class="n">sigl</span> <span class="nb">fog</span>    <span class="mf">.5</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span> 		<span class="c1">;left channel</span>
+a<span class="n">sigr</span> <span class="nb">fog</span>    <span class="mf">.4</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="nb">p4</span><span class="o">+</span><span class="mf">.2</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.5</span>	<span class="c1">;right channel</span>
+      <span class="nb">outs</span>   a<span class="n">sigl</span><span class="p">,</span> a<span class="n">sigr</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 131072 1 "<span class="stamnt">f</span>ox.wav" 0 0 0
-<span class="stamnt">f</span> 2 0 1024 19 .5 .5 270 .5
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">131072</span> <span class="mi">1</span> <span class="s">"fox.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">19</span> <span class="mf">.5</span> <span class="mf">.5</span> <span class="mi">270</span> <span class="mf">.5</span>
 
-<span class="stamnt">i</span> 1 0 10 .7  .1
-<span class="stamnt">i</span> 1 + 4  1.2  2
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mf">.7</span>  <span class="mf">.1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span>  <span class="mf">1.2</span>  <span class="mi">2</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -171,7 +171,7 @@ asigr <span class="opc">fog</span>    .4, 25, p4<span class="op">+</span>.2, a1,
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206487696"></a>
+        <a id="idm1437768560"></a>
         <h2>See Also</h2>
         <p>
        <a class="link" href="GEN09.html" title="GEN09"><em class="citetitle">GEN09</em></a> and

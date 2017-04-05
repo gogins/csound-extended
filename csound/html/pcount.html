@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pcount</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pconvolve.html" title="pconvolve" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124042560"></a>
+        <a id="idm1521398192"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>pcount</em></span> returns the number of pfields belonging to a note event.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124044272"></a>
+        <a id="idm1521393968"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">icount <span class="command"><strong>pcount</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp124046352"></a>
+        <a id="idm1521394864"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>icount</em></span> - stores the number of pfields for the current note event.
@@ -74,109 +75,108 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp124050304"></a>
+        <a id="idm1521391408"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pcount opcode. It uses the file <a class="ulink" href="examples/pcount.csd" target="_top"><em class="citetitle">pcount.csd</em></a>.
+      Here is an example of the pcount opcode. It uses the file <a class="ulink" href="examples/pcount.csd.html" target="_top"><em class="citetitle">pcount.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp124052160"></a>
+          <a id="idm1521255936"></a>
           <p class="title">
-            <strong>Example 641. Example of the pcount opcode.</strong>
+            <strong>Example 661. Example of the pcount opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp257611456"></a>
-              <a class="ulink" href="examples/pcount.csd.html" target="_top">Play</a>
+              <a id="idm1344028656"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pcount.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pcount.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; This UDO returns a pfield value but returns 0 if it does not exist.</span>
-<span class="oblock">opcode</span>  mypvalue, i, <span class="opc">i</span>
-	index  <span class="opc">xin</span>
-	inum   <span class="opc">pcount</span>
-	<span class="octrl">if</span>	  (index <span class="op">&gt;</span> inum)  then
-		iout <span class="op">=</span> 0.0
-	<span class="octrl">else</span>
-		iout <span class="opc">pindex</span> index
-	<span class="octrl">endif</span>
+<span class="c1">; This UDO returns a pfield value but returns 0 if it does not exist.</span>
+<span class="kd">opcode</span>  <span class="nf">mypvalue</span><span class="p">,</span> <span class="kt">i</span><span class="p">,</span> <span class="kt">i</span>
+	i<span class="n">ndex</span>  <span class="nb">xin</span>
+	i<span class="n">num</span>   <span class="nb">pcount</span>
+	<span class="k">if</span>	  <span class="p">(</span>i<span class="n">ndex</span> <span class="o">&gt;</span> i<span class="n">num</span><span class="p">)</span>  <span class="k">then</span>
+		i<span class="n">out</span> <span class="o">=</span> <span class="mf">0.0</span>
+	<span class="k">else</span>
+		i<span class="n">out</span> <span class="nb">pindex</span> i<span class="n">ndex</span>
+	<span class="k">endif</span>
 	
-	<span class="opc">xout</span>	iout
-<span class="oblock">endop</span>
+	<span class="nb">xout</span>	i<span class="n">out</span>
+<span class="kd">endop</span>
 	
-<span class="comment">; Envelope UDO that reads parameters from a flexible number of pfields</span>
-<span class="comment">; Syntax:   kenv  flexlinseg  ipstart</span>
-<span class="comment">;           ipstart is the first pfield of the envelope</span>
-<span class="comment">;               parameters.  Reads remaining pfields (up to 21 of them).</span>
-<span class="comment">;           kenv is the output envelope.</span>
+<span class="c1">; Envelope UDO that reads parameters from a flexible number of pfields</span>
+<span class="c1">; Syntax:   kenv  flexlinseg  ipstart</span>
+<span class="c1">;           ipstart is the first pfield of the envelope</span>
+<span class="c1">;               parameters.  Reads remaining pfields (up to 21 of them).</span>
+<span class="c1">;           kenv is the output envelope.</span>
 
-<span class="oblock">opcode</span>  flexlinseg, k, <span class="opc">i</span>
-	ipstart <span class="opc">xin</span>
+<span class="kd">opcode</span>  <span class="nf">flexlinseg</span><span class="p">,</span> <span class="kt">k</span><span class="p">,</span> <span class="kt">i</span>
+	i<span class="n">pstart</span> <span class="nb">xin</span>
 	
-	iep1   mypvalue	ipstart
-	iep2   mypvalue	ipstart <span class="op">+</span> 1
-	iep3   mypvalue	ipstart <span class="op">+</span> 2
-	iep4   mypvalue	ipstart <span class="op">+</span> 3
-	iep5   mypvalue	ipstart <span class="op">+</span> 4
-	iep6   mypvalue	ipstart <span class="op">+</span> 5
-	iep7   mypvalue	ipstart <span class="op">+</span> 6
-	iep8   mypvalue	ipstart <span class="op">+</span> 7
-	iep9   mypvalue	ipstart <span class="op">+</span> 8
-	iepa   mypvalue	ipstart <span class="op">+</span> 9
-	iepb   mypvalue	ipstart <span class="op">+</span> 10
-	iepc   mypvalue	ipstart <span class="op">+</span> 11
-	iepd   mypvalue	ipstart <span class="op">+</span> 12
-	iepe   mypvalue	ipstart <span class="op">+</span> 13
-	iepf   mypvalue	ipstart <span class="op">+</span> 14
-	iepg   mypvalue	ipstart <span class="op">+</span> 15
-	ieph   mypvalue	ipstart <span class="op">+</span> 16
-	iepi   mypvalue	ipstart <span class="op">+</span> 17
-	iepj   mypvalue	ipstart <span class="op">+</span> 18
-	iepk   mypvalue	ipstart <span class="op">+</span> 19
-	iepl   mypvalue	ipstart <span class="op">+</span> 20
+	i<span class="n">ep1</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span>
+	i<span class="n">ep2</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">1</span>
+	i<span class="n">ep3</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">2</span>
+	i<span class="n">ep4</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">3</span>
+	i<span class="n">ep5</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">4</span>
+	i<span class="n">ep6</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">5</span>
+	i<span class="n">ep7</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">6</span>
+	i<span class="n">ep8</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">7</span>
+	i<span class="n">ep9</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">8</span>
+	i<span class="n">epa</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">9</span>
+	i<span class="n">epb</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">10</span>
+	i<span class="n">epc</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">11</span>
+	i<span class="n">epd</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">12</span>
+	i<span class="n">epe</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">13</span>
+	i<span class="n">epf</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">14</span>
+	i<span class="n">epg</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">15</span>
+	i<span class="n">eph</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">16</span>
+	i<span class="n">epi</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">17</span>
+	i<span class="n">epj</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">18</span>
+	i<span class="n">epk</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">19</span>
+	i<span class="n">epl</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">20</span>
 
-	kenv   <span class="opc">linseg</span>	 iep1, iep2, iep3, iep4, iep5, iep6, iep7, iep8, \
-	                   iep9, iepa, iepb, iepc, iepd, iepe, iepf, iepg, \
-	                   ieph, iepi, iepj, iepk, iepl	
-	<span class="opc">xout</span>   kenv
-<span class="oblock">endop</span>
+	k<span class="n">env</span>   <span class="nb">linseg</span>	 i<span class="n">ep1</span><span class="p">,</span> i<span class="n">ep2</span><span class="p">,</span> i<span class="n">ep3</span><span class="p">,</span> i<span class="n">ep4</span><span class="p">,</span> i<span class="n">ep5</span><span class="p">,</span> i<span class="n">ep6</span><span class="p">,</span> i<span class="n">ep7</span><span class="p">,</span> i<span class="n">ep8</span><span class="p">,</span> \
+	                   i<span class="n">ep9</span><span class="p">,</span> i<span class="n">epa</span><span class="p">,</span> i<span class="n">epb</span><span class="p">,</span> i<span class="n">epc</span><span class="p">,</span> i<span class="n">epd</span><span class="p">,</span> i<span class="n">epe</span><span class="p">,</span> i<span class="n">epf</span><span class="p">,</span> i<span class="n">epg</span><span class="p">,</span> \
+	                   i<span class="n">eph</span><span class="p">,</span> i<span class="n">epi</span><span class="p">,</span> i<span class="n">epj</span><span class="p">,</span> i<span class="n">epk</span><span class="p">,</span> i<span class="n">epl</span>	
+	<span class="nb">xout</span>   k<span class="n">env</span>
+<span class="kd">endop</span>
 	
-<span class="oblock">instr</span> 1
-<span class="comment">; This instrument only requires 3 pfields but can accept up to 24.</span>
-<span class="comment">; (You will still get warnings about more than 3).	</span>
-kenv flexlinseg  4		<span class="comment">; envelope params start at p4</span>
-aout <span class="opc">oscili</span> kenv<span class="op">*</span>.5, 256, 1
-     <span class="opc">outs</span> aout, aout
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; This instrument only requires 3 pfields but can accept up to 24.</span>
+<span class="c1">; (You will still get warnings about more than 3).	</span>
+k<span class="n">env</span> <span class="nf">flexlinseg</span>  <span class="mi">4</span>		<span class="c1">; envelope params start at p4</span>
+a<span class="n">out</span> <span class="nb">oscili</span> k<span class="n">env</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1  0 8192 10 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span>  <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span>1  0 2  0.0 1.0 1.0 1.0 0.0
-<span class="stamnt">i</span>1  2 2  0.0 0.1 1.0 1.0 1.0 0.1 0.0
-<span class="stamnt">i</span>1  4 2  0.0 0.5 0.0	  			<span class="comment">; one problem is that "missing" pfields carry</span>
-<span class="stamnt">i</span>1  6 2  0.0 0.5 0.0 !	  			<span class="comment">; now we can fix this problem with !</span>
-<span class="stamnt">i</span>1  8 10  0.0  3.0 1.0  0.3 0.1  0.3 1.0  0.3 0.1  0.3 1.0  0.3 0.1  0.8 0.9  5.0 0.0
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">0</span> <span class="mi">2</span>  <span class="mf">0.0</span> <span class="mf">1.0</span> <span class="mf">1.0</span> <span class="mf">1.0</span> <span class="mf">0.0</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">2</span> <span class="mi">2</span>  <span class="mf">0.0</span> <span class="mf">0.1</span> <span class="mf">1.0</span> <span class="mf">1.0</span> <span class="mf">1.0</span> <span class="mf">0.1</span> <span class="mf">0.0</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">4</span> <span class="mi">2</span>  <span class="mf">0.0</span> <span class="mf">0.5</span> <span class="mf">0.0</span>	  			<span class="c1">; one problem is that "missing" pfields carry</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">6</span> <span class="mi">2</span>  <span class="mf">0.0</span> <span class="mf">0.5</span> <span class="mf">0.0</span> <span class="o">!</span>	  			<span class="c1">; now we can fix this problem with !</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">8</span> <span class="mi">10</span>  <span class="mf">0.0</span>  <span class="mf">3.0</span> <span class="mf">1.0</span>  <span class="mf">0.3</span> <span class="mf">0.1</span>  <span class="mf">0.3</span> <span class="mf">1.0</span>  <span class="mf">0.3</span> <span class="mf">0.1</span>  <span class="mf">0.3</span> <span class="mf">1.0</span>  <span class="mf">0.3</span> <span class="mf">0.1</span>  <span class="mf">0.8</span> <span class="mf">0.9</span>  <span class="mf">5.0</span> <span class="mf">0.0</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -203,14 +203,14 @@ B  8.000 .. 18.000 T 18.000 TT 18.000 M:  0.49994  0.49994
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124058992"></a>
+        <a id="idm1521255040"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pindex.html" title="pindex"><em class="citetitle">pindex</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp124061280"></a>
+        <a id="idm1521251456"></a>
         <h2>Credits</h2>
         <p>Example by: Anthony Kozar</p>
         <p>Dec. 2006</p>

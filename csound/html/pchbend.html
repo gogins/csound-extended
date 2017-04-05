@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pchbend</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pcauchy.html" title="pcauchy" />
@@ -38,82 +39,79 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp123549008"></a>
+        <a id="idm1521678320"></a>
         <h2>Description</h2>
         <p>
       Get the current pitch-bend value for this channel.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123550304"></a>
+        <a id="idm1521677552"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ibend <span class="command"><strong>pchbend</strong></span> [imin] [, imax]</pre>
         <pre class="synopsis">kbend <span class="command"><strong>pchbend</strong></span> [imin] [, imax]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp123553984"></a>
+        <a id="idm1521680368"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imin, imax</em></span> (optional) -- set minimum and maximum limits on values obtained
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123555776"></a>
+        <a id="idm1521684976"></a>
         <h2>Performance</h2>
         <p>
       Get the current pitch-bend value for this channel. Note that this access to pitch-bend data is independent of the MIDI pitch, enabling the value here to be used for any arbitrary purpose.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123557408"></a>
+        <a id="idm1521673200"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the pchbend opcode. It uses the file <a class="ulink" href="examples/pchbend.csd" target="_top"><em class="citetitle">pchbend.csd</em></a>.
+      Here is an example of the pchbend opcode. It uses the file <a class="ulink" href="examples/pchbend.csd.html" target="_top"><em class="citetitle">pchbend.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp123559184"></a>
+          <a id="idm1521675888"></a>
           <p class="title">
-            <strong>Example 635. Example of the pchbend opcode.</strong>
+            <strong>Example 654. Example of the pchbend opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp256879760"></a>
-              <a class="ulink" href="examples/pchbend.csd.html" target="_top">Play</a>
+              <a id="idm1344908528"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac -Q1 -Ma  <span class="comment">;;;realtime audio out and midi in (on all inputs) and out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pchbend.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac -Q1 -Ma  <span class="c1">;;;realtime audio out and midi in (on all inputs) and out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pchbend.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span> 
+
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
+
+<span class="kd">instr</span>   <span class="nf">1</span>	<span class="c1">;use external midi keyboard</span>
+
+i<span class="n">cps</span> <span class="nb">cpsmidi</span>
+k<span class="n">bnd</span> <span class="nb">pchbend</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span>					<span class="c1">;one octave lower and higher</span>
+k<span class="n">env</span> <span class="nb">linsegr</span> <span class="mi">0</span><span class="p">,</span><span class="mf">.001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;amplitude envelope </span>
+a<span class="n">sig</span> <span class="nb">pluck</span> <span class="mf">.8</span> <span class="o">*</span> k<span class="n">env</span><span class="p">,</span> i<span class="n">cps</span><span class="o">+</span>k<span class="n">bnd</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
+
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">30</span>	<span class="c1">;runs 30 seconds</span>
  
-
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
-
-<span class="oblock">instr</span>   1	<span class="comment">;use external midi keyboard</span>
-
-icps <span class="opc">cpsmidi</span>
-kbnd <span class="opc">pchbend</span> 0, 100					<span class="comment">;one octave lower and higher</span>
-kenv <span class="opc">linsegr</span> 0,.001, 1, .1, 0				<span class="comment">;amplitude envelope </span>
-asig <span class="opc">pluck</span> .8 <span class="op">*</span> kenv, icps<span class="op">+</span>kbnd, 440, 0, 1
-     <span class="opc">outs</span> asig, asig
-
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
-
-<span class="stamnt">f</span> 0 30	<span class="comment">;runs 30 seconds</span>
- 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>   
 </pre>
             </div>
           </div>
@@ -122,7 +120,7 @@ asig <span class="opc">pluck</span> .8 <span class="op">*</span> kenv, icps<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123563472"></a>
+        <a id="idm1521669488"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
@@ -139,7 +137,7 @@ asig <span class="opc">pluck</span> .8 <span class="op">*</span> kenv, icps<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp123575184"></a>
+        <a id="idm1521930480"></a>
         <h2>Credits</h2>
         <p>
       </p>

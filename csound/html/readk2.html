@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>readk2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="readk.html" title="readk" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132246192"></a>
+        <a id="idm1512870528"></a>
         <h2>Description</h2>
         <p>
       Periodically reads two orchestra control-signal values from an external file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132290288"></a>
+        <a id="idm1512867456"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kr1, kr2 <span class="command"><strong>readk2</strong></span> ifilname, iformat, iprd</pre>
       </div>
       <div class="refsect1">
-        <a id="idp132292512"></a>
+        <a id="idm1512869504"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilname</em></span> -- an integer N denoting a file named "readk.N" or a character string (in double quotes, spaces permitted) denoting the external file name. For a string, it may either be a full path name with directory specified or a simple filename.  In the later case, the file is sought first in the current directory, then in <a class="link" href="CommandEnvironment.html" title="Csound Environment Variables"><em class="citetitle">SSDIR</em></a>, and finally in <a class="link" href="CommandEnvironment.html" title="Csound Environment Variables"><em class="citetitle">SFDIR</em></a>.
@@ -91,7 +92,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132305152"></a>
+        <a id="idm1512860928"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kr1, kr2</em></span> -- output of the signals read from <span class="emphasis"><em>ifilname</em></span>.
@@ -101,64 +102,63 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132309120"></a>
+        <a id="idm1512850304"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the readk2 opcode. It uses the file <a class="ulink" href="examples/readk2.csd" target="_top"><em class="citetitle">readk2.csd</em></a>.
+      Here is an example of the readk2 opcode. It uses the file <a class="ulink" href="examples/readk2.csd.html" target="_top"><em class="citetitle">readk2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp132310896"></a>
+          <a id="idm1512849280"></a>
           <p class="title">
-            <strong>Example 774. Example of the readk2 opcode.</strong>
+            <strong>Example 795. Example of the readk2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp261669568"></a>
-              <a class="ulink" href="examples/readk2.csd.html" target="_top">Play</a>
+              <a id="idm1334484208"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o readk2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o readk2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giSine <span class="ohdr">ftgen</span> 0, 0, 2^10, 10, 1
+gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">^</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">;writes two control signals to a file</span>
-kfreq     <span class="opc">randh</span>     100, 1, 2, 1, 500 <span class="comment">;generates one random number between 400 and 600 per second</span>
-kdb       <span class="opc">randh</span>     12, 1, 2, 1, <span class="op">-</span>12 <span class="comment">;amplitudes in dB between -24 and 0</span>
-          <span class="opc">dumpk2</span>    kfreq, kdb, "dumpk2.txt", 8, 1 <span class="comment">;writes the control signals</span>
-          <span class="opc">prints</span>    "WRITING<span class="op">:</span>\n"
-          <span class="opc">printks</span>   "kfreq <span class="op">=</span> <span class="op">%</span>f, kdb <span class="op">=</span> <span class="op">%</span>f\n", 1, kfreq, kdb  <span class="comment">;prints them</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;writes two control signals to a file</span>
+k<span class="n">freq</span>     <span class="nb">randh</span>     <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span> <span class="c1">;generates one random number between 400 and 600 per second</span>
+k<span class="n">db</span>       <span class="nb">randh</span>     <span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span> <span class="c1">;amplitudes in dB between -24 and 0</span>
+          <span class="nb">dumpk2</span>    k<span class="n">freq</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> <span class="s">"dumpk2.txt"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;writes the control signals</span>
+          <span class="nb">prints</span>    <span class="s">"WRITING:</span><span class="se">\n</span><span class="s">"</span>
+          <span class="nb">printks</span>   <span class="s">"kfreq = %f, kdb = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">db</span>  <span class="c1">;prints them</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2 <span class="comment">;reads the file written by instr 1</span>
-kf,kdb    <span class="opc">readk2</span>    "dumpk2.txt", 8, 1
-          <span class="opc">prints</span>    "READING<span class="op">:</span>\n"
-          <span class="opc">printks</span>   "kfreq <span class="op">=</span> <span class="op">%</span>f, kdb <span class="op">=</span> <span class="op">%</span>f\n", 1, kf, kdb  <span class="comment">;prints again</span>
-kdb       <span class="opc">lineto</span>    kdb, .1 <span class="comment">;smoothing amp transition</span>
-aout      <span class="opc">poscil</span>    <span class="opc">ampdb</span>(kdb), kf, giSine
-          <span class="opc">outs</span>      aout, aout
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;reads the file written by instr 1</span>
+k<span class="n">f</span><span class="p">,</span>k<span class="n">db</span>    <span class="nb">readk2</span>    <span class="s">"dumpk2.txt"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span>
+          <span class="nb">prints</span>    <span class="s">"READING:</span><span class="se">\n</span><span class="s">"</span>
+          <span class="nb">printks</span>   <span class="s">"kfreq = %f, kdb = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">f</span><span class="p">,</span> k<span class="n">db</span>  <span class="c1">;prints again</span>
+k<span class="n">db</span>       <span class="nb">lineto</span>    k<span class="n">db</span><span class="p">,</span> <span class="mf">.1</span> <span class="c1">;smoothing amp transition</span>
+a<span class="n">out</span>      <span class="nb">poscil</span>    <span class="nb">ampdb</span><span class="p">(</span>k<span class="n">db</span><span class="p">),</span> k<span class="n">f</span><span class="p">,</span> gi<span class="n">Sine</span>
+          <span class="nb">outs</span>      a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">i</span> 2 5 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -186,7 +186,7 @@ kfreq = 440.103500, kdb = -0.058300
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132316352"></a>
+        <a id="idm1512854272"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dumpk.html" title="dumpk"><em class="citetitle">dumpk</em></a>,
@@ -199,7 +199,7 @@ kfreq = 440.103500, kdb = -0.058300
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132324192"></a>
+        <a id="idm1512845312"></a>
         <h2>Credits</h2>
         <p>By: John ffitch and Barry L. Vercoe</p>
         <p>1999 or earlier</p>

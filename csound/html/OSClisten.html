@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>OSClisten</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="OSCinit.html" title="OSCinit" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120278576"></a>
+        <a id="idm1525030128"></a>
         <h2>Description</h2>
         <p>
       On each k-cycle looks to see if an OSC message has been send to
@@ -46,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120319904"></a>
+        <a id="idm1525023856"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kans <span class="command"><strong>OSClisten</strong></span> ihandle, idest, itype [, xdata1, xdata2, ...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp120321984"></a>
+        <a id="idm1525025264"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span>
@@ -79,7 +80,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120326512"></a>
+        <a id="idm1525022448"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kans</em></span> -- set to 1 if a new message was
@@ -98,7 +99,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120330464"></a>
+        <a id="idm1525021040"></a>
         <h2>Example</h2>
         <p>
       The example shows a pair of floating point numbers being received
@@ -126,160 +127,159 @@ ex:
         </pre>
         </div>
         <p>
-      Below are two .csd files which demonstrate the usage of the OSC opcodes. They use the files <a class="ulink" href="examples/OSCmidisend.csd" target="_top"><em class="citetitle">OSCmidisend.csd</em></a> and <a class="ulink" href="examples/OSCmidircv.csd" target="_top"><em class="citetitle">OSCmidircv.csd</em></a>.
+      Below are two .csd files which demonstrate the usage of the OSC opcodes. They use the files <a class="ulink" href="examples/OSCmidisend.csd.html" target="_top"><em class="citetitle">OSCmidisend.csd</em></a> and <a class="ulink" href="examples/OSCmidircv.csd.html" target="_top"><em class="citetitle">OSCmidircv.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp120345664"></a>
+          <a id="idm1525007216"></a>
           <p class="title">
-            <strong>Example 597. Example of the OSC opcodes.</strong>
+            <strong>Example 616. Example of the OSC opcodes.</strong>
           </p>
           <div class="example-contents">
-            <p>The following two .csd files demonstrate the usage of the OSC opcodes in csound. The first file, <a class="ulink" href="examples/OSCmidisend.csd" target="_top"><em class="citetitle">OSCmidisend.csd</em></a>, transforms received real-time MIDI messages into OSC data. The second file, <a class="ulink" href="examples/OSCmidircv.csd" target="_top"><em class="citetitle">OSCmidircv.csd</em></a>, can take these OSC messages, and intrepret them to generate sound from note messages, and store controller values. It will use controller number 7 to control volume. Note that these files are designed to be on the same machine, but if a different host address (in the IPADDRESS macro) is used, they can be separate machines on a network, or connected through the internet.</p>
+            <p>The following two .csd files demonstrate the usage of the OSC opcodes in csound. The first file, <a class="ulink" href="examples/OSCmidisend.csd.html" target="_top"><em class="citetitle">OSCmidisend.csd</em></a>, transforms received real-time MIDI messages into OSC data. The second file, <a class="ulink" href="examples/OSCmidircv.csd.html" target="_top"><em class="citetitle">OSCmidircv.csd</em></a>, can take these OSC messages, and intrepret them to generate sound from note messages, and store controller values. It will use controller number 7 to control volume. Note that these files are designed to be on the same machine, but if a different host address (in the IPADDRESS macro) is used, they can be separate machines on a network, or connected through the internet.</p>
             <p>CSD file to send OSC messages:</p>
             <div class="refsect1">
-              <a id="idp255955120"></a>
-              <a class="ulink" href="examples/OSCmidisend.csd.html" target="_top">Play</a>
+              <a id="idm1348644592"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-  <span class="ohdr">sr</span>	    <span class="op">=</span>  44100
-  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  128
-  <span class="ohdr">nchnls</span>    <span class="op">=</span>  1
+  <span class="vg">sr</span>	    <span class="o">=</span>  <span class="mi">44100</span>
+  <span class="vg">ksmps</span>	    <span class="o">=</span>  <span class="mi">128</span>
+  <span class="vg">nchnls</span>    <span class="o">=</span>  <span class="mi">1</span>
 
-<span class="comment">; Example by David Akbari 2007</span>
-<span class="comment">; Modified by Jonathan Murphy</span>
-<span class="comment">; Use this file to generate OSC events for OSCmidircv.csd</span>
+<span class="c1">; Example by David Akbari 2007</span>
+<span class="c1">; Modified by Jonathan Murphy</span>
+<span class="c1">; Use this file to generate OSC events for OSCmidircv.csd</span>
 
-<span class="omacro">#define</span> IPADDRESS	# "localhost" #
-<span class="omacro">#define</span> PORT 		# 47120 #
+<span class="cp">#define</span> <span class="cp">IPADDRESS</span>	<span class="p">#</span><span class="cp"> "localhost" </span><span class="p">#</span>
+<span class="cp">#define</span> <span class="cp">PORT</span> 		<span class="p">#</span><span class="cp"> 47120 </span><span class="p">#</span>
 
-<span class="opc">turnon</span> 1000
-
-
-    <span class="oblock">instr</span>	1000
-
-  kst, kch, kd1, kd2  <span class="opc">midiin</span>
-
-  <span class="opc">OSCsend</span>   kst<span class="op">+</span>kch<span class="op">+</span>kd1<span class="op">+</span>kd2, $IPADDRESS, $PORT, "<span class="op">/</span>midi", "iiii", kst, kch, kd1, kd2
-
-    <span class="oblock">endin</span>
+<span class="nb">turnon</span> <span class="mi">1000</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 0 3600  <span class="comment">;Dummy f-table</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+    <span class="kd">instr</span>	<span class="nf">1000</span>
+
+  k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>  <span class="nb">midiin</span>
+
+  <span class="nb">OSCsend</span>   k<span class="n">st</span><span class="o">+</span>k<span class="n">ch</span><span class="o">+</span>k<span class="n">d1</span><span class="o">+</span>k<span class="n">d2</span><span class="p">,</span> <span class="cp">$IPADDRESS</span><span class="p">,</span> <span class="cp">$PORT</span><span class="p">,</span> <span class="s">"/midi"</span><span class="p">,</span> <span class="s">"iiii"</span><span class="p">,</span> k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>
+
+    <span class="kd">endin</span>
+
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">3600</span>  <span class="c1">;Dummy f-table</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
             <p>CSD file to receive OSC messages:</p>
             <div class="refsect1">
-              <a id="idp255954432"></a>
-              <a class="ulink" href="examples/OSCmidircv.csd.html" target="_top">Play</a>
+              <a id="idm1349804784"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="c1">; network_recv.csd</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-  <span class="ohdr">sr</span>	    <span class="op">=</span>  44100
-  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  128
-  <span class="ohdr">nchnls</span>    <span class="op">=</span>  1
+  <span class="vg">sr</span>	    <span class="o">=</span>  <span class="mi">44100</span>
+  <span class="vg">ksmps</span>	    <span class="o">=</span>  <span class="mi">128</span>
+  <span class="vg">nchnls</span>    <span class="o">=</span>  <span class="mi">1</span>
 
-<span class="comment">; Example by Jonathan Murphy and Andres Cabrera 2007</span>
-<span class="comment">; Use file OSCmidisend.csd to generate OSC events for this file</span>
+<span class="c1">; Example by Jonathan Murphy and Andres Cabrera 2007</span>
+<span class="c1">; Use file OSCmidisend.csd to generate OSC events for this file</span>
 
-  <span class="ohdr">0dbfs</span>	    <span class="op">=</span>  1
+  <span class="vg">0dbfs</span>	    <span class="o">=</span>  <span class="mi">1</span>
 
-  gilisten  <span class="opc">OSCinit</span>   47120
+  gi<span class="n">listen</span>  <span class="nb">OSCinit</span>   <span class="mi">47120</span>
 
-  gisin	    <span class="ohdr">ftgen</span>     1, 0, 16384, 10, 1
-  givel	    <span class="ohdr">ftgen</span>     2, 0, 128, <span class="op">-</span>2, 0
-  gicc	    <span class="ohdr">ftgen</span>     3, 0, 128, <span class="op">-</span>7, 100, 128, 100  <span class="comment">;Default all controllers to 100</span>
+  gi<span class="n">sin</span>	    <span class="nb">ftgen</span>     <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+  gi<span class="n">vel</span>	    <span class="nb">ftgen</span>     <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
+  gi<span class="n">cc</span>	    <span class="nb">ftgen</span>     <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span>  <span class="c1">;Default all controllers to 100</span>
  
-<span class="comment">;Define scale tuning</span>
-  giji_12   <span class="ohdr">ftgen</span>     202, 0, 32, <span class="op">-</span>2, 12, 2, 256, 60, 1, 16<span class="op">/</span>15, 9<span class="op">/</span>8, 6<span class="op">/</span>5, 5<span class="op">/</span>4, 4<span class="op">/</span>3, 7<span class="op">/</span>5, \
-                               3<span class="op">/</span>2, 8<span class="op">/</span>5, 5<span class="op">/</span>3, 9<span class="op">/</span>5, 15<span class="op">/</span>8, 2
+<span class="c1">;Define scale tuning</span>
+  gi<span class="n">ji_12</span>   <span class="nb">ftgen</span>     <span class="mi">202</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="o">/</span><span class="mi">15</span><span class="p">,</span> <span class="mi">9</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> \
+                               <span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span>
 
-<span class="omacro">#define</span> DEST #"<span class="op">/</span>midi"#
-<span class="comment">; Use controller number 7 for volume</span>
-<span class="omacro">#define</span> VOL #7#
+<span class="cp">#define</span> <span class="cp">DEST</span> <span class="p">#</span><span class="cp">"/midi"</span><span class="p">#</span>
+<span class="c1">; Use controller number 7 for volume</span>
+<span class="cp">#define</span> <span class="cp">VOL</span> <span class="p">#</span><span class="cp">7</span><span class="p">#</span>
 
-<span class="opc">turnon</span> 1000
-
-
-    <span class="oblock">instr</span>   1000
-
-  kst	    <span class="opc">init</span>      0
-  kch	    <span class="opc">init</span>      0
-  kd1	    <span class="opc">init</span>      0
-  kd2	    <span class="opc">init</span>      0
-
-<span class="olabel">next</span><span class="op">:</span>
-
-  kk	    <span class="opc">OSClisten</span>	gilisten, $DEST, "iiii", kst, kch, kd1, kd2
-
-<span class="octrl">if</span> (kk <span class="op">==</span> 0) <span class="octrl">goto</span> <span class="olabel">done</span>
-
-<span class="opc">printks</span> "kst <span class="op">=</span> <span class="op">%</span>i, kch <span class="op">=</span> <span class="op">%</span>i, kd1 <span class="op">=</span> <span class="op">%</span>i, kd2 <span class="op">=</span> <span class="op">%</span>i\\n", \
-         0, kst, kch, kd1, kd2
-
-<span class="octrl">if</span> (kst <span class="op">==</span> 176) then
-<span class="comment">;Store controller information in a table</span>
-	    <span class="opc">tablew</span>    kd2, kd1, gicc
-<span class="octrl">endif</span>  
-
-<span class="octrl">if</span> (kst <span class="op">==</span> 144) then
-<span class="comment">;Process noteon and noteoff messages.</span>
-  kkey	    <span class="op">=</span>  kd1
-  kvel	    <span class="op">=</span>  kd2
-  kcps	    <span class="opc">cpstun</span>    kvel, kkey, giji_12
-  kamp	    <span class="op">=</span>  kvel<span class="op">/</span>127
-
-<span class="octrl">if</span> (kvel <span class="op">==</span> 0) then
-	    <span class="opc">turnoff2</span>  1001, 4, 1
-<span class="octrl">elseif</span> (kvel <span class="op">&gt;</span> 0) then
-	    <span class="opc">event</span>     "i", 1001, 0, <span class="op">-</span>1, kcps, kamp
-<span class="octrl">endif</span>
-<span class="octrl">endif</span>
-
-	<span class="octrl">kgoto</span>	<span class="olabel">next</span>  <span class="comment">;Process all events in queue</span>
-
-<span class="olabel">done</span><span class="op">:</span>
-    <span class="oblock">endin</span>
+<span class="nb">turnon</span> <span class="mi">1000</span>
 
 
+    <span class="kd">instr</span>   <span class="nf">1000</span>
 
-    <span class="oblock">instr</span> 1001   <span class="comment">;Simple instrument</span>
+  k<span class="n">st</span>	    <span class="nb">init</span>      <span class="mi">0</span>
+  k<span class="n">ch</span>	    <span class="nb">init</span>      <span class="mi">0</span>
+  k<span class="n">d1</span>	    <span class="nb">init</span>      <span class="mi">0</span>
+  k<span class="n">d2</span>	    <span class="nb">init</span>      <span class="mi">0</span>
 
-  icps	    <span class="opc">init</span>      p4
-  kvol	    <span class="opc">table</span>     $VOL, gicc  <span class="comment">;Read MIDI volume from controller table</span>
-  kvol	    <span class="op">=</span>  kvol<span class="op">/</span>127
+<span class="nl">next</span><span class="p">:</span>
 
-  aenv     <span class="opc">linsegr</span>    0, .003, p5, 0.03, p5 <span class="op">*</span> 0.5, 0.3, 0
-  aosc	    <span class="opc">oscil</span>     aenv, icps, gisin
+  k<span class="n">k</span>	    <span class="nb">OSClisten</span>	gi<span class="n">listen</span><span class="p">,</span> <span class="cp">$DEST</span><span class="p">,</span> <span class="s">"iiii"</span><span class="p">,</span> k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>
 
-	    <span class="opc">out</span>	      aosc <span class="op">*</span> kvol
-    <span class="oblock">endin</span>
+<span class="k">if</span> <span class="p">(</span>k<span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">goto</span> <span class="nl">done</span>
+
+<span class="nb">printks</span> <span class="s">"kst = </span><span class="si">%i</span><span class="s">, kch = </span><span class="si">%i</span><span class="s">, kd1 = </span><span class="si">%i</span><span class="s">, kd2 = </span><span class="si">%i</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> \
+         <span class="mi">0</span><span class="p">,</span> k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>
+
+<span class="k">if</span> <span class="p">(</span>k<span class="n">st</span> <span class="o">==</span> <span class="mi">176</span><span class="p">)</span> <span class="k">then</span>
+<span class="c1">;Store controller information in a table</span>
+	    <span class="nb">tablew</span>    k<span class="n">d2</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> gi<span class="n">cc</span>
+<span class="k">endif</span>  
+
+<span class="k">if</span> <span class="p">(</span>k<span class="n">st</span> <span class="o">==</span> <span class="mi">144</span><span class="p">)</span> <span class="k">then</span>
+<span class="c1">;Process noteon and noteoff messages.</span>
+  k<span class="n">key</span>	    <span class="o">=</span>  k<span class="n">d1</span>
+  k<span class="n">vel</span>	    <span class="o">=</span>  k<span class="n">d2</span>
+  k<span class="n">cps</span>	    <span class="nb">cpstun</span>    k<span class="n">vel</span><span class="p">,</span> k<span class="n">key</span><span class="p">,</span> gi<span class="n">ji_12</span>
+  k<span class="n">amp</span>	    <span class="o">=</span>  k<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>
+
+<span class="k">if</span> <span class="p">(</span>k<span class="n">vel</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+	    <span class="nb">turnoff2</span>  <span class="mi">1001</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span>
+<span class="k">elseif</span> <span class="p">(</span>k<span class="n">vel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+	    <span class="nb">event</span>     <span class="s">"i"</span><span class="p">,</span> <span class="mi">1001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">amp</span>
+<span class="k">endif</span>
+<span class="k">endif</span>
+
+	<span class="k">kgoto</span>	<span class="nl">next</span>  <span class="c1">;Process all events in queue</span>
+
+<span class="nl">done</span><span class="p">:</span>
+    <span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 0 3600  <span class="comment">;Dummy f-table</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+
+    <span class="kd">instr</span> <span class="nf">1001</span>   <span class="c1">;Simple instrument</span>
+
+  i<span class="n">cps</span>	    <span class="nb">init</span>      <span class="nb">p4</span>
+  k<span class="n">vol</span>	    <span class="nb">table</span>     <span class="cp">$VOL</span><span class="p">,</span> gi<span class="n">cc</span>  <span class="c1">;Read MIDI volume from controller table</span>
+  k<span class="n">vol</span>	    <span class="o">=</span>  k<span class="n">vol</span><span class="o">/</span><span class="mi">127</span>
+
+  a<span class="n">env</span>     <span class="nb">linsegr</span>    <span class="mi">0</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="nb">p5</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span>
+  a<span class="n">osc</span>	    <span class="nb">oscil</span>     a<span class="n">env</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> gi<span class="n">sin</span>
+
+	    <span class="nb">out</span>	      a<span class="n">osc</span> <span class="o">*</span> k<span class="n">vol</span>
+    <span class="kd">endin</span>
+
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">3600</span>  <span class="c1">;Dummy f-table</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -288,7 +288,7 @@ ex:
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120351856"></a>
+        <a id="idm1525000944"></a>
         <h2>See Also</h2>
         <p>
         <a class="link" href="OSCsend.html" title="OSCsend"><em class="citetitle">OSCsend</em></a>,
@@ -297,7 +297,7 @@ ex:
         <p> More information on this opcode: <a class="ulink" href="http://www.youtube.com/watch?v=JX1C3TqP_9Y" target="_top"><em class="citetitle">http://www.youtube.com/watch?v=JX1C3TqP_9Y</em></a>  , made by Andrés Cabrera </p>
       </div>
       <div class="refsect1">
-        <a id="idp120356256"></a>
+        <a id="idm1525260784"></a>
         <h2>Credits</h2>
         <p>
       </p>

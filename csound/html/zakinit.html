@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>zakinit</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="zacl.html" title="zacl" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp160301968"></a>
+        <a id="idm1484331120"></a>
         <h2>Description</h2>
         <p>
       Establishes zak space. Must be called only once.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160303328"></a>
+        <a id="idm1484322928"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>zakinit</strong></span> isizea, isizek</pre>
       </div>
       <div class="refsect1">
-        <a id="idp160305296"></a>
+        <a id="idm1484325872"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isizea</em></span> -- the number of audio rate locations for a-rate patching. Each location is actually an array which is ksmps long.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160371840"></a>
+        <a id="idm1484328176"></a>
         <h2>Performance</h2>
         <p>
       At least one location each is always allocated for both za and zk spaces. There can be thousands or tens of thousands za and zk ranges, but most pieces probably only need a few dozen for patching signals. These patching locations are referred to by number in the other zak opcodes.
@@ -87,99 +88,98 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp160377296"></a>
+        <a id="idm1484319216"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the zakinit opcode. It uses the file <a class="ulink" href="examples/zakinit.csd" target="_top"><em class="citetitle">zakinit.csd</em></a>.
+      Here is an example of the zakinit opcode. It uses the file <a class="ulink" href="examples/zakinit.csd.html" target="_top"><em class="citetitle">zakinit.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp160379072"></a>
+          <a id="idm1484315120"></a>
           <p class="title">
-            <strong>Example 1096. Example of the zakinit opcode.</strong>
+            <strong>Example 1123. Example of the zakinit opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp273784976"></a>
-              <a class="ulink" href="examples/zakinit.csd.html" target="_top">Play</a>
+              <a id="idm1301070960"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o zakinit.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o zakinit.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 4410
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Initialize the ZAK space.</span>
-<span class="comment">; Create 3 a-rate variables and 5 k-rate variables.</span>
-<span class="opc">zakinit</span> 2, 3
+<span class="c1">; Initialize the ZAK space.</span>
+<span class="c1">; Create 3 a-rate variables and 5 k-rate variables.</span>
+<span class="nb">zakinit</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">;a simple waveform.</span>
-	<span class="comment">; Generate a simple sine waveform.</span>
-	asin <span class="opc">oscil</span> 20000, 440, 1
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;a simple waveform.</span>
+	<span class="c1">; Generate a simple sine waveform.</span>
+	a<span class="n">sin</span> <span class="nb">oscil</span> <span class="mi">20000</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
 
-	<span class="comment">; Send the sine waveform to za variable #1.</span>
-	<span class="opc">zaw</span> asin, 1
-<span class="oblock">endin</span>
+	<span class="c1">; Send the sine waveform to za variable #1.</span>
+	<span class="nb">zaw</span> a<span class="n">sin</span><span class="p">,</span> <span class="mi">1</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2  <span class="comment">;generates audio output.</span>
-	<span class="comment">; Read za variable #1.</span>
-	a1 <span class="opc">zar</span> 1
+<span class="kd">instr</span> <span class="nf">2</span>  <span class="c1">;generates audio output.</span>
+	<span class="c1">; Read za variable #1.</span>
+	a<span class="n">1</span> <span class="nb">zar</span> <span class="mi">1</span>
 
-	<span class="comment">; Generate audio output.</span>
-	<span class="opc">out</span> a1
+	<span class="c1">; Generate audio output.</span>
+	<span class="nb">out</span> a<span class="n">1</span>
 
-	<span class="comment">; Clear the za variables, get them ready for </span>
-	<span class="comment">; another pass.</span>
-	<span class="opc">zacl</span> 0, 3
-<span class="oblock">endin</span>
+	<span class="c1">; Clear the za variables, get them ready for </span>
+	<span class="c1">; another pass.</span>
+	<span class="nb">zacl</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 3  <span class="comment">;increments k-type channels</span>
-	k0 <span class="opc">zkr</span> 0
-	k1 <span class="opc">zkr</span> 1
-	k2 <span class="opc">zkr</span> 2
+<span class="kd">instr</span> <span class="nf">3</span>  <span class="c1">;increments k-type channels</span>
+	k<span class="n">0</span> <span class="nb">zkr</span> <span class="mi">0</span>
+	k<span class="n">1</span> <span class="nb">zkr</span> <span class="mi">1</span>
+	k<span class="n">2</span> <span class="nb">zkr</span> <span class="mi">2</span>
 
-	<span class="opc">zkw</span> k0<span class="op">+</span>1, 0
-	<span class="opc">zkw</span> k1<span class="op">+</span>5, 1
-	<span class="opc">zkw</span> k2<span class="op">+</span>10, 2
-<span class="oblock">endin</span>
+	<span class="nb">zkw</span> k<span class="n">0</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+	<span class="nb">zkw</span> k<span class="n">1</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span>
+	<span class="nb">zkw</span> k<span class="n">2</span><span class="o">+</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 4 <span class="comment">;displays values from k-type channels</span>
-	k0 <span class="opc">zkr</span> 0
-	k1 <span class="opc">zkr</span> 1
-	k2 <span class="opc">zkr</span> 2
+<span class="kd">instr</span> <span class="nf">4</span> <span class="c1">;displays values from k-type channels</span>
+	k<span class="n">0</span> <span class="nb">zkr</span> <span class="mi">0</span>
+	k<span class="n">1</span> <span class="nb">zkr</span> <span class="mi">1</span>
+	k<span class="n">2</span> <span class="nb">zkr</span> <span class="mi">2</span>
 
-<span class="comment">; The total count for k0 is 30, since there are 10</span>
-<span class="comment">; control blocks per second and intruments 3 and 4</span>
-<span class="comment">; are on for 3 seconds.</span>
-	<span class="opc">printf</span> "k0 <span class="op">=</span> <span class="op">%</span>i\n",k0, k0
-	<span class="opc">printf</span> "k1 <span class="op">=</span> <span class="op">%</span>i\n",k1, k1
-	<span class="opc">printf</span> "k2 <span class="op">=</span> <span class="op">%</span>i\n",k2, k2
-<span class="oblock">endin</span>
+<span class="c1">; The total count for k0 is 30, since there are 10</span>
+<span class="c1">; control blocks per second and intruments 3 and 4</span>
+<span class="c1">; are on for 3 seconds.</span>
+	<span class="nb">printf</span> <span class="s">"k0 = </span><span class="si">%i</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>k<span class="n">0</span><span class="p">,</span> k<span class="n">0</span>
+	<span class="nb">printf</span> <span class="s">"k1 = </span><span class="si">%i</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>k<span class="n">1</span><span class="p">,</span> k<span class="n">1</span>
+	<span class="nb">printf</span> <span class="s">"k2 = </span><span class="si">%i</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>k<span class="n">2</span><span class="p">,</span> k<span class="n">2</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Table #1, a sine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 10 1
+<span class="c1">; Table #1, a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">i</span> 2 0 1
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 3 0 3
-<span class="stamnt">i</span> 4 0 3
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">4</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -188,7 +188,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp160383248"></a>
+        <a id="idm1484321520"></a>
         <h2>Credits</h2>
         <p>
       </p>

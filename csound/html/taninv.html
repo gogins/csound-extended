@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>taninv</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tanh.html" title="tanh" />
@@ -38,70 +39,71 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp148515712"></a>
+        <a id="idm1495903088"></a>
         <h2>Description</h2>
         <p>
       Returns the arctangent of <span class="emphasis"><em>x</em></span> (<span class="emphasis"><em>x</em></span> in radians).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148582672"></a>
+        <a id="idm1495892592"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>taninv</strong></span>(x) (no rate restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>taninv</strong></span>(x) (no rate
+    restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>taninv</strong></span>(k/i[]) (k- or i-arrays )</pre>
       </div>
       <div class="refsect1">
-        <a id="idp148584736"></a>
+        <a id="idm1495892336"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the taninv opcode. It uses the file <a class="ulink" href="examples/taninv.csd" target="_top"><em class="citetitle">taninv.csd</em></a>.
+      Here is an example of the taninv opcode. It uses the file <a class="ulink" href="examples/taninv.csd.html" target="_top"><em class="citetitle">taninv.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp148586512"></a>
+          <a id="idm1495892976"></a>
           <p class="title">
-            <strong>Example 950. Example of the taninv opcode.</strong>
+            <strong>Example 976. Example of the taninv opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268478896"></a>
-              <a class="ulink" href="examples/taninv.csd.html" target="_top">Play</a>
+              <a id="idm1317323888"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o taninv.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o taninv.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  irad <span class="op">=</span> 0.5
-  i1 <span class="op">=</span> <span class="opc">taninv</span>(irad)
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  i<span class="n">rad</span> <span class="o">=</span> <span class="mf">0.5</span>
+  i<span class="n">1</span> <span class="o">=</span> <span class="nb">taninv</span><span class="p">(</span>i<span class="n">rad</span><span class="p">)</span>
 
-  <span class="opc">print</span> i1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+  <span class="nb">print</span> i<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -115,7 +117,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148591568"></a>
+        <a id="idm1495896176"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cos.html" title="cos"><em class="citetitle">cos</em></a>,
@@ -130,7 +132,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148601200"></a>
+        <a id="idm1495882608"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>New in version 3.48</p>

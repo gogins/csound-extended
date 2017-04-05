@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>dct</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="dconv.html" title="dconv" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87677472"></a>
+        <a id="idm1558756592"></a>
         <h2>Description</h2>
         <p>
        Applies a forward Discrete Cosine Transform to an input
@@ -48,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87681840"></a>
+        <a id="idm1558754544"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>dct</strong></span> kin[]</pre>
         <pre class="synopsis">iout[] <span class="command"><strong>dct</strong></span> iin[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp87744448"></a>
+        <a id="idm1558759792"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iout[]</em></span> -- output array containing the DCT. It will be created if it does not exist.
@@ -64,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87746912"></a>
+        <a id="idm1558749040"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- output array containing the DCT. It will be created if it does not exist.
@@ -74,43 +75,41 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87749472"></a>
+        <a id="idm1558746096"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the dct opcode. It uses the file <a class="ulink" href="examples/dct.csd" target="_top"><em class="citetitle">dct.csd</em></a>.</p>
+      Here is an example of the dct opcode. It uses the file <a class="ulink" href="examples/dct.csd.html" target="_top"><em class="citetitle">dct.csd</em></a>.</p>
         <div class="example">
-          <a id="idp87751424"></a>
+          <a id="idm1558750192"></a>
           <p class="title">
-            <strong>Example 185. Example of the dct opcode.</strong>
+            <strong>Example 187. Example of the dct opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp239071648"></a>
-              <a class="ulink" href="examples/dct.csd.html" target="_top">Play</a>
+              <a id="idm1393847664"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="oblock">instr</span> 1
+i<span class="n">Arr</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span>
+i<span class="n">DCT</span><span class="p">[]</span> <span class="nb">dct</span> i<span class="n">Arr</span>
+i<span class="n">iDCT</span><span class="p">[]</span> <span class="nb">dctinv</span> i<span class="n">DCT</span>
 
-iArr[] <span class="opc">fillarray</span> 1,2,3,4
-iDCT[] <span class="opc">dct</span> iArr
-iiDCT[] <span class="opc">dctinv</span> iDCT
-
-<span class="opc">prints</span> "<span class="op">%</span>.1f <span class="op">%</span>.1f <span class="op">%</span>.1f <span class="op">%</span>.1f <span class="op">=</span><span class="op">&gt;</span> <span class="op">%</span>.1f <span class="op">%</span>.1f <span class="op">%</span>.1f <span class="op">%</span>.1f\n",
-        iArr[0], iArr[1], iArr[2], iArr[3], 
-        iiDCT[0], iiDCT[1], iiDCT[2], iiDCT[3]
+<span class="nb">prints</span> <span class="s">"%.1f %.1f %.1f %.1f =&gt; %.1f %.1f %.1f %.1f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+        i<span class="n">Arr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">Arr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">Arr</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">Arr</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
+        i<span class="n">iDCT</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">iDCT</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">iDCT</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">iDCT</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
                 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 0
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -118,7 +117,7 @@ iiDCT[] <span class="opc">dctinv</span> iDCT
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idp87755584"></a>
+        <a id="idm1558747632"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>,
@@ -127,7 +126,7 @@ iiDCT[] <span class="opc">dctinv</span> iDCT
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp87759664"></a>
+        <a id="idm1558741232"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Strings</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="PartOpcodesOverview.html" title="Part II. Opcodes Overview" />
     <link rel="prev" href="arraysfft.html" title="Array-based spectral opcodes" />
@@ -77,7 +78,10 @@ a1    <span class="opc">diskin2</span> Sname, 1</pre>
     Strings can also be linked to a number using <a class="link" href="strset.html" title="strset"><em class="citetitle">strset</em></a> and <a class="link" href="strget.html" title="strget"><em class="citetitle">strget</em></a>.
   </p>
       <p>
-    Csound 5 also has improvements in parsing string constants. It is possible to specify a multi-line string by enclosing it within {{ and }} instead of the usual double quote characters, and the following escape sequences are automatically converted:
+    Csound 5 also has improvements in parsing string constants. It is possible
+    to specify a multi-line string by enclosing it within {{ and }} instead of
+    the usual double quote characters, and the following escape sequences are
+    automatically converted:
     </p>
       <div class="itemizedlist">
         <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -105,6 +109,41 @@ a1    <span class="opc">diskin2</span> Sname, 1</pre>
         </ul>
       </div>
       <p>
+    </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Note: Note">
+          <tr>
+            <td rowspan="2" align="center" valign="top" width="25">
+              <img alt="[Note]" src="images/note.png" />
+            </td>
+            <th align="left">Note</th>
+          </tr>
+          <tr>
+            <td align="left" valign="top">
+              <p>
+        If the user does not want an escaped sequence to be automatically converted, she has to escape it
+        with an additional '\' character so that Csound knows it does not have to interpret the escaped sequence.
+        For example the string <code class="code">"Not escaped\nline return"</code> will be converted to
+        </p>
+              <pre class="programlisting">
+        "Not escaped
+         line return"
+        </pre>
+              <p>
+        before being used, while the string <code class="code">"Escaped\\nline return"</code> will be converted to
+        </p>
+              <pre class="programlisting">
+        "Escaped\nline return"
+        </pre>
+              <p>
+        before being used.
+      </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <p>
+    
     It can be useful together with the <a class="link" href="system.html" title="system"><em class="citetitle">system</em></a> opcode:
     </p>
       <pre class="programlisting">

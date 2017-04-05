@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLkeyIn</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLjoy.html" title="FLjoy" />
@@ -38,25 +39,25 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94650320"></a>
+        <a id="idm1551445872"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLkeyIn</em></span> informs about the status of a key pressed by the user on the alphanumeric keyboard when an FLTK panel has got the focus.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94694896"></a>
+        <a id="idm1551433200"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kascii <span class="command"><strong>FLkeyIn</strong></span> [ifn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp94697104"></a>
+        <a id="idm1551432432"></a>
         <h2>Initialization</h2>
         <p>ifn – (optional, default value is zero) set the behavior of FLkeyIn (see below).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94698480"></a>
+        <a id="idm1551436144"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kascii</em></span> - the ascii value of last pressed key. If the key is pressed, the value is positive, when the key is released the value is negative.
     </p>
@@ -90,61 +91,60 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp94707744"></a>
+        <a id="idm1551430256"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLkeyIn opcode. It uses the file <a class="ulink" href="examples/FLkeyIn.csd" target="_top"><em class="citetitle">FLkeyIn.csd</em></a>.
+      Here is an example of the FLkeyIn opcode. It uses the file <a class="ulink" href="examples/FLkeyIn.csd.html" target="_top"><em class="citetitle">FLkeyIn.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp94709520"></a>
+          <a id="idm1551430512"></a>
           <p class="title">
-            <strong>Example 284. Example of the FLkeyIn opcode.</strong>
+            <strong>Example 286. Example of the FLkeyIn opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp242399968"></a>
-              <a class="ulink" href="examples/FLkeyIn.csd.html" target="_top">Play</a>
+              <a id="idm1385935216"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">ksmps</span><span class="op">=</span>128
-<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">128</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
-<span class="comment">;Example by Andres Cabrera 2007</span>
+<span class="c1">;Example by Andres Cabrera 2007</span>
 
-<span class="opc">FLpanel</span> "FLkeyIn", 400, 300, <span class="op">-</span>1, <span class="op">-</span>1, 5, 1, 1
-<span class="opc">FLpanelEnd</span>
+<span class="nb">FLpanel</span> <span class="s">"FLkeyIn"</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+<span class="nb">FLpanelEnd</span>
 
-<span class="opc">FLrun</span>
+<span class="nb">FLrun</span>
 
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-kascii   <span class="opc">FLkeyIn</span>
-ktrig <span class="opc">changed</span> kascii
-<span class="octrl">if</span> (kascii <span class="op">&gt;</span> 0) then
-  <span class="opc">printf</span> "Key Down<span class="op">:</span> <span class="op">%</span>i\n", ktrig, kascii
-<span class="octrl">else</span>
-  <span class="opc">printf</span> "Key Up<span class="op">:</span> <span class="op">%</span>i\n", ktrig, <span class="op">-</span>kascii
-<span class="octrl">endif</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">ascii</span>   <span class="nb">FLkeyIn</span>
+k<span class="n">trig</span> <span class="nb">changed</span> k<span class="n">ascii</span>
+<span class="k">if</span> <span class="p">(</span>k<span class="n">ascii</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+  <span class="nb">printf</span> <span class="s">"Key Down: </span><span class="si">%i</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">ascii</span>
+<span class="k">else</span>
+  <span class="nb">printf</span> <span class="s">"Key Up: </span><span class="si">%i</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> <span class="o">-</span>k<span class="n">ascii</span>
+<span class="k">endif</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 120
-<span class="stamnt">e</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">120</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -153,7 +153,7 @@ ktrig <span class="opc">changed</span> kascii
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94714256"></a>
+        <a id="idm1551427312"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

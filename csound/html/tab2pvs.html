@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tab2pvs</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tabsum.html" title="tabsum" />
@@ -38,22 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148294112"></a>
+        <a id="idm1496391424"></a>
         <h2>Description</h2>
         <p>
        Copies a pvs frame from a t-variable or k-rate array. Currently only AMP+FREQ is produced. This opcode requires the t-type to be defined, which means it only works in the new bison/flex-based parser.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148295520"></a>
+        <a id="idm1496392448"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>tab2pvs</strong></span> tvar|karr[][,ihopsize, iwinsize, iwintype]</pre>
+        <pre class="synopsis">fsig <span class="command"><strong>tab2pvs</strong></span> kmags[], kfreqs[][,ihopsize, iwinsize, iwintype]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp148358256"></a>
+        <a id="idm1496394368"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tvar</em></span> -- k-rate array (or t-variable) containing the input. It is produced at every k-period, but may not contain a new frame, pvs frames are produced at their own frame rate that is independent of kr. The size of this vector will determine the fftsize, N = size - 2.
+    </p>
+        <p>
+      <span class="emphasis"><em>kmags[], kfreqs[]</em></span> -- k-rate arrays containing the input magnitude and frequency values. The output is produced at every k-period, but may not contain a new frame, pvs frames are produced at their own frame rate that is independent of kr. These vectors must be the same size and they will determine the fftsize, N = size - 2.
     </p>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output fsig to be copied.
@@ -69,14 +74,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148364464"></a>
+        <a id="idm1496387456"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idp148365392"></a>
+          <a id="idm1496380544"></a>
           <p class="title">
-            <strong>Example 946. Example</strong>
+            <strong>Example 972. Example</strong>
           </p>
           <div class="example-contents"><pre class="programlisting">
 karr[] init 1026
@@ -89,7 +94,7 @@ aout pvsynth fsig1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148367888"></a>
+        <a id="idm1496380928"></a>
         <h2>Credits</h2>
         <p>
       </p>

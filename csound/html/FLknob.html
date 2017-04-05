@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLknob</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLkeyIn.html" title="FLkeyIn" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp94676016"></a>
+        <a id="idm1551390192"></a>
         <h2>Description</h2>
         <p>
       A FLTK widget opcode that creates a knob.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94750400"></a>
+        <a id="idm1551391856"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout, ihandle <span class="command"><strong>FLknob</strong></span> "label", imin, imax, iexp, itype, idisp, iwidth, \
       ix, iy [, icursorsize]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp94752752"></a>
+        <a id="idm1551389808"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> -- a handle value (an integer number) that unequivocally references a corresponding widget. This is used by other opcodes that modify a widget's properties (see <a class="link" href="ControlFltkAppearance.html" title="Modifying FLTK Widget Appearance"><em class="citetitle">Modifying FLTK Widget Appearance</em></a>). It is automatically utput by <span class="emphasis"><em>FLknob</em></span> and must not be set by the user label. (The user label is a double-quoted string containing some user-provided text placed near the widget.)
@@ -182,7 +183,7 @@ in the score. In fact, tables placed in the score are created later than the ini
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94791648"></a>
+        <a id="idm1551360624"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout</em></span> -- output value
@@ -192,90 +193,89 @@ in the score. In fact, tables placed in the score are created later than the ini
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94794288"></a>
+        <a id="idm1551362928"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLknob opcode. It uses the file <a class="ulink" href="examples/FLknob.csd" target="_top"><em class="citetitle">FLknob.csd</em></a>.
+      Here is an example of the FLknob opcode. It uses the file <a class="ulink" href="examples/FLknob.csd.html" target="_top"><em class="citetitle">FLknob.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp94796144"></a>
+          <a id="idm1551361904"></a>
           <p class="title">
-            <strong>Example 285. Example of the FLknob opcode.</strong>
+            <strong>Example 287. Example of the FLknob opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp242586000"></a>
-              <a class="ulink" href="examples/FLknob.csd.html" target="_top">Play</a>
+              <a id="idm1385719792"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLknob.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLknob.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; A sine with oscillator with flknob controlled frequency</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; A sine with oscillator with flknob controlled frequency</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">FLpanel</span> "Frequency Knob", 900, 400, 50, 50
-    <span class="comment">; Minimum value output by the knob</span>
-    imin <span class="op">=</span> 200
-    <span class="comment">; Maximum value output by the knob</span>
-    imax <span class="op">=</span> 5000
-    <span class="comment">; Logarithmic type knob selected</span>
-    iexp <span class="op">=</span> <span class="op">-</span>1
-    <span class="comment">; Knob graphic type (1=3D knob)</span>
-    itype <span class="op">=</span> 1 
-    <span class="comment">; Display handle (-1=not used)</span>
-    idisp <span class="op">=</span> <span class="op">-</span>1
-    <span class="comment">; Width of the knob in pixels</span>
-    iwidth <span class="op">=</span> 70
-    <span class="comment">; Distance of the left edge of the knob </span>
-    <span class="comment">; from the left edge of the panel</span>
-    ix <span class="op">=</span> 70
-    <span class="comment">; Distance of the top edge of the knob </span>
-    <span class="comment">; from the top of the panel</span>
-    iy <span class="op">=</span> 125
+<span class="nb">FLpanel</span> <span class="s">"Frequency Knob"</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="c1">; Minimum value output by the knob</span>
+    i<span class="n">min</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="c1">; Maximum value output by the knob</span>
+    i<span class="n">max</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="c1">; Logarithmic type knob selected</span>
+    i<span class="n">exp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">; Knob graphic type (1=3D knob)</span>
+    i<span class="n">type</span> <span class="o">=</span> <span class="mi">1</span> 
+    <span class="c1">; Display handle (-1=not used)</span>
+    i<span class="n">disp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">; Width of the knob in pixels</span>
+    i<span class="n">width</span> <span class="o">=</span> <span class="mi">70</span>
+    <span class="c1">; Distance of the left edge of the knob </span>
+    <span class="c1">; from the left edge of the panel</span>
+    i<span class="n">x</span> <span class="o">=</span> <span class="mi">70</span>
+    <span class="c1">; Distance of the top edge of the knob </span>
+    <span class="c1">; from the top of the panel</span>
+    i<span class="n">y</span> <span class="o">=</span> <span class="mi">125</span>
 
-    gkfreq, ihandle <span class="opc">FLknob</span> "Frequency", imin, imax, iexp, itype, idisp, iwidth, ix, iy
-<span class="comment">; End of panel contents</span>
-<span class="opc">FLpanelEnd</span>
-<span class="comment">; Run the widget thread!</span>
-<span class="opc">FLrun</span>
+    gk<span class="n">freq</span><span class="p">,</span> i<span class="n">handle</span> <span class="nb">FLknob</span> <span class="s">"Frequency"</span><span class="p">,</span> i<span class="n">min</span><span class="p">,</span> i<span class="n">max</span><span class="p">,</span> i<span class="n">exp</span><span class="p">,</span> i<span class="n">type</span><span class="p">,</span> i<span class="n">disp</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span>
+<span class="c1">; End of panel contents</span>
+<span class="nb">FLpanelEnd</span>
+<span class="c1">; Run the widget thread!</span>
+<span class="nb">FLrun</span>
 
-<span class="comment">; Set the widget's initial value</span>
-<span class="opc">FLsetVal_i</span> 300, ihandle
+<span class="c1">; Set the widget's initial value</span>
+<span class="nb">FLsetVal_i</span> <span class="mi">300</span><span class="p">,</span> i<span class="n">handle</span>
 
-<span class="oblock">instr</span> 1
-    iamp <span class="op">=</span> 15000
-    ifn <span class="op">=</span> 1
-    asig <span class="opc">oscili</span> iamp, gkfreq, ifn
-    <span class="opc">out</span> asig
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Function table that defines a single cycle</span>
-<span class="comment">; of a sine wave.</span>
-<span class="stamnt">f</span> 1 0 1024 10 1
-
-<span class="comment">; Instrument 1 will play a note for 1 hour.</span>
-<span class="stamnt">i</span> 1 0 3600
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">amp</span> <span class="o">=</span> <span class="mi">15000</span>
+    i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+    a<span class="n">sig</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> gk<span class="n">freq</span><span class="p">,</span> i<span class="n">fn</span>
+    <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Function table that defines a single cycle</span>
+<span class="c1">; of a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Instrument 1 will play a note for 1 hour.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -283,91 +283,90 @@ in the score. In fact, tables placed in the score are created later than the ini
         <p><br class="example-break" />
     </p>
         <p>
-      Here is another example of the FLknob opcode, showing the different styles of knobs and the usage of FLvalue to display a knob's value. It uses the file <a class="ulink" href="examples/FLknob-2.csd" target="_top"><em class="citetitle">FLknob-2.csd</em></a>.
+      Here is another example of the FLknob opcode, showing the different styles of knobs and the usage of FLvalue to display a knob's value. It uses the file <a class="ulink" href="examples/FLknob-2.csd.html" target="_top"><em class="citetitle">FLknob-2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp94801552"></a>
+          <a id="idm1551349104"></a>
           <p class="title">
-            <strong>Example 286. More complex example of the FLknob opcode.</strong>
+            <strong>Example 288. More complex example of the FLknob opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp242413536"></a>
-              <a class="ulink" href="examples/FLknob-2.csd.html" target="_top">Play</a>
+              <a id="idm1385773552"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLknob.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLknob.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">;By Andres Cabrera 2007</span>
-<span class="opc">FLpanel</span> "Knob Types", 330, 230, 50, 50
-    <span class="comment">; Distance of the left edge of the knob </span>
-    <span class="comment">; from the left edge of the panel</span>
-    ix <span class="op">=</span> 20
-    <span class="comment">; Distance of the top edge of the knob </span>
-    <span class="comment">; from the top of the panel</span>
-    iy <span class="op">=</span> 20
+<span class="c1">;By Andres Cabrera 2007</span>
+<span class="nb">FLpanel</span> <span class="s">"Knob Types"</span><span class="p">,</span> <span class="mi">330</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="c1">; Distance of the left edge of the knob </span>
+    <span class="c1">; from the left edge of the panel</span>
+    i<span class="n">x</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">; Distance of the top edge of the knob </span>
+    <span class="c1">; from the top of the panel</span>
+    i<span class="n">y</span> <span class="o">=</span> <span class="mi">20</span>
 
-    <span class="comment">;Create boxes that display a widget's value</span>
-    ihandleA <span class="opc">FLvalue</span> "A", 60, 20, ix <span class="op">+</span> 130, iy <span class="op">+</span> 110
-    ihandleB <span class="opc">FLvalue</span> "B", 60, 20, ix <span class="op">+</span> 220, iy <span class="op">+</span> 110
-    ihandleC <span class="opc">FLvalue</span> "C", 60, 20, ix <span class="op">+</span> 130, iy <span class="op">+</span> 160
-    ihandleD <span class="opc">FLvalue</span> "D", 60, 20, ix <span class="op">+</span> 220, iy <span class="op">+</span> 160
+    <span class="c1">;Create boxes that display a widget's value</span>
+    i<span class="n">handleA</span> <span class="nb">FLvalue</span> <span class="s">"A"</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">130</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">110</span>
+    i<span class="n">handleB</span> <span class="nb">FLvalue</span> <span class="s">"B"</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">220</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">110</span>
+    i<span class="n">handleC</span> <span class="nb">FLvalue</span> <span class="s">"C"</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">130</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">160</span>
+    i<span class="n">handleD</span> <span class="nb">FLvalue</span> <span class="s">"D"</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">220</span><span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">160</span>
 
-    <span class="comment">; The foru types of FLknobs</span>
-    gkdummy1, ihandle1 <span class="opc">FLknob</span> "Type 1", 200, 5000, <span class="op">-</span>1, 1, ihandleA, 70, ix, iy, 90
-    gkdummy2, ihandle2 <span class="opc">FLknob</span> "Type 2", 200, 5000, <span class="op">-</span>1, 2, ihandleB, 70, ix <span class="op">+</span> 100, iy
-    gkdummy3, ihandle3 <span class="opc">FLknob</span> "Type 3", 200, 5000, <span class="op">-</span>1, 3, ihandleC, 70, ix <span class="op">+</span> 200, iy
-    gkdummy4, ihandle4 <span class="opc">FLknob</span> "Type 4", 200, 5000, <span class="op">-</span>1, 4, ihandleD, 70, ix , iy <span class="op">+</span> 100
-<span class="comment">; End of panel contents</span>
-<span class="opc">FLpanelEnd</span>
-<span class="comment">; Run the widget thread!</span>
-<span class="opc">FLrun</span>
+    <span class="c1">; The foru types of FLknobs</span>
+    gk<span class="n">dummy1</span><span class="p">,</span> i<span class="n">handle1</span> <span class="nb">FLknob</span> <span class="s">"Type 1"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">handleA</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> <span class="mi">90</span>
+    gk<span class="n">dummy2</span><span class="p">,</span> i<span class="n">handle2</span> <span class="nb">FLknob</span> <span class="s">"Type 2"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> i<span class="n">handleB</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">y</span>
+    gk<span class="n">dummy3</span><span class="p">,</span> i<span class="n">handle3</span> <span class="nb">FLknob</span> <span class="s">"Type 3"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> i<span class="n">handleC</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> i<span class="n">x</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> i<span class="n">y</span>
+    gk<span class="n">dummy4</span><span class="p">,</span> i<span class="n">handle4</span> <span class="nb">FLknob</span> <span class="s">"Type 4"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> i<span class="n">handleD</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> i<span class="n">x</span> <span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">100</span>
+<span class="c1">; End of panel contents</span>
+<span class="nb">FLpanelEnd</span>
+<span class="c1">; Run the widget thread!</span>
+<span class="nb">FLrun</span>
 
-<span class="comment">; Set the color of widgets</span>
-<span class="opc">FLsetColor</span> 20, 23, 100, ihandle1
-<span class="opc">FLsetColor</span> 0, 123, 100, ihandle2
-<span class="opc">FLsetColor</span> 180, 23, 12, ihandle3
-<span class="opc">FLsetColor</span> 10, 230, 0, ihandle4
+<span class="c1">; Set the color of widgets</span>
+<span class="nb">FLsetColor</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">handle1</span>
+<span class="nb">FLsetColor</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">handle2</span>
+<span class="nb">FLsetColor</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> i<span class="n">handle3</span>
+<span class="nb">FLsetColor</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">handle4</span>
 
-<span class="opc">FLsetColor2</span> 200, 230, 0, ihandle1
-<span class="opc">FLsetColor2</span> 200,0 ,123 , ihandle2
-<span class="opc">FLsetColor2</span> 180, 180, 100, ihandle3
-<span class="opc">FLsetColor2</span> 180, 23, 12, ihandle4
-
-
-<span class="comment">; Set the initial value of the widget</span>
-<span class="opc">FLsetVal_i</span> 300, ihandle1
-<span class="opc">FLsetVal_i</span> 1000, ihandle2
+<span class="nb">FLsetColor2</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">handle1</span>
+<span class="nb">FLsetColor2</span> <span class="mi">200</span><span class="p">,</span><span class="mi">0</span> <span class="p">,</span><span class="mi">123</span> <span class="p">,</span> i<span class="n">handle2</span>
+<span class="nb">FLsetColor2</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">handle3</span>
+<span class="nb">FLsetColor2</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> i<span class="n">handle4</span>
 
 
-<span class="oblock">instr</span> 1
-<span class="comment">; Nothing here for now</span>
-<span class="oblock">endin</span>
+<span class="c1">; Set the initial value of the widget</span>
+<span class="nb">FLsetVal_i</span> <span class="mi">300</span><span class="p">,</span> i<span class="n">handle1</span>
+<span class="nb">FLsetVal_i</span> <span class="mi">1000</span><span class="p">,</span> i<span class="n">handle2</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="stamnt">f</span> 0 3600   <span class="comment">;Dumy table to make csound wait for realtime events</span>
-
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; Nothing here for now</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">3600</span>   <span class="c1">;Dumy table to make csound wait for realtime events</span>
+
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -376,7 +375,7 @@ in the score. In fact, tables placed in the score are created later than the ini
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94803520"></a>
+        <a id="idm1551352688"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLcount.html" title="FLcount"><em class="citetitle">FLcount</em></a>,
@@ -387,7 +386,7 @@ in the score. In fact, tables placed in the score are created later than the ini
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94809472"></a>
+        <a id="idm1551028496"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

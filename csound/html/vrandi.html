@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vrandi</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vrandh.html" title="vrandh" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156864272"></a>
+        <a id="idm1488029296"></a>
         <h2>Description</h2>
         <p>
       Generate a sort of 'vectorial band-limited noise'
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156946560"></a>
+        <a id="idm1488031984"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vrandi</strong></span>  ifn,  krange, kcps, ielements [, idstoffset] [, iseed] \
       [, isize] [, ioffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp156948608"></a>
+        <a id="idm1488028784"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> - number of the table where the vectorial signal will be generated
@@ -73,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156955856"></a>
+        <a id="idm1488020592"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>krange</em></span> - range of random elements (from -<span class="emphasis"><em>krange</em></span> to <span class="emphasis"><em>krange</em></span>)
@@ -95,76 +96,75 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156965008"></a>
+        <a id="idm1488015088"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vrandi opcode. It uses the file <a class="ulink" href="examples/vrandi.csd" target="_top"><em class="citetitle">vrandi.csd</em></a>.
+      Here is an example of the vrandi opcode. It uses the file <a class="ulink" href="examples/vrandi.csd.html" target="_top"><em class="citetitle">vrandi.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp156966832"></a>
+          <a id="idm1488009072"></a>
           <p class="title">
-            <strong>Example 1053. Example of the vrandi opcode.</strong>
+            <strong>Example 1079. Example of the vrandi opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp272586144"></a>
-              <a class="ulink" href="examples/vrandi.csd.html" target="_top">Play</a>
+              <a id="idm1305930864"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vrandi.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vrandi.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">ksmps</span><span class="op">=</span>128
-<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">128</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
-<span class="comment">;Example by Andres Cabrera</span>
+<span class="c1">;Example by Andres Cabrera</span>
 
-gitab <span class="ohdr">ftgen</span> 0, 0, 16, <span class="op">-</span>7, 0, 128, 0
+gi<span class="n">tab</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span>
 
-<span class="oblock">instr</span> 1
-  krange <span class="opc">init</span> p4
-  kcps <span class="opc">init</span> p5
-  ioffset <span class="opc">init</span> p6
-  <span class="comment">;       table   krange  kcps  ielements   idstoffset  iseed  isize ioffset</span>
-  <span class="opc">vrandi</span>  gitab,  krange, kcps,     3,         3,         2,   1,    ioffset
+<span class="kd">instr</span> <span class="nf">1</span>
+  k<span class="n">range</span> <span class="nb">init</span> <span class="nb">p4</span>
+  k<span class="n">cps</span> <span class="nb">init</span> <span class="nb">p5</span>
+  i<span class="n">offset</span> <span class="nb">init</span> <span class="nb">p6</span>
+  <span class="c1">;       table   krange  kcps  ielements   idstoffset  iseed  isize ioffset</span>
+  <span class="nb">vrandi</span>  gi<span class="n">tab</span><span class="p">,</span>  k<span class="n">range</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span>     <span class="mi">3</span><span class="p">,</span>         <span class="mi">3</span><span class="p">,</span>         <span class="mi">2</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>    i<span class="n">offset</span>
 
-  kfreq1 <span class="opc">table</span> 3, gitab
-  kfreq2 <span class="opc">table</span> 4, gitab
-  kfreq3 <span class="opc">table</span> 5, gitab
+  k<span class="n">freq1</span> <span class="nb">table</span> <span class="mi">3</span><span class="p">,</span> gi<span class="n">tab</span>
+  k<span class="n">freq2</span> <span class="nb">table</span> <span class="mi">4</span><span class="p">,</span> gi<span class="n">tab</span>
+  k<span class="n">freq3</span> <span class="nb">table</span> <span class="mi">5</span><span class="p">,</span> gi<span class="n">tab</span>
 
-  <span class="comment">;Change the frequency of three oscillators according to the random values</span>
-  aosc1 <span class="opc">oscili</span> 4000, kfreq1, 1
-  aosc2 <span class="opc">oscili</span> 2000, kfreq2, 1
-  aosc3 <span class="opc">oscili</span> 4000, kfreq3, 1
+  <span class="c1">;Change the frequency of three oscillators according to the random values</span>
+  a<span class="n">osc1</span> <span class="nb">oscili</span> <span class="mi">4000</span><span class="p">,</span> k<span class="n">freq1</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">osc2</span> <span class="nb">oscili</span> <span class="mi">2000</span><span class="p">,</span> k<span class="n">freq2</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">osc3</span> <span class="nb">oscili</span> <span class="mi">4000</span><span class="p">,</span> k<span class="n">freq3</span><span class="p">,</span> <span class="mi">1</span>
 
-  <span class="opc">outs</span> aosc1<span class="op">+</span>aosc2, aosc3<span class="op">+</span>aosc2
-<span class="oblock">endin</span>
+  <span class="nb">outs</span> a<span class="n">osc1</span><span class="o">+</span>a<span class="n">osc2</span><span class="p">,</span> a<span class="n">osc3</span><span class="o">+</span>a<span class="n">osc2</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">f</span> 1 0 2048 10 1
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2048</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="comment">;             krange  kcps    ioffset</span>
-<span class="stamnt">i</span> 1 0 	5	100	1	300
-<span class="stamnt">i</span> 1 5 	5	5	1	400
-<span class="stamnt">i</span> 1 10 	5	100	2	1000
-<span class="stamnt">i</span> 1 15 	5	400	4	1000
-<span class="stamnt">i</span> 1 20 	5	1000	8	2000
-<span class="stamnt">i</span> 1 20 	5	300	32	350
+<span class="c1">;             krange  kcps    ioffset</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> 	<span class="mi">5</span>	<span class="mi">100</span>	<span class="mi">1</span>	<span class="mi">300</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">5</span> 	<span class="mi">5</span>	<span class="mi">5</span>	<span class="mi">1</span>	<span class="mi">400</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">10</span> 	<span class="mi">5</span>	<span class="mi">100</span>	<span class="mi">2</span>	<span class="mi">1000</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">15</span> 	<span class="mi">5</span>	<span class="mi">400</span>	<span class="mi">4</span>	<span class="mi">1000</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">20</span> 	<span class="mi">5</span>	<span class="mi">1000</span>	<span class="mi">8</span>	<span class="mi">2000</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">20</span> 	<span class="mi">5</span>	<span class="mi">300</span>	<span class="mi">32</span>	<span class="mi">350</span>
   
-<span class="stamnt">e</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -173,7 +173,7 @@ gitab <span class="ohdr">ftgen</span> 0, 0, 16, <span class="op">-</span>7, 0, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156971024"></a>
+        <a id="idm1488012016"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="vrandh.html" title="vrandh"><em class="citetitle">vrandh</em></a>, 
@@ -181,7 +181,7 @@ gitab <span class="ohdr">ftgen</span> 0, 0, 16, <span class="op">-</span>7, 0, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156974032"></a>
+        <a id="idm1488001392"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

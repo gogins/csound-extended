@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>lposcila</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="lposcil3.html" title="lposcil3" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111548736"></a>
+        <a id="idm1534045552"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>lposcila</em></span> reads sampled sound from a table with looping and high precision.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111553168"></a>
+        <a id="idm1534040432"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>lposcila</strong></span> aamp, kfreqratio, kloop, kend, ift [,iphs] </pre>
       </div>
       <div class="refsect1">
-        <a id="idp111555376"></a>
+        <a id="idm1534043632"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ift</em></span> -- function table number
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111617008"></a>
+        <a id="idm1534031472"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ar</em></span> -- output signal
@@ -82,61 +83,60 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111624224"></a>
+        <a id="idm1534034672"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the lposcila opcode. It uses the file <a class="ulink" href="examples/lposcila.csd" target="_top"><em class="citetitle">lposcila.csd</em></a>.
+      Here is an example of the lposcila opcode. It uses the file <a class="ulink" href="examples/lposcila.csd.html" target="_top"><em class="citetitle">lposcila.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp111626080"></a>
+          <a id="idm1534036336"></a>
           <p class="title">
-            <strong>Example 475. Example of the lposcila opcode.</strong>
+            <strong>Example 490. Example of the lposcila opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp250441376"></a>
-              <a class="ulink" href="examples/lposcila.csd.html" target="_top">Play</a>
+              <a id="idm1361351536"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o lposcila.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o lposcila.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kcps  <span class="op">=</span> 1.3					<span class="comment">;a 3d up</span>
-kloop <span class="op">=</span> 0					<span class="comment">;loop start time in samples</span>
-kend  <span class="op">=</span> 10000					<span class="comment">;loop end time in samples</span>
+k<span class="n">cps</span>  <span class="o">=</span> <span class="mf">1.3</span>					<span class="c1">;a 3d up</span>
+k<span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>					<span class="c1">;loop start time in samples</span>
+k<span class="n">end</span>  <span class="o">=</span> <span class="mi">10000</span>					<span class="c1">;loop end time in samples</span>
 
-aenv <span class="opc">expsega</span> 0.01, 0.1, 1, 0.1, 0.5, 0.5, 0.01	<span class="comment">;envelope with fast and short segment</span>
-asig <span class="opc">lposcila</span> aenv, kcps, kloop, kend, 1	<span class="comment">;use it for amplitude</span>
-     <span class="opc">outs</span> asig, asig
+a<span class="n">env</span> <span class="nb">expsega</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.01</span>	<span class="c1">;envelope with fast and short segment</span>
+a<span class="n">sig</span> <span class="nb">lposcila</span> a<span class="n">env</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">loop</span><span class="p">,</span> k<span class="n">end</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;use it for amplitude</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; Its table size is deferred,</span>
-<span class="comment">; and format taken from the soundfile header.</span>
-<span class="stamnt">f</span> 1 0 0 1 "beats.wav" 0 0 0
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Its table size is deferred,</span>
+<span class="c1">; and format taken from the soundfile header.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"beats.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
 
-<span class="comment">; Play Instrument #1 for 6 seconds.</span>
-<span class="comment">; This will loop the drum pattern several times.</span>
-<span class="stamnt">i</span> 1 0 2
+<span class="c1">; Play Instrument #1 for 6 seconds.</span>
+<span class="c1">; This will loop the drum pattern several times.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -145,7 +145,7 @@ asig <span class="opc">lposcila</span> aenv, kcps, kloop, kend, 1	<span class="c
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111630368"></a>
+        <a id="idm1534027888"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="lposcil.html" title="lposcil"><em class="citetitle">lposcil</em></a>,
@@ -154,7 +154,7 @@ asig <span class="opc">lposcila</span> aenv, kcps, kloop, kend, 1	<span class="c
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111634336"></a>
+        <a id="idm1534024176"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

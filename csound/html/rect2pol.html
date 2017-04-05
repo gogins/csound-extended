@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>rect2pol</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="readscratch.html" title="readscratch" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132589504"></a>
+        <a id="idm1512588912"></a>
         <h2>Description</h2>
         <p>
       Converts an input array in real-imaginary format to magnitude-phase format.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132590688"></a>
+        <a id="idm1512591728"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>rect2pol</strong></span> kin[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp132592784"></a>
+        <a id="idm1512581360"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- output array containing the complex-valued magnitude-phase output. It will be created if it does not exist.
@@ -60,100 +61,99 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132653312"></a>
+        <a id="idm1512581104"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the rect2pol opcode. It uses the file <a class="ulink" href="examples/rect2pol.csd" target="_top"><em class="citetitle">rect2pol.csd</em></a>.</p>
+      Here is an example of the rect2pol opcode. It uses the file <a class="ulink" href="examples/rect2pol.csd.html" target="_top"><em class="citetitle">rect2pol.csd</em></a>.</p>
         <div class="example">
-          <a id="idp132655120"></a>
+          <a id="idm1512576880"></a>
           <p class="title">
-            <strong>Example 779. Example of the rect2pol opcode.</strong>
+            <strong>Example 800. Example of the rect2pol opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp261900496"></a>
-              <a class="ulink" href="examples/rect2pol.csd.html" target="_top">Play</a>
+              <a id="idm1333758832"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -d -o dac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="op">/</span><span class="op">*</span> <span class="ohdr">ksmps</span> needs to be an integer div of
-   hopsize <span class="op">*</span><span class="op">/</span>
-<span class="ohdr">ksmps</span> <span class="op">=</span> 64
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="cm">/* ksmps needs to be an integer div of
+   hopsize */</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">64</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
- ihopsize <span class="op">=</span> 256   <span class="comment">; hopsize</span>
- ifftsize <span class="op">=</span> 1024  <span class="comment">; FFT size </span>
- iolaps <span class="op">=</span> ifftsize<span class="op">/</span>ihopsize <span class="comment">; overlaps</span>
- ibw <span class="op">=</span> <span class="ohdr">sr</span><span class="op">/</span>ifftsize <span class="comment">; bin bandwidth</span>
- kcnt <span class="opc">init</span> 0    <span class="comment">; counting vars</span>
- krow <span class="opc">init</span> 0
+ i<span class="n">hopsize</span> <span class="o">=</span> <span class="mi">256</span>   <span class="c1">; hopsize</span>
+ i<span class="n">fftsize</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1">; FFT size </span>
+ i<span class="n">olaps</span> <span class="o">=</span> i<span class="n">fftsize</span><span class="o">/</span>i<span class="n">hopsize</span> <span class="c1">; overlaps</span>
+ i<span class="n">bw</span> <span class="o">=</span> <span class="vg">sr</span><span class="o">/</span>i<span class="n">fftsize</span> <span class="c1">; bin bandwidth</span>
+ k<span class="n">cnt</span> <span class="nb">init</span> <span class="mi">0</span>    <span class="c1">; counting vars</span>
+ k<span class="n">row</span> <span class="nb">init</span> <span class="mi">0</span>
 
- kOla[] <span class="opc">init</span> ifftsize <span class="comment">; overlap-add buffer</span>
- kIn[] <span class="opc">init</span> ifftsize  <span class="comment">; input buffer</span>
- kOut[][] <span class="opc">init</span> iolaps, ifftsize <span class="comment">; output buffers</span>
+ k<span class="n">Ola</span><span class="p">[]</span> <span class="nb">init</span> i<span class="n">fftsize</span> <span class="c1">; overlap-add buffer</span>
+ k<span class="n">In</span><span class="p">[]</span> <span class="nb">init</span> i<span class="n">fftsize</span>  <span class="c1">; input buffer</span>
+ k<span class="n">Out</span><span class="p">[][]</span> <span class="nb">init</span> i<span class="n">olaps</span><span class="p">,</span> i<span class="n">fftsize</span> <span class="c1">; output buffers</span>
 
- a1 <span class="opc">diskin2</span> "fox.wav",1,0,1 <span class="comment">; audio input</span>
+ a<span class="n">1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span> <span class="c1">; audio input</span>
 
- <span class="op">/</span><span class="op">*</span> every hopsize samples <span class="op">*</span><span class="op">/</span>
- <span class="octrl">if</span> kcnt <span class="op">==</span> ihopsize then  
-   <span class="op">/</span><span class="op">*</span> <span class="opc">window</span> and take FFT <span class="op">*</span><span class="op">/</span>
-   kWin[] <span class="opc">window</span> kIn,krow<span class="op">*</span>ihopsize
-   kSpec[] <span class="opc">rfft</span> kWin
+ <span class="cm">/* every hopsize samples */</span>
+ <span class="k">if</span> k<span class="n">cnt</span> <span class="o">==</span> i<span class="n">hopsize</span> <span class="k">then</span>  
+   <span class="cm">/* window and take FFT */</span>
+   k<span class="n">Win</span><span class="p">[]</span> <span class="nb">window</span> k<span class="n">In</span><span class="p">,</span>k<span class="n">row</span><span class="o">*</span>i<span class="n">hopsize</span>
+   k<span class="n">Spec</span><span class="p">[]</span> <span class="nb">rfft</span> k<span class="n">Win</span>
    
-   kSpec <span class="opc">rect2pol</span> kSpec 
+   k<span class="n">Spec</span> <span class="nb">rect2pol</span> k<span class="n">Spec</span> 
    
-   <span class="op">/</span><span class="op">*</span> reduce <span class="opc">mags</span> between high and low freqs <span class="op">*</span><span class="op">/</span>
-   ilow <span class="op">=</span> 0
-   ihigh <span class="op">=</span> 1000
-   ki <span class="op">=</span> <span class="opc">int</span>(ilow<span class="op">/</span>ibw)
-   until ki <span class="op">&gt;=</span> <span class="opc">int</span>(ihigh<span class="op">/</span>ibw) do
-     kSpec[ki] <span class="op">=</span> kSpec[ki]<span class="op">*</span>0.1
-     ki <span class="op">+</span><span class="op">=</span> 2
-   od
+   <span class="cm">/* reduce mags between high and low freqs */</span>
+   i<span class="n">low</span> <span class="o">=</span> <span class="mi">0</span>
+   i<span class="n">high</span> <span class="o">=</span> <span class="mi">1000</span>
+   k<span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>i<span class="n">low</span><span class="o">/</span>i<span class="n">bw</span><span class="p">)</span>
+   <span class="k">until</span> k<span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">int</span><span class="p">(</span>i<span class="n">high</span><span class="o">/</span>i<span class="n">bw</span><span class="p">)</span> <span class="k">do</span>
+     k<span class="n">Spec</span><span class="p">[</span>k<span class="n">i</span><span class="p">]</span> <span class="o">=</span> k<span class="n">Spec</span><span class="p">[</span>k<span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mf">0.1</span>
+     k<span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+   <span class="k">od</span>
    
-   kSpec <span class="opc">pol2rect</span> kSpec
+   k<span class="n">Spec</span> <span class="nb">pol2rect</span> k<span class="n">Spec</span>
    
-   <span class="op">/</span><span class="op">*</span> IFFT <span class="op">+</span> <span class="opc">window</span> <span class="op">*</span><span class="op">/</span>
-   kRow[] <span class="opc">rifft</span> kSpec
-   kWin <span class="opc">window</span> kRow, krow<span class="op">*</span>ihopsize
-   <span class="op">/</span><span class="op">*</span> place it on <span class="opc">out</span> buffer <span class="op">*</span><span class="op">/</span>
-   kOut <span class="opc">setrow</span> kWin, krow
+   <span class="cm">/* IFFT + window */</span>
+   k<span class="n">Row</span><span class="p">[]</span> <span class="nb">rifft</span> k<span class="n">Spec</span>
+   k<span class="n">Win</span> <span class="nb">window</span> k<span class="n">Row</span><span class="p">,</span> k<span class="n">row</span><span class="o">*</span>i<span class="n">hopsize</span>
+   <span class="cm">/* place it on out buffer */</span>
+   k<span class="n">Out</span> <span class="nb">setrow</span> k<span class="n">Win</span><span class="p">,</span> k<span class="n">row</span>
 
-   <span class="op">/</span><span class="op">*</span> zero the ola buffer <span class="op">*</span><span class="op">/</span>
-   kOla <span class="op">=</span> 0
-   <span class="op">/</span><span class="op">*</span> overlap<span class="op">-</span>add <span class="op">*</span><span class="op">/</span>
-   ki <span class="op">=</span> 0
-   until ki <span class="op">==</span> iolaps do
-     kRow <span class="opc">getrow</span> kOut, ki
-     kOla <span class="op">=</span> kOla <span class="op">+</span> kRow
-     ki <span class="op">+</span><span class="op">=</span> 1
-   od
+   <span class="cm">/* zero the ola buffer */</span>
+   k<span class="n">Ola</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="cm">/* overlap-add */</span>
+   k<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="k">until</span> k<span class="n">i</span> <span class="o">==</span> i<span class="n">olaps</span> <span class="k">do</span>
+     k<span class="n">Row</span> <span class="nb">getrow</span> k<span class="n">Out</span><span class="p">,</span> k<span class="n">i</span>
+     k<span class="n">Ola</span> <span class="o">=</span> k<span class="n">Ola</span> <span class="o">+</span> k<span class="n">Row</span>
+     k<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">od</span>
   
-  <span class="op">/</span><span class="op">*</span> update counters <span class="op">*</span><span class="op">/</span> 
-  krow <span class="op">=</span> (krow<span class="op">+</span>1)<span class="op">%</span>iolaps
-  kcnt <span class="op">=</span> 0
- <span class="octrl">endif</span>
+  <span class="cm">/* update counters */</span> 
+  k<span class="n">row</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span>i<span class="n">olaps</span>
+  k<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="k">endif</span>
 
- <span class="op">/</span><span class="op">*</span> shift audio <span class="opc">in</span><span class="op">/</span><span class="opc">out</span> of buffers <span class="op">*</span><span class="op">/</span>
- kIn <span class="opc">shiftin</span> a1
- a2 <span class="opc">shiftout</span> kOla
-    <span class="opc">out</span> a2<span class="op">/</span>iolaps
+ <span class="cm">/* shift audio in/out of buffers */</span>
+ k<span class="n">In</span> <span class="nb">shiftin</span> a<span class="n">1</span>
+ a<span class="n">2</span> <span class="nb">shiftout</span> k<span class="n">Ola</span>
+    <span class="nb">out</span> a<span class="n">2</span><span class="o">/</span>i<span class="n">olaps</span>
 
- <span class="op">/</span><span class="op">*</span> increment counter <span class="op">*</span><span class="op">/</span>
- kcnt <span class="op">+</span><span class="op">=</span> <span class="ohdr">ksmps</span>
+ <span class="cm">/* increment counter */</span>
+ k<span class="n">cnt</span> <span class="o">+=</span> <span class="vg">ksmps</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 10
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -161,7 +161,7 @@
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idp132659280"></a>
+        <a id="idm1512571888"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>,
@@ -169,7 +169,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132662288"></a>
+        <a id="idm1512570480"></a>
         <h2>Credits</h2>
         <p>
       </p>

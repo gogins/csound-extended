@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>deltapxw</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="deltapx.html" title="deltapx" />
@@ -38,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88661648"></a>
+        <a id="idm1557905520"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>deltapxw</em></span> mixes the input signal to a delay line. This opcode can be mixed with reading units (<a class="link" href="deltap.html" title="deltap"><em class="citetitle">deltap</em></a>, <a class="link" href="deltapn.html" title="deltapn"><em class="citetitle">deltapn</em></a>, <a class="link" href="deltapi.html" title="deltapi"><em class="citetitle">deltapi</em></a>, <a class="link" href="deltap3.html" title="deltap3"><em class="citetitle">deltap3</em></a>, and <a class="link" href="deltapx.html" title="deltapx"><em class="citetitle">deltapx</em></a>) in any order; the actual delay time is the difference of the read and write time. This opcode can read from and write to a <a class="link" href="delayr.html" title="delayr"><em class="citetitle">delayr</em></a>/<a class="link" href="delayw.html" title="delayw"><em class="citetitle">delayw</em></a> delay line with interpolation. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88669920"></a>
+        <a id="idm1557893872"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>deltapxw</strong></span> ain, adel, iwsize</pre>
       </div>
       <div class="refsect1">
-        <a id="idp88671968"></a>
+        <a id="idm1557891696"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iwsize</em></span> -- interpolation window size in samples. Allowed values are integer multiplies of 4 in the range 4 to 1024. <span class="emphasis"><em>iwsize</em></span> = 4 uses cubic interpolation.  Increasing <span class="emphasis"><em>iwsize</em></span> improves sound quality at the expense of CPU usage, and minimum delay time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88674688"></a>
+        <a id="idm1557892976"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> -- Input signal.
@@ -118,61 +119,60 @@ adl3 &lt;= idlr - (1 + iws3/2)/sr              (allows feedback)
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp88688064"></a>
+        <a id="idm1557874672"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the deltapxw opcode. It uses the file <a class="ulink" href="examples/deltapxw.csd" target="_top"><em class="citetitle">deltapxw.csd</em></a>.
+      Here is an example of the deltapxw opcode. It uses the file <a class="ulink" href="examples/deltapxw.csd.html" target="_top"><em class="citetitle">deltapxw.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp88689840"></a>
+          <a id="idm1557874288"></a>
           <p class="title">
-            <strong>Example 203. Example of the deltapxw opcode.</strong>
+            <strong>Example 205. Example of the deltapxw opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp239785104"></a>
-              <a class="ulink" href="examples/deltapxw.csd.html" target="_top">Play</a>
+              <a id="idm1392860272"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o deltapxw.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o deltapxw.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>     <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span>  <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-a1      <span class="opc">phasor</span>   300
-a1      <span class="op">=</span>  a1 <span class="op">-</span> 0.5
-a_      <span class="opc">delayr</span>   1
-adel    <span class="opc">phasor</span>   4
-adel    <span class="op">=</span>  <span class="opc">sin</span>(2 <span class="op">*</span> 3.14159265 <span class="op">*</span> adel) <span class="op">*</span> 0.01 <span class="op">+</span> 0.2
-        <span class="opc">deltapxw</span> a1, adel, 32
-adel    <span class="opc">phasor</span>   2
-adel    <span class="op">=</span>  <span class="opc">sin</span>(2 <span class="op">*</span> 3.14159265 <span class="op">*</span> adel) <span class="op">*</span> 0.01 <span class="op">+</span> 0.2
-        <span class="opc">deltapxw</span> a1, adel, 32
-adel    <span class="op">=</span>  0.3
-a2      <span class="opc">deltapx</span>  adel, 32
-a1      <span class="op">=</span>  0
-        <span class="opc">delayw</span>   a1
-        <span class="opc">outs</span>     a2<span class="op">*</span>.7, a2<span class="op">*</span>.7
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+a<span class="n">1</span>      <span class="nb">phasor</span>   <span class="mi">300</span>
+a<span class="n">1</span>      <span class="o">=</span>  a<span class="n">1</span> <span class="o">-</span> <span class="mf">0.5</span>
+a<span class="n">_</span>      <span class="nb">delayr</span>   <span class="mi">1</span>
+a<span class="n">del</span>    <span class="nb">phasor</span>   <span class="mi">4</span>
+a<span class="n">del</span>    <span class="o">=</span>  <span class="nb">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">3.14159265</span> <span class="o">*</span> a<span class="n">del</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span> <span class="o">+</span> <span class="mf">0.2</span>
+        <span class="nb">deltapxw</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">del</span><span class="p">,</span> <span class="mi">32</span>
+a<span class="n">del</span>    <span class="nb">phasor</span>   <span class="mi">2</span>
+a<span class="n">del</span>    <span class="o">=</span>  <span class="nb">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">3.14159265</span> <span class="o">*</span> a<span class="n">del</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span> <span class="o">+</span> <span class="mf">0.2</span>
+        <span class="nb">deltapxw</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">del</span><span class="p">,</span> <span class="mi">32</span>
+a<span class="n">del</span>    <span class="o">=</span>  <span class="mf">0.3</span>
+a<span class="n">2</span>      <span class="nb">deltapx</span>  a<span class="n">del</span><span class="p">,</span> <span class="mi">32</span>
+a<span class="n">1</span>      <span class="o">=</span>  <span class="mi">0</span>
+        <span class="nb">delayw</span>   a<span class="n">1</span>
+        <span class="nb">outs</span>     a<span class="n">2</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> a<span class="n">2</span><span class="o">*</span><span class="mf">.7</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -181,14 +181,14 @@ a1      <span class="op">=</span>  0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88694128"></a>
+        <a id="idm1557879280"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="deltapx.html" title="deltapx"><em class="citetitle">deltapx</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp88696176"></a>
+        <a id="idm1557875952"></a>
         <h2>Credits</h2>
         <p>
       </p>

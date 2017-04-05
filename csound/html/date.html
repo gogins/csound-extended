@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>date</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="dam.html" title="dam" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87288288"></a>
+        <a id="idm1559238512"></a>
         <h2>Description</h2>
         <p>
       Returns the number seconds since a base date, using the
@@ -49,13 +50,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87330128"></a>
+        <a id="idm1559237616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir[, inano] <span class="command"><strong>date</strong></span></pre>
         <pre class="synopsis">kr[, knano] <span class="command"><strong>date</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp87333424"></a>
+        <a id="idm1559239152"></a>
         <h2>Initialization and Performance</h2>
         <p>
       <span class="emphasis"><em>ir</em></span> -- value at i-time, of the system clock
@@ -75,7 +76,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87338192"></a>
+        <a id="idm1559236592"></a>
         <p>
       Note that the base date was originally 1970 but since verson
       5.14 it has been changed as single precission floating point
@@ -87,49 +88,50 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87339888"></a>
+        <a id="idm1559230192"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the date opcode. It uses the file <a class="ulink" href="examples/date.csd" target="_top"><em class="citetitle">date.csd</em></a>.
+      Here is an example of the date opcode. It uses the file <a class="ulink" href="examples/date.csd.html" target="_top"><em class="citetitle">date.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp87341664"></a>
+          <a id="idm1559231856"></a>
           <p class="title">
-            <strong>Example 177. Example of the date opcode.</strong>
+            <strong>Example 179. Example of the date opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp239061520"></a>
-              <a class="ulink" href="examples/date.csd.html" target="_top">Play</a>
+              <a id="idm1394525040"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o date.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="oblock">instr</span> 1
-      ii,ij <span class="opc">date</span>
-      <span class="opc">print</span> ii
-      <span class="opc">print</span> ij
-      Sa <span class="opc">dates</span> ii
-      <span class="opc">prints</span> Sa
-      Ss <span class="opc">dates</span> <span class="op">-</span>1
-      <span class="opc">prints</span> Ss
-      St <span class="opc">dates</span> 1
-      <span class="opc">prints</span> St 
-<span class="oblock">endin</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o date.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+      i<span class="n">i</span><span class="p">,</span>i<span class="n">j</span> <span class="nb">date</span>
+      <span class="nb">print</span> i<span class="n">i</span>
+      <span class="nb">print</span> i<span class="n">j</span>
+      S<span class="n">a</span> <span class="nb">dates</span> i<span class="n">i</span>
+      <span class="nb">prints</span> S<span class="n">a</span>
+      S<span class="n">s</span> <span class="nb">dates</span> <span class="o">-</span><span class="mi">1</span>
+      <span class="nb">prints</span> S<span class="n">s</span>
+      S<span class="n">t</span> <span class="nb">dates</span> <span class="mi">1</span>
+      <span class="nb">prints</span> S<span class="n">t</span> 
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -149,14 +151,14 @@ Thu Jan  1 01:00:01 1970
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87344624"></a>
+        <a id="idm1559234160"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dates.html" title="dates"><em class="citetitle">dates</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp87346768"></a>
+        <a id="idm1559228400"></a>
         <h2>Credits</h2>
         <p>
       </p>

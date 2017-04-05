@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>resonz</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="resony.html" title="resony" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp133291056"></a>
+        <a id="idm1511864688"></a>
         <h2>Description</h2>
         <p>
       Implementations of a second-order, two-pole two-zero bandpass filter with variable frequency response.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133292368"></a>
+        <a id="idm1511869680"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>resonz</strong></span> asig, xcf, xbw [, iscl] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp133367936"></a>
+        <a id="idm1511595632"></a>
         <h2>Initialization</h2>
         <p>
       The optional initialization variables for <span class="emphasis"><em>resonr</em></span> and <span class="emphasis"><em>resonz</em></span> are identical to the i-time variables for <a class="link" href="reson.html" title="reson"><em class="citetitle">reson</em></a>.
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133374896"></a>
+        <a id="idm1511593968"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>resonr</em></span> and <span class="emphasis"><em>resonz</em></span> are variations of the classic two-pole bandpass resonator (<a class="link" href="reson.html" title="reson"><em class="citetitle">reson</em></a>). Both filters have two zeroes in their transfer functions, in addition to the two poles. <span class="emphasis"><em>resonz</em></span> has its zeroes located at z = 1 and z = -1. <span class="emphasis"><em>resonr</em></span> has its zeroes located at +sqrt(<span class="emphasis"><em>R</em></span>) and -sqrt(<span class="emphasis"><em>R</em></span>), where <span class="emphasis"><em>R</em></span> is the radius of the poles in the complex z-plane. The addition of zeroes to <span class="emphasis"><em>resonr</em></span> and <span class="emphasis"><em>resonz</em></span> results in the improved selectivity of the magnitude response of these filters at cutoff frequencies close to 0, at the expense of less selectivity of frequencies above the cutoff peak.
@@ -85,7 +86,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133387760"></a>
+        <a id="idm1511574128"></a>
         <h2>Technical History</h2>
         <p>
       <span class="emphasis"><em>resonr</em></span> and <span class="emphasis"><em>resonz</em></span> were originally described in an article by Julius O. Smith and James B. Angell.<sup>1</sup> Smith and Angell recommended the <span class="emphasis"><em>resonz</em></span> form (zeros at +1 and -1) when computational efficiency was the main concern, as it has one less multiply per sample, while <span class="emphasis"><em>resonr</em></span> (zeroes at + and - the square root of the pole radius R) was recommended for situations when a perfectly constant-gain center peak was required.
@@ -95,92 +96,91 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133396576"></a>
+        <a id="idm1511580016"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the resonr and resonz opcodes. It uses the file <a class="ulink" href="examples/resonr.csd" target="_top"><em class="citetitle">resonr.csd</em></a>.
+      Here is an example of the resonr and resonz opcodes. It uses the file <a class="ulink" href="examples/resonr.csd.html" target="_top"><em class="citetitle">resonr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp133398448"></a>
+          <a id="idm1511572208"></a>
           <p class="title">
-            <strong>Example 788. Example of the resonr and resonz opcodes.</strong>
+            <strong>Example 809. Example of the resonr and resonz opcodes.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp262367968"></a>
-              <a class="ulink" href="examples/resonr.csd.html" target="_top">Play</a>
+              <a id="idm1332549744"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o resonr.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o resonr.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="op">/</span><span class="op">*</span> Written by Sean Costello <span class="op">*</span><span class="op">/</span>
- <span class="comment">; Orchestra file for resonant filter sweep of a sawtooth-like waveform. </span>
-  <span class="comment">; The outputs of reson, resonr, and resonz are scaled by coefficients</span>
-  <span class="comment">; specified in the score, so that each filter can be heard on its own</span>
-  <span class="comment">; from the same instrument.</span>
+<span class="cm">/* Written by Sean Costello */</span>
+ <span class="c1">; Orchestra file for resonant filter sweep of a sawtooth-like waveform. </span>
+  <span class="c1">; The outputs of reson, resonr, and resonz are scaled by coefficients</span>
+  <span class="c1">; specified in the score, so that each filter can be heard on its own</span>
+  <span class="c1">; from the same instrument.</span>
 
-  <span class="ohdr">sr</span> <span class="op">=</span> 44100
-  <span class="ohdr">kr</span> <span class="op">=</span> 4410
-  <span class="ohdr">ksmps</span> <span class="op">=</span> 10
-  <span class="ohdr">nchnls</span> <span class="op">=</span> 1
+  <span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+  <span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+  <span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+  <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
   
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
   
-  idur     <span class="op">=</span>        p3
-  ibegfreq <span class="op">=</span>        p4                              <span class="comment">; beginning of sweep frequency</span>
-  iendfreq <span class="op">=</span>        p5                              <span class="comment">; ending of sweep frequency</span>
-  ibw      <span class="op">=</span>        p6                              <span class="comment">; bandwidth of filters in Hz</span>
-  ifreq    <span class="op">=</span>        p7                              <span class="comment">; frequency of gbuzz that is to be filtered</span>
-  iamp     <span class="op">=</span>        p8                              <span class="comment">; amplitude to scale output by</span>
-  ires     <span class="op">=</span>        p9                              <span class="comment">; coefficient to scale amount of reson in output</span>
-  iresr    <span class="op">=</span>        p10                             <span class="comment">; coefficient to scale amount of resonr in output</span>
-  iresz    <span class="op">=</span>        p11                             <span class="comment">; coefficient to scale amount of resonz in output</span>
+  i<span class="n">dur</span>     <span class="o">=</span>        <span class="nb">p3</span>
+  i<span class="n">begfreq</span> <span class="o">=</span>        <span class="nb">p4</span>                              <span class="c1">; beginning of sweep frequency</span>
+  i<span class="n">endfreq</span> <span class="o">=</span>        <span class="nb">p5</span>                              <span class="c1">; ending of sweep frequency</span>
+  i<span class="n">bw</span>      <span class="o">=</span>        <span class="nb">p6</span>                              <span class="c1">; bandwidth of filters in Hz</span>
+  i<span class="n">freq</span>    <span class="o">=</span>        <span class="nb">p7</span>                              <span class="c1">; frequency of gbuzz that is to be filtered</span>
+  i<span class="n">amp</span>     <span class="o">=</span>        <span class="nb">p8</span>                              <span class="c1">; amplitude to scale output by</span>
+  i<span class="n">res</span>     <span class="o">=</span>        <span class="nb">p9</span>                              <span class="c1">; coefficient to scale amount of reson in output</span>
+  i<span class="n">resr</span>    <span class="o">=</span>        <span class="nb">p10</span>                             <span class="c1">; coefficient to scale amount of resonr in output</span>
+  i<span class="n">resz</span>    <span class="o">=</span>        <span class="nb">p11</span>                             <span class="c1">; coefficient to scale amount of resonz in output</span>
   
- <span class="comment">; Frequency envelope for reson cutoff</span>
-  kfreq    <span class="opc">linseg</span> ibegfreq, idur <span class="op">*</span> .5, iendfreq, idur <span class="op">*</span> .5, ibegfreq
+ <span class="c1">; Frequency envelope for reson cutoff</span>
+  k<span class="n">freq</span>    <span class="nb">linseg</span> i<span class="n">begfreq</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">,</span> i<span class="n">endfreq</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">,</span> i<span class="n">begfreq</span>
   
- <span class="comment">; Amplitude envelope to prevent clicking</span>
-  kenv     <span class="opc">linseg</span> 0, .1, iamp, idur <span class="op">-</span> .2, iamp, .1, 0
+ <span class="c1">; Amplitude envelope to prevent clicking</span>
+  k<span class="n">env</span>     <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">-</span> <span class="mf">.2</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
   
- <span class="comment">; Number of harmonics for gbuzz scaled to avoid aliasing</span>
-  iharms   <span class="op">=</span>        (<span class="ohdr">sr</span><span class="op">*</span>.4)<span class="op">/</span>ifreq
+ <span class="c1">; Number of harmonics for gbuzz scaled to avoid aliasing</span>
+  i<span class="n">harms</span>   <span class="o">=</span>        <span class="p">(</span><span class="vg">sr</span><span class="o">*</span><span class="mf">.4</span><span class="p">)</span><span class="o">/</span>i<span class="n">freq</span>
   
-  asig     <span class="opc">gbuzz</span> 1, ifreq, iharms, 1, .9, 1      <span class="comment">; "Sawtooth" waveform</span>
-  ain      <span class="op">=</span>        kenv <span class="op">*</span> asig                     <span class="comment">; output scaled by amp envelope</span>
-  ares     <span class="opc">reson</span> ain, kfreq, ibw, 1
-  aresr    <span class="opc">resonr</span> ain, kfreq, ibw, 1
-  aresz    <span class="opc">resonz</span> ain, kfreq, ibw, 1
+  a<span class="n">sig</span>     <span class="nb">gbuzz</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> i<span class="n">harms</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mi">1</span>      <span class="c1">; "Sawtooth" waveform</span>
+  a<span class="n">in</span>      <span class="o">=</span>        k<span class="n">env</span> <span class="o">*</span> a<span class="n">sig</span>                     <span class="c1">; output scaled by amp envelope</span>
+  a<span class="n">res</span>     <span class="nb">reson</span> a<span class="n">in</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> i<span class="n">bw</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">resr</span>    <span class="nb">resonr</span> a<span class="n">in</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> i<span class="n">bw</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">resz</span>    <span class="nb">resonz</span> a<span class="n">in</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> i<span class="n">bw</span><span class="p">,</span> <span class="mi">1</span>
   
-           <span class="opc">out</span> ares <span class="op">*</span> ires <span class="op">+</span> aresr <span class="op">*</span> iresr <span class="op">+</span> aresz <span class="op">*</span> iresz
+           <span class="nb">out</span> a<span class="n">res</span> <span class="o">*</span> i<span class="n">res</span> <span class="o">+</span> a<span class="n">resr</span> <span class="o">*</span> i<span class="n">resr</span> <span class="o">+</span> a<span class="n">resz</span> <span class="o">*</span> i<span class="n">resz</span>
   
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-/* Written by Sean Costello */
-<span class="stamnt">f</span>1 0 8192 9 1 1 .25                               <span class="comment">; cosine table for gbuzz generator</span>
-  
-<span class="stamnt">i</span>1  0 10 1 3000 200 100 4000 1 0 0                <span class="comment">; reson  output with bw = 200</span>
-<span class="stamnt">i</span>1 10 10 1 3000 200 100 4000 0 1 0                <span class="comment">; resonr output with bw = 200</span>
-<span class="stamnt">i</span>1 20 10 1 3000 200 100 4000 0 0 1                <span class="comment">; resonz output with bw = 200</span>
-<span class="stamnt">i</span>1 30 10 1 3000  50 200 8000 1 0 0                <span class="comment">; reson  output with bw = 50</span>
-<span class="stamnt">i</span>1 40 10 1 3000  50 200 8000 0 1 0                <span class="comment">; resonr output with bw = 50</span>
-<span class="stamnt">i</span>1 50 10 1 3000  50 200 8000 0 0 1                <span class="comment">; resonz output with bw = 50</span>
-<span class="stamnt">e</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="cm">/* Written by Sean Costello */</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">9</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mf">.25</span>                               <span class="c1">; cosine table for gbuzz generator</span>
+  
+<span class="nb">i</span><span class="mi">1</span>  <span class="mi">0</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">3000</span> <span class="mi">200</span> <span class="mi">100</span> <span class="mi">4000</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>                <span class="c1">; reson  output with bw = 200</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">10</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">3000</span> <span class="mi">200</span> <span class="mi">100</span> <span class="mi">4000</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>                <span class="c1">; resonr output with bw = 200</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">20</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">3000</span> <span class="mi">200</span> <span class="mi">100</span> <span class="mi">4000</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>                <span class="c1">; resonz output with bw = 200</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">30</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">3000</span>  <span class="mi">50</span> <span class="mi">200</span> <span class="mi">8000</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>                <span class="c1">; reson  output with bw = 50</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">40</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">3000</span>  <span class="mi">50</span> <span class="mi">200</span> <span class="mi">8000</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>                <span class="c1">; resonr output with bw = 50</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">50</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">3000</span>  <span class="mi">50</span> <span class="mi">200</span> <span class="mi">8000</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>                <span class="c1">; resonz output with bw = 50</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -189,7 +189,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133402752"></a>
+        <a id="idm1511564400"></a>
         <h2>References</h2>
         <p>
       </p>
@@ -221,14 +221,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133410608"></a>
+        <a id="idm1511561712"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="resonr.html" title="resonr"><em class="citetitle">resonr</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp133412720"></a>
+        <a id="idm1511558256"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>sfinstr</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="sfinstr3m.html" title="sfinstr3m" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp136882736"></a>
+        <a id="idm1508115056"></a>
         <h2>Description</h2>
         <p>
       Plays a SoundFont2 (SF2) sample instrument, generating a stereo sound. These opcodes allow management the sample-structure of SF2 files. In order to understand the usage of these opcodes, the user must have some knowledge of the SF2 format, so a brief description of this format can be found in the <a class="link" href="MiscSf2.html" title="Appendix G. SoundFont2 File Format"><em class="citetitle">SoundFont2 File Format Appendix</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136885104"></a>
+        <a id="idm1508114800"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1, ar2 <span class="command"><strong>sfinstr</strong></span> ivel, inotenum, xamp, xfreq, instrnum, ifilhandle \
       [, iflag] [, ioffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp136887376"></a>
+        <a id="idm1508099056"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ivel</em></span> -- velocity value
@@ -73,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136894656"></a>
+        <a id="idm1508092016"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- amplitude correction factor
@@ -99,68 +100,67 @@ a multiplier.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136908256"></a>
+        <a id="idm1508089840"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the sfinstr opcode. It uses the file <a class="ulink" href="examples/sfinstr.csd" target="_top"><em class="citetitle">sfinstr.csd</em></a>.
+      Here is an example of the sfinstr opcode. It uses the file <a class="ulink" href="examples/sfinstr.csd.html" target="_top"><em class="citetitle">sfinstr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp136910112"></a>
+          <a id="idm1508082928"></a>
           <p class="title">
-            <strong>Example 837. Example of the sfinstr opcode.</strong>
+            <strong>Example 863. Example of the sfinstr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp264288208"></a>
-              <a class="ulink" href="examples/sfinstr.csd.html" target="_top">Play</a>
+              <a id="idm1327759856"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac -+rtmidi=virtual -M0 <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o sfinstr.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac -+rtmidi=virtual -M0 <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o sfinstr.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
 
 
-gisf	<span class="opc">sfload</span>	"sf_GMbank.sf2"
-	<span class="opc">sfilist</span>	isf
+gi<span class="n">sf</span>	<span class="nb">sfload</span>	<span class="s">"sf_GMbank.sf2"</span>
+	<span class="nb">sfilist</span>	i<span class="n">sf</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; play from score and midi keyboard</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; play from score and midi keyboard</span>
 
-	<span class="opc">mididefault</span>	60, p3
-	<span class="opc">midinoteonkey</span>	p4, p5
-inum	<span class="opc">init</span>	p4
-ivel	<span class="opc">init</span>	p5
-ivel	<span class="opc">init</span>	ivel<span class="op">/</span>127					<span class="comment">;make velocity dependent</span>
-kamp	<span class="opc">linsegr</span>	1, 1, 1, .1, 0
-kamp	<span class="op">=</span> kamp<span class="op">/</span>5000						<span class="comment">;scale amplitude</span>
-kfreq	<span class="opc">init</span>	1						<span class="comment">;do not change freq from sf</span>
-a1,a2	<span class="opc">sfinstr</span>	ivel, inum, kamp<span class="op">*</span>ivel, kfreq, 194, gisf		<span class="comment">;= Strings 2 tighter</span>
-	<span class="opc">outs</span>	a1, a2
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
+k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
+k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">5000</span>						<span class="c1">;scale amplitude</span>
+k<span class="n">freq</span>	<span class="nb">init</span>	<span class="mi">1</span>						<span class="c1">;do not change freq from sf</span>
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span class="nb">sfinstr</span>	i<span class="n">vel</span><span class="p">,</span> i<span class="n">num</span><span class="p">,</span> k<span class="n">amp</span><span class="o">*</span>i<span class="n">vel</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">194</span><span class="p">,</span> gi<span class="n">sf</span>		<span class="c1">;= Strings 2 tighter</span>
+	<span class="nb">outs</span>	a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>
 	
-	<span class="oblock">endin</span>
+	<span class="kd">endin</span>
 	
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0  60				<span class="comment">; stay active for 1 minute</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span>  <span class="mi">60</span>				<span class="c1">; stay active for 1 minute</span>
 
-<span class="stamnt">i</span>1 0 1 60 127
-<span class="stamnt">i</span>1 + 1 62 &lt;
-<span class="stamnt">i</span>1 + 1 65 &lt;
-<span class="stamnt">i</span>1 + 1 69 10
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">60</span> <span class="mi">127</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">62</span> <span class="o">&lt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">65</span> <span class="o">&lt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="mi">69</span> <span class="mi">10</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -169,7 +169,7 @@ a1,a2	<span class="opc">sfinstr</span>	ivel, inum, kamp<span class="op">*</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136914400"></a>
+        <a id="idm1508083568"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sfilist.html" title="sfilist"><em class="citetitle">sfilist</em></a>,
@@ -183,7 +183,7 @@ a1,a2	<span class="opc">sfinstr</span>	ivel, inum, kamp<span class="op">*</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp136923168"></a>
+        <a id="idm1508080240"></a>
         <h2>Credits</h2>
         <p>
       </p>

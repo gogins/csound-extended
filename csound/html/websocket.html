@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>websocket</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="waveset.html" title="waveset" />
@@ -38,33 +39,33 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158398720"></a>
+        <a id="idm1486165744"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>websocket</em></span> reads and writes <span class="emphasis"><em>N</em></span> signals and arrays using a websocket connection.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158400736"></a>
+        <a id="idm1486172400"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis">xout1[, xout2, xout3, ..., xoutN] <span class="command"><strong>websocket</strong></span> iport, xin1[, xin2, xin3, ..., xinN]</pre>
+        <pre class="synopsis">xout1[, xout2, xout3, ..., xoutN] <span class="command"><strong>websocket</strong></span> iport, xin</pre>
       </div>
       <div class="refsect1">
-        <a id="idp158462208"></a>
+        <a id="idm1486166384"></a>
         <h2>Initialization</h2>
         <p>
         <span class="emphasis"><em>iport</em></span> the local web port to read/write data.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158463872"></a>
+        <a id="idm1486158576"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xout1,... xoutN</em></span> -- The output variables which contain data received from a websocket. On the web side the websocket must send data using a protocol name that matches the output variable name e.g. "ksignal" for a k-rate variable. If an array is intended to be received from a websocket it must be first initialised before being used as an output to the opcode. Otherwise the opcode doesn't know what size data to expect from the websocket. When sending data to a websocket from the web page it must be sent as a 32 or 64 bit array, depending on the build of Csound that is being used. 
     </p>
         <p>
-        <span class="emphasis"><em>xin1,... xinN</em></span> -- The input variables
-        which contain data which is sent to a websocket. On the web
+        <span class="emphasis"><em>xin</em></span> -- The input variable
+        which contains data to be sent to a websocket. On the web
         side the websocket receives data using a protocol name that
         matches the input variable name e.g. "ksignal" for a k-rate
         variable. When receiving data from a websocket on the web page
@@ -91,47 +92,45 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158469712"></a>
+        <a id="idm1486159600"></a>
         <h2>Examples</h2>
         <p>
-      Here is a simple example of the websocket opcode. It uses the file <a class="ulink" href="examples/websocket.csd" target="_top"><em class="citetitle">websocket.csd</em></a> and <a class="ulink" href="examples/websocket.html" target="_top"><em class="citetitle">websocket.html</em></a>.
+      Here is a simple example of the websocket opcode. It uses the file <a class="ulink" href="examples/websocket.csd.html" target="_top"><em class="citetitle">websocket.csd</em></a> and <a class="ulink" href="examples/websocket.html" target="_top"><em class="citetitle">websocket.html</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp158472432"></a>
+          <a id="idm1486163312"></a>
           <p class="title">
-            <strong>Example 1070. Example of the websocket opcode.</strong>
+            <strong>Example 1096. Example of the websocket opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp273139872"></a>
-              <a class="ulink" href="examples/websocket.csd.html" target="_top">Play</a>
+              <a id="idm1304768496"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
-<span class="ohdr">ksmps</span> <span class="op">=</span> 256
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
 
-<span class="opc">schedule</span> 1, 0, <span class="op">-</span>1
+<span class="nb">schedule</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-    klfo <span class="opc">lfo</span> 1, 1
-    iport <span class="opc">init</span> 8888
-    kinput websocket iport, klfo
-    <span class="opc">printk2</span> kinput
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    k<span class="n">lfo</span> <span class="nb">lfo</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+    i<span class="n">port</span> <span class="nb">init</span> <span class="mi">8888</span>
+    k<span class="n">input</span> <span class="nb">websocket</span> i<span class="n">port</span><span class="p">,</span> k<span class="n">lfo</span>
+    <span class="nb">printk2</span> k<span class="n">input</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -140,7 +139,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158476720"></a>
+        <a id="idm1486154864"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="OSClisten.html" title="OSClisten"><em class="citetitle">OSClisten</em></a>
@@ -148,7 +147,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp158479696"></a>
+        <a id="idm1486153968"></a>
         <h2>Credits</h2>
         <p>
       </p>

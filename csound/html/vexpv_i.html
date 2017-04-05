@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vexpv_i</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vexpv.html" title="vexpv" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155074368"></a>
+        <a id="idm1489497328"></a>
         <h2>Description</h2>
         <p>
       Performs exponential operations between two vectorial control signals at init time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155075632"></a>
+        <a id="idm1489497200"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vexpv_i</strong></span>  ifn1, ifn2, ielements [, idstoffset] [, isrcoffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp155077648"></a>
+        <a id="idm1489495920"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn1</em></span>  - number of the table hosting the first vector to be processed
@@ -69,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155082752"></a>
+        <a id="idm1489496432"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>vexpv_i</em></span> elevates each element of ifn2 to the corresponding element of ifn1. Each vectorial signal is hosted by a table (ifn1 and ifn2). The number of elements contained in both vectors must be the same.
@@ -105,7 +106,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp155102944"></a>
+        <a id="idm1489745520"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado. Optional arguments added by Andres Cabrera and Istvan Varga.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

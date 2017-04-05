@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>igoto</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fftinv.html" title="fftinv" />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105347376"></a>
+        <a id="idm1540703248"></a>
         <h2>Description</h2>
         <p>
       During the i-time pass only, unconditionally transfer control to the statement labeled by <span class="emphasis"><em>label</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105349008"></a>
+        <a id="idm1540695056"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>igoto</strong></span> label</pre>
         <p>
@@ -53,83 +54,82 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105423216"></a>
+        <a id="idm1540694928"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the igoto opcode. It uses the file <a class="ulink" href="examples/igoto.csd" target="_top"><em class="citetitle">igoto.csd</em></a>.
+      Here is an example of the igoto opcode. It uses the file <a class="ulink" href="examples/igoto.csd.html" target="_top"><em class="citetitle">igoto.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp105425072"></a>
+          <a id="idm1540699280"></a>
           <p class="title">
-            <strong>Example 403. Example of the igoto opcode.</strong>
+            <strong>Example 410. Example of the igoto opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp248210448"></a>
-              <a class="ulink" href="examples/igoto.csd.html" target="_top">Play</a>
+              <a id="idm1370289264"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o igoto.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o igoto.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Get the value of the 4th p-field from the score.</span>
-  iparam <span class="op">=</span> p4
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Get the value of the 4th p-field from the score.</span>
+  i<span class="n">param</span> <span class="o">=</span> <span class="nb">p4</span>
 
-  <span class="comment">; If iparam is 1 then play the high note.</span>
-  <span class="comment">; If not then play the low note.</span>
-  <span class="octrl">if</span> (iparam <span class="op">==</span> 1) <span class="octrl">igoto</span> <span class="olabel">highnote</span>
-    <span class="octrl">igoto</span> <span class="olabel">lownote</span>
+  <span class="c1">; If iparam is 1 then play the high note.</span>
+  <span class="c1">; If not then play the low note.</span>
+  <span class="k">if</span> <span class="p">(</span>i<span class="n">param</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">highnote</span>
+    <span class="k">igoto</span> <span class="nl">lownote</span>
 
-<span class="olabel">highnote</span><span class="op">:</span>
-  ifreq <span class="op">=</span> 880
-  <span class="octrl">goto</span> <span class="olabel">playit</span>
+<span class="nl">highnote</span><span class="p">:</span>
+  i<span class="n">freq</span> <span class="o">=</span> <span class="mi">880</span>
+  <span class="k">goto</span> <span class="nl">playit</span>
 
-<span class="olabel">lownote</span><span class="op">:</span>
-  ifreq <span class="op">=</span> 440
-  <span class="octrl">goto</span> <span class="olabel">playit</span>
+<span class="nl">lownote</span><span class="p">:</span>
+  i<span class="n">freq</span> <span class="o">=</span> <span class="mi">440</span>
+  <span class="k">goto</span> <span class="nl">playit</span>
 
-<span class="olabel">playit</span><span class="op">:</span>
-  <span class="comment">; Print the values of iparam and ifreq.</span>
-  <span class="opc">print</span> iparam
-  <span class="opc">print</span> ifreq
+<span class="nl">playit</span><span class="p">:</span>
+  <span class="c1">; Print the values of iparam and ifreq.</span>
+  <span class="nb">print</span> i<span class="n">param</span>
+  <span class="nb">print</span> i<span class="n">freq</span>
 
-  a1 <span class="opc">oscil</span> 10000, ifreq, 1
-  <span class="opc">out</span> a1
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Table #1: a simple sine wave.</span>
-<span class="stamnt">f</span> 1 0 32768 10 1
-
-<span class="comment">; p4: 1 = high note, anything else = low note</span>
-<span class="comment">; Play Instrument #1 for one second, a low note.</span>
-<span class="stamnt">i</span> 1 0 1 0
-<span class="comment">; Play a Instrument #1 for one second, a high note.</span>
-<span class="stamnt">i</span> 1 1 1 1
-<span class="stamnt">e</span>
+  a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="nb">out</span> a<span class="n">1</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Table #1: a simple sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32768</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; p4: 1 = high note, anything else = low note</span>
+<span class="c1">; Play Instrument #1 for one second, a low note.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="c1">; Play a Instrument #1 for one second, a high note.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -147,7 +147,7 @@ instr 1:  ifreq = 880.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105430176"></a>
+        <a id="idm1540697488"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cggoto.html" title="cggoto"><em class="citetitle">cggoto</em></a>,
@@ -162,7 +162,7 @@ instr 1:  ifreq = 880.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp105439872"></a>
+        <a id="idm1540687248"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

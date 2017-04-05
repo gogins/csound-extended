@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>outrg</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="outq.html" title="outq" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122271008"></a>
+        <a id="idm1522934384"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>outrg</em></span> outputs audio to a range of adjacent audio channels on the audio output device.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122272704"></a>
+        <a id="idm1522935792"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outrg</strong></span> kstart, aout1 [,aout2, aout3, ..., aoutN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp122346608"></a>
+        <a id="idm1522932592"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kstart</em></span> - the number of the first channel of the output device to be accessed (channel numbers starts with 1, which is the first channel)
@@ -63,68 +64,67 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122351824"></a>
+        <a id="idm1522926064"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the outrg opcode. It uses the file <a class="ulink" href="examples/outrg.csd" target="_top"><em class="citetitle">outrg.csd</em></a>.
+      Here is an example of the outrg opcode. It uses the file <a class="ulink" href="examples/outrg.csd.html" target="_top"><em class="citetitle">outrg.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp122353680"></a>
+          <a id="idm1522923376"></a>
           <p class="title">
-            <strong>Example 618. Example of the outrg opcode.</strong>
+            <strong>Example 637. Example of the outrg opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp256484640"></a>
-              <a class="ulink" href="examples/outrg.csd.html" target="_top">Play</a>
+              <a id="idm1346984960"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outrg.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outrg.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 4        <span class="comment">;quad</span>
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">4</span>        <span class="c1">;quad</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kleft <span class="opc">init</span> 1
-asig  <span class="opc">vco2</span> .5, 220			<span class="comment">;sawtooth</span>
-idur <span class="op">=</span> p3<span class="op">/</span>(<span class="ohdr">nchnls</span><span class="op">-</span>1)
-knext <span class="opc">init</span> idur
-kpos <span class="opc">init</span> 0
-krate <span class="opc">init</span> 1<span class="op">/</span>idur
-kbase <span class="opc">init</span> 0
-ktime <span class="opc">timeinsts</span>
-<span class="octrl">if</span> ktime<span class="op">&gt;=</span>knext then
-  kleft <span class="op">=</span> kleft <span class="op">+</span> 1
-  knext <span class="op">=</span> knext <span class="op">+</span> idur
-  kpos <span class="op">=</span> 0
-  kbase <span class="op">=</span> ktime
-<span class="octrl">else</span>
-  kpos <span class="op">=</span> (ktime<span class="op">-</span>kbase)<span class="op">/</span>idur
-<span class="octrl">endif</span>
-<span class="opc">printks</span> "speaker <span class="op">%</span>d position <span class="op">%</span>f\n", 0, kleft, kpos
-a1,a2 <span class="opc">pan2</span> asig, kpos
-      <span class="opc">outrg</span>  kleft, a1, a2
-kpos <span class="op">=</span> kbase<span class="op">/</span>idur
-<span class="oblock">endin</span>
+k<span class="n">left</span> <span class="nb">init</span> <span class="mi">1</span>
+a<span class="n">sig</span>  <span class="nb">vco2</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">220</span>			<span class="c1">;sawtooth</span>
+i<span class="n">dur</span> <span class="o">=</span> <span class="nb">p3</span><span class="o">/</span><span class="p">(</span><span class="vg">nchnls</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+k<span class="n">next</span> <span class="nb">init</span> i<span class="n">dur</span>
+k<span class="n">pos</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">rate</span> <span class="nb">init</span> <span class="mi">1</span><span class="o">/</span>i<span class="n">dur</span>
+k<span class="n">base</span> <span class="nb">init</span> <span class="mi">0</span>
+k<span class="n">time</span> <span class="nb">timeinsts</span>
+<span class="k">if</span> k<span class="n">time</span><span class="o">&gt;=</span>k<span class="n">next</span> <span class="k">then</span>
+  k<span class="n">left</span> <span class="o">=</span> k<span class="n">left</span> <span class="o">+</span> <span class="mi">1</span>
+  k<span class="n">next</span> <span class="o">=</span> k<span class="n">next</span> <span class="o">+</span> i<span class="n">dur</span>
+  k<span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+  k<span class="n">base</span> <span class="o">=</span> k<span class="n">time</span>
+<span class="k">else</span>
+  k<span class="n">pos</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">time</span><span class="o">-</span>k<span class="n">base</span><span class="p">)</span><span class="o">/</span>i<span class="n">dur</span>
+<span class="k">endif</span>
+<span class="nb">printks</span> <span class="s">"speaker </span><span class="si">%d</span><span class="s"> position %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">left</span><span class="p">,</span> k<span class="n">pos</span>
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span> <span class="nb">pan2</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">pos</span>
+      <span class="nb">outrg</span>  k<span class="n">left</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>
+k<span class="n">pos</span> <span class="o">=</span> k<span class="n">base</span><span class="o">/</span>i<span class="n">dur</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 10
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -152,7 +152,7 @@ speaker 4 position 0.000000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp122358928"></a>
+        <a id="idm1522920560"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

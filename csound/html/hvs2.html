@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>hvs2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="hvs1.html" title="hvs1" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104886192"></a>
+        <a id="idm1540909808"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>hvs2</em></span> allows two-dimensional Hyper Vectorial Synthesis (HVS) controlled by externally-updated k-variables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104931424"></a>
+        <a id="idm1540909936"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>hvs2</strong></span> kx, ky, inumParms, inumPointsX, inumPointsY, iOutTab, iPositionsTab, iSnapTab [, iConfigTab]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp104933488"></a>
+        <a id="idm1540915440"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inumParms</em></span> - number of parameters controlled by the HVS. Each HVS snapshot is made up of <span class="emphasis"><em>inumParms</em></span> elements.
@@ -72,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104944288"></a>
+        <a id="idm1540905072"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kx, ky</em></span> -  these are externally-modified variables which controls the motion of the pointer in the HVS matrix cube (or square or line in case of HVS matrices made up of less than 3 dimensions). The range of these input arguments must be 0 to 1.
@@ -93,12 +94,12 @@
       Snapshot order, as stored into the <span class="emphasis"><em>iSnapTab</em></span>, can or cannot follow the order of the pivot-points numbers. In fact it is possible to alter this order by means the <span class="emphasis"><em>iPositionsTab</em></span>, a table that remaps the position of each snapshot in relation to the pivot points. The <span class="emphasis"><em>iPositionsTab</em></span> is made up of the positions of the snapshots (contained in the <span class="emphasis"><em>iSnapTab</em></span>) in the two-dimensional grid. Each subsequent element is actually a pointer representing the position in the <span class="emphasis"><em>iSnapTab</em></span>. For example, in a 2-dimensional HVS matrix such as the following (in this case having <span class="emphasis"><em>inumPointsX</em></span> = 3 and <span class="emphasis"><em>inumPointsY</em></span> = 5:
     </p>
         <div class="table">
-          <a id="idp104956192"></a>
+          <a id="idm1540893680"></a>
           <p class="title">
             <strong>Table 10. </strong>
           </p>
           <div class="table-contents">
-            <table border="1">
+            <table class="table" border="1">
               <colgroup>
                 <col />
                 <col />
@@ -164,103 +165,80 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104978560"></a>
+        <a id="idm1541132400"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the hvs2 opcode. It uses the file <a class="ulink" href="examples/hvs2.csd" target="_top"><em class="citetitle">hvs2.csd</em></a>.
+      Here is an example of the hvs2 opcode. It uses the file <a class="ulink" href="examples/hvs2.csd.html" target="_top"><em class="citetitle">hvs2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp104980416"></a>
+          <a id="idm1541136496"></a>
           <p class="title">
-            <strong>Example 397. Example of the hvs2 opcode.</strong>
+            <strong>Example 404. Example of the hvs2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp247778736"></a>
-              <a class="ulink" href="examples/hvs2.csd.html" target="_top">Play</a>
+              <a id="idm1370365424"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">100</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+gi<span class="n">numLinesX</span> <span class="nb">init</span>	<span class="mi">4</span>
+gi<span class="n">numLinesY</span> <span class="nb">init</span>	<span class="mi">4</span>
+gi<span class="n">numParms</span>	<span class="nb">init</span>	<span class="mi">3</span>
+gi<span class="n">OutTab</span>	<span class="nb">ftgen</span>	<span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>      <span class="mi">0</span>
+gi<span class="n">PosTab</span>	<span class="nb">ftgen</span>	<span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>     <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span>
+gi<span class="n">SnapTab</span>	<span class="nb">ftgen</span>	<span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>     <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> \
+                              <span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>    <span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span>
+<span class="nb">tb0_init</span>	gi<span class="n">OutTab</span>
+        <span class="nb">FLpanel</span>	<span class="s">"Prova HVS2"</span><span class="p">,</span><span class="mi">600</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span>
+gk<span class="n">1</span><span class="p">,</span>    gk<span class="n">2</span><span class="p">,</span>   i<span class="n">h1</span><span class="p">,</span> i<span class="n">h2</span>  <span class="nb">FLjoy</span>   <span class="s">"HVS controller XY"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>     <span class="mi">1</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>     <span class="o">-</span><span class="mi">1</span><span class="p">,</span>     <span class="o">-</span><span class="mi">1</span><span class="p">,</span>     <span class="mi">300</span><span class="p">,</span>    <span class="mi">300</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span> 
+<span class="c1">; *ihandle,                      *numlinesX,   *numlinesY, *iwidth, *iheight, *ix, *iy,*image;</span>
+gi<span class="n">handle</span>	<span class="nb">FLhvsBox</span>	gi<span class="n">numLinesX</span><span class="p">,</span>   gi<span class="n">numLinesY</span><span class="p">,</span>  <span class="mi">300</span><span class="p">,</span>   <span class="mi">300</span><span class="p">,</span>      <span class="mi">300</span><span class="p">,</span>  <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="nb">FLpanel_end</span>
+        <span class="nb">FLrun</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>44100
-<span class="ohdr">ksmps</span><span class="op">=</span>100
-<span class="ohdr">nchnls</span><span class="op">=</span>2
-
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
-
-ginumLinesX <span class="opc">init</span>	4
-ginumLinesY <span class="opc">init</span>	4
-ginumParms	<span class="opc">init</span>	3
-
-giOutTab	<span class="ohdr">ftgen</span>	5,0,8, <span class="op">-</span>2,      0
-giPosTab	<span class="ohdr">ftgen</span>	6,0,32, <span class="op">-</span>2,     3,2,1,0,4,5,6,7,8,9,10, 11, 15, 14, 13, 12
-giSnapTab	<span class="ohdr">ftgen</span>	8,0,64, <span class="op">-</span>2,     1,1,1,   2,0,0,  3,2,0,  2,2,2,  5,2,1,  2,3,4,  6,1,7,    0,0,0, \
-                              1,3,5,   3,4,4,  1,5,8,  1,1,5,  4,3,2,  3,4,5,  7,6,5,    7,8,9
-
-<span class="opc">tb0_init</span>	giOutTab
-
-        <span class="opc">FLpanel</span>	"Prova HVS2",600,400,10,100,0
-
-gk1,    gk2,   ih1, ih2  <span class="opc">FLjoy</span>   "HVS controller XY", 0,    1,     1,     0,     0,     0,     <span class="op">-</span>1,     <span class="op">-</span>1,     300,    300,     0, 50 
-
-<span class="comment">; *ihandle,                      *numlinesX,   *numlinesY, *iwidth, *iheight, *ix, *iy,*image;</span>
-gihandle	<span class="opc">FLhvsBox</span>	ginumLinesX,   ginumLinesY,  300,   300,      300,  50, 1
-
-        <span class="opc">FLpanel_end</span>
-        <span class="opc">FLrun</span>
-
-
-	<span class="oblock">instr</span>	1
-
-<span class="comment">; Smooth control signals to avoid clicks</span>
-kx <span class="opc">portk</span> gk1, 0.02
-ky <span class="opc">portk</span> gk2, 0.02
-
-<span class="comment">;              kx,  ky,  inumParms,  inumlinesX,  inumlinesY,  iOutTab,  iPosTab,  iSnapTab [, iConfigTab]</span>
-        <span class="opc">hvs2</span>  kx, ky, ginumParms, ginumLinesX, ginumLinesY, giOutTab, giPosTab, giSnapTab  <span class="comment">;, iConfigTab</span>
-
-<span class="comment">;                       *kx, *ky, *ihandle;</span>
-        <span class="opc">FLhvsBoxSetValue</span> gk1, gk2, gihandle
-
-k0	<span class="opc">init</span>	0
-k1	<span class="opc">init</span>	1
-k2	<span class="opc">init</span>	2
-
-<span class="opc">printk2</span>	<span class="opc">tb0</span>(k0)
-<span class="opc">printk2</span>	<span class="opc">tb0</span>(k1), 10
-<span class="opc">printk2</span>	<span class="opc">tb0</span>(k2), 20
-
-  kris <span class="opc">init</span> 0.003
-  kdur <span class="opc">init</span> 0.02
-  kdec <span class="opc">init</span> 0.007
-
-<span class="comment">; Make parameters of synthesis depend on the table values produced by hvs</span>
-ares1 <span class="opc">fof</span> 0.2, <span class="opc">tb0</span>(k0)<span class="op">*</span>100 <span class="op">+</span> 50, <span class="opc">tb0</span>(k1)<span class="op">*</span>100 <span class="op">+</span> 200, 0, <span class="opc">tb0</span>(k2) <span class="op">*</span> 10 <span class="op">+</span> 50, 0.003, 0.02, 0.007, 20, \
-      1, 2, p3
-ares2 <span class="opc">fof</span> 0.2, <span class="opc">tb0</span>(k1)<span class="op">*</span>100 <span class="op">+</span> 50, <span class="opc">tb0</span>(k2)<span class="op">*</span>100 <span class="op">+</span> 200, 0, <span class="opc">tb0</span>(k0) <span class="op">*</span> 10 <span class="op">+</span> 50, 0.003, 0.02, 0.007, 20, \
-      1, 2, p3
-
-<span class="opc">outs</span> ares1, ares2
-	<span class="oblock">endin</span>
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 1024 10 1  <span class="comment">;Sine wave</span>
-<span class="stamnt">f</span> 2 0 1024 19 0.5 0.5 270 0.5  <span class="comment">;Grain envelope table</span>
-
-<span class="stamnt">f</span>0 3600
-
-<span class="stamnt">i</span>1 0 3600
-
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+	<span class="kd">instr</span>	<span class="nf">1</span>
+<span class="c1">; Smooth control signals to avoid clicks</span>
+k<span class="n">x</span> <span class="nb">portk</span> gk<span class="n">1</span><span class="p">,</span> <span class="mf">0.02</span>
+k<span class="n">y</span> <span class="nb">portk</span> gk<span class="n">2</span><span class="p">,</span> <span class="mf">0.02</span>
+<span class="c1">;              kx,  ky,  inumParms,  inumlinesX,  inumlinesY,  iOutTab,  iPosTab,  iSnapTab [, iConfigTab]</span>
+        <span class="nb">hvs2</span>  k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> gi<span class="n">numParms</span><span class="p">,</span> gi<span class="n">numLinesX</span><span class="p">,</span> gi<span class="n">numLinesY</span><span class="p">,</span> gi<span class="n">OutTab</span><span class="p">,</span> gi<span class="n">PosTab</span><span class="p">,</span> gi<span class="n">SnapTab</span>  <span class="c1">;, iConfigTab</span>
+<span class="c1">;                       *kx, *ky, *ihandle;</span>
+        <span class="nb">FLhvsBoxSetValue</span> gk<span class="n">1</span><span class="p">,</span> gk<span class="n">2</span><span class="p">,</span> gi<span class="n">handle</span>
+k<span class="n">0</span>	<span class="nb">init</span>	<span class="mi">0</span>
+k<span class="n">1</span>	<span class="nb">init</span>	<span class="mi">1</span>
+k<span class="n">2</span>	<span class="nb">init</span>	<span class="mi">2</span>
+<span class="nb">printk2</span>	<span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">)</span>
+<span class="nb">printk2</span>	<span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">),</span> <span class="mi">10</span>
+<span class="nb">printk2</span>	<span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">),</span> <span class="mi">20</span>
+  k<span class="n">ris</span> <span class="nb">init</span> <span class="mf">0.003</span>
+  k<span class="n">dur</span> <span class="nb">init</span> <span class="mf">0.02</span>
+  k<span class="n">dec</span> <span class="nb">init</span> <span class="mf">0.007</span>
+<span class="c1">; Make parameters of synthesis depend on the table values produced by hvs</span>
+a<span class="n">res1</span> <span class="nb">fof</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> \
+      <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span>
+a<span class="n">res2</span> <span class="nb">fof</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> \
+      <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span>
+<span class="nb">outs</span> a<span class="n">res1</span><span class="p">,</span> a<span class="n">res2</span>
+	<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>  <span class="c1">;Sine wave</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">19</span> <span class="mf">0.5</span> <span class="mf">0.5</span> <span class="mi">270</span> <span class="mf">0.5</span>  <span class="c1">;Grain envelope table</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -268,121 +246,120 @@ ares2 <span class="opc">fof</span> 0.2, <span class="opc">tb0</span>(k1)<span cl
         <p><br class="example-break" />
     </p>
         <p>
-      Here is second example of the hvs2 opcode. It uses the file <a class="ulink" href="examples/hvs2-2.csd" target="_top"><em class="citetitle">hvs2-2.csd</em></a>.
+      Here is second example of the hvs2 opcode. It uses the file <a class="ulink" href="examples/hvs2-2.csd.html" target="_top"><em class="citetitle">hvs2-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp104985696"></a>
+          <a id="idm1541135856"></a>
           <p class="title">
-            <strong>Example 398. Second example of the hvs2 opcode.</strong>
+            <strong>Example 405. Second example of the hvs2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp247887040"></a>
-              <a class="ulink" href="examples/hvs2-2.csd.html" target="_top">Play</a>
+              <a id="idm1369700592"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o hvs2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o hvs2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span><span class="op">=</span>48000
-<span class="ohdr">ksmps</span><span class="op">=</span>100
-<span class="ohdr">nchnls</span><span class="op">=</span>2
+<span class="vg">sr</span><span class="o">=</span><span class="mi">48000</span>
+<span class="vg">ksmps</span><span class="o">=</span><span class="mi">100</span>
+<span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
-<span class="comment">; Example by James Hearon 2008</span>
-<span class="comment">; Edited by Andres Cabrera</span>
+<span class="c1">; Example by James Hearon 2008</span>
+<span class="c1">; Edited by Andres Cabrera</span>
 
-ginumPointsX <span class="opc">init</span>       16
-ginumPointsY <span class="opc">init</span>       16
-ginumParms  <span class="opc">init</span>        3
+gi<span class="n">numPointsX</span> <span class="nb">init</span>       <span class="mi">16</span>
+gi<span class="n">numPointsY</span> <span class="nb">init</span>       <span class="mi">16</span>
+gi<span class="n">numParms</span>  <span class="nb">init</span>        <span class="mi">3</span>
 
-<span class="comment">;Generate 9 tables with arbitrary points</span>
-gitmp <span class="ohdr">ftgen</span> 100, 0, 16, <span class="op">-</span>2, 70, 260, 390, 180, 200, 300, 980, 126, \
-                330, 860, 580, 467, 220, 399, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 200, 0, 16, <span class="op">-</span>2, 100, 200, 300, 140, 600, 700, 880, 126, \
-                330, 560, 780, 167, 220, 999, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 300, 0, 16, <span class="op">-</span>2, 400, 200, 300, 540, 600, 700, 880, 126, \
-                330, 160, 780, 167, 820, 999, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 400, 0, 16, <span class="op">-</span>2, 100, 200, 800, 640, 600, 300, 880, 126, \
-                330, 660, 780, 167, 220, 999, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 500, 0, 16, <span class="op">-</span>2, 200, 200, 360, 440, 600, 700, 880, 126, \
-                330, 560, 380, 167, 220, 499, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 600, 0, 16, <span class="op">-</span>2, 100, 600, 300, 840, 600, 700, 880, 126, \
-                330, 260, 980, 367, 120, 399, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 700, 0, 16, <span class="op">-</span>2, 100, 200, 300, 340, 200, 500, 380, 126, \
-                330, 860, 780, 867, 120, 999, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 800, 0, 16, <span class="op">-</span>2, 100, 600, 300, 240, 200, 700, 880, 126, \
-                130, 560, 980, 167, 220, 499, 1026, 1500
-gitmp <span class="ohdr">ftgen</span> 900, 0, 16, <span class="op">-</span>2, 100, 800, 200, 140, 600, 700, 680, 126, \
-                330, 560, 780, 167, 120, 299, 1026, 1500
+<span class="c1">;Generate 9 tables with arbitrary points</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">260</span><span class="p">,</span> <span class="mi">390</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">980</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">860</span><span class="p">,</span> <span class="mi">580</span><span class="p">,</span> <span class="mi">467</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">399</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">560</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">540</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">820</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">660</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">560</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">499</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">840</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">260</span><span class="p">,</span> <span class="mi">980</span><span class="p">,</span> <span class="mi">367</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">399</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">340</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">860</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">867</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">130</span><span class="p">,</span> <span class="mi">560</span><span class="p">,</span> <span class="mi">980</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">499</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
+gi<span class="n">tmp</span> <span class="nb">ftgen</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">680</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> \
+                <span class="mi">330</span><span class="p">,</span> <span class="mi">560</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">299</span><span class="p">,</span> <span class="mi">1026</span><span class="p">,</span> <span class="mi">1500</span>
 
-giOutTab <span class="ohdr">ftgen</span>   5,0,8, <span class="op">-</span>2,      0
-giPosTab <span class="ohdr">ftgen</span>   6,0,32, <span class="op">-</span>2, 0,1,2,3,4,5,6,7,8,9,10, 11, 15, 14, 13, 12
-giSnapTab <span class="ohdr">ftgen</span>   8,0,64, <span class="op">-</span>2,  1,1,1,   2,0,0,  3,2,0,  2,2,2,  \
-        5,2,1,  2,3,4,  6,1,7,  0,0,0,  1,3,5,  3,4,4,  1,5,8,  1,1,5,  \
-        4,3,2,  3,4,5,  7,6,5,  7,8,9
+gi<span class="n">OutTab</span> <span class="nb">ftgen</span>   <span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>      <span class="mi">0</span>
+gi<span class="n">PosTab</span> <span class="nb">ftgen</span>   <span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span>
+gi<span class="n">SnapTab</span> <span class="nb">ftgen</span>   <span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>  \
+        <span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  \
+        <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span>
 
-<span class="opc">tb0_init</span>        giOutTab
+<span class="nb">tb0_init</span>        gi<span class="n">OutTab</span>
 
-        <span class="opc">FLpanel</span> "hsv2",440,100,10,10,0
-gk1,ih1 <span class="opc">FLslider</span> "X", 0,1, 0, 5, <span class="op">-</span>1, 400,20, 20,10
-gk2, ih2 <span class="opc">FLslider</span> "Y", 0, 1, 0, 5, <span class="op">-</span>1, 400, 20, 20, 50
-        <span class="opc">FLpanel_end</span>
+        <span class="nb">FLpanel</span> <span class="s">"hsv2"</span><span class="p">,</span><span class="mi">440</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span>
+gk<span class="n">1</span><span class="p">,</span>i<span class="n">h1</span> <span class="nb">FLslider</span> <span class="s">"X"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span><span class="mi">10</span>
+gk<span class="n">2</span><span class="p">,</span> i<span class="n">h2</span> <span class="nb">FLslider</span> <span class="s">"Y"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span>
+        <span class="nb">FLpanel_end</span>
 
-        <span class="opc">FLpanel</span> "hvsBox",280,280,500,1000,0
-<span class="comment">;ihandle FLhvsBox inumlinesX, inumlinesY, iwidth, iheight, ix, iy [, image]</span>
-gih1  <span class="opc">FLhvsBox</span>  16, 16, 250, 250, 10, 1
-        <span class="opc">FLpanel_end</span>
-        <span class="opc">FLrun</span>
-
-
-        <span class="oblock">instr</span>   1
-<span class="opc">FLhvsBoxSetValue</span> gk1, gk2, gih1
-
-<span class="opc">hvs2</span>    gk1,gk2,  ginumParms, ginumPointsX, ginumPointsY, giOutTab, giPosTab, giSnapTab  <span class="comment">;, iConfigTab</span>
-
-k0      <span class="opc">init</span>    0
-k1      <span class="opc">init</span>    1
-k2      <span class="opc">init</span>    2
-kspeed  <span class="opc">init</span>    0
-
-kspeed <span class="op">=</span> <span class="opc">int</span>((<span class="opc">tb0</span>(k2)) <span class="op">+</span> 1)<span class="op">*</span>.10
-
-kenv  <span class="opc">oscil</span>   25000, kspeed<span class="op">*</span>16, 10 
-
-k1    <span class="opc">phasor</span> kspeed <span class="comment">;slow phasor: 200 sec.</span>
-kpch  <span class="opc">tableikt</span> k1 <span class="op">*</span> 16, <span class="opc">int</span>((<span class="opc">tb0</span>(k1)) <span class="op">+</span>1)<span class="op">*</span>100 <span class="comment">;scale phasor * length</span>
-a1    <span class="opc">oscilikt</span> kenv, kpch, <span class="opc">int</span>(<span class="opc">tb0</span>(k0)) <span class="op">+</span>1000<span class="comment">;scale pitch slightly</span>
-ahp <span class="opc">butterlp</span> a1, 2500
-<span class="opc">outs</span> ahp, ahp
-
-        <span class="oblock">endin</span>
+        <span class="nb">FLpanel</span> <span class="s">"hvsBox"</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span>
+<span class="c1">;ihandle FLhvsBox inumlinesX, inumlinesY, iwidth, iheight, ix, iy [, image]</span>
+gi<span class="n">h1</span>  <span class="nb">FLhvsBox</span>  <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="nb">FLpanel_end</span>
+        <span class="nb">FLrun</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+        <span class="kd">instr</span>   <span class="nf">1</span>
+<span class="nb">FLhvsBoxSetValue</span> gk<span class="n">1</span><span class="p">,</span> gk<span class="n">2</span><span class="p">,</span> gi<span class="n">h1</span>
 
-<span class="stamnt">f</span> 10  0  1024 20  5 <span class="comment">;use of windowing function</span>
-<span class="stamnt">f</span>1000 0 1024 10 .33 .25 .5
-<span class="stamnt">f</span>1001 0 1024 10 1
-<span class="stamnt">f</span>1002 0 1024 10 .5  .25  .05
-<span class="stamnt">f</span>1003 0 1024 10 .05  .10  .3  .5  1
-<span class="stamnt">f</span>1004 0 1024 10 1 .5  .25  .125  .625
-<span class="stamnt">f</span>1005 0 1024 10 .33  .44  .55  .66
-<span class="stamnt">f</span>1006 0 1024 10 1 1 1 1 1
-<span class="stamnt">f</span>1007 0 1024 10 .05 .25 .05 .25 .05 1
+<span class="nb">hvs2</span>    gk<span class="n">1</span><span class="p">,</span>gk<span class="n">2</span><span class="p">,</span>  gi<span class="n">numParms</span><span class="p">,</span> gi<span class="n">numPointsX</span><span class="p">,</span> gi<span class="n">numPointsY</span><span class="p">,</span> gi<span class="n">OutTab</span><span class="p">,</span> gi<span class="n">PosTab</span><span class="p">,</span> gi<span class="n">SnapTab</span>  <span class="c1">;, iConfigTab</span>
 
-<span class="stamnt">f</span>0 3600
-<span class="stamnt">i</span>1 0 3600
+k<span class="n">0</span>      <span class="nb">init</span>    <span class="mi">0</span>
+k<span class="n">1</span>      <span class="nb">init</span>    <span class="mi">1</span>
+k<span class="n">2</span>      <span class="nb">init</span>    <span class="mi">2</span>
+k<span class="n">speed</span>  <span class="nb">init</span>    <span class="mi">0</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+k<span class="n">speed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mf">.10</span>
+
+k<span class="n">env</span>  <span class="nb">oscil</span>   <span class="mi">25000</span><span class="p">,</span> k<span class="n">speed</span><span class="o">*</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span> 
+
+k<span class="n">1</span>    <span class="nb">phasor</span> k<span class="n">speed</span> <span class="c1">;slow phasor: 200 sec.</span>
+k<span class="n">pch</span>  <span class="nb">tableikt</span> k<span class="n">1</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">))</span> <span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="c1">;scale phasor * length</span>
+a<span class="n">1</span>    <span class="nb">oscilikt</span> k<span class="n">env</span><span class="p">,</span> k<span class="n">pch</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">))</span> <span class="o">+</span><span class="mi">1000</span><span class="c1">;scale pitch slightly</span>
+a<span class="n">hp</span> <span class="nb">butterlp</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">2500</span>
+<span class="nb">outs</span> a<span class="n">hp</span><span class="p">,</span> a<span class="n">hp</span>
+
+        <span class="kd">endin</span>
+
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="nb">f</span> <span class="mi">10</span>  <span class="mi">0</span>  <span class="mi">1024</span> <span class="mi">20</span>  <span class="mi">5</span> <span class="c1">;use of windowing function</span>
+<span class="nb">f</span><span class="mi">1000</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mf">.33</span> <span class="mf">.25</span> <span class="mf">.5</span>
+<span class="nb">f</span><span class="mi">1001</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">f</span><span class="mi">1002</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mf">.5</span>  <span class="mf">.25</span>  <span class="mf">.05</span>
+<span class="nb">f</span><span class="mi">1003</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mf">.05</span>  <span class="mf">.10</span>  <span class="mf">.3</span>  <span class="mf">.5</span>  <span class="mi">1</span>
+<span class="nb">f</span><span class="mi">1004</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mf">.5</span>  <span class="mf">.25</span>  <span class="mf">.125</span>  <span class="mf">.625</span>
+<span class="nb">f</span><span class="mi">1005</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mf">.33</span>  <span class="mf">.44</span>  <span class="mf">.55</span>  <span class="mf">.66</span>
+<span class="nb">f</span><span class="mi">1006</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="nb">f</span><span class="mi">1007</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mf">.05</span> <span class="mf">.25</span> <span class="mf">.05</span> <span class="mf">.25</span> <span class="mf">.05</span> <span class="mi">1</span>
+
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -391,7 +368,7 @@ ahp <span class="opc">butterlp</span> a1, 2500
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104989984"></a>
+        <a id="idm1541122288"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="hvs1.html" title="hvs1"><em class="citetitle">hvs1</em></a>,
@@ -400,7 +377,7 @@ ahp <span class="opc">butterlp</span> a1, 2500
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp104993952"></a>
+        <a id="idm1541128432"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

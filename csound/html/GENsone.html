@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GENsone</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GENexp.html" title="GENexp" />
-    <link rel="next" href="GENfarey.html" title="GENfarey" />
+    <link rel="next" href="GENquadbezier.html" title="GENquadbezier" />
   </head>
   <body>
     <div class="navheader">
@@ -20,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="GENexp.html">Prev</a> </td>
           <th width="60%" align="center">Score Statements and GEN Routines</th>
-          <td width="20%" align="right"> <a accesskey="n" href="GENfarey.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="GENquadbezier.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207839616"></a>
+        <a id="idm1436545904"></a>
         <h2>Description</h2>
         <p>
       Creates an ftable with values of the sone function for equal power.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207840896"></a>
+        <a id="idm1436541680"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size "sone" start end equalpoint rescale</pre>
       </div>
       <div class="refsect1">
-        <a id="idp207842880"></a>
+        <a id="idm1436542832"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must
@@ -72,76 +73,74 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207920464"></a>
+        <a id="idm1436533232"></a>
         <h2>Examples</h2>
         <p>
-	    Here is an example of the GENsone routine. It uses the files <a class="ulink" href="examples/gensone.csd" target="_top"><em class="citetitle">gensone.csd</em></a>.
+	    Here is an example of the GENsone routine. It uses the files <a class="ulink" href="examples/gensone.csd.html" target="_top"><em class="citetitle">gensone.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp207922320"></a>
+          <a id="idm1436530672"></a>
           <p class="title">
-            <strong>Example 1163. An example of the GENsone routine.</strong>
+            <strong>Example 1191. An example of the GENsone routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp276020192"></a>
-              <a class="ulink" href="examples/gensone.csd.html" target="_top">Play</a>
+              <a id="idm1292646384"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gensone.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gensone.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; simple oscillator with loudness correction. </span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; simple oscillator with loudness correction. </span>
 
-kcps <span class="op">=</span> <span class="opc">cpspch</span>(p4) 
-kenv <span class="opc">linseg</span> 0, p3<span class="op">*</span>0.25, 1, p3<span class="op">*</span>0.75, 0	<span class="comment">;amplitude envelope</span>
-kamp <span class="opc">tablei</span> 16384 <span class="op">*</span>kenv, 2 
-asig <span class="opc">oscil</span> kamp, kcps, 1
-     <span class="opc">outs</span> asig, asig
+k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span> 
+k<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;amplitude envelope</span>
+k<span class="n">amp</span> <span class="nb">tablei</span> <span class="mi">16384</span> <span class="o">*</span>k<span class="n">env</span><span class="p">,</span> <span class="mi">2</span> 
+a<span class="n">sig</span> <span class="nb">oscil</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
   
-<span class="oblock">endin</span> 
+<span class="kd">endin</span> 
 
-<span class="oblock">instr</span> 2	<span class="comment">;neutral oscillator to compare with</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;neutral oscillator to compare with</span>
 
-kcps <span class="op">=</span> <span class="opc">cpspch</span>(p4)  
-kenv <span class="opc">linseg</span> 0, p3<span class="op">*</span>0.25, 1, p3<span class="op">*</span>0.75, 0	<span class="comment">;amplitude envelope</span>
-asig <span class="opc">oscil</span> kenv, kcps, 1
-     <span class="opc">outs</span> asig, asig
+k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>  
+k<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;amplitude envelope</span>
+a<span class="n">sig</span> <span class="nb">oscil</span> k<span class="n">env</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
   
-<span class="oblock">endin</span> 
+<span class="kd">endin</span> 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
-<span class="stamnt">f</span> 1 0 16384 10 1 	<span class="comment">;sine wave</span>
-<span class="stamnt">f</span> 2 0 16385 "sone" 0 32000 32000 0 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span> 	<span class="c1">;sine wave</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">16385</span> <span class="s">"sone"</span> <span class="mi">0</span> <span class="mi">32000</span> <span class="mi">32000</span> <span class="mi">0</span> 
 
-<span class="stamnt">s</span>
-<span class="stamnt">f</span> 0 1	<span class="comment">;1 second of silence before we start...</span>
-<span class="stamnt">s</span> 
-<span class="stamnt">i</span> 1 0 2 7.00 
-<span class="stamnt">i</span> 1 + . 7.01 
-<span class="stamnt">i</span> 1 + . 8.02 
-<span class="stamnt">i</span> 1 + . 8.03 
-<span class="stamnt">s</span> 
-<span class="stamnt">i</span> 2 0 2 7.00 
-<span class="stamnt">i</span> 2 + . 7.01 
-<span class="stamnt">i</span> 2 + . 8.02 
-<span class="stamnt">i</span> 2 + . 8.03 
-<span class="stamnt">e</span> 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">s</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">1</span>	<span class="c1">;1 second of silence before we start...</span>
+<span class="nb">s</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">7.00</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">7.01</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">8.02</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">8.03</span> 
+<span class="nb">s</span> 
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">7.00</span> 
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">7.01</span> 
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">8.02</span> 
+<span class="nb">i</span> <span class="mi">2</span> <span class="o">+</span> <span class="o">.</span> <span class="mf">8.03</span> 
+<span class="nb">e</span> 
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -162,12 +161,12 @@ asig <span class="opc">oscil</span> kenv, kcps, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207928240"></a>
+        <a id="idm1436527856"></a>
         <h2>See Also</h2>
         <p> More information on Sone: <a class="ulink" href="http://en.wikipedia.org/wiki/Sone" target="_top"><em class="citetitle">http://en.wikipedia.org/wiki/Sone</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idp207930160"></a>
+        <a id="idm1436527728"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch</p>
       </div>
@@ -180,14 +179,14 @@ asig <span class="opc">oscil</span> kenv, kcps, 1
           <td width="20%" align="center">
             <a accesskey="u" href="ScoregensTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="GENfarey.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="GENquadbezier.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">GENexp </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> GENfarey</td>
+          <td width="40%" align="right" valign="top"> GENquadbezier</td>
         </tr>
       </table>
     </div>

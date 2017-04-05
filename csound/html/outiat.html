@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>outiat</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="outh.html" title="outh" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp120683120"></a>
+        <a id="idm1524287984"></a>
         <h2>Description</h2>
         <p>
       Sends MIDI aftertouch messages at i-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120684368"></a>
+        <a id="idm1524290416"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outiat</strong></span> ichn, ivalue, imin, imax</pre>
       </div>
       <div class="refsect1">
-        <a id="idp120759040"></a>
+        <a id="idm1524293360"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ichn</em></span> -- MIDI channel number (1-16)
@@ -66,7 +67,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120763264"></a>
+        <a id="idm1524283120"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>outiat</em></span> (i-rate aftertouch output) sends aftertouch messages. It works only with MIDI instruments which recognize them. It can drive a different value of a parameter for each note currently active. 
@@ -76,54 +77,53 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120768448"></a>
+        <a id="idm1524279920"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the outiat opcode. It uses the file <a class="ulink" href="examples/outiat.csd" target="_top"><em class="citetitle">outiat.csd</em></a>.
+      Here is an example of the outiat opcode. It uses the file <a class="ulink" href="examples/outiat.csd.html" target="_top"><em class="citetitle">outiat.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp120770304"></a>
+          <a id="idm1524534768"></a>
           <p class="title">
-            <strong>Example 602. Example of the outiat opcode.</strong>
+            <strong>Example 621. Example of the outiat opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255951280"></a>
-              <a class="ulink" href="examples/outiat.csd.html" target="_top">Play</a>
+              <a id="idm1347898096"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac -Q1 -M0  <span class="comment">;;;realtime audio out and midi in and out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outiat.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac -Q1 -M0  <span class="c1">;;;realtime audio out and midi in and out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outiat.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ikey <span class="opc">notnum</span> 
-ivel  <span class="opc">veloc</span>
+i<span class="n">key</span> <span class="nb">notnum</span> 
+i<span class="n">vel</span>  <span class="nb">veloc</span>
 
-ivib <span class="op">=</span> 25		<span class="comment">;low value.</span>
-<span class="opc">outiat</span> 1, ivib, 0, 127	<span class="comment">;assign aftertouch on</span>
-<span class="opc">print</span> ivib		<span class="comment">;external synth for example to</span>
-<span class="opc">midion</span> 1, ikey, ivel	<span class="comment">;change depth of filter modulation</span>
+i<span class="n">vib</span> <span class="o">=</span> <span class="mi">25</span>		<span class="c1">;low value.</span>
+<span class="nb">outiat</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">vib</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span>	<span class="c1">;assign aftertouch on</span>
+<span class="nb">print</span> i<span class="n">vib</span>		<span class="c1">;external synth for example to</span>
+<span class="nb">midion</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">key</span><span class="p">,</span> i<span class="n">vel</span>	<span class="c1">;change depth of filter modulation</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>0 30 			<span class="comment">;play for 30 seconds</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">30</span> 			<span class="c1">;play for 30 seconds</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -132,7 +132,7 @@ ivib <span class="op">=</span> 25		<span class="comment">;low value.</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120774592"></a>
+        <a id="idm1524539504"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="outic14.html" title="outic14"><em class="citetitle">outic14</em></a>, 
@@ -149,7 +149,7 @@ ivib <span class="op">=</span> 25		<span class="comment">;low value.</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120786240"></a>
+        <a id="idm1524528240"></a>
         <h2>Credits</h2>
         <p>
       </p>

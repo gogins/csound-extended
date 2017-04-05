@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>distort1</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="distort.html" title="distort" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp89358848"></a>
+        <a id="idm1557031664"></a>
         <h2>Description</h2>
         <p>
       Implementation of modified hyperbolic tangent distortion. <span class="emphasis"><em>distort1</em></span> can be used to generate wave shaping distortion based on a modification of the <a class="link" href="tanh.html" title="tanh"><em class="citetitle">tanh</em></a> function.
@@ -56,19 +57,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89429696"></a>
+        <a id="idm1557024240"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>distort1</strong></span> asig, kpregain, kpostgain, kshape1, kshape2[, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp89431968"></a>
+        <a id="idm1557018224"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode</em></span> (Csound version 5.00 and later only; optional, defaults to 0) -- scales kpregain, kpostgain, kshape1, and kshape2 for use with audio signals in the range -32768 to 32768 (imode=0), -0dbfs to 0dbfs (imode=1), or disables scaling of kpregain and kpostgain and scales kshape1 by kpregain and kshape2 by -kpregain (imode=2).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89434272"></a>
+        <a id="idm1557022832"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- is the input signal.
@@ -87,76 +88,75 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89440176"></a>
+        <a id="idm1557010672"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the distort1 opcode. It uses the file <a class="ulink" href="examples/distort1.csd" target="_top"><em class="citetitle">distort1.csd</em></a>.
+      Here is an example of the distort1 opcode. It uses the file <a class="ulink" href="examples/distort1.csd.html" target="_top"><em class="citetitle">distort1.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp89442032"></a>
+          <a id="idm1557010544"></a>
           <p class="title">
-            <strong>Example 213. Example of the distort1 opcode.</strong>
+            <strong>Example 215. Example of the distort1 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp239787616"></a>
-              <a class="ulink" href="examples/distort1.csd.html" target="_top">Play</a>
+              <a id="idm1391931632"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o distort1.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o distort1.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
 
-gadist <span class="opc">init</span> 0
+ga<span class="n">dist</span> <span class="nb">init</span> <span class="mi">0</span>
   
-<span class="oblock">instr</span> 1
-  iamp <span class="op">=</span> p4
-  ifqc <span class="op">=</span> <span class="opc">cpspch</span>(p5)
-  asig <span class="opc">pluck</span> iamp, ifqc, ifqc, 0, 1
-  gadist <span class="op">=</span> gadist <span class="op">+</span> asig
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  i<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+  i<span class="n">fqc</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="nb">pluck</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">fqc</span><span class="p">,</span> i<span class="n">fqc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+  ga<span class="n">dist</span> <span class="o">=</span> ga<span class="n">dist</span> <span class="o">+</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
   
-<span class="oblock">instr</span> 50
-  kpre <span class="opc">init</span> p4
-  kpost <span class="opc">init</span> p5
-  kshap1 <span class="opc">init</span> p6
-  kshap2 <span class="opc">init</span> p7
-  aout <span class="opc">distort1</span> gadist, kpre, kpost, kshap1, kshap2, 1
+<span class="kd">instr</span> <span class="nf">50</span>
+  k<span class="n">pre</span> <span class="nb">init</span> <span class="nb">p4</span>
+  k<span class="n">post</span> <span class="nb">init</span> <span class="nb">p5</span>
+  k<span class="n">shap1</span> <span class="nb">init</span> <span class="nb">p6</span>
+  k<span class="n">shap2</span> <span class="nb">init</span> <span class="nb">p7</span>
+  a<span class="n">out</span> <span class="nb">distort1</span> ga<span class="n">dist</span><span class="p">,</span> k<span class="n">pre</span><span class="p">,</span> k<span class="n">post</span><span class="p">,</span> k<span class="n">shap1</span><span class="p">,</span> k<span class="n">shap2</span><span class="p">,</span> <span class="mi">1</span>
 
-  <span class="opc">outs</span> aout, aout
+  <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-  gadist <span class="op">=</span> 0
-<span class="oblock">endin</span>
+  ga<span class="n">dist</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">;   Sta  Dur  Amp    Pitch</span>
-<span class="stamnt">i</span>1  0.0  3.0  0.5  6.00
-<span class="stamnt">i</span>1  0.5  2.5  0.5  7.00
-<span class="stamnt">i</span>1  1.0  2.0  0.5  7.07
-<span class="stamnt">i</span>1  1.5  1.5  0.5  8.00
+<span class="c1">;   Sta  Dur  Amp    Pitch</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mf">0.0</span>  <span class="mf">3.0</span>  <span class="mf">0.5</span>  <span class="mf">6.00</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mf">0.5</span>  <span class="mf">2.5</span>  <span class="mf">0.5</span>  <span class="mf">7.00</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mf">1.0</span>  <span class="mf">2.0</span>  <span class="mf">0.5</span>  <span class="mf">7.07</span>
+<span class="nb">i</span><span class="mi">1</span>  <span class="mf">1.5</span>  <span class="mf">1.5</span>  <span class="mf">0.5</span>  <span class="mf">8.00</span>
   
-<span class="comment">;   Sta  Dur  PreGain PostGain Shape1 Shape2</span>
-<span class="stamnt">i</span>50 0    4      2       .5       0      0
-<span class="stamnt">e</span>
+<span class="c1">;   Sta  Dur  PreGain PostGain Shape1 Shape2</span>
+<span class="nb">i</span><span class="mi">50</span> <span class="mi">0</span>    <span class="mi">4</span>      <span class="mi">2</span>       <span class="mf">.5</span>       <span class="mi">0</span>      <span class="mi">0</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -165,7 +165,7 @@ gadist <span class="opc">init</span> 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp89446352"></a>
+        <a id="idm1557011184"></a>
         <h2>Credits</h2>
         <p>
       </p>

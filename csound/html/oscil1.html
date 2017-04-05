@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>oscil1</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="oscbnk.html" title="oscbnk" />
@@ -38,25 +39,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119552080"></a>
+        <a id="idm1525804272"></a>
         <h2>Description</h2>
         <p>
       Accesses table values by incremental sampling.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119553344"></a>
+        <a id="idm1525803376"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>oscil1</strong></span> idel, kamp, idur [, ifn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp119602000"></a>
+        <a id="idm1525796976"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idel</em></span> -- delay in seconds before <span class="emphasis"><em>oscil1</em></span> incremental sampling begins.
     </p>
         <p>
-      <span class="emphasis"><em>idur</em></span> -- duration in seconds to sample through the <span class="emphasis"><em>oscil1</em></span> table just once. A zero or negative value will cause all initialization to be skipped.
+      <span class="emphasis"><em>idur</em></span> -- duration in seconds to sample
+      through the <span class="emphasis"><em>oscil1</em></span> table just once. A
+      negative value will make the table be read from the end to the beginning.
     </p>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- (optional) function table
@@ -66,7 +69,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119606816"></a>
+        <a id="idm1525797360"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude factor.
@@ -76,61 +79,59 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119612352"></a>
+        <a id="idm1525793520"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the oscil1 opcode. It uses the file <a class="ulink" href="examples/oscil1.csd" target="_top"><em class="citetitle">oscil1.csd</em></a>.
+      Here is an example of the oscil1 opcode. It uses the file <a class="ulink" href="examples/oscil1.csd.html" target="_top"><em class="citetitle">oscil1.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp119614208"></a>
+          <a id="idm1525788784"></a>
           <p class="title">
-            <strong>Example 587. Example of the oscil1 opcode.</strong>
+            <strong>Example 606. Example of the oscil1 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255254704"></a>
-              <a class="ulink" href="examples/oscil1i.csd.html" target="_top">Play</a>
+              <a id="idm1350181232"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o oscil1i.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o oscil1i.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span>     1   
+<span class="kd">instr</span>     <span class="nf">1</span>   
 
-ipanfn <span class="op">=</span> p4
-asig   <span class="opc">vco2</span> .3, 220
-kpan   <span class="opc">oscil1i</span> 0, 1, p3, ipanfn	<span class="comment">;create panning &amp;</span>
-kleft  <span class="op">=</span> <span class="opc">sqrt</span>(kpan)		<span class="comment">;start right away</span>
-kright <span class="op">=</span> <span class="opc">sqrt</span>(1<span class="op">-</span>kpan)     
-       <span class="opc">outs</span> kleft<span class="op">*</span>asig, kright<span class="op">*</span>asig
+i<span class="n">panfn</span> <span class="o">=</span> <span class="nb">p4</span>
+a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.3</span><span class="p">,</span> <span class="mi">220</span>
+k<span class="n">pan</span>   <span class="nb">oscil1i</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">panfn</span>	<span class="c1">;create panning &amp;</span>
+k<span class="n">left</span>  <span class="o">=</span> <span class="nb">sqrt</span><span class="p">(</span>k<span class="n">pan</span><span class="p">)</span>		<span class="c1">;start right away</span>
+k<span class="n">right</span> <span class="o">=</span> <span class="nb">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span>k<span class="n">pan</span><span class="p">)</span>     
+       <span class="nb">outs</span> k<span class="n">left</span><span class="o">*</span>a<span class="n">sig</span><span class="p">,</span> k<span class="n">right</span><span class="o">*</span>a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-                                                                                  
-<span class="stamnt">f</span> 1 0  3 -7 .5  3  .5		<span class="comment">;remain in center (.5 CONSTANT)                                                                          </span>
-<span class="stamnt">f</span> 2 0 129 7  1 129 0 		<span class="comment">;left--&gt;right                                                                                                     </span>
-<span class="stamnt">f</span> 3 0 129 7 .5  32 1 64 0 33 .5 <span class="comment">;center--&gt;left--&gt;right--&gt;center    </span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>                                                                                  
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span>  <span class="mi">3</span> <span class="o">-</span><span class="mi">7</span> <span class="mf">.5</span>  <span class="mi">3</span>  <span class="mf">.5</span>		<span class="c1">;remain in center (.5 CONSTANT)                                                                          </span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">129</span> <span class="mi">7</span>  <span class="mi">1</span> <span class="mi">129</span> <span class="mi">0</span> 		<span class="c1">;left--&gt;right                                                                                                     </span>
+<span class="nb">f</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">129</span> <span class="mi">7</span> <span class="mf">.5</span>  <span class="mi">32</span> <span class="mi">1</span> <span class="mi">64</span> <span class="mi">0</span> <span class="mi">33</span> <span class="mf">.5</span> <span class="c1">;center--&gt;left--&gt;right--&gt;center    </span>
 
-<span class="stamnt">i</span> 1  0  2  1			<span class="comment">;use table 1</span>
-<span class="stamnt">i</span> 1  3  2  2			<span class="comment">;use table 2</span>
-<span class="stamnt">i</span> 1  6  2  3			<span class="comment">;use table 3</span>
+<span class="nb">i</span> <span class="mi">1</span>  <span class="mi">0</span>  <span class="mi">2</span>  <span class="mi">1</span>			<span class="c1">;use table 1</span>
+<span class="nb">i</span> <span class="mi">1</span>  <span class="mi">3</span>  <span class="mi">2</span>  <span class="mi">2</span>			<span class="c1">;use table 2</span>
+<span class="nb">i</span> <span class="mi">1</span>  <span class="mi">6</span>  <span class="mi">2</span>  <span class="mi">3</span>			<span class="c1">;use table 3</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -154,7 +155,7 @@ kright <span class="op">=</span> <span class="opc">sqrt</span>(1<span class="op"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119619728"></a>
+        <a id="idm1525787376"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="table.html" title="table"><em class="citetitle">table</em></a>,

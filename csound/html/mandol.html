@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>mandol</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="mandel.html" title="mandel" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp112604064"></a>
+        <a id="idm1533034608"></a>
         <h2>Description</h2>
         <p>
       An emulation of a mandolin.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112608160"></a>
+        <a id="idm1533026928"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>mandol</strong></span> kamp, kfreq, kpluck, kdetune, kgain, ksize \
     [, ifn] [, iminfreq]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp112610528"></a>
+        <a id="idm1533029744"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- table number containing the pluck wave form. The file <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a> is suitable for this. It is also available at <a class="ulink" href="ftp://ftp.cs.bath.ac.uk/pub/dream/documentation/sounds/modelling/" target="_top"><em class="citetitle">ftp://ftp.cs.bath.ac.uk/pub/dream/documentation/sounds/modelling/</em></a>.
@@ -61,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112675760"></a>
+        <a id="idm1533024496"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -83,62 +84,61 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112682304"></a>
+        <a id="idm1532931056"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the mandol opcode. It uses the file <a class="ulink" href="examples/mandol.csd" target="_top"><em class="citetitle">mandol.csd</em></a>, and <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a>.
+      Here is an example of the mandol opcode. It uses the file <a class="ulink" href="examples/mandol.csd.html" target="_top"><em class="citetitle">mandol.csd</em></a>, and <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp112685008"></a>
+          <a id="idm1532932976"></a>
           <p class="title">
-            <strong>Example 490. Example of the mandol opcode.</strong>
+            <strong>Example 505. Example of the mandol opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp251682448"></a>
-              <a class="ulink" href="examples/mandol.csd.html" target="_top">Play</a>
+              <a id="idm1358316528"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o mandol.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o mandol.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kamp    <span class="op">=</span> p4
-ksize   <span class="op">=</span> p5
-kdetune <span class="op">=</span> p6
-asig <span class="opc">mandol</span> kamp, 880, .4, kdetune, 0.99, ksize, 1, 220
-     <span class="opc">outs</span> asig, asig
+k<span class="n">amp</span>    <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">size</span>   <span class="o">=</span> <span class="nb">p5</span>
+k<span class="n">detune</span> <span class="o">=</span> <span class="nb">p6</span>
+a<span class="n">sig</span> <span class="nb">mandol</span> k<span class="n">amp</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mf">.4</span><span class="p">,</span> k<span class="n">detune</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> k<span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">220</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; "mandpluk.aiff" audio file</span>
-<span class="stamnt">f</span> 1 0 8192 1 "mandpluk.ai<span class="stamnt">f</span><span class="stamnt">f</span>" 0 0 0
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; "mandpluk.aiff" audio file</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">1</span> <span class="s">"mandpluk.aiff"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
 
-<span class="stamnt">i</span> 1 .5 1  1  2 .99
-<span class="stamnt">i</span> 1 +  1 .5  1 .99	<span class="comment">;lower volume to compensate</span>
-<span class="stamnt">i</span> 1 +  3 .3 .3 .99	<span class="comment">;lower volume to compensate</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mf">.5</span> <span class="mi">1</span>  <span class="mi">1</span>  <span class="mi">2</span> <span class="mf">.99</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span>  <span class="mi">1</span> <span class="mf">.5</span>  <span class="mi">1</span> <span class="mf">.99</span>	<span class="c1">;lower volume to compensate</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span>  <span class="mi">3</span> <span class="mf">.3</span> <span class="mf">.3</span> <span class="mf">.99</span>	<span class="c1">;lower volume to compensate</span>
 
-<span class="stamnt">i</span> 1 4  1  1  2 .39	<span class="comment">;change detune value</span>
-<span class="stamnt">i</span> 1 +  1 .5  1 .39
-<span class="stamnt">i</span> 1 +  3 .3 .3 .39
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span>  <span class="mi">1</span>  <span class="mi">1</span>  <span class="mi">2</span> <span class="mf">.39</span>	<span class="c1">;change detune value</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span>  <span class="mi">1</span> <span class="mf">.5</span>  <span class="mi">1</span> <span class="mf">.39</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span>  <span class="mi">3</span> <span class="mf">.3</span> <span class="mf">.3</span> <span class="mf">.39</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -147,7 +147,7 @@ asig <span class="opc">mandol</span> kamp, 880, .4, kdetune, 0.99, ksize, 1, 220
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112689328"></a>
+        <a id="idm1532923760"></a>
         <h2>Credits</h2>
         <p>
       </p>

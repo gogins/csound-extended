@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLvalue</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fluidSetInterpMethod.html" title="fluidSetInterpMethod" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp98845408"></a>
+        <a id="idm1547218288"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLvalue</em></span> shows current the value of a valuator in a text field.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp98847184"></a>
+        <a id="idm1547214832"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ihandle <span class="command"><strong>FLvalue</strong></span> "label", iwidth, iheight, ix, iy</pre>
       </div>
       <div class="refsect1">
-        <a id="idp98849504"></a>
+        <a id="idm1547219696"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> -- handle value (an integer number) that unequivocally references the corresponding valuator. It can be used for the <span class="emphasis"><em>idisp</em></span> argument of a valuator.
@@ -73,7 +74,7 @@ left corner of corresponding window (expressed in pixels).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp98920464"></a>
+        <a id="idm1547205744"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>FLvalue</em></span> shows the current values of a valuator in a text field. It outputs <span class="emphasis"><em>ihandle</em></span> that can then be used for the <span class="emphasis"><em>idisp</em></span> argument of a valuator (see the <a class="link" href="ControlFltkValuators.html" title="FLTK Valuators"><em class="citetitle">FLTK Valuators section</em></a>). In this way, the values of that valuator will be dynamically be shown in a text field.
@@ -95,81 +96,80 @@ left corner of corresponding window (expressed in pixels).
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp98927920"></a>
+        <a id="idm1547208560"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLvalue opcode. It uses the file <a class="ulink" href="examples/FLvalue.csd" target="_top"><em class="citetitle">FLvalue.csd</em></a>.
+      Here is an example of the FLvalue opcode. It uses the file <a class="ulink" href="examples/FLvalue.csd.html" target="_top"><em class="citetitle">FLvalue.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp98929776"></a>
+          <a id="idm1547198192"></a>
           <p class="title">
-            <strong>Example 311. Example of the FLvalue opcode.</strong>
+            <strong>Example 313. Example of the FLvalue opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp244228480"></a>
-              <a class="ulink" href="examples/FLvalue.csd.html" target="_top">Play</a>
+              <a id="idm1380663536"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLvalue.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLvalue.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Using the opcode flvalue to display the output of a slider </span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Using the opcode flvalue to display the output of a slider </span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">FLpanel</span> "Value Display Box", 900, 200, 50, 50
-    <span class="comment">; Width of the value display box in pixels</span>
-    iwidth <span class="op">=</span> 50
-    <span class="comment">; Height of the value display box in pixels</span>
-    iheight <span class="op">=</span> 20
-    <span class="comment">; Distance of the left edge of the value display</span>
-    <span class="comment">; box from the left edge of the panel</span>
-    ix <span class="op">=</span> 65
-    <span class="comment">; Distance of the top edge of the value display</span>
-    <span class="comment">; box from the top edge of the panel</span>
-    iy <span class="op">=</span> 55
+<span class="nb">FLpanel</span> <span class="s">"Value Display Box"</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="c1">; Width of the value display box in pixels</span>
+    i<span class="n">width</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="c1">; Height of the value display box in pixels</span>
+    i<span class="n">height</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">; Distance of the left edge of the value display</span>
+    <span class="c1">; box from the left edge of the panel</span>
+    i<span class="n">x</span> <span class="o">=</span> <span class="mi">65</span>
+    <span class="c1">; Distance of the top edge of the value display</span>
+    <span class="c1">; box from the top edge of the panel</span>
+    i<span class="n">y</span> <span class="o">=</span> <span class="mi">55</span>
 
-    idisp <span class="opc">FLvalue</span> "Hertz", iwidth, iheight, ix, iy
-    gkfreq, ihandle <span class="opc">FLslider</span> "Frequency", 200, 5000, <span class="op">-</span>1, 5, idisp, 750, 30, 125, 50
-    <span class="opc">FLsetVal_i</span> 500, ihandle
-<span class="comment">; End of panel contents</span>
-<span class="opc">FLpanelEnd</span>
-<span class="comment">; Run the widget thread!</span>
-<span class="opc">FLrun</span>
+    i<span class="n">disp</span> <span class="nb">FLvalue</span> <span class="s">"Hertz"</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span>
+    gk<span class="n">freq</span><span class="p">,</span> i<span class="n">handle</span> <span class="nb">FLslider</span> <span class="s">"Frequency"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> i<span class="n">disp</span><span class="p">,</span> <span class="mi">750</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="nb">FLsetVal_i</span> <span class="mi">500</span><span class="p">,</span> i<span class="n">handle</span>
+<span class="c1">; End of panel contents</span>
+<span class="nb">FLpanelEnd</span>
+<span class="c1">; Run the widget thread!</span>
+<span class="nb">FLrun</span>
 
-<span class="oblock">instr</span> 1
-    iamp <span class="op">=</span> 15000
-    ifn <span class="op">=</span> 1
-    asig <span class="opc">oscili</span> iamp, gkfreq, ifn
-    <span class="opc">out</span> asig
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Function table that defines a single cycle</span>
-<span class="comment">; of a sine wave.</span>
-<span class="stamnt">f</span> 1 0 1024 10 1
-
-<span class="comment">; Instrument 1 will play a note for 1 hour.</span>
-<span class="stamnt">i</span> 1 0 3600
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">amp</span> <span class="o">=</span> <span class="mi">15000</span>
+    i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+    a<span class="n">sig</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> gk<span class="n">freq</span><span class="p">,</span> i<span class="n">fn</span>
+    <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Function table that defines a single cycle</span>
+<span class="c1">; of a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Instrument 1 will play a note for 1 hour.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -178,7 +178,7 @@ left corner of corresponding window (expressed in pixels).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp98934096"></a>
+        <a id="idm1547195376"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLbox.html" title="FLbox"><em class="citetitle">FLbox</em></a>,
@@ -189,7 +189,7 @@ left corner of corresponding window (expressed in pixels).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp98940048"></a>
+        <a id="idm1547193968"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

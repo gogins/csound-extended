@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>noteondur2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="noteon.html" title="noteon" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp118044464"></a>
+        <a id="idm1527282160"></a>
         <h2>Description</h2>
         <p>
       Sends a noteon and a noteoff MIDI message both with the same channel, number and velocity.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118045616"></a>
+        <a id="idm1527278960"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>noteondur2</strong></span> ichn, inum, ivel, idur</pre>
       </div>
       <div class="refsect1">
-        <a id="idp118047536"></a>
+        <a id="idm1527280752"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ichn</em></span> -- MIDI channel number (1-16)
@@ -66,7 +67,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118051744"></a>
+        <a id="idm1527276016"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>noteondur2</em></span> (i-rate note on with duration) sends a noteon and a noteoff MIDI message both with the same channel, number and velocity. Noteoff message is sent after <span class="emphasis"><em>idur</em></span> seconds are elapsed by the time <span class="emphasis"><em>noteondur2</em></span> was active.
@@ -79,62 +80,60 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118059056"></a>
+        <a id="idm1527261552"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the noteondur2 opcode. It uses the file <a class="ulink" href="examples/noteondur2.csd" target="_top"><em class="citetitle">noteondur2.csd</em></a>.
+      Here is an example of the noteondur2 opcode. It uses the file <a class="ulink" href="examples/noteondur2.csd.html" target="_top"><em class="citetitle">noteondur2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp118060912"></a>
+          <a id="idm1527262320"></a>
           <p class="title">
-            <strong>Example 569. Example of the noteondur2 opcode.</strong>
+            <strong>Example 587. Example of the noteondur2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <p>This example generates notes for every note received on the MIDI input. It generates MIDI notes on csound's MIDI output, so be sure to connect something.</p>
             <div class="refsect1">
-              <a id="idp254753600"></a>
-              <a class="ulink" href="examples/noteondur2.csd.html" target="_top">Play</a>
+              <a id="idm1351879280"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d         -M0  -Q1<span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d         -M0  -Q1<span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Example by Giorgio Zucco 2007</span>
+<span class="c1">; Example by Giorgio Zucco 2007</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-  ifund   <span class="opc">notnum</span> 
-  ivel 	<span class="opc">veloc</span>
-  idur <span class="op">=</span> 1
+  i<span class="n">fund</span>   <span class="nb">notnum</span> 
+  i<span class="n">vel</span> 	<span class="nb">veloc</span>
+  i<span class="n">dur</span> <span class="o">=</span> <span class="mi">1</span>
 
-  <span class="comment">;chord with single key</span>
-  <span class="opc">noteondur2</span> 	1, ifund,   ivel, idur
-  <span class="opc">noteondur2</span> 	1, ifund<span class="op">+</span>3, ivel, idur
-  <span class="opc">noteondur2</span> 	1, ifund<span class="op">+</span>7, ivel, idur
-  <span class="opc">noteondur2</span> 	1, ifund<span class="op">+</span>9, ivel, idur
+  <span class="c1">;chord with single key</span>
+  <span class="nb">noteondur2</span> 	<span class="mi">1</span><span class="p">,</span> i<span class="n">fund</span><span class="p">,</span>   i<span class="n">vel</span><span class="p">,</span> i<span class="n">dur</span>
+  <span class="nb">noteondur2</span> 	<span class="mi">1</span><span class="p">,</span> i<span class="n">fund</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> i<span class="n">vel</span><span class="p">,</span> i<span class="n">dur</span>
+  <span class="nb">noteondur2</span> 	<span class="mi">1</span><span class="p">,</span> i<span class="n">fund</span><span class="o">+</span><span class="mi">7</span><span class="p">,</span> i<span class="n">vel</span><span class="p">,</span> i<span class="n">dur</span>
+  <span class="nb">noteondur2</span> 	<span class="mi">1</span><span class="p">,</span> i<span class="n">fund</span><span class="o">+</span><span class="mi">9</span><span class="p">,</span> i<span class="n">vel</span><span class="p">,</span> i<span class="n">dur</span>
 
-<span class="oblock">endin</span>
-
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; Dummy ftable</span>
-<span class="stamnt">f</span> 0 60
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Dummy ftable</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -143,7 +142,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118065760"></a>
+        <a id="idm1527264496"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="noteoff.html" title="noteoff"><em class="citetitle">noteoff</em></a>,
@@ -154,7 +153,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp118071648"></a>
+        <a id="idm1527255920"></a>
         <h2>Credits</h2>
         <p>
       </p>

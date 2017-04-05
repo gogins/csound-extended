@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vco2ft</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="vco2.html" title="vco2" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp153346752"></a>
+        <a id="idm1491473504"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>vco2ft</em></span> returns the function table number to be used for generating the specified waveform at a given frequency. This function table number can be used by any Csound opcode that generates a signal by reading function tables (like <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a>). The tables must be calculated by <a class="link" href="vco2init.html" title="vco2init"><em class="citetitle">vco2init</em></a> before <span class="emphasis"><em>vco2ft</em></span> is called and shared as Csound ftables (<span class="emphasis"><em>ibasfn</em></span>).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153351360"></a>
+        <a id="idm1491472736"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kfn <span class="command"><strong>vco2ft</strong></span> kcps, iwave [, inyx]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp153353568"></a>
+        <a id="idm1491474912"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iwave</em></span> -- the waveform for which table number is to be selected. Allowed values are:
@@ -87,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153364320"></a>
+        <a id="idm1491138032"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kfn</em></span> -- the ftable number, returned at k-rate.
@@ -97,14 +98,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153368160"></a>
+        <a id="idm1491131504"></a>
         <h2>Examples</h2>
         <p>
       See the example for the <a class="link" href="vco2.html" title="vco2"><em class="citetitle">vco2</em></a> opcode.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153370352"></a>
+        <a id="idm1491134576"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vco2ift.html" title="vco2ift"><em class="citetitle">vco2ift</em></a>,
@@ -113,7 +114,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp153374416"></a>
+        <a id="idm1491137136"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga</p>
         <p>New in version 4.22</p>

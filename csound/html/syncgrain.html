@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>syncgrain</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="svfilter.html" title="svfilter" />
@@ -38,7 +39,7 @@ Synchronous granular synthesis.
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp145201360"></a>
+        <a id="idm1499662704"></a>
         <h2>Description</h2>
         <p>
 <span class="emphasis"><em>syncgrain</em></span> implements synchronous granular synthesis. The source sound for the
@@ -79,13 +80,13 @@ large-size tables. This opcode is based on the SndObj library SyncGrain class.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp145283088"></a>
+        <a id="idm1499657200"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>syncgrain</strong></span> kamp, kfreq, kpitch, kgrsize, kprate, ifun1, \
       ifun2, iolaps</pre>
       </div>
       <div class="refsect1">
-        <a id="idp145285440"></a>
+        <a id="idm1499655024"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifun1</em></span> -- source signal function table. Deferred-allocation tables (see
@@ -103,7 +104,7 @@ large-size tables. This opcode is based on the SndObj library SyncGrain class.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp145291280"></a>
+        <a id="idm1499647344"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude scaling
@@ -126,62 +127,61 @@ freeze it.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp145297360"></a>
+        <a id="idm1499652848"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the syncgrain opcode. It uses the file <a class="ulink" href="examples/syncgrain.csd" target="_top"><em class="citetitle">syncgrain.csd</em></a>.
+      Here is an example of the syncgrain opcode. It uses the file <a class="ulink" href="examples/syncgrain.csd.html" target="_top"><em class="citetitle">syncgrain.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp145299136"></a>
+          <a id="idm1499901936"></a>
           <p class="title">
-            <strong>Example 919. Example of the syncgrain opcode.</strong>
+            <strong>Example 945. Example of the syncgrain opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp267245712"></a>
-              <a class="ulink" href="examples/syncgrain.csd.html" target="_top">Play</a>
+              <a id="idm1319819632"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o syncgrain.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o syncgrain.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span> 
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
   
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 		
-iolaps  <span class="op">=</span> 2
-igrsize <span class="op">=</span> 0.04
-ifreq   <span class="op">=</span> iolaps<span class="op">/</span>igrsize
-ips     <span class="op">=</span> 1<span class="op">/</span>iolaps
+i<span class="n">olaps</span>  <span class="o">=</span> <span class="mi">2</span>
+i<span class="n">grsize</span> <span class="o">=</span> <span class="mf">0.04</span>
+i<span class="n">freq</span>   <span class="o">=</span> i<span class="n">olaps</span><span class="o">/</span>i<span class="n">grsize</span>
+i<span class="n">ps</span>     <span class="o">=</span> <span class="mi">1</span><span class="o">/</span>i<span class="n">olaps</span>
 
-istr    <span class="op">=</span> .3   <span class="op">/</span><span class="op">*</span> timescale  <span class="op">*</span><span class="op">/</span>
-ipitch  <span class="op">=</span> p4   <span class="op">/</span><span class="op">*</span> pitchscale <span class="op">*</span><span class="op">/</span>
+i<span class="n">str</span>    <span class="o">=</span> <span class="mf">.3</span>   <span class="cm">/* timescale  */</span>
+i<span class="n">pitch</span>  <span class="o">=</span> <span class="nb">p4</span>   <span class="cm">/* pitchscale */</span>
 
-asig	<span class="opc">syncgrain</span> 1, ifreq, ipitch, igrsize, ips<span class="op">*</span>istr, 1, 2, iolaps
-	<span class="opc">outs</span>	  asig, asig 
+a<span class="n">sig</span>	<span class="nb">syncgrain</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> i<span class="n">pitch</span><span class="p">,</span> i<span class="n">grsize</span><span class="p">,</span> i<span class="n">ps</span><span class="o">*</span>i<span class="n">str</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> i<span class="n">olaps</span>
+	<span class="nb">outs</span>	  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span> 
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 0 1 "<span class="stamnt">f</span>ox.wav" 0 0 0	<span class="comment">;deferred table</span>
-<span class="stamnt">f</span>2   0   8192   20   2   1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"fox.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>	<span class="c1">;deferred table</span>
+<span class="nb">f</span><span class="mi">2</span>   <span class="mi">0</span>   <span class="mi">8192</span>   <span class="mi">20</span>   <span class="mi">2</span>   <span class="mi">1</span>
 
-<span class="stamnt">i</span>1 0 5 1
-<span class="stamnt">i</span>1 + 5 4
-<span class="stamnt">i</span>1 + 5 .8
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mi">4</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="mf">.8</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -190,7 +190,7 @@ asig	<span class="opc">syncgrain</span> 1, ifreq, ipitch, igrsize, ips<span clas
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp145303424"></a>
+        <a id="idm1499901296"></a>
         <h2>Credits</h2>
         <p>
       </p>

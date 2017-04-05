@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>logcurve</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="logbtwo.html" title="logbtwo" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp109882256"></a>
+        <a id="idm1535601776"></a>
         <h2>Description</h2>
         <p>
       Generates a logarithmic curve in range 0 to 1 of arbitrary steepness.
@@ -54,12 +55,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp109885856"></a>
+        <a id="idm1535598960"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout <span class="command"><strong>logcurve</strong></span> kindex, ksteepness</pre>
       </div>
       <div class="refsect1">
-        <a id="idp109888096"></a>
+        <a id="idm1535602800"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kindex</em></span> -- Index value. Expected range 0 to 1.
@@ -74,55 +75,54 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp109891776"></a>
+        <a id="idm1535599344"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the logcurve opcode. It uses the file <a class="ulink" href="examples/logcurve.csd" target="_top"><em class="citetitle">logcurve.csd</em></a>.
+      Here is an example of the logcurve opcode. It uses the file <a class="ulink" href="examples/logcurve.csd.html" target="_top"><em class="citetitle">logcurve.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp109893552"></a>
+          <a id="idm1535592944"></a>
           <p class="title">
-            <strong>Example 453. Example of the logcurve opcode.</strong>
+            <strong>Example 468. Example of the logcurve opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp249710992"></a>
-              <a class="ulink" href="examples/logcurve.csd.html" target="_top">Play</a>
+              <a id="idm1363575936"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    Silent</span>
--odac           -iadc     -d    <span class="comment">;;;realtime output</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    Silent</span>
+-odac           -iadc     -d    <span class="c1">;;;realtime output</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span>	<span class="op">=</span>	48000
-<span class="ohdr">ksmps</span>	<span class="op">=</span>	100
-<span class="ohdr">nchnls</span>	<span class="op">=</span>	2
+<span class="vg">sr</span>	<span class="o">=</span>	<span class="mi">48000</span>
+<span class="vg">ksmps</span>	<span class="o">=</span>	<span class="mi">100</span>
+<span class="vg">nchnls</span>	<span class="o">=</span>	<span class="mi">2</span>
 
-		<span class="oblock">instr</span>	1	<span class="comment">; logcurve test</span>
+		<span class="kd">instr</span>	<span class="nf">1</span>	<span class="c1">; logcurve test</span>
 
-kmod	<span class="opc">phasor</span>	1<span class="op">/</span>p3
+k<span class="n">mod</span>	<span class="nb">phasor</span>	<span class="mi">1</span><span class="o">/</span><span class="nb">p3</span>
 
-kout	<span class="opc">logcurve</span> kmod, p4
+k<span class="n">out</span>	<span class="nb">logcurve</span> k<span class="n">mod</span><span class="p">,</span> <span class="nb">p4</span>
 
-	<span class="opc">printks</span> "kmod <span class="op">=</span> <span class="op">%</span>f  kout <span class="op">=</span> <span class="op">%</span>f\\n", 0.1, kmod, kout
+	<span class="nb">printks</span> <span class="s">"kmod = %f  kout = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">mod</span><span class="p">,</span> k<span class="n">out</span>
 
-		<span class="oblock">endin</span>
+		<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1	0	10 2
-<span class="stamnt">i</span>1	10	10 30
-<span class="stamnt">i</span>1	20	10 0.5
+<span class="nb">i</span><span class="mi">1</span>	<span class="mi">0</span>	<span class="mi">10</span> <span class="mi">2</span>
+<span class="nb">i</span><span class="mi">1</span>	<span class="mi">10</span>	<span class="mi">10</span> <span class="mi">30</span>
+<span class="nb">i</span><span class="mi">1</span>	<span class="mi">20</span>	<span class="mi">10</span> <span class="mf">0.5</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -131,7 +131,7 @@ kout	<span class="opc">logcurve</span> kmod, p4
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp109897872"></a>
+        <a id="idm1535589616"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="scale.html" title="scale"><em class="citetitle">scale</em></a>,
@@ -140,7 +140,7 @@ kout	<span class="opc">logcurve</span> kmod, p4
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp109901904"></a>
+        <a id="idm1535591920"></a>
         <h2>Credits</h2>
         <p>
       </p>

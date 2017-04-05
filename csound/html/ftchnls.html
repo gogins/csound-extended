@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ftchnls</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="freeverb.html" title="freeverb" />
@@ -38,85 +39,84 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101224688"></a>
+        <a id="idm1544845680"></a>
         <h2>Description</h2>
         <p>
       Returns the number of channels in a stored function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101287168"></a>
+        <a id="idm1544850416"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftchnls</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idp101289232"></a>
+        <a id="idm1544847216"></a>
         <h2>Performance</h2>
         <p>
       Returns the number of channels of a <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a> table, determined from the header of the original file.  If the original file has no header or the table was not created by these GEN01, <span class="emphasis"><em>ftchnls</em></span> returns -1.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101292016"></a>
+        <a id="idm1544845936"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the ftchnls opcode. It uses the files <a class="ulink" href="examples/ftchnls.csd" target="_top"><em class="citetitle">ftchnls.csd</em></a>, <a class="ulink" href="examples/mary.wav" target="_top"><em class="citetitle">mary.wav</em></a>, and <a class="ulink" href="examples/kickroll.wav" target="_top"><em class="citetitle">kickroll.wav</em></a>.
+      Here is an example of the ftchnls opcode. It uses the files <a class="ulink" href="examples/ftchnls.csd.html" target="_top"><em class="citetitle">ftchnls.csd</em></a>, <a class="ulink" href="examples/mary.wav" target="_top"><em class="citetitle">mary.wav</em></a>, and <a class="ulink" href="examples/kickroll.wav" target="_top"><em class="citetitle">kickroll.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp101295536"></a>
+          <a id="idm1544837872"></a>
           <p class="title">
-            <strong>Example 344. Example of the ftchnls opcode.</strong>
+            <strong>Example 347. Example of the ftchnls opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp245429088"></a>
-              <a class="ulink" href="examples/ftchnls.csd.html" target="_top">Play</a>
+              <a id="idm1377264880"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">;-odac     ;;;realtime audio out</span>
--iadc    <span class="comment">;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o ftchnls.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">;-odac     ;;;realtime audio out</span>
+-iadc    <span class="c1">;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o ftchnls.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ichnls <span class="op">=</span> <span class="opc">ftchnls</span>(p4)
-<span class="opc">print</span> ichnls
+i<span class="n">chnls</span> <span class="o">=</span> <span class="nb">ftchnls</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+<span class="nb">print</span> i<span class="n">chnls</span>
 
-<span class="octrl">if</span> (ichnls <span class="op">==</span> 1) then
-   asigL <span class="opc">loscil3</span> .8, 4, p4
-   asigR <span class="op">=</span> 	asigL
-<span class="octrl">elseif</span> (ichnls <span class="op">==</span> 2) then
-   asigL, asigR <span class="opc">loscil3</span> .8, 4, p4
-<span class="comment">;safety precaution if not mono or stereo</span>
-<span class="octrl">else</span>
-   asigL <span class="op">=</span> 0
-   asigR <span class="op">=</span> 0
-<span class="octrl">endif</span>
-        <span class="opc">outs</span> asigL, asigR
+<span class="k">if</span> <span class="p">(</span>i<span class="n">chnls</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
+   a<span class="n">sigL</span> <span class="nb">loscil3</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span>
+   a<span class="n">sigR</span> <span class="o">=</span> 	a<span class="n">sigL</span>
+<span class="k">elseif</span> <span class="p">(</span>i<span class="n">chnls</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="k">then</span>
+   a<span class="n">sigL</span><span class="p">,</span> a<span class="n">sigR</span> <span class="nb">loscil3</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span>
+<span class="c1">;safety precaution if not mono or stereo</span>
+<span class="k">else</span>
+   a<span class="n">sigL</span> <span class="o">=</span> <span class="mi">0</span>
+   a<span class="n">sigR</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">endif</span>
+        <span class="nb">outs</span> a<span class="n">sigL</span><span class="p">,</span> a<span class="n">sigR</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 0 1 "mary.wav" 0 0 0
-<span class="stamnt">f</span> 2 0 0 1 "kickroll.wav" 0 0 0
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"mary.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="s">"kickroll.wav"</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
 
-<span class="stamnt">i</span> 1 0 3 1 <span class="comment">;mono file</span>
-<span class="stamnt">i</span> 1 + 2 2 <span class="comment">;stereo file</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mi">1</span> <span class="c1">;mono file</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mi">2</span> <span class="c1">;stereo file</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -133,7 +133,7 @@ instr 1:  ichnls = 2.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101301488"></a>
+        <a id="idm1544839536"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftlen.html" title="ftlen"><em class="citetitle">ftlen</em></a>,
@@ -143,7 +143,7 @@ instr 1:  ichnls = 2.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp101306480"></a>
+        <a id="idm1544831088"></a>
         <h2>Credits</h2>
         <p>
       </p>

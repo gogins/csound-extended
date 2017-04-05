@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>cpumeter</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="cpsxpch.html" title="cpsxpch" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86471072"></a>
+        <a id="idm1559836144"></a>
         <h2>Description</h2>
         <p>
       Reports the usage of cpu either total or per core to monitor how
@@ -46,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86515168"></a>
+        <a id="idm1559835632"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktot[,kcpu1, kcpu2,...]<span class="command"><strong>cpumeter</strong></span> ifreq</pre>
       </div>
       <div class="refsect1">
-        <a id="idp86517344"></a>
+        <a id="idm1559843696"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifreq</em></span> is the time in seconds that the meter
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86519136"></a>
+        <a id="idm1559842032"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>cpumeter</em></span> reads the total idle time in the
@@ -70,65 +71,64 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86521872"></a>
+        <a id="idm1559833328"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the cpumeter opcode. It uses the file <a class="ulink" href="examples/cpumeter.csd" target="_top"><em class="citetitle">cpumeter.csd</em></a>.
+      Here is an example of the cpumeter opcode. It uses the file <a class="ulink" href="examples/cpumeter.csd.html" target="_top"><em class="citetitle">cpumeter.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp86523728"></a>
+          <a id="idm1559831152"></a>
           <p class="title">
-            <strong>Example 166. Example of the cpumeter opcode.</strong>
+            <strong>Example 168. Example of the cpumeter opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp238739984"></a>
-              <a class="ulink" href="examples/cpumeter.csd.html" target="_top">Play</a>
+              <a id="idm1395210608"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o cpumeter.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o cpumeter.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
 
-<span class="oblock">instr</span> 1 <span class="comment">;cpu metering; stop when too large</span>
-k0   <span class="opc">cpumeter</span>   0.1
-     <span class="opc">printk2</span> k0
-     <span class="octrl">if</span> k0<span class="op">&gt;</span>70 then
-       <span class="opc">event</span> "i", 3, 0.1, 1
-     <span class="octrl">endif</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;cpu metering; stop when too large</span>
+k<span class="n">0</span>   <span class="nb">cpumeter</span>   <span class="mf">0.1</span>
+     <span class="nb">printk2</span> k<span class="n">0</span>
+     <span class="k">if</span> k<span class="n">0</span><span class="o">&gt;</span><span class="mi">70</span> <span class="k">then</span>
+       <span class="nb">event</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="k">endif</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
-     <span class="opc">event_i</span>    "i", 2, 1, 1000
-     asig <span class="opc">oscil</span> 0.2, 440, 1
-     <span class="opc">out</span> asig
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+     <span class="nb">event_i</span>    <span class="s">"i"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span>
+     a<span class="n">sig</span> <span class="nb">oscil</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
  
-<span class="oblock">instr</span> 3
-     <span class="opc">exitnow</span>
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 32768 10 1	<span class="comment">; sine wave</span>
+<span class="kd">instr</span> <span class="nf">3</span>
+     <span class="nb">exitnow</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">32768</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">; sine wave</span>
 
-<span class="stamnt">i</span> 1 0 1000
-<span class="stamnt">i</span> 2 0 1000
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1000</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1000</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -137,7 +137,7 @@ k0   <span class="opc">cpumeter</span>   0.1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86528016"></a>
+        <a id="idm1559830128"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="maxalloc.html" title="maxalloc"><em class="citetitle">maxalloc</em></a>, <a class="link" href="prealloc.html" title="prealloc"><em class="citetitle">prealloc</em></a>,
@@ -145,7 +145,7 @@ k0   <span class="opc">cpumeter</span>   0.1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp86531952"></a>
+        <a id="idm1559832176"></a>
         <h2>Credits</h2>
         <p>
       </p>

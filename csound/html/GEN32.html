@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN32</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN31.html" title="GEN31" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207104304"></a>
+        <a id="idm1437302768"></a>
         <h2>Description</h2>
         <p>
       This routine is similar to <a class="link" href="GEN31.html" title="GEN31"><em class="citetitle">GEN31</em></a>, but allows specifying source ftable for each partial. Tables can be resampled either with FFT, or linear interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207161904"></a>
+        <a id="idm1437297392"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size  32  srca  pna stra phsa  srcb pnb strb phsb  ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idp207163888"></a>
+        <a id="idm1437303536"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>srca, srcb</em></span> -- source table number. A negative value can be used to read the table with linear interpolation (by default, the source waveform is transposed and phase shifted using FFT); this is less accurate, but faster, and allows non-integer and negative partial numbers.
@@ -66,80 +67,79 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207168400"></a>
+        <a id="idm1437292144"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the GEN32 routine. It uses the file <a class="ulink" href="examples/gen32.csd" target="_top"><em class="citetitle">gen32.csd</em></a>.
+      Here is an example of the GEN32 routine. It uses the file <a class="ulink" href="examples/gen32.csd.html" target="_top"><em class="citetitle">gen32.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp207170256"></a>
+          <a id="idm1437291376"></a>
           <p class="title">
-            <strong>Example 1152. Example of the gen32 generator.</strong>
+            <strong>Example 1180. Example of the gen32 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp275924288"></a>
-              <a class="ulink" href="examples/gen32.csd.html" target="_top">Play</a>
+              <a id="idm1294770416"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen32.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen32.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-itmp    <span class="ohdr">ftgen</span> 1, 0, 16384, 7, 1, 16384, <span class="op">-</span>1		<span class="comment">; sawtooth</span>
-itmp    <span class="ohdr">ftgen</span> 2, 0, 8192, 10, 1				<span class="comment">; sine</span>
-itmp    <span class="ohdr">ftgen</span> 5, 0, 4096, <span class="op">-</span>32, <span class="op">-</span>2, 1.5, 1.0, 0.25, 1, 2, 0.5, 0, 1, 3, <span class="op">-</span>0.25, 0.5	<span class="comment">; mix tables</span>
-itmp    <span class="ohdr">ftgen</span> 6, 0, 16384, 20, 3, 1			<span class="comment">; window</span>
-<span class="comment">; generate band-limited waveforms</span>
-inote   <span class="op">=</span>  0
-<span class="olabel">loop0</span><span class="op">:</span>
-icps    <span class="op">=</span>  440 <span class="op">*</span> <span class="opc">exp</span>(<span class="opc">log</span>(2) <span class="op">*</span> (inote <span class="op">-</span> 69) <span class="op">/</span> 12)        <span class="comment">; one table for</span>
-inumh   <span class="op">=</span>  <span class="ohdr">sr</span> <span class="op">/</span> (2 <span class="op">*</span> icps)                              <span class="comment">; each MIDI note number</span>
-ift     <span class="op">=</span>  <span class="opc">int</span>(inote <span class="op">+</span> 256.5)
-itmp    <span class="ohdr">ftgen</span> ift, 0, 4096, <span class="op">-</span>30, 5, 1, inumh
-inote   <span class="op">=</span>  inote <span class="op">+</span> 1
-        <span class="octrl">if</span> (inote <span class="op">&lt;</span> 127.5) <span class="octrl">igoto</span> <span class="olabel">loop0</span>
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>		<span class="c1">; sawtooth</span>
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">; sine</span>
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span>	<span class="c1">; mix tables</span>
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; window</span>
+<span class="c1">; generate band-limited waveforms</span>
+i<span class="n">note</span>   <span class="o">=</span>  <span class="mi">0</span>
+<span class="nl">loop0</span><span class="p">:</span>
+i<span class="n">cps</span>    <span class="o">=</span>  <span class="mi">440</span> <span class="o">*</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>i<span class="n">note</span> <span class="o">-</span> <span class="mi">69</span><span class="p">)</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span>        <span class="c1">; one table for</span>
+i<span class="n">numh</span>   <span class="o">=</span>  <span class="vg">sr</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> i<span class="n">cps</span><span class="p">)</span>                              <span class="c1">; each MIDI note number</span>
+i<span class="n">ft</span>     <span class="o">=</span>  <span class="nb">int</span><span class="p">(</span>i<span class="n">note</span> <span class="o">+</span> <span class="mf">256.5</span><span class="p">)</span>
+i<span class="n">tmp</span>    <span class="nb">ftgen</span> i<span class="n">ft</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">numh</span>
+i<span class="n">note</span>   <span class="o">=</span>  i<span class="n">note</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span>i<span class="n">note</span> <span class="o">&lt;</span> <span class="mf">127.5</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">loop0</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kcps    <span class="opc">expon</span> 20, p3, 16000
-kft     <span class="op">=</span>  <span class="opc">int</span>(256.5 <span class="op">+</span> 69 <span class="op">+</span> 12 <span class="op">*</span> <span class="opc">log</span>(kcps <span class="op">/</span> 440) <span class="op">/</span> <span class="opc">log</span>(2))
-kft     <span class="op">=</span>  (kft <span class="op">&gt;</span> 383 <span class="op">?</span> 383 <span class="op">:</span> kft)
-a1      <span class="opc">phasor</span> kcps
-a1      <span class="opc">tableikt</span> a1, kft, 1, 0, 1
-        <span class="opc">outs</span> a1<span class="op">*</span>.5, a1<span class="op">*</span>.5
-<span class="oblock">endin</span>
+k<span class="n">cps</span>    <span class="nb">expon</span> <span class="mi">20</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">16000</span>
+k<span class="n">ft</span>     <span class="o">=</span>  <span class="nb">int</span><span class="p">(</span><span class="mf">256.5</span> <span class="o">+</span> <span class="mi">69</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="nb">log</span><span class="p">(</span>k<span class="n">cps</span> <span class="o">/</span> <span class="mi">440</span><span class="p">)</span> <span class="o">/</span> <span class="nb">log</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+k<span class="n">ft</span>     <span class="o">=</span>  <span class="p">(</span>k<span class="n">ft</span> <span class="o">&gt;</span> <span class="mi">383</span> <span class="p">?</span> <span class="mi">383</span> <span class="p">:</span> k<span class="n">ft</span><span class="p">)</span>
+a<span class="n">1</span>      <span class="nb">phasor</span> k<span class="n">cps</span>
+a<span class="n">1</span>      <span class="nb">tableikt</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">ft</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="nb">outs</span> a<span class="n">1</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> a<span class="n">1</span><span class="o">*</span><span class="mf">.5</span>
+<span class="kd">endin</span>
         
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-kcps    <span class="opc">expon</span> 20, p3, 16000
-kft     <span class="op">=</span>  <span class="opc">int</span>(256.5 <span class="op">+</span> 69 <span class="op">+</span> 12 <span class="op">*</span> <span class="opc">log</span>(kcps <span class="op">/</span> 440) <span class="op">/</span> <span class="opc">log</span>(2))
-kft     <span class="op">=</span>  (kft <span class="op">&gt;</span> 383 <span class="op">?</span> 383 <span class="op">:</span> kft)
-kgdur   limit 10 <span class="op">/</span> kcps, 0.1, 1
-a1      <span class="opc">grain2</span> kcps, 0.02, kgdur, 30, kft, 6, <span class="op">-</span>0.5
-        <span class="opc">outs</span> a1<span class="op">*</span>.08, a1<span class="op">*</span>.08
+k<span class="n">cps</span>    <span class="nb">expon</span> <span class="mi">20</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">16000</span>
+k<span class="n">ft</span>     <span class="o">=</span>  <span class="nb">int</span><span class="p">(</span><span class="mf">256.5</span> <span class="o">+</span> <span class="mi">69</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="nb">log</span><span class="p">(</span>k<span class="n">cps</span> <span class="o">/</span> <span class="mi">440</span><span class="p">)</span> <span class="o">/</span> <span class="nb">log</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+k<span class="n">ft</span>     <span class="o">=</span>  <span class="p">(</span>k<span class="n">ft</span> <span class="o">&gt;</span> <span class="mi">383</span> <span class="p">?</span> <span class="mi">383</span> <span class="p">:</span> k<span class="n">ft</span><span class="p">)</span>
+k<span class="n">gdur</span>   <span class="nb">limit</span> <span class="mi">10</span> <span class="o">/</span> k<span class="n">cps</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">1</span>      <span class="nb">grain2</span> k<span class="n">cps</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> k<span class="n">ft</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span>
+        <span class="nb">outs</span> a<span class="n">1</span><span class="o">*</span><span class="mf">.08</span><span class="p">,</span> a<span class="n">1</span><span class="o">*</span><span class="mf">.08</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">t</span> 0 60
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">t</span> <span class="mi">0</span> <span class="mi">60</span>
 
-<span class="stamnt">i</span> 1 0 10
-<span class="stamnt">i</span> 2 12 10
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">12</span> <span class="mi">10</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -148,7 +148,7 @@ a1      <span class="opc">grain2</span> kcps, 0.02, kgdur, 30, kft, 6, <span cla
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207174544"></a>
+        <a id="idm1437294960"></a>
         <h2>Credits</h2>
         <p>Author: Rasmus Ekman</p>
         <p>Programmer: Istvan Varga</p>

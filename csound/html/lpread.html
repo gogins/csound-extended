@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>lpread</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="lposcilsa2.html" title="lposcilsa2" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp111732944"></a>
+        <a id="idm1533561456"></a>
         <h2>Description</h2>
         <p>
       Reads a control file of time-ordered information frames.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111734128"></a>
+        <a id="idm1533556976"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">krmsr, krmso, kerr, kcps <span class="command"><strong>lpread</strong></span> ktimpnt, ifilcod [, inpoles] [, ifrmrate]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp111805776"></a>
+        <a id="idm1533557104"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- integer or character-string denoting a control-file (reflection coefficients and four parameter values) derived from n-pole linear predictive spectral analysis of a source audio signal. An integer denotes the suffix of a file <span class="emphasis"><em>lp.m</em></span>; a character-string (in double quotes) gives a filename, optionally a full pathname. If not fullpath, the file is sought first in the current directory, then in that of the environment variable SADIR (if defined). Memory usage depends on the size of the file, which is held entirely in memory during computation but shared by multiple calls (see also <span class="emphasis"><em>adsyn</em></span>, <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>).
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111811760"></a>
+        <a id="idm1533549552"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>lpread</em></span> accesses a control file of time-ordered information frames, each containing n-pole filter coefficients derived from linear predictive analysis of a source signal at fixed time intervals (e.g. 1/100 of a second), plus four parameter values:
@@ -94,61 +95,60 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111834656"></a>
+        <a id="idm1533533680"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the lpread opcode. It uses the file <a class="ulink" href="examples/lpread.csd" target="_top"><em class="citetitle">lpread.csd</em></a>.
+      Here is an example of the lpread opcode. It uses the file <a class="ulink" href="examples/lpread.csd.html" target="_top"><em class="citetitle">lpread.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp111836512"></a>
+          <a id="idm1533533168"></a>
           <p class="title">
-            <strong>Example 478. Example of the lpread opcode.</strong>
+            <strong>Example 493. Example of the lpread opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp250785440"></a>
-              <a class="ulink" href="examples/lpread.csd.html" target="_top">Play</a>
+              <a id="idm1361059696"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o lpread.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o lpread.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">; works with or without -a option when analyzing "fox.wav" from the manual</span>
-ilen  <span class="opc">filelen</span> "fox.wav"	<span class="comment">; length of soundfile</span>
-<span class="opc">prints</span> "fox.wav <span class="op">=</span> <span class="op">%</span>f seconds\\n",ilen
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; works with or without -a option when analyzing "fox.wav" from the manual</span>
+i<span class="n">len</span>  <span class="nb">filelen</span> <span class="s">"fox.wav"</span>	<span class="c1">; length of soundfile</span>
+<span class="nb">prints</span> <span class="s">"fox.wav = %f seconds</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span>i<span class="n">len</span>
 
-ktime <span class="opc">line</span> 0, p3, p4
-krmsr,krmso,kerr,kcps <span class="opc">lpread</span> ktime,"fox_poles.lpc"
-krmso <span class="op">=</span> krmso<span class="op">*</span>.00007			<span class="comment">; low volume</span>
-aout  <span class="opc">buzz</span> krmso, kcps, 15, 1
-krmsr <span class="op">=</span> krmsr<span class="op">*</span>.0001			<span class="comment">; low volume</span>
-asig  <span class="opc">rand</span> krmsr
-      <span class="opc">outs</span> (aout<span class="op">*</span>2)<span class="op">+</span>asig, (aout<span class="op">*</span>2)<span class="op">+</span>asig	<span class="comment">; mix buzz and rand</span>
+k<span class="n">time</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p4</span>
+k<span class="n">rmsr</span><span class="p">,</span>k<span class="n">rmso</span><span class="p">,</span>k<span class="n">err</span><span class="p">,</span>k<span class="n">cps</span> <span class="nb">lpread</span> k<span class="n">time</span><span class="p">,</span><span class="s">"fox_poles.lpc"</span>
+k<span class="n">rmso</span> <span class="o">=</span> k<span class="n">rmso</span><span class="o">*</span><span class="mf">.00007</span>			<span class="c1">; low volume</span>
+a<span class="n">out</span>  <span class="nb">buzz</span> k<span class="n">rmso</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">rmsr</span> <span class="o">=</span> k<span class="n">rmsr</span><span class="o">*</span><span class="mf">.0001</span>			<span class="c1">; low volume</span>
+a<span class="n">sig</span>  <span class="nb">rand</span> k<span class="n">rmsr</span>
+      <span class="nb">outs</span> <span class="p">(</span>a<span class="n">out</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span>a<span class="n">sig</span><span class="p">,</span> <span class="p">(</span>a<span class="n">out</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span>a<span class="n">sig</span>	<span class="c1">; mix buzz and rand</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; sine</span>
-<span class="stamnt">f</span>1 0 4096 10 1 
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; sine</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span> 
 
-<span class="stamnt">i</span> 1 0 2.8 1	<span class="comment">; first words only</span>
-<span class="stamnt">i</span> 1 4 2.8 2.8	<span class="comment">; whole sentence</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">2.8</span> <span class="mi">1</span>	<span class="c1">; first words only</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mf">2.8</span> <span class="mf">2.8</span>	<span class="c1">; whole sentence</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -163,7 +163,7 @@ fox.wav = 2.756667 seconds
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111842416"></a>
+        <a id="idm1533531376"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="lpfreson.html" title="lpfreson"><em class="citetitle">lpfreson</em></a>, 

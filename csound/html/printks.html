@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>printks</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="printk.html" title="printk" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp126573120"></a>
+        <a id="idm1518918256"></a>
         <h2>Description</h2>
         <p>
       Prints at k-rate using a printf() style syntax.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126574464"></a>
+        <a id="idm1518916592"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>printks</strong></span> "string", itime [, kval1] [, kval2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp126642880"></a>
+        <a id="idm1518919280"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>"string"</em></span> -- the text string to be printed. Can be up to 8192 characters and must be in double quotes.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126645616"></a>
+        <a id="idm1518924656"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval1, kval2, ...</em></span> (optional) -- The k-rate values to be printed. These are specified in <span class="emphasis"><em><span class="quote">“<span class="quote">string</span>”</span></em></span> with the standard C value specifier (%f, %d, etc.) in the order given.
@@ -82,7 +83,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126655472"></a>
+        <a id="idm1518911344"></a>
         <h2>Print Output Formatting</h2>
         <p>
       All standard C language printf() control characters may be used. For example, if <span class="emphasis"><em>kval1</em></span> = 153.26789 then some common formatting options are:
@@ -111,7 +112,7 @@
 
       </p>
         <div class="informaltable">
-          <table border="1">
+          <table class="informaltable" border="1">
             <colgroup>
               <col />
               <col />
@@ -182,63 +183,62 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp126677840"></a>
+        <a id="idm1518884336"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the printks opcode. It uses the file <a class="ulink" href="examples/printks.csd" target="_top"><em class="citetitle">printks.csd</em></a>.
+      Here is an example of the printks opcode. It uses the file <a class="ulink" href="examples/printks.csd.html" target="_top"><em class="citetitle">printks.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp126679696"></a>
+          <a id="idm1518889584"></a>
           <p class="title">
-            <strong>Example 682. Example of the printks opcode.</strong>
+            <strong>Example 702. Example of the printks opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259284960"></a>
-              <a class="ulink" href="examples/printks.csd.html" target="_top">Play</a>
+              <a id="idm1339934832"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o printks.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o printks.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 1
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  <span class="comment">; Change a value linearly from 0 to 100,</span>
-  <span class="comment">; over the period defined by p3.</span>
-  kup <span class="opc">line</span> 0, p3, 100
-  <span class="comment">; Change a value linearly from 30 to 10, </span>
-  <span class="comment">; over the period defined by p3.</span>
-  kdown <span class="opc">line</span> 30, p3, 10
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  <span class="c1">; Change a value linearly from 0 to 100,</span>
+  <span class="c1">; over the period defined by p3.</span>
+  k<span class="n">up</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span>
+  <span class="c1">; Change a value linearly from 30 to 10, </span>
+  <span class="c1">; over the period defined by p3.</span>
+  k<span class="n">down</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10</span>
 
-  <span class="comment">; Print the value of kup and kdown, once per second.</span>
-  <span class="opc">printks</span> "kup <span class="op">=</span> <span class="op">%</span>f, kdown <span class="op">=</span> <span class="op">%</span>f\\n", 1, kup, kdown
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Play Instrument #1 for 5 seconds.</span>
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">e</span>
+  <span class="c1">; Print the value of kup and kdown, once per second.</span>
+  <span class="nb">printks</span> <span class="s">"kup = %f, kdown = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">up</span><span class="p">,</span> k<span class="n">down</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Play Instrument #1 for 5 seconds.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -259,7 +259,7 @@ kup = 79.933266, kdown = 13.872493
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126685088"></a>
+        <a id="idm1518887024"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="printk2.html" title="printk2"><em class="citetitle">printk2</em></a> and 
@@ -267,7 +267,7 @@ kup = 79.933266, kdown = 13.872493
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp126688208"></a>
+        <a id="idm1518878832"></a>
         <h2>Credits</h2>
         <p>
       </p>

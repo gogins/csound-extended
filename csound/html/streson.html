@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>streson</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="strcmpk.html" title="strcmpk" />
@@ -38,26 +39,16 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp144245120"></a>
+        <a id="idm1500944240"></a>
         <h2>Description</h2>
         <p>
       An audio signal is modified by a string resonator with variable fundamental frequency.
     </p>
       </div>
+      <div class="refsect1"><a id="idm1500939504"></a><h2>Syntax</h2>%
+    <pre class="synopsis">ares <span class="command"><strong>streson</strong></span> asig, kfr, kfdbgain</pre></div>
       <div class="refsect1">
-        <a id="idp144246544"></a>
-        <h2>Syntax</h2>
-        <pre class="synopsis">ares <span class="command"><strong>streson</strong></span> asig, kfr, ifdbgain</pre>
-      </div>
-      <div class="refsect1">
-        <a id="idp144248672"></a>
-        <h2>Initialization</h2>
-        <p>
-      <span class="emphasis"><em>ifdbgain</em></span> -- feedback gain, between 0 and 1, of the internal delay line. A value close to 1 creates a slower decay and a more pronounced resonance. Small values may leave the input signal unaffected. Depending on the filter frequency, typical values are &gt; .9.
-    </p>
-      </div>
-      <div class="refsect1">
-        <a id="idp144281488"></a>
+        <a id="idm1500931184"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- the input audio signal.
@@ -66,72 +57,78 @@
       <span class="emphasis"><em>kfr</em></span> -- the fundamental frequency of the string.
     </p>
         <p>
+      <span class="emphasis"><em>kfdbgain</em></span> -- feedback gain, typically between 0 and 1,
+      of the internal delay line. A value close to 1 creates a slower
+      decay and a more pronounced resonance. Small values may leave
+      the input signal unaffected. Depending on the filter frequency,
+      typical values are &gt; 0.9.  Values down to -1 are also useful.
+    </p>
+        <p>
       <span class="emphasis"><em>streson</em></span> passes the input <span class="emphasis"><em>asig</em></span> through a network composed of comb, low-pass and all-pass filters, similar to the one used in some versions of the Karplus-Strong algorithm, creating a string resonator effect. The fundamental frequency of the <span class="quote">“<span class="quote">string</span>”</span> is controlled by the k-rate variable <span class="emphasis"><em>kfr</em></span>.This opcode can be used to simulate sympathetic resonances to an input signal.
     </p>
         <p>
-      See <a class="link" href="MiscModalFreq.html" title="Appendix E. Modal Frequency Ratios"><em class="citetitle">Modal Frequency Ratios</em></a> for frequency ratios of real intruments which can be used to determine the values of <span class="emphasis"><em>kfrq</em></span>.
+      See <a class="link" href="MiscModalFreq.html" title="Appendix E. Modal Frequency Ratios"><em class="citetitle">Modal Frequency Ratios</em></a> for frequency ratios of real instruments which can be used to determine the values of <span class="emphasis"><em>kfrq</em></span>.
     </p>
         <p>
       <span class="emphasis"><em>streson</em></span> is an adaptation of the StringFlt object of the SndObj Sound Object Library developed by the author.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp144289360"></a>
+        <a id="idm1500933360"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the streson opcode. It uses the file <a class="ulink" href="examples/streson.csd" target="_top"><em class="citetitle">streson.csd</em></a>.
+      Here is an example of the streson opcode. It uses the file <a class="ulink" href="examples/streson.csd.html" target="_top"><em class="citetitle">streson.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp144291216"></a>
+          <a id="idm1500927600"></a>
           <p class="title">
-            <strong>Example 906. Example of the streson opcode.</strong>
+            <strong>Example 932. Example of the streson opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp266677360"></a>
-              <a class="ulink" href="examples/streson.csd.html" target="_top">Play</a>
+              <a id="idm1320929776"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o streson.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o streson.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">diskin2</span> "fox.wav", 1, 0, 1
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
  
-kfr <span class="op">=</span> p4
-ifdbgain <span class="op">=</span> 0.90
+k<span class="n">fr</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">fdbgain</span> <span class="o">=</span> <span class="mf">0.90</span>
 
-astr <span class="opc">streson</span> asig, kfr, ifdbgain
-asig <span class="opc">clip</span> astr, 0, 1
-     <span class="opc">outs</span> asig, asig
+a<span class="n">str</span> <span class="nb">streson</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">fr</span><span class="p">,</span> i<span class="n">fdbgain</span>
+a<span class="n">sig</span> <span class="nb">clip</span> a<span class="n">str</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 1 20
-<span class="stamnt">i</span> 1 + . &gt;
-<span class="stamnt">i</span> 1 + . &gt;
-<span class="stamnt">i</span> 1 + . &gt;
-<span class="stamnt">i</span> 1 + . &gt;
-<span class="stamnt">i</span> 1 + . &gt;
-<span class="stamnt">i</span> 1 + . 1000
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">20</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="o">&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="o">&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="o">&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="o">&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="o">&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">.</span> <span class="mi">1000</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -140,7 +137,7 @@ asig <span class="opc">clip</span> astr, 0, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp144295440"></a>
+        <a id="idm1500926192"></a>
         <h2>Credits</h2>
         <p>
       </p>

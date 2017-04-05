@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>spectrum</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="specsum.html" title="specsum" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp141828256"></a>
+        <a id="idm1503071472"></a>
         <h2>Description</h2>
         <p>
       Generate a constant-Q, exponentially-spaced DFT across all octaves of a multiply-downsampled control or audio input signal.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp141829584"></a>
+        <a id="idm1503070960"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">wsig <span class="command"><strong>spectrum</strong></span> xsig, iprd, iocts, ifrqa [, iq] [, ihann] [, idbout] \
       [, idsprd] [, idsinrs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp141831856"></a>
+        <a id="idm1503075440"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihann</em></span> (optional) -- apply a Hamming or Hanning window to the input. The default is 0 (Hamming window)
@@ -87,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp141906928"></a>
+        <a id="idm1503065840"></a>
         <h2>Performance</h2>
         <p>
       This unit first puts signal <span class="emphasis"><em>asig</em></span> or <span class="emphasis"><em>ksig</em></span> through <span class="emphasis"><em>iocts</em></span> of successive octave decimation and downsampling, and preserves a buffer of down-sampled values in each octave (optionally displayed as a composite buffer every <span class="emphasis"><em>idisprd</em></span> seconds).  Then at every <span class="emphasis"><em>iprd</em></span> seconds, the preserved samples are passed through a filter bank (<span class="emphasis"><em>ifrqs</em></span> parallel filters per octave, exponentially spaced, with frequency/bandwidth Q of <span class="emphasis"><em>iq</em></span>), and the output magnitudes optionally converted (<span class="emphasis"><em>idbout </em></span>) to produce a band-limited spectrum that can be read by other units.
@@ -100,7 +101,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp141920736"></a>
+        <a id="idm1503049968"></a>
         <h2>Examples</h2>
         <p>
       </p>

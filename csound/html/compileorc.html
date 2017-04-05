@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>compileorc</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="compilecsd.html" title="compilecsd" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84644496"></a>
+        <a id="idm1561801968"></a>
         <h2>Description</h2>
         <p>
       Compileorc will compile one or more instruments at init time, which will be added to the running engine. In case of
@@ -47,12 +48,12 @@ definition will still perform until it terminates.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84718368"></a>
+        <a id="idm1561804912"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ires <span class="command"><strong>compileorc</strong></span> Sfilename</pre>
       </div>
       <div class="refsect1">
-        <a id="idp84720512"></a>
+        <a id="idm1561801072"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">Sfilename</span>”</span></em></span> --  a string containing the name of the file containing the orchestra.
@@ -62,45 +63,44 @@ definition will still perform until it terminates.
 </p>
       </div>
       <div class="refsect1">
-        <a id="idp84723264"></a>
+        <a id="idm1561804528"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the compileorc opcode. It uses the file <a class="ulink" href="examples/compileorc.csd" target="_top"><em class="citetitle">compileorc.csd</em></a>.
+      Here is an example of the compileorc opcode. It uses the file <a class="ulink" href="examples/compileorc.csd.html" target="_top"><em class="citetitle">compileorc.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp84725120"></a>
+          <a id="idm1561791344"></a>
           <p class="title">
-            <strong>Example 137. Example of the compileorc opcode.</strong>
+            <strong>Example 139. Example of the compileorc opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp237666336"></a>
-              <a class="ulink" href="examples/compileorc.csd.html" target="_top">Play</a>
+              <a id="idm1397598448"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -o dac -d
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-ires <span class="opc">compileorc</span> "does_not_exist.orc"
-<span class="opc">print</span> ires <span class="comment">; -1 as could not compile</span>
-ires <span class="opc">compileorc</span> "my.orc"
-<span class="opc">print</span> ires <span class="comment">; 0 as compiled successfully</span>
-<span class="opc">event_i</span> "i", 2, 0, 3, .2, 465 <span class="comment">;send event </span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">res</span> <span class="nb">compileorc</span> <span class="s">"does_not_exist.orc"</span>
+<span class="nb">print</span> i<span class="n">res</span> <span class="c1">; -1 as could not compile</span>
+i<span class="n">res</span> <span class="nb">compileorc</span> <span class="s">"my.orc"</span>
+<span class="nb">print</span> i<span class="n">res</span> <span class="c1">; 0 as compiled successfully</span>
+<span class="nb">event_i</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mi">465</span> <span class="c1">;send event </span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span>1 0 1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -109,7 +109,7 @@ ires <span class="opc">compileorc</span> "my.orc"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84729408"></a>
+        <a id="idm1561790832"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="event.html" title="event"><em class="citetitle">event</em></a>,
@@ -121,7 +121,7 @@ ires <span class="opc">compileorc</span> "my.orc"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp84736256"></a>
+        <a id="idm1561788144"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini, 2013 </p>
       </div>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pvsarp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="pvsanal.html" title="pvsanal" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128263632"></a>
+        <a id="idm1517131504"></a>
         <h2>Description</h2>
         <p>
     This opcode arpeggiates spectral components, by amplifying one bin and attenuating
@@ -47,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128307888"></a>
+        <a id="idm1517135472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsarp</strong></span> fsigin, kbin, kdepth, kgain</pre>
       </div>
       <div class="refsect1">
-        <a id="idp128310112"></a>
+        <a id="idm1517133552"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -88,62 +89,61 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp128316208"></a>
+        <a id="idm1517125488"></a>
         <h2>Examples</h2>
         <p>
-        Here is an example of the pvsarp opcode. It uses the file <a class="ulink" href="examples/pvsarp.csd" target="_top"><em class="citetitle">pvsarp.csd</em></a>
+        Here is an example of the pvsarp opcode. It uses the file <a class="ulink" href="examples/pvsarp.csd.html" target="_top"><em class="citetitle">pvsarp.csd</em></a>
         </p>
         <div class="example">
-          <a id="idp128317952"></a>
+          <a id="idm1517123952"></a>
           <p class="title">
-            <strong>Example 700. Example of the pvsarp opcode.</strong>
+            <strong>Example 720. Example of the pvsarp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp260000160"></a>
-              <a class="ulink" href="examples/pvsarp.csd.html" target="_top">Play</a>
+              <a id="idm1338577648"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     <span class="comment">;;;-d     RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvsarp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     <span class="c1">;;;-d     RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvsarp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-asig  <span class="opc">in</span>                                 <span class="comment">; get the signal in</span>
-idepth <span class="op">=</span> p4
+<span class="kd">instr</span> <span class="nf">1</span>
+a<span class="n">sig</span>  <span class="nb">in</span>                                 <span class="c1">; get the signal in</span>
+i<span class="n">depth</span> <span class="o">=</span> <span class="nb">p4</span>
 
-fsig  <span class="opc">pvsanal</span>   asig, 1024, 256, 1024, 1 <span class="comment">; analyse it</span>
-kbin  <span class="opc">oscili</span>   0.1, 0.5, 1               <span class="comment">; ftable 1 in the 0-1 range</span>
-ftps  <span class="opc">pvsarp</span>   fsig, kbin<span class="op">+</span>0.01, idepth, 2   <span class="comment">; arpeggiate it (range 220.5 - 2425.5)</span>
-atps  <span class="opc">pvsynth</span>  ftps                      <span class="comment">; synthesise it</span>
+<span class="n">fsig</span>  <span class="nb">pvsanal</span>   a<span class="n">sig</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; analyse it</span>
+k<span class="n">bin</span>  <span class="nb">oscili</span>   <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>               <span class="c1">; ftable 1 in the 0-1 range</span>
+<span class="n">ftps</span>  <span class="nb">pvsarp</span>   <span class="n">fsig</span><span class="p">,</span> k<span class="n">bin</span><span class="o">+</span><span class="mf">0.01</span><span class="p">,</span> i<span class="n">depth</span><span class="p">,</span> <span class="mi">2</span>   <span class="c1">; arpeggiate it (range 220.5 - 2425.5)</span>
+a<span class="n">tps</span>  <span class="nb">pvsynth</span>  <span class="n">ftps</span>                      <span class="c1">; synthesise it</span>
 
-       <span class="opc">out</span> atps
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 4096 10 1 <span class="comment">;sine wave</span>
-
-<span class="stamnt">i</span> 1 0 10 0.9
-<span class="stamnt">i</span> 1 + 10 0.5
-<span class="stamnt">e</span>
+       <span class="nb">out</span> a<span class="n">tps</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span> <span class="c1">;sine wave</span>
+
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mf">0.9</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">0.5</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -151,65 +151,64 @@ atps  <span class="opc">pvsynth</span>  ftps                      <span class="c
         <p><br class="example-break" />
         </p>
         <p>
-        Here is another example of the pvsarp opcode. It uses the file <a class="ulink" href="examples/pvsarp2.csd" target="_top"><em class="citetitle">pvsarp2.csd</em></a>
+        Here is another example of the pvsarp opcode. It uses the file <a class="ulink" href="examples/pvsarp2.csd.html" target="_top"><em class="citetitle">pvsarp2.csd</em></a>
         </p>
         <div class="example">
-          <a id="idp128323216"></a>
+          <a id="idm1517123568"></a>
           <p class="title">
-            <strong>Example 701. Example of the pvsarp opcode.</strong>
+            <strong>Example 721. Example of the pvsarp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259986704"></a>
-              <a class="ulink" href="examples/pvsarp2.csd.html" target="_top">Play</a>
+              <a id="idm1338698736"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o pvsarp2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o pvsarp2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 16
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">;; example written by joachim heintz 2009</span>
+<span class="c1">;; example written by joachim heintz 2009</span>
 
-<span class="oblock">instr</span> 1
-ifftsize	<span class="op">=</span>		1024
-ioverlap	<span class="op">=</span>		ifftsize <span class="op">/</span> 4
-iwinsize	<span class="op">=</span>		ifftsize
-iwinshape	<span class="op">=</span>		1<span class="comment">; von-Hann window</span>
-Sfile1		<span class="op">=</span>		"fox.wav"
-ain1		<span class="opc">soundin</span>	Sfile1
-fftin		<span class="opc">pvsanal</span>	ain1, ifftsize, ioverlap, iwinsize, iwinshape
-  <span class="comment">;make 3 independently moving accentuations in the spectrum</span>
-kbin1		<span class="opc">linseg</span>		0.05, p3<span class="op">/</span>2, .05, p3<span class="op">/</span>2, .05
-farp1		<span class="opc">pvsarp</span>		fftin, kbin1, .9, 10
-kbin2		<span class="opc">linseg</span>		0.075, p3<span class="op">/</span>2, .1, p3<span class="op">/</span>2, .075
-farp2		<span class="opc">pvsarp</span>		fftin, kbin2, .9, 10
-kbin3		<span class="opc">linseg</span>		0.02, p3<span class="op">/</span>2, .03, p3<span class="op">/</span>2, .04
-farp3		<span class="opc">pvsarp</span>		fftin, kbin3, .9, 10
-  <span class="comment">;resynthesize and add them</span>
-aout1		<span class="opc">pvsynth</span>	farp1
-aout2		<span class="opc">pvsynth</span>	farp2
-aout3		<span class="opc">pvsynth</span>	farp3
-aout		<span class="op">=</span>		aout1<span class="op">*</span>.3 <span class="op">+</span> aout2<span class="op">*</span>.3 <span class="op">+</span> aout3<span class="op">*</span>.3
-		<span class="opc">out</span>		aout
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+i<span class="n">fftsize</span>	<span class="o">=</span>		<span class="mi">1024</span>
+i<span class="n">overlap</span>	<span class="o">=</span>		i<span class="n">fftsize</span> <span class="o">/</span> <span class="mi">4</span>
+i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsize</span>
+i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
+S<span class="n">file1</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
+a<span class="n">in1</span>		<span class="nb">soundin</span>	S<span class="n">file1</span>
+<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in1</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
+  <span class="c1">;make 3 independently moving accentuations in the spectrum</span>
+k<span class="n">bin1</span>		<span class="nb">linseg</span>		<span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.05</span>
+<span class="n">farp1</span>		<span class="nb">pvsarp</span>		<span class="n">fftin</span><span class="p">,</span> k<span class="n">bin1</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mi">10</span>
+k<span class="n">bin2</span>		<span class="nb">linseg</span>		<span class="mf">0.075</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.075</span>
+<span class="n">farp2</span>		<span class="nb">pvsarp</span>		<span class="n">fftin</span><span class="p">,</span> k<span class="n">bin2</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mi">10</span>
+k<span class="n">bin3</span>		<span class="nb">linseg</span>		<span class="mf">0.02</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.03</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.04</span>
+<span class="n">farp3</span>		<span class="nb">pvsarp</span>		<span class="n">fftin</span><span class="p">,</span> k<span class="n">bin3</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mi">10</span>
+  <span class="c1">;resynthesize and add them</span>
+a<span class="n">out1</span>		<span class="nb">pvsynth</span>	<span class="n">farp1</span>
+a<span class="n">out2</span>		<span class="nb">pvsynth</span>	<span class="n">farp2</span>
+a<span class="n">out3</span>		<span class="nb">pvsynth</span>	<span class="n">farp3</span>
+a<span class="n">out</span>		<span class="o">=</span>		a<span class="n">out1</span><span class="o">*</span><span class="mf">.3</span> <span class="o">+</span> a<span class="n">out2</span><span class="o">*</span><span class="mf">.3</span> <span class="o">+</span> a<span class="n">out3</span><span class="o">*</span><span class="mf">.3</span>
+		<span class="nb">out</span>		a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 3 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> 
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -218,7 +217,7 @@ aout		<span class="op">=</span>		aout1<span class="op">*</span>.3 <span class="o
         </p>
       </div>
       <div class="refsect1">
-        <a id="idp128327504"></a>
+        <a id="idm1517115120"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -227,7 +226,7 @@ aout		<span class="op">=</span>		aout1<span class="op">*</span>.3 <span class="o
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp128331472"></a>
+        <a id="idm1517118448"></a>
         <h2>Credits</h2>
         <p>
       </p>

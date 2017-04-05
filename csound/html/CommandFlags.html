@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Csound command line</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="CommandTop.html" title="The Csound Command" />
     <link rel="prev" href="CommandDesc.html" title="Description of the command syntax" />
@@ -36,20 +37,20 @@
         <p>csound</p>
       </div>
       <div class="refsect1">
-        <a id="idp62305840"></a>
+        <a id="idm1591370736"></a>
         <h2>Description</h2>
         <p>
         The <span class="emphasis"><em>csound</em></span> command executes Csound.
       </p>
       </div>
       <div class="refsect1">
-        <a id="idp62307472"></a>
+        <a id="idm1591373424"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [orchname]  [scorename]</pre>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [csdfilename]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp62388848"></a>
+        <a id="idm1591361776"></a>
         <h2>Csound command line flags</h2>
         <p>
         Listed below are the command line flags available in Csound6 in alphabetical order. Various platform
@@ -430,7 +431,8 @@
             </dt>
             <dd>
               <p>
-              prints system sr and exits, requires -o dac.
+              prints system sr and exits, requires previous -o dac.
+              If the audio does not support this request then -1 is reported.
             </p>
             </dd>
             <dt>
@@ -1442,6 +1444,15 @@
             <dd>
               <p>
               Verbose translate and run. Prints details of orch translation and performance, enabling errors to be more clearly located.
+            </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusVersion"></a>
+              <span class="term">--version<a id="IndexMinusVersion" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+              Exits after printing version information.
             </p>
             </dd>
             <dt>

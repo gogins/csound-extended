@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>getcfg</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="gendyx.html" title="gendyx" />
-    <link rel="next" href="getrow.html" title="getrow" />
+    <link rel="next" href="getcol.html" title="getcol" />
   </head>
   <body>
     <div class="navheader">
@@ -20,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="gendyx.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="getrow.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="getcol.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp103000032"></a>
+        <a id="idm1543219824"></a>
         <h2>Description</h2>
         <p>
       Return various configuration settings in Svalue as a string at init time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103044080"></a>
+        <a id="idm1543221744"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">Svalue <span class="command"><strong>getcfg</strong></span> iopt</pre>
       </div>
       <div class="refsect1">
-        <a id="idp103046224"></a>
+        <a id="idm1543221232"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iopt</em></span>
@@ -102,75 +103,71 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103054672"></a>
+        <a id="idm1543214960"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the getcfg opcode. It uses the file <a class="ulink" href="examples/getcfg.csd" target="_top"><em class="citetitle">getcfg.csd</em></a>.
+      Here is an example of the getcfg opcode. It uses the file <a class="ulink" href="examples/getcfg.csd.html" target="_top"><em class="citetitle">getcfg.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp103056528"></a>
+          <a id="idm1543208944"></a>
           <p class="title">
-            <strong>Example 372. Example of the getcfg opcode.</strong>
+            <strong>Example 376. Example of the getcfg opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp246441680"></a>
-              <a class="ulink" href="examples/getcfg.csd.html" target="_top">Play</a>
+              <a id="idm1373946352"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
--iadc    <span class="comment">;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
- 
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+-iadc    <span class="c1">;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="nt">&lt;/CsOptions&gt;</span> 
+<span class="nt">&lt;CsInstruments&gt;</span> 
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-S1 <span class="opc">getcfg</span> 1	<span class="comment">; -+max_str_len </span>
-S2 <span class="opc">getcfg</span> 2	<span class="comment">; -i </span>
-S3 <span class="opc">getcfg</span> 3	<span class="comment">; -o </span>
-S4 <span class="opc">getcfg</span> 4	<span class="comment">; RTaudio </span>
-S5 <span class="opc">getcfg</span> 5	<span class="comment">; -t </span>
-S6 <span class="opc">getcfg</span> 6	<span class="comment">; os system host </span>
-S7 <span class="opc">getcfg</span> 7	<span class="comment">; callback </span>
+S<span class="n">1</span> <span class="nb">getcfg</span> <span class="mi">1</span>	<span class="c1">; -+max_str_len </span>
+S<span class="n">2</span> <span class="nb">getcfg</span> <span class="mi">2</span>	<span class="c1">; -i </span>
+S<span class="n">3</span> <span class="nb">getcfg</span> <span class="mi">3</span>	<span class="c1">; -o </span>
+S<span class="n">4</span> <span class="nb">getcfg</span> <span class="mi">4</span>	<span class="c1">; RTaudio </span>
+S<span class="n">5</span> <span class="nb">getcfg</span> <span class="mi">5</span>	<span class="c1">; -t </span>
+S<span class="n">6</span> <span class="nb">getcfg</span> <span class="mi">6</span>	<span class="c1">; os system host </span>
+S<span class="n">7</span> <span class="nb">getcfg</span> <span class="mi">7</span>	<span class="c1">; callback </span>
 
-<span class="opc">prints</span> "<span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span>" 
-<span class="opc">prints</span> "\nMax string len <span class="op">:</span> " 
-<span class="opc">prints</span>	S1 
-<span class="opc">prints</span> "\nInput file name (<span class="op">-</span>i) <span class="op">:</span> " 
-<span class="opc">prints</span>	S2 
-<span class="opc">prints</span> "\nOutput file name (<span class="op">-</span>o) <span class="op">:</span> " 
-<span class="opc">prints</span>	S3 
-<span class="opc">prints</span> "\nRTaudio (<span class="op">-</span>odac) <span class="op">:</span> " 
-<span class="opc">prints</span>	S4 
-<span class="opc">prints</span> "\nBeat <span class="opc">mode</span> (<span class="op">-</span>t)<span class="op">?</span> <span class="op">:</span> " 
-<span class="opc">prints</span>	S5 
-<span class="opc">prints</span> "\nHost Op. Sys. <span class="op">:</span> " 
-<span class="opc">prints</span>	S6 
-<span class="opc">prints</span> "\nCallback <span class="op">?</span> <span class="op">:</span> " 
-<span class="opc">prints</span>	S7 
-<span class="opc">prints</span> "\n" 
-<span class="opc">prints</span> "<span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span>\n" 
+<span class="nb">prints</span> <span class="s">"------------------------------"</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">Max string len : "</span> 
+<span class="nb">prints</span>	S<span class="n">1</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">Input file name (-i) : "</span> 
+<span class="nb">prints</span>	S<span class="n">2</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">Output file name (-o) : "</span> 
+<span class="nb">prints</span>	S<span class="n">3</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">RTaudio (-odac) : "</span> 
+<span class="nb">prints</span>	S<span class="n">4</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">Beat mode (-t)? : "</span> 
+<span class="nb">prints</span>	S<span class="n">5</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">Host Op. Sys. : "</span> 
+<span class="nb">prints</span>	S<span class="n">6</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">Callback ? : "</span> 
+<span class="nb">prints</span>	S<span class="n">7</span> 
+<span class="nb">prints</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> 
+<span class="nb">prints</span> <span class="s">"------------------------------</span><span class="se">\n</span><span class="s">"</span> 
 
-<span class="oblock">endin</span> 
+<span class="kd">endin</span> 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
-<span class="stamnt">i</span> 1 0 0 
-<span class="stamnt">e</span> 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> 
+<span class="nb">e</span> 
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -194,7 +191,7 @@ Callback ? : 0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp103061760"></a>
+        <a id="idm1543204720"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -219,14 +216,14 @@ Callback ? : 0
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="getrow.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="getcol.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">gendyx </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> getrow</td>
+          <td width="40%" align="right" valign="top"> getcol</td>
         </tr>
       </table>
     </div>

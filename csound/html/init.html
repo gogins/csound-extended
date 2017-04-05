@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>init</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="inh.html" title="inh" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106094512"></a>
+        <a id="idm1540175472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>init</strong></span> iarg</pre>
         <pre class="synopsis">ires <span class="command"><strong>init</strong></span> iarg</pre>
@@ -49,14 +50,14 @@
         <pre class="synopsis">tab <span class="command"><strong>init</strong></span> isize[, ival]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp106149504"></a>
+        <a id="idm1540168688"></a>
         <h2>Description</h2>
         <p> 
       Put the value of the i-time expression into a k- or a-rate variable.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106150784"></a>
+        <a id="idm1540162672"></a>
         <h2>Initialization</h2>
         <p>
       Puts the value of the i-time expression
@@ -79,55 +80,52 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106154688"></a>
+        <a id="idm1540165616"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the init opcode. It uses the file <a class="ulink" href="examples/init.csd" target="_top"><em class="citetitle">init.csd</em></a>.
+      Here is an example of the init opcode. It uses the file <a class="ulink" href="examples/init.csd.html" target="_top"><em class="citetitle">init.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp106156464"></a>
+          <a id="idm1540169200"></a>
           <p class="title">
-            <strong>Example 414. Example of the init opcode.</strong>
+            <strong>Example 421. Example of the init opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp248665488"></a>
-              <a class="ulink" href="examples/init.csd.html" target="_top">Play</a>
+              <a id="idm1368489712"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--n  <span class="comment">;no sound output</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
- 
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-n  <span class="c1">;no sound output</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span> 
 
-<span class="ohdr">sr</span>     <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span>  <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">;shows what init does</span>
-        kinit <span class="opc">init</span> 0 
-        kinit <span class="op">=</span> kinit <span class="op">+</span> 1 
-        <span class="opc">printk</span> .1, kinit 
-<span class="oblock">endin</span> 
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;shows what init does</span>
+        k<span class="n">init</span> <span class="nb">init</span> <span class="mi">0</span> 
+        k<span class="n">init</span> <span class="o">=</span> k<span class="n">init</span> <span class="o">+</span> <span class="mi">1</span> 
+        <span class="nb">printk</span> <span class="mf">.1</span><span class="p">,</span> k<span class="n">init</span> 
+<span class="kd">endin</span> 
 
-<span class="oblock">instr</span> 2 <span class="comment">;shows what an assignment does</span>
-        knoinit <span class="op">=</span> 0 
-        knoinit <span class="op">=</span> knoinit <span class="op">+</span> 1 
-        <span class="opc">printk</span> .1, knoinit 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
- 
-<span class="comment">;play one second each</span>
-<span class="stamnt">i</span>1 0 1 
-<span class="stamnt">i</span>2 2 1 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;shows what an assignment does</span>
+        k<span class="n">noinit</span> <span class="o">=</span> <span class="mi">0</span> 
+        k<span class="n">noinit</span> <span class="o">=</span> k<span class="n">noinit</span> <span class="o">+</span> <span class="mi">1</span> 
+        <span class="nb">printk</span> <span class="mf">.1</span><span class="p">,</span> k<span class="n">noinit</span> 
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span> 
+<span class="nt">&lt;CsScore&gt;</span> 
+<span class="c1">;play one second each</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> 
+<span class="nb">i</span><span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> 
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span> 
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span> 
 </pre>
             </div>
           </div>
@@ -162,7 +160,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp106162224"></a>
+        <a id="idm1540160752"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="assign.html" title="="><em class="citetitle">=</em></a>,
@@ -172,7 +170,7 @@
         <p> Other information on this opcode in the Floss Manuals: <a class="ulink" href="http://www.flossmanuals.net/csound/ch016_a-initialization-and-performance-pass" target="_top"><em class="citetitle">http://www.flossmanuals.net/csound/ch016_a-initialization-and-performance-pass</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idp106167520"></a>
+        <a id="idm1540155632"></a>
         <h2>Credits</h2>
         <p>
       Init first appeared in the original Csound, but the extension to

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tablew</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tableshuffle.html" title="tableshuffle" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp147233824"></a>
+        <a id="idm1497769072"></a>
         <h2>Description</h2>
         <p>
       This opcode operates on existing function tables, changing their
@@ -50,14 +51,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp147299904"></a>
+        <a id="idm1497769840"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tablew</strong></span> asig, andx, ifn [, ixmode] [, ixoff] [, iwgmode]</pre>
         <pre class="synopsis"><span class="command"><strong>tablew</strong></span> isig, indx, ifn [, ixmode] [, ixoff] [, iwgmode]</pre>
         <pre class="synopsis"><span class="command"><strong>tablew</strong></span> ksig, kndx, ifn [, ixmode] [, ixoff] [, iwgmode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp147304544"></a>
+        <a id="idm1497767792"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>asig</em></span>, <span class="emphasis"><em>isig,</em></span> <span class="emphasis"><em>ksig</em></span> -- The value to be written into the table.
@@ -134,24 +135,24 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp147324720"></a>
+        <a id="idm1497751152"></a>
         <h2>Performance</h2>
         <div class="refsect2">
-          <a id="idp147325392"></a>
+          <a id="idm1497756528"></a>
           <h3>Limit mode (0)</h3>
           <p>
         Limit the total index (<span class="emphasis"><em>ndx</em></span> + <span class="emphasis"><em>ixoff</em></span>) to between 0 and the guard point. For a table of length 5, this means that locations 0 to 3 and location 4 (the guard point) can be written. A negative total index writes to location 0.
       </p>
         </div>
         <div class="refsect2">
-          <a id="idp147327632"></a>
+          <a id="idm1497744496"></a>
           <h3>Wrap mode (1)</h3>
           <p>
         Wrap total index value into locations 0 to E, where E is either one less than the table length or the factor of 2 number which is one less than the table length. For example, wrap into a 0 to 3 range - so that total index 6 writes to location 2.
       </p>
         </div>
         <div class="refsect2">
-          <a id="idp147329088"></a>
+          <a id="idm1497745904"></a>
           <h3>Guardpoint mode (2)</h3>
           <p>
         The guardpoint is written at the same time as location 0 is written - with the same value.
@@ -176,7 +177,7 @@
       </p>
         </div>
         <div class="refsect2">
-          <a id="idp147337088"></a>
+          <a id="idm1497732976"></a>
           <h3>Caution with k-rate table numbers</h3>
           <p>
         At k-rate or a-rate, if a table number of &lt; 1 is given, or the table number points to a non-existent table, or to one which has a length of 0 (it is to be loaded from a file later) then an error will result and the instrument will be deactivated. <span class="emphasis"><em>kfn</em></span> and <span class="emphasis"><em>afn</em></span> must be initialized at the appropriate rate using <span class="emphasis"><em>init</em></span>. Attempting to load an i-rate value into <span class="emphasis"><em>kfn</em></span> or <span class="emphasis"><em>afn</em></span> will result in an error.
@@ -221,7 +222,7 @@ ival <span class="opc">tab_i</span>  indx, giFt
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp147356288"></a>
+        <a id="idm1497725424"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tableiw.html" title="tableiw"><em class="citetitle">tableiw</em></a>,
@@ -229,7 +230,7 @@ ival <span class="opc">tab_i</span>  indx, giFt
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp147359360"></a>
+        <a id="idm1497720176"></a>
         <h2>Credits</h2>
         <p>
       </p>

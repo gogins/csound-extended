@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>envlpx</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="endop.html" title="endop" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90695088"></a>
+        <a id="idm1555426544"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>envlpx</em></span> -- apply an envelope consisting of 3 segments:
@@ -60,13 +61,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90766752"></a>
+        <a id="idm1555415280"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>envlpx</strong></span> xamp, irise, idur, idec, ifn, iatss, iatdec [, ixmod]</pre>
         <pre class="synopsis">kres <span class="command"><strong>envlpx</strong></span> kamp, irise, idur, idec, ifn, iatss, iatdec [, ixmod]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp90770496"></a>
+        <a id="idm1555412720"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>irise</em></span> -- rise time in seconds. A zero or negative value signifies no rise modification.
@@ -112,7 +113,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90783056"></a>
+        <a id="idm1555409648"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp, xamp</em></span> -- input amplitude signal.
@@ -132,69 +133,68 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90788352"></a>
+        <a id="idm1555398000"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the envlpx opcode. It uses the file <a class="ulink" href="examples/envlpx.csd" target="_top"><em class="citetitle">envlpx.csd</em></a>.
+      Here is an example of the envlpx opcode. It uses the file <a class="ulink" href="examples/envlpx.csd.html" target="_top"><em class="citetitle">envlpx.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp90790128"></a>
+          <a id="idm1555403376"></a>
           <p class="title">
-            <strong>Example 236. Example of the envlpx opcode.</strong>
+            <strong>Example 238. Example of the envlpx opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240908608"></a>
-              <a class="ulink" href="examples/envlpx.csd.html" target="_top">Play</a>
+              <a id="idm1389806960"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o envlpx.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o envlpx.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-irise <span class="op">=</span> 0.2
-idec  <span class="op">=</span> 0.5
-idur  <span class="op">=</span> p3 <span class="op">-</span> idec
+i<span class="n">rise</span> <span class="o">=</span> <span class="mf">0.2</span>
+i<span class="n">dec</span>  <span class="o">=</span> <span class="mf">0.5</span>
+i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">p3</span> <span class="o">-</span> i<span class="n">dec</span>
 
-ifn <span class="op">=</span> 1
-iatss <span class="op">=</span> p5
-iatdec <span class="op">=</span> 0.01
+i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+i<span class="n">atss</span> <span class="o">=</span> <span class="nb">p5</span>
+i<span class="n">atdec</span> <span class="o">=</span> <span class="mf">0.01</span>
 
-kenv <span class="opc">envlpx</span> .6, irise, idur, idec, ifn, iatss, iatdec
-kcps <span class="op">=</span> <span class="opc">cpspch</span>(p4)
-asig <span class="opc">vco2</span> kenv, kcps
-<span class="comment">;apply envlpx to the filter cut-off frequency</span>
-asig <span class="opc">moogvcf</span> asig, kcps <span class="op">+</span> (kenv <span class="op">*</span> 8 <span class="op">*</span> kcps) , .5 <span class="comment">;the higher the pitch, the higher the filter cut-off frequency</span>
-     <span class="opc">outs</span> asig, asig
+k<span class="n">env</span> <span class="nb">envlpx</span> <span class="mf">.6</span><span class="p">,</span> i<span class="n">rise</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> i<span class="n">dec</span><span class="p">,</span> i<span class="n">fn</span><span class="p">,</span> i<span class="n">atss</span><span class="p">,</span> i<span class="n">atdec</span>
+k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+a<span class="n">sig</span> <span class="nb">vco2</span> k<span class="n">env</span><span class="p">,</span> k<span class="n">cps</span>
+<span class="c1">;apply envlpx to the filter cut-off frequency</span>
+a<span class="n">sig</span> <span class="nb">moogvcf</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cps</span> <span class="o">+</span> <span class="p">(</span>k<span class="n">env</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> k<span class="n">cps</span><span class="p">)</span> <span class="p">,</span> <span class="mf">.5</span> <span class="c1">;the higher the pitch, the higher the filter cut-off frequency</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; a linear rising envelope</span>
-<span class="stamnt">f</span> 1 0 129 -7 0 128 1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; a linear rising envelope</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">129</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 2 7.00 .1
-<span class="stamnt">i</span> 1 + 2 7.02  1
-<span class="stamnt">i</span> 1 + 2 7.03  2
-<span class="stamnt">i</span> 1 + 2 7.05  3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">7.00</span> <span class="mf">.1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">7.02</span>  <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">7.03</span>  <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">7.05</span>  <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -203,7 +203,7 @@ asig <span class="opc">moogvcf</span> asig, kcps <span class="op">+</span> (kenv
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90794352"></a>
+        <a id="idm1555402864"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="envlpxr.html" title="envlpxr"><em class="citetitle">envlpxr</em></a>, 
@@ -212,7 +212,7 @@ asig <span class="opc">moogvcf</span> asig, kcps <span class="op">+</span> (kenv
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90798384"></a>
+        <a id="idm1555389552"></a>
         <h2>Credits</h2>
         <p>Thanks goes to Luis Jure for pointing out a mistake with <span class="emphasis"><em>iatss</em></span>.</p>
       </div>

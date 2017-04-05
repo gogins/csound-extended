@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>vosim</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="voice.html" title="voice" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156175008"></a>
+        <a id="idm1488545264"></a>
         <h2>Description</h2>
         <p>
       This opcode produces a simple vocal simulation based on glottal pulses with formant characteristics.
@@ -47,18 +48,18 @@ The VOSIM (VOcal SIMulation) synthesis method was developed by Kaegi and Tempela
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156176512"></a>
+        <a id="idm1488548080"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>vosim</strong></span> kamp, kFund, kForm, kDecay, kPulseCount, kPulseFactor, ifn [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp156178592"></a>
+        <a id="idm1488548336"></a>
         <h2>Intialization</h2>
         <p><span class="emphasis"><em>ifn</em></span> - a sound table, normally containing half a period of a sinewave, squared (see notes below).</p>
         <p><span class="emphasis"><em>iskip</em></span> - (optional) Skip initialization, for tied notes.</p>
       </div>
       <div class="refsect1">
-        <a id="idp156180880"></a>
+        <a id="idm1488545904"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>ar</em></span> - output signal. Note that the output is usually unipolar - positive only.</p>
         <p><span class="emphasis"><em>kamp</em></span> - output amplitude, the peak amplitude of the first pulse in each burst.
@@ -171,140 +172,139 @@ but some other artefacts could be created.</p>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156221040"></a>
+        <a id="idm1488517232"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the vosim opcode. It uses the file <a class="ulink" href="examples/vosim.csd" target="_top"><em class="citetitle">vosim.csd</em></a>.
+      Here is an example of the vosim opcode. It uses the file <a class="ulink" href="examples/vosim.csd.html" target="_top"><em class="citetitle">vosim.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp156222896"></a>
+          <a id="idm1488514672"></a>
           <p class="title">
-            <strong>Example 1045. Example of the vosim opcode.</strong>
+            <strong>Example 1071. Example of the vosim opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp272065376"></a>
-              <a class="ulink" href="examples/vosim.csd.html" target="_top">Play</a>
+              <a id="idm1306488560"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o vosim.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span>     <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span>  <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o vosim.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">;#################################################</span>
-<span class="comment">; By Rasmus Ekman 2008</span>
+<span class="c1">;#################################################</span>
+<span class="c1">; By Rasmus Ekman 2008</span>
 
-<span class="comment">; Square each point in table #p4. This should only be run once in the performance.</span>
-<span class="oblock">instr</span> 10
+<span class="c1">; Square each point in table #p4. This should only be run once in the performance.</span>
+<span class="kd">instr</span> <span class="nf">10</span>
 
-	index <span class="opc">tableng</span> p4
-	index <span class="op">=</span> index <span class="op">-</span> 1  <span class="comment">; start from last point</span>
-<span class="olabel">loop</span><span class="op">:</span>
-	ival <span class="opc">table</span> index, p4
-	ival <span class="op">=</span> ival <span class="op">*</span> ival
-	<span class="opc">tableiw</span> ival, index, p4
-	index <span class="op">=</span> index <span class="op">-</span> 1
-	<span class="octrl">if</span> index <span class="op">&lt;</span> 0 <span class="octrl">igoto</span> <span class="olabel">endloop</span>
-		<span class="octrl">igoto</span> <span class="olabel">loop</span>
-<span class="olabel">endloop</span><span class="op">:</span> 
-<span class="oblock">endin</span>
+	i<span class="n">ndex</span> <span class="nb">tableng</span> <span class="nb">p4</span>
+	i<span class="n">ndex</span> <span class="o">=</span> i<span class="n">ndex</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1">; start from last point</span>
+<span class="nl">loop</span><span class="p">:</span>
+	i<span class="n">val</span> <span class="nb">table</span> i<span class="n">ndex</span><span class="p">,</span> <span class="nb">p4</span>
+	i<span class="n">val</span> <span class="o">=</span> i<span class="n">val</span> <span class="o">*</span> i<span class="n">val</span>
+	<span class="nb">tableiw</span> i<span class="n">val</span><span class="p">,</span> i<span class="n">ndex</span><span class="p">,</span> <span class="nb">p4</span>
+	i<span class="n">ndex</span> <span class="o">=</span> i<span class="n">ndex</span> <span class="o">-</span> <span class="mi">1</span>
+	<span class="k">if</span> i<span class="n">ndex</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">igoto</span> <span class="nl">endloop</span>
+		<span class="k">igoto</span> <span class="nl">loop</span>
+<span class="nl">endloop</span><span class="p">:</span> 
+<span class="kd">endin</span>
 
-<span class="comment">;#################################################</span>
+<span class="c1">;#################################################</span>
 
-<span class="comment">; Main vosim instrument. Sweeps from a fund1/form1 to fund2/form2,</span>
-<span class="comment">; trying for narrowest formant bandwidth (still quite wide by the looks of it)</span>
-<span class="comment">; p4:     amp</span>
-<span class="comment">; p5, p6: fund beg-end</span>
-<span class="comment">; p7, p8: form beg-end</span>
-<span class="comment">; p9:     amp decay (ignored)</span>
-<span class="comment">; p10:    pulse count (ignored - calc internally)</span>
-<span class="comment">; p11:    pulse length mod</span>
-<span class="comment">; p12:    skip (for tied events)</span>
-<span class="comment">; p13:    don't fade out (if followed by tied note)</span>
-<span class="oblock">instr</span> 1
-    kamp  <span class="opc">init</span>  p4
-    <span class="comment">; freq start, end</span>
-    kfund  <span class="opc">line</span>  p5, p3, p6
-    <span class="comment">; formant start, end</span>
-    kform  <span class="opc">line</span>  p7, p3, p8
+<span class="c1">; Main vosim instrument. Sweeps from a fund1/form1 to fund2/form2,</span>
+<span class="c1">; trying for narrowest formant bandwidth (still quite wide by the looks of it)</span>
+<span class="c1">; p4:     amp</span>
+<span class="c1">; p5, p6: fund beg-end</span>
+<span class="c1">; p7, p8: form beg-end</span>
+<span class="c1">; p9:     amp decay (ignored)</span>
+<span class="c1">; p10:    pulse count (ignored - calc internally)</span>
+<span class="c1">; p11:    pulse length mod</span>
+<span class="c1">; p12:    skip (for tied events)</span>
+<span class="c1">; p13:    don't fade out (if followed by tied note)</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    k<span class="n">amp</span>  <span class="nb">init</span>  <span class="nb">p4</span>
+    <span class="c1">; freq start, end</span>
+    k<span class="n">fund</span>  <span class="nb">line</span>  <span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>
+    <span class="c1">; formant start, end</span>
+    k<span class="n">form</span>  <span class="nb">line</span>  <span class="nb">p7</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p8</span>
 
-	<span class="comment">; Try for constant ratio burst/silence, and narrowest formant bandwidth</span>
-	kPulseCount  <span class="op">=</span> (kform <span class="op">/</span> kfund)  <span class="comment">;init p10</span>
-	<span class="comment">; Attempt to smooth steps between format bandwidths,</span>
-	<span class="comment">; increasing decay before we are forced to a lower pulse count</span>
-	kDecay <span class="op">=</span> kPulseCount<span class="op">/</span>(kform <span class="op">%</span> kfund)  <span class="comment">; init p9</span>
-	<span class="octrl">if</span> (kDecay <span class="op">*</span> kPulseCount) <span class="op">&gt;</span> kamp then
-		kDecay <span class="op">=</span> kamp <span class="op">/</span> kPulseCount
-	<span class="octrl">endif</span>
-	kDecay <span class="op">=</span> 0.3 <span class="op">*</span> kDecay
+	<span class="c1">; Try for constant ratio burst/silence, and narrowest formant bandwidth</span>
+	k<span class="n">PulseCount</span>  <span class="o">=</span> <span class="p">(</span>k<span class="n">form</span> <span class="o">/</span> k<span class="n">fund</span><span class="p">)</span>  <span class="c1">;init p10</span>
+	<span class="c1">; Attempt to smooth steps between format bandwidths,</span>
+	<span class="c1">; increasing decay before we are forced to a lower pulse count</span>
+	k<span class="n">Decay</span> <span class="o">=</span> k<span class="n">PulseCount</span><span class="o">/</span><span class="p">(</span>k<span class="n">form</span> <span class="o">%</span> k<span class="n">fund</span><span class="p">)</span>  <span class="c1">; init p9</span>
+	<span class="k">if</span> <span class="p">(</span>k<span class="n">Decay</span> <span class="o">*</span> k<span class="n">PulseCount</span><span class="p">)</span> <span class="o">&gt;</span> k<span class="n">amp</span> <span class="k">then</span>
+		k<span class="n">Decay</span> <span class="o">=</span> k<span class="n">amp</span> <span class="o">/</span> k<span class="n">PulseCount</span>
+	<span class="k">endif</span>
+	k<span class="n">Decay</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> k<span class="n">Decay</span>
 
-	kPulseFactor <span class="opc">init</span> p11
+	k<span class="n">PulseFactor</span> <span class="nb">init</span> <span class="nb">p11</span>
 	
-<span class="comment">;  ar	vosim	kamp, kFund, kForm, kDecay, kPulseCount, kPulseFactor, ifn [, iskip]</span>
-    ar1	<span class="opc">vosim</span> 	kamp, kfund, kform, kDecay, kPulseCount, kPulseFactor, 17, p12
+<span class="c1">;  ar	vosim	kamp, kFund, kForm, kDecay, kPulseCount, kPulseFactor, ifn [, iskip]</span>
+    a<span class="n">r1</span>	<span class="nb">vosim</span> 	k<span class="n">amp</span><span class="p">,</span> k<span class="n">fund</span><span class="p">,</span> k<span class="n">form</span><span class="p">,</span> k<span class="n">Decay</span><span class="p">,</span> k<span class="n">PulseCount</span><span class="p">,</span> k<span class="n">PulseFactor</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="nb">p12</span>
 
-    <span class="comment">; scale amplitude for 16-bit files, with quick fade out</span>
-    amp <span class="opc">init</span> 20000
-    <span class="octrl">if</span> (p13 <span class="op">!=</span> 0) <span class="octrl">goto</span> <span class="olabel">nofade</span>
-	amp <span class="opc">linseg</span> 20000, p3<span class="op">-</span>.02, 20000, .02, 0
-<span class="olabel">nofade</span><span class="op">:</span>
-	<span class="opc">out</span> ar1 <span class="op">*</span> amp
-<span class="oblock">endin</span>
+    <span class="c1">; scale amplitude for 16-bit files, with quick fade out</span>
+    a<span class="n">mp</span> <span class="nb">init</span> <span class="mi">20000</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">p13</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">goto</span> <span class="nl">nofade</span>
+	a<span class="n">mp</span> <span class="nb">linseg</span> <span class="mi">20000</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="mf">.02</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="mf">.02</span><span class="p">,</span> <span class="mi">0</span>
+<span class="nl">nofade</span><span class="p">:</span>
+	<span class="nb">out</span> a<span class="n">r1</span> <span class="o">*</span> a<span class="n">mp</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">f</span>1       0  32768    9  1    1  0   <span class="comment">; sine wave</span>
-<span class="stamnt">f</span>17      0  32768    9  0.5  1  0   <span class="comment">; half sine wave</span>
-<span class="stamnt">i</span>10 0 0 17 <span class="comment">; init run only, square table 17</span>
+<span class="nb">f</span><span class="mi">1</span>       <span class="mi">0</span>  <span class="mi">32768</span>    <span class="mi">9</span>  <span class="mi">1</span>    <span class="mi">1</span>  <span class="mi">0</span>   <span class="c1">; sine wave</span>
+<span class="nb">f</span><span class="mi">17</span>      <span class="mi">0</span>  <span class="mi">32768</span>    <span class="mi">9</span>  <span class="mf">0.5</span>  <span class="mi">1</span>  <span class="mi">0</span>   <span class="c1">; half sine wave</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">17</span> <span class="c1">; init run only, square table 17</span>
 
-<span class="comment">; Vosim score</span>
+<span class="c1">; Vosim score</span>
 
-<span class="comment">; Picking some formants from the table in Csound manual</span>
+<span class="c1">; Picking some formants from the table in Csound manual</span>
 
-<span class="comment">;      p4=amp  fund     form      decay pulses pulsemod [skip] nofade</span>
-<span class="comment">; tenor a -&gt; e</span>
-<span class="stamnt">i</span>1 0  .5  .5   280 240  650  400   .03   5      1
-<span class="stamnt">i</span>1 .  .   .3   .   .    1080 1700  .03   5      .
-<span class="stamnt">i</span>1 .  .   .2   .   .    2650 2600  .03   5      .
-<span class="stamnt">i</span>1 .  .   .15  .   .    2900 3200  .03   5      .
+<span class="c1">;      p4=amp  fund     form      decay pulses pulsemod [skip] nofade</span>
+<span class="c1">; tenor a -&gt; e</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span>  <span class="mf">.5</span>  <span class="mf">.5</span>   <span class="mi">280</span> <span class="mi">240</span>  <span class="mi">650</span>  <span class="mi">400</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>  <span class="o">.</span>   <span class="mf">.3</span>   <span class="o">.</span>   <span class="o">.</span>    <span class="mi">1080</span> <span class="mi">1700</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>  <span class="o">.</span>   <span class="mf">.2</span>   <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2650</span> <span class="mi">2600</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>  <span class="o">.</span>   <span class="mf">.15</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2900</span> <span class="mi">3200</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>
 
-<span class="comment">; tenor a -&gt; o</span>
-<span class="stamnt">i</span>1 0.6 .2  .5  300 210  650  400   .03   5      1      0      1
-<span class="stamnt">i</span>1 .   .   .3  .   .    1080 800   .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .2  .   .    2650 2600  .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .15 .   .    2900 2800  .03   5      .      .      .
-<span class="comment">; tenor o -&gt; aah</span>
-<span class="stamnt">i</span>1 .8  .3  .5  210 180  400  650   .03   5      1      1      1
-<span class="stamnt">i</span>1 .   .   .3  .   .    800  1080  .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .2  .   .    2600 2650  .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .15 .   .    2800 2900  .03   5      .      .      .
-<span class="comment">; tenor aa -&gt; i</span>
-<span class="stamnt">i</span>1 1.1 .2  .5  180 250  650  290   .03   5      1      1      1
-<span class="stamnt">i</span>1 .   .   .3  .   .    1080 1870  .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .2  .   .    2650 2800  .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .15 .   .    2900 3250  .03   5      .      .      .
-<span class="comment">; tenor i -&gt; u</span>
-<span class="stamnt">i</span>1 1.3 .3  .5  250 270  290  350   .03   5      1      1      0
-<span class="stamnt">i</span>1 .   .   .3  .   .    1870 600   .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .2  .   .    2800 2700  .03   5      .      .      .
-<span class="stamnt">i</span>1 .   .   .15 .   .    3250 2900  .03   5      .      .      .
+<span class="c1">; tenor a -&gt; o</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">0.6</span> <span class="mf">.2</span>  <span class="mf">.5</span>  <span class="mi">300</span> <span class="mi">210</span>  <span class="mi">650</span>  <span class="mi">400</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="mi">1</span>      <span class="mi">0</span>      <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.3</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">1080</span> <span class="mi">800</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.2</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2650</span> <span class="mi">2600</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.15</span> <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2900</span> <span class="mi">2800</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="c1">; tenor o -&gt; aah</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">.8</span>  <span class="mf">.3</span>  <span class="mf">.5</span>  <span class="mi">210</span> <span class="mi">180</span>  <span class="mi">400</span>  <span class="mi">650</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="mi">1</span>      <span class="mi">1</span>      <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.3</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">800</span>  <span class="mi">1080</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.2</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2600</span> <span class="mi">2650</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.15</span> <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2800</span> <span class="mi">2900</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="c1">; tenor aa -&gt; i</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">1.1</span> <span class="mf">.2</span>  <span class="mf">.5</span>  <span class="mi">180</span> <span class="mi">250</span>  <span class="mi">650</span>  <span class="mi">290</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="mi">1</span>      <span class="mi">1</span>      <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.3</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">1080</span> <span class="mi">1870</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.2</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2650</span> <span class="mi">2800</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.15</span> <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2900</span> <span class="mi">3250</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="c1">; tenor i -&gt; u</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mf">1.3</span> <span class="mf">.3</span>  <span class="mf">.5</span>  <span class="mi">250</span> <span class="mi">270</span>  <span class="mi">290</span>  <span class="mi">350</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="mi">1</span>      <span class="mi">1</span>      <span class="mi">0</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.3</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">1870</span> <span class="mi">600</span>   <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.2</span>  <span class="o">.</span>   <span class="o">.</span>    <span class="mi">2800</span> <span class="mi">2700</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="o">.</span>   <span class="o">.</span>   <span class="mf">.15</span> <span class="o">.</span>   <span class="o">.</span>    <span class="mi">3250</span> <span class="mi">2900</span>  <span class="mf">.03</span>   <span class="mi">5</span>      <span class="o">.</span>      <span class="o">.</span>      <span class="o">.</span>
 
-<span class="stamnt">e</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -313,7 +313,7 @@ but some other artefacts could be created.</p>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156227184"></a>
+        <a id="idm1488506224"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>,
@@ -321,7 +321,7 @@ but some other artefacts could be created.</p>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp156230128"></a>
+        <a id="idm1488504560"></a>
         <h2>Credits</h2>
         <p>
       </p>

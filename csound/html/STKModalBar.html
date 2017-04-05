@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>STKModalBar</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="STKMandolin.html" title="STKMandolin" />
@@ -38,18 +39,18 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143089440"></a>
+        <a id="idm1501732336"></a>
         <h2>Description</h2>
         <p>
       This opcode is a resonant bar instrument.It has a number of different struck bar instruments.</p>
       </div>
       <div class="refsect1">
-        <a id="idp143093600"></a>
+        <a id="idm1501722992"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKModalBar</strong></span> ifrequency, iamplitude, [khard, kv1[, kpos, kv2[, klfo, kv3[, klfodepth, kv4[, kmix, kv5[, kvol, kv6[, kinstr, kv7]]]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp143095920"></a>
+        <a id="idm1501728496"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -59,7 +60,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143158464"></a>
+        <a id="idm1501723888"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>khard</em></span> -- controller 2, hardness of the stick. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>kpos</em></span> -- controller 4, stick position. Value range of kv2 is 0-127.</p>
@@ -70,7 +71,7 @@
         <p><span class="emphasis"><em>kinstr</em></span> -- controller 16, instrument presets (0 = marimba, 1 = vibraphone, 2 = agogo, 3 = wood1, 4 = reso, 5 = wood2, 6 = beats, 7 = two fixed, 8 = clump). Value range of kv7 is 0-16.</p>
       </div>
       <div class="refsect1">
-        <a id="idp143164592"></a>
+        <a id="idm1501976304"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -96,55 +97,54 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp143169072"></a>
+        <a id="idm1501978224"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the STKModalBar opcode. It uses the file <a class="ulink" href="examples/STKModalBar.csd" target="_top"><em class="citetitle">STKModalBar.csd</em></a>.
+      Here is an example of the STKModalBar opcode. It uses the file <a class="ulink" href="examples/STKModalBar.csd.html" target="_top"><em class="citetitle">STKModalBar.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idp143170944"></a>
+          <a id="idm1501976048"></a>
           <p class="title">
-            <strong>Example 886. Example of the STKModalBar opcode.</strong>
+            <strong>Example 912. Example of the STKModalBar opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp266106912"></a>
-              <a class="ulink" href="examples/STKModalBar.csd.html" target="_top">Play</a>
+              <a id="idm1322629360"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o STKModalBar.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o STKModalBar.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifrq	<span class="op">=</span>	p4
-kv1	<span class="op">=</span>	p5					<span class="comment">;stick hardness					;</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
+k<span class="n">v1</span>	<span class="o">=</span>	<span class="nb">p5</span>					<span class="c1">;stick hardness					;</span>
 
-asig	<span class="opc">STKModalBar</span> <span class="opc">cpspch</span>(ifrq), 1, 2, kv1, 4, 120, 11, 0, 1, 0, 8, 10, 16, 1
-asig	<span class="op">=</span>	asig <span class="op">*</span> 3				<span class="comment">;amplify</span>
-	<span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span>	<span class="nb">STKModalBar</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">frq</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span> <span class="o">*</span> <span class="mi">3</span>				<span class="c1">;amplify</span>
+	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2 8.00 0 
-<span class="stamnt">i</span> 1 + 2 8.05 120
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">8.00</span> <span class="mi">0</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="mf">8.05</span> <span class="mi">120</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -153,7 +153,7 @@ asig	<span class="op">=</span>	asig <span class="op">*</span> 3				<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143172864"></a>
+        <a id="idm1501974896"></a>
         <h2>Credits</h2>
         <p>
       </p>

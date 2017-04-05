@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN30</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN28.html" title="GEN28" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207003696"></a>
+        <a id="idm1437109488"></a>
         <h2>Description</h2>
         <p>
       Extracts a range of harmonic partials from an existing waveform.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207004880"></a>
+        <a id="idm1437104368"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size  30  src  minh maxh [ref_sr] [interp]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp207075232"></a>
+        <a id="idm1437103600"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>src</em></span> -- source ftable
@@ -75,88 +76,87 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207085536"></a>
+        <a id="idm1437092208"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the GEN30 routine. It uses the files <a class="ulink" href="examples/gen30.csd" target="_top"><em class="citetitle">gen30.csd</em></a>.
+      Here is an example of the GEN30 routine. It uses the files <a class="ulink" href="examples/gen30.csd.html" target="_top"><em class="citetitle">gen30.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp207087392"></a>
+          <a id="idm1437094512"></a>
           <p class="title">
-            <strong>Example 1151. Example of the GEN30 routine.</strong>
+            <strong>Example 1179. Example of the GEN30 routine.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp275923472"></a>
-              <a class="ulink" href="examples/gen30.csd.html" target="_top">Play</a>
+              <a id="idm1295216112"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen30.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen30.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">;a simplified example of Istvan Varga</span>
-<span class="ohdr">sr</span> <span class="op">=</span>  44100
-<span class="ohdr">ksmps</span> <span class="op">=</span>  32
-<span class="ohdr">nchnls</span> <span class="op">=</span>  2
-<span class="ohdr">0dbfs</span>   <span class="op">=</span> 1
+<span class="c1">;a simplified example of Istvan Varga</span>
+<span class="vg">sr</span> <span class="o">=</span>  <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span>  <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span>  <span class="mi">2</span>
+<span class="vg">0dbfs</span>   <span class="o">=</span> <span class="mi">1</span>
 
-isaw	<span class="ohdr">ftgen</span> 1, 0, 16384, 7, 1, 16384, <span class="op">-</span>1						<span class="comment">;sawtooth wave </span>
-iFM	<span class="ohdr">ftgen</span> 3, 0, 4096, 7, 0, 512, 0.25, 512, 1, 512, 0.25, 512,	\
-			     0, 512, <span class="op">-</span>0.25, 512, <span class="op">-</span>1, 512, <span class="op">-</span>0.25, 512, 0			<span class="comment">;FM waveform</span>
-iAM	<span class="ohdr">ftgen</span> 4, 0, 4096, 5, 1, 4096, 0.01						<span class="comment">;AM waveform</span>
-iEQ	<span class="ohdr">ftgen</span> 5, 0, 1024, 5, 1, 512, 32, 512, 1						<span class="comment">;FM to EQ</span>
-isine	<span class="ohdr">ftgen</span> 6, 0, 1024, 10, 1								<span class="comment">;sine wave</span>
+i<span class="n">saw</span>	<span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>						<span class="c1">;sawtooth wave </span>
+i<span class="n">FM</span>	<span class="nb">ftgen</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span>	\
+			     <span class="mi">0</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">0</span>			<span class="c1">;FM waveform</span>
+i<span class="n">AM</span>	<span class="nb">ftgen</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mf">0.01</span>						<span class="c1">;AM waveform</span>
+i<span class="n">EQ</span>	<span class="nb">ftgen</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;FM to EQ</span>
+i<span class="n">sine</span>	<span class="nb">ftgen</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>								<span class="c1">;sine wave</span>
 
-<span class="op">/</span><span class="op">*</span> generate bandlimited sawtooth waves <span class="op">*</span><span class="op">/</span>
-i0	<span class="op">=</span>  0
-<span class="olabel">loop1</span><span class="op">:</span>
-imaxh	<span class="op">=</span>  <span class="ohdr">sr</span> <span class="op">/</span> (2 <span class="op">*</span> 440.0 <span class="op">*</span> <span class="opc">exp</span>(<span class="opc">log</span>(2.0) <span class="op">*</span> (i0 <span class="op">-</span> 69) <span class="op">/</span> 12))
-i_	<span class="ohdr">ftgen</span> i0 <span class="op">+</span> 10, 0, 4096, <span class="op">-</span>30, 1, 1, imaxh					<span class="comment">;use gen 30</span>
-i0	<span class="op">=</span>  i0 <span class="op">+</span> 1
-	<span class="octrl">if</span> (i0 <span class="op">&lt;</span> 127.5) <span class="octrl">igoto</span> <span class="olabel">loop1</span>
+<span class="cm">/* generate bandlimited sawtooth waves */</span>
+i<span class="n">0</span>	<span class="o">=</span>  <span class="mi">0</span>
+<span class="nl">loop1</span><span class="p">:</span>
+i<span class="n">maxh</span>	<span class="o">=</span>  <span class="vg">sr</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">440.0</span> <span class="o">*</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>i<span class="n">0</span> <span class="o">-</span> <span class="mi">69</span><span class="p">)</span> <span class="o">/</span> <span class="mi">12</span><span class="p">))</span>
+i<span class="n">_</span>	<span class="nb">ftgen</span> i<span class="n">0</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">maxh</span>					<span class="c1">;use gen 30</span>
+i<span class="n">0</span>	<span class="o">=</span>  i<span class="n">0</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="k">if</span> <span class="p">(</span>i<span class="n">0</span> <span class="o">&lt;</span> <span class="mf">127.5</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">loop1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kcps	<span class="op">=</span>  440.0 <span class="op">*</span> <span class="opc">exp</span>(<span class="opc">log</span>(2.0) <span class="op">*</span> (p4 <span class="op">-</span> 69) <span class="op">/</span> 12)					<span class="comment">;note frequency</span>
-klpmaxf	limit p5 <span class="op">*</span> kcps, 1000.0, 12000.0						<span class="comment">;lowpass max. frequency</span>
+k<span class="n">cps</span>	<span class="o">=</span>  <span class="mf">440.0</span> <span class="o">*</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">p4</span> <span class="o">-</span> <span class="mi">69</span><span class="p">)</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span>					<span class="c1">;note frequency</span>
+k<span class="n">lpmaxf</span>	<span class="nb">limit</span> <span class="nb">p5</span> <span class="o">*</span> k<span class="n">cps</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">12000.0</span>						<span class="c1">;lowpass max. frequency</span>
 
-kfmd1	<span class="op">=</span>  0.03 <span class="op">*</span> kcps									<span class="comment">;FM depth in Hz</span>
-kamfr	<span class="op">=</span>  kcps <span class="op">*</span> 0.02									<span class="comment">;AM frequency</span>
-kamfr2	<span class="op">=</span>  kcps <span class="op">*</span> 0.1
+k<span class="n">fmd1</span>	<span class="o">=</span>  <span class="mf">0.03</span> <span class="o">*</span> k<span class="n">cps</span>									<span class="c1">;FM depth in Hz</span>
+k<span class="n">amfr</span>	<span class="o">=</span>  k<span class="n">cps</span> <span class="o">*</span> <span class="mf">0.02</span>									<span class="c1">;AM frequency</span>
+k<span class="n">amfr2</span>	<span class="o">=</span>  k<span class="n">cps</span> <span class="o">*</span> <span class="mf">0.1</span>
 
-kfnum	<span class="op">=</span>  (10 <span class="op">+</span> 69 <span class="op">+</span> 0.5 <span class="op">+</span> 12 <span class="op">*</span> <span class="opc">log</span>(kcps <span class="op">/</span> 440.0) <span class="op">/</span> <span class="opc">log</span>(2.0))				<span class="comment">;table number</span>
-aenv	<span class="opc">linseg</span> 0, p3<span class="op">*</span>0.25, 1, p3<span class="op">*</span>0.75, 0						<span class="comment">;amp. envelope</span>
+k<span class="n">fnum</span>	<span class="o">=</span>  <span class="p">(</span><span class="mi">10</span> <span class="o">+</span> <span class="mi">69</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="nb">log</span><span class="p">(</span>k<span class="n">cps</span> <span class="o">/</span> <span class="mf">440.0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">log</span><span class="p">(</span><span class="mf">2.0</span><span class="p">))</span>				<span class="c1">;table number</span>
+a<span class="n">env</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">0</span>						<span class="c1">;amp. envelope</span>
 
-asig	<span class="opc">oscbnk</span> kcps, 0.0, kfmd1, 0.0, 40, 200, 0.1, 0.2, 0, 0, 144,	      \
-		0.0, klpmaxf, 0.0, 0.0, 1.5, 1.5, 2, kfnum, 3, 0, 5, 5, 5
-asig	<span class="op">=</span> asig <span class="op">*</span> aenv<span class="op">*</span>.03
-<span class="opc">outs</span> asig, asig
+a<span class="n">sig</span>	<span class="nb">oscbnk</span> k<span class="n">cps</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> k<span class="n">fmd1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">144</span><span class="p">,</span>	      \
+		<span class="mf">0.0</span><span class="p">,</span> k<span class="n">lpmaxf</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">fnum</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span>
+a<span class="n">sig</span>	<span class="o">=</span> a<span class="n">sig</span> <span class="o">*</span> a<span class="n">env</span><span class="o">*</span><span class="mf">.03</span>
+<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 1 0 6 41 10
-<span class="stamnt">i</span> 1 0 6 60
-<span class="stamnt">i</span> 1 0 6 65
-<span class="stamnt">i</span> 1 0 6 69
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 1 0 6 41 64
-<span class="stamnt">i</span> 1 0 6 60
-<span class="stamnt">i</span> 1 0 6 65
-<span class="stamnt">i</span> 1 0 6 69
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">41</span> <span class="mi">10</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">60</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">65</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">69</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">41</span> <span class="mi">64</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">60</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">65</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">69</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -165,7 +165,7 @@ asig	<span class="op">=</span> asig <span class="op">*</span> aenv<span class="o
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207091680"></a>
+        <a id="idm1437097456"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga</p>
         <p>New in version 4.16</p>

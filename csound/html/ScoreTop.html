@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>The Standard Numeric Score</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="PartOverview.html" title="Part I. Overview" />
     <link rel="prev" href="functional.html" title="Function Syntax in Csound6" />
@@ -148,6 +149,11 @@
 <span class="stamnt">i</span>1   1.5       .5               ; only p1 to p3 are carried here</pre>
           </div>
           <p>
+    </p>
+          <p>
+      An alternative to using ! is to switch automatic carrying off
+      apart from p1, p2 and p3.  This can be done with the score
+      opcode statement "C 0", and can be restored with "C 1".
     </p>
         </div>
         <div class="section">

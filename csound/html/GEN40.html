@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN40</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN34.html" title="GEN34" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207324192"></a>
+        <a id="idm1436995696"></a>
         <h2>Description</h2>
         <p>
       Generates a continuous random distribution function starting from the shape of a user-defined distribution histogram.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207367552"></a>
+        <a id="idm1436994544"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 40 shapetab</pre>
       </div>
       <div class="refsect1">
-        <a id="idp207369488"></a>
+        <a id="idm1436990192"></a>
         <h2>Performance</h2>
         <p>
       The shape of histogram must be stored in a previously defined table, in fact shapetab argument must be filled with the number of such table.
@@ -63,64 +64,63 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207373760"></a>
+        <a id="idm1436993264"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the GEN40 generator. It uses the file <a class="ulink" href="examples/gen40.csd" target="_top"><em class="citetitle">gen40.csd</em></a>.
+      Here is an example of the GEN40 generator. It uses the file <a class="ulink" href="examples/gen40.csd.html" target="_top"><em class="citetitle">gen40.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idp207375536"></a>
+          <a id="idm1436987888"></a>
           <p class="title">
-            <strong>Example 1155. Example of the GEN40 generator.</strong>
+            <strong>Example 1183. Example of the GEN40 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp276835376"></a>
-              <a class="ulink" href="examples/gen40.csd.html" target="_top">Play</a>
+              <a id="idm1294174320"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o GEN40.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o GEN40.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; every run time same values</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; every run time same values</span>
 
-kuser <span class="opc">cuserrnd</span> 0, 100, 1
-      <span class="opc">printk</span> .2, kuser
-asig  <span class="opc">poscil</span> .5, 220<span class="op">+</span>kuser, 3
-      <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+k<span class="n">user</span> <span class="nb">cuserrnd</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span>
+      <span class="nb">printk</span> <span class="mf">.2</span><span class="p">,</span> k<span class="n">user</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">220</span><span class="o">+</span>k<span class="n">user</span><span class="p">,</span> <span class="mi">3</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">; every run time different values</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">; every run time different values</span>
 
-      <span class="ohdr">seed</span> 0
-kuser <span class="opc">cuserrnd</span> 0, 100, 1
-      <span class="opc">printk</span> .2, kuser
-asig  <span class="opc">poscil</span> .5, 220<span class="op">+</span>kuser, 3
-      <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16 -7 1 4 0 8 0 4 1	<span class="comment">;distrubution using GEN07</span>
-<span class="stamnt">f</span> 2 0 16384 40 1		<span class="comment">;GEN40 is to be used with cuserrnd</span>
-<span class="stamnt">f</span> 3 0 8192 10 1			<span class="comment">;sine</span>
+      <span class="nb">seed</span> <span class="mi">0</span>
+k<span class="n">user</span> <span class="nb">cuserrnd</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span>
+      <span class="nb">printk</span> <span class="mf">.2</span><span class="p">,</span> k<span class="n">user</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">220</span><span class="o">+</span>k<span class="n">user</span><span class="p">,</span> <span class="mi">3</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">0</span> <span class="mi">8</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">1</span>	<span class="c1">;distrubution using GEN07</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">40</span> <span class="mi">1</span>		<span class="c1">;GEN40 is to be used with cuserrnd</span>
+<span class="nb">f</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>			<span class="c1">;sine</span>
 
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">i</span> 2 3 2
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">2</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -174,7 +174,7 @@ WARNING: Seeding from current time 2006647442
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp207385760"></a>
+        <a id="idm1436973296"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
       </div>

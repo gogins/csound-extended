@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>STKVoicForm</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="STKTubeBell.html" title="STKTubeBell" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143753072"></a>
+        <a id="idm1501237872"></a>
         <h2>Description</h2>
         <p>
       STKVoicForm is a four formant synthesis instrument. 
@@ -46,12 +47,12 @@ This instrument contains an excitation singing wavetable (looping wave with rand
 Measured formant data is included, and enough data is there to support either parallel or cascade synthesis. In the floating point case cascade synthesis is the most natural so that's what you'll find here.</p>
       </div>
       <div class="refsect1">
-        <a id="idp143757728"></a>
+        <a id="idm1501225072"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKVoicForm</strong></span> ifrequency, iamplitude, [kmix, kv1[, ksel, kv2[, klfo, kv3[, klfodepth, kv4[, kloud, kv5]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp143760016"></a>
+        <a id="idm1501228528"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -61,7 +62,7 @@ Measured formant data is included, and enough data is there to support either pa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143824928"></a>
+        <a id="idm1501223152"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kmix</em></span> -- controller 2, voiced/unvoiced mix. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>ksel</em></span> -- controller 4, vowel/phoneme selection. Value range of kv2 is 0-127.</p>
@@ -70,7 +71,7 @@ Measured formant data is included, and enough data is there to support either pa
         <p><span class="emphasis"><em>kloud</em></span> -- controller 128, loudness (spectral tilt). Value range of kv5 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idp143829392"></a>
+        <a id="idm1501216752"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -96,56 +97,55 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp143833872"></a>
+        <a id="idm1501216368"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKVoicForm opcode. 
-      It uses the file <a class="ulink" href="examples/STKVoicForm.csd" target="_top"><em class="citetitle">STKVoicForm.csd</em></a>.
+      It uses the file <a class="ulink" href="examples/STKVoicForm.csd.html" target="_top"><em class="citetitle">STKVoicForm.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idp143835760"></a>
+          <a id="idm1501219696"></a>
           <p class="title">
-            <strong>Example 898. Example of the STKVoicForm opcode.</strong>
+            <strong>Example 924. Example of the STKVoicForm opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp266528480"></a>
-              <a class="ulink" href="examples/STKVoicForm.csd.html" target="_top">Play</a>
+              <a id="idm1321483632"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o STKVoicForm.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o STKVoicForm.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifrq	<span class="op">=</span>	p4
-kv2	<span class="opc">line</span>	p5, p3, p6				<span class="comment">;Vowel/Phoneme Selection</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
+k<span class="n">v2</span>	<span class="nb">line</span>	<span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>				<span class="c1">;Vowel/Phoneme Selection</span>
 
-asig	<span class="opc">STKVoicForm</span> <span class="opc">cpspch</span>(p4), 1, 2, 1, 4, kv2, 128, 100, 1, 10, 11, 100
-asig	<span class="op">=</span>	asig <span class="op">*</span> .5				<span class="comment">;too loud</span>
-	<span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span>	<span class="nb">STKVoicForm</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">100</span>
+a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span> <span class="o">*</span> <span class="mf">.5</span>				<span class="c1">;too loud</span>
+	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 5  7.00 100 0
-<span class="stamnt">i</span> 1 + 10 7.00 1  50
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>  <span class="mf">7.00</span> <span class="mi">100</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">7.00</span> <span class="mi">1</span>  <span class="mi">50</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -154,7 +154,7 @@ asig	<span class="op">=</span>	asig <span class="op">*</span> .5				<span class=
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp143837680"></a>
+        <a id="idm1501221744"></a>
         <h2>Credits</h2>
         <p>
       </p>

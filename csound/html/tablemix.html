@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tablemix</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tablekt.html" title="tablekt" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp146795392"></a>
+        <a id="idm1498181744"></a>
         <h2>Description</h2>
         <p>
       Mixes two tables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146839776"></a>
+        <a id="idm1498181616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tablemix</strong></span> kdft, kdoff, klen, ks1ft, ks1off, ks1g, ks2ft, ks2off, ks2g</pre>
       </div>
       <div class="refsect1">
-        <a id="idp146841760"></a>
+        <a id="idm1498182128"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kdft</em></span> -- Destination function table.
@@ -90,57 +91,56 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146858368"></a>
+        <a id="idm1498170480"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tablemix opcode. It uses the file <a class="ulink" href="examples/tablemix.csd" target="_top"><em class="citetitle">tablemix.csd</em></a>.
+      Here is an example of the tablemix opcode. It uses the file <a class="ulink" href="examples/tablemix.csd.html" target="_top"><em class="citetitle">tablemix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp146860224"></a>
+          <a id="idm1498168560"></a>
           <p class="title">
-            <strong>Example 935. Example of the tablemix opcode.</strong>
+            <strong>Example 961. Example of the tablemix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268130992"></a>
-              <a class="ulink" href="examples/tablemix.csd.html" target="_top">Play</a>
+              <a id="idm1318003824"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tablemix.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tablemix.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-gisinoid <span class="ohdr">ftgen</span> 1, 0, 256, 10, 1, 0, 0, .4		<span class="comment">;sinoid</span>
-gisaw    <span class="ohdr">ftgen</span> 2, 0, 1024, 7, 0, 256, 1			<span class="comment">;saw</span>
-gimix    <span class="ohdr">ftgen</span> 100, 0, 256, 7, 0, 256, 1		<span class="comment">;destination table</span>
+gi<span class="n">sinoid</span> <span class="nb">ftgen</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.4</span>		<span class="c1">;sinoid</span>
+gi<span class="n">saw</span>    <span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;saw</span>
+gi<span class="n">mix</span>    <span class="nb">ftgen</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;destination table</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kgain <span class="opc">linseg</span> 0, p3<span class="op">*</span>.5, .5, p3<span class="op">*</span>.5, 0
-      <span class="opc">tablemix</span> 100, 0, 256, 1, 0, 1, 2, 0, kgain
-asig  <span class="opc">poscil</span> .5, 110, gimix			<span class="comment">;mix table 1 &amp; 2			</span>
-      <span class="opc">outs</span>   asig, asig
+k<span class="n">gain</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>
+      <span class="nb">tablemix</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> k<span class="n">gain</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> gi<span class="n">mix</span>			<span class="c1">;mix table 1 &amp; 2			</span>
+      <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span>1 0 10
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -149,7 +149,7 @@ asig  <span class="opc">poscil</span> .5, 110, gimix			<span class="comment">;mi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146864512"></a>
+        <a id="idm1498168816"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tablecopy.html" title="tablecopy"><em class="citetitle">tablecopy</em></a>,
@@ -160,7 +160,7 @@ asig  <span class="opc">poscil</span> .5, 110, gimix			<span class="comment">;mi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146870400"></a>
+        <a id="idm1498156400"></a>
         <h2>Credits</h2>
         <p>
       </p>

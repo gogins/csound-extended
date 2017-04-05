@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>moscil</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="moogvcf2.html" title="moogvcf2" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp116635248"></a>
+        <a id="idm1528799728"></a>
         <h2>Description</h2>
         <p>
       Sends a stream of the MIDI notes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116716640"></a>
+        <a id="idm1528796400"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>moscil</strong></span> kchn, knum, kvel, kdur, kpause</pre>
       </div>
       <div class="refsect1">
-        <a id="idp116718528"></a>
+        <a id="idm1528797168"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kchn</em></span> -- MIDI channel number (1-16)
@@ -75,65 +76,63 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116728016"></a>
+        <a id="idm1528785776"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the moscil opcode. It uses the file <a class="ulink" href="examples/moscil.csd" target="_top"><em class="citetitle">moscil.csd</em></a>.
+      Here is an example of the moscil opcode. It uses the file <a class="ulink" href="examples/moscil.csd.html" target="_top"><em class="citetitle">moscil.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp116729792"></a>
+          <a id="idm1528791664"></a>
           <p class="title">
-            <strong>Example 549. Example of the moscil opcode.</strong>
+            <strong>Example 565. Example of the moscil opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <p>This example generates a stream of notes for every note received on the MIDI input. It generates MIDI notes on csound's MIDI output, so be sure to connect something.</p>
             <div class="refsect1">
-              <a id="idp254169920"></a>
-              <a class="ulink" href="examples/moscil.csd.html" target="_top">Play</a>
+              <a id="idm1352926320"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
- 
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d         -M0  -Q1<span class="comment">;;;RT audio I/O with MIDI in</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span> 
+<span class="nt">&lt;CsOptions&gt;</span> 
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d         -M0  -Q1<span class="c1">;;;RT audio I/O with MIDI in</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="comment">; Example by Giorgio Zucco 2007</span>
+<span class="c1">; Example by Giorgio Zucco 2007</span>
 
 
-<span class="oblock">instr</span> 1  <span class="comment">;Triggered by MIDI notes on channel 1</span>
+<span class="kd">instr</span> <span class="nf">1</span>  <span class="c1">;Triggered by MIDI notes on channel 1</span>
 
-  inote <span class="opc">notnum</span>
-  ivel 	<span class="opc">veloc</span>
+  i<span class="n">note</span> <span class="nb">notnum</span>
+  i<span class="n">vel</span> 	<span class="nb">veloc</span>
 
-  kpitch <span class="op">=</span> 40
-  kfreq  <span class="op">=</span> 2
+  k<span class="n">pitch</span> <span class="o">=</span> <span class="mi">40</span>
+  k<span class="n">freq</span>  <span class="o">=</span> <span class="mi">2</span>
 
-  kdur   <span class="op">=</span>  .04
-  kpause <span class="op">=</span>  .1
+  k<span class="n">dur</span>   <span class="o">=</span>  <span class="mf">.04</span>
+  k<span class="n">pause</span> <span class="o">=</span>  <span class="mf">.1</span>
 
-  k1 	<span class="opc">lfo</span> 	kpitch, kfreq,5
+  k<span class="n">1</span> 	<span class="nb">lfo</span> 	k<span class="n">pitch</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span><span class="mi">5</span>
 
-  <span class="comment">;plays a stream of notes of kdur duration on MIDI channel 1</span>
-  <span class="opc">moscil</span>  1, inote <span class="op">+</span> k1, ivel,   kdur, kpause
+  <span class="c1">;plays a stream of notes of kdur duration on MIDI channel 1</span>
+  <span class="nb">moscil</span>  <span class="mi">1</span><span class="p">,</span> i<span class="n">note</span> <span class="o">+</span> k<span class="n">1</span><span class="p">,</span> i<span class="n">vel</span><span class="p">,</span>   k<span class="n">dur</span><span class="p">,</span> k<span class="n">pause</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; Dummy ftable</span>
-<span class="stamnt">f</span>0 60
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Dummy ftable</span>
+<span class="nb">f</span><span class="mi">0</span> <span class="mi">60</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -142,7 +141,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116734640"></a>
+        <a id="idm1528780016"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midion.html" title="midion"><em class="citetitle">midion</em></a>,
@@ -154,7 +153,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp116741488"></a>
+        <a id="idm1528780656"></a>
         <h2>Credits</h2>
         <p>
       </p>

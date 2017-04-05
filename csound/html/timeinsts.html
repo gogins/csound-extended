@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>timeinsts</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="timeinstk.html" title="timeinstk" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp149149904"></a>
+        <a id="idm1495281520"></a>
         <h2>Description</h2>
         <p>
       Read absolute time, in seconds, since the start of an instance of an instrument.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149230896"></a>
+        <a id="idm1495278192"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>timeinsts</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idp149232944"></a>
+        <a id="idm1495273456"></a>
         <h2>Performance</h2>
         <p>
       Time in seconds is available with <span class="emphasis"><em>timeinsts</em></span>. This would return 0.5 after half a second.
@@ -63,59 +64,58 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149237728"></a>
+        <a id="idm1495271792"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the timeinsts opcode. It uses the file <a class="ulink" href="examples/timeinsts.csd" target="_top"><em class="citetitle">timeinsts.csd</em></a>.
+      Here is an example of the timeinsts opcode. It uses the file <a class="ulink" href="examples/timeinsts.csd.html" target="_top"><em class="citetitle">timeinsts.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp149239504"></a>
+          <a id="idm1495272688"></a>
           <p class="title">
-            <strong>Example 960. Example of the timeinsts opcode.</strong>
+            <strong>Example 986. Example of the timeinsts opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp269002896"></a>
-              <a class="ulink" href="examples/timeinsts.csd.html" target="_top">Play</a>
+              <a id="idm1315555312"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o timeinsts.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o timeinsts.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-giSine <span class="ohdr">ftgen</span> 0, 0, 2^10, 10, 1
+gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">^</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-kvib <span class="opc">init</span> 1
-ktim <span class="opc">timeinsts</span>				<span class="comment">;read time </span>
+k<span class="n">vib</span> <span class="nb">init</span> <span class="mi">1</span>
+k<span class="n">tim</span> <span class="nb">timeinsts</span>				<span class="c1">;read time </span>
 
-<span class="octrl">if</span> ktim <span class="op">&gt;</span> 2 then			<span class="comment">;do something after 2 seconds</span>
-   kvib <span class="opc">oscili</span> 2, 3, giSine		<span class="comment">;make a vibrato</span>
-<span class="octrl">endif</span>
+<span class="k">if</span> k<span class="n">tim</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">then</span>			<span class="c1">;do something after 2 seconds</span>
+   k<span class="n">vib</span> <span class="nb">oscili</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> gi<span class="n">Sine</span>		<span class="c1">;make a vibrato</span>
+<span class="k">endif</span>
 
-asig <span class="opc">poscil</span> .5, 600<span class="op">+</span>kvib, giSine	<span class="comment">;add vibrato</span>
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">600</span><span class="o">+</span>k<span class="n">vib</span><span class="p">,</span> gi<span class="n">Sine</span>	<span class="c1">;add vibrato</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span> 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span> 
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -124,14 +124,14 @@ asig <span class="opc">poscil</span> .5, 600<span class="op">+</span>kvib, giSin
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149243792"></a>
+        <a id="idm1495269488"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="timeinstk.html" title="timeinstk"><em class="citetitle">timeinstk</em></a>, <a class="link" href="timek.html" title="timek"><em class="citetitle">timek</em></a>, <a class="link" href="times.html" title="times"><em class="citetitle">times</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149247760"></a>
+        <a id="idm1495269360"></a>
         <h2>Credits</h2>
         <p>
       </p>

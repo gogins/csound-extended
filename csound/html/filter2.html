@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>filter2</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="fft.html" title="fft" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92898208"></a>
+        <a id="idm1553008752"></a>
         <h2>Description</h2>
         <p>
       General purpose custom filter with no time-varying pole control. The filter coefficients implement the following difference equation:
@@ -64,20 +65,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92965296"></a>
+        <a id="idm1553002480"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>filter2</strong></span> asig, iM, iN, ib0, ib1, ..., ibM, ia1, ia2, ..., iaN</pre>
         <pre class="synopsis">kres <span class="command"><strong>filter2</strong></span> ksig, iM, iN, ib0, ib1, ..., ibM, ia1, ia2, ..., iaN</pre>
       </div>
       <div class="refsect1">
-        <a id="idp92968976"></a>
+        <a id="idm1553000944"></a>
         <h2>Initialization</h2>
         <p>
       At initialization the number of zeros and poles of the filter are specified along with the corresponding zero and pole coefficients. The coefficients must be obtained by an external filter-design application such as Matlab and specified directly or loaded into a table via <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92971424"></a>
+        <a id="idm1552999408"></a>
         <h2>Performance</h2>
         <p>
       The<span class="emphasis"><em> filter2</em></span> opcodes perform filtering using a transposed form-II digital filter lattice with no time-varying control.
@@ -87,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92976624"></a>
+        <a id="idm1552995440"></a>
         <h2>Examples</h2>
         <p>
       A first-order linear-phase lowpass FIR filter operating on a k-rate signal:
@@ -100,56 +101,55 @@ k1 <span class="opc">filter2</span> ksig, 2, 0, 0.5, 0.5   <span class="comment"
         <p>
     </p>
         <p>
-      Here is another example of the filter2 opcode. It uses the file <a class="ulink" href="examples/filter2.csd" target="_top"><em class="citetitle">filter2.csd</em></a>.
+      Here is another example of the filter2 opcode. It uses the file <a class="ulink" href="examples/filter2.csd.html" target="_top"><em class="citetitle">filter2.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idp92981312"></a>
+          <a id="idm1552995824"></a>
           <p class="title">
-            <strong>Example 271. Example of the filter2 opcode.</strong>
+            <strong>Example 273. Example of the filter2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp241787184"></a>
-              <a class="ulink" href="examples/filter2.csd.html" target="_top">Play</a>
+              <a id="idm1387485424"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o filter2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o filter2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	 <span class="comment">; 2 saw waves of which one is slightly detuned</span>
+<span class="kd">instr</span> <span class="nf">1</span>	 <span class="c1">; 2 saw waves of which one is slightly detuned</span>
  
-ib1   <span class="op">=</span> p5  
-ivol  <span class="op">=</span> p6				<span class="comment">;volume to compensate                                               </span>
-kcps  <span class="opc">init</span> <span class="opc">cpspch</span>(p4)
-asig1 <span class="opc">vco2</span> .05, kcps			<span class="comment">;saw 1</span>
-asaw1 <span class="opc">filter2</span> asig1, 1, 1, 1, ib1	<span class="comment">;filter 1 </span>
-asig2 <span class="opc">vco2</span> .05, kcps<span class="op">+</span>1			<span class="comment">;saw 2                      </span>
-asaw2 <span class="opc">filter2</span> asig2, 1, 1, 1, ib1	<span class="comment">;filter 2</span>
-aout  <span class="op">=</span> (asaw1<span class="op">+</span>asaw2)<span class="op">*</span>ivol		<span class="comment">;mix</span>
-      <span class="opc">outs</span> aout, aout
+i<span class="n">b1</span>   <span class="o">=</span> <span class="nb">p5</span>  
+i<span class="n">vol</span>  <span class="o">=</span> <span class="nb">p6</span>				<span class="c1">;volume to compensate                                               </span>
+k<span class="n">cps</span>  <span class="nb">init</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+a<span class="n">sig1</span> <span class="nb">vco2</span> <span class="mf">.05</span><span class="p">,</span> k<span class="n">cps</span>			<span class="c1">;saw 1</span>
+a<span class="n">saw1</span> <span class="nb">filter2</span> a<span class="n">sig1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">b1</span>	<span class="c1">;filter 1 </span>
+a<span class="n">sig2</span> <span class="nb">vco2</span> <span class="mf">.05</span><span class="p">,</span> k<span class="n">cps</span><span class="o">+</span><span class="mi">1</span>			<span class="c1">;saw 2                      </span>
+a<span class="n">saw2</span> <span class="nb">filter2</span> a<span class="n">sig2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">b1</span>	<span class="c1">;filter 2</span>
+a<span class="n">out</span>  <span class="o">=</span> <span class="p">(</span>a<span class="n">saw1</span><span class="o">+</span>a<span class="n">saw2</span><span class="p">)</span><span class="o">*</span>i<span class="n">vol</span>		<span class="c1">;mix</span>
+      <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 4 6.00 -.001 5	<span class="comment">;different filter values</span>
-<span class="stamnt">i</span> 1 + 4 6.00 -.6   2	<span class="comment">;and different volumes</span>
-<span class="stamnt">i</span> 1 + 4 6.00 -.95 .3	<span class="comment">;to compensate</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mf">6.00</span> <span class="o">-</span><span class="mf">.001</span> <span class="mi">5</span>	<span class="c1">;different filter values</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="mf">6.00</span> <span class="o">-</span><span class="mf">.6</span>   <span class="mi">2</span>	<span class="c1">;and different volumes</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="mf">6.00</span> <span class="o">-</span><span class="mf">.95</span> <span class="mf">.3</span>	<span class="c1">;to compensate</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -158,14 +158,14 @@ aout  <span class="op">=</span> (asaw1<span class="op">+</span>asaw2)<span class
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92985600"></a>
+        <a id="idm1553249648"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="zfilter2.html" title="zfilter2"><em class="citetitle">zfilter2</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp92987648"></a>
+        <a id="idm1553253104"></a>
         <h2>Credits</h2>
         <p>
       </p>

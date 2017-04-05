@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>repluck</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="remove.html" title="remove" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp132798672"></a>
+        <a id="idm1512238576"></a>
         <h2>Description</h2>
         <p>
        <span class="emphasis"><em>repluck</em></span> is an implementation of the physical model of the plucked string. A user can control the pluck point, the pickup point, the filter, and an additional audio signal, <span class="emphasis"><em>axcite</em></span>. <span class="emphasis"><em>axcite</em></span> is used to excite the 'string'. Based on the Karplus-Strong algorithm.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132852928"></a>
+        <a id="idm1512228848"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>repluck</strong></span> iplk, kamp, icps, kpick, krefl, axcite</pre>
       </div>
       <div class="refsect1">
-        <a id="idp132855184"></a>
+        <a id="idm1512228720"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iplk</em></span> -- The point of pluck is <span class="emphasis"><em>iplk</em></span>, which is a fraction of the way up the string (0 to 1). A pluck point of zero means no initial pluck.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132858848"></a>
+        <a id="idm1512235504"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -73,80 +74,79 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132862704"></a>
+        <a id="idm1512220016"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>axcite</em></span> -- A signal which excites the string.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132864432"></a>
+        <a id="idm1512224496"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the repluck opcode. It uses the file <a class="ulink" href="examples/repluck.csd" target="_top"><em class="citetitle">repluck.csd</em></a>.
+      Here is an example of the repluck opcode. It uses the file <a class="ulink" href="examples/repluck.csd.html" target="_top"><em class="citetitle">repluck.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp132866208"></a>
+          <a id="idm1512223728"></a>
           <p class="title">
-            <strong>Example 781. Example of the repluck opcode.</strong>
+            <strong>Example 802. Example of the repluck opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp262010112"></a>
-              <a class="ulink" href="examples/repluck.csd.html" target="_top">Play</a>
+              <a id="idm1333532912"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o repluck.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o repluck.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-iplk  <span class="op">=</span> 0.75
-kamp  <span class="op">=</span> .8
-icps  <span class="op">=</span> 110
-krefl <span class="op">=</span> p4
-kpick <span class="op">=</span> p5
+i<span class="n">plk</span>  <span class="o">=</span> <span class="mf">0.75</span>
+k<span class="n">amp</span>  <span class="o">=</span> <span class="mf">.8</span>
+i<span class="n">cps</span>  <span class="o">=</span> <span class="mi">110</span>
+k<span class="n">refl</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">pick</span> <span class="o">=</span> <span class="nb">p5</span>
 
 
-axcite <span class="opc">oscil</span> 1, 1, 1
-asig <span class="opc">repluck</span> iplk, kamp, icps, kpick, krefl, axcite
-asig <span class="opc">dcblock2</span> asig		<span class="comment">;get rid of DC offset</span>
-     <span class="opc">outs</span> asig, asig
+a<span class="n">xcite</span> <span class="nb">oscil</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig</span> <span class="nb">repluck</span> i<span class="n">plk</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> k<span class="n">pick</span><span class="p">,</span> k<span class="n">refl</span><span class="p">,</span> a<span class="n">xcite</span>
+a<span class="n">sig</span> <span class="nb">dcblock2</span> a<span class="n">sig</span>		<span class="c1">;get rid of DC offset</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 10 1	<span class="comment">;sine wave.</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave.</span>
 
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 1 0 1 0.95 0.75	<span class="comment">;sounds heavier (=p5)</span>
-<span class="stamnt">i</span> 1 + 1  &lt;
-<span class="stamnt">i</span> 1 + 1  &lt;
-<span class="stamnt">i</span> 1 + 1  &lt;
-<span class="stamnt">i</span> 1 + 10 0.6
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">0.95</span> <span class="mf">0.75</span>	<span class="c1">;sounds heavier (=p5)</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">&lt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">&lt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">&lt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">0.6</span>
 
-<span class="stamnt">s</span>
-<span class="stamnt">i</span> 1 0 1 0.95 0.15	<span class="comment">;sounds softer (=p5)</span>
-<span class="stamnt">i</span> 1 + 1  &lt;
-<span class="stamnt">i</span> 1 + 1  &lt;
-<span class="stamnt">i</span> 1 + 1  &lt;
-<span class="stamnt">i</span> 1 + 10 0.6
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">s</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">0.95</span> <span class="mf">0.15</span>	<span class="c1">;sounds softer (=p5)</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">&lt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">&lt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">&lt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span> <span class="mf">0.6</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -155,14 +155,14 @@ asig <span class="opc">dcblock2</span> asig		<span class="comment">;get rid of D
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132870528"></a>
+        <a id="idm1512221040"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="wgpluck2.html" title="wgpluck2"><em class="citetitle">wgpluck2</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132872640"></a>
+        <a id="idm1512224752"></a>
         <h2>Credits</h2>
         <p>
       </p>

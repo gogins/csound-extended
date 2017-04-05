@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>bformenc1</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="bexprnd.html" title="bexprnd" />
@@ -38,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81453104"></a>
+        <a id="idm1565090160"></a>
         <h2>Description</h2>
         <p>
       Codes a signal into the ambisonic B format
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81454448"></a>
+        <a id="idm1565092976"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aw, ax, ay, az <span class="command"><strong>bformenc1</strong></span> asig, kalpha, kbeta</pre>
         <pre class="synopsis">aw, ax, ay, az, ar, as, at, au, av <span class="command"><strong>bformenc1</strong></span> asig, kalpha, kbeta</pre>
@@ -54,7 +55,7 @@
         <pre class="synopsis">aarray[] <span class="command"><strong>bformenc1</strong></span> asig, kalpha, kbeta</pre>
       </div>
       <div class="refsect1">
-        <a id="idp81461312"></a>
+        <a id="idm1565078768"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aw, ax, ay, ... </em></span>
@@ -75,93 +76,92 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81466848"></a>
+        <a id="idm1565080176"></a>
         <h2>Example</h2>
         <p>
-      Here is an example of the bformenc1 opcode. It uses the file <a class="ulink" href="examples/bformenc1.csd" target="_top"><em class="citetitle">bformenc1.csd</em></a>.
+      Here is an example of the bformenc1 opcode. It uses the file <a class="ulink" href="examples/bformenc1.csd.html" target="_top"><em class="citetitle">bformenc1.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp81468704"></a>
+          <a id="idm1565070960"></a>
           <p class="title">
             <strong>Example 88. Example of the bformenc1 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp235151728"></a>
-              <a class="ulink" href="examples/bformenc1.csd.html" target="_top">Play</a>
+              <a id="idm1402517488"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
-<span class="comment">;-odac           -iadc     -d     ;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
- -o bformenc.wav -W <span class="comment">;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 8
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+<span class="c1">;-odac           -iadc     -d     ;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+ -o bformenc.wav -W <span class="c1">;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">;without arrays</span>
-<span class="comment">; generate pink noise</span>
-anoise <span class="opc">pinkish</span> 1
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;without arrays</span>
+<span class="c1">; generate pink noise</span>
+a<span class="n">noise</span> <span class="nb">pinkish</span> <span class="mi">1</span>
         
-<span class="comment">; two full turns</span>
-kalpha <span class="opc">line</span> 0, p3, 720
-kbeta <span class="op">=</span> 0
+<span class="c1">; two full turns</span>
+k<span class="n">alpha</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">720</span>
+k<span class="n">beta</span> <span class="o">=</span> <span class="mi">0</span>
         
-<span class="comment">; generate B format</span>
-aw, ax, ay, az, ar, as, at, au, av <span class="opc">bformenc1</span> anoise, kalpha, kbeta
+<span class="c1">; generate B format</span>
+a<span class="n">w</span><span class="p">,</span> a<span class="n">x</span><span class="p">,</span> a<span class="n">y</span><span class="p">,</span> a<span class="n">z</span><span class="p">,</span> a<span class="n">r</span><span class="p">,</span> a<span class="n">s</span><span class="p">,</span> a<span class="n">t</span><span class="p">,</span> a<span class="n">u</span><span class="p">,</span> a<span class="n">v</span> <span class="nb">bformenc1</span> a<span class="n">noise</span><span class="p">,</span> k<span class="n">alpha</span><span class="p">,</span> k<span class="n">beta</span>
         
-<span class="comment">; decode B format for 8 channel circle loudspeaker setup</span>
-a1, a2, a3, a4, a5, a6, a7, a8 <span class="opc">bformdec1</span> 4, aw, ax, ay, az, ar, as, at, au, av        
+<span class="c1">; decode B format for 8 channel circle loudspeaker setup</span>
+a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> a<span class="n">4</span><span class="p">,</span> a<span class="n">5</span><span class="p">,</span> a<span class="n">6</span><span class="p">,</span> a<span class="n">7</span><span class="p">,</span> a<span class="n">8</span> <span class="nb">bformdec1</span> <span class="mi">4</span><span class="p">,</span> a<span class="n">w</span><span class="p">,</span> a<span class="n">x</span><span class="p">,</span> a<span class="n">y</span><span class="p">,</span> a<span class="n">z</span><span class="p">,</span> a<span class="n">r</span><span class="p">,</span> a<span class="n">s</span><span class="p">,</span> a<span class="n">t</span><span class="p">,</span> a<span class="n">u</span><span class="p">,</span> a<span class="n">v</span>        
 
-<span class="comment">; write audio out</span>
-<span class="opc">outo</span> a1, a2, a3, a4, a5, a6, a7, a8
-<span class="oblock">endin</span>
+<span class="c1">; write audio out</span>
+<span class="nb">outo</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> a<span class="n">4</span><span class="p">,</span> a<span class="n">5</span><span class="p">,</span> a<span class="n">6</span><span class="p">,</span> a<span class="n">7</span><span class="p">,</span> a<span class="n">8</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2 <span class="comment">;with arrays (csound6)</span>
-<span class="comment">;set file names for:</span>
-S_bform <span class="op">=</span> "bform_out.wav" <span class="comment">;b-format (2nd order) output</span>
-S_sound <span class="op">=</span> "sound_out.wav" <span class="comment">;sound output</span>
+<span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;with arrays (csound6)</span>
+<span class="c1">;set file names for:</span>
+S<span class="n">_bform</span> <span class="o">=</span> <span class="s">"bform_out.wav"</span> <span class="c1">;b-format (2nd order) output</span>
+S<span class="n">_sound</span> <span class="o">=</span> <span class="s">"sound_out.wav"</span> <span class="c1">;sound output</span>
 
-<span class="comment">; generate pink noise</span>
-anoise <span class="opc">pinkish</span> 1
+<span class="c1">; generate pink noise</span>
+a<span class="n">noise</span> <span class="nb">pinkish</span> <span class="mi">1</span>
         
-<span class="comment">; two full turns</span>
-kalpha <span class="opc">line</span> 0, p3, 720
-kbeta <span class="op">=</span> 0
+<span class="c1">; two full turns</span>
+k<span class="n">alpha</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">720</span>
+k<span class="n">beta</span> <span class="o">=</span> <span class="mi">0</span>
         
-<span class="comment">;create array for B-format 2nd order (9 chnls)</span>
-aBform[] <span class="opc">init</span> 9
+<span class="c1">;create array for B-format 2nd order (9 chnls)</span>
+a<span class="n">Bform</span><span class="p">[]</span> <span class="nb">init</span> <span class="mi">9</span>
 
-<span class="comment">; generate B-format</span>
-aBform <span class="opc">bformenc1</span> anoise, kalpha, kbeta
+<span class="c1">; generate B-format</span>
+a<span class="n">Bform</span> <span class="nb">bformenc1</span> a<span class="n">noise</span><span class="p">,</span> k<span class="n">alpha</span><span class="p">,</span> k<span class="n">beta</span>
 
-<span class="comment">;write out b-format</span>
-<span class="opc">fout</span> "fout.wav", 18, aBform
+<span class="c1">;write out b-format</span>
+<span class="nb">fout</span> <span class="s">"fout.wav"</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> a<span class="n">Bform</span>
 
-<span class="comment">;create array for audio output (8 channels)</span>
-aAudio[] <span class="opc">init</span> 8
+<span class="c1">;create array for audio output (8 channels)</span>
+a<span class="n">Audio</span><span class="p">[]</span> <span class="nb">init</span> <span class="mi">8</span>
         
-<span class="comment">;decode B format for 8 channel circle loudspeaker setup</span>
-aAudio <span class="opc">bformdec1</span> 4, aBform
+<span class="c1">;decode B format for 8 channel circle loudspeaker setup</span>
+a<span class="n">Audio</span> <span class="nb">bformdec1</span> <span class="mi">4</span><span class="p">,</span> a<span class="n">Bform</span>
 
-<span class="comment">; write audio out</span>
-<span class="opc">fout</span> S_sound, 18, aAudio
-<span class="oblock">endin</span>
+<span class="c1">; write audio out</span>
+<span class="nb">fout</span> S<span class="n">_sound</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> a<span class="n">Audio</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 8
-<span class="stamnt">i</span> 2 8 8
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">8</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">8</span> <span class="mi">8</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -170,14 +170,14 @@ aAudio <span class="opc">bformdec1</span> 4, aBform
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81472992"></a>
+        <a id="idm1565074800"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="bformdec1.html" title="bformdec1"><em class="citetitle">bformdec1</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81475104"></a>
+        <a id="idm1565071984"></a>
         <h2>Credits</h2>
         <p>
       </p>

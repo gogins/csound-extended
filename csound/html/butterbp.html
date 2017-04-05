@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>butterbp</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="butlp.html" title="butlp" />
@@ -38,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp81912656"></a>
+        <a id="idm1564349696"></a>
         <h2>Description</h2>
         <p>
       Implementation of a second-order band-pass Butterworth filter. This opcode can also be written as <a class="link" href="butbp.html" title="butbp"><em class="citetitle">butbp</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81937856"></a>
+        <a id="idm1564337408"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>butterbp</strong></span> asig, xfreq, xband [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp81940112"></a>
+        <a id="idm1564335872"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- Skip initialization if present and non-zero.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81941904"></a>
+        <a id="idm1564339584"></a>
         <h2>Performance</h2>
         <p>
       These filters are Butterworth second-order IIR filters. They are slightly slower than the original filters in Csound, but they offer an almost flat passband and very good precision and stopband attenuation.
@@ -73,61 +74,60 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81974880"></a>
+        <a id="idm1564330368"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the butterbp opcode. It uses the file <a class="ulink" href="examples/butterbp.csd" target="_top"><em class="citetitle">butterbp.csd</em></a>.
+      Here is an example of the butterbp opcode. It uses the file <a class="ulink" href="examples/butterbp.csd.html" target="_top"><em class="citetitle">butterbp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp81976656"></a>
+          <a id="idm1564329856"></a>
           <p class="title">
-            <strong>Example 96. Example of the butterbp opcode.</strong>
+            <strong>Example 97. Example of the butterbp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp236042752"></a>
-              <a class="ulink" href="examples/butterbp.csd.html" target="_top">Play</a>
+              <a id="idm1401065968"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;RT audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o butterbp.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;RT audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o butterbp.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">; White noise signal</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; White noise signal</span>
 
-asig <span class="opc">rand</span> 0.6
-     <span class="opc">outs</span> asig, asig
+a<span class="n">sig</span> <span class="nb">rand</span> <span class="mf">0.6</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">;filtered noise</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;filtered noise</span>
 
-asig <span class="opc">rand</span> 1
-abp  <span class="opc">butterbp</span> asig, 2000, 100	<span class="comment">;passing only 1950 to 2050 Hz</span>
-     <span class="opc">outs</span> abp, abp
+a<span class="n">sig</span> <span class="nb">rand</span> <span class="mi">1</span>
+a<span class="n">bp</span>  <span class="nb">butterbp</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">100</span>	<span class="c1">;passing only 1950 to 2050 Hz</span>
+     <span class="nb">outs</span> a<span class="n">bp</span><span class="p">,</span> a<span class="n">bp</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">i</span> 2 2.5 2
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mf">2.5</span> <span class="mi">2</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -136,7 +136,7 @@ abp  <span class="opc">butterbp</span> asig, 2000, 100	<span class="comment">;pa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81980944"></a>
+        <a id="idm1564331008"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="butterbr.html" title="butterbr"><em class="citetitle">butterbr</em></a>, 
@@ -145,7 +145,7 @@ abp  <span class="opc">butterbp</span> asig, 2000, 100	<span class="comment">;pa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp81984976"></a>
+        <a id="idm1564327296"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tablexkt</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tablewkt.html" title="tablewkt" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp147742800"></a>
+        <a id="idm1496757360"></a>
         <h2>Description</h2>
         <p>
       Reads function tables with linear, cubic, or sinc interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp147744160"></a>
+        <a id="idm1496758128"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>tablexkt</strong></span> xndx, kfn, kwarp, iwsize [, ixmode] [, ixoff] [, iwrap]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp147746368"></a>
+        <a id="idm1496761072"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iwsize</em></span> -- This parameter controls the type of interpolation to be used:
@@ -140,7 +141,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp147764800"></a>
+        <a id="idm1496744816"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- audio output
@@ -173,72 +174,74 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp147772368"></a>
+        <a id="idm1496736624"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tablexkt opcode. It uses the file <a class="ulink" href="examples/tablexkt.csd" target="_top"><em class="citetitle">tablexkt.csd</em></a>.
+      Here is an example of the tablexkt opcode. It uses the file <a class="ulink" href="examples/tablexkt.csd.html" target="_top"><em class="citetitle">tablexkt.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp147774224"></a>
+          <a id="idm1496738544"></a>
           <p class="title">
-            <strong>Example 939. Example of the tablexkt opcode.</strong>
+            <strong>Example 965. Example of the tablexkt opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp268008576"></a>
-              <a class="ulink" href="examples/tablexkt.csd.html" target="_top">Play</a>
+              <a id="idm1317299440"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tablexkt.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="comment">;Example by Jonathan Murphy</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tablexkt.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
 
-  <span class="ohdr">sr</span>	    <span class="op">=</span>  44100
-  <span class="ohdr">ksmps</span>	    <span class="op">=</span>  10
-  <span class="ohdr">nchnls</span>    <span class="op">=</span>  1
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="c1">;Example by Jonathan Murphy</span>
 
-    <span class="oblock">instr</span> 1
+  <span class="vg">sr</span>	    <span class="o">=</span>  <span class="mi">44100</span>
+  <span class="vg">ksmps</span>	    <span class="o">=</span>  <span class="mi">10</span>
+  <span class="vg">nchnls</span>    <span class="o">=</span>  <span class="mi">1</span>
 
-  ifn	    <span class="op">=</span>  1    <span class="comment">; query f1 as to number of samples</span>
-  ilen	    <span class="op">=</span>  <span class="opc">nsamp</span>(ifn)
+    <span class="kd">instr</span> <span class="nf">1</span>
 
-  itrns	    <span class="op">=</span>  4   <span class="comment">; transpose up 4 octaves</span>
-  ilps	    <span class="op">=</span>  16  <span class="comment">; allow iwsize/2 samples at start</span>
-  ilpe	    <span class="op">=</span>  ilen <span class="op">-</span> 16   <span class="comment">; and at end</span>
-  imode	    <span class="op">=</span>  3  <span class="comment">; loop forwards and backwards</span>
-  istrt	    <span class="op">=</span>  16  <span class="comment">; start 16 samples into loop</span>
+  i<span class="n">fn</span>	    <span class="o">=</span>  <span class="mi">1</span>    <span class="c1">; query f1 as to number of samples</span>
+  i<span class="n">len</span>	    <span class="o">=</span>  <span class="nb">nsamp</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span>
 
-  alphs	    <span class="opc">lphasor</span>   itrns, ilps, ilpe, imode, istrt
-	<span class="comment">; use lphasor as index</span>
-  andx	    <span class="op">=</span>  alphs
+  i<span class="n">trns</span>	    <span class="o">=</span>  <span class="mi">4</span>   <span class="c1">; transpose up 4 octaves</span>
+  i<span class="n">lps</span>	    <span class="o">=</span>  <span class="mi">16</span>  <span class="c1">; allow iwsize/2 samples at start</span>
+  i<span class="n">lpe</span>	    <span class="o">=</span>  i<span class="n">len</span> <span class="o">-</span> <span class="mi">16</span>   <span class="c1">; and at end</span>
+  i<span class="n">mode</span>	    <span class="o">=</span>  <span class="mi">3</span>  <span class="c1">; loop forwards and backwards</span>
+  i<span class="n">strt</span>	    <span class="o">=</span>  <span class="mi">16</span>  <span class="c1">; start 16 samples into loop</span>
 
-  kfn	    <span class="op">=</span>  1   <span class="comment">; read f1</span>
-  kwarp	    <span class="op">=</span>  4 <span class="comment">; anti-aliasing, should be same value as itrns above</span>
-  iwsize    <span class="op">=</span>  32  <span class="comment">; iwsize must be at least 8 * kwarp</span>
+  a<span class="n">lphs</span>	    <span class="nb">lphasor</span>   i<span class="n">trns</span><span class="p">,</span> i<span class="n">lps</span><span class="p">,</span> i<span class="n">lpe</span><span class="p">,</span> i<span class="n">mode</span><span class="p">,</span> i<span class="n">strt</span>
+	<span class="c1">; use lphasor as index</span>
+  a<span class="n">ndx</span>	    <span class="o">=</span>  a<span class="n">lphs</span>
 
-  atab	    <span class="opc">tablexkt</span>  andx, kfn, kwarp, iwsize
+  k<span class="n">fn</span>	    <span class="o">=</span>  <span class="mi">1</span>   <span class="c1">; read f1</span>
+  k<span class="n">warp</span>	    <span class="o">=</span>  <span class="mi">4</span> <span class="c1">; anti-aliasing, should be same value as itrns above</span>
+  i<span class="n">wsize</span>    <span class="o">=</span>  <span class="mi">32</span>  <span class="c1">; iwsize must be at least 8 * kwarp</span>
 
-  atab	    <span class="op">=</span>  atab <span class="op">*</span> 10000
+  a<span class="n">tab</span>	    <span class="nb">tablexkt</span>  a<span class="n">ndx</span><span class="p">,</span> k<span class="n">fn</span><span class="p">,</span> k<span class="n">warp</span><span class="p">,</span> i<span class="n">wsize</span>
 
-	    <span class="opc">out</span>	      atab
+  a<span class="n">tab</span>	    <span class="o">=</span>  a<span class="n">tab</span> <span class="o">*</span> <span class="mi">10000</span>
 
-    <span class="oblock">endin</span>
+	    <span class="nb">out</span>	      a<span class="n">tab</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 262144 1 "beats.wav" 0 4 1
-<span class="stamnt">i</span>1 0 60
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+    <span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">262144</span> <span class="mi">1</span> <span class="s">"beats.wav"</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">1</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -247,7 +250,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp147778544"></a>
+        <a id="idm1496734448"></a>
         <h2>Credits</h2>
         <p>
       </p>

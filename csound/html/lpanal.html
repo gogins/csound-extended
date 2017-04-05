@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>lpanal</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="UtilitySoundfile.html#UtilityAnalysis" title="Analysis File Generation (ATSA, CVANAL, HETRO, LPANAL, PVANAL)" />
     <link rel="prev" href="hetro.html" title="hetro" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp214035408"></a>
+        <a id="idm1430182544"></a>
         <h2>Description</h2>
         <p>
 	    Linear predictive analysis for the Csound <a class="link" href="SpectralLpcresyn.html" title="Linear Predictive Coding (LPC) Resynthesis"><em class="citetitle">Linear Predictive Coding (LPC) Resynthesis</em></a> opcodes. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp214080672"></a>
+        <a id="idm1430169616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>csound -U lpanal</strong></span> [flags] infilename outfilename</pre>
         <pre class="synopsis"><span class="command"><strong>lpanal</strong></span> [flags] infilename outfilename</pre>
       </div>
       <div class="refsect1">
-        <a id="idp214084000"></a>
+        <a id="idm1430171792"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>lpanal</em></span> performs both lpc and pitch-tracking analysis on a soundfile to produce a time-ordered sequence of <span class="emphasis"><em>frames</em></span> of control information suitable for Csound resynthesis. Analysis is conditioned by the control flags below. A space is optional between the flag and its value.
@@ -112,7 +113,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp214100368"></a>
+        <a id="idm1430417808"></a>
         <h2>Examples</h2>
         <p>
 
@@ -125,7 +126,7 @@
       will analyze the first 2.5 seconds of file "audiofile.test", producing srate/200 frames per second, each containing 26-pole filter coefficients and a pitch estimate between 100 and 400 Hertz. Stabilized (<span class="emphasis"><em>-a</em></span>) output will be placed in "lpfil22" in the current directory.
     </p>
         <div class="refsect2">
-          <a id="idp214104368"></a>
+          <a id="idm1430418832"></a>
           <h3>File Format </h3>
           <p>
         Output is a file comprised of an identifiable header plus a set of frames of floating point analysis data. Each frame contains four values of pitch and gain information, followed by <span class="emphasis"><em>npoles</em></span> filter coefficients. The file is readable by Csound's <a class="link" href="lpread.html" title="lpread"><em class="citetitle">lpread</em></a>.

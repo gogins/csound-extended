@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>rand</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="r2c.html" title="r2c" />
@@ -38,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131471664"></a>
+        <a id="idm1513682288"></a>
         <h2>Description</h2>
         <p>
       Output is a controlled random number series between -<span class="emphasis"><em>amp</em></span> and +<span class="emphasis"><em>amp</em></span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131473648"></a>
+        <a id="idm1513679984"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>rand</strong></span> xamp [, iseed] [, isel] [, ioffset]</pre>
         <pre class="synopsis">kres <span class="command"><strong>rand</strong></span> xamp [, iseed] [, isel] [, ioffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp131538336"></a>
+        <a id="idm1513674736"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iseed</em></span> (optional, default=0.5) -- a seed value for the recursive pseudo-random formula. A value between 0 and 1 will produce an initial output of <span class="emphasis"><em>kamp * iseed</em></span>. A value greater than 1 will be seeded from the system clock. A negative value will cause seed re-initialization to be skipped. The default seed value is .5.
@@ -64,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131542544"></a>
+        <a id="idm1513680368"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp, xamp</em></span> -- range over which random numbers are distributed.
@@ -80,64 +81,63 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131549632"></a>
+        <a id="idm1513672176"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the rand opcode. It uses the file <a class="ulink" href="examples/rand.csd" target="_top"><em class="citetitle">rand.csd</em></a>.
+      Here is an example of the rand opcode. It uses the file <a class="ulink" href="examples/rand.csd.html" target="_top"><em class="citetitle">rand.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp131551488"></a>
+          <a id="idm1513672560"></a>
           <p class="title">
-            <strong>Example 762. Example of the rand opcode.</strong>
+            <strong>Example 783. Example of the rand opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp261329088"></a>
-              <a class="ulink" href="examples/rand.csd.html" target="_top">Play</a>
+              <a id="idm1335213552"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o rand.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if RT audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o rand.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1	<span class="comment">;same values every time</span>
+<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;same values every time</span>
 
-krnd <span class="opc">rand</span> 100
-     <span class="opc">printk</span> .5, krnd			<span class="comment">; look </span>
-aout <span class="opc">oscili</span> 0.8, 440<span class="op">+</span>krnd, 1		<span class="comment">; &amp; listen</span>
-     <span class="opc">outs</span> aout, aout
+k<span class="n">rnd</span> <span class="nb">rand</span> <span class="mi">100</span>
+     <span class="nb">printk</span> <span class="mf">.5</span><span class="p">,</span> k<span class="n">rnd</span>			<span class="c1">; look </span>
+a<span class="n">out</span> <span class="nb">oscili</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">440</span><span class="o">+</span>k<span class="n">rnd</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; &amp; listen</span>
+     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2	<span class="comment">;different values every time</span>
+<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;different values every time</span>
 
-krnd <span class="opc">rand</span> 100, 10			<span class="comment">; seed from system clock</span>
-     <span class="opc">printk</span> .5, krnd			<span class="comment">; look </span>
-aout <span class="opc">oscili</span> 0.8, 440<span class="op">+</span>krnd, 1		<span class="comment">; &amp; listen</span>
-     <span class="opc">outs</span> aout, aout
+k<span class="n">rnd</span> <span class="nb">rand</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span>			<span class="c1">; seed from system clock</span>
+     <span class="nb">printk</span> <span class="mf">.5</span><span class="p">,</span> k<span class="n">rnd</span>			<span class="c1">; look </span>
+a<span class="n">out</span> <span class="nb">oscili</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">440</span><span class="o">+</span>k<span class="n">rnd</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; &amp; listen</span>
+     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 10 1	<span class="comment">;sine wave.</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave.</span>
 
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">i</span> 2 2 1
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -162,7 +162,7 @@ WARNING: Seeding from current time 472230558
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131557152"></a>
+        <a id="idm1513661552"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="randh.html" title="randh"><em class="citetitle">randh</em></a>,
@@ -170,7 +170,7 @@ WARNING: Seeding from current time 472230558
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp131560192"></a>
+        <a id="idm1513660272"></a>
         <h2>Credits</h2>
         <p>Thanks to a note from John ffitch, I changed the names of the parameters.</p>
       </div>

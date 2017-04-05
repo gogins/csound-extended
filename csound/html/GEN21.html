@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN21</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN20.html" title="GEN20" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206592560"></a>
+        <a id="idm1437919856"></a>
         <h2>Description</h2>
         <p>
       This generates tables of different random distributions. (See also <a class="link" href="betarand.html" title="betarand"><em class="citetitle">betarand</em></a>, <a class="link" href="bexprnd.html" title="bexprnd"><em class="citetitle">bexprnd</em></a>, <a class="link" href="cauchy.html" title="cauchy"><em class="citetitle">cauchy</em></a>, <a class="link" href="exprand.html" title="exprand"><em class="citetitle">exprand</em></a>, <a class="link" href="gauss.html" title="gauss"><em class="citetitle">gauss</em></a>, <a class="link" href="linrand.html" title="linrand"><em class="citetitle">linrand</em></a>, <a class="link" href="pcauchy.html" title="pcauchy"><em class="citetitle">pcauchy</em></a>, <a class="link" href="poisson.html" title="poisson"><em class="citetitle">poisson</em></a>, <a class="link" href="trirand.html" title="trirand"><em class="citetitle">trirand</em></a>, <a class="link" href="unirand.html" title="unirand"><em class="citetitle">unirand</em></a>, and <a class="link" href="weibull.html" title="weibull"><em class="citetitle">weibull</em></a>)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206649248"></a>
+        <a id="idm1437913456"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 21 type level [arg1  [arg2]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp206651296"></a>
+        <a id="idm1437900912"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>time</em></span> and <span class="emphasis"><em>size</em></span> are the usual GEN function arguments. <span class="emphasis"><em>level</em></span> defines the amplitude. Note that GEN21 is not self-normalizing as are most other GEN functions. <span class="emphasis"><em>type</em></span> defines the distribution to be used as follow:
@@ -106,7 +107,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206666960"></a>
+        <a id="idm1437897456"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -123,73 +124,72 @@
       All of the above additions were designed by the author between May and December 1994, under the supervision of Dr. Richard Boulanger.
     </p>
         <p>
-      Here is a complete example of the GEN21 routine. It uses the file <a class="ulink" href="examples/gen21.csd" target="_top"><em class="citetitle">gen21.csd</em></a>.
+      Here is a complete example of the GEN21 routine. It uses the file <a class="ulink" href="examples/gen21.csd.html" target="_top"><em class="citetitle">gen21.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp206677248"></a>
+          <a id="idm1437887344"></a>
           <p class="title">
-            <strong>Example 1145. Example of the GEN21 routine.</strong>
+            <strong>Example 1173. Example of the GEN21 routine.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp276366848"></a>
-              <a class="ulink" href="examples/gen21.csd.html" target="_top">Play</a>
+              <a id="idm1295346928"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen21.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen21.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifn    <span class="op">=</span> p4
-isize  <span class="op">=</span> <span class="opc">ftlen</span>(ifn) 
-<span class="opc">prints</span> "TABLE NUMBER<span class="op">:</span> <span class="op">%</span>d\n", ifn   
-<span class="opc">prints</span> "Index\tValue\n"
+i<span class="n">fn</span>    <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">size</span>  <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span> 
+<span class="nb">prints</span> <span class="s">"TABLE NUMBER: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">fn</span>   
+<span class="nb">prints</span> <span class="s">"Index</span><span class="se">\t</span><span class="s">Value</span><span class="se">\n</span><span class="s">"</span>
     
-iindex <span class="op">=</span> 0				<span class="comment">;start loop</span>
-<span class="olabel">begin_loop</span><span class="op">:</span>
-     ivalue <span class="opc">tab_i</span> iindex, ifn
-     <span class="opc">prints</span> "<span class="op">%</span>d<span class="op">:</span>\t<span class="op">%</span>f\n", iindex, ivalue
-     iindex <span class="op">=</span> iindex <span class="op">+</span> 1
-  <span class="octrl">if</span> (iindex <span class="op">&lt;</span> isize) <span class="octrl">igoto</span> <span class="olabel">begin_loop</span>
+i<span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>				<span class="c1">;start loop</span>
+<span class="nl">begin_loop</span><span class="p">:</span>
+     i<span class="n">value</span> <span class="nb">tab_i</span> i<span class="n">index</span><span class="p">,</span> i<span class="n">fn</span>
+     <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">:</span><span class="se">\t</span><span class="s">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">index</span><span class="p">,</span> i<span class="n">value</span>
+     i<span class="n">index</span> <span class="o">=</span> i<span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="k">if</span> <span class="p">(</span>i<span class="n">index</span> <span class="o">&lt;</span> i<span class="n">size</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">begin_loop</span>
   
-<span class="comment">;produce sound - and repeat it 10 times so you can hear the patterns:   </span>
-aphase <span class="opc">phasor</span> 10<span class="op">/</span>10			<span class="comment">;play all 32 values 10x over 10 seconds</span>
-aphase <span class="op">=</span> aphase<span class="op">*</span>isize			<span class="comment">;step through table</span>
-afrq   <span class="opc">table</span> aphase, p4			<span class="comment">;read table number</span>
-asig   <span class="opc">poscil</span> .5, (afrq<span class="op">*</span>500)<span class="op">+</span>1000,10	<span class="comment">;scale values of table 500 times, add 1000 Hz</span>
-       <span class="opc">outs</span> asig , asig			<span class="comment">;so we can distinguish the different tables </span>
-<span class="oblock">endin</span>
+<span class="c1">;produce sound - and repeat it 10 times so you can hear the patterns:   </span>
+a<span class="n">phase</span> <span class="nb">phasor</span> <span class="mi">10</span><span class="o">/</span><span class="mi">10</span>			<span class="c1">;play all 32 values 10x over 10 seconds</span>
+a<span class="n">phase</span> <span class="o">=</span> a<span class="n">phase</span><span class="o">*</span>i<span class="n">size</span>			<span class="c1">;step through table</span>
+a<span class="n">frq</span>   <span class="nb">table</span> a<span class="n">phase</span><span class="p">,</span> <span class="nb">p4</span>			<span class="c1">;read table number</span>
+a<span class="n">sig</span>   <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="p">(</span>a<span class="n">frq</span><span class="o">*</span><span class="mi">500</span><span class="p">)</span><span class="o">+</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10</span>	<span class="c1">;scale values of table 500 times, add 1000 Hz</span>
+       <span class="nb">outs</span> a<span class="n">sig</span> <span class="p">,</span> a<span class="n">sig</span>			<span class="c1">;so we can distinguish the different tables </span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span>1 0 32 21 1		<span class="comment">;Uniform (white noise)</span>
-<span class="stamnt">f</span>2 0 32 21 6		<span class="comment">;Gaussian (mu=0.0, sigma=1/3.83=0.261)</span>
-<span class="stamnt">f</span>3 0 32 21 6 5.745	<span class="comment">;Gaussian (mu=0.0, sigma=5.745/3.83=1.5)</span>
-<span class="stamnt">f</span>4 0 32 21 9 1 1 2	<span class="comment">;Beta (note that level precedes arguments)</span>
-<span class="stamnt">f</span>5 0 32 21 10 1 2	<span class="comment">;Weibull</span>
-<span class="stamnt">f</span>10 0 8192 10 1		<span class="comment">;Sine wave</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">32</span> <span class="mi">21</span> <span class="mi">1</span>		<span class="c1">;Uniform (white noise)</span>
+<span class="nb">f</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">32</span> <span class="mi">21</span> <span class="mi">6</span>		<span class="c1">;Gaussian (mu=0.0, sigma=1/3.83=0.261)</span>
+<span class="nb">f</span><span class="mi">3</span> <span class="mi">0</span> <span class="mi">32</span> <span class="mi">21</span> <span class="mi">6</span> <span class="mf">5.745</span>	<span class="c1">;Gaussian (mu=0.0, sigma=5.745/3.83=1.5)</span>
+<span class="nb">f</span><span class="mi">4</span> <span class="mi">0</span> <span class="mi">32</span> <span class="mi">21</span> <span class="mi">9</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span>	<span class="c1">;Beta (note that level precedes arguments)</span>
+<span class="nb">f</span><span class="mi">5</span> <span class="mi">0</span> <span class="mi">32</span> <span class="mi">21</span> <span class="mi">10</span> <span class="mi">1</span> <span class="mi">2</span>	<span class="c1">;Weibull</span>
+<span class="nb">f</span><span class="mi">10</span> <span class="mi">0</span> <span class="mi">8192</span> <span class="mi">10</span> <span class="mi">1</span>		<span class="c1">;Sine wave</span>
 
-<span class="stamnt">i</span> 1  0 10 1
-<span class="stamnt">i</span> 1 11 10 2
-<span class="stamnt">i</span> 1 22 10 3
-<span class="stamnt">i</span> 1 33 10 4
-<span class="stamnt">i</span> 1 44 10 5
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span>  <span class="mi">0</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">22</span> <span class="mi">10</span> <span class="mi">3</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">33</span> <span class="mi">10</span> <span class="mi">4</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">5</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -244,7 +244,7 @@ asig   <span class="opc">poscil</span> .5, (afrq<span class="op">*</span>500)<sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp206698176"></a>
+        <a id="idm1437870576"></a>
         <h2>Credits</h2>
         <p>
       </p>

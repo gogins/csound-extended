@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>FLcount</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="FLcolor2.html" title="FLcolor2" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp94056576"></a>
+        <a id="idm1552206064"></a>
         <h2>Description</h2>
         <p>
       Allows the user to increase/decrease a value with mouse clicks on a corresponding arrow button.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94057952"></a>
+        <a id="idm1552205168"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout, ihandle <span class="command"><strong>FLcount</strong></span> "label", imin, imax, istep1, istep2, itype, \
       iwidth, iheight, ix, iy, iopcode [, kp1] [, kp2] [, kp3] [...] [, kpN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp94060512"></a>
+        <a id="idm1552208496"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> -- a handle value (an integer number) that unequivocally references a corresponding widget. Used by further opcodes that changes some valuator's properties. It is automatically set by the corresponding valuator.
@@ -91,7 +92,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94076416"></a>
+        <a id="idm1552188656"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout</em></span> -- output value
@@ -116,95 +117,94 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94087120"></a>
+        <a id="idm1552186480"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the FLcount opcode. It uses the file <a class="ulink" href="examples/FLcount.csd" target="_top"><em class="citetitle">FLcount.csd</em></a>.
+      Here is an example of the FLcount opcode. It uses the file <a class="ulink" href="examples/FLcount.csd.html" target="_top"><em class="citetitle">FLcount.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp94088896"></a>
+          <a id="idm1552186352"></a>
           <p class="title">
-            <strong>Example 281. Example of the FLcount opcode.</strong>
+            <strong>Example 283. Example of the FLcount opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp242375472"></a>
-              <a class="ulink" href="examples/FLcount.csd.html" target="_top">Play</a>
+              <a id="idm1386111088"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in    No messages</span>
--odac           -iadc     -d     <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o FLcount.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in    No messages</span>
+-odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o FLcount.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Demonstration of the flcount opcode</span>
-<span class="comment">; clicking on the single arrow buttons</span>
-<span class="comment">; increments the oscillator in semitone steps</span>
-<span class="comment">; clicking on the double arrow buttons </span>
-<span class="comment">; increments the oscillator in octave steps</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 441
-<span class="ohdr">ksmps</span> <span class="op">=</span> 100
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="c1">; Demonstration of the flcount opcode</span>
+<span class="c1">; clicking on the single arrow buttons</span>
+<span class="c1">; increments the oscillator in semitone steps</span>
+<span class="c1">; clicking on the double arrow buttons </span>
+<span class="c1">; increments the oscillator in octave steps</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">441</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="opc">FLpanel</span> "Counter", 900, 400, 50, 50
-    <span class="comment">; Minimum value output by counter</span>
-    imin <span class="op">=</span> 6
-    <span class="comment">; Maximum value output by counter</span>
-    imax <span class="op">=</span> 12
-    <span class="comment">; Single arrow step size (semitones)</span>
-    istep1 <span class="op">=</span> 1<span class="op">/</span>12
-    <span class="comment">; Double arrow step size (octave)</span>
-    istep2 <span class="op">=</span> 1 
-    <span class="comment">; Counter type (1=double arrow counter)</span>
-    itype <span class="op">=</span> 1
-    <span class="comment">; Width of the counter in pixels</span>
-    iwidth <span class="op">=</span> 200
-    <span class="comment">; Height of the counter in pixels</span>
-    iheight <span class="op">=</span> 30
-    <span class="comment">; Distance of the left edge of the counter</span>
-    <span class="comment">; from the left edge of the panel</span>
-    ix <span class="op">=</span> 50
-    <span class="comment">; Distance of the top edge of the counter</span>
-    <span class="comment">; from the top edge of the panel</span>
-    iy <span class="op">=</span> 50
-    <span class="comment">; Score event type (-1=ignored)</span>
-    iopcode <span class="op">=</span> <span class="op">-</span>1
+<span class="nb">FLpanel</span> <span class="s">"Counter"</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="c1">; Minimum value output by counter</span>
+    i<span class="n">min</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="c1">; Maximum value output by counter</span>
+    i<span class="n">max</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="c1">; Single arrow step size (semitones)</span>
+    i<span class="n">step1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">12</span>
+    <span class="c1">; Double arrow step size (octave)</span>
+    i<span class="n">step2</span> <span class="o">=</span> <span class="mi">1</span> 
+    <span class="c1">; Counter type (1=double arrow counter)</span>
+    i<span class="n">type</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1">; Width of the counter in pixels</span>
+    i<span class="n">width</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="c1">; Height of the counter in pixels</span>
+    i<span class="n">height</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="c1">; Distance of the left edge of the counter</span>
+    <span class="c1">; from the left edge of the panel</span>
+    i<span class="n">x</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="c1">; Distance of the top edge of the counter</span>
+    <span class="c1">; from the top edge of the panel</span>
+    i<span class="n">y</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="c1">; Score event type (-1=ignored)</span>
+    i<span class="n">opcode</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
-    gkoct, ihandle <span class="opc">FLcount</span> "pitch <span class="opc">in</span> oct format", imin, imax, istep1, istep2, itype, iwidth, iheight, ix, iy, iopcode, 1, 0, 1
-<span class="comment">; End of panel contents</span>
-<span class="opc">FLpanelEnd</span>
-<span class="comment">; Run the widget thread!</span>
-<span class="opc">FLrun</span>
+    gk<span class="n">oct</span><span class="p">,</span> i<span class="n">handle</span> <span class="nb">FLcount</span> <span class="s">"pitch in oct format"</span><span class="p">,</span> i<span class="n">min</span><span class="p">,</span> i<span class="n">max</span><span class="p">,</span> i<span class="n">step1</span><span class="p">,</span> i<span class="n">step2</span><span class="p">,</span> i<span class="n">type</span><span class="p">,</span> i<span class="n">width</span><span class="p">,</span> i<span class="n">height</span><span class="p">,</span> i<span class="n">x</span><span class="p">,</span> i<span class="n">y</span><span class="p">,</span> i<span class="n">opcode</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="c1">; End of panel contents</span>
+<span class="nb">FLpanelEnd</span>
+<span class="c1">; Run the widget thread!</span>
+<span class="nb">FLrun</span>
 
-<span class="oblock">instr</span> 1
-    iamp <span class="op">=</span> 15000
-    ifn <span class="op">=</span> 1
-    asig <span class="opc">oscili</span> iamp, <span class="opc">cpsoct</span>(gkoct), ifn
-    <span class="opc">out</span> asig
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="comment">; Function table that defines a single cycle</span>
-<span class="comment">; of a sine wave.</span>
-<span class="stamnt">f</span> 1 0 1024 10 1
-
-<span class="comment">; Instrument 1 will play a note for 1 hour.</span>
-<span class="stamnt">i</span> 1 0 3600
-<span class="stamnt">e</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">amp</span> <span class="o">=</span> <span class="mi">15000</span>
+    i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
+    a<span class="n">sig</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="nb">cpsoct</span><span class="p">(</span>gk<span class="n">oct</span><span class="p">),</span> i<span class="n">fn</span>
+    <span class="nb">out</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="c1">; Function table that defines a single cycle</span>
+<span class="c1">; of a sine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>
+
+<span class="c1">; Instrument 1 will play a note for 1 hour.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -213,7 +213,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94093216"></a>
+        <a id="idm1552174320"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLjoy.html" title="FLjoy"><em class="citetitle">FLjoy</em></a>,
@@ -224,7 +224,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp94099168"></a>
+        <a id="idm1552177136"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

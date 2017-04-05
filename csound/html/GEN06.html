@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>GEN06</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="ScoregensTop.html" title="Score Statements and GEN Routines" />
     <link rel="prev" href="GEN05.html" title="GEN05" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp205305152"></a>
+        <a id="idm1438877808"></a>
         <h2>Description</h2>
         <p>
       This subroutine will generate a function comprised of segments of cubic polynomials, spanning specified points just three at a time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp205388496"></a>
+        <a id="idm1438878832"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span>  #   time   size   6   a   n1   b   n2   c   n3   d ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idp205390480"></a>
+        <a id="idm1438881008"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power off or power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>).
@@ -83,60 +84,59 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp205408384"></a>
+        <a id="idm1438868080"></a>
         <h2>Examples</h2>
         <p>
-	    Here is an example of the GEN06 routine. It uses the files <a class="ulink" href="examples/gen06.csd" target="_top"><em class="citetitle">gen06.csd</em></a>.
+	    Here is an example of the GEN06 routine. It uses the files <a class="ulink" href="examples/gen06.csd.html" target="_top"><em class="citetitle">gen06.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp205410240"></a>
+          <a id="idm1438866288"></a>
           <p class="title">
-            <strong>Example 1130. An example of the GEN06 routine.</strong>
+            <strong>Example 1158. An example of the GEN06 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp274806560"></a>
-              <a class="ulink" href="examples/gen06.csd.html" target="_top">Play</a>
+              <a id="idm1297749616"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o gen06.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o gen06.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifn  <span class="op">=</span> p4				<span class="comment">;choose between tables</span>
-kcps <span class="opc">init</span> 1<span class="op">/</span>p3				<span class="comment">;create index over duration of note.</span>
-kndx <span class="opc">phasor</span> kcps
-ixmode <span class="op">=</span> 1
-kval <span class="opc">table</span> kndx, ifn, ixmode		<span class="comment">;normalize mode</span>
+i<span class="n">fn</span>  <span class="o">=</span> <span class="nb">p4</span>				<span class="c1">;choose between tables</span>
+k<span class="n">cps</span> <span class="nb">init</span> <span class="mi">1</span><span class="o">/</span><span class="nb">p3</span>				<span class="c1">;create index over duration of note.</span>
+k<span class="n">ndx</span> <span class="nb">phasor</span> k<span class="n">cps</span>
+i<span class="n">xmode</span> <span class="o">=</span> <span class="mi">1</span>
+k<span class="n">val</span> <span class="nb">table</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">fn</span><span class="p">,</span> i<span class="n">xmode</span>		<span class="c1">;normalize mode</span>
 
-kfreq <span class="op">=</span> kval <span class="op">*</span> 30			<span class="comment">;scale frequency to emphasixe effect</span>
-asig  <span class="opc">poscil</span> .7, 220 <span class="op">+</span> kfreq, 1		<span class="comment">;add to frequency</span>
-      <span class="opc">outs</span> asig, asig
+k<span class="n">freq</span> <span class="o">=</span> k<span class="n">val</span> <span class="o">*</span> <span class="mi">30</span>			<span class="c1">;scale frequency to emphasixe effect</span>
+a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.7</span><span class="p">,</span> <span class="mi">220</span> <span class="o">+</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;add to frequency</span>
+      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
   
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 1 0 16384 10 1 <span class="comment">;sine wave.</span>
-<span class="stamnt">f</span> 2 0 513 6 1 128 -1 128 1 64 -.5 64 .5 16 -.5 8 1 16 -.5 8 1 16 -.5 84 1 16 -.5 8 .1 16 -.1 17 0
-<span class="stamnt">f</span> 3 0 513 6 0 128 0.5 128 1 128 0 129 -1
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span> <span class="c1">;sine wave.</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">513</span> <span class="mi">6</span> <span class="mi">1</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">128</span> <span class="mi">1</span> <span class="mi">64</span> <span class="o">-</span><span class="mf">.5</span> <span class="mi">64</span> <span class="mf">.5</span> <span class="mi">16</span> <span class="o">-</span><span class="mf">.5</span> <span class="mi">8</span> <span class="mi">1</span> <span class="mi">16</span> <span class="o">-</span><span class="mf">.5</span> <span class="mi">8</span> <span class="mi">1</span> <span class="mi">16</span> <span class="o">-</span><span class="mf">.5</span> <span class="mi">84</span> <span class="mi">1</span> <span class="mi">16</span> <span class="o">-</span><span class="mf">.5</span> <span class="mi">8</span> <span class="mf">.1</span> <span class="mi">16</span> <span class="o">-</span><span class="mf">.1</span> <span class="mi">17</span> <span class="mi">0</span>
+<span class="nb">f</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">513</span> <span class="mi">6</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mf">0.5</span> <span class="mi">128</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span> <span class="mi">129</span> <span class="o">-</span><span class="mi">1</span>
 
-<span class="stamnt">i</span> 1 0 3 2
-<span class="stamnt">i</span> 1 4 3 3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -166,7 +166,7 @@ asig  <span class="opc">poscil</span> .7, 220 <span class="op">+</span> kfreq, 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp205420096"></a>
+        <a id="idm1438859760"></a>
         <h2>See Also</h2>
         <p>
        <a class="link" href="GEN05.html" title="GEN05"><em class="citetitle">GEN05</em></a>,

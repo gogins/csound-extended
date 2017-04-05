@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>reson</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="repluck.html" title="repluck" />
@@ -38,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp132843328"></a>
+        <a id="idm1512180208"></a>
         <h2>Description</h2>
         <p>
       A second-order resonant filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132844544"></a>
+        <a id="idm1512180080"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>reson</strong></span> asig, xcf, xbw [, iscl] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp132917104"></a>
+        <a id="idm1512184816"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iscl</em></span> (optional, default=0) -- coded scaling factor for resonators. A value of 1 signifies a peak response factor of 1, i.e. all frequencies other than kcf are attenuated in accordance with the (normalized) response curve. A value of 2 raises the response factor so that its overall RMS value equals 1. (This intended equalization of input and output power assumes all frequencies are physically present; hence it is most applicable to white noise.) A zero value signifies no scaling of the signal, leaving that to some later adjustment (see <a class="link" href="balance.html" title="balance"><em class="citetitle">balance</em></a>). The default value is 0.
@@ -60,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132921632"></a>
+        <a id="idm1512181360"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- the output signal at audio rate.
@@ -79,57 +80,56 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132928304"></a>
+        <a id="idm1512176624"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the reson opcode. It uses the file <a class="ulink" href="examples/reson.csd" target="_top"><em class="citetitle">reson.csd</em></a>.
+      Here is an example of the reson opcode. It uses the file <a class="ulink" href="examples/reson.csd.html" target="_top"><em class="citetitle">reson.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp132930080"></a>
+          <a id="idm1512176496"></a>
           <p class="title">
-            <strong>Example 782. Example of the reson opcode.</strong>
+            <strong>Example 803. Example of the reson opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp262142032"></a>
-              <a class="ulink" href="examples/reson.csd.html" target="_top">Play</a>
+              <a id="idm1333282928"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac   <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o reson.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac   <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o reson.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asaw <span class="opc">vco2</span> .2, 220	<span class="comment">;sawtooth</span>
-kcf  <span class="opc">line</span> 220, p3, 1760	<span class="comment">;vary cut-off frequency from 220 to 1280 Hz</span>
-kbw  <span class="op">=</span> p4		<span class="comment">;vary bandwidth of filter too		</span>
-ares <span class="opc">reson</span> asaw, kcf, kbw
-asig <span class="opc">balance</span> ares, asaw
-     <span class="opc">outs</span> asig, asig
+a<span class="n">saw</span> <span class="nb">vco2</span> <span class="mf">.2</span><span class="p">,</span> <span class="mi">220</span>	<span class="c1">;sawtooth</span>
+k<span class="n">cf</span>  <span class="nb">line</span> <span class="mi">220</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1760</span>	<span class="c1">;vary cut-off frequency from 220 to 1280 Hz</span>
+k<span class="n">bw</span>  <span class="o">=</span> <span class="nb">p4</span>		<span class="c1">;vary bandwidth of filter too		</span>
+a<span class="n">res</span> <span class="nb">reson</span> a<span class="n">saw</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">bw</span>
+a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res</span><span class="p">,</span> a<span class="n">saw</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 4 10	<span class="comment">;bandwidth of filter = 10 Hz</span>
-<span class="stamnt">i</span> 1 + 4 50	<span class="comment">;50 Hz and</span>
-<span class="stamnt">i</span> 1 + 4 200	<span class="comment">;200 Hz</span>
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mi">10</span>	<span class="c1">;bandwidth of filter = 10 Hz</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="mi">50</span>	<span class="c1">;50 Hz and</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="mi">200</span>	<span class="c1">;200 Hz</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -138,7 +138,7 @@ asig <span class="opc">balance</span> ares, asaw
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132934400"></a>
+        <a id="idm1512175472"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="areson.html" title="areson"><em class="citetitle">areson</em></a>,
@@ -153,7 +153,7 @@ asig <span class="opc">balance</span> ares, asaw
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp132944192"></a>
+        <a id="idm1512429296"></a>
         <h2>Credits</h2>
         <p>Audio rate parameters introduced in version 6.02</p>
         <p>November 2013.</p>

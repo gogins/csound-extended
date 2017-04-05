@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>lpshold</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="lpreson.html" title="lpreson" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111982112"></a>
+        <a id="idm1533693168"></a>
         <h2>Description</h2>
         <p>
       Generate control signal consisting of held segments delimited by two or more specified points. The entire envelope is looped at <span class="emphasis"><em>kfreq</em></span> rate. Each parameter can be varied at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111983936"></a>
+        <a id="idm1533685744"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ksig <span class="command"><strong>lpshold</strong></span> kfreq, ktrig, iphase, ktime0, kvalue0  [, kvalue1] [, ktime1] [, kvalue2] [, ktime2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp111986256"></a>
+        <a id="idm1533682672"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> -- Output signal
@@ -77,66 +78,65 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp111996864"></a>
+        <a id="idm1533672176"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the lpshold opcode. It uses the file <a class="ulink" href="examples/lpshold.csd" target="_top"><em class="citetitle">lpshold.csd</em></a>.
+      Here is an example of the lpshold opcode. It uses the file <a class="ulink" href="examples/lpshold.csd.html" target="_top"><em class="citetitle">lpshold.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp111998720"></a>
+          <a id="idm1533676528"></a>
           <p class="title">
-            <strong>Example 481. Example of the lpshold opcode.</strong>
+            <strong>Example 496. Example of the lpshold opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp250599504"></a>
-              <a class="ulink" href="examples/lpshold.csd.html" target="_top">Play</a>
+              <a id="idm1360815088"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o lpshold.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o lpshold.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-kfrq  <span class="opc">init</span>    p4  <span class="comment">; frequency of the loop </span>
-ifrac <span class="op">=</span>       p5  <span class="comment">; fraction of frequency at which to force retrigger</span>
-ipan  <span class="op">=</span>       p6  <span class="comment">; pan position</span>
-ktrig <span class="opc">metro</span>   kfrq <span class="op">*</span> ifrac  <span class="comment">; trigger to force restart the loop</span>
-iphs  <span class="op">=</span>       0   <span class="comment">; initial phase of the loop</span>
-<span class="comment">; a loop of midi note numbers:   note duration etc...</span>
-knote <span class="opc">lpshold</span> kfrq, ktrig, iphs, 61,  0.0625,  60, 0.9375,   61, 1, 58, 1, \
-63, 2, 65, 3
-aenv  <span class="opc">linseg</span> 0,0.01,1,p3<span class="op">-</span>0.11,1,0.1,0   <span class="comment">; amplitude envelope</span>
-krnd  <span class="opc">rspline</span> <span class="op">-</span>0.05,0.05,0.5,1 <span class="comment">; random detune</span>
-asig  <span class="opc">gbuzz</span>   0.2<span class="op">*</span>aenv, <span class="opc">cpsmidinn</span>(knote<span class="op">+</span>krnd), 30, 1, 0.5, 1 
-      <span class="opc">outs</span>    asig<span class="op">*</span>ipan, asig<span class="op">*</span>(1<span class="op">-</span>ipan)
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">frq</span>  <span class="nb">init</span>    <span class="nb">p4</span>  <span class="c1">; frequency of the loop </span>
+i<span class="n">frac</span> <span class="o">=</span>       <span class="nb">p5</span>  <span class="c1">; fraction of frequency at which to force retrigger</span>
+i<span class="n">pan</span>  <span class="o">=</span>       <span class="nb">p6</span>  <span class="c1">; pan position</span>
+k<span class="n">trig</span> <span class="nb">metro</span>   k<span class="n">frq</span> <span class="o">*</span> i<span class="n">frac</span>  <span class="c1">; trigger to force restart the loop</span>
+i<span class="n">phs</span>  <span class="o">=</span>       <span class="mi">0</span>   <span class="c1">; initial phase of the loop</span>
+<span class="c1">; a loop of midi note numbers:   note duration etc...</span>
+k<span class="n">note</span> <span class="nb">lpshold</span> k<span class="n">frq</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> i<span class="n">phs</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span>  <span class="mf">0.0625</span><span class="p">,</span>  <span class="mi">60</span><span class="p">,</span> <span class="mf">0.9375</span><span class="p">,</span>   <span class="mi">61</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> \
+<span class="mi">63</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">3</span>
+a<span class="n">env</span>  <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">p3</span><span class="o">-</span><span class="mf">0.11</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span>   <span class="c1">; amplitude envelope</span>
+k<span class="n">rnd</span>  <span class="nb">rspline</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span> <span class="c1">; random detune</span>
+a<span class="n">sig</span>  <span class="nb">gbuzz</span>   <span class="mf">0.2</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="nb">cpsmidinn</span><span class="p">(</span>k<span class="n">note</span><span class="o">+</span>k<span class="n">rnd</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span> 
+      <span class="nb">outs</span>    a<span class="n">sig</span><span class="o">*</span>i<span class="n">pan</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span>i<span class="n">pan</span><span class="p">)</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="comment">; cosine wave.</span>
-<span class="stamnt">f</span> 1 0 16384 11 1
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; cosine wave.</span>
+<span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">11</span> <span class="mi">1</span>
 
-<span class="comment">; 3 layers of the loop are played, each at a different speed, </span>
-<span class="comment">; - with different retriggering rate, and pan location.</span>
-<span class="stamnt">i</span> 1 0 60 0.5   [8/10] 0.5
-<span class="stamnt">i</span> 1 0 60 0.375 [8/11] 0.1
-<span class="stamnt">i</span> 1 0 60 0.25  [8/13] 0.9
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="c1">; 3 layers of the loop are played, each at a different speed, </span>
+<span class="c1">; - with different retriggering rate, and pan location.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span> <span class="mf">0.5</span>   <span class="p">[</span><span class="mi">8</span><span class="o">/</span><span class="mi">10</span><span class="p">]</span> <span class="mf">0.5</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span> <span class="mf">0.375</span> <span class="p">[</span><span class="mi">8</span><span class="o">/</span><span class="mi">11</span><span class="p">]</span> <span class="mf">0.1</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span> <span class="mf">0.25</span>  <span class="p">[</span><span class="mi">8</span><span class="o">/</span><span class="mi">13</span><span class="p">]</span> <span class="mf">0.9</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -145,14 +145,14 @@ asig  <span class="opc">gbuzz</span>   0.2<span class="op">*</span>aenv, <span c
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112003040"></a>
+        <a id="idm1533673584"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="loopseg.html" title="loopseg"><em class="citetitle">loopseg</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp112005152"></a>
+        <a id="idm1533281520"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in Version 4.13</p>

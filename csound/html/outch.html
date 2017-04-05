@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>outch</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="outc.html" title="outc" />
@@ -38,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120568784"></a>
+        <a id="idm1524650224"></a>
         <h2>Description</h2>
         <p>
       Writes multi-channel audio data, with user-controllable channels, to an external device or stream.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120634560"></a>
+        <a id="idm1524648304"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outch</strong></span> kchan1, asig1 [, kchan2] [, asig2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp120636576"></a>
+        <a id="idm1524645744"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>outch</em></span> outputs <span class="emphasis"><em>asig1</em></span> on the channel determined by <span class="emphasis"><em>kchan1</em></span>, <span class="emphasis"><em>asig2</em></span> on the channel determined by <span class="emphasis"><em>kchan2</em></span>, etc.
@@ -74,59 +75,58 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp120644432"></a>
+        <a id="idm1524639984"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the outch opcode. It uses the file <a class="ulink" href="examples/outch.csd" target="_top"><em class="citetitle">outch.csd</em></a>.
+      Here is an example of the outch opcode. It uses the file <a class="ulink" href="examples/outch.csd.html" target="_top"><em class="citetitle">outch.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp120646288"></a>
+          <a id="idm1524635632"></a>
           <p class="title">
-            <strong>Example 600. Example of the outch opcode.</strong>
+            <strong>Example 619. Example of the outch opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255952544"></a>
-              <a class="ulink" href="examples/outch.csd.html" target="_top">Play</a>
+              <a id="idm1348600816"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac    <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outch.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac    <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outch.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 5
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">vco2</span> .05, 100	<span class="comment">; sawtooth waveform at low volume</span>
+a<span class="n">sig</span> <span class="nb">vco2</span> <span class="mf">.05</span><span class="p">,</span> <span class="mi">100</span>	<span class="c1">; sawtooth waveform at low volume</span>
 
-kcut <span class="opc">line</span> 100, p3, 30	<span class="comment">; Vary cutoff frequency</span>
-kresonance <span class="op">=</span> .7
-inumlayer <span class="op">=</span> 3
-asig <span class="opc">lowresx</span> asig, kcut, kresonance, inumlayer
+k<span class="n">cut</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span>	<span class="c1">; Vary cutoff frequency</span>
+k<span class="n">resonance</span> <span class="o">=</span> <span class="mf">.7</span>
+i<span class="n">numlayer</span> <span class="o">=</span> <span class="mi">3</span>
+a<span class="n">sig</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut</span><span class="p">,</span> k<span class="n">resonance</span><span class="p">,</span> i<span class="n">numlayer</span>
 
-klfo <span class="opc">lfo</span> 4, .5, 4	
-klfo <span class="op">=</span> klfo<span class="op">+</span>1		<span class="comment">; offset of 1</span>
-<span class="opc">printks</span> "signal is sent to channel <span class="op">%</span>d\\n", .1, klfo
-      <span class="opc">outch</span> klfo,asig
+k<span class="n">lfo</span> <span class="nb">lfo</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">4</span>	
+k<span class="n">lfo</span> <span class="o">=</span> k<span class="n">lfo</span><span class="o">+</span><span class="mi">1</span>		<span class="c1">; offset of 1</span>
+<span class="nb">printks</span> <span class="s">"signal is sent to channel </span><span class="si">%d</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> k<span class="n">lfo</span>
+      <span class="nb">outch</span> k<span class="n">lfo</span><span class="p">,</span>a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 30
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -145,53 +145,52 @@ signal is sent to channel 5
         <p>
     </p>
         <p>
-      Here is another example of the outch opcode. It uses the file <a class="ulink" href="examples/outch.csd" target="_top"><em class="citetitle">outch-2.csd</em></a>.
+      Here is another example of the outch opcode. It uses the file <a class="ulink" href="examples/outch.csd.html" target="_top"><em class="citetitle">outch-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp120652432"></a>
+          <a id="idm1524634864"></a>
           <p class="title">
-            <strong>Example 601. Another example of the outch opcode.</strong>
+            <strong>Example 620. Another example of the outch opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp255949888"></a>
-              <a class="ulink" href="examples/outch-2.csd.html" target="_top">Play</a>
+              <a id="idm1348550000"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac      <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o outch-2.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac      <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o outch-2.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 4
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="ohdr">seed</span>     0
+<span class="nb">seed</span>     <span class="mi">0</span>
 
-<span class="oblock">instr</span> 1 <span class="comment">;random movements between 4 speakers with outch</span>
+<span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;random movements between 4 speakers with outch</span>
 
-ichn1     <span class="opc">random</span>    1, 4.999 <span class="comment">;channel to start</span>
-ichn2     <span class="opc">random</span>    1, 4.999 <span class="comment">;channel to end</span>
-          <span class="opc">prints</span>    "Moving from speaker <span class="op">%</span>d to speaker <span class="op">%</span>d<span class="op">%</span>n", <span class="opc">int</span>(ichn1), <span class="opc">int</span>(ichn2)
-asamp     <span class="opc">soundin</span>   "fox.wav"
-kmov      <span class="opc">linseg</span>    0, p3, 1
-a1, a2    <span class="opc">pan2</span>      asamp, kmov
-          <span class="opc">outch</span>     <span class="opc">int</span>(ichn1), a1, <span class="opc">int</span>(ichn2), a2
-<span class="oblock">endin</span>
+i<span class="n">chn1</span>     <span class="nb">random</span>    <span class="mi">1</span><span class="p">,</span> <span class="mf">4.999</span> <span class="c1">;channel to start</span>
+i<span class="n">chn2</span>     <span class="nb">random</span>    <span class="mi">1</span><span class="p">,</span> <span class="mf">4.999</span> <span class="c1">;channel to end</span>
+          <span class="nb">prints</span>    <span class="s">"Moving from speaker </span><span class="si">%d</span><span class="s"> to speaker </span><span class="si">%d</span><span class="se">%n</span><span class="s">"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span>i<span class="n">chn1</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span>i<span class="n">chn2</span><span class="p">)</span>
+a<span class="n">samp</span>     <span class="nb">soundin</span>   <span class="s">"fox.wav"</span>
+k<span class="n">mov</span>      <span class="nb">linseg</span>    <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>    <span class="nb">pan2</span>      a<span class="n">samp</span><span class="p">,</span> k<span class="n">mov</span>
+          <span class="nb">outch</span>     <span class="nb">int</span><span class="p">(</span>i<span class="n">chn1</span><span class="p">),</span> a<span class="n">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span>i<span class="n">chn2</span><span class="p">),</span> a<span class="n">2</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">r</span> 5
-<span class="stamnt">i</span> 1 0 3
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">r</span> <span class="mi">5</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -200,7 +199,7 @@ a1, a2    <span class="opc">pan2</span>      asamp, kmov
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp120654352"></a>
+        <a id="idm1524636400"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="out32.html" title="out32"><em class="citetitle">out32</em></a>,
@@ -211,7 +210,7 @@ a1, a2    <span class="opc">pan2</span>      asamp, kmov
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue16/audiorouting.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue16/audiorouting.html</em></a>  , written by Andreas Russo </p>
       </div>
       <div class="refsect1">
-        <a id="idp120660640"></a>
+        <a id="idm1524629232"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>else</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="dust2.html" title="dust2" />
@@ -38,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp90404592"></a>
+        <a id="idm1555723872"></a>
         <h2>Description</h2>
         <p>
       Executes a block of code when an "if...then" condition is false.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90469552"></a>
+        <a id="idm1555730912"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -54,72 +55,71 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idp90471440"></a>
+        <a id="idm1555729888"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>else</em></span> is used inside of a block of code between the <a class="link" href="if.html" title="if"><em class="citetitle">"if...then"</em></a> and <a class="link" href="endif.html" title="endif"><em class="citetitle">endif</em></a> opcodes. It defines which statements are executed when a "if...then" condition is false. Only one <span class="emphasis"><em>else</em></span> statement may occur and it must be the last conditional statement before the <span class="emphasis"><em>endif</em></span> opcode.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90476048"></a>
+        <a id="idm1555716448"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the else opcode. It uses the file <a class="ulink" href="examples/else.csd" target="_top"><em class="citetitle">else.csd</em></a>.
+      Here is an example of the else opcode. It uses the file <a class="ulink" href="examples/else.csd.html" target="_top"><em class="citetitle">else.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idp90477824"></a>
+          <a id="idm1555721184"></a>
           <p class="title">
-            <strong>Example 231. Example of the else opcode.</strong>
+            <strong>Example 233. Example of the else opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp240716368"></a>
-              <a class="ulink" href="examples/else.csd.html" target="_top">Play</a>
+              <a id="idm1390124528"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o else.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o else.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ipch <span class="op">=</span> <span class="opc">cpspch</span>(p4)
-ienv <span class="op">=</span> p5
+i<span class="n">pch</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+i<span class="n">env</span> <span class="o">=</span> <span class="nb">p5</span>
 
 
-<span class="octrl">if</span> (ienv <span class="op">==</span> 0) then 	
-	kenv <span class="opc">adsr</span> 0.01, 0.95, .7, .5
-<span class="octrl">else</span>
-	kenv <span class="opc">linseg</span> 0, p3 <span class="op">*</span> .5, 1, p3 <span class="op">*</span> .5, 0
-<span class="octrl">endif</span>
+<span class="k">if</span> <span class="p">(</span>i<span class="n">env</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span> 	
+	k<span class="n">env</span> <span class="nb">adsr</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">.7</span><span class="p">,</span> <span class="mf">.5</span>
+<span class="k">else</span>
+	k<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>
+<span class="k">endif</span>
 
-aout <span class="opc">vco2</span>    .8, ipch, 10
-aout <span class="opc">moogvcf</span> aout, ipch <span class="op">+</span> (kenv <span class="op">*</span> 6 <span class="op">*</span> ipch) , .5
+a<span class="n">out</span> <span class="nb">vco2</span>    <span class="mf">.8</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="mi">10</span>
+a<span class="n">out</span> <span class="nb">moogvcf</span> a<span class="n">out</span><span class="p">,</span> i<span class="n">pch</span> <span class="o">+</span> <span class="p">(</span>k<span class="n">env</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">*</span> i<span class="n">pch</span><span class="p">)</span> <span class="p">,</span> <span class="mf">.5</span>
 
-aout <span class="op">=</span> aout <span class="op">*</span> kenv
-    <span class="opc">outs</span> aout, aout
+a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span> <span class="o">*</span> k<span class="n">env</span>
+    <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2 8.00 0
-<span class="stamnt">i</span> 1 3 2 8.00 1
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mf">8.00</span> <span class="mi">0</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mf">8.00</span> <span class="mi">1</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -128,7 +128,7 @@ aout <span class="op">=</span> aout <span class="op">*</span> kenv
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp90482160"></a>
+        <a id="idm1555715040"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="elseif.html" title="elseif"><em class="citetitle">elseif</em></a>,
@@ -143,7 +143,7 @@ aout <span class="op">=</span> aout <span class="op">*</span> kenv
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/2006spring/controlFlow.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/2006spring/controlFlow.html</em></a>  , written by Steven Yi </p>
       </div>
       <div class="refsect1">
-        <a id="idp90492256"></a>
+        <a id="idm1555707104"></a>
         <h2>Credits</h2>
         <p>New in version 4.21</p>
       </div>

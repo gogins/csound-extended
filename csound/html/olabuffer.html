@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>olabuffer</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="octpch.html" title="octpch" />
@@ -38,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119130352"></a>
+        <a id="idm1525957488"></a>
         <h2>Description</h2>
         <p>
         <span class="emphasis"><em>olabuffer</em></span> This opcode takes 1 dimensional k-rate arrays that contain sequential frames of audio and sums them based on an overlap factor resulting in an audio signal output. This is useful for frame based audio processing such as spectral analysis/synthesis.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119132160"></a>
+        <a id="idm1525950448"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>olabuffer</strong></span> kin, ioverlap</pre>
       </div>
       <div class="refsect1">
-        <a id="idp119134272"></a>
+        <a id="idm1525950960"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ioverlap</em></span> -- The amount of overlaps per k-array input frame sample size. For example for an input window size of 1024, and a hop size of 256 the overlap factor would be 4. The overlap factor must be larger than or equal to ksmps and must also be an integer multiple of the input k-rate array sample count.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119136192"></a>
+        <a id="idm1525944688"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout</em></span> -- The resulting audio signal from the added input frames.
@@ -65,52 +66,51 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119138256"></a>
+        <a id="idm1525948656"></a>
         <h2>Examples</h2>
         <p>
-      Here is a simple example of the olabuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd" target="_top"><em class="citetitle">framebuffer.csd</em></a>.
+      Here is a simple example of the olabuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd.html" target="_top"><em class="citetitle">framebuffer.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp119140144"></a>
+          <a id="idm1525943920"></a>
           <p class="title">
-            <strong>Example 584. Example of the olabuffer opcode.</strong>
+            <strong>Example 603. Example of the olabuffer opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp255251824"></a>
-              <a class="ulink" href="examples/framebuffer.csd.html" target="_top">Play</a>
+              <a id="idm1350652272"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
 -odac
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
-<span class="ohdr">ksmps</span> <span class="op">=</span> 128
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
 
-<span class="oblock">instr</span> 1
-    isize <span class="opc">init</span> 1024
-    ioverlaps <span class="opc">init</span> 4
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">size</span> <span class="nb">init</span> <span class="mi">1024</span>
+    i<span class="n">overlaps</span> <span class="nb">init</span> <span class="mi">4</span>
 
-    asig <span class="opc">diskin2</span> "fox.wav", 1, 0, 1
-    kframe[] <span class="opc">framebuffer</span> asig, isize
-    kwindowedFrame[] <span class="opc">window</span> kframe, isize
+    a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    k<span class="n">frame</span><span class="p">[]</span> <span class="nb">framebuffer</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">size</span>
+    k<span class="n">windowedFrame</span><span class="p">[]</span> <span class="nb">window</span> k<span class="n">frame</span><span class="p">,</span> i<span class="n">size</span>
 
-    aout <span class="opc">olabuffer</span> kwindowedFrame, ioverlaps
-    aout <span class="op">=</span> aout <span class="op">/</span> 2
+    a<span class="n">out</span> <span class="nb">olabuffer</span> k<span class="n">windowedFrame</span><span class="p">,</span> i<span class="n">overlaps</span>
+    a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span> <span class="o">/</span> <span class="mi">2</span>
 
-    <span class="opc">outs</span> aout, aout
-<span class="oblock">endin</span>
+    <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 400
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">400</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -119,7 +119,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119144432"></a>
+        <a id="idm1525946096"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="olabuffer.html" title="olabuffer"><em class="citetitle">olabuffer</em></a>
@@ -128,7 +128,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp119148336"></a>
+        <a id="idm1525934832"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tablei</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tablegpw.html" title="tablegpw" />
@@ -38,21 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146227696"></a>
+        <a id="idm1499026800"></a>
         <h2>Description</h2>
         <p>
       Accesses table values by direct indexing with linear interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146228976"></a>
+        <a id="idm1499020400"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>tablei</strong></span> andx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">ires <span class="command"><strong>tablei</strong></span> indx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">kres <span class="command"><strong>tablei</strong></span> kndx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp146297344"></a>
+        <a id="idm1499023600"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- function table number. <span class="emphasis"><em>tablei</em></span> requires the extended guard point.
@@ -92,95 +93,94 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146305680"></a>
+        <a id="idm1499012592"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tablei</em></span> is a interpolating unit in which the fractional part of index is used to interpolate between adjacent table entries. The smoothness gained by interpolation is at some small cost in execution time (see also <a class="link" href="oscili.html" title="oscili"><em class="citetitle">oscili</em></a>, etc.), but the interpolating and non-interpolating units are otherwise interchangeable. Note that when <span class="emphasis"><em>tablei</em></span> uses a periodic index whose modulo <span class="emphasis"><em>n</em></span> is less than the power of 2 table length, the interpolation process requires that there be an (<span class="emphasis"><em>n</em></span> + 1)th table value that is a repeat of the 1st (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f Statement</em></a> in score).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146310896"></a>
+        <a id="idm1499017840"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tablei opcode. It uses the file <a class="ulink" href="examples/tablei.csd" target="_top"><em class="citetitle">tablei.csd</em></a>.
+      Here is an example of the tablei opcode. It uses the file <a class="ulink" href="examples/tablei.csd.html" target="_top"><em class="citetitle">tablei.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp146312752"></a>
+          <a id="idm1499002096"></a>
           <p class="title">
-            <strong>Example 930. Example of the tablei opcode.</strong>
+            <strong>Example 956. Example of the tablei opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp267919680"></a>
-              <a class="ulink" href="examples/tablei.csd.html" target="_top">Play</a>
+              <a id="idm1318549104"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tablei.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tablei.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="ohdr">seed</span> 0	<span class="comment">;generate new values every time the instr is played</span>
+<span class="nb">seed</span> <span class="mi">0</span>	<span class="c1">;generate new values every time the instr is played</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-ifn <span class="op">=</span> p4
-isize <span class="op">=</span> p5
-ithresh <span class="op">=</span> 0.5
+i<span class="n">fn</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">size</span> <span class="o">=</span> <span class="nb">p5</span>
+i<span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.5</span>
     
-itemp <span class="ohdr">ftgen</span> ifn, 0, isize, 21, 2
+i<span class="n">temp</span> <span class="nb">ftgen</span> i<span class="n">fn</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">2</span>
 
-iwrite_value <span class="op">=</span> 0
-i_index <span class="op">=</span> 0
+i<span class="n">write_value</span> <span class="o">=</span> <span class="mi">0</span>
+i<span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
     
-<span class="olabel">loop_start</span><span class="op">:</span>
-    iread_value <span class="opc">tablei</span> i_index, ifn
+<span class="nl">loop_start</span><span class="p">:</span>
+    i<span class="n">read_value</span> <span class="nb">tablei</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">fn</span>
     
-    <span class="octrl">if</span> iread_value <span class="op">&gt;</span> ithresh then
-         iwrite_value <span class="op">=</span> 1
-    <span class="octrl">else</span>
-         iwrite_value <span class="op">=</span> <span class="op">-</span>1
-    <span class="octrl">endif</span>
-<span class="opc">tableiw</span> iwrite_value, i_index, ifn
-<span class="octrl">loop_lt</span> i_index, 1, isize, <span class="olabel">loop_start</span>        
-    <span class="opc">turnoff</span>
+    <span class="k">if</span> i<span class="n">read_value</span> <span class="o">&gt;</span> i<span class="n">thresh</span> <span class="k">then</span>
+         i<span class="n">write_value</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span>
+         i<span class="n">write_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">endif</span>
+<span class="nb">tableiw</span> i<span class="n">write_value</span><span class="p">,</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">fn</span>
+<span class="k">loop_lt</span> i<span class="n">_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="nl">loop_start</span>        
+    <span class="nb">turnoff</span>
 
-<span class="oblock">endin</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-ifn <span class="op">=</span> p4
-isize <span class="op">=</span> <span class="opc">ftlen</span>(ifn)    
-<span class="opc">prints</span> "Index\tValue\n"
+i<span class="n">fn</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">size</span> <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span>    
+<span class="nb">prints</span> <span class="s">"Index</span><span class="se">\t</span><span class="s">Value</span><span class="se">\n</span><span class="s">"</span>
     
-i_index <span class="op">=</span> 0
-<span class="olabel">loop_start</span><span class="op">:</span>
-    ivalue <span class="opc">tablei</span> i_index, ifn
-    <span class="opc">prints</span> "<span class="op">%</span>d<span class="op">:</span>\t<span class="op">%</span>f\n", i_index, ivalue
+i<span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="nl">loop_start</span><span class="p">:</span>
+    i<span class="n">value</span> <span class="nb">tablei</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">fn</span>
+    <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">:</span><span class="se">\t</span><span class="s">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">value</span>
 
-  <span class="octrl">loop_lt</span> i_index, 1, isize, <span class="olabel">loop_start</span>		<span class="comment">;read table 1 with our index</span>
+  <span class="k">loop_lt</span> i<span class="n">_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="nl">loop_start</span>		<span class="c1">;read table 1 with our index</span>
 
-aout <span class="opc">oscili</span> .5, 100, ifn			<span class="comment">;use table to play the polypulse</span>
-     <span class="opc">outs</span>   aout, aout
+a<span class="n">out</span> <span class="nb">oscili</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">fn</span>			<span class="c1">;use table to play the polypulse</span>
+     <span class="nb">outs</span>   a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 1 100 16
-<span class="stamnt">i</span> 2 0 2 100
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">100</span> <span class="mi">16</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">100</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -189,7 +189,7 @@ aout <span class="opc">oscili</span> .5, 100, ifn			<span class="comment">;use t
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp146317040"></a>
+        <a id="idm1499004400"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="table.html" title="table"><em class="citetitle">table</em></a>,

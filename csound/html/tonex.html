@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tonex</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tonek.html" title="tonek" />
@@ -38,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp149638144"></a>
+        <a id="idm1494884080"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>tonex</em></span> is equivalent to a filter consisting of more layers of <a class="link" href="tone.html" title="tone"><em class="citetitle">tone</em></a> with the same arguments, serially connected. Using a stack of a larger number of filters allows a sharper cutoff. They are faster than using a larger number instances in a Csound orchestra of the old opcodes, because only one initialization and k- cycle are needed at time and the audio loop falls entirely inside the cache memory of processor.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149713184"></a>
+        <a id="idm1494873328"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>tonex</strong></span>  asig, khp [, inumlayer] [, iskip]</pre>
         <pre class="synopsis">ares <span class="command"><strong>tonex</strong></span>  asig, ahp [, inumlayer] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp149716832"></a>
+        <a id="idm1494878192"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inumlayer</em></span> (optional) -- number of elements in the filter stack. Default value is 4.
@@ -61,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149719664"></a>
+        <a id="idm1494879088"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -73,59 +74,58 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149722576"></a>
+        <a id="idm1494871920"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tonex opcode. It uses the file <a class="ulink" href="examples/tonex.csd" target="_top"><em class="citetitle">tonex.csd</em></a>.
+      Here is an example of the tonex opcode. It uses the file <a class="ulink" href="examples/tonex.csd.html" target="_top"><em class="citetitle">tonex.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp149724432"></a>
+          <a id="idm1494870640"></a>
           <p class="title">
-            <strong>Example 968. Example of the tonex opcode.</strong>
+            <strong>Example 994. Example of the tonex opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp269311440"></a>
-              <a class="ulink" href="examples/tonex.csd.html" target="_top">Play</a>
+              <a id="idm1314801008"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac     <span class="comment">;;;realtime audio out</span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tonex.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac     <span class="c1">;;;realtime audio out</span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tonex.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100 
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32 
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1 
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span> 
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span> 
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span> 
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="oblock">instr</span> 1
+<span class="kd">instr</span> <span class="nf">1</span>
 
-asig <span class="opc">diskin2</span> "beats.wav", 1
-     <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
 
-<span class="oblock">instr</span> 2
+<span class="kd">instr</span> <span class="nf">2</span>
 
-kton <span class="opc">line</span> 10000, p3, 0		<span class="comment">;all the way down to 0 Hz</span>
-asig <span class="opc">diskin2</span> "beats.wav", 1
-asig <span class="opc">tonex</span> asig, kton, 8	<span class="comment">;8 filters</span>
-     <span class="opc">outs</span> asig, asig
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+k<span class="n">ton</span> <span class="nb">line</span> <span class="mi">10000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>		<span class="c1">;all the way down to 0 Hz</span>
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">sig</span> <span class="nb">tonex</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">ton</span><span class="p">,</span> <span class="mi">8</span>	<span class="c1">;8 filters</span>
+     <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="stamnt">i</span> 1 0 2
-<span class="stamnt">i</span> 2 3 2
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">2</span>
 
-<span class="stamnt">e</span>
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -134,7 +134,7 @@ asig <span class="opc">tonex</span> asig, kton, 8	<span class="comment">;8 filte
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149728720"></a>
+        <a id="idm1494871408"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="atonex.html" title="atonex"><em class="citetitle">atonex</em></a>,
@@ -142,7 +142,7 @@ asig <span class="opc">tonex</span> asig, kton, 8	<span class="comment">;8 filte
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp149731728"></a>
+        <a id="idm1494864112"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>tanh</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tan.html" title="tan" />
@@ -38,28 +39,30 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp148466384"></a>
+        <a id="idm1495940464"></a>
         <h2>Description</h2>
         <p>
       Returns the hyperbolic tangent of <span class="emphasis"><em>x</em></span>. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148532208"></a>
+        <a id="idm1495936368"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>tanh</strong></span>(x) (no rate restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>tanh</strong></span>(x) (no rate
+    restriction)</pre>
+        <pre class="synopsis"><span class="command"><strong>tanh</strong></span>(k/i[]) (k- or i-arrays )</pre>
       </div>
       <div class="refsect1">
-        <a id="idp148534160"></a>
+        <a id="idm1495932272"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the tanh opcode. It uses the file <a class="ulink" href="examples/tanh.csd" target="_top"><em class="citetitle">tanh.csd</em></a>. 
+      Here is an example of the tanh opcode. It uses the file <a class="ulink" href="examples/tanh.csd.html" target="_top"><em class="citetitle">tanh.csd</em></a>. 
 
       </p>
         <div class="example">
-          <a id="idp148535936"></a>
+          <a id="idm1495937264"></a>
           <p class="title">
-            <strong>Example 949. Example of the tanh opcode.</strong>
+            <strong>Example 975. Example of the tanh opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time
@@ -67,46 +70,45 @@
         Flags</em></a> for more information on using command
         line flags.</p>
             <div class="refsect1">
-              <a id="idp268482112"></a>
-              <a class="ulink" href="examples/tanh.csd.html" target="_top">Play</a>
+              <a id="idm1316977648"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac           -iadc    <span class="comment">;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o tanh.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac           -iadc    <span class="c1">;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o tanh.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="comment">; Initialize the global variables.</span>
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">kr</span> <span class="op">=</span> 4410
-<span class="ohdr">ksmps</span> <span class="op">=</span> 10
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
-<span class="ohdr">0dbfs</span> <span class="op">=</span> 1
+<span class="c1">; Initialize the global variables.</span>
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">kr</span> <span class="o">=</span> <span class="mi">4410</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">; Instrument #1.</span>
-<span class="oblock">instr</span> 1
-  asig1 <span class="opc">vco</span>  1, 440, 2, 0.4, 1
-  asig2 <span class="opc">vco</span>  1, 800, 3, 0.5, 1
-  asig  <span class="op">=</span>    asig1<span class="op">+</span>asig2       <span class="comment">;; will go out of range</span>
-        <span class="opc">out</span>  <span class="opc">tanh</span>(asig)        <span class="comment">;; but tanh is a limiter</span>
-<span class="oblock">endin</span>
-
-
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-
-<span class="stamnt">f</span>1 0 65536 10 1
-<span class="comment">; Play Instrument #1 for one second.</span>
-<span class="stamnt">i</span> 1 0 1
-<span class="stamnt">e</span>
+<span class="c1">; Instrument #1.</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+  a<span class="n">sig1</span> <span class="nb">vco</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">sig2</span> <span class="nb">vco</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">sig</span>  <span class="o">=</span>    a<span class="n">sig1</span><span class="o">+</span>a<span class="n">sig2</span>       <span class="c1">;; will go out of range</span>
+        <span class="nb">out</span>  <span class="nb">tanh</span><span class="p">(</span>a<span class="n">sig</span><span class="p">)</span>        <span class="c1">;; but tanh is a limiter</span>
+<span class="kd">endin</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+
+<span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">65536</span> <span class="mi">10</span> <span class="mi">1</span>
+<span class="c1">; Play Instrument #1 for one second.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">e</span>
+
+
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -115,7 +117,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148540432"></a>
+        <a id="idm1495934320"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cos.html" title="cos"><em class="citetitle">cos</em></a>,
@@ -129,7 +131,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp148549104"></a>
+        <a id="idm1495923312"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>New in version 3.47</p>

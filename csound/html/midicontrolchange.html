@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>midicontrolchange</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="midichn.html" title="midichn" />
@@ -38,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp113973600"></a>
+        <a id="idm1531296496"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>midicontrolchange</em></span> is designed to simplify writing instruments that can be used interchangeably for either score or MIDI input, and to make it easier to adapt instruments originally written for score input to work with MIDI input.
@@ -52,12 +53,12 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114044576"></a>
+        <a id="idm1531287024"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>midicontrolchange</strong></span> xcontroller, xcontrollervalue [, ilow] [, ihigh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp114046656"></a>
+        <a id="idm1531291248"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ilow</em></span> (optional) -- optional low value after rescaling, defaults to 0.
@@ -67,7 +68,7 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114049152"></a>
+        <a id="idm1531290736"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xcontroller</em></span> -- specifies a MIDI controller number (0-127).
@@ -98,58 +99,57 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
         </div>
       </div>
       <div class="refsect1">
-        <a id="idp114057248"></a>
+        <a id="idm1531282160"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the midicontrolchange opcode. It uses the file <a class="ulink" href="examples/midicontrolchange.csd" target="_top"><em class="citetitle">midicontrolchange.csd</em></a>
+      Here is an example of the midicontrolchange opcode. It uses the file <a class="ulink" href="examples/midicontrolchange.csd.html" target="_top"><em class="citetitle">midicontrolchange.csd</em></a>
 
       </p>
         <div class="example">
-          <a id="idp114059104"></a>
+          <a id="idm1531285104"></a>
           <p class="title">
-            <strong>Example 511. Example of the midicontrolchange opcode.</strong>
+            <strong>Example 527. Example of the midicontrolchange opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idp251700560"></a>
-              <a class="ulink" href="examples/midicontrolchange.csd.html" target="_top">Play</a>
+              <a id="idm1356770928"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
--odac  -+rtmidi=virtual   -M0  <span class="comment">;;;realtime audio out and midi in </span>
-<span class="comment">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o midicontrolchange.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+-odac  -+rtmidi=virtual   -M0  <span class="c1">;;;realtime audio out and midi in </span>
+<span class="c1">;-iadc    ;;;uncomment -iadc if realtime audio input is needed too</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o midicontrolchange.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="oblock">instr</span> 1
-<span class="comment">; use slider of contr. 7 of virtual keyboard</span>
-kcont <span class="opc">init</span> 1	<span class="comment">; max. volume</span>
-<span class="opc">midicontrolchange</span> 7, kcont, 0, 1<span class="comment">; use controller 7, scaled between 0 and 1	</span>
-<span class="opc">printk2</span> kcont	<span class="comment">; Display the key value when it changes and key is pressed</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">; use slider of contr. 7 of virtual keyboard</span>
+k<span class="n">cont</span> <span class="nb">init</span> <span class="mi">1</span>	<span class="c1">; max. volume</span>
+<span class="nb">midicontrolchange</span> <span class="mi">7</span><span class="p">,</span> k<span class="n">cont</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; use controller 7, scaled between 0 and 1	</span>
+<span class="nb">printk2</span> k<span class="n">cont</span>	<span class="c1">; Display the key value when it changes and key is pressed</span>
 
-kenv <span class="opc">madsr</span> 0.5, 0.8, 0.8, 0.5		<span class="comment">; envelope multiplied by</span>
-asig <span class="opc">pluck</span> kenv<span class="op">*</span>kcont, 220, 220, 2, 1	<span class="comment">; value of controller 7	 </span>
-     <span class="opc">outs</span>  asig, asig
+k<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span>		<span class="c1">; envelope multiplied by</span>
+a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</span><span class="o">*</span>k<span class="n">cont</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; value of controller 7	 </span>
+     <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="oblock">endin</span>
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">f</span> 0 30
-<span class="stamnt">f</span> 2 0 4096 10 1	
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">f</span> <span class="mi">0</span> <span class="mi">30</span>
+<span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>	
 
-<span class="stamnt">i</span> 1 10 2	<span class="comment">; play a note from score as well</span>
-<span class="stamnt">e</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">10</span> <span class="mi">2</span>	<span class="c1">; play a note from score as well</span>
+<span class="nb">e</span>
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -158,7 +158,7 @@ asig <span class="opc">pluck</span> kenv<span class="op">*</span>kcont, 220, 220
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114061040"></a>
+        <a id="idm1531284464"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midichannelaftertouch.html" title="midichannelaftertouch"><em class="citetitle">midichannelaftertouch</em></a>, 
@@ -174,7 +174,7 @@ asig <span class="opc">pluck</span> kenv<span class="op">*</span>kcont, 220, 220
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp114071728"></a>
+        <a id="idm1531535344"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins</p>
         <p>New in version 4.20</p>

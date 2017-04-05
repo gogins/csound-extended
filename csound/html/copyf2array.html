@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>copyf2array</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="copya2ftab.html" title="copya2ftab" />
@@ -38,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85123328"></a>
+        <a id="idm1561058288"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>copyf2array</em></span> opcode takes an f-table and
@@ -46,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85124960"></a>
+        <a id="idm1561053296"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>copyf2array</strong></span> tab, kftbl</pre>
       </div>
       <div class="refsect1">
-        <a id="idp85198768"></a>
+        <a id="idm1561053168"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tab</em></span> --  tables for destination.
@@ -61,62 +62,61 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85201120"></a>
+        <a id="idm1561046256"></a>
         <h2>Example</h2>
         <p>
       Here is an example of the copyf2array opcode. It uses the file
-      <a class="ulink" href="examples/copyf2array.csd" target="_top"><em class="citetitle">copyf2array.csd</em></a>.
+      <a class="ulink" href="examples/copyf2array.csd.html" target="_top"><em class="citetitle">copyf2array.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idp85202976"></a>
+          <a id="idm1561045360"></a>
           <p class="title">
-            <strong>Example 144. Example of the copyf2array opcode.</strong>
+            <strong>Example 146. Example of the copyf2array opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp237912448"></a>
-              <a class="ulink" href="examples/copyf2array.csd.html" target="_top">Play</a>
+              <a id="idm1397375728"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
 -n
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 32
-<span class="ohdr">nchnls</span> <span class="op">=</span> 2
-<span class="ohdr">0dbfs</span>  <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">;8 points sine wave function table</span>
-giSine  <span class="ohdr">ftgen</span>   0, 0, 8, 10, 1
+<span class="c1">;8 points sine wave function table</span>
+gi<span class="n">Sine</span>  <span class="nb">ftgen</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
 
-  <span class="oblock">instr</span> 1
-<span class="comment">;create array</span>
-kArr[]  <span class="opc">init</span>    8
+  <span class="kd">instr</span> <span class="nf">1</span>
+<span class="c1">;create array</span>
+k<span class="n">Arr</span><span class="p">[]</span>  <span class="nb">init</span>    <span class="mi">8</span>
 
-<span class="comment">;copy table values in it</span>
-        <span class="opc">copyf2array</span> kArr, giSine
+<span class="c1">;copy table values in it</span>
+        <span class="nb">copyf2array</span> k<span class="n">Arr</span><span class="p">,</span> gi<span class="n">Sine</span>
         
-<span class="comment">;print values</span>
-kndx    <span class="op">=</span>       0
-  until kndx <span class="op">==</span> <span class="opc">lenarray</span>(kArr) do
-        <span class="opc">printf</span>  "kArr[<span class="op">%</span>d] <span class="op">=</span> <span class="op">%</span>f\n", kndx<span class="op">+</span>1, kndx, kArr[kndx]
-kndx    <span class="op">+</span><span class="op">=</span>      1
-  od
+<span class="c1">;print values</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Arr</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">Arr</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
 
-<span class="comment">;turn instrument off</span>
-        <span class="opc">turnoff</span>
-  <span class="oblock">endin</span>
+<span class="c1">;turn instrument off</span>
+        <span class="nb">turnoff</span>
+  <span class="kd">endin</span>
   
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
-<span class="stamnt">i</span> 1 0 0.1
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">0.1</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -125,14 +125,14 @@ kndx    <span class="op">+</span><span class="op">=</span>      1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85207264"></a>
+        <a id="idm1561050480"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="copya2ftab.html" title="copya2ftab"><em class="citetitle">copya2ftab</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp85209312"></a>
+        <a id="idm1561047408"></a>
         <h2>Credits</h2>
         <p>
       </p>

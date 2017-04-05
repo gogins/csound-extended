@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>portk</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
-    <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="port.html" title="port" />
@@ -38,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idp125750960"></a>
+        <a id="idm1519548272"></a>
         <h2>Description</h2>
         <p>
       Applies portamento to a step-valued control signal.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125752320"></a>
+        <a id="idm1519547888"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>portk</strong></span> ksig, khtim [, isig]</pre>
       </div>
       <div class="refsect1">
-        <a id="idp125822560"></a>
+        <a id="idm1519545456"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isig</em></span> (optional, default=0) -- initial (i.e. previous) value for internal feedback. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125824416"></a>
+        <a id="idm1519550064"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kres</em></span> -- the output signal at control-rate.
@@ -73,63 +74,62 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125829920"></a>
+        <a id="idm1519542256"></a>
         <h2>Examples</h2>
         <p>
-      Here is an example of the portk opcode. It uses the file <a class="ulink" href="examples/portk.csd" target="_top"><em class="citetitle">portk.csd</em></a>.
+      Here is an example of the portk opcode. It uses the file <a class="ulink" href="examples/portk.csd.html" target="_top"><em class="citetitle">portk.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idp125831696"></a>
+          <a id="idm1519540976"></a>
           <p class="title">
-            <strong>Example 669. Example of the portk opcode.</strong>
+            <strong>Example 689. Example of the portk opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idp259064560"></a>
-              <a class="ulink" href="examples/portk.csd.html" target="_top">Play</a>
+              <a id="idm1340839664"></a>
               <pre class="programlisting">
-<span class="csdtag">&lt;CsoundSynthesizer&gt;</span>
-<span class="csdtag">&lt;CsOptions&gt;</span>
-<span class="comment">; Select audio/midi flags here according to platform</span>
-<span class="comment">; Audio out   Audio in</span>
--odac         <span class="comment">;  -iadc    ;;;RT audio I/O</span>
-<span class="comment">; For Non-realtime ouput leave only the line below:</span>
-<span class="comment">; -o portk.wav -W ;;; for file output any platform</span>
-<span class="csdtag">&lt;/CsOptions&gt;</span>
-<span class="csdtag">&lt;CsInstruments&gt;</span>
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out   Audio in</span>
+-odac         <span class="c1">;  -iadc    ;;;RT audio I/O</span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o portk.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
 
-<span class="ohdr">sr</span> <span class="op">=</span> 44100
-<span class="ohdr">ksmps</span> <span class="op">=</span> 128
-<span class="ohdr">nchnls</span> <span class="op">=</span> 1
+<span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="comment">;Example by Andres Cabrera 2007</span>
+<span class="c1">;Example by Andres Cabrera 2007</span>
 
-<span class="opc">FLpanel</span> "Slider", 650, 140, 50, 50
-    gkval1, gislider1 <span class="opc">FLslider</span> "Watch me", 0, 127, 0, 5, <span class="op">-</span>1, 580, 30, 25, 20
-    gkval2, gislider2 <span class="opc">FLslider</span> "Move me", 0, 127, 0, 5, <span class="op">-</span>1, 580, 30, 25, 80
-    gkhtim, gislider3 <span class="opc">FLslider</span> "khtim", 0.1, 1, 0, 6, <span class="op">-</span>1, 30, 100, 610, 10
-<span class="opc">FLpanelEnd</span>
-<span class="opc">FLrun</span>
+<span class="nb">FLpanel</span> <span class="s">"Slider"</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    gk<span class="n">val1</span><span class="p">,</span> gi<span class="n">slider1</span> <span class="nb">FLslider</span> <span class="s">"Watch me"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">580</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">20</span>
+    gk<span class="n">val2</span><span class="p">,</span> gi<span class="n">slider2</span> <span class="nb">FLslider</span> <span class="s">"Move me"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">580</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">80</span>
+    gk<span class="n">htim</span><span class="p">,</span> gi<span class="n">slider3</span> <span class="nb">FLslider</span> <span class="s">"khtim"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">610</span><span class="p">,</span> <span class="mi">10</span>
+<span class="nb">FLpanelEnd</span>
+<span class="nb">FLrun</span>
 
-<span class="opc">FLsetVal_i</span> 0.1, gislider3 <span class="comment">;set initial time to 0.1</span>
+<span class="nb">FLsetVal_i</span> <span class="mf">0.1</span><span class="p">,</span> gi<span class="n">slider3</span> <span class="c1">;set initial time to 0.1</span>
 
-<span class="oblock">instr</span> 1
-kval <span class="opc">portk</span> gkval2, gkhtim  <span class="comment">; take the value of slider 2 and apply portamento</span>
-<span class="opc">FLsetVal</span> 1, kval, gislider1  <span class="comment">;set the value of slider 1 to kval</span>
-<span class="oblock">endin</span>
+<span class="kd">instr</span> <span class="nf">1</span>
+k<span class="n">val</span> <span class="nb">portk</span> gk<span class="n">val2</span><span class="p">,</span> gk<span class="n">htim</span>  <span class="c1">; take the value of slider 2 and apply portamento</span>
+<span class="nb">FLsetVal</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> gi<span class="n">slider1</span>  <span class="c1">;set the value of slider 1 to kval</span>
+<span class="kd">endin</span>
 
-<span class="csdtag">&lt;/CsInstruments&gt;</span>
-<span class="csdtag">&lt;CsScore&gt;</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
 
-<span class="comment">; Play Instrument #1 for one minute.</span>
-<span class="stamnt">i</span> 1 0 60
-<span class="stamnt">e</span>
+<span class="c1">; Play Instrument #1 for one minute.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">60</span>
+<span class="nb">e</span>
 
 
-<span class="csdtag">&lt;/CsScore&gt;</span>
-<span class="csdtag">&lt;/CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
             </div>
           </div>
@@ -138,7 +138,7 @@ kval <span class="opc">portk</span> gkval2, gkhtim  <span class="comment">; take
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125836016"></a>
+        <a id="idm1519541744"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="areson.html" title="areson"><em class="citetitle">areson</em></a>,
@@ -153,7 +153,7 @@ kval <span class="opc">portk</span> gkval2, gkhtim  <span class="comment">; take
     </p>
       </div>
       <div class="refsect1">
-        <a id="idp125845776"></a>
+        <a id="idm1519530736"></a>
         <h2>Credits</h2>
         <p>
       </p>
