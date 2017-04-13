@@ -1,13 +1,16 @@
-# CSOUND PATCHES
+# Csound Patches
 
 ## Copyright (C) 2017 by Michael Gogins
-
-## These patches are licensed under the terms of the GNU Lesser General Public
-License version 2.
+## These patches are licensed under the terms of the GNU Lesser General Public License version 2.
 
 This directory contains Csound patches written in such a way as to be
 completely modular. I use these patches to compose my own pieces. None of
 these patches depends on any external resources or code.
+
+Some of the patches are instruments, and some are effects. Effects are
+usually scheduled using the `alwayson` opcode and connected in processing
+chains using the `connect' opcode. See the Csound Reference Manual example
+for the signal flow graph opcodes to see how this is done.
 
 You can #include any of these patches in a Csound orchestra and expect it to
 render audio from any MIDI or score events. All audio output levels are
