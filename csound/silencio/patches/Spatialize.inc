@@ -369,7 +369,7 @@ kmute = kAdist + kEdist
 ; Mute the reflection if it gets behind the source.
 kmute = (kmute < 1.5707 ? sin(kmute) : 1)
 ; Attenuate the early reflection by distance.
-kgain = 1 / kDist * gk_EarlyReflection_damp * kmute
+k_gain = 1 / kDist * gk_EarlyReflection_damp * kmute
 ; Cut high frequencies by distance.
 kDdiff = ( kDdiff < 0.05 ? 0.05 : kDdiff)
 klfboost = (sqrt(1 / kDdiff ) + kD) * gk_EarlyReflection_lfboost
@@ -379,7 +379,7 @@ afilt pareq afilt, 174, klfboost, 0.7071, 1
 afilt balance afilt, asignal
 adel interp kdel
 asigref vdelay3 afilt, adel, 200 ; milliseconds
-asigref = asigref * kgain
+asigref = asigref * k_gain
 ; Convert radians to degrees.
 kAref = kAref * 57.2958
 kEref = kEref * 57.2958
@@ -561,7 +561,7 @@ kmute = kAdist + kEdist
 ; Mute the reflection if it gets behind the source.
 kmute = (kmute < 1.5707 ? sin(kmute) : 1)
 ; Attenuate the early reflection by distance.
-kgain = 1 / kDist * gk_EarlyReflection_damp * kmute
+k_gain = 1 / kDist * gk_EarlyReflection_damp * kmute
 ; Cut high frequencies by distance.
 kDdiff = ( kDdiff < 0.05 ? 0.05 : kDdiff)
 klfboost = (sqrt(1 / kDdiff ) + kD) * gk_EarlyReflection_lfboost
@@ -571,7 +571,7 @@ afilt pareq afilt, 174, klfboost, 0.7071, 1
 afilt balance afilt, asignal
 adel interp kdel
 asigref vdelay3 afilt, adel, 200
-asigref = asigref * kgain
+asigref = asigref * k_gain
 ; Convert radians to degrees.
 kAref = kAref * 57.2958
 kEref = kEref * 57.2958

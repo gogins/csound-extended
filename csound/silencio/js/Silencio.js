@@ -314,6 +314,18 @@ Event.prototype.toString = function() {
   return text;
 }
 
+/**
+ * Csound pfields are:
+ * p1 Instrument number
+ * p2 Time (seconds)
+ * p3 Duration (seconds)
+ * p4 MIDI key
+ * p5 MIDI velocity (roughly dBSPL)
+ * p6 Pan (spatial left to right)
+ * p7 Depth (spatial front to back)
+ * p8 Height (spatial bottom to top)
+ * p9 Phase (radians)
+ */
 Event.prototype.toIStatement = function() {
   var text = 'i';
   text = text.concat(' ', this.data[3].toFixed(6));
@@ -451,32 +463,18 @@ Score.prototype.setDuration = function (duration) {
 }
 
 Score.prototype.sendToCsound = function(csound, extra) {
-  this.sort();
+    this.sort();
     if (typeof extra === 'undefined') {
         jscore = '';
     } else {
         extra = 5.0;
-  var duration = this.getDuration() + extra;
-  jscore = 'f 0 ' + duration + ' 0\n';
+        var duration = this.getDuration() + extra;
+        jscore = 'f 0 ' + duration + ' 0\n';
     }
-    //for (var i = 0; i < this.data.length; i++) {
-    //    var event = this.data[i];
-    //    var pfields = [];
-    //    pfields.push(event.data[3]);
-    //    pfields.push(event.data[0]);
-    //    pfields.push(event.data[1]);
-    //    pfields.push(event.data[4]);
-    //    pfields.push(event.data[5]);
-    //    pfields.push(event.data[6]);
-    //    pfields.push(event.data[7]);
-    //    pfields.push(event.data[8]);
-    //    pfields.push(event.data[9]);
-    //    csound.scoreEvent('i', pfields);
-    //}
-  for (var i = 0; i < this.data.length; i++) {
-    jscore += this.data[i].toIStatement();
-  }
-  csound.readScore(jscore);
+    for (var i = 0; i < this.data.length; i++) {
+        jscore += this.data[i].toIStatement();
+    }
+    csound.readScore(jscore);
 }
 
 Score.prototype.findScales = function() {
@@ -658,7 +656,7 @@ Score.prototype.progress3D = function(score_time) {
 }
 
 /**
- * Sets up a scene, camera, and renderer with controls to view 
+ * Sets up a scene, camera, and renderer with controls to view
  * either a fixed or a real-time score.
  */
 Score.prototype.prepareScene3D = function(canvas) {
@@ -717,7 +715,7 @@ Score.prototype.plotNote3D = function(note, channel_minimum, channel_range, velo
      if (channel_range == 0) {
         channel_range = 1;
     }
-    if (velocity_range == 0) {        
+    if (velocity_range == 0) {
         velocity_range = 1;
     }
     hue = channel / channel_range;
@@ -742,14 +740,14 @@ Score.prototype.plotNote3D = function(note, channel_minimum, channel_range, velo
  * Plots a grid for a fixed score.
  */
 Score.prototype.plotGrid3D = function() {
-    // Generate the grid. Its origin for time is 0 and for pitch its origin is the 
+    // Generate the grid. Its origin for time is 0 and for pitch its origin is the
     // first C lower than or equal to the lowest pitch in the score.
     var time_minimum = this.minima.time;
     var time_maximum = this.getDuration();
     var key_minimum = this.minima.key;
     var key_maximum = this.maxima.key;
     var channel_minimum = this.minima.channel;
-    var channel_maximum = this.maxima.channel;    
+    var channel_maximum = this.maxima.channel;
     var line_material = new THREE.LineBasicMaterial();
     time_minimum = 0;
     instrument_minimum = 0;
@@ -780,7 +778,7 @@ Score.prototype.plotGrid3D = function() {
     origin.position.y = key_minimum;
     origin.position.z = 0;
     this.scene.add(origin);
-    // Put a ball at the start of middle C, to indicate the current Csound 
+    // Put a ball at the start of middle C, to indicate the current Csound
     // score time.
     var cursor_geometry = new THREE.SphereGeometry(1, 10, 10);
     var cursor_material = new THREE.MeshLambertMaterial();
@@ -832,10 +830,10 @@ Score.prototype.render3D = function() {
 }
 
 /**
- * Draws the notes in a fixed score as a 3-dimensional piano roll. The score is 
- * fitted into the viewport to start with, but the user can use the mouse or 
- * trackball to move around the score and to zoom in and out. The dimensions 
- * are: time = x, MIDI key = y, MIDI channel = z and hue, and loudness = 
+ * Draws the notes in a fixed score as a 3-dimensional piano roll. The score is
+ * fitted into the viewport to start with, but the user can use the mouse or
+ * trackball to move around the score and to zoom in and out. The dimensions
+ * are: time = x, MIDI key = y, MIDI channel = z and hue, and loudness =
  * value; a grid shows tens of seconds and octaves.
  */
 Score.prototype.draw3D = function(canvas) {
@@ -843,7 +841,7 @@ Score.prototype.draw3D = function(canvas) {
     // Plot the notes.
     for (var i = 0; i < this.data.length; i++) {
         this.plotNote3D(this.data[i], this.minima.channel, this.ranges.channel, this.minima.velocity, this.ranges.velocity);
-    }    
+    }
     this.plotGrid3D();
     this.lookAtFullScore3D();
     return canvas;
@@ -1180,7 +1178,7 @@ function Recurrent(generators, transitions, depth, index, cursor, score)
 }
 
 /**
- * Like ES6 Map, but with value keys, which are represented by stringified 
+ * Like ES6 Map, but with value keys, which are represented by stringified
  * keys.
  */
 function ValueMap(make_key_) {
@@ -1241,7 +1239,7 @@ ValueMap.prototype.values = function() {
 }
 
 /**
- * Like ES6 Set, but treats elements as values, which are represented as 
+ * Like ES6 Set, but treats elements as values, which are represented as
  * stringified values.
  */
 function ValueSet(make_key_) {
@@ -1282,7 +1280,7 @@ ValueSet.prototype.entries = function() {
 ValueSet.prototype.forEach = function(callback, thisarg) {
     this.map.forEach(callback, thisarg);
 }
-    
+
 ValueSet.prototype.has = function(value) {
     return this.map.has(this.make_key(value));
 }

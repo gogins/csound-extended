@@ -2,7 +2,7 @@
                         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                         ; Author: Thomas Kung
                         pset                    0, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, 6.0
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, p5, 6.0
 iattack 		        = 			            0.25
 isustain		        =			            p3
 irelease 		        = 			            0.3333333
@@ -12,9 +12,9 @@ ip7                     =                       2.2
 ishift      		    =           		    4.0 / 12000.0
 kpch       		        =           		    kHz
 koct        		    =           		    octcps(kHz) 
-isine                   ftgenonce               0, 0, 65537,    10,     1
-icosine                 ftgenonce               0, 0, 65537,    11,     1 ; Cosine wave. Get that noise down on the most widely used table!
-iln                     ftgenonce               0, 0, 65537,   -12,    20.0 ; Unscaled ln(I(x)) from 0 to 20.0.
+isine                   ftgenonce               0, 0, 65536,    10,     1
+icosine                 ftgenonce               0, 0, 65536,    11,     1 
+iln                     ftgenonce               0, 0, 65536,   -12,    20.0 ; Unscaled ln(I(x)) from 0 to 20.0.
 aadsr                   linen                   1.0, iattack, irelease, 0.01
 amodi                   linseg                  0, iattack, 5, p3, 2, irelease, 0
                         ; r moves from ip6 to ip7 in p3 secs.
@@ -34,7 +34,7 @@ ao2                     poscil                  a2 * kpch, kpch, icosine
 aleft                   poscil                  a4, ao2 + cpsoct(koct + ishift), isine
                         ; Final output right
 aright                  poscil                  a4, ao2 + cpsoct(koct - ishift), isine
-aleft, aright		    Pan			            p7, (aleft + aright) * iamplitude * adamping
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+aleft, aright		    Pan			            p7, (aleft + aright) * i_amplitude * adamping
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin

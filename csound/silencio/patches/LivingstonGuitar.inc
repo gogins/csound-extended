@@ -35,9 +35,9 @@
                         ; in     st   dur   amp   pch   plklen  fbfac	pkupPos	 pluckPos  brightness  vibf   vibd  vibdel
                         ; i01.2	 0.5  0.75  5000  7.11	.85     0.9975	.0	    .25	       1	       0	  0	 0
                         pset                    0, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, 13
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, p5, 13
 p3, adamping		    Damping			        0.003, p3,.03
-ip4                     init                    iamplitude
+ip4                     init                    i_amplitude
 ip6                     init                    0.85
 ip7                     init                    0.9975
 ip8                     init                    0
@@ -139,7 +139,7 @@ ainputb                 tone                    aenvstrb, sr * 0.9 / 2
 ainputf                 tone                    ainputf, sr * 0.9 / 2
 ainputb                 tone                    ainputb, sr * 0.9 / 2
                         ; Vibrato generator
-icosine                 ftgenonce               0, 0, 65537,    11,     1.0                        
+icosine                 ftgenonce               0, 0, 65536,    11,     1.0                        
 avib                    poscil                  ivibDepth, ivibRate, icosine
 avibdl		            delayr		            (((ivibStDly * 1.1)) > 0.0) ? (ivibStDly * 1.1) : 0.01
 avibrato	            deltapi	                ivibStDly
@@ -174,6 +174,6 @@ abkdout	                filter2                 abkdout, 3, 0, ia0, ia1, ia0
 aresbod                 filter2                 (afwdout + abkdout), 5, 4, 0.000000000005398681501844749, .00000000000001421085471520200, -.00000000001076383426834582, -00000000000001110223024625157, .000000000005392353230604385, -3.990098622573566, 5.974971737738533, -3.979630684599723, .9947612723736902
 asig                    =                       (1500 * (afwav + abkwav + aresbod * .000000000000000000003)) * adamping
 aleft, aright		    Pan			            p7, asig
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin

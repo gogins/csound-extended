@@ -2,26 +2,26 @@
                         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                         ; Author: Lee Zakian
                         pset                    0, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, 7.0
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, p5, 7.0
 p3, adamping		    Damping			        0.01, p3, 0.01
 ip3                     =                       (p3 < 3.0 ? p3 : 3.0)
 if2                    ftgenonce                   0, 0, 16,       -2,     40, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 10240
-if26                   ftgenonce                   0, 0, 65537,    -10,    2000, 489, 74, 219, 125, 9, 33, 5, 5 
-if27                   ftgenonce                   0, 0, 65537,    -10,    2729, 1926, 346, 662, 537, 110, 61, 29, 7 
-if28                   ftgenonce                   0, 0, 65537,    -10,    2558, 2012, 390, 361, 534, 139, 53, 22, 10, 13, 10 
-if29                   ftgenonce                   0, 0, 65537,    -10,    12318, 8844, 1841, 1636, 256, 150, 60, 46, 11 
-if30                   ftgenonce                   0, 0, 65537,    -10,    1229, 16, 34, 57, 32 
-if31                   ftgenonce                   0, 0, 65537,    -10,    163, 31, 1, 50, 31 
-if32                   ftgenonce                   0, 0, 65537,    -10,    4128, 883, 354, 79, 59, 23 
-if33                   ftgenonce                   0, 0, 65537,    -10,    1924, 930, 251, 50, 25, 14
-if34                   ftgenonce                   0, 0, 65537,    -10,    94, 6, 22, 8 
-if35                   ftgenonce                   0, 0, 65537,    -10,    2661, 87, 33, 18 
-if36                   ftgenonce                   0, 0, 65537,    -10,    174, 12
-if37                   ftgenonce                   0, 0, 65537,    -10,    314, 13
-iwtsin                 ftgenonce                   0, 0, 65537,    10,     1
+if26                   ftgenonce                   0, 0, 65536,    -10,    2000, 489, 74, 219, 125, 9, 33, 5, 5 
+if27                   ftgenonce                   0, 0, 65536,    -10,    2729, 1926, 346, 662, 537, 110, 61, 29, 7 
+if28                   ftgenonce                   0, 0, 65536,    -10,    2558, 2012, 390, 361, 534, 139, 53, 22, 10, 13, 10 
+if29                   ftgenonce                   0, 0, 65536,    -10,    12318, 8844, 1841, 1636, 256, 150, 60, 46, 11 
+if30                   ftgenonce                   0, 0, 65536,    -10,    1229, 16, 34, 57, 32 
+if31                   ftgenonce                   0, 0, 65536,    -10,    163, 31, 1, 50, 31 
+if32                   ftgenonce                   0, 0, 65536,    -10,    4128, 883, 354, 79, 59, 23 
+if33                   ftgenonce                   0, 0, 65536,    -10,    1924, 930, 251, 50, 25, 14
+if34                   ftgenonce                   0, 0, 65536,    -10,    94, 6, 22, 8 
+if35                   ftgenonce                   0, 0, 65536,    -10,    2661, 87, 33, 18 
+if36                   ftgenonce                   0, 0, 65536,    -10,    174, 12
+if37                   ftgenonce                   0, 0, 65536,    -10,    314, 13
+iwtsin                 ftgenonce                   0, 0, 65536,    10,     1
 ; parameters
                         ; p4    overall amplitude scaling factor
-ip4                     init                    iamplitude
+ip4                     init                    i_amplitude
                         ; p5    pitch in Hertz (normal pitch range: C4-C7)
 ip5                     init                    iHz
                         ; p6    percent vibrato depth, recommended values in range [-1., +1.]
@@ -203,7 +203,7 @@ afilt                   tone                    asig, kcut
 asig                    balance                 afilt, asig
 ; garev                 =                       garev + asig
 ;                       outs                    asig, asig
-aleft, aright		    Pan			            p7, (asig + asig) * adamping * iamplitude
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+aleft, aright		    Pan			            p7, (asig + asig) * adamping * i_amplitude
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin

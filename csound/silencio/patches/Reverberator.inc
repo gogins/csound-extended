@@ -117,6 +117,6 @@ adry1                   =           ain1 * idry
 adry2                   =           ain2 * idry
 awet1                   =           aout1 * iwet
 awet2                   =           aout2 * iwet
-                        outleta         "leftout", adry1 + awet1
-                        outleta         "rightout", adry2 + awet2
+                        outleta         "outleft", adry1 + awet1
+                        outleta         "outright", adry2 + awet2
                         endin

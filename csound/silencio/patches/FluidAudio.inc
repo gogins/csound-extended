@@ -2,11 +2,11 @@
                         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                         ; Author: Michael Gogins
 ijunk			        = 			            p1 + p2 + p3 + p4 + p5
-iHz,kHz,iamplitude,idB  NoteOn                  p4, 127, p5
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, 127, p5
 aleft, aright   	    fluidOut		        giFluidsynth
-aleft			        = 			            iamplitude * aleft
-aright			        =			            iamplitude * aright
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+aleft			        = 			            i_amplitude * aleft
+aright			        =			            i_amplitude * aright
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin
 

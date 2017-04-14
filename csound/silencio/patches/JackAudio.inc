@@ -23,10 +23,10 @@ aright1	    JackoAudioIn 	"rightin1"
             ; Sends audio coming in from Aeolus out
             ; not only to the Jack system out (sound card),
             ; but also to the signal flow graph.
-            ; Note that in freewheeling mode, "leftout"
-            ; and "rightout" simply go silent.
-            outleta         "leftout", aleft+aleft1
-            outleta         "rightout", aright+aright1
-            JackoAudioOut 	"leftout", aleft+aleft1
-            JackoAudioOut 	"rightout", aright+aright1
+            ; Note that in freewheeling mode, "outleft"
+            ; and "outright" simply go silent.
+            outleta         "outleft", aleft+aleft1
+            outleta         "outright", aright+aright1
+            JackoAudioOut 	"outleft", aleft+aleft1
+            JackoAudioOut 	"outright", aright+aright1
             endin

@@ -2,14 +2,14 @@
                         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                         ; Author: Jon Nelson
                         pset                    0, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, 27
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, p5, 27
 ip3                     init                    3.0
 iattack			        =			            0.05
 isustain		        =			            p3
 irelease		        =			            0.1
-ichebychev              ftgenonce               0, 0, 65537,    -7,    -1, 150, 0.1, 110, 0, 252, 0
-isine                   ftgenonce               0, 0, 65537,    10,     1
-icook3                  ftgenonce               0, 0, 65537,    10,     1, .4, 0.2, 0.1, 0.1, .05
+ichebychev              ftgenonce               0, 0, 65536,    -7,    -1, 150, 0.1, 110, 0, 252, 0
+isine                   ftgenonce               0, 0, 65536,    10,     1
+icook3                  ftgenonce               0, 0, 65536,    10,     1, .4, 0.2, 0.1, 0.1, .05
 ip6 			        = 			            ichebychev
                         ; Pitch.
 i1                      =                       iHz
@@ -40,8 +40,8 @@ a6                      =                       ((a3 * .1) + (a4 * .1) + (a5 * .
 a7                      comb                    a6, .5, 1 / i1
 a8                      =                       (a6 * .9) + (a7 * .1)
 asignal        		    balance         	    a8, a1
-aleft, aright		    Pan			            p7, asignal * iamplitude
+aleft, aright		    Pan			            p7, asignal * i_amplitude
 p3, aleft, aright	    Declick			        iattack, p3, irelease, aleft, aright
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin

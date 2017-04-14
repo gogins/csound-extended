@@ -2,11 +2,11 @@
                         ; Author: Michael Bergeman
                         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                         pset                    0, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, -60.0
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, p5, -60.0
 p3, adamping		    Damping			        0.01, p3, 0.01
 koctave			        =			            octcps(kHz)
 idb			            = 			            1.5
-ibergeman               ftgenonce               0, 0, 65537,    10,     .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
+ibergeman               ftgenonce               0, 0, 65536,    10,     .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
 ip5                     =                       ibergeman
 ip3                     =                       5.0
 ip6                     =                       0.9
@@ -39,8 +39,8 @@ a15                     reverb2                 a4, 5, 0.3
 a16                     reverb2                 a4, 4, 0.2
 a17                     =                       (a15 + a4) * k7
 a18                     =                       (a16 + a4) * k7
-aleft, aright		    Pan			            p7, (a17 + a18) * iamplitude * adamping
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+aleft, aright		    Pan			            p7, (a17 + a18) * i_amplitude * adamping
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin   
 

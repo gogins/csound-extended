@@ -9,10 +9,10 @@ these patches depends on any external resources or code.
 
 Some of the patches are instruments, and some are effects. Effects are
 usually scheduled using the `alwayson` opcode and connected in processing
-chains using the `connect' opcode. See the Csound Reference Manual example
+chains using the `connect` opcode. See the Csound Reference Manual example
 for the signal flow graph opcodes to see how this is done.
 
-You can #include any of these patches in a Csound orchestra and expect it to
+You can `#include` any of these patches in a Csound orchestra and expect it to
 render audio from any MIDI or score events. All audio output levels are
 normalized so thst MIDI velocity 80 produces -6 dBFS. Each instrument
 patch uses a releasing envelope. The patches are optimized for audio quality.
@@ -29,4 +29,4 @@ has a "gk_InstrumentName_MasterLevel" control parameter calibrated in dB.
 
 A Python script, "patch_calibrator.py", is provided to help with the writing
 of new patches. It generates a range of notes for a patch, and prints output
-that can be used to derive an audio level normalization factor.
+levels that can be used to derive an audio level normalization factor.

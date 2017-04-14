@@ -6,8 +6,8 @@
                         ; original pitch        = A6
                         ; range                 = C6 - C7
                         ; extended range        = F4 - C7
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, 26.0
-isine                   ftgenonce               0, 0, 65537,    10,     1
+iHz,kHz,i_amplitude,idB  NoteOn                  p4, p5, 26.0
+isine                   ftgenonce               0, 0, 65536,    10,     1
 iinstrument             =                       p1
 istarttime              =                       p2
 ioctave                 =                       p4
@@ -32,10 +32,10 @@ awt2                    poscil                  amp2, 2.7 * kfreq, isine
 awt3                    poscil                  amp3, 4.95 * kfreq, isine
 asig                    =                       awt1 + awt2 + awt3
 arel                    linenr                  1,0, idur, .06
-asignal                 =                       asig * arel * (iamp / inorm) * iamplitude
+asignal                 =                       asig * arel * (iamp / inorm) * i_amplitude
 aleft, aright		    Pan			            p7, asignal
 p3, aleft, aright	    Declick			        0.005, p3, 0.3, aleft, aright
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
+                        outleta                 "outleft", aleft
+                        outleta                 "outright", aright
                         endin   
 

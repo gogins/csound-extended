@@ -1,37 +1,50 @@
-                        instr DelayedPlucked
-                        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                        ; Author: Michael Gogins
-                        pset                    0, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0
-iHz,kHz,iamplitude,idB  NoteOn                  p4, p5, 18.0
-iattack			        =			            0.006
-idecay				    =				        1.5
-isustain		        =			            p3
-irelease		        =			            0.05
-ihertz                  =                       iHz
-ioctave			        =			            octcps(iHz)
-                        ; Detuning of strings by 4 cents each way.
-idetune                 =                       4.0 / 1200.0
-ihertzleft              =                       cpsoct(ioctave + idetune)
-ihertzright             =                       cpsoct(ioctave - idetune)
-isine                   ftgenonce               0, 0, 65537,    10,     1
-icosine                 ftgenonce               0, 0, 65537,    11,     1 ; Cosine wave. Get that noise down on the most widely used table!
-igenleft                =                       isine
-igenright               =                       icosine
-kvibrato                poscil                  1.0 / 120.0, 7.0, icosine
-kenvelope            	transeg                 0.0, iattack, -7.0, 1.0, idecay, -7.0, 0.5, isustain, 0.0, 0.125, irelease, -7.0, 0.0
-ag                      pluck                   kenvelope, cpsoct(ioctave + kvibrato), iHz, igenleft, 1
-agleft                  pluck                   kenvelope, ihertzleft,  iHz, igenleft, 1
-agright                 pluck                   kenvelope, ihertzright, iHz, igenright, 1
-imsleft                 =                       0.2 * 1000
-imsright                =                       0.21 * 1000
-adelayleft              vdelay                  ag, imsleft, imsleft + 100
-adelayright             vdelay                  ag, imsright, imsright + 100
-asignal                 =                       kenvelope * (agleft + adelayleft + agright + adelayright)
-                        ; Highpass filter to exclude speaker cone excursions.
-asignal1                butterhp                asignal, 32.0
-asignal2                balance                 asignal1, asignal
-aleft, aright		    Pan			            p7, asignal2 * iamplitude
-p3, aleft, aright	    Declick			        0       .006, p3, 0.06, aleft, aright
-                        outleta                 "leftout", aleft
-                        outleta                 "rightout", aright
-                        endin
+gk_DelayedPlucked_level init 0
+instr DelayedPlucked
+; Author: Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+i_pan = p6
+i_depth = p7
+i_height = p8
+i_phase = p9
+iamps = -12.71
+i_normalization = ampdb(-iamps - 12)
+i_amplitude = ampdb(i_midi_velocity) / 32767.0 * i_normalization
+i_frequency = cpsmidinn(i_midi_key)
+iattack = 0.006
+idecay = 1.5
+isustain = p3
+irelease = 0.05
+p3 = iattack + isustain + irelease
+ihertz = i_frequency
+ioctave = octcps(i_frequency)
+ ; Detuning of strings by 4 cents each way.
+idetune = 4.0 / 1200.0
+ihertzleft = cpsoct(ioctave + idetune)
+ihertzright = cpsoct(ioctave - idetune)
+isine ftgenonce 0, 0, 65536, 10, 1
+icosine ftgenonce 0, 0, 65536, 11, 1
+igenleft = isine
+igenright = icosine
+kvibrato poscil 1.0 / 120.0, 7.0, icosine
+kenvelope transeg 0.0, iattack, -7.0, 1.0, idecay, -7.0, 0.5, isustain, 0.0, 0.125, irelease, -7.0, 0.0
+ag pluck kenvelope, cpsoct(ioctave + kvibrato), i_frequency, igenleft, 1
+agleft pluck kenvelope, ihertzleft, i_frequency, igenleft, 1
+agright pluck kenvelope, ihertzright, i_frequency, igenright, 1
+imsleft = 0.2 * 1000
+imsright = 0.21 * 1000
+adelayleft vdelay ag, imsleft, imsleft + 100
+adelayright vdelay ag, imsright, imsright + 100
+asignal = kenvelope * (agleft + adelayleft + agright + adelayright)
+; Highpass filter to exclude speaker cone excursions.
+asignal1 butterhp asignal, 32.0
+asignal2 balance asignal1, asignal
+k_gain = ampdb(gk_DelayedPlucked_level)
+aleft, aright pan2 asignal2 * i_amplitude * k_gain, i_pan
+outleta "outleft", aleft
+outleta "outright", aright
+prints "DelayedPluck   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p6
+endin
