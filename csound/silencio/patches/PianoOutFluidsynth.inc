@@ -10,9 +10,9 @@ i_depth = p7
 i_height = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-iamps = 0
-i_normalization = ampdb(-iamps - 12)
-i_amplitude = ampdb(i_midi_velocity) / 32767.0 * i_normalization
+i_overall_amps = 0
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Piano_level)
 giFluidsynth fluidEngine 0, 0
 giFluidSteinway fluidLoad "Piano Steinway Grand Model C (21,738KB).sf2", giFluidsynth, 1

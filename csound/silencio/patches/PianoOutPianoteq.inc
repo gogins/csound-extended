@@ -1,9 +1,9 @@
 gk_Piano_level init 0
 instr PianoOut
 k_gain = ampdb(gk_Piano_level)
-iamps = -30
-i_normalization = ampdb(-iamps - 12)
-i_amplitude = ampdb(80) / 32767.0 * i_normalization
+i_overall_amps = 60
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(80) * i_normalization
 giPianoteq vstinit "C:/Program_Files/Steinberg/VSTPlugins/Pianoteq5_x64", 0
 ; Should be "D4 Daily Practice".
 vstprogset giPianoteq, 0
