@@ -1,6 +1,12 @@
 gk_FMModerate2_level init 0
 instr FMModerate2
+if p3 == -1 then
+  p3 = 3600
+endif
 ; Author: Michael Gogins
+if p3 == -1 then
+  p3 = 1000000
+endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -21,14 +27,14 @@ idecay = 1.5
 irelease = 0.05
 p3 = iattack + isustain + irelease
 icarrier = 1
-imodulator = 3
-ifmamplitude = 8
-index = 5.5
+imodulator = 4
+ifmamplitude = 9
+index = 2
 ifrequencyb = i_frequency * 1.003
 icarrierb = icarrier * 1.004
-aindenv transegr 0.0, iattack, -9.0, 1.0, idecay, -10.0, 0.025, isustain, 0.0, 0.025, irelease, -7.0, 0.0
+aindenv transegr 0.0, iattack, 9.0, 1.0, idecay, 10.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
 aindex = aindenv * index * ifmamplitude
-icosine ftgenonce 0, 0, 65536, 11, 1 
+icosine ftgenonce 0, 0, 65536, 11, 1
 aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine
 aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, icosine; Plus amplitude correction.
 afmout = (aouta + aoutb) * aindenv

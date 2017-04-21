@@ -474,6 +474,7 @@ Score.prototype.sendToCsound = function(csound, extra) {
     for (var i = 0; i < this.data.length; i++) {
         jscore += this.data[i].toIStatement();
     }
+    ;console.log(jscore);
     csound.readScore(jscore);
 }
 

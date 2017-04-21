@@ -8,6 +8,9 @@ instr Blower
  // Original by Hans Mikelson.
  // Adapted by Michael Gogins.
  //////////////////////////////////////////////
+if p3 == -1 then
+  p3 = 1000000
+endif
 i_instrument = p1
 i_time = p2
 i_duration = p3

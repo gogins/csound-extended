@@ -11,6 +11,9 @@ gk_Droner_partial10 init 0
 gk_Droner_level init 0
 gi_Droner_waveform init 0
 instr Droner
+if p3 == -1 then
+  p3 = 1000000
+endif
 insno = p1
 istart = p2
 iduration = p3

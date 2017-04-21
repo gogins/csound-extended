@@ -11,7 +11,7 @@ vstprogset giPianoteq, 0
 vstparamset giPianoteq, 0, 0
 ; Reverb off.
 vstparamset giPianoteq, 72, 0
-vstinfo giPianoteq
+; vstinfo giPianoteq
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -21,7 +21,10 @@ ainleft init 0.0
 ainright init 0.0
 aoutleft, aoutright vstaudiog giPianoteq, ainleft, ainright
 ; printks "vstaudiog: %9.4f %9.4f\n", 0.5, aoutleft, aoutright
-outleta "outleft", aoutleft * k_gain * i_amplitude
-outleta "outright", aoutright * k_gain * i_amplitude
-prints "PianoOutPt     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
+aoutleft = aoutleft * k_gain * i_amplitude
+aoutright = aoutright * k_gain * i_amplitude
+outleta "outleft", aoutleft
+outleta "outright", aoutright
+prints  "PianoOutPt     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
+printks "PianoOutPt     L %9.4f R %9.4f l %9.4f\n", 0.5, aoutleft, aoutright, gk_Piano_level
 endin

@@ -1,6 +1,9 @@
 gk_DelayedPlucked_level init 0
 instr DelayedPlucked
 ; Author: Michael Gogins
+if p3 == -1 then
+  p3 = 1000000
+endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -10,7 +13,7 @@ i_pan = p6
 i_depth = p7
 i_height = p8
 i_phase = p9
-i_overall_amps = -12.71
+i_overall_amps = 76.02
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 i_frequency = cpsmidinn(i_midi_key)
@@ -30,15 +33,15 @@ icosine ftgenonce 0, 0, 65536, 11, 1
 igenleft = isine
 igenright = icosine
 kvibrato poscil 1.0 / 120.0, 7.0, icosine
-kenvelope transeg 0.0, iattack, -7.0, 1.0, idecay, -7.0, 0.5, isustain, 0.0, 0.125, irelease, -7.0, 0.0
-ag pluck kenvelope, cpsoct(ioctave + kvibrato), i_frequency, igenleft, 1
-agleft pluck kenvelope, ihertzleft, i_frequency, igenleft, 1
-agright pluck kenvelope, ihertzright, i_frequency, igenright, 1
+a_envelope transegr 0.0, iattack, -7.0, 1.0, idecay, -7.0, 0.5, isustain, 0.0, 0.125, irelease, -7.0, 0.0
+ag pluck 1, cpsoct(ioctave + kvibrato), i_frequency, igenleft, 1
+agleft pluck 1, ihertzleft, i_frequency, igenleft, 1
+agright pluck 1, ihertzright, i_frequency, igenright, 1
 imsleft = 0.2 * 1000
 imsright = 0.21 * 1000
 adelayleft vdelay ag, imsleft, imsleft + 100
 adelayright vdelay ag, imsright, imsright + 100
-asignal = kenvelope * (agleft + adelayleft + agright + adelayright)
+asignal = a_envelope * (agleft + adelayleft + agright + adelayright)
 ; Highpass filter to exclude speaker cone excursions.
 asignal1 butterhp asignal, 32.0
 asignal2 balance asignal1, asignal
