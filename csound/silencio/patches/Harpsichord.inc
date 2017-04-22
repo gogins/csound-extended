@@ -38,5 +38,5 @@ asignal = asignal * adeclick
 aleft, aright pan2 asignal, i_pan
 outleta "outleft", aleft
 outleta "outright", aright
-prints "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
 endin

@@ -169,7 +169,7 @@ asignal = (aleft1 + aright1) * k_gain * i_normalization
 aleft2, aright2 pan2 asignal, i_pan
 outleta "outleft", aleft2
 outleta "outright", aright2
-prints  "FM_Clang       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints  "FM_Clang       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
 printks "FM_Clang       L %9.4f R %9.4f l %9.4f\n", 0.5, aleft2, aright2, gk_FM_Clang_level
 outs aleft2, aright2
 endin

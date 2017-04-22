@@ -52,9 +52,10 @@ A Score is a matrix in which the rows are Events.
 An Event is a homogeneous vector with the following dimensions:
 
  1 Time in seconds from start of performance.
- 2 Duration in seconds.
+ 2 Duration in seconds, -1 is "indefinite."
  3 MIDI status (only the most significant nybble, e.g. 144 for 'NOTE ON').
- 4 MIDI channel (any real number >= 0, fractional part ties events).
+ 4 MIDI channel (any real number, fractional part ties events, 
+   negative is 'NOTE OFF').
  5 MIDI key number from 0 to 127, 60 is middle C (a real number).
  6 MIDI velocity from 0 to 127, 80 is mezzo-forte (a real number).
  7 x or pan, 0 is the origin.
@@ -271,11 +272,11 @@ function Event() {
     get: function() { return this.data[5]; },
     set: function(value) { this.data[5] = value; }
   });
-  Object.defineProperty(this,"depth",{
+  Object.defineProperty(this,"pan",{
     get: function() { return this.data[6]; },
     set: function(value) { this.data[6] = value; }
   });
-  Object.defineProperty(this,"pan",{
+  Object.defineProperty(this,"depth",{
     get: function() { return this.data[7]; },
     set: function(value) { this.data[7] = value; }
   });
