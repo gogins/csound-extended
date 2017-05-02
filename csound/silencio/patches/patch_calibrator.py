@@ -9,6 +9,8 @@ ksmps = 100
 nchnls = 2
 0dbfs = 1
 
+#include "FilteredSines.inc"
+#include "ZakianFlute.inc"
 #include "Harpsichord.inc"
 #include "DelayedPlucked.inc"
 #include "FMModerate2.inc"
@@ -43,6 +45,8 @@ connect "Droner", "outleft", "MasterOutput", "inleft"
 connect "Droner", "outright", "MasterOutput", "inright"
 connect "FM_Clang", "outleft", "MasterOutput", "inleft"
 connect "FM_Clang", "outright", "MasterOutput", "inright"
+connect "FilteredSines", "outleft", "MasterOutput", "inleft"
+connect "FilteredSines", "outright", "MasterOutput", "inright"
 connect "FMModerate2", "outleft", "MasterOutput", "inleft"
 connect "FMModerate2", "outright", "MasterOutput", "inright"
 connect "Harpsichord", "outleft", "MasterOutput", "inleft"
@@ -57,6 +61,8 @@ connect "Sweeper", "outleft", "MasterOutput", "inleft"
 connect "Sweeper", "outright", "MasterOutput", "inright"
 connect "YiString", "outleft", "MasterOutput", "inleft"
 connect "YiString", "outright", "MasterOutput", "inright"
+connect "ZakianFlute", "outleft", "MasterOutput", "inleft"
+connect "ZakianFlute", "outright", "MasterOutput", "inright"
 
 ;#include "PianoOutFluidsynth.inc"
 #include "PianoOutPianoteq.inc"
