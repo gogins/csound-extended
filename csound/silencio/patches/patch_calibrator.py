@@ -9,6 +9,7 @@ ksmps = 100
 nchnls = 2
 0dbfs = 1
 
+#include "FMBell.inc"
 #include "ToneWheelOrgan.inc"
 #include "HeavyMetal.inc"
 #include "FilteredSines.inc"
@@ -45,6 +46,8 @@ connect "DelayedPlucked", "outleft", "MasterOutput", "inleft"
 connect "DelayedPlucked", "outright", "MasterOutput", "inright"
 connect "Droner", "outleft", "MasterOutput", "inleft"
 connect "Droner", "outright", "MasterOutput", "inright"
+connect "FMBell", "outleft", "MasterOutput", "inleft"
+connect "FMBell", "outright", "MasterOutput", "inright"
 connect "FM_Clang", "outleft", "MasterOutput", "inleft"
 connect "FM_Clang", "outright", "MasterOutput", "inright"
 connect "FilteredSines", "outleft", "MasterOutput", "inleft"
