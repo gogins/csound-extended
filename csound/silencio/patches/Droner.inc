@@ -62,6 +62,5 @@ aright = adamping * aright
 k_gain = ampdb(gk_Droner_level)
 outleta "outleft", aleft * k_gain
 outleta "outright", aright * k_gain
-;;;;;;;;;;;;;;;;;;;;i
-prints "Droner        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p6
+prints "Droner         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p6
 endin

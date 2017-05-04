@@ -3,7 +3,7 @@
 Copyright (C) 2013 by Michael Gogins.
 All rights reserved.
 </CsLicense>
-<CsOptions> 
+<CsOptions>
 -odac -m3 -d
 </CsOptions>
 <CsInstruments>
@@ -214,7 +214,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Phaser i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)  
+printks "Phaser i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 gk_Sweeper_Attack init 10
@@ -277,7 +277,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Sweeper i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)  
+printks "Sweeper i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 gk_Buzzer_Attack init 10
@@ -317,7 +317,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Buzzer  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)  
+printks "Buzzer  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 gk_Shiner_Attack init 10
@@ -357,7 +357,7 @@ absignal, aspatialreverbsend Spatialize asignal, kfronttoback, klefttoright, kbo
 outletv "outbformat", absignal
 outleta "out", aspatialreverbsend
 kelapsed timeinsts
-printks "Shiner i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kfronttoback, klefttoright, kbottomtotop, downsamp(asignal)  
+printks "Shiner i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kfronttoback, klefttoright, kbottomtotop, downsamp(asignal)
 endin
 
 gk_Blower_Attack init 10
@@ -370,7 +370,6 @@ instr Blower
  // Original by Hans Mikelson.
  // Adapted by Michael Gogins.
  //////////////////////////////////////////////
- pset 0, 0, 3600
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -450,7 +449,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Blower  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %9.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)  
+printks "Blower  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %9.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 instr Controls
@@ -479,22 +478,22 @@ t 0 27
 ; p4 is frequency: [numerator/denominator*fundamental*octave]
 
 ; C E B
-i "Droner1"   0 60 [ 1 /  1 * 60 * 1] 60 
-i "Droner1"   0 60 [ 5 /  4 * 60 * 2] 60 
-i "Droner1"   0 30 [28 / 15 * 60 * 3] 60 
+i "Droner1"   0 60 [ 1 /  1 * 60 * 1] 60
+i "Droner1"   0 60 [ 5 /  4 * 60 * 2] 60
+i "Droner1"   0 30 [28 / 15 * 60 * 3] 60
 ; C Ab E B
-i "Blower1" 30 30 [ 8 /  5 * 60 * 1] 60 
+i "Blower1" 30 30 [ 8 /  5 * 60 * 1] 60
 ; G F# B
-i "Buzzer1"  60 60 [ 3 /  2 * 60 * 1] 60 
-i "Buzzer1"  60 60 [45 / 32 * 60 * 2] 60 
-i "Buzzer1"  60 30 [28 / 15 * 60 * 3] 60 
+i "Buzzer1"  60 60 [ 3 /  2 * 60 * 1] 60
+i "Buzzer1"  60 60 [45 / 32 * 60 * 2] 60
+i "Buzzer1"  60 30 [28 / 15 * 60 * 3] 60
 ; G F B
-i "Buzzer1"  90 30 [ 4 / 3 * 60 * 3] 60 
+i "Buzzer1"  90 30 [ 4 / 3 * 60 * 3] 60
 ; C E B
-i "Droner1" 120 60 [ 1 /  1 * 60 * 1] 60 
-i "Droner1" 120 60 [ 5 /  4 * 60 * 2] 60 
-i "Droner1" 120 30 [28 / 15 * 60 * 2] 60 
-i "Droner1" 150 30 [ 1 /  1 * 60 * 5] 60 
+i "Droner1" 120 60 [ 1 /  1 * 60 * 1] 60
+i "Droner1" 120 60 [ 5 /  4 * 60 * 2] 60
+i "Droner1" 120 30 [28 / 15 * 60 * 2] 60
+i "Droner1" 150 30 [ 1 /  1 * 60 * 5] 60
 e 10.0
 </CsScore>
 </CsoundSynthesizer>

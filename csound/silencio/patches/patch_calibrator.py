@@ -17,19 +17,20 @@ i_depth = p7
 i_height = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-i_overall_amps = 0 ; To start - change to observed value.
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = 70
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_XXX_level)
 '''
 
 epilog = '''
-isustain_ = p3
-iattack_ = .002
-irelease_ = .01
-p3 = isustain_ + iattack_ + irelease_
-adeclick linsegr 0, iattack_, 1, isustain_, 1, irelease_, 0
-aleft, aright pan2 asignal * k_gain, i_pan
+iattack = .002
+isustain = p3
+irelease = 0.1
+p3 = iattack + isustain + irelease
+a_declick linsegr 0, iattack, 1, isustain, 1, irelease, 0
+aleft, aright pan2 asignal * i_amplitude * a_declick * k_gain, i_pan
 outleta "outleft", aleft
 outleta "outright", aright
 prints "XXX            i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
@@ -37,11 +38,11 @@ prints "XXX            i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", 
 
 orc = '''
 sr = 48000
-ksmps = 10
+ksmps = 15
 nchnls = 2
 0dbfs = 1
 
-#include "LivingstonGuitar.inc"
+#include "STKPlucked.inc"
 
 #include "Blower.inc"
 #include "DelayedPlucked.inc"
@@ -57,7 +58,14 @@ nchnls = 2
 #include "Harpsichord.inc"
 #include "HeavyMetal.inc"
 #include "LivingstonGuitar.inc"
+#include "Melody.inc"
+#include "Plucked.inc"
+#include "Rhodes.inc"
+#include "STKBeeThree.inc"
+#include "STKBowed.inc"
+#include "STKPlucked.inc"
 #include "ToneWheelOrgan.inc"
+#include "TubularBell.inc"
 #include "ZakianFlute.inc"
 
 #include "PianoNotePianoteq.inc"
@@ -109,16 +117,30 @@ connect "HeavyMetal", "outright", "MasterOutput", "inright"
 connect "HeavyMetal", "outleft", "MasterOutput", "inleft"
 connect "LivingstonGuitar", "outleft", "MasterOutput", "inleft"
 connect "LivingstonGuitar", "outright", "MasterOutput", "inright"
+connect "Melody", "outleft", "MasterOutput", "inleft"
+connect "Melody", "outright", "MasterOutput", "inright"
 connect "Phaser", "outleft", "MasterOutput", "inleft"
 connect "Phaser", "outright", "MasterOutput", "inright"
 connect "PianoOut", "outleft", "MasterOutput", "inleft"
 connect "PianoOut", "outright", "MasterOutput", "inright"
+connect "Plucked", "outleft", "MasterOutput", "inleft"
+connect "Plucked", "outright", "MasterOutput", "inright"
+connect "Rhodes", "outleft", "MasterOutput", "inleft"
+connect "Rhodes", "outright", "MasterOutput", "inright"
 connect "Shiner", "outleft", "MasterOutput", "inleft"
 connect "Shiner", "outright", "MasterOutput", "inright"
+connect "STKBeeThree", "outleft", "MasterOutput", "inleft"
+connect "STKBeeThree", "outright", "MasterOutput", "inright"
+connect "STKBowed", "outleft", "MasterOutput", "inleft"
+connect "STKBowed", "outright", "MasterOutput", "inright"
+connect "STKPlucked", "outleft", "MasterOutput", "inleft"
+connect "STKPlucked", "outright", "MasterOutput", "inright"
 connect "Sweeper", "outleft", "MasterOutput", "inleft"
 connect "Sweeper", "outright", "MasterOutput", "inright"
 connect "ToneWheelOrgan", "outleft", "MasterOutput", "inleft"
 connect "ToneWheelOrgan", "outright", "MasterOutput", "inright"
+connect "TubularBell", "outleft", "MasterOutput", "inleft"
+connect "TubularBell", "outright", "MasterOutput", "inright"
 connect "YiString", "outleft", "MasterOutput", "inleft"
 connect "YiString", "outright", "MasterOutput", "inright"
 connect "ZakianFlute", "outleft", "MasterOutput", "inleft"
@@ -138,7 +160,7 @@ def generate_score():
     for duration in [0.125, .25, 2]:
         for key in xrange(24,108,3):
             time_ = time_ + duration * 1.5
-            velocity = 80 # random.choice([80, 80-6, 80-12, 80-18])
+            velocity = random.choice([80, 80-6, 80-12, 80-18])
             score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0.5\n' % (time_, duration, key, velocity)
     return score
 
