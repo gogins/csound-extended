@@ -4,8 +4,12 @@
 ## These patches are licensed under the terms of the GNU Lesser General Public License version 2.
 
 This directory contains Csound patches written in such a way as to be
-completely modular. I use these patches to compose my own pieces. None of
-the patches depends on any external resources or code.
+completely modular. I use these patches to compose my own pieces. Most of
+these patches do not depend on any external resources or code. A few patches
+depend on SoundFonts or VST plugins.
+
+An exposition of the methodology behind these modular patches may be found in
+<a href='modular_csound.pdf'><b><i>A Module System for Csound</b></i></a>.
 
 Some of the patches are instruments, and some are effects. Effects are
 usually scheduled using the `alwayson` opcode and connected in processing
@@ -22,11 +26,34 @@ opcodes, which are stereo pairs with standard names `"inleft"`, `"inright"`,
 `"outleft"`, and `"outright"`.
 
 Control parameters are set by global variables using the naming convention
-`gk_InstrumentName_ControlVariableName`. Default values are set for all
+`gk_InstrumentName_control_variable_name`. Default values are set for all
 control parameters, but in use they most likely would be set by k-rate
 control channels in an "always on" Controller instrument. Each instrument
-has a "gk_InstrumentName_MasterLevel" control parameter calibrated in dB.
+has a `gk_InstrumentName_level` control parameter calibrated in dB.
 
-A Python script, "patch_calibrator.py", is provided to help with the writing
+A Python script, `patch_calibrator.py`, is provided to help with the writing
 of new patches. It generates a range of notes for a patch, and prints output
 levels that can be used to derive an audio level normalization factor.
+
+The <a href='Spatialize.inc'>Spatialize.inc</a>
+file implements a complete system for spatializing audio based on the
+excellent work of <a href='xxx'>Jan Jacob Hofmann</a>. Integrating this code
+with the instrument definitions in this directory has not yet been done, but
+is easy to do on a case by case basis by replacing, in instrument definitions,
+the output code
+
+```
+aleft, aright pan2 asignal, i_pan
+outleta "outleft", aleft
+outleta "outright", aright
+```
+with
+```
+absignal[] init 16
+absignal, aspatialreverbsend Spatialize asignal, kfronttoback, klefttoright, kbottomtotop
+outletv "outbformat", absignal
+outleta "out", aspatialreverbsend
+```
+
+For a working example of the spatialization system, see <a href='SpatializedDrone.inc'>`SpatializedDrone`</a>
+

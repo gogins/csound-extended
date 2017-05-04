@@ -18,7 +18,11 @@ https://gogins.github.io/csound/html/indexframes.html
 
 Not all examples are playable at this time. Only csd based examples (not orc based) that output stereo audio, and do not use file-based resources (such as sample soundfiles) or network-based resources (e.g. OSC does not work), are currently working.
 
-## Playable Example Pieces Using Csound for PNaCl
+## Patches
+
+The <a href="https://github.com/gogins/gogins.github.io/tree/master/csound/silencio/patches">`csound/silencio/patches`</a> directory contains a library of self-contained Csound instrument defintions, a Python script for testing them and normalizing their loudness, and a system for spatializing audio based on the work of <a href='http://www.sonicarchitecture.de/en/index_janja.html'>Jan Jacob Hofmann</a>.
+
+## Playable Example Pieces Using Csound fo>>r PNaCl
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux.
 
