@@ -8,8 +8,8 @@ completely modular. I use these patches to compose my own pieces. Most of
 these patches do not depend on any external resources or code. A few patches
 depend on SoundFonts or VST plugins.
 
-An exposition of the methodology behind these modular patches may be found in
-<a href='modular_csound.pdf'><b><i>A Module System for Csound</b></i></a>.
+An (incomplete but still useful) exposition of the methodology behind these
+modular patches may be found in<a href='modular_csound.pdf'><b><i>A Module System for Csound</b></i></a>.
 
 Some of the patches are instruments, and some are effects. Effects are
 usually scheduled using the `alwayson` opcode and connected in processing
