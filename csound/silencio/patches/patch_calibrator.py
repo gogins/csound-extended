@@ -3,25 +3,66 @@ import random
 #output = "test.wav"
 output = "dac"
 
+prologue = '''
+if p3 == -1 then
+  p3 = 1000000
+endif
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+i_pan = p6
+i_depth = p7
+i_height = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+i_overall_amps = 0 ; To start - change to observed value.
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_XXX_level)
+'''
+
+epilog = '''
+isustain_ = p3
+iattack_ = .002
+irelease_ = .01
+p3 = isustain_ + iattack_ + irelease_
+adeclick linsegr 0, iattack_, 1, isustain_, 1, irelease_, 0
+aleft, aright pan2 asignal * k_gain, i_pan
+outleta "outleft", aleft
+outleta "outright", aright
+prints "XXX            i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
+'''
+
 orc = '''
 sr = 48000
-ksmps = 100
+ksmps = 10
 nchnls = 2
 0dbfs = 1
 
-#include "FMBell.inc"
-#include "ToneWheelOrgan.inc"
-#include "HeavyMetal.inc"
-#include "FilteredSines.inc"
-#include "ZakianFlute.inc"
-#include "Harpsichord.inc"
-#include "DelayedPlucked.inc"
-#include "FMModerate2.inc"
-#include "FM_Clang.inc"
-#include "PianoNotePianoteq.inc"
+#include "LivingstonGuitar.inc"
+
 #include "Blower.inc"
+#include "DelayedPlucked.inc"
 #include "Droner.inc"
+#include "FilteredSines.inc"
+#include "FM_Clang.inc"
+#include "FMBell.inc"
+#include "FMModerate.inc"
+#include "FMModerate2.inc"
+#include "FMModulatedChorus.inc"
+#include "Guitar.inc"
+#include "Guitar2.inc"
+#include "Harpsichord.inc"
+#include "HeavyMetal.inc"
+#include "LivingstonGuitar.inc"
+#include "ToneWheelOrgan.inc"
+#include "ZakianFlute.inc"
+
+#include "PianoNotePianoteq.inc"
 ;#include "PianoNoteFluidsynth.inc"
+
 #include "MasterOutput.inc"
 
 iampdbfs init 1
@@ -46,18 +87,28 @@ connect "DelayedPlucked", "outleft", "MasterOutput", "inleft"
 connect "DelayedPlucked", "outright", "MasterOutput", "inright"
 connect "Droner", "outleft", "MasterOutput", "inleft"
 connect "Droner", "outright", "MasterOutput", "inright"
-connect "FMBell", "outleft", "MasterOutput", "inleft"
-connect "FMBell", "outright", "MasterOutput", "inright"
-connect "FM_Clang", "outleft", "MasterOutput", "inleft"
-connect "FM_Clang", "outright", "MasterOutput", "inright"
 connect "FilteredSines", "outleft", "MasterOutput", "inleft"
 connect "FilteredSines", "outright", "MasterOutput", "inright"
+connect "FM_Clang", "outleft", "MasterOutput", "inleft"
+connect "FM_Clang", "outright", "MasterOutput", "inright"
+connect "FMBell", "outleft", "MasterOutput", "inleft"
+connect "FMBell", "outright", "MasterOutput", "inright"
+connect "FMModerate", "outleft", "MasterOutput", "inleft"
+connect "FMModerate", "outright", "MasterOutput", "inright"
 connect "FMModerate2", "outleft", "MasterOutput", "inleft"
 connect "FMModerate2", "outright", "MasterOutput", "inright"
+connect "FMModulatedChorus", "outleft", "MasterOutput", "inleft"
+connect "FMModulatedChorus", "outright", "MasterOutput", "inright"
+connect "Guitar", "outleft", "MasterOutput", "inleft"
+connect "Guitar", "outright", "MasterOutput", "inright"
+connect "Guitar2", "outleft", "MasterOutput", "inleft"
+connect "Guitar2", "outright", "MasterOutput", "inright"
 connect "Harpsichord", "outleft", "MasterOutput", "inleft"
 connect "Harpsichord", "outright", "MasterOutput", "inright"
 connect "HeavyMetal", "outright", "MasterOutput", "inright"
 connect "HeavyMetal", "outleft", "MasterOutput", "inleft"
+connect "LivingstonGuitar", "outleft", "MasterOutput", "inleft"
+connect "LivingstonGuitar", "outright", "MasterOutput", "inright"
 connect "Phaser", "outleft", "MasterOutput", "inleft"
 connect "Phaser", "outright", "MasterOutput", "inright"
 connect "PianoOut", "outleft", "MasterOutput", "inleft"
@@ -87,7 +138,7 @@ def generate_score():
     for duration in [0.125, .25, 2]:
         for key in xrange(24,108,3):
             time_ = time_ + duration * 1.5
-            velocity = random.choice([80, 80-6, 80-12, 80-18])
+            velocity = 80 # random.choice([80, 80-6, 80-12, 80-18])
             score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0.5\n' % (time_, duration, key, velocity)
     return score
 

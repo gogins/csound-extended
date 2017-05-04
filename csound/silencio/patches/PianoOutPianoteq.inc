@@ -26,5 +26,5 @@ aoutright = aoutright * k_gain * i_amplitude
 outleta "outleft", aoutleft
 outleta "outright", aoutright
 prints  "PianoOutPt     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
-printks "PianoOutPt     L %9.4f R %9.4f l %9.4f\n", 0.5, aoutleft, aoutright, gk_Piano_level
+; printks "PianoOutPt     L %9.4f R %9.4f l %9.4f\n", 0.5, aoutleft, aoutright, gk_Piano_level
 endin
