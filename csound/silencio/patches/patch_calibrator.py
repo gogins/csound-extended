@@ -42,7 +42,7 @@ ksmps = 15
 nchnls = 2
 0dbfs = 1
 
-#include "STKPlucked.inc"
+#include "STKBowed.inc"
 
 #include "Blower.inc"
 #include "DelayedPlucked.inc"
