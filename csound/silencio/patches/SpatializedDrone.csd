@@ -140,7 +140,7 @@ absignal, asend Spatialize asignal, gk_Droner_x + kx, gk_Droner_y + ky, gk_Drone
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Droner  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %9.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, asignal
+printks "Droner  i %7.2f t %7.2f [%7.2f] d %7.2f k %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %9.2f\n", 1.0, p1, p2, kelapsed, p3, p4, ihertz, p5, kx, ky, kz, asignal
 endin
 
 gk_Bower_Attack = 10
@@ -214,7 +214,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Phaser i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
+printks "Phaser i %7.2f t %7.2f [%7.2f] d %7.2f k %7.2f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, p4, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 gk_Sweeper_Attack init 10
@@ -317,7 +317,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Buzzer  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
+printks "Buzzer  i %7.2f t %7.2f [%7.2f] d %7.2f k %7.2 f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, p4, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 gk_Shiner_Attack init 10
