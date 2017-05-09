@@ -38,6 +38,7 @@ TO DO
 
 DEPENDENCIES
 
+fs
 three.js
 TrackballControls.js
 sprintf.js
@@ -340,6 +341,10 @@ Event.prototype.toIStatement = function() {
   text = text.concat(' ', this.data[9].toFixed(6));
   text = text.concat('\n');
   return text;
+}
+
+Event.prototype.toFomus = function() {
+    return 'note part ' + Math.floor(this.channel) + ' time ' + this.time * 2 + ' duration ' + this.duration * 2 + ' pitch ' + this.key + ' dynamic ' + this.velocity + ';';
 }
 
 Event.prototype.temper = function(tonesPerOctave) {
@@ -902,6 +907,88 @@ Score.prototype.slice = function(begin, end_, by_reference) {
     };
     return s;
 };
+
+/*
+title "Black Mountain"
+author "Michael Gogins"
+n-threads 4
+output (ly mid xml)
+timesig (4 4)
+beat 1/4
+beatdiv 32
+quartertones yes
+dyns yes
+dyn-range (60 60)
+//div-tie-score 3
+untie yes
+untie-dur-range (1/32 4)
+lily-papersize "11x17"
+part <id: 2 name: "Piano">
+part <id: 3 name: "Harpsichord">
+part <id: 4 name: "Bower">
+part <id: 5 name: "Phaser">
+part <id: 6 name: "YiString">
+part <id: 7 name: "FM_Clang">
+part <id: 8 name: "Droner">
+part <id: 7 name: "Sweeper">
+part <id: 8 name: "Buzzer">
+part <id: 9 name: "Shiner">
+part <id: 10 name: "Blower">
+part 2
+time 0 dur 1/4 ||
+mark [tempo "* = #" 120];
+note part 2 time 2 duration 9.269172743318434 pitch 96 dynamic 60;
+note part 2 time 2.2485088081771827 duration 9.269172743318434 pitch 96 dynamic 60;
+*/
+
+Score.prototype.engrave = function(title, composer, names_for_instrument_numbers) {
+    try {
+        var filepath = window.location.pathname.slice(1);
+        filepath = fs.realpathSync(filepath);
+        filepath = filepath + '.fms';
+        console.log('saving to filepath: ' + filepath);
+        this.sort();
+        this.findScales();
+        lines = [];
+        lines.push('title "' + title + '"');
+        lines.push('author "' + composer + '"');
+        lines.push('output (ly mid xml)');
+        lines.push('timesig (4 4)');
+        lines.push('beatdiv 4');
+        lines.push('quartertones yes');
+        lines.push('dyns yes');
+        lines.push('untie yes');
+        lines.push('untie-dur-range (1/64 4)');
+        lines.push('dyn-range (' + Math.round(this.minima.velocity) + ' ' + Math.round(this.maxima.velocity) + ')');
+        lines.push('lily-papersize "11x17"');
+        first_part = null;
+        for (var number in names_for_instrument_numbers) {
+            if (names_for_instrument_numbers.hasOwnProperty(number)) {
+                if (first_part == null) {
+                    first_part = number;
+                }
+                lines.push('part <id: ' + number + ' name: "' + names_for_instrument_numbers[number] + '">');
+            }
+        }            
+        lines.push('part ' + first_part);
+        lines.push('time 0 dur 1/4 ||');
+        lines.push('mark [tempo "* = #" 120];');
+        for (var i = 0; i < this.data.length; i++) {
+            var note = this.data[i].toFomus();
+            lines.push(note);
+        };
+        var fd = fs.openSync(filepath, 'w');
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i] + '\n';
+            fs.writeSync(fd, line);
+        }
+        fs.close(fd);
+        return true;
+    } catch (err) {
+        console.log(err.message);
+        return false;
+    }
+}
 
 function eventComparator(a, b) {
   for (var i = 0; i < a.data.length; i++) {
