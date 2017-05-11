@@ -8,6 +8,10 @@ completely modular. I use these patches to compose my own pieces. Most of
 these patches do not depend on any external resources or code. A few patches
 depend on SoundFonts or VST plugins.
 
+There are two pianos. In the orchestra header, `#define USE_PIANOTEQ` to use the 
+excellent commercial physically modeled piano VST plugin; otherwise, a large 
+sampled Steinway SoundFont is used.
+
 An (incomplete but still useful) exposition of the methodology behind these
 modular patches may be found in<a href='modular_csound.pdf'><b><i>A Module System for Csound</b></i></a>.
 
@@ -18,12 +22,14 @@ for the signal flow graph opcodes to see how this is done.
 
 You can `#include` any of these patches in a Csound orchestra and expect it to
 render audio from any MIDI or score events. All audio output levels are
-normalized so thst MIDI velocity 80 produces -6 dBFS. Each instrument
+normalized so that MIDI velocity 80 produces about -6 dBFS. Each instrument
 patch uses a releasing envelope. The patches are optimized for audio quality.
 
 All audio outputs and inputs are performed using the signal flow graph
-opcodes, which are stereo pairs with standard names `"inleft"`, `"inright"`,
-`"outleft"`, and `"outright"`.
+opcodes. In the orchestra header, `#define USE_SPATIALIZATION' to output audio 
+to a 16-channel Ambisonic B-format signal outlet named `abformat`, along with a 
+mono `out` outlet that can be used as a reverb send; otherwise, instruments output 
+plain stereo to outlets `outleft` and `outright`.
 
 Control parameters are set by global variables using the naming convention
 `gk_InstrumentName_control_variable_name`. Default values are set for all
@@ -37,23 +43,6 @@ levels that can be used to derive an audio level normalization factor.
 
 The <a href='Spatialize.inc'>Spatialize.inc</a>
 file implements a complete system for spatializing audio based on the
-excellent work of <a href='xxx'>Jan Jacob Hofmann</a>. Integrating this code
-with the instrument definitions in this directory has not yet been done, but
-is easy to do on a case by case basis by replacing, in instrument definitions,
-the output code
-
-```
-aleft, aright pan2 asignal, i_pan
-outleta "outleft", aleft
-outleta "outright", aright
-```
-with
-```
-absignal[] init 16
-absignal, aspatialreverbsend Spatialize asignal, kfronttoback, klefttoright, kbottomtotop
-outletv "outbformat", absignal
-outleta "out", aspatialreverbsend
-```
-
-For a working example of the spatialization system, see <a href='SpatializedDrone.inc'>`SpatializedDrone`</a>
+excellent work of <a href='xxx'>Jan Jacob Hofmann</a>. For a working example 
+of the spatialization system, see <a href='SpatializedDrone.inc'>`SpatializedDrone`</a>
 

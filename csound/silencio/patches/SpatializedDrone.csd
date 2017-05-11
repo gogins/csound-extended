@@ -7,10 +7,12 @@ All rights reserved.
 -odac -m3 -d
 </CsOptions>
 <CsInstruments>
-sr = 48000
+sr = 44100
 ksmps = 100
 nchnls = 2
 0dbfs = 100000
+
+#define USE_SPATIALIZATION ##
 
 #include "Spatialize.inc"
 
@@ -39,52 +41,10 @@ connect "Blower", "out", "SpatialReverb", "in"
 connect "Buzzer", "outbformat", "BformatDecoder", "inbformat"
 connect "Buzzer", "out", "SpatialReverb", "in"
 connect "SpatialReverb", "outbformat", "BformatDecoder", "inbformat"
+
 alwayson "SpatialReverb"
 alwayson "BformatDecoder"
 alwayson "Controls"
-
-opcode hertz2midinn, i, i
-ihertz xin
-print ihertz
-; m = 12*log2(fm/440 Hz) + 69
-ilog2 = log(2)
-imidinn = 12 * (log(ihertz / 440) / ilog2) + 69
-print imidinn
-xout imidinn
-endop
-
-instr Droner1
-insno = p1
-istart = p2
-iduration = p3
-ihertz = p4
-ivelocity = p5
-ipan = p6
-ikey hertz2midinn ihertz
-event_i "i", "Droner", 0, iduration, ikey, ivelocity, 0, ipan
-endin
-
-instr Buzzer1
-insno = p1
-istart = p2
-iduration = p3
-ihertz = p4
-ivelocity = p5
-ipan = p6
-ikey hertz2midinn ihertz
-event_i "i", "Buzzer", 0, iduration, ikey, ivelocity, 0, ipan
-endin
-
-instr Blower1
-insno = p1
-istart = p2
-iduration = p3
-ihertz = p4
-ivelocity = p5
-ipan = p6
-ikey hertz2midinn ihertz
-event_i "i", "Blower", 0, iduration, ikey, ivelocity, 0, ipan
-endin
 
 gk_Droner_Attack init 10
 gk_Droner_1 init 0.5
@@ -360,97 +320,7 @@ kelapsed timeinsts
 printks "Shiner i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kfronttoback, klefttoright, kbottomtotop, downsamp(asignal)
 endin
 
-gk_Blower_Attack init 10
-gkgrainDensity init 150
-gkgrainDuration init 0.2
-gkgrainAmplitudeRange init 100
-gkgrainFrequencyRange init .033
-instr Blower
- //////////////////////////////////////////////
- // Original by Hans Mikelson.
- // Adapted by Michael Gogins.
- //////////////////////////////////////////////
-i_instrument = p1
-i_time = p2
-i_duration = p3
-i_midikey = p4
-i_midivelocity = p5
-i_phase = p6
-i_pan = p6
-i_depth = p8
-i_height = p9
-i_pitchclassset = p10
-i_homogeneity = p11
-ifrequency = cpsmidinn(i_midikey)
-iamplitude = ampdb(i_midivelocity) / 200
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ; f1 0 65536 1 "hahaha.aif" 0 4 0
- ; f2 0 1024 7 0 224 1 800 0
- ; f3 0 8192 7 1 8192 -1
- ; f4 0 1024 7 0 512 1 512 0
- ; f5 0 1024 10 1 .3 .1 0 .2 .02 0 .1 .04
- ; f6 0 1024 10 1 0 .5 0 .33 0 .25 0 .2 0 .167
- ; a0 14 50
- ; p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
- ; Start Dur Amp Freq GrTab WinTab FqcRng Dens Fade
- ; i1 0.0 6.5 700 9.00 5 4 .210 200 1.8
- ; i1 3.2 3.5 800 7.08 . 4 .042 100 0.8
- ; i1 5.1 5.2 600 7.10 . 4 .0320 100 0.9
- ; i1 7.2 6.6 900 8.03 . 4 .021 150 1.6
- ; i1 21.3 4.5 1000 9.00 . 4 .031 150 1.2
- ; i1 26.5 13.5 1100 6.09 . 4 .121 150 1.5
- ; i1 30.7 9.3 900 8.05 . 4 .014 150 2.5
- ; i1 34.2 8.8 700 10.02 . 4 .14 150 1.6
-igrtab ftgenonce 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
-iwintab ftgenonce 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
-iHz = cpsmidinn(i_midikey)
-
-ihertz = iHz
-ip4 = iamplitude
-ip5 = iHz
-ip6 = igrtab
-ip7 = iwintab
-ip8 = 0.033
-ip8 = .002
-ip9 = 150
-ip9 = 100
-ip10 = 1.6
-ip10 = 3
-idur = p3
-iamp = iamplitude ; p4
-ifqc = iHz ; cpspch(p5)
-igrtab = ip6
-iwintab = ip7
-ifrng = ip8
-idens = ip9
-ifade = ip10
-igdur = 0.2
-iattack = i(gk_Blower_Attack)
-idecay = iattack
-isustain = p3 - iattack
-p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
-kamp = kenvelope
-; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
-aoutl grain ip4, ifqc, gkgrainDensity, gkgrainAmplitudeRange, ifqc * gkgrainFrequencyRange, gkgrainDuration, igrtab, iwintab, 5
-aoutr grain ip4, ifqc, gkgrainDensity, gkgrainAmplitudeRange, ifqc * gkgrainFrequencyRange, gkgrainDuration, igrtab, iwintab, 5
-aleft = aoutl * kamp * iamplitude
-aright = aoutr * kamp * iamplitude
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-asignal = aleft + aright
-absignal[] init 16
-kx jspline 6, 1/5, 1/20
-ky jspline 6, 1/5, 1/20
-kz jspline 6, 1/5, 1/20
-absignal, asend Spatialize asignal, kx, ky, kz
-outleta "out", asend
-outletv "outbformat", absignal
-kelapsed timeinsts
-printks "Blower  i %7.2f t %7.2f [%7.2f] d %7.2f f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %9.2f\n", 1.0, p1, p2, kelapsed, p3, ihertz, p5, kx, ky, kz, downsamp(asignal)
-endin
+#include "Blower.inc"
 
 instr Controls
 gk_Droner_1 invalue "gk_Droner_1"
@@ -475,25 +345,26 @@ endin
 
 t 0 27
 
-; p4 is frequency: [numerator/denominator*fundamental*octave]
+; p4 is just intonation in MIDI key numbers (numerator can be 0):
+; [ ((numerator / denominator) * 12) + (octave * 12) + 24 ] 
 
 ; C E B
-i "Droner1"   0 60 [ 1 /  1 * 60 * 1] 60
-i "Droner1"   0 60 [ 5 /  4 * 60 * 2] 60
-i "Droner1"   0 30 [28 / 15 * 60 * 3] 60
+i "Droner"    0 60 [ (( 0 /  1) * 12) + (1 * 12) + 24 ] 60
+i "Droner"    0 60 [ (( 4 /  5) * 12) + (2 * 12) + 24 ] 60
+i "Droner"    0 60 [ ((15 / 28) * 12) + (3 * 12) + 24 ] 60
 ; C Ab E B
-i "Blower1" 30 30 [ 8 /  5 * 60 * 1] 60
+i "Blower"   30 30 [ (( 5 /  8) * 12) + (1 * 12) + 24 ] 60
 ; G F# B
-i "Buzzer1"  60 60 [ 3 /  2 * 60 * 1] 60
-i "Buzzer1"  60 60 [45 / 32 * 60 * 2] 60
-i "Buzzer1"  60 30 [28 / 15 * 60 * 3] 60
+i "Buzzer"   60 60 [ (( 2 /  3) * 12) + (1 * 12) + 24 ] 60
+i "Buzzer"   60 60 [ ((32 / 45) * 12) + (2 * 12) + 24 ] 60
+i "Buzzer"   60 30 [ ((15 / 28) * 12) + (3 * 12) + 24 ] 60
 ; G F B
-i "Buzzer1"  90 30 [ 4 / 3 * 60 * 3] 60
+i "Buzzer"   90 30 [ (( 3 /  4) * 12) + (3 * 12) + 24 ] 60
 ; C E B
-i "Droner1" 120 60 [ 1 /  1 * 60 * 1] 60
-i "Droner1" 120 60 [ 5 /  4 * 60 * 2] 60
-i "Droner1" 120 30 [28 / 15 * 60 * 2] 60
-i "Droner1" 150 30 [ 1 /  1 * 60 * 5] 60
+i "Droner"  120 60 [ (( 0 /  1) * 12) + (1 * 12) + 24 ] 60
+i "Droner"  120 60 [ (( 4 /  5) * 12) + (2 * 12) + 24 ] 60
+i "Droner"  120 30 [ ((15 / 28) * 12) + (2 * 12) + 24 ] 60
+i "Droner"  150 30 [ (( 0 /  1) * 12) + (2 * 12) + 24 ] 60
 e 10.0
 </CsScore>
 </CsoundSynthesizer>

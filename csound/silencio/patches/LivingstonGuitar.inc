@@ -47,9 +47,9 @@ i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-i_pan = p6
-i_depth = p7
-i_height = p8
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 i_overall_amps = 130 ; To start - change to observed value.
@@ -181,9 +181,23 @@ delayw ainputb + abkdout*ifbfac*ifbfac
 ; resonance due to the top plate = 220 Hz
 ; resonance due to the inclusion of the back plate = 400 Hz (weakest)
 aresbod filter2 (afwdout + abkdout), 5,4, .000000000005398681501844749,.00000000000001421085471520200,-.00000000001076383426834582,-00000000000001110223024625157,.000000000005392353230604385,-3.990098622573566,5.974971737738533,-3.979630684599723,.9947612723736902
-asignal = 1500*(afwav+abkwav+aresbod*.000000000000000000003)
-aleft, aright pan2 asignal * k_gain * i_amplitude * adeclick, i_pan
-outleta "outleft", aleft
-outleta "outright", aright
-prints "LivingstonGuit i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
+a_signal = 1500*(afwav+abkwav+aresbod*.000000000000000000003)
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+p3 = i_attack + i_sustain + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "LivingstonGuit i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin

@@ -12,9 +12,9 @@ i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-i_pan = p6
-i_depth = p7
-i_height = p8
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
 i_phase = p9
 i_overall_amps = 77.7
 i_normalization = ampdb(-i_overall_amps) / 2
@@ -209,11 +209,23 @@ asig = awt1 + awt2 + awt3
 asig = asig*(iampscale/inorm)
 kcut linseg 0, iattack, ifiltcut, isustain, ifiltcut, idecay, 0 ; lowpass filter for brightness control
 afilt tone asig, kcut
-asig balance afilt, asig
-adeclick linsegr 0, iattack, 1, isustain, 1, irelease, 0
-asignal = asig * adeclick
-aleft, aright pan2 asignal, i_pan
-outleta "outleft", aleft
-outleta "outright", aright
-prints "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
+a_signal balance afilt, asig
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+p3 = i_attack + i_sustain + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin

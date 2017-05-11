@@ -6,9 +6,9 @@ i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-i_pan = p6
-i_depth = p7
-i_height = p8
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
 i_phase = p9
 ; Use channel assigned in fluidLoad.
 i_channel = 0

@@ -4,6 +4,8 @@ import random
 output = "dac"
 
 prologue = '''
+gk_INSTR_level init 0
+instr INSTR
 if p3 == -1 then
   p3 = 1000000
 endif
@@ -12,28 +14,37 @@ i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-i_pan = p6
-i_depth = p7
-i_height = p8
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
 i_overall_amps = 70
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
-k_gain = ampdb(gk_XXX_level)
+k_gain = ampdb(gk_INSTR_level)
 '''
 
 epilog = '''
-iattack = .002
-isustain = p3
-irelease = 0.1
-p3 = iattack + isustain + irelease
-a_declick linsegr 0, iattack, 1, isustain, 1, irelease, 0
-aleft, aright pan2 asignal * i_amplitude * a_declick * k_gain, i_pan
-outleta "outleft", aleft
-outleta "outright", aright
-prints "XXX            i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+p3 = i_attack + i_sustain + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "INSTR          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 '''
 
 orc = '''
@@ -42,34 +53,40 @@ ksmps = 15
 nchnls = 2
 0dbfs = 1
 
-#include "STKBowed.inc"
+; Uncomment only the patch that you want to test. 
+; Keep these in alphabetical order.
 
-#include "Blower.inc"
-#include "DelayedPlucked.inc"
-#include "Droner.inc"
-#include "FilteredSines.inc"
-#include "FM_Clang.inc"
-#include "FMBell.inc"
-#include "FMModerate.inc"
-#include "FMModerate2.inc"
-#include "FMModulatedChorus.inc"
-#include "Guitar.inc"
-#include "Guitar2.inc"
-#include "Harpsichord.inc"
-#include "HeavyMetal.inc"
-#include "LivingstonGuitar.inc"
-#include "Melody.inc"
-#include "Plucked.inc"
-#include "Rhodes.inc"
-#include "STKBeeThree.inc"
-#include "STKBowed.inc"
-#include "STKPlucked.inc"
-#include "ToneWheelOrgan.inc"
-#include "TubularBell.inc"
-#include "ZakianFlute.inc"
+;#define USE_PIANOTEQ
 
+;#include "Blower.inc"
+;#include "DelayedPlucked.inc"
+;#include "Droner.inc"
+;#include "FilteredSines.inc"
+;#include "FM_Clang.inc"
+;#include "FMBell.inc"
+;#include "FMModerate.inc"
+;#include "FMModerate2.inc"
+;#include "FMModulatedChorus.inc"
+;#include "Guitar.inc"
+;#include "Harpsichord.inc"
+;#include "HeavyMetal.inc"
+;#include "LivingstonGuitar.inc"
+;#include "Melody.inc"
+#ifdef USE_PIANOTEQ
 #include "PianoNotePianoteq.inc"
+#else
 ;#include "PianoNoteFluidsynth.inc"
+#endif
+;#include "Plucked.inc"
+;#include "Rhodes.inc"
+;#include "STKBeeThree.inc"
+;#include "STKBowed.inc"
+;#include "STKPlucked.inc"
+;#include "ToneWheelOrgan.inc"
+;#include "TubularBell.inc"
+;#include "Xing.inc"
+;#include "YiString.inc"
+#include "ZakianFlute.inc"
 
 #include "MasterOutput.inc"
 
@@ -141,13 +158,19 @@ connect "ToneWheelOrgan", "outleft", "MasterOutput", "inleft"
 connect "ToneWheelOrgan", "outright", "MasterOutput", "inright"
 connect "TubularBell", "outleft", "MasterOutput", "inleft"
 connect "TubularBell", "outright", "MasterOutput", "inright"
+connect "Xing", "outleft", "MasterOutput", "inleft"
+connect "Xing", "outright", "MasterOutput", "inright"
 connect "YiString", "outleft", "MasterOutput", "inleft"
 connect "YiString", "outright", "MasterOutput", "inright"
 connect "ZakianFlute", "outleft", "MasterOutput", "inleft"
 connect "ZakianFlute", "outright", "MasterOutput", "inright"
 
-;#include "PianoOutFluidsynth.inc"
+#ifdef USE_PIANOTEQ
 #include "PianoOutPianoteq.inc"
+#else
+#include "PianoOutFluidsynth.inc"
+#endif
+
 
 alwayson "PianoOut"
 alwayson "MasterOutput"
@@ -161,7 +184,7 @@ def generate_score():
         for key in xrange(24,108,3):
             time_ = time_ + duration * 1.5
             velocity = random.choice([80, 80-6, 80-12, 80-18])
-            score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0.5\n' % (time_, duration, key, velocity)
+            score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, duration, key, velocity)
     return score
 
 message_level = 1 + 2 + 32 + 128

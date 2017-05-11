@@ -35,7 +35,7 @@ In this system, spatial locations are passed to the spatialize opcode in
 Cartesian coordinates. These are the same as those used in physics:
 
 -- x runs from ahead to behind.
--- y runs from left to right.
+-- y runs from left to right. This is the same as stereo pan.
 -- z runs from below to above.
 
 Spherical coordinates are more or less standard for Ambisonics, and are
