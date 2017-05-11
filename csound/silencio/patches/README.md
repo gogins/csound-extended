@@ -26,7 +26,7 @@ normalized so that MIDI velocity 80 produces about -6 dBFS. Each instrument
 patch uses a releasing envelope. The patches are optimized for audio quality.
 
 All audio outputs and inputs are performed using the signal flow graph
-opcodes. In the orchestra header, `#define USE_SPATIALIZATION' to output audio 
+opcodes. In the orchestra header, `#define USE_SPATIALIZATION` to output audio 
 to a 16-channel Ambisonic B-format signal outlet named `abformat`, along with a 
 mono `out` outlet that can be used as a reverb send; otherwise, instruments output 
 plain stereo to outlets `outleft` and `outright`.
