@@ -275,12 +275,12 @@ function Event() {
   });
   Object.defineProperty(this,"depth",{
     get: function() { return this.data[6]; },
-    set: function(value) { this.data[7] = value; }
+    set: function(value) { this.data[6] = value; }
   });
   // Ambisonic left to right is the Y dimension!
   Object.defineProperty(this,"pan",{
     get: function() { return this.data[7]; },
-    set: function(value) { this.data[6] = value; }
+    set: function(value) { this.data[7] = value; }
   });
   Object.defineProperty(this,"heigth",{
     get: function() { return this.data[8]; },
@@ -304,6 +304,9 @@ Event.VELOCITY = 5;
 Event.X = 6;
 Event.Y = 7;
 Event.Z = 8;
+Event.DEPTH = 6;
+Event.PAN = 7;
+Event.HEIGHT = 8;
 Event.PHASE = 9;
 Event.HOMOGENEITY = 10;
 Event.COUNT = 11;
@@ -470,6 +473,19 @@ Score.prototype.setDuration = function (duration) {
     event.data[0] = event.data[0] * factor;
     event.data[1] = event.data[1] * factor;
   }
+}
+
+Score.prototype.quantize = function(dimension, quantum) {
+    for (var i = 0; i < this.data.length; i++) {
+        var event = this.data[i];
+        var value = Math.floor(event.data[dimension] / quantum);
+        event.data[dimension] = (value * quantum);
+    }
+}
+
+Score.prototype.quantizeTime = function(quantum) {
+    this.quantize(0, quantum);
+    this.quantize(1, quantum);
 }
 
 Score.prototype.sendToCsound = function(csound, extra) {
@@ -931,7 +947,10 @@ Score.prototype.engrave = function(fomus_overrides) {
         lines.push('author "' + this.composer + '"');
         lines.push('output (ly mid xml)');
         lines.push('timesig (4 4)');
-        lines.push('beatdiv 4');
+        // 32nd notes are the shortest.
+        lines.push('beatdiv 8');
+        // No tuplets -- they make this kind of thing ureadable.
+        lines.push('tuplets ()');
         lines.push('quartertones yes');
         lines.push('dyns yes');
         lines.push('prune-type steal');
