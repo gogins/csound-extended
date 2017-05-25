@@ -94,7 +94,7 @@ var restoreFromLocalFile = function(toObject, filepath) {
     } catch (err) {
         console.log(err.message);
     }
-}
+};
 
 /**
  * Translate the object to JSON and save it on the local filesystem.
@@ -105,10 +105,11 @@ var restoreFromLocalFile = function(toObject, filepath) {
  */
 var saveToLocalFile = function(fromObject, object, filepath) {
     try {
+        var json = null;
         if (fromObject) {
-            var json = JSON.stringify(object);
+            json = JSON.stringify(object);
         } else {
-            var json = object;
+            json = object;
         }
         if (typeof json === 'undefined') {
             throw "saveToLocalFile: json is undefined.";
@@ -129,7 +130,7 @@ var saveToLocalFile = function(fromObject, object, filepath) {
         console.log(err.message);
         return false;
     }
-}
+};
 
 /**
  * Restore dat.gui parameters as JSON from:
@@ -141,14 +142,14 @@ var saveToLocalFile = function(fromObject, object, filepath) {
  */
 var restoreDatGuiJson = function(default_parameters_json) {
     var parameters_filesystem_json = Silencio.restoreFromLocalFile(false);
-    if (parameters_filesystem_json != null && parameters_filesystem_json != 'null') {
+    if (parameters_filesystem_json !== null && parameters_filesystem_json !== 'null') {
         console.log('Restored dat.gui parameters from local filesystem: ' + parameters_filesystem_json);
         return JSON.parse(parameters_filesystem_json);
     } else {
         console.log('Restored dat.gui parameters from default: ' + parameters_default_json);
         return parameters_default_json;
     }
-}
+};
 
 /**
  * Save the parameters object for dat.gui as JSON to the local file system.
@@ -164,7 +165,7 @@ var saveDatGuiJson = function(gui) {
         console.log(err.message);
         return false;
     }
-}
+};
 
 /**
  * Parse the Csound orchestra for hints to create a user interface using
@@ -178,11 +179,11 @@ var saveDatGuiJson = function(gui) {
  */
 var createNwSlider = function(line, window, nwfolder) {
 
-}
+};
 
 var createNwUi = function(orc, csound, window) {
      var channels = [];
-}
+};
 
 function eq_epsilon(a, b) {
   var epsilon_factor = 100 * Number.EPSILON;
@@ -291,7 +292,7 @@ function Event() {
     set: function(value) { this.data[9] = value; }
   });
   Object.defineProperty(this,"homogeneity",{
-    get: function() { return this.data[10]; Event.TIME = 0;},
+    get: function() { return this.data[10]; },
     set: function(value) { this.data[10] = value; }
   });
 }
@@ -318,7 +319,7 @@ Event.prototype.toString = function() {
   }
   text = text.concat('\n');
   return text;
-}
+};
 
 /**
  * Csound pfields are:
@@ -345,11 +346,11 @@ Event.prototype.toIStatement = function() {
   text = text.concat(' ', this.data[9].toFixed(6));
   text = text.concat('\n');
   return text;
-}
+};
 
 Event.prototype.toFomus = function() {
     return 'note part ' + Math.floor(this.channel) + ' time ' + this.time * 2 + ' duration ' + this.duration * 2 + ' pitch ' + this.key + ' dynamic ' + this.velocity + ';';
-}
+};
 
 Event.prototype.temper = function(tonesPerOctave) {
   if (typeof tonesPerOctave === 'undefined') {
@@ -359,13 +360,13 @@ Event.prototype.temper = function(tonesPerOctave) {
   var tone = Math.floor((octave * tonesPerOctave) + 0.5);
   octave = tone / tonesPerOctave;
   this.key = octave * 12;
-}
+};
 
 Event.prototype.clone = function() {
   other = new Event();
   other.data = this.data.slice(0);
   return other;
-}
+};
 
 function Score() {
   this.data  = [];
@@ -391,23 +392,23 @@ Score.prototype.add = function(p0_time, p1_duration, p2_status, p3_channel, p4_k
      }
   }
   this.data.push(event);
-}
+};
 
 Score.prototype.append = function(event) {
   this.data.push(event);
-}
+};
 
 Score.prototype.append_score = function (score) {
     for (var i = 0; i < score.data.length; i++) {
         this.data.push(score.data[i]);
     }
-}
+};
 
 Score.prototype.clear = function () {
   while(this.data.length > 0) {
     this.data.pop();
   }
-}
+};
 
 Score.prototype.getDuration = function () {
   this.sort();
@@ -415,7 +416,7 @@ Score.prototype.getDuration = function () {
   var duration = 0;
   for (var i = 0; i < this.data.length; i++) {
     var event = this.data[i];
-    if (i == 0) {
+    if (i === 0) {
       duration = event.end; //data[0] + event.data[1];
     } else {
       var currentDuration = event.end; //data[0] + event.data[1];
@@ -425,7 +426,7 @@ Score.prototype.getDuration = function () {
     }
   }
   return duration;
-}
+};
 
 Score.prototype.log = function (what) {
   if (typeof what === 'undefined') {
@@ -437,13 +438,14 @@ Score.prototype.log = function (what) {
     var event = this.data[i];
     csound.message(what + event.toString());
   }
-}
+};
 
 Score.prototype.getEnd = function () {
+  var end = null;
   for (var i = 0; i < this.data.length; i++) {
     var event = this.data[i];
     if (i === 0) {
-        var end = event.end;
+        end = event.end;
     } else {
         if (end < event.end) {
             end = event.end;
@@ -451,29 +453,31 @@ Score.prototype.getEnd = function () {
     }
   }
   return end;
-}
+};
 
 Score.prototype.setDuration = function (duration) {
   this.sort();
   var start = this.data[0].time;
-  for (var i = 0; i < this.data.length; i++) {
-    var event = this.data[i];
+  var i;
+  var event;
+  for (i = 0; i < this.data.length; i++) {
+    event = this.data[i];
     event.data[0] = event.data[0] - start;
   }
   var currentDuration = this.data[0].end;
-  for (var i = 0; i < this.data.length; i++) {
-    var event = this.data[i];
+  for (i = 0; i < this.data.length; i++) {
+    event = this.data[i];
     if (event.end > currentDuration) {
       currentDuration = event.end;
     }
   }
   var factor = Math.abs(duration / currentDuration);
-  for (var i = 0; i < this.data.length; i++) {
-    var event = this.data[i];
+  for (i = 0; i < this.data.length; i++) {
+    event = this.data[i];
     event.data[0] = event.data[0] * factor;
     event.data[1] = event.data[1] * factor;
   }
-}
+};
 
 Score.prototype.quantize = function(dimension, quantum) {
     for (var i = 0; i < this.data.length; i++) {
@@ -481,12 +485,12 @@ Score.prototype.quantize = function(dimension, quantum) {
         var value = Math.floor(event.data[dimension] / quantum);
         event.data[dimension] = (value * quantum);
     }
-}
+};
 
 Score.prototype.quantizeTime = function(quantum) {
     this.quantize(0, quantum);
     this.quantize(1, quantum);
-}
+};
 
 Score.prototype.sendToCsound = function(csound, extra) {
     this.sort();
@@ -500,15 +504,15 @@ Score.prototype.sendToCsound = function(csound, extra) {
     for (var i = 0; i < this.data.length; i++) {
         jscore += this.data[i].toIStatement();
     }
-    ;console.log(jscore);
+    console.log(jscore);
     csound.readScore(jscore);
-}
+};
 
 Score.prototype.findScales = function() {
   for (var i = 0; i < this.minima.data.length; i++) {
     this.findScale(i);
   }
-}
+};
 
 Score.prototype.findScale = function(dimension) {
   var min = Number.NaN;
@@ -530,7 +534,7 @@ Score.prototype.findScale = function(dimension) {
   this.minima.data[dimension] = min;
   this.maxima.data[dimension] = max;
   this.ranges.data[dimension] = max - min;
-}
+};
 
 Score.prototype.setScale = function(dimension, minimum, range) {
   this.findScale(dimension);
@@ -551,17 +555,17 @@ Score.prototype.setScale = function(dimension, minimum, range) {
     value += translate;
     this.data[i].data[dimension] = value;
   }
-}
+};
 
 Score.prototype.temper = function(tonesPerOctave) {
   for (var i = 0; i < this.data.length; i++) {
     this.data[i].temper(tonesPerOctave);
   }
-}
+};
 
 Score.prototype.sort = function() {
   this.data.sort(eventComparator);
-}
+};
 
 Score.prototype.tieOverlaps = function(tieExact) {
   csound.message("Before tieing: " + this.data.length + "\n");
@@ -569,11 +573,15 @@ Score.prototype.tieOverlaps = function(tieExact) {
       tieExact = false;
   }
   this.sort();
-  for (var laterI = this.data.length - 1; laterI >= 0; laterI--) {
-    var laterEvent = this.data[laterI];
+  var laterI;
+  var laterEvent;
+  var earlierI;
+  var earlierEvent;
+  for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
+    laterEvent = this.data[laterI];
     if (laterEvent.status === 144) {
-        for (var earlierI = laterI - 1; earlierI >= 0; earlierI--) {
-          var earlierEvent = this.data[earlierI];
+        for ( earlierI = laterI - 1; earlierI >= 0; earlierI--) {
+          earlierEvent = this.data[earlierI];
         if (earlierEvent.status === 144) {
           var overlaps = false;
           if (tieExact) {
@@ -599,8 +607,8 @@ Score.prototype.tieOverlaps = function(tieExact) {
   }
   }
   // Get rid of notes that will not sound (again).
-  for (var laterI = this.data.length - 1; laterI >= 0; laterI--) {
-    var laterEvent = this.data[laterI];
+  for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
+    laterEvent = this.data[laterI];
     if (laterEvent.status === 144) {
       if ((laterEvent.duration <= 0) || (laterEvent.velocity <= 0)) {
         this.data.splice(laterI, 1);
@@ -608,14 +616,14 @@ Score.prototype.tieOverlaps = function(tieExact) {
     }
   }
   csound.message("After tieing: " + this.data.length + "\n");
-}
+};
 
 Score.prototype.progress = function(score_time) {
     if (context !== null) {
         context.fillStyle = "LawnGreen";
-        context.fillRect(0, 60, score_time, .01);
+        context.fillRect(0, 60, score_time, 0.01);
     }
-}
+};
 
 Score.prototype.draw = function(canvas, W, H) {
   this.findScales();
@@ -624,7 +632,7 @@ Score.prototype.draw = function(canvas, W, H) {
   csound.message("ranges:  " + this.ranges + "\n");
   var xsize = this.getDuration();
   var ysize = this.ranges.key;
-  var inner_scale = .9
+  var inner_scale = 0.9;
   // Create a border.
   var xscale = Math.abs(W * inner_scale / xsize);
   var yscale = Math.abs(H * inner_scale / ysize);
@@ -639,11 +647,11 @@ Score.prototype.draw = function(canvas, W, H) {
   csound.message("scale:  " + xscale + ", " + yscale + "\n");
   csound.message("move:   " + xmove + ", " + ymove + "\n");
   var channelRange = this.ranges.channel;
-  if (channelRange == 0) {
+  if (channelRange === 0) {
     channelRange = 1;
   }
   var velocityRange = this.ranges.velocity;
-  if (velocityRange == 0) {
+  if (velocityRange === 0) {
     velocityRange = 1;
   }
   for (var i = 0; i < this.data.length; i++) {
@@ -654,7 +662,7 @@ Score.prototype.draw = function(canvas, W, H) {
     hue = 100 * (hue / channelRange);
     var value = this.data[i].velocity - this.minima.velocity;
     value = value / velocityRange;
-    value = .5 + value / 2;
+    value = 0.5 + value / 2;
     var hsv = "hsv("+hue+","+1+","+value+")";
     context.strokeStyle = tinycolor(hsv).toHexString();
     //csound.message("color: " + context.strokeStyle + "\n");
@@ -666,7 +674,7 @@ Score.prototype.draw = function(canvas, W, H) {
     //console.log(this.data[i].toString() + ' x1: ' + x1 + ' x2: ' + x2 + ' y: ' + y + ' hsv: ' + hsv + '.');
   }
   return context;
-}
+};
 
 /**
  * Displays the score cursor at the current time.
@@ -680,7 +688,7 @@ Score.prototype.progress3D = function(score_time) {
         this.camera.updateProjectionMatrix();
         this.renderer.render(this.scene, this.camera);
     }
-}
+};
 
 /**
  * Sets up a scene, camera, and renderer with controls to view
@@ -715,7 +723,7 @@ Score.prototype.prepareScene3D = function(canvas) {
     var light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(1, 1, 1).normalize();
     this.scene.add(light);
-    var light2 = new THREE.AmbientLight(0x404040, .5);
+    var light2 = new THREE.AmbientLight(0x404040, 0.5);
     this.scene.add(light2);
     var onResize = function() {
         canvas.width  = canvas.clientWidth;
@@ -725,9 +733,9 @@ Score.prototype.prepareScene3D = function(canvas) {
         this.controls.handleResize();
         this.camera.updateProjectionMatrix();
         this.renderer.render(this.scene, this.camera);
-    }
+    };
     window.addEventListener('resize', onResize, false);
-}
+};
 
 /**
  * Adds the note to the 3D scene. Can be used with a fixed or a real-time score.
@@ -739,16 +747,16 @@ Score.prototype.plotNote3D = function(note, channel_minimum, channel_range, velo
     var key = note.key;
     var channel = note.channel - channel_minimum;
     var geometry = new THREE.BoxBufferGeometry(duration, 1, 1);
-     if (channel_range == 0) {
+     if (channel_range === 0) {
         channel_range = 1;
     }
-    if (velocity_range == 0) {
+    if (velocity_range === 0) {
         velocity_range = 1;
     }
     hue = channel / channel_range;
     var value = note.velocity - velocity_minimum;
     value = value / velocity_range;
-    value = .5 + value / 2;
+    value = 0.5 + value / 2;
     var material = new THREE.MeshLambertMaterial();
     material.color.setHSL(hue, 1, value);
     material.opacity = 0.5;
@@ -761,7 +769,7 @@ Score.prototype.plotNote3D = function(note, channel_minimum, channel_range, velo
     note_mesh.position.y = key;
     note_mesh.position.z = channel;
     this.scene.add(note_mesh);
-}
+};
 
 /**
  * Plots a grid for a fixed score.
@@ -787,7 +795,7 @@ Score.prototype.plotGrid3D = function() {
             var box = new THREE.LineSegments(new THREE.EdgesGeometry(grid_geometry), line_material);
             ///box = new THREE.EdgesGeometry(box);
             box.material.color.setRGB(0, 0.25, 0);
-            box.material.opacity = .25;
+            box.material.opacity = 0.25;
             box.material.transparent = true;
             box.position.x = t + 5;
             box.position.y = k + 6;
@@ -815,7 +823,7 @@ Score.prototype.plotGrid3D = function() {
     this.score_cursor.position.y = 60;
     this.score_cursor.position.z = 0;
     this.scene.add(this.score_cursor);
-}
+};
 
 /**
  * Looks at a full fixed score.
@@ -830,7 +838,7 @@ Score.prototype.lookAtFullScore3D = function() {
     this.controls.update();
     this.camera.updateProjectionMatrix();
     this.renderer.render(this.scene, this.camera);
-}
+};
 
 /**
  * Looks at the front (current notes) of a real-time score.
@@ -845,7 +853,7 @@ Score.prototype.lookAtFront3D = function() {
     this.controls.update();
     this.camera.updateProjectionMatrix();
     this.renderer.render(this.scene, this.camera);
-}
+};
 
 /**
  * Redraws the scene using the camera updated from the controls.
@@ -854,7 +862,7 @@ Score.prototype.render3D = function() {
     this.controls.update();
     this.camera.updateProjectionMatrix();
     this.renderer.render(this.scene, this.camera);
-}
+};
 
 /**
  * Draws the notes in a fixed score as a 3-dimensional piano roll. The score is
@@ -872,14 +880,14 @@ Score.prototype.draw3D = function(canvas) {
     this.plotGrid3D();
     this.lookAtFullScore3D();
     return canvas;
-}
+};
 
 Score.prototype.toString = function() {
     var result = '';
     for (var i = 0; i < this.data.length; i++) {
         var event = this.data[i];
         result = result.concat(event.toString());
-    };
+    }
     return result;
 };
 
@@ -888,7 +896,7 @@ Score.prototype.toCsoundScore = function(extra) {
     for (var i = 0; i < this.data.length; i++) {
         var event = this.data[i];
         result = result.concat(event.toIStatement());
-    };
+    }
     if (typeof extra !== 'undefined') {
         result.concat('e ' + extra);
     }
@@ -923,8 +931,8 @@ Score.prototype.slice = function(begin, end_, by_reference) {
             } else {
                 s.append(event.clone());
             }
-        };
-    };
+        }
+    }
     return s;
 };
 
@@ -966,19 +974,20 @@ Score.prototype.engrave = function(fomus_overrides) {
         first_part = null;
         for (var number in this.names_for_instrument_numbers) {
             if (this.names_for_instrument_numbers.hasOwnProperty(number)) {
-                if (first_part == null) {
+                if (first_part === null) {
                     first_part = number;
                 }
                 var name = this.names_for_instrument_numbers[number];
                 lines.push('part <id: ' + number + ' name: "' + name + '" abbr: "' + name.substring(0, 3) + '">');
             }
-        }            
-        for (var i = 0; i < this.data.length; i++) {
+        }
+        var i;        
+        for (i = 0; i < this.data.length; i++) {
             var note = this.data[i].toFomus();
             lines.push(note);
-        };
+        }
         var fd = fs.openSync(filepath, 'w');
-        for (var i = 0; i < lines.length; i++) {
+        for (i = 0; i < lines.length; i++) {
             var line = lines[i] + '\n';
             fs.writeSync(fd, line);
         }
@@ -988,7 +997,7 @@ Score.prototype.engrave = function(fomus_overrides) {
         console.log(err.message);
         return false;
     }
-}
+};
 
 function eventComparator(a, b) {
   for (var i = 0; i < a.data.length; i++) {
@@ -996,7 +1005,7 @@ function eventComparator(a, b) {
     var bvalue = b.data[i];
     var difference = avalue - bvalue;
     if (difference !== 0) {
-      return difference
+      return difference;
     }
   }
   return 0;
@@ -1078,7 +1087,7 @@ function LSys() {
 }
 LSys.prototype.addRule = function(c, replacement) {
   this.rules[c] = replacement;
-}
+};
 LSys.prototype.generate = function(n) {
   this.sentence = this.axiom;
   for (var g = 0; g < n; g++) {
@@ -1101,8 +1110,10 @@ LSys.prototype.draw = function(t, context, W, H) {
   // Draw for size.
   t.reset();
   var size = [t.p.x, t.p.y, t.p.x, t.p.y];
-  for (var i=0; this.sentence.length > i; i++) {
-    var c = this.sentence[i];
+  var i;
+  var c;
+  for (i=0; this.sentence.length > i; i++) {
+    c = this.sentence[i];
     this.interpret(c, t, context, size);
   }
   // Draw to show.
@@ -1115,8 +1126,8 @@ LSys.prototype.draw = function(t, context, W, H) {
   context.scale(xscale, yscale);
   context.translate(xmove, ymove);
   t.reset();
-  for (var i=0; this.sentence.length > i; i++) {
-    var c = this.sentence[i];
+  for (i=0; this.sentence.length > i; i++) {
+    c = this.sentence[i];
     this.interpret(c, t, context);
   }
 };
@@ -1142,14 +1153,14 @@ Turtle.prototype.startNote = function() {
   this.event.key = - this.p.y;
   this.event.velocity = hsv.v;
   this.event.pan = Math.random();
-}
+};
 Turtle.prototype.endNote = function(score) {
   this.event.end = this.p.x;
   if (this.event.duration > 0) {
     var event = this.event.clone();
     score.data.push(event);
   }
-}
+};
 LSys.prototype.interpret = function(c, t, context, size) {
   //csound.message('c:' + c + '\n');
   if (c === 'F') {
@@ -1179,7 +1190,6 @@ LSys.prototype.interpret = function(c, t, context, size) {
   } else {
       this.findSize(t, size);
   }
-
 };
 
 /**
@@ -1251,7 +1261,7 @@ function Recurrent(generators, transitions, depth, index, cursor, score)
 {
     depth = depth - 1;
     //print(string.format('Recurrent(depth: %d  index: %d  cursor: %s)', depth, index, cursor:__tostring()))
-    if (depth == 0) {
+    if (depth === 0) {
         return;
     }
     var transitionsForThisIndex = transitions[index];
@@ -1283,49 +1293,48 @@ function ValueMap(make_key_) {
 
 ValueMap.prototype.get_size = function() {
     return this.map.size;
-}
+};
 
 ValueMap.prototype.set_size = function(count) {
     this.map.size = count;
-}
-
+};
 
 ValueMap.prototype.clear = function() {
     this.map.clear();
-}
+};
 
 ValueMap.prototype.delete = function(key) {
     return this.map.delete(this.make_key(key));
-}
+};
 
 ValueMap.prototype.entries = function() {
     return this.map.entries();
-}
+};
 
 ValueMap.prototype.forEach = function(callback, thisarg) {
     this.map.forEach(callback, thisarg);
-}
+};
 
 ValueMap.prototype.get = function(key) {
     return this.map.get(this.make_key(key));
-}
+};
 
 ValueMap.prototype.has = function(key) {
     return this.map.has(this.make_key(key));
-}
+};
 
 ValueMap.prototype.keys = function() {
     return this.map.keys();
-}
+};
 
 ValueMap.prototype.set = function(key, value) {
     this.map.set(this.make_key(key), value);
     return this;
-}
+};
 
 ValueMap.prototype.values = function() {
     return this.map.values();
-}
+};
 
 /**
  * Like ES6 Set, but treats elements as values, which are represented as
@@ -1344,42 +1353,43 @@ function ValueSet(make_key_) {
 
 ValueSet.prototype.get_size = function() {
     return this.map.size;
-}
+};
 
 ValueSet.prototype.set_size = function(count) {
     this.map.size = count;
-}
+};
+
 ValueSet.prototype.add = function(value) {
     this.map.set(this.make_key(value), value);
     return this;
-}
+};
 
 ValueSet.prototype.clear = function() {
     this.map.clear();
-}
+};
 
 ValueSet.prototype.delete = function(value) {
     return this.map.delete(this.make_key(value));
-}
+};
 
 ValueSet.prototype.entries = function() {
     return this.map.entries();
-}
+};
 
 ValueSet.prototype.forEach = function(callback, thisarg) {
     this.map.forEach(callback, thisarg);
-}
+};
 
 ValueSet.prototype.has = function(value) {
     return this.map.has(this.make_key(value));
-}
+};
 
 ValueSet.prototype.values = function() {
     return this.map.values();
-}
+};
 
-console.log('browser:  ' + navigator.appName)
-console.log('platform: ' + navigator.platform)
+console.log('browser:  ' + navigator.appName);
+console.log('platform: ' + navigator.platform);
 var Silencio = {
   eq_epsilon: eq_epsilon,
   gt_epsilon: gt_epsilon,
