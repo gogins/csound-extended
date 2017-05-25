@@ -1219,7 +1219,11 @@ Part of Silencio, an algorithmic music composition library for Csound.
         return this.iseRPTI(ChordSpace.OCTAVE);
     };
     Chord.prototype.iseOPTTI = function() {
-        return this.iseRPTTI(ChordSpace.OCTAVE);
+        var result = this.iseRPTTI(ChordSpace.OCTAVE);
+        if (result === true) {
+            console.log('Chord.prototype.iseOPTTI: ' + this + ' ' + result);
+        }
+        return result;
     };
 
     // Returns the equivalent of the chord within the representative fundamental
@@ -2091,31 +2095,33 @@ layer:      %6.2f`,
         g = typeof g !== 'undefined' ? g : 1;
         var equivalenceMapper = null;
         if (equivalence == 'OP') {
-            equivalenceMapper = Chord.iseOP;
+            equivalenceMapper = Chord.prototype.iseOP;
         }
         if (equivalence == 'OPT') {
-            equivalenceMapper = Chord.iseOPT;
+            equivalenceMapper = Chord.prototype.iseOPT;
         }
         if (equivalence == 'OPTT') {
-            equivalenceMapper = Chord.iseOPTT;
+            equivalenceMapper = Chord.prototype.iseOPTT;
         }
         if (equivalence == 'OPI') {
-            equivalenceMapper = Chord.iseOPI;
+            equivalenceMapper = Chord.prototype.iseOPI;
         }
         if (equivalence == 'OPTI') {
-            equivalenceMapper = Chord.iseOPTI;
+            equivalenceMapper = Chord.prototype.iseOPTI;
         }
         if (equivalence == 'OPTTI') {
-            equivalenceMapper = Chord.iseOPTTI;
+            equivalenceMapper = Chord.prototype.iseOPTTI;
         }
-        var equivalentChords = Set();
+        var equivalentChords = new Set();
         // Enumerate all chords in [-O, O].
         var iterator = ChordSpace.iterator(voices, -13);
-        // print('iterator:', tostring(iterator))
+        console.log('iterator:' + iterator);
+        console.log('equivalenceMapper:' + equivalenceMapper);
         while (ChordSpace.next(iterator, -13, 13, g) === true) {
             if (iterator.iseP() === true) {
                 var eP = iterator.clone();
-                if (equivalenceMapper(eP)) {
+                if (equivalenceMapper.apply(eP)) {
+                    console.log('mapped:' + eP);
                     equivalentChords.add(eP);
                 }
             }
@@ -2127,6 +2133,49 @@ layer:      %6.2f`,
             'array': zeroBasedChords,
             'set': equivalentChords
         };
+    };
+    
+    /**
+     * Returns a chord with the specified number of voices all set to a first
+     * pitch, useful as an iterator.
+     */
+    ChordSpace.iterator = function(voices, first) {
+        var odometer = new Chord();
+        odometer.resize(voices);
+        for (var voice = 0; voice < voices; voice++) {
+            odometer[voice] = first;
+        }
+        return odometer;
+    };
+    
+    ChordSpaceGroup.prototype.list = function(listheader, listopttis, listvoicings) {
+        listheader = typeof listheader !== 'undefined' ? listheader : false;
+        listopttis = typeof listopttis !== 'undefined' ? listopttis : false;
+        listvoicings = typeof listvoicings !== 'undefined' ? listvoicings : false;
+        if (listheader) {
+            console.log(sprintf('ChordSpaceGroup.voices: %8d', this.voices));
+            console.log(sprintf('ChordSpaceGroup.range : %8d', this.range));
+            console.log(sprintf('ChordSpaceGroup.g     : %13.4f', this.g));
+            console.log(sprintf('ChordSpaceGroup.countP: %8d', this.countP));
+            console.log(sprintf('ChordSpaceGroup.countI: %8d', this.countI));
+            console.log(sprintf('ChordSpaceGroup.countT: %8d', this.countT));
+            console.log(sprintf('ChordSpaceGroup.countV: %8d', this.countV));
+        }
+        var index;
+        var opti;
+        var voicing;
+        if (listopttis) {
+            for (index = 0; index < this.optisForIndexes.length; index++) {
+                optti = this.optisForIndexes[index];
+                console.log(sprintf('index: %5d  opti: %s  index from opti: %s', index, optti.toString(), this.indexesForOptis[opti]));
+            }
+        }
+        if (listvoicings) {
+            for (index = 0; index < this.voicingsForIndexes[index]; index++) {
+                voicing = this.voicingsForIndexes[index];
+                console.log(sprintf('voicing index: %5d  voicing: %s  index from voicing: %5d', index, voicing.toString(), this.indexesForVoicings[voicing]));
+            }
+        }
     };
 
     /** 
@@ -2152,7 +2201,6 @@ layer:      %6.2f`,
             this.indexesForOptis[opti] = index;
             this.countP = this.countP + 1;
         }
-        this.list();
     };
 
     //////////////////////////////////////////////////////////////////////////////
