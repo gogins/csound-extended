@@ -379,7 +379,7 @@ Part of Silencio, an algorithmic music composition library for Csound.
         }
     };
 
-    // Resizes the chord to the length of the array, and sets 
+    // Resizes the chord to the length of the array, and sets
     // the pitches from the values of the array.
     Chord.prototype.set = function(array) {
         this.resize(array.length);
@@ -872,13 +872,13 @@ Part of Silencio, an algorithmic music composition library for Csound.
     // Returns the equivalent of the chord within the representative fundamental
     // domain of transpositonal equivalence and the equal temperament generated
     // by g. I.e., returns the chord transposed such that its layer is 0 or, under
-    // transposition, the positive layer closest to 0. NOTE: Does NOT return the
-    // result under any other equivalence class.
+    // transposition, the positive integral layer closest to 0. NOTE: Does NOT
+    // return the result under any other equivalence class.
     Chord.prototype.eTT = function(g) {
         g = typeof g !== 'undefined' ? g : 1;
         var normal = this.eT();
-        var ng = Math.ceil(normal.voices[0] / g);
-        var transposition = (ng * g) - normal.voices[0];
+        var indg = Math.ceil(normal.voices[0] / g);
+        var transposition = (indg * g) - normal.voices[0];
         normal = normal.T(transposition);
         return normal;
     };
@@ -979,7 +979,7 @@ Part of Silencio, an algorithmic music composition library for Csound.
 
     // Returns the permutations of the pitches in a chord. The permutations from
     // any particular permutation are always returned in the same order.
-    // FIXME: This is not thought through. It does what I said to do, but that may 
+    // FIXME: This is not thought through. It does what I said to do, but that may
     // not be what I meant.
     Chord.prototype.permutations = function() {
         var permutation = this.clone();
@@ -998,14 +998,15 @@ Part of Silencio, an algorithmic music composition library for Csound.
     Chord.prototype.iseV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var outer = this.voices[0] + range - this.voices[this.size() - 1];
-        var isNormal = true;
-        for (var voice = 0; voice < this.size() - 2; voice++) {
-            var inner = this.voices[voice + 1] - this.voices[voice];
+        var inner;
+        var voice;
+        for (voice = 0; voice < this.size() - 2; voice++) {
+            inner = this.voices[voice + 1] - this.voices[voice];
             if (ChordSpace.ge_epsilon(outer, inner) === false) {
-                isNormal = false;
+                return false;
             }
         }
-        return isNormal;
+        return true;
     };
 
     // Returns the equivalent of the chord within the representative fundamental
@@ -1566,7 +1567,7 @@ layer:      %6.2f`,
         return this.clone();
     };
 
-    // Returns the number of invariant voiceN, under pitch-class equivalence, in 
+    // Returns the number of invariant voiceN, under pitch-class equivalence, in
     // the chord. The two chords must have the same number of voiceN.
     ChordSpace.invariantvoiceN = function(a_, b_) {
         var a = a_.eOP();
@@ -1581,11 +1582,11 @@ layer:      %6.2f`,
         return count;
     };
 
-    // Returns the contextual inversion(s) of the chord that preserves n 
-    // invariant voiceN under pitch-class equivalence, in a sorted list. If there 
-    // are no such inversions, an empty list is returned. The inversions are 
-    // returned in equivalence class OP. g is the generator of transposition, by 
-    // default 1. 
+    // Returns the contextual inversion(s) of the chord that preserves n
+    // invariant voiceN under pitch-class equivalence, in a sorted list. If there
+    // are no such inversions, an empty list is returned. The inversions are
+    // returned in equivalence class OP. g is the generator of transposition, by
+    // default 1.
     Chord.prototype.J = function(n, g) {
         g = typeof g !== 'undefined' ? g : 1;
         var inversions = {};
@@ -1845,8 +1846,8 @@ layer:      %6.2f`,
         return score;
     };
 
-    // For all the notes in the score beginning at or later than the start time, 
-    // and up to but not including the end time, moves the pitch of the note to 
+    // For all the notes in the score beginning at or later than the start time,
+    // and up to but not including the end time, moves the pitch of the note to
     // belong to the chord, using the conformToChord function.
     ChordSpace.apply = function(score, chord, start, end_, octaveEquivalence) {
         octaveEquivalence = typeof octaveEquivalence !== 'undefined' ? octaveEquivalence : true;
@@ -2121,7 +2122,6 @@ layer:      %6.2f`,
             if (iterator.iseP() === true) {
                 var eP = iterator.clone();
                 if (equivalenceMapper.apply(eP)) {
-                    console.log('mapped:' + eP);
                     equivalentChords.add(eP);
                 }
             }
@@ -2134,7 +2134,7 @@ layer:      %6.2f`,
             'set': equivalentChords
         };
     };
-    
+
     /**
      * Returns a chord with the specified number of voices all set to a first
      * pitch, useful as an iterator.
@@ -2143,11 +2143,285 @@ layer:      %6.2f`,
         var odometer = new Chord();
         odometer.resize(voices);
         for (var voice = 0; voice < voices; voice++) {
-            odometer[voice] = first;
+            odometer.voices[voice] = first;
         }
         return odometer;
     };
-    
+
+var todo = `
+
+function ChordSpace.createFilename(voices, range, g, extension)
+    extension = extension or '.lua'
+    local gstring = string.format('g%.6f', g)
+    gstring = string.gsub(gstring, '%.', '_')
+    local filename = string.format('ChordSpaceGroup_V%d_R%d_%s%s', voices, range, gstring, extension)
+    return filename
+end
+
+-- Loads the group if found, creates and saves it otherwise.
+
+function ChordSpace.createChordSpaceGroup(voices, range, g)
+    local filename = ChordSpace.createFilename(voices, range, 1)
+    local file, message, error = io.open(filename, 'r')
+    if file == nil then
+        print(string.format('File "%s" not found, creating...', filename))
+        chordSpaceGroup = ChordSpaceGroup:new()
+        chordSpaceGroup:initialize(voices, range, g)
+        chordSpaceGroup:save()
+        return chordSpaceGroup
+    else
+        print(string.format('Loading ChordSpaceGroup from file "%s"...', filename))
+        return ChordSpace.load(voices, range, g)
+    end
+end
+
+function ChordSpace.load(voices, range, g)
+    local filename = ChordSpace.createFilename(voices, range, 1)
+    print('Loading:', filename)
+    local deserialized = ChordSpaceGroup.load(filename)
+    return deserialized
+end
+
+function ChordSpaceGroup:save(filename)
+    filename = filename or ChordSpace.createFilename(self.voices, self.range, self.g, '.lua')
+    local text = serialize(self)
+    local writer = io.open(filename, 'w+')
+    writer:write(text)
+    writer:close()
+end
+
+function ChordSpaceGroup.load(filename)
+    local reader = io.open(filename)
+    local text = reader:read("*all")
+    -- What's deserialized is a function, which needs to be called.
+    local object = loadstring(text)()
+    -- Fix up metatable.
+    local chordSpaceGroup = ChordSpaceGroup:new(object)
+    -- Fix up metatables of chords too.
+    for index, opti in pairs(chordSpaceGroup.optisForIndexes) do
+        chordSpaceGroup.optisForIndexes[index] = Chord:new(opti)
+    end
+    return chordSpaceGroup
+end
+
+-- Returns the chord for the indices of prime form, inversion,
+-- transposition, and voicing. The chord is not in RP; rather, each voice of
+-- the chord's OP may have zero or more octaves added to it.
+
+function ChordSpaceGroup:toChord(P, I, T, V, printme)
+    printme = printme or false
+    P = P % self.countP
+    I = I % 2
+    T = T % ChordSpace.OCTAVE
+    V = V % self.countV
+    if printme then
+        print('toChord:             ', P, I, T, V)
+    end
+    local optti = self.optisForIndexes[P]
+    if printme then
+        print('toChord:   optti:    ', optti, optti:__hash())
+    end
+    local optt = nil
+    if I == 0 then
+        optt = optti
+    else
+        optt = optti:I():eOPTT()
+    end
+    if printme then
+        print('toChord:   optt:     ', optt)
+    end
+    local optt_t = optt:T(T)
+    if printme then
+        print('toChord:   optt_t:   ', optt_t)
+    end
+    local op = optt_t:eOP()
+    if printme then
+        print('toChord:   op:       ', op)
+    end
+    V = V % self.countV
+    local revoicing = ChordSpace.octavewiseRevoicing(op, V, self.range)
+    if printme then
+        print('toChord:   revoicing:', revoicing)
+    end
+    return revoicing, opti, op
+end
+
+-- Returns the indices of prime form, inversion, transposition,
+-- and voicing for a chord.
+
+function ChordSpaceGroup:fromChord(chord, printme)
+    printme = printme or false
+    if printme then
+        print('fromChord: chord:    ', chord, chord:iseOP())
+    end
+    local op = nil
+    if chord:iseOP() then
+        op = chord:clone()
+    else
+        op = chord:eOP()
+    end
+    if printme then
+        print('fromChord: op:       ', op)
+    end
+    local optt = chord:eOPTT()
+    if printme then
+        print('fromChord: optt:     ', optt)
+    end
+    local T = 0
+    for t = 0, ChordSpace.OCTAVE - 1, self.g do
+        local optt_t = optt:T(t):eOP()
+        if printme then
+            print('fromChord: optt_t:   ', optt_t, t)
+        end
+        if optt_t:__eq_epsilon(op) == true then
+            if printme then
+                print('equals')
+            end
+            T = t
+            break
+        end
+    end
+    local optti = chord:eOPTTI()
+    if printme then
+        print('fromChord: optti:    ', optti, optti:__hash())
+    end
+    local P = self.indexesForOptis[optti:__hash()]
+    local I = 0
+    if optti ~= optt then
+        I = 1
+        local optt_i_optt = optt:I():eOPTT()
+        if optt_i_optt ~= optti then
+            print("Error: OPTT(I(OPTT)) must equal OPTTI.")
+            print('optt_i_optt:', optt_i_optt:information())
+            print('optti:      ', optti:information())
+            os.exit()
+        end
+    end
+    local voicing = ChordSpace.voiceleading(op, chord)
+    V = self.indexesForVoicings[voicing:__hash()]
+    if printme then
+        print('fromChord: voicing:  ', voicing, V)
+        print('fromChord:           ', P, I, T, V)
+    end
+    return P, I, T, V
+end
+
+`;
+
+    /**
+     * Returns the indices of prime form, inversion, transposition,
+     * and voicing for a chord in the group.
+     */
+    ChordSpaceGroup.prototype.fromChord = function(chord, printme) {
+        printme = typeof(printme) !== 'undefined' ? printme : false;
+        if (printme) {
+            console.log('fromChord: chord:    ' + chord + ' ' + chord.iseOP());
+        }
+        var op;
+        if (chord.iseOP()) {
+            op = chord.clone();
+        } else {
+            op = chord.eOP();
+        }
+        if (printme) {
+            console.log('fromChord: op:       ' + op);
+        }
+        var optt = chord.eOPTT();
+        if (printme) {
+            console.log('fromChord: optt:     ' + optt);
+        }
+        var T = 0;
+        for (t = 0; t < ChordSpace.OCTAVE - 1; t = t + this.g) {
+            var optt_t = optt.T(t).eOP();
+            if (printme) {
+                console.log('fromChord: optt_t:   ' + optt_t + ' ' + t);
+            }
+            if (optt_t.eq_epsilon(op) === true) {
+                if (printme) {
+                    console.log('equals');
+                }
+                T = t;
+                break;
+            }
+        }
+        var optti = chord.eOPTTI();
+        if (printme) {
+            console.log('fromChord: optti:    ' + optti);
+        }
+        var P = this.indexesForOptis[optti.toString()];
+        var I = 0;
+        var optt_i_optt;
+        if (optti.eq_epsilon(optt) === false) {
+            I = 1;
+            optt_i_optt = optt.I().eOPTT();
+            if (optt_i_optt.eq_epsilon(optti) === false) {
+                console.log("Error: OPTT(I(OPTT)) must equal OPTTI.");
+                console.log('optt_i_optt:' + optt_i_optt.information());
+                console.log('optti:      ' + optti.information());
+                process.exit();
+            }
+        }
+        var voicing = ChordSpace.voiceleading(op, chord);
+        // Possible alternative implementation: V = this.indexesForVoicings[voicing.toString()];
+        var V = ChordSpace.indexForOctavewiseRevoicing(chord, range, printme);
+        if (V === -1) {
+            V = 0;
+        }
+        if (printme) {
+            console.log('fromChord: voicing:  ' + voicing + ' ' + V);
+            console.log('fromChord:           ' + P + ' ' + I + ' ' + T + ' ' + V);
+        }
+        return {'P': P, 'I': I, 'T': T, 'V': V};
+    };
+
+    ChordSpaceGroup.prototype.printChords = function() {
+        for (var index = 0; index < this.optisForIndexes.length; index++) {
+            var opti = this.optisForIndexes[index];
+            var name = opti.name();
+            console.log(sprintf('index: %5d  opti: %s %s', index, opti.toString(), name));
+        }
+    };
+
+    ChordSpaceGroup.prototype.printNamedChords = function() {
+        for (var index = 0; index < this.optisForIndexes.length; index++) {
+            var opti = this.optisForIndexes[index];
+            var name = opti.name();
+            if (name !== '') {
+                console.log(sprintf('index: %5d  opti: %s %s', index, opti.toString(), name));
+            }
+        }
+    };
+
+    /**
+     * Returns the index of the octavewise revoicing that this chord is,
+     * relative to its OP equivalent, within the indicated range. Returns
+     * -1 if there is no such chord within the range.
+     */
+    ChordSpace.indexForOctavewiseRevoicing = function (chord, range, debug) {
+        var revoicingN = ChordSpace.octavewiseRevoicings(chord, range);
+        var origin = chord.eOP();
+        var revoicing = origin.clone();
+        var revoicingI = 0;
+        while (true) {
+            if (debug) {
+                console.log(sprintf("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s\n",
+                    chord.toString(),
+                    range,
+                    revoicingI,
+                    revoicingN,
+                    revoicing.toString()));
+            }
+            if (revoicing.eq_epsilon(chord) === true) {
+                return revoicingI;
+            }
+            ChordSpace.next(revoicing, origin, range, ChordSpace.OCTAVE);
+            revoicingI++;
+            if (revoicingI > revoicingN) {
+                return -1;
+            }
+        }
+    };
+
     ChordSpaceGroup.prototype.list = function(listheader, listopttis, listvoicings) {
         listheader = typeof listheader !== 'undefined' ? listheader : false;
         listopttis = typeof listopttis !== 'undefined' ? listopttis : false;
@@ -2166,19 +2440,19 @@ layer:      %6.2f`,
         var voicing;
         if (listopttis) {
             for (index = 0; index < this.optisForIndexes.length; index++) {
-                optti = this.optisForIndexes[index];
-                console.log(sprintf('index: %5d  opti: %s  index from opti: %s', index, optti.toString(), this.indexesForOptis[opti]));
+                opti = this.optisForIndexes[index];
+                console.log(sprintf('index: %5d  opti: %s  index from opti: %s', index, opti.toString(), this.indexesForOptis[opti.toString()]));
             }
         }
         if (listvoicings) {
             for (index = 0; index < this.voicingsForIndexes[index]; index++) {
                 voicing = this.voicingsForIndexes[index];
-                console.log(sprintf('voicing index: %5d  voicing: %s  index from voicing: %5d', index, voicing.toString(), this.indexesForVoicings[voicing]));
+                console.log(sprintf('voicing index: %5d  voicing: %s  index from voicing: %5d', index, voicing.toString(), this.indexesForVoicings[voicing.toString()]));
             }
         }
     };
 
-    /** 
+    /**
      * N is the number of voices in the chord space, g is the generator of
      * transposition, and range is the size of chord space.
      */
@@ -2195,10 +2469,10 @@ layer:      %6.2f`,
         this.indexesForOptis = {};
         var result = ChordSpace.allOfEquivalenceClass(voices, 'OPTTI');
         this.optisForIndexes = result.array;
-        this.indexesForOptis = {};
+        this.indexesForOptis = new Map();
         for (var index = 0; index < this.optisForIndexes.length; index++) {
             var opti = this.optisForIndexes[index];
-            this.indexesForOptis[opti] = index;
+            this.indexesForOptis[opti.toString()] = index;
             this.countP = this.countP + 1;
         }
     };

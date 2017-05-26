@@ -216,22 +216,22 @@ Q(c, n, m)      Contexual transposition;
                 of L or R; but, like them, K and Q generate the T-I group.
 
 J(c, n [, i [, g] ])  Contextual inversion;
-                J(c, n [, i ], g] ]) returns all (or, optionally, the ith) 
-                inversion(s) of chord c that preserve n pitch-classes of c. 
-                The remaining pitches of c invert "around" the invariant 
-                pitch-classes. If there is no such inversion, an empty list is 
-                returned. If there is more than one such inversion, a list of 
+                J(c, n [, i ], g] ]) returns all (or, optionally, the ith)
+                inversion(s) of chord c that preserve n pitch-classes of c.
+                The remaining pitches of c invert "around" the invariant
+                pitch-classes. If there is no such inversion, an empty list is
+                returned. If there is more than one such inversion, a list of
                 them is returned, ordered by pitch.
-                Algorithm: 
+                Algorithm:
                 (1) Create an empty set of inverted chords.
-                (2) For each pitch-class from 0 to 11 step g (g is the 
+                (2) For each pitch-class from 0 to 11 step g (g is the
                     generator of transposition, e.g. g = 1 for TET):
                     (a) Invert c in the pitch-class.
-                    (b) Test if n pitch-classes of c are invariant. 
-                    (c) If so, add the inverted chord to the set of 
-                        inversions in octave-equivalent and 
+                    (b) Test if n pitch-classes of c are invariant.
+                    (c) If so, add the inverted chord to the set of
+                        inversions in octave-equivalent and
                         permutation-equivalent form.
-                (3) Return the sorted set of inversions (or, optionally, the 
+                (3) Return the sorted set of inversions (or, optionally, the
                     ith inversion in the set).
 ]]
 end
@@ -813,7 +813,7 @@ function Chord:count(pitch)
     return n
 end
 
-function ChordSpace.invariantPcs(a_, b_) 
+function ChordSpace.invariantPcs(a_, b_)
     local a = a_:eOP()
     local b = b_:eOP()
     local count = 0
@@ -1324,8 +1324,8 @@ end
 -- Returns the equivalent of the chord within the representative fundamental
 -- domain of transpositonal equivalence and the equal temperament generated
 -- by g. I.e., returns the chord transposed such that its layer is 0 or, under
--- transposition, the positive layer closest to 0. NOTE: Does NOT return the
--- result under any other equivalence class.
+-- transposition, the positive integral layer closest to 0. NOTE: Does NOT
+-- return the result under any other equivalence class.
 -- EQUIVALENT
 function Chord:eTT(g)
     g = g or 1
@@ -2918,7 +2918,11 @@ function ChordSpaceGroup:fromChord(chord, printme)
         end
     end
     local voicing = ChordSpace.voiceleading(op, chord)
-    V = self.indexesForVoicings[voicing:__hash()]
+    -- V = self.indexesForVoicings[voicing:__hash()]
+    local V_ = indexForOctavewiseRevoicing(chord, range, printme);
+    if (V_ == -1) then
+        V_ = 0;
+    end
     if printme then
         print('fromChord: voicing:  ', voicing, V)
         print('fromChord:           ', P, I, T, V)
