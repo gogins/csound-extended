@@ -1710,6 +1710,7 @@ layer:      %6.2f`,
         return ChordSpace.voiceleadingSimpler(source, d1, d2, avoidParallels);
     };
 
+    FIXME: low is Chord in C++ and scalar here.
     ChordSpace.next = function(odometer, low, high, g) {
         var voiceN = odometer.size();
         // "Tick."
@@ -2092,6 +2093,29 @@ layer:      %6.2f`,
         return voicings;
     };
 
+    ChordSpace.octavewiseRevoicing = function(chord, index, range) {
+        var voices = chord.size();
+        var odometer = chord.origin();
+        var eop = chord.eOP();
+        // Enumerate the permutations.
+        // iterator[0] is the most significant voice, and
+        // iterator[N-1] is the least significant voice.
+        var voicings = 0;
+        var v;
+        for (v = 0; v < index; v++) {
+            ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE);
+            // Wrap around?
+            if (odometer.voices[0] > range) {
+                odometer = chord.origin();
+            }
+            voicings = voicings + 1;
+        }
+        for (v = 0; v < odometer.size(); v++) {
+            odometer.voices[v] = odometer.voices[v] + eop.voices[v];
+        }
+        return odometer;
+    };
+
     ChordSpace.allOfEquivalenceClass = function(voices, equivalence, g) {
         g = typeof g !== 'undefined' ? g : 1;
         var equivalenceMapper = null;
@@ -2214,7 +2238,7 @@ function ChordSpaceGroup:toChord(P, I, T, V, printme)
     I = I % 2
     T = T % ChordSpace.OCTAVE
     V = V % self.countV
-    if printme then
+    if (printme) {
         print('toChord:             ', P, I, T, V)
     end
     local optti = self.optisForIndexes[P]
@@ -2246,67 +2270,51 @@ function ChordSpaceGroup:toChord(P, I, T, V, printme)
     return revoicing, opti, op
 end
 
--- Returns the indices of prime form, inversion, transposition,
--- and voicing for a chord.
-
-function ChordSpaceGroup:fromChord(chord, printme)
-    printme = printme or false
-    if printme then
-        print('fromChord: chord:    ', chord, chord:iseOP())
-    end
-    local op = nil
-    if chord:iseOP() then
-        op = chord:clone()
-    else
-        op = chord:eOP()
-    end
-    if printme then
-        print('fromChord: op:       ', op)
-    end
-    local optt = chord:eOPTT()
-    if printme then
-        print('fromChord: optt:     ', optt)
-    end
-    local T = 0
-    for t = 0, ChordSpace.OCTAVE - 1, self.g do
-        local optt_t = optt:T(t):eOP()
-        if printme then
-            print('fromChord: optt_t:   ', optt_t, t)
-        end
-        if optt_t:__eq_epsilon(op) == true then
-            if printme then
-                print('equals')
-            end
-            T = t
-            break
-        end
-    end
-    local optti = chord:eOPTTI()
-    if printme then
-        print('fromChord: optti:    ', optti, optti:__hash())
-    end
-    local P = self.indexesForOptis[optti:__hash()]
-    local I = 0
-    if optti ~= optt then
-        I = 1
-        local optt_i_optt = optt:I():eOPTT()
-        if optt_i_optt ~= optti then
-            print("Error: OPTT(I(OPTT)) must equal OPTTI.")
-            print('optt_i_optt:', optt_i_optt:information())
-            print('optti:      ', optti:information())
-            os.exit()
-        end
-    end
-    local voicing = ChordSpace.voiceleading(op, chord)
-    V = self.indexesForVoicings[voicing:__hash()]
-    if printme then
-        print('fromChord: voicing:  ', voicing, V)
-        print('fromChord:           ', P, I, T, V)
-    end
-    return P, I, T, V
-end
 
 `;
+
+    /**
+     * Returns the chord for the indices of prime form, inversion,
+     * transposition, and voicing. The chord is not in RP; rather, each voice
+     * of the chord's OP may have zero or more octaves added to it.
+     */
+    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, printme) {
+        printme = typeof printme !== 'undefined' ? printme : false;
+        P = P % this.countP;
+        I = I % 2;
+        T = T % ChordSpace.OCTAVE;
+        V = V % this.countV;
+        if (printme) {
+            console.log(sprintf('toChord:             %s %s %s %s', P, I, T, V));
+        }
+        var optti = this.optisForIndexes[P];
+        if (printme) {
+            console.log('toChord:   optti:    ' + optti);
+        }
+        var optt;
+        if (I === 0) {
+            optt = optti;
+        } else {
+            optt = optti.I().eOPTT();
+        }
+        if (console.logme) {
+            console.log('toChord:   optt:      ' + optt);
+        }
+        var optt_t = optt.T(T);
+        if (printme) {
+            console.log('toChord:   optt_t:    ' + optt_t);
+        }
+        var op = optt_t.eOP();
+        if (printme) {
+            console.log('toChord:   op:        ' + op);
+        }
+        V = V % this.countV;
+        var revoicing = ChordSpace.octavewiseRevoicing(op, V, this.range);
+        if (printme) {
+            console.log('toChord:   revoicing: ' + revoicing);
+        }
+        return {'revoicing': revoicing, 'opti': optti, 'op': op};
+    };
 
     /**
      * Returns the indices of prime form, inversion, transposition,
@@ -2404,12 +2412,12 @@ end
         var revoicingI = 0;
         while (true) {
             if (debug) {
-                console.log(sprintf("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s\n",
-                    chord.toString(),
+                console.log(sprintf("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s",
+                    chord,
                     range,
                     revoicingI,
                     revoicingN,
-                    revoicing.toString()));
+                    revoicing));
             }
             if (revoicing.eq_epsilon(chord) === true) {
                 return revoicingI;
