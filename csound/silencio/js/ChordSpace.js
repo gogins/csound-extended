@@ -1710,7 +1710,7 @@ layer:      %6.2f`,
         return ChordSpace.voiceleadingSimpler(source, d1, d2, avoidParallels);
     };
 
-    FIXME: low is Chord in C++ and scalar here.
+    //FIXME: low is Chord in C++ and scalar here and in Lua.
     ChordSpace.next = function(odometer, low, high, g) {
         var voiceN = odometer.size();
         // "Tick."
@@ -1723,6 +1723,25 @@ layer:      %6.2f`,
             }
         }
         if (odometer.voices[0] > high) {
+            return false;
+        }
+        return true;
+    };
+
+    ChordSpace.next = function(iterator_, origin, range, g) {
+        var leastSignificantVoice = iterator_.size() - 1;
+        var mostSignificantVoice = 0;
+        // Increment, as in an odometer.
+        iterator_.setPitch(leastSignificantVoice, iterator_.getPitch(leastSignificantVoice) + g);
+        // If necessary, carry the increment to the next most significant voice.
+        var voice;
+        for (voice = leastSignificantVoice; voice > mostSignificantVoice; --voice) {
+            if (Silencio.gt_epsilon(iterator_.voices[voice], (origin.voices[voice] + range))) {
+                iterator_.voices[voice] = origin.voices[voice];
+                iterator_.voices[voice - 1] = (iterator_.voices[voice - 1] + g);
+            }
+        }
+        if (Silencio.gt_epsilon(iterator_.voices[mostSignificantVoice], (origin.voices[mostSignificantVoice] + range)) === true) {
             return false;
         }
         return true;
@@ -2082,37 +2101,39 @@ layer:      %6.2f`,
     ChordSpace.octavewiseRevoicings = function(chord, range) {
         range = range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var voices = chord.size();
-        var odometer = chord.origin();
+        var origin = chord.eOP();
+        var odometer = origin.clone();
         // Enumerate the permutations.
         // iterator[0] is the most significant voice, and
         // iterator[N-1] is the least significant voice.
         var voicings = 0;
-        while (ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE) === true) {
+        while (ChordSpace.next(odometer, origin, range, ChordSpace.OCTAVE) === true) {
             voicings = voicings + 1;
         }
         return voicings;
     };
 
+    ///FIXME
     ChordSpace.octavewiseRevoicing = function(chord, index, range) {
-        var voices = chord.size();
-        var odometer = chord.origin();
-        var eop = chord.eOP();
+        ///var voices = chord.size();
+        var origin = chord.eOP();
+        var odometer = origin.clone();
         // Enumerate the permutations.
         // iterator[0] is the most significant voice, and
         // iterator[N-1] is the least significant voice.
         var voicings = 0;
         var v;
         for (v = 0; v < index; v++) {
-            ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE);
+            ChordSpace.next(odometer, origin, range, ChordSpace.OCTAVE);
             // Wrap around?
             if (odometer.voices[0] > range) {
                 odometer = chord.origin();
             }
             voicings = voicings + 1;
         }
-        for (v = 0; v < odometer.size(); v++) {
-            odometer.voices[v] = odometer.voices[v] + eop.voices[v];
-        }
+        ///for (v = 0; v < odometer.size(); v++) {
+        ///    odometer.voices[v] = odometer.voices[v] + origin.voices[v];
+        ///}
         return odometer;
     };
 
@@ -2140,9 +2161,10 @@ layer:      %6.2f`,
         var equivalentChords = new Set();
         // Enumerate all chords in [-O, O].
         var iterator = ChordSpace.iterator(voices, -13);
+        var origin = iterator.clone();
         console.log('iterator:' + iterator);
         console.log('equivalenceMapper:' + equivalenceMapper);
-        while (ChordSpace.next(iterator, -13, 13, g) === true) {
+        while (ChordSpace.next(iterator, origin, 26, g) === true) {
             if (iterator.iseP() === true) {
                 var eP = iterator.clone();
                 if (equivalenceMapper.apply(eP)) {
@@ -2170,6 +2192,13 @@ layer:      %6.2f`,
             odometer.voices[voice] = first;
         }
         return odometer;
+    };
+
+    ChordSpace.createFilename = function(voices, range, g) {
+        var gstring = sprintf('g%.6f', g);
+        gstring = gstring.replace('.', '_');
+        var filename = sprintf('ChordSpaceGroup_V%d_R%d_%s.json', voices, range, gstring);
+        return filename;
     };
 
 var todo = `
@@ -2228,55 +2257,15 @@ function ChordSpaceGroup.load(filename)
     return chordSpaceGroup
 end
 
--- Returns the chord for the indices of prime form, inversion,
--- transposition, and voicing. The chord is not in RP; rather, each voice of
--- the chord's OP may have zero or more octaves added to it.
-
-function ChordSpaceGroup:toChord(P, I, T, V, printme)
-    printme = printme or false
-    P = P % self.countP
-    I = I % 2
-    T = T % ChordSpace.OCTAVE
-    V = V % self.countV
-    if (printme) {
-        print('toChord:             ', P, I, T, V)
-    end
-    local optti = self.optisForIndexes[P]
-    if printme then
-        print('toChord:   optti:    ', optti, optti:__hash())
-    end
-    local optt = nil
-    if I == 0 then
-        optt = optti
-    else
-        optt = optti:I():eOPTT()
-    end
-    if printme then
-        print('toChord:   optt:     ', optt)
-    end
-    local optt_t = optt:T(T)
-    if printme then
-        print('toChord:   optt_t:   ', optt_t)
-    end
-    local op = optt_t:eOP()
-    if printme then
-        print('toChord:   op:       ', op)
-    end
-    V = V % self.countV
-    local revoicing = ChordSpace.octavewiseRevoicing(op, V, self.range)
-    if printme then
-        print('toChord:   revoicing:', revoicing)
-    end
-    return revoicing, opti, op
-end
-
-
 `;
 
     /**
      * Returns the chord for the indices of prime form, inversion,
      * transposition, and voicing. The chord is not in RP; rather, each voice
      * of the chord's OP may have zero or more octaves added to it.
+     * Please note, because some set classes e.g. diminished chords are
+     * invariant under some T, there may be more than one PITV to get the
+     * same chord.
      */
     ChordSpaceGroup.prototype.toChord = function(P, I, T, V, printme) {
         printme = typeof printme !== 'undefined' ? printme : false;
@@ -2342,7 +2331,7 @@ end
         for (t = 0; t < ChordSpace.OCTAVE - 1; t = t + this.g) {
             var optt_t = optt.T(t).eOP();
             if (printme) {
-                console.log('fromChord: optt_t:   ' + optt_t + ' ' + t);
+                console.log('fromChord: optt_t:   ' + optt_t + ' T: ' + t);
             }
             if (optt_t.eq_epsilon(op) === true) {
                 if (printme) {
@@ -2444,18 +2433,21 @@ end
             console.log(sprintf('ChordSpaceGroup.countV: %8d', this.countV));
         }
         var index;
+        var voicing_index;
         var opti;
-        var voicing;
+        var voicingFromIndex;
+        var indexFromVoicing;
         if (listopttis) {
             for (index = 0; index < this.optisForIndexes.length; index++) {
                 opti = this.optisForIndexes[index];
                 console.log(sprintf('index: %5d  opti: %s  index from opti: %s', index, opti.toString(), this.indexesForOptis[opti.toString()]));
-            }
-        }
-        if (listvoicings) {
-            for (index = 0; index < this.voicingsForIndexes[index]; index++) {
-                voicing = this.voicingsForIndexes[index];
-                console.log(sprintf('voicing index: %5d  voicing: %s  index from voicing: %5d', index, voicing.toString(), this.indexesForVoicings[voicing.toString()]));
+                if (listvoicings) {
+                    for (voicing_index = 0; voicing_index < this.countV; voicing_index++) {
+                        voicingFromIndex = ChordSpace.octavewiseRevoicing(opti, voicing_index, this.range);
+                        indexFromVoicing = ChordSpace.indexForOctavewiseRevoicing(voicingFromIndex, this.range);
+                        console.log(sprintf('  voicing index: %5d  voicing: %s  index from voicing: %5d', voicing_index, voicingFromIndex, indexFromVoicing));
+                    }
+                }
             }
         }
     };
