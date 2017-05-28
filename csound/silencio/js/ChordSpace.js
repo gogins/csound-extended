@@ -2194,6 +2194,11 @@ layer:      %6.2f`,
         return odometer;
     };
 
+    /**
+     * Creates a JSON filename encoding the structure of a chord space group.
+     * NOTE: Serialization and deserialization of ChordSpaceGroup is not complete
+     * and may or may not prove necessary.
+     */
     ChordSpace.createFilename = function(voices, range, g) {
         var gstring = sprintf('g%.6f', g);
         gstring = gstring.replace('.', '_');
@@ -2201,63 +2206,25 @@ layer:      %6.2f`,
         return filename;
     };
 
-var todo = `
-
-function ChordSpace.createFilename(voices, range, g, extension)
-    extension = extension or '.lua'
-    local gstring = string.format('g%.6f', g)
-    gstring = string.gsub(gstring, '%.', '_')
-    local filename = string.format('ChordSpaceGroup_V%d_R%d_%s%s', voices, range, gstring, extension)
-    return filename
-end
-
--- Loads the group if found, creates and saves it otherwise.
-
-function ChordSpace.createChordSpaceGroup(voices, range, g)
-    local filename = ChordSpace.createFilename(voices, range, 1)
-    local file, message, error = io.open(filename, 'r')
-    if file == nil then
-        print(string.format('File "%s" not found, creating...', filename))
-        chordSpaceGroup = ChordSpaceGroup:new()
-        chordSpaceGroup:initialize(voices, range, g)
-        chordSpaceGroup:save()
-        return chordSpaceGroup
-    else
-        print(string.format('Loading ChordSpaceGroup from file "%s"...', filename))
-        return ChordSpace.load(voices, range, g)
-    end
-end
-
-function ChordSpace.load(voices, range, g)
-    local filename = ChordSpace.createFilename(voices, range, 1)
-    print('Loading:', filename)
-    local deserialized = ChordSpaceGroup.load(filename)
-    return deserialized
-end
-
-function ChordSpaceGroup:save(filename)
-    filename = filename or ChordSpace.createFilename(self.voices, self.range, self.g, '.lua')
-    local text = serialize(self)
-    local writer = io.open(filename, 'w+')
-    writer:write(text)
-    writer:close()
-end
-
-function ChordSpaceGroup.load(filename)
-    local reader = io.open(filename)
-    local text = reader:read("*all")
-    -- What's deserialized is a function, which needs to be called.
-    local object = loadstring(text)()
-    -- Fix up metatable.
-    local chordSpaceGroup = ChordSpaceGroup:new(object)
-    -- Fix up metatables of chords too.
-    for index, opti in pairs(chordSpaceGroup.optisForIndexes) do
-        chordSpaceGroup.optisForIndexes[index] = Chord:new(opti)
-    end
-    return chordSpaceGroup
-end
-
-`;
+    /**
+     * Loads the group if found, creates and saves it otherwise.
+     * NOTE: Serialization and deserialization of ChordSpaceGroup is not complete
+     * and may or may not prove necessary.
+    */
+    ChordSpace.createChordSpaceGroup = function(voices, range, g) {
+        var chordSpaceGroup = new ChordSpaceGroup();
+        var filename = ChordSpace.createFilename(voices, range, g);
+        var restored_ = Silencio.restoreFromLocalFile(true, filename);
+        if (restored_ !== null) {
+            Object.assign(chordSpaceGroup, restored_);
+            console.log(sprintf('Loaded ChordSpaceGroup from file "%s"...', filename));
+        } else {
+            console.log(sprintf('File "%s" not found, creating...', filename));
+            chordSpaceGroup.initialize(voices, range, g);
+            Silencio.saveToLocalFile(true, chordSpaceGroup, filename);
+        }
+        return chordSpaceGroup;
+    };
 
     /**
      * Returns the chord for the indices of prime form, inversion,

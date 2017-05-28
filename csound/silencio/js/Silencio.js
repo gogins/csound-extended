@@ -54,7 +54,7 @@ tinycolor.js
      1 Time in seconds from start of performance.
      2 Duration in seconds, -1 is "indefinite."
      3 MIDI status (only the most significant nybble, e.g. 144 for 'NOTE ON').
-     4 MIDI channel (any real number, fractional part ties events, 
+     4 MIDI channel (any real number, fractional part ties events,
        negative is 'NOTE OFF').
      5 MIDI key number from 0 to 127, 60 is middle C (a real number).
      6 MIDI velocity from 0 to 127, 80 is mezzo-forte (a real number).
@@ -92,6 +92,7 @@ tinycolor.js
             return json;
         } catch (err) {
             console.log(err.message);
+            return null;
         }
     };
 
@@ -1443,7 +1444,7 @@ tinycolor.js
 
     console.log('browser:  ' + navigator.appName);
     console.log('platform: ' + navigator.platform);
-    
+
     var Silencio = {
         eq_epsilon: eq_epsilon,
         gt_epsilon: gt_epsilon,
