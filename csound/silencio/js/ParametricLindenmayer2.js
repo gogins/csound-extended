@@ -100,6 +100,10 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
     ParametricLindenmayer.Turtle = function(note_, chord_, modality_) {
         this.step = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
         this.scale = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+        this.P = 0;
+        this.I = 0;
+        this.T = 0;
+        this.V = 0;
         if (typeof note_ === 'undefined') {
             this.note = new Silencio.Event();
         } else {
@@ -124,6 +128,10 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         clone_.note = this.note.clone();
         clone_.chord = this.chord.clone();
         clone_.modality = this.modality.clone();
+        clone_.P = this.P;
+        clone_.I = this.I;
+        clone_.T = this.T;
+        clone_.V = this.V;
         return clone_;
     };
 
@@ -210,6 +218,7 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         this.formal_parameters_for_commands = {};
         this.axiom = [];
         this.rules_for_words = {};
+        this.chord_space_group = new ChordSpace.ChordSpaceGroup();
         this.turtle = new ParametricLindenmayer.Turtle();
         this.identity_command = function(lsystem, turtle_) {
             return turtle_;
@@ -322,6 +331,43 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
+        /**
+         * Assign the parameters P, I, T, and V to the current turtle state.
+         */
+        this.add_command('PitvAssign(P, I, T, V)', function(lsystem, turtle, P, I, T, V) {
+            turtle.P = P;
+            turtle.I = I;
+            turtle.T = T;
+            turtle.V = V;
+            this.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = this.chord.clone();
+            return turtle;
+        });
+        /**
+         * Add the parameters P, I, T, and V to the current turtle state.
+         */
+        this.add_command('PitvMove(P, I, T, V', function(lsystem, turtle, P, I, T, V) {
+            turtle.P += P;
+            turtle.I += I;
+            turtle.T += T;
+            turtle.V += V;
+            this.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = this.chord.clone();
+            return turtle;
+        });
+        /**
+         * Create notes in the score at the current time and duration from
+         * the current turtle state's P, I, T, and V.
+         * TODO: Use per-voice parameters.
+         */
+        this.add_command('PitvNotes()', function(lsystem, turtle) {
+            ChordSpace.insert(this.lsys.score, turtle.chord, turtle.note.time);
+            return turtle;
+        });
+        /**
+         * Create notes in the score at the current time at the closest
+         * voice-leading from the current turtle state's P, I, and T.
+         */
         this.reset();
     };
 

@@ -1855,12 +1855,11 @@ layer:      %6.2f`,
     };
 
     // Inserts the notes of the chord into the score at the specified time.
-    // The internal duration, instrument, and loudness are used if present,
-    // if not the specified values are used.
-    ChordSpace.insert = function(score, chord, time_, duration, channel, velocity, pan) {
+    // The internal duration, instrument, and loudness are used.
+    ChordSpace.insert = function(score, chord, time_) {
         // console.log(score, chord, time_, duration, channel, velocity, pan)
         for (var voice = 0; voice < chord.size(); voice++) {
-            var event = chord.note(voice, time_, duration, channel, velocity, pan);
+            var event = chord.note(voice, time_, chord.getDuration(voice), chord.getChannel(voice), chord.getVelocity(voice), chord.getPan(voice));
             score.append(event);
         }
         return score;
