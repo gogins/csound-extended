@@ -339,8 +339,8 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             turtle.I = I;
             turtle.T = T;
             turtle.V = V;
-            this.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
-            lsystem.chords_for_times[turtle.note.time] = this.chord.clone();
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -351,23 +351,37 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             turtle.I += I;
             turtle.T += T;
             turtle.V += V;
-            this.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
-            lsystem.chords_for_times[turtle.note.time] = this.chord.clone();
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
          * Create notes in the score at the current time and duration from
          * the current turtle state's P, I, T, and V.
-         * TODO: Use per-voice parameters.
          */
         this.add_command('PitvNotes()', function(lsystem, turtle) {
             ChordSpace.insert(this.lsys.score, turtle.chord, turtle.note.time);
             return turtle;
         });
         /**
-         * Create notes in the score at the current time at the closest
-         * voice-leading from the current turtle state's P, I, and T.
+         * Create a chord at the current time and duration from
+         * the current turtle state's P, I, T at the closest voiceleading from
+         * the previous chord. The voiceleading is done between the prior and
+         * current state of the turtle.chord, so may not perform as expected
+         * unless operations are not successive in time. Please note, the
+         * chordSpaceGroup of the LSystem must first have been initialized.
          */
+        this.add_command('PitVoiceleadingNotes(P, I, T, V)', function(lsystem, turtle, P, I, T, V) {
+            var prior_chord = turtle.chord.clone();
+            turtle.P += P;
+            turtle.I += I;
+            turtle.T += T;
+            turtle.V += V;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            turtle.chord = ChordSpace.voiceleadingClosestRange(prior_chord, turtle.chord, this.chordSpaceGroup.range, true);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
         this.reset();
     };
 
