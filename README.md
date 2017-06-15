@@ -24,7 +24,7 @@ Not all examples are playable at this time. Only csd based examples (not orc bas
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the WebAssembly build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux. Note that WebAssembly is supposed to replace all other means of running "native" code in Web browsers.
 
-https://github.com/gogins/gogins.github.io/tree/master/csound/wasm/minimal.html
+https://gogins.github.io/csound/wasm/minimal.html
 
 ## Playable Example Pieces Using Csound for PNaCl
 
