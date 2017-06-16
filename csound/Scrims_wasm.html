@@ -84,6 +84,8 @@
 <CsOptions>
 </CsOptions>
 <CsInstruments>
+nchnls  = 2
+
 opcode hertz2midinn, i, i
 ihertz xin
 print ihertz
@@ -604,8 +606,8 @@ ihomogeneity = p11
 ain_left chnget "reverb_out_left"
 ain_right chnget "reverb_out_right"
 kgain = ampdb(gk_MasterOutput_level)
-aout_left = ain_left * gk_MasterOutput_level * kgain * 0.00000001
-aout_right = ain_right * gk_MasterOutput_level * kgain * 0.00000001
+aout_left = ain_left * gk_MasterOutput_level * kgain * 0.0001
+aout_right = ain_right * gk_MasterOutput_level * kgain * 0.0001
 outs aout_left, aout_right
 prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
