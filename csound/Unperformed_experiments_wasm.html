@@ -122,12 +122,6 @@ alwayson "Reverb2Right"
 alwayson "ParametricEQ"
 alwayson "MasterOutput"
 
-#define USE_PIANOTEQ #1#
-#ifdef USE_PIANOTEQ
-#include "PianoNotePianoteq.inc"
-#else
-#include "PianoNoteFluidsynth.inc"
-#endif
 #include "Harpsichord.inc"
 #include "FM_Clang.inc"
 #include "DelayedPlucked.inc"
@@ -135,18 +129,11 @@ alwayson "MasterOutput"
 #include "STKPlucked.inc"
 #include "Rhodes.inc"
 
-#ifdef USE_PIANOTEQ
-#include "PianoOutPianoteq.inc"
-#else
-#include "PianoOutFluidsynth.inc"
-#endif
-
 maxalloc 1, 8
 maxalloc 2, 8
 maxalloc 3, 8
 maxalloc 4, 8
 maxalloc 5, 8
-maxalloc 6, 8
 
 gk_Reverb_Feedback init 0.975
 gk_Delay_Modulation init 0.875
@@ -202,7 +189,6 @@ instr Controls
     gk_Harpsichord_reflection chnget "gk_Harpsichord_reflection"
     gk_Harpsichord_pluck chnget "gk_Harpsichord_pluck"
     gk_MasterOutput_level chnget "gk_MasterOutput_level"
-    gk_Piano_level chnget "gk_Piano_level"
     gk_Plucked_level chnget "gk_Plucked_level"
     gk_STKPlucked_level chnget "gk_STKPlucked_level"
     gk_Rhodes_level chnget "gk_Rhodes_level"
@@ -302,13 +288,6 @@ endin
             "use strict";
             try {
                 console.log('csound:', csound);
-                var fs = require('fs');
-                var nwgui = require('nw.gui');
-                var nw_window = nwgui.Window.get();
-                nw_window.on('close', function() {
-                    console.log('Closing down...');
-                    this.close(true);
-                    });
                 var score = new Silencio.Score();
                 var FM9 = ChordSpace.chordForName('FM9');
                 var Bb7 = ChordSpace.chordForName('Bb7');
@@ -356,7 +335,6 @@ endin
                 gk_Harpsichord_pick: 0.75,
                 gk_Harpsichord_reflection: 0.5,
                 gk_Harpsichord_pluck: 0.75,
-                gk_Piano_level: 0.5,
                 gk_Plucked_level: 0,
                 gk_STKPlucked_level: 0,
                 gk_Rhodes_level: 0.0,
@@ -928,7 +906,7 @@ endin
             // the highest row, left to right in each row.
 
             var value_threshold = .95;
-            var instrument_count = 6;
+            var instrument_count = 5;
             var range = 72;
             var bass = 28;
             var dynamic_range = 6.0;
