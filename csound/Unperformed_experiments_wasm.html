@@ -344,26 +344,25 @@ endin
                 gk_overlap: 0.05,
                 gk_FM_Clang_level: 0,
                 Play: function() {
-                    Silencio.saveDatGuiJson(gui);
-                    try {
-                        csound.setMessageCallback(csoundMessage);
-                    } catch(e) {
-                        console.log(e);
+                    
+                    if (typeof csound.is_playing === 'undefined') {
+                        csound.is_playing = false;
                     }
-                    gui.revert();
-                    csound.setOption('-m0');
-                    //csound.setOption('-j3');
-                    csound.setOption('--nodisplays');
-                    csound.setOption('-odac');
-                    var orc = document.getElementById('orc').value;
-                    csound.compileOrc(orc);
-                    csound.readScore('f 0 370\n');
-                    csound.start();
-                    csound.perform();
+                    if (csound.is_playing === false) {
+                        csound.perform();
+                        gui.revert();
+                        csound.compileOrc(document.getElementById('orc').value);
+                        start_time_seconds = new Date().getTime() / 1000.0;
+                        csound.is_playing = true;
+                    } else {
+                        csound.is_playing = false;
+                        csound.stop();
+                    }
                     start_time_seconds = new Date().getTime() / 1000.0;
 
                 },
                 Stop: function() {
+                     csound.is_playing = false;
                     Silencio.saveDatGuiJson(gui);
                     csound.stop();
                 },
