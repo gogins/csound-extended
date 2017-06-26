@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Unperformed experiments have no results</title>
+        <title>Csound Visual Music Example</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
         <style>
@@ -45,7 +45,7 @@
             {
                 background-color:transparent;
             }
-            .dg {
+        .dg {
                 font-family: Monaco, sans-serif;
                 font-size:8pt;
             }
@@ -59,38 +59,14 @@
         <script src="silencio/js/Silencio.js"></script>
         <script src="silencio/js/ChordSpace.js"></script>
         <script src="silencio/js/sprintf.js"></script>
-        <script type="text/javascript" src="csound.js"></script>
-        <script>
-            try {
-                var nw_window = nwgui.Window.get();
-                nw_window.on('close', function() {
-                    console.log('Closing down...');
-                this.close(true);
-                //process.exit(0);
-                });
-            } catch (err) {
-                console.log(err.message);
-            }
-            var handleMessage = function(message) {
-                var messages_textarea = document.getElementById("console");
-                var existing = messages_textarea.value;
-                messages_textarea.value = existing + "\n" + message;
-                messages_textarea.scrollTop = messages_textarea.scrollHeight;
-            }
-            var moduleDidLoad = function() {
-                document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
-                console.warn = handleMessage;
-            }
-        </script>
     </head>
     <body>
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt;">
             <col width=400px>
             <col width=250px>
-            <th style="color:gold;text-align:left">Unperformed experiments have no results, by Michael Gogins.
+            <th style="color:gold;text-align:left">Csound Visual Music Example
             </p></td><td style="color:gold;text-align:right;"</th>
-            <!-- Copyright (C) 2017 by Michael Gogins -->
-            <tr>
+             <tr>
                 <td>Time: </td><td id="Time_cell" style="color:LawnGreen;text-align:right;"></td>
             </tr>
             <tr>
@@ -109,573 +85,157 @@
         </table>
         <div id = 'webgl_cell' class='canvas' style="position:absolute;left:1vw;color:#eee;top:1vw;"/>
         <textarea class="code" id="orc" hidden rows=24 cols=80>
-<CsoundSynthesizer>
-<CsOptions>
--m1 -d
-</CsOptions>
-<CsInstruments>
-nchnls  = 2
+sr = 48000
+ksmps = 100
+nchnls = 2
+0dbfs = 1
 
-opcode hertz2midinn, i, i
-ihertz xin
-print ihertz
-; m = 12*log2(fm/440 Hz) + 69
-ilog2 = log(2)
-imidinn = 12 * (log(ihertz / 440) / ilog2) + 69
-print imidinn
-xout imidinn
-endop
+connect "DelayedPluck", "outleft", "ReverbLeft", "inleft"
+connect "DelayedPluck", "outright", "ReverbRight", "inright"
+connect "FM_Clang", "outleft", "ReverbLeft", "inleft"
+connect "FM_Clang", "outright", "ReverbRight", "inright"
+connect "Harpsichord", "outleft", "Reverb2Left", "inleft"
+connect "Harpsichord", "outright", "Reverb2Right", "inright"
+connect "Plucked", "outleft", "ReverbLeft", "inleft"
+connect "Plucked", "outright", "ReverbRight", "inright"
+connect "Rhodes", "outleft", "Reverb2Left", "inleft"
+connect "Rhodes", "outright", "Reverb2Right", "inright"
+connect "STKPlucked", "outleft", "ReverbLeft", "inleft"
+connect "STKPlucked", "outright", "ReverbRight", "inright"
+connect "PianoOut", "outleft", "MasterOutput", "inleft"
+connect "PianoOut", "outright", "MasterOutput", "inright"
+connect "PianoOut", "outleft", "Reverb2Left", "inleft"
+connect "PianoOut", "outright", "Reverb2Right", "inright"
+connect "ReverbLeft", "outleft", "MasterOutput", "inleft"
+connect "ReverbRight", "outright", "MasterOutput", "inright"
+connect "Reverb2Left", "outleft", "MasterOutput", "inleft"
+connect "Reverb2Right", "outright", "MasterOutput", "inright"
 
-; Each Csound instrument uses global variables
-; and function tables declared in the global area of the orchestra
-; just above the instrument definition itself. A naming pattern is
-; used to avoid name collisions and keep everything straight.
+alwayson "Controls"
+alwayson "PianoOut"
+alwayson "ReverbLeft"
+alwayson "ReverbRight"
+alwayson "Reverb2Left"
+alwayson "Reverb2Right"
+alwayson "ParametricEQ"
+alwayson "MasterOutput"
 
-gaSendM,gaSendL,gaSendR init 0
-gi_FM_Clang_sine ftgen 0,0,4096,10,1 ;A SINE WAVE. USED BY THE LFOs.
-gi_FM_Clang_detuning ftgen 0,0,128,21,1,1 ; random array used for fixing unique detune values for each note
-gi_FM_Clang_DryMap ftgen 0,0,4096,7,1,2048,1,2048,0 ; dry mixer control mapping
-gi_FM_Clang_WetMap ftgen 0,0,4096,7,0,2048,1,2048,1 ; wet mixer control mapping
-gaSendL,gaSendR init 0 ; initialise variable used for sending audio between instruments
-gi_FM_Clang_Imp ftgen 0,0,4097,9,0.5,1,0 ; shape for the hammer inpulse
-gi_FM_Clang_stereo ftgen 0,0,256,21,1,1 ; random array used for fixing unique stereo values for each note
-gi_FM_Clang_detune ftgen 0,0,256,21,1,1 ; random array used for fixing unique detune values for each note
-gi_FM_Clang_scale ftgen 0,0,128,-7,-1,128,1
+; define USE_PIANOTEQ #1#
+#ifdef USE_PIANOTEQ
+#include "PianoNotePianoteq.inc"
+#else
+#include "PianoNoteFluidsynth.inc"
+#endif
+#include "Harpsichord.inc"
+#include "FM_Clang.inc"
+#include "DelayedPlucked.inc"
+#include "Plucked.inc"
+#include "STKPlucked.inc"
+#include "Rhodes.inc"
 
-instr FM_Clang_controls ; Read in widgets
-iporttime = 0.05
-gk_FM_Clang_mod chnget "mod"
-gk_FM_Clang_mod port gk_FM_Clang_mod,iporttime
-gk_FM_Clang_NdxVel chnget "NdxVel"
-gk_FM_Clang_Dur chnget "Dur"
-gk_FM_Clang_FiltFund chnget "FiltFund"
-gk_FM_Clang_NdxCurve chnget "NdxCurve"
-gk_FM_Clang_LPF chnget "LPF"
-gk_FM_Clang_ModDep chnget "ModDep"
-gk_FM_Clang_ModRte chnget "ModRte"
-gk_FM_Clang_ModRteKyb chnget "ModRteKyb"
-gk_FM_Clang_ModMix chnget "ModMix"
-gk_FM_Clang_Sustain chnget "Sustain"
-gk_FM_Clang_CarKyb chnget "CarKyb"
-gk_FM_Clang_StWidth chnget "StWidth"
-gk_FM_Clang_StWidth init 0.01
-gk_FM_Clang_StMix chnget "StMix"
-gk_FM_Clang_DryWet chnget "RvbDryWet"
-gk_FM_Clang_Dry table gk_FM_Clang_DryWet,gi_FM_Clang_DryMap,1 ; map dry/wet control
-gk_FM_Clang_Wet table gk_FM_Clang_DryWet,gi_FM_Clang_WetMap,1 ;
-gk_FM_Clang_RvbSize chnget "RvbSize"
-gk_FM_Clang_Detune chnget "Detune"
-gk_FM_Clang_DtnMix chnget "DtnMix"
-gk_FM_Clang_Amp chnget "Amp"
-gk_FM_Clang_level chnget "gk_FM_Clang_level"
-gk_FM_Clang_Amp port gk_FM_Clang_Amp,iporttime
-gk_FM_Clang_AttTim chnget "AttTim"
-gk_FM_Clang_AttVel chnget "AttVel"
-gk_FM_Clang_NseAmp chnget "NseAmp"
-gk_FM_Clang_NseBW chnget "NseBW"
-gk_FM_Clang_NseFllw chnget "NseFllw"
-endin
+#ifdef USE_PIANOTEQ
+#include "PianoOutPianoteq.inc"
+#else
+#include "PianoOutFluidsynth.inc"
+#endif
 
-gi_Droner_overlap init .1
-gk_Droner_distort_factor init 0.4
-gk_Droner_first_harmonic init 0.4
-gk_Droner_slider1 init .05
-gk_Droner_slider2 init .1
-gk_Droner_slider3 init .04
-gk_Droner_slider4 init .2
-gk_Droner_slider5 init .02
-gk_Droner_level init 0
-gi_Droner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
-instr Droner
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-k1 init .5
-k2 init .05
-k3 init .1
-k4 init .2
-k5 init .1
-k6 init .05
-k7 init .1
-k8 init 0
-k9 init 0
-k10 init 0
-k3 = gk_Droner_slider1
-k4 = gk_Droner_slider2
-k5 = gk_Droner_slider3
-k6 = gk_Droner_slider4
-k7 = gk_Droner_slider5
-kwaveform init 0
-iamp = ampdb(ivelocity)
-iattack = gi_Droner_overlap
-idecay = gi_Droner_overlap
-isustain = p3
-p3 = iattack + isustain + idecay
-aenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-if kwaveform == 0 then
-asignal poscil3 1, ihertz, gi_Droner_sine
-endif
-if kwaveform == 1 then
-asignal vco2 1, ihertz, 8 ; integrated saw
-endif
-if kwaveform == 2 then
-asignal vco2 1, ihertz, 12 ; triangle
-endif
-asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
-asignal = asignal * aenvelope * 10
-aleft, aright pan2 asignal, ipan
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-kgain = ampdb(gk_Droner_level)
-aleft = adamping * aleft * kgain
-aright = adamping * aright * kgain
-; Each instrument sends its audio to a global audio output bus,
-; where effects can be applied.
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-opcode FM_Clang_veloc, i, iii
-; *p->r = *p->ilo + csound->curip->m_veloc*(*p->ihi - *p->ilo) * dv127;
-ivel, ilow, ihigh xin
-xout ilow + ivel * (ihigh - ilow) * 0.007874
-endop
-
-instr FM_Clang ; Sound producing instrument. Triggered by MIDI notes or score notes.
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-icps = cpsmidinn(ikey)
-inum = ikey
-iamplitude = ampdb(ivelocity)
-; icps cpsmidi
-; inum notnum
-iKybdScl table inum,gi_FM_Clang_scale ; Keyboard scaling value. Note '0' maps to a value of -1, note 64 maps to a value of zero and note 127 maps to a value of 1.
-; Amplitude Envelope
-idur = i(gk_FM_Clang_Dur)
-iAmpCurve = -8
-iRelTim = (i(gk_FM_Clang_Sustain)==1?idur:0.1)
-;iAttVel veloc i(gk_FM_Clang_AttVel)*0.05,0
-iAttVel FM_Clang_veloc ivelocity, i(gk_FM_Clang_AttVel)*0.05,0
-iAttTim = iAttVel + i(gk_FM_Clang_AttTim)
-if iAttTim==0 then
-aAEnv transegr 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
-else
-aAEnv transegr 0,iAttTim,iAmpCurve, 1,idur,iAmpCurve,0, iRelTim,iAmpCurve,0
-endif
-; Key velocity to amplitude
-;iAVel veloc 0,0.1
-iAVel FM_Clang_veloc ivelocity, 0, 0.1
-; FM index
-iNdx veloc 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
-iNdx FM_Clang_veloc ivelocity, 0,i(gk_FM_Clang_NdxVel) ; Key velocity to FM index
-kIEnv transeg iNdx*octave(-iKybdScl*4),idur,-i(gk_FM_Clang_NdxCurve),0 ; Index envelope. Amplitude influenced by 'Index' widget control and keyboard scaling (index reduced for higher notes, increased for lower notes)
-; Carrier frequency keyboard scaling
-icar = 1 * octave(iKybdScl*i(gk_FM_Clang_CarKyb))
-; Carrier ratio modulation
-iModRte table inum,gi_FM_Clang_scale
-iModRte = octave(iModRte*i(gk_FM_Clang_ModRteKyb))
-kDepEnv transeg 1,idur,-4,0
-amod lfo gk_FM_Clang_ModDep*0.1*kDepEnv, gk_FM_Clang_ModRte * iModRte, 0
-; Noise bandpass filter cutoff as it respond to the 'Carrier Follow' switch
-kcf = gk_FM_Clang_NseFllw==1?icps*gk_FM_Clang_mod:icps
-; Noise amplitude keyboard following
-kNseAmp = octave(iKybdScl*-4)*gk_FM_Clang_NseAmp
-; Main FM algorithm
-if gk_FM_Clang_NseAmp>0 then ; If noise amplitude is greater than zero...
-aNse gauss kNseAmp ; ... generate some gaussian noise
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; bandpass filter the noise
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW ; and again
-else
-aNse = 0 ; Otherwise no noise signal!
-endif
-idetune table inum,gi_FM_Clang_detune ; Read a detuning value from a random table
-asig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair
-aModSig foscil iAVel, icps*cent(-gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; FM pair with modulation
-asig = asig + (aModSig * gk_FM_Clang_ModMix) ; Mix the two FM pairs.
-; Auxilliary FM algorithm (used for detuning)
-if gk_FM_Clang_DtnMix>0&&gk_FM_Clang_Detune>0 then
-if gk_FM_Clang_NseAmp>0 then
-aNse gauss kNseAmp
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
-aNse butbp aNse,kcf,kcf*gk_FM_Clang_NseBW
-else
-aNse = 0
-endif
-idetune table inum+128,gi_FM_Clang_detune ; Read a detuning value from a random table
-asig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar +aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine ; Detuning applied to fundemental
-aModSig2 foscil iAVel, icps*cent(gk_FM_Clang_Detune*idetune), icar+amod+aNse, gk_FM_Clang_mod, kIEnv, gi_FM_Clang_sine
-asig2 = asig2 + (aModSig2 * gk_FM_Clang_ModMix)
-asig = asig + asig2*gk_FM_Clang_DtnMix
-endif
-; Filter Fundemental
-if i(gk_FM_Clang_FiltFund)==1 then ; If filter fundemental switch is active
-asig butbr asig,icps*icar,icps*icar*0.3 ; Filter out fundemental
-asig butbr asig,icps*icar,icps*icar*0.3 ; and again to make sure it is all gone
-endif
-; Lowpass Filter
-if i(gk_FM_Clang_LPF)<32 then ; If lowpass filter is less than maximum...
-kCF limit icps*gk_FM_Clang_LPF,20,20000 ; ...create the cutoff value in CPS based on fundemental and LPF ratio control. Limit to prevent out of range values.
-asig clfilt asig,kCF,0,2 ; Butterworth lowpass filter
-endif
-; Amplitude Envelope
-kgain = ampdb(gk_FM_Clang_level)
-asig = asig * aAEnv * gk_FM_Clang_Amp * kgain; Apply amplitude envelope
-; Stereo Effect
-iDlyTimL table inum,gi_FM_Clang_stereo ; Read a delay time value from a random table based on note played
-iDlyTimR table inum+128,gi_FM_Clang_stereo ; Read a different delay time value from a random table based on note played
-if gk_FM_Clang_StWidth>0&&gk_FM_Clang_StMix>0 then ; If 'width' is above zero and 'mix' is above zero...
-aL vdelay asig, iDlyTimL*gk_FM_Clang_StWidth*1000, 0.2*1000 ; ...left channel delay
-aR vdelay asig, iDlyTimR*gk_FM_Clang_StWidth*1000, 0.2*1000 ; right channel delay
-aL ntrpol asig, aL, gk_FM_Clang_StMix ; Mix delayed and dry signal
-aR ntrpol asig, aR, gk_FM_Clang_StMix ;
-aleft = aL;*gk_FM_Clang_Dry
-aright = aR;*gk_FM_Clang_Dry
-gaSendL = gaSendL + aL ; Send to reverb
-gaSendR = gaSendR + aR
-else
-aleft = asig;*gk_FM_Clang_Dry
-aright = asig;*gk_FM_Clang_Dry
-gaSendL = gaSendL + asig ; Send to reverb
-gaSendR = gaSendR + asig
-endif
-aleft = aleft * ampdb(ivelocity)
-aright = aleft * ampdb(ivelocity)
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-gk_Harpsichord_level init 0
-gk_HarpsichordPan init .5
-gi_Harptable ftgen 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
-instr Harpsichord
-//////////////////////////////////////////////
-// Original by James Kelley.
-// Adapted by Michael Gogins.
-//////////////////////////////////////////////
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-iattack = .005
-isustain = p3
-irelease = .3
-p3 = iattack + isustain + irelease
-iHz = cpsmidinn(ikey)
-kHz = k(iHz)
-iamplitude = ampdb(ivelocity)
-aenvelope 	 transeg 1.0, 20.0, -10.0, 0.05
-apluck 	 pluck 1, kHz, iHz, 0, 1
-aharp 	 poscil 1, kHz, gi_Harptable
-aharp2 	 balance apluck, aharp
-asignal			 = (apluck + aharp2) * iamplitude * aenvelope * 10
-adeclick linsegr 0, iattack, 1, isustain, 1, irelease, 0
-kgain = ampdb(gk_Harpsichord_level)
-asignal = asignal * adeclick * kgain
-aoutleft, aoutright pan2 asignal, ipan
-chnmix aoutleft, "out_left"
-chnmix aoutright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-gi_Sweeper_overlap init .1
-gk_Sweeper_britel init 0
-gk_Sweeper_briteh init 2.9
-gk_Sweeper_britels init .2 / 3
-gk_Sweeper_britehs init 2.5 / 2
-gk_Sweeper_level init 0
-gi_Sweeper_sine ftgen 0, 0, 65536, 10, 1
-gi_Sweeper_octfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
-instr Sweeper
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-iamp = ampdb(ivelocity)
-iattack = gi_Sweeper_overlap
-idecay = gi_Sweeper_overlap
-isustain = p3
-p3 = iattack + isustain + idecay
-aenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-icps = ihertz
-kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
-ktonemoddep jspline 0.01,0.05,0.012
-ktonemodrte jspline 6,0.1,0.2
-ktone poscil3 ktonemoddep, ktonemodrte, gi_Sweeper_sine
-kbrite rspline gk_Sweeper_britel, gk_Sweeper_briteh, gk_Sweeper_britels, gk_Sweeper_britehs
-ibasfreq init icps
-ioctcnt init 3
-iphs init 0
-a1 hsboscil 1, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gi_Sweeper_octfn, ioctcnt, iphs
-a1 = a1 * aenvelope
-amod poscil3 0.25, ibasfreq*(1/3), gi_Sweeper_sine
-arm = a1*amod
-kmix expseg 0.001, 0.01, rnd(1), rnd(3)+0.3, 0.001
-kmix=.25
-a1 ntrpol a1, arm, kmix
-;a1 pareq a1/10, 400, 15, .707
-;a1 tone a1, 500
-kpanrte jspline 5, 0.05, 0.1
-kpandep jspline 0.9, 0.2, 0.4
-kpan poscil3 kpandep, kpanrte, gi_Sweeper_sine
-a1,a2 pan2 a1, kpan
-a1 delay a1, rnd(0.1)
-a2 delay a2, rnd(0.11)
-aenv linsegr 1, 1, 0
-aenv = aenvelope
-aleft = a1*aenv*.02
-aright = a2*aenv*.02
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-kgain = ampdb(gk_Sweeper_level)
-aleft = adamping * aleft * kgain
-aright = adamping * aright * kgain
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-; printks "gk_Sweeper_level: %f kgain: %f aleft: %f\n", 0.5, gk_Sweeper_level, kgain, k(aleft)
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-gi_Buzzer_overlap init .1
-gk_Buzzer_harmonics init 2
-gk_Buzzer_level init 0
-gk_Buzzer_distort_factor init 0.4
-gk_Buzzer_first_harmonic init 0.4
-gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
-instr Buzzer
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-iamp = ampdb(ivelocity) * 4
-iattack = gi_Buzzer_overlap
-idecay = gi_Buzzer_overlap
-isustain = p3
-p3 = iattack + isustain + idecay
-aenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-asignal buzz aenvelope, ihertz, gk_Buzzer_harmonics, gi_Buzzer_sine
-asignal = asignal * 3
-aleft, aright pan2 asignal, ipan
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-kgain = ampdb(gk_Buzzer_level)
-aleft = adamping * aleft * kgain
-aright = adamping * aright * kgain
-chnmix aleft, "out_left"
-chnmix aright, "out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-; All control channels come into this always-on instrument so that
-; the channel need be read only once per kperiod for greater efficiency.
-
-instr Controls
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-gk_Droner_slider1 chnget "gk_Droner_slider1"
-gk_Droner_slider2 chnget "gk_Droner_slider2"
-gk_Droner_slider3 chnget "gk_Droner_slider3"
-gk_Droner_slider4 chnget "gk_Droner_slider4"
-gk_Droner_slider5 chnget "gk_Droner_slider5"
-gk_Droner_level chnget "gk_Droner_level"
-gk_Buzzer_harmonics chnget "gk_Buzzer_harmonics"
-gk_Buzzer_level chnget "gk_Buzzer_level"
-gk_Sweeper_level chnget "gk_Sweeper_level"
-gk_Harpsichord_level chnget "gk_Harpsichord_level"
-gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
-gk_MasterOutput_level chnget "gk_MasterOutput_level"
-prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-gk_FM_Clang_preset init 1
-instr FM_Clang_preset
-gk_FM_Clang_preset chnget "gk_FM_Clang_preset"
-ktrig changed gk_FM_Clang_preset
-#define SET_PRESET(N'Amp'AttTim'AttVel'Dur'Sustain'mod'NdxVel'NdxCurve'CarKyb'DtnMix'Detune'LPF'FiltFund'NseAmp'NseBW'NseFllw'ModMix'ModDep'ModRte'ModRteKyb'StMix'StWidth'RvbDryWet'RvbSize)
-#
-if i(gk_FM_Clang_preset)==$N then
-printks2 "setting preset %d\n", $N
-chnset $Amp ,"Amp"
-chnset $AttTim ,"AttTim"
-chnset $AttVel ,"AttVel"
-chnset $Dur ,"Dur"
-chnset $Sustain ,"Sustain"
-chnset $mod ,"mod"
-chnset $NdxVel ,"NdxVel"
-chnset $NdxCurve ,"NdxCurve"
-chnset $CarKyb ,"CarKyb"
-chnset $DtnMix ,"DtnMix"
-chnset $Detune ,"Detune"
-chnset $LPF ,"LPF"
-chnset $FiltFund ,"FiltFund"
-chnset $NseAmp ,"NseAmp"
-chnset $NseBW ,"NseBW"
-chnset $NseFllw ,"NseFllw"
-chnset $ModMix ,"ModMix"
-chnset $ModDep ,"ModDep"
-chnset $ModRte ,"ModRte"
-chnset $ModRteKyb,"ModRteKyb"
-chnset $StMix ,"StMix"
-chnset $StWidth ,"StWidth"
-chnset $RvbDryWet,"RvbDryWet"
-chnset $RvbSize ,"RvbSize"
-endif
-#
-if ktrig==1 then
-reinit SEND_PRESET
-endif
-SEND_PRESET:
-; N'Amp'AttTim'AttVel'Dur'Sustain'mod 'NdxVel'NdxCurve'CarKyb'DtnMix'Detune'LPF'FiltFund'NseAmp'NseBW'NseFllw'ModMix'ModDep'ModRte'ModRteKyb'StMix'StWidth'RvbDryWet'RvbSize)
-$SET_PRESET(1'0.5'0 '0 '12 '1 '2.29'1 '16 '0 '1 '1.5 '16 '1 '1000 '0.001'0 '1 '0.1 '3 '0 '0.5 '0.01 '0.3 '0.55 )
-$SET_PRESET(2'0.8'0 '0 '1.7'1 '5.04'0.55 '100 '0 '0 '0 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.1 '0.55 )
-$SET_PRESET(3'0.5'0.1 '0.5 '3.8'1 '1.00'2 '28 '0 '1 '15 '16 '0 '500 '0.0077'1 '1 '0.1 '3 '0 '0.5 '0.01 '0.3 '0.55 )
-$SET_PRESET(4'0.5'0 '0.006 '24 '1 '3.19'1 '15 '0 '0.47 '2.5 '16 '1 '0 '0.001'0 '1 '0.1 '0.33 '1.7 '0.5 '0.01 '0.3 '0.55 )
-$SET_PRESET(5'0.8'0 '1 '6.6'0 '1.12'1 '13 '-2.68 '1 '25 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '1 '0.02 '0.172 '0.21 )
-$SET_PRESET(6'3.25'0.1 '1 '1.28'0 '2.55'0.55 '35 '-2.3 '0 '1.5 '16 '1 '2000 '0.0025'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.68 '0.93 )
-$SET_PRESET(7'4 '0.1 '1 '2.39'1 '2.55'0.55 '35 '-2.3 '0 '1.5 '16 '1 '16 '0.1262'0 '0 '0.1 '3 '0 '0 '0.01 '1.00 '0 )
-$SET_PRESET(8'1 '0 '0 '14.25'1 '6.97'0.55 '35 '-2.3 '0.13 '1.5 '4.78'1 '16 '0.0326'0 '1 '0.1 '3 '0 '0 '0.01 '0.6 '0 )
-$SET_PRESET(9'1.65'0 '0 '1.7'1 '1.20'0.55 '100 '0 '0 '0 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.1 '0.55 )
-$SET_PRESET(10'2' 0 '0 '1 '1 '2.15'0.55 '100 '0 '0.21 '12 '3.8'0 '0 '0.001'0 '0 '0.1 '3 '0 '0.5 '0.01 '0.35 '0.37 )
-$SET_PRESET(11'2 '0.1 '1 '3.44'1 '3.75'0.55 '100 '0 '0.21 '25 '16 '0 '0 '0.001'1 '0 '0.1 '3 '0 '0.5 '0.05 '0 '0.37 )
-$SET_PRESET(12'2 '0.1 '1 '1.45'1 '2.66'1.00 '16 '0 '0.21 '25 '16 '0 '0 '0.001'1 '0 '0.1 '3 '0 '0.5 '0.05 '0.6 '0.37 )
-$SET_PRESET(13'1.9'0 '0 '24 '1 '2.29'1.00 '23.25 '-4 '1 '1.5 '16 '1 '151 '0.0178'1 '1 '0.1 '3 '0 '0.5 '0.01 '0.3 '0.55 )
-endin
-
-; The global effects receive audio from the global audio output bus,
-; and send it on to their own global output busses.
+maxalloc 1, 8
+maxalloc 2, 8
+maxalloc 3, 8
+maxalloc 4, 8
+maxalloc 5, 8
+maxalloc 6, 8
 
 gk_Reverb_Feedback init 0.975
-gk_Reverb_DelayModulation init 0.875
-instr Reverb
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-ain_left chnget "out_left"
-ain_right chnget "out_right"
-azero init 0
-aout_left init 0
-aout_left, aright reverbsc ain_left, azero, gk_Reverb_Feedback, 15000.0
+gk_Delay_Modulation init 0.875
+
+instr ReverbLeft
 aleft init 0
 azero init 0
-aleft, aout_right reverbsc azero, ain_right, gk_Reverb_Feedback, 15000.0
-chnmix aout_left, "reverb_out_left"
-chnmix aout_right, "reverb_out_right"
-prints "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+aleft inleta "inleft"
+aleft, aright reverbsc aleft, azero, gk_Reverb_Feedback, 15000.
+outleta "outleft", aleft
+;;;;;;;;;;;;;;;;;;;;i
+prints "ReverbLeft  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr ReverbRight
+aleft init 0
+azero init 0
+aright inleta "inright"
+aleft, aright reverbsc azero, aright, gk_Reverb_Feedback, 15000.0
+outleta "outright", aright
+;;;;;;;;;;;;;;;;;;;;i
+prints "ReverbRight i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gk_Reverb2_Feedback init 0.975
+gk_Delay2_Modulation init 0.875
+
+instr Reverb2Left
+aleft init 0
+azero init 0
+aleft inleta "inleft"
+aleft, aright reverbsc aleft, azero, gk_Reverb2_Feedback, 15000.
+outleta "outleft", aleft
+;;;;;;;;;;;;;;;;;;;;i
+prints "Reverb2Left i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr Reverb2Right
+aleft init 0
+azero init 0
+aright inleta "inright"
+aleft, aright reverbsc azero, aright, gk_Reverb2_Feedback, 15000.0
+outleta "outright", aright
+;;;;;;;;;;;;;;;;;;;;i
+prints "Reverb2Righ i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr Controls
+    gk_FM_Clang_level chnget "gk_FM_Clang_level"
+    gk_DelayedPlucked_level chnget "gk_DelayedPlucked_level"
+    gk_Harpsichord_level chnget "gk_Harpsichord_level"
+    gk_Harpsichord_pick chnget "gk_Harpsichord_pick"
+    gk_Harpsichord_reflection chnget "gk_Harpsichord_reflection"
+    gk_Harpsichord_pluck chnget "gk_Harpsichord_pluck"
+    gk_MasterOutput_level chnget "gk_MasterOutput_level"
+    gk_Piano_level chnget "gk_Piano_level"
+    gk_Plucked_level chnget "gk_Plucked_level"
+    gk_STKPlucked_level chnget "gk_STKPlucked_level"
+    gk_Rhodes_level chnget "gk_Rhodes_level"
+    gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
+    gk_Reverb2_Feedback chnget "gk_Reverb2_Feedback"
+    gk_overlap chnget "gk_overlap"
+;;;;;;;;;;;;;;;;;;;;i
+prints "Controls    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
 
 gk_MasterOutput_level init 0
+gS_MasterOutput_filename init ""
 instr MasterOutput
-; Consume unused pfields.
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-ain_left chnget "reverb_out_left"
-ain_right chnget "reverb_out_right"
-kgain = ampdb(gk_MasterOutput_level)
-aout_left = ain_left * gk_MasterOutput_level * kgain * 0.0001
-aout_right = ain_right * gk_MasterOutput_level * kgain * 0.0001
-outs aout_left, aout_right
-prints "instr %4d t %12.4f d %12.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+p3 = 60 * 7
+aleft inleta "inleft"
+aright inleta "inright"
+k_gain = ampdb(gk_MasterOutput_level)
+printks2 "Master gain: %f\n", k_gain
+iamp init 1
+iattack init 10
+idecay init 10
+isustain = p3 - (iattack + idecay)
+aenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+aleft butterlp aleft, 18000
+aright butterlp aright, 18000
+outs aleft * k_gain * aenvelope, aright * k_gain * aenvelope
+; We want something that will play on my phone.
+i_amplitude_adjustment = ampdbfs(-3) / 32767
+i_filename_length strlen gS_MasterOutput_filename
+if i_filename_length > 0 then
+prints sprintf("Output filename: %s\n", gS_MasterOutput_filename)
+fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
+endif
+prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 endin
-
-; This instrument clears the global output busses of audio for the next kperiod.
-
-instr Clear
-insno = p1
-itime = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p7
-ipan = p6
-idepth = p8
-iheight = p9
-ipcs = p10
-ihomogeneity = p11
-chnclear "out_left"
-chnclear "out_right"
-chnclear "reverb_out_left"
-chnclear "reverb_out_right"
-prints "instr %4d t %12.4f d %12.4f\n", p1, p2, p3
-endin
-
-; Finally the orchestra itself turns on the effects instruments and the
-; other always-on instruments.
-
-scoreline_i "i \"Controls\" 0 420"
-scoreline_i "i \"FM_Clang_controls\" 0 420"
-scoreline_i "i \"FM_Clang_preset\" 0 420"
-scoreline_i "i \"Reverb\" 0 420"
-scoreline_i "i \"MasterOutput\" 0 420"
-scoreline_i "i \"Clear\" 0 420"
-</CsInstruments>
-<CsScore>
-</CsScore>
-</CsoundSynthesizer>
         </textarea>
         <script id="example" type="x-shader/x-fragment">
             precision mediump float;
@@ -739,7 +299,15 @@ scoreline_i "i \"Clear\" 0 420"
             /* jshint bitwise: true, strict:false */
             "use strict";
             try {
+                var csound = require('csound.node');
                 console.log('csound:', csound);
+                var fs = require('fs');
+                var nwgui = require('nw.gui');
+                var nw_window = nwgui.Window.get();
+                nw_window.on('close', function() {
+                    console.log('Closing down...');
+                    this.close(true);
+                    });
                 var score = new Silencio.Score();
                 var FM9 = ChordSpace.chordForName('FM9');
                 var Bb7 = ChordSpace.chordForName('Bb7');
@@ -768,7 +336,7 @@ scoreline_i "i \"Clear\" 0 420"
             }
             var quality = 2, quality_levels = [0.5, 1, 2, 4, 8];
             var toolbar, compileButton, fullscreenButton, compileTimer, errorLines = [];
-            var code, canvas, gl, vertex_buffer, currentProgram, vertexPosition, screenVertexPosition, panButton;
+            var code, canvas, gl, buffer, currentProgram, vertexPosition, screenVertexPosition, panButton;
             var parameters = {
                 instruments: 4,
                 frames_per_second: 30,
@@ -787,6 +355,7 @@ scoreline_i "i \"Clear\" 0 420"
                 gk_Harpsichord_pick: 0.75,
                 gk_Harpsichord_reflection: 0.5,
                 gk_Harpsichord_pluck: 0.75,
+                gk_Piano_level: 0.5,
                 gk_Plucked_level: 0,
                 gk_STKPlucked_level: 0,
                 gk_Rhodes_level: 0.0,
@@ -796,25 +365,40 @@ scoreline_i "i \"Clear\" 0 420"
                 gk_overlap: 0.05,
                 gk_FM_Clang_level: 0,
                 Play: function() {
-                    if (typeof csound.is_playing === 'undefined') {
-                        csound.is_playing = false;
+                    Silencio.saveDatGuiJson(gui);
+                    try {
+                        csound.setMessageCallback(csoundMessage);
+                    } catch(e) {
+                        console.log(e);
                     }
-                    if (csound.is_playing === false) {
-                        csound.perform();
-                        gui.revert();
-                        csound.compileCsdText(document.getElementById('orc').value);
-                        start_time_seconds = new Date().getTime() / 1000.0;
-                        csound.is_playing = true;
-                    } else {
-                        csound.is_playing = false;
-                        csound.stop();
-                    }
+                    gui.revert();
+                    csound.setOption('-m0');
+                    //csound.setOption('-j3');
+                    csound.setOption('--nodisplays');
+                    csound.setOption('-odac');
+                    var orc = document.getElementById('orc').value;
+                    csound.compileOrc(orc);
+                    csound.readScore('f 0 370\n');
+                    csound.start();
+                    csound.perform();
                     start_time_seconds = new Date().getTime() / 1000.0;
+
                 },
                 Stop: function() {
-                    csound.is_playing = false;
                     Silencio.saveDatGuiJson(gui);
                     csound.stop();
+                },
+                Developer_tools: function() {
+                    nwgui.Window.get().showDevTools();
+                },
+                Close: function() {
+                    try {
+                        csound.stop();
+                        Silencio.saveDatGuiJson(gui);
+                        window.close();
+                    } catch (e) {
+                        console.log(e);
+                    }
                 },
                 CM: function() {
                     chord = CM.clone();
@@ -991,8 +575,8 @@ scoreline_i "i \"Clear\" 0 420"
                 // enable dFdx, dFdy, fwidth
                 gl.getExtension('OES_standard_derivatives');
                 // Create vertex buffer (2 triangles)
-                vertex_buffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+                buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([- 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0]), gl.STATIC_DRAW);
                 // Create surface buffer (coordinates at screen corners)
                 surface.buffer = gl.createBuffer();
@@ -1343,7 +927,7 @@ scoreline_i "i \"Clear\" 0 420"
             // the highest row, left to right in each row.
 
             var value_threshold = .95;
-            var instrument_count = 5;
+            var instrument_count = 6;
             var range = 72;
             var bass = 28;
             var dynamic_range = 6.0;
@@ -1389,7 +973,7 @@ scoreline_i "i \"Clear\" 0 420"
 
             var create_on_event = function(score, x, y, h, v) {
                ///var insno = ((x / gl.drawingBufferWidth) * instrument_count) + 1;
-               var insno = Math.floor((h * instrument_count) + 2);
+               var insno = Math.floor((h * instrument_count) + 1);
                var key = Math.floor((y / gl.drawingBufferHeight) * range + bass);
                var velocity = Math.floor(v * dynamic_range + softest);
                var pan = Math.random();
@@ -1399,7 +983,7 @@ scoreline_i "i \"Clear\" 0 420"
 
             var create_off_event = function(score, x, y, h, v) {
                ///var insno = ((x / gl.drawingBufferWidth) * instrument_count) + 1;
-               var insno = Math.floor((h * instrument_count) + 2);
+               var insno = Math.floor((h * instrument_count) + 1);
                var key = Math.floor((y / gl.drawingBufferHeight) * range + bass);
                var velocity = Math.floor(v * dynamic_range + softest);
                var pan = Math.random();
@@ -1408,7 +992,7 @@ scoreline_i "i \"Clear\" 0 420"
             }
 
             var send_events = function() {
-               if (typeof csound.is_playing === 'undefined') {
+               if (csound.isPlaying() === false) {
                     return;
                }
                score.clear();
@@ -1466,7 +1050,7 @@ scoreline_i "i \"Clear\" 0 420"
                 gl.uniform2f(currentProgram.uniformsCache.surfaceSize, surface.width, surface.height);
                 gl.bindBuffer(gl.ARRAY_BUFFER, surface.buffer);
                 gl.vertexAttribPointer(surface.positionAttribute, 2, gl.FLOAT, false, 0, 0);
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
                 gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, false, 0, 0);
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, backTarget.texture);
@@ -1478,7 +1062,7 @@ scoreline_i "i \"Clear\" 0 420"
                 gl.useProgram(screenProgram);
                 gl.uniform2f(screenProgram.uniformsCache.resolution, parameters.screenWidth, parameters.screenHeight);
                 gl.uniform1i(screenProgram.uniformsCache.texture, 1);
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
                 gl.vertexAttribPointer(screenVertexPosition, 2, gl.FLOAT, false, 0, 0);
                 gl.activeTexture(gl.TEXTURE1);
                 gl.bindTexture(gl.TEXTURE_2D, frontTarget.texture);
@@ -1521,6 +1105,7 @@ scoreline_i "i \"Clear\" 0 420"
         "gk_DelayedPlucked_level": 23.494926719278467,
         "gk_FM_Clang_level": 9.064261555806084,
         "gk_Harpsichord_level": 10.507328072153328,
+        "gk_Piano_level": -14.024802705749721,
         "gk_Plucked_level": 9.064261555806084,
         "gk_STKPlucked_level": 11.950394588500558
       }
@@ -1548,6 +1133,11 @@ scoreline_i "i \"Clear\" 0 420"
           "folders": {}
         },
         "Harpsichord": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        },
+        "Piano": {
           "preset": "Default",
           "closed": false,
           "folders": {}
@@ -1583,12 +1173,15 @@ scoreline_i "i \"Clear\" 0 420"
                 gui.remember(parameters);
                 gui.add(parameters, 'Play').name('Play [Ctrl-P]');
                 gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
+                gui.add(parameters, 'Developer_tools').name('Debugger');
+                gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
                 var Master = gui.addFolder('Master effects');
                 add_slider(Master, 'duration', 0, 8   ).name('Duration [Alt-D]').listen();
                 add_slider(Master, 'tempo', 0, .333334).name('Tempo    [Alt-T]').listen();
                 add_slider(Master, 'zoom', 0, 128     ).name('Zoom     [Alt-Z]').listen();
                 add_slider(Master, 'stride', 1, 100   ).name('Stride   [Alt-S]').listen();
                 add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
+                add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
                 add_slider(Master, 'gk_MasterOutput_level', -40, 40);
                 var intruments = gui.addFolder('Instruments');
                 var delayedplucked = intruments.addFolder('DelayedPlucked');
@@ -1597,6 +1190,8 @@ scoreline_i "i \"Clear\" 0 420"
                 add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
                 var Harpsichord = intruments.addFolder('Harpsichord');
                 add_slider(Harpsichord, 'gk_Harpsichord_level', -40, 40);
+                var Piano = intruments.addFolder('Piano');
+                add_slider(Piano, 'gk_Piano_level', -40, 40);
                 var Plucked = intruments.addFolder('Plucked');
                 add_slider(Plucked, 'gk_Plucked_level', -40, 40);
                 var STKPlucked = intruments.addFolder('STKPlucked');
@@ -1623,15 +1218,13 @@ scoreline_i "i \"Clear\" 0 420"
                 Chords.add(parameters, 'T5'  ).name('D()   [Ctrl-D]');
                 gui.revert();
             };
-           function gk_update(name, value) {
+            function gk_update(name, value) {
                 if (typeof csound !== 'undefined') {
-                    if (csound.is_playing === true) {
-                        var numberValue = parseFloat(value);
-                        csound.setControlChannel(name, numberValue);
-                        csound.message(name + ': ' + numberValue + '\n');
-                    }
+                    var numberValue = parseFloat(value);
+                    csound.setControlChannel(name, numberValue);
+                    csound.message(name + ': ' + numberValue + '\n');
                 }
-            };
+            }
             function add_slider(gui_folder, token, minimum, maximum) {
                 var on_parameter_change = function(value) {
                     if (token.startsWith('gk_')) {
