@@ -1181,13 +1181,15 @@ endin
                 Chords.add(parameters, 'T5'  ).name('D()   [Ctrl-D]');
                 gui.revert();
             };
-            function gk_update(name, value) {
+           function gk_update(name, value) {
                 if (typeof csound !== 'undefined') {
-                    var numberValue = parseFloat(value);
-                    csound.setControlChannel(name, numberValue);
-                    csound.message(name + ': ' + numberValue + '\n');
+                    if (csound.is_playing === true) {
+                        var numberValue = parseFloat(value);
+                        csound.setControlChannel(name, numberValue);
+                        csound.message(name + ': ' + numberValue + '\n');
+                    }
                 }
-            }
+            };
             function add_slider(gui_folder, token, minimum, maximum) {
                 var on_parameter_change = function(value) {
                     if (token.startsWith('gk_')) {
