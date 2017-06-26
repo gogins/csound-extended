@@ -784,18 +784,6 @@ endin
                     Silencio.saveDatGuiJson(gui);
                     csound.stop();
                 },
-                Developer_tools: function() {
-                    nwgui.Window.get().showDevTools();
-                },
-                Close: function() {
-                    try {
-                        csound.stop();
-                        Silencio.saveDatGuiJson(gui);
-                        window.close();
-                    } catch (e) {
-                        console.log(e);
-                    }
-                },
                 CM: function() {
                     chord = CM.clone();
                     modality = chord.clone();
@@ -1563,8 +1551,6 @@ endin
                 gui.remember(parameters);
                 gui.add(parameters, 'Play').name('Play [Ctrl-P]');
                 gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
-                gui.add(parameters, 'Developer_tools').name('Debugger');
-                gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
                 var Master = gui.addFolder('Master effects');
                 add_slider(Master, 'duration', 0, 8   ).name('Duration [Alt-D]').listen();
                 add_slider(Master, 'tempo', 0, .333334).name('Tempo    [Alt-T]').listen();
