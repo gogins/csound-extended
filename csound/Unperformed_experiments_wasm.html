@@ -1021,7 +1021,7 @@ endin
                 gl.uniform2f(currentProgram.uniformsCache.surfaceSize, surface.width, surface.height);
                 gl.bindBuffer(gl.ARRAY_BUFFER, surface.buffer);
                 gl.vertexAttribPointer(surface.positionAttribute, 2, gl.FLOAT, false, 0, 0);
-                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, false, 0, 0);
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, backTarget.texture);
