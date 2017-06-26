@@ -104,17 +104,12 @@ connect "Rhodes", "outleft", "Reverb2Left", "inleft"
 connect "Rhodes", "outright", "Reverb2Right", "inright"
 connect "STKPlucked", "outleft", "ReverbLeft", "inleft"
 connect "STKPlucked", "outright", "ReverbRight", "inright"
-connect "PianoOut", "outleft", "MasterOutput", "inleft"
-connect "PianoOut", "outright", "MasterOutput", "inright"
-connect "PianoOut", "outleft", "Reverb2Left", "inleft"
-connect "PianoOut", "outright", "Reverb2Right", "inright"
 connect "ReverbLeft", "outleft", "MasterOutput", "inleft"
 connect "ReverbRight", "outright", "MasterOutput", "inright"
 connect "Reverb2Left", "outleft", "MasterOutput", "inleft"
 connect "Reverb2Right", "outright", "MasterOutput", "inright"
 
 alwayson "Controls"
-alwayson "PianoOut"
 alwayson "ReverbLeft"
 alwayson "ReverbRight"
 alwayson "Reverb2Left"
@@ -343,8 +338,7 @@ endin
                 gk_MasterOutput_level: 0.4,
                 gk_overlap: 0.05,
                 gk_FM_Clang_level: 0,
-                Play: function() {
-                    
+                Play: function() {                   
                     if (typeof csound.is_playing === 'undefined') {
                         csound.is_playing = false;
                     }
@@ -359,7 +353,6 @@ endin
                         csound.stop();
                     }
                     start_time_seconds = new Date().getTime() / 1000.0;
-
                 },
                 Stop: function() {
                      csound.is_playing = false;
@@ -1083,7 +1076,6 @@ endin
         "gk_DelayedPlucked_level": 23.494926719278467,
         "gk_FM_Clang_level": 9.064261555806084,
         "gk_Harpsichord_level": 10.507328072153328,
-        "gk_Piano_level": -14.024802705749721,
         "gk_Plucked_level": 9.064261555806084,
         "gk_STKPlucked_level": 11.950394588500558
       }
@@ -1111,11 +1103,6 @@ endin
           "folders": {}
         },
         "Harpsichord": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Piano": {
           "preset": "Default",
           "closed": false,
           "folders": {}
@@ -1168,8 +1155,6 @@ endin
                 add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
                 var Harpsichord = intruments.addFolder('Harpsichord');
                 add_slider(Harpsichord, 'gk_Harpsichord_level', -40, 40);
-                var Piano = intruments.addFolder('Piano');
-                add_slider(Piano, 'gk_Piano_level', -40, 40);
                 var Plucked = intruments.addFolder('Plucked');
                 add_slider(Plucked, 'gk_Plucked_level', -40, 40);
                 var STKPlucked = intruments.addFolder('STKPlucked');
