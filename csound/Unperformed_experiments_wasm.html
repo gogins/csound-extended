@@ -1033,7 +1033,7 @@ endin
                 gl.useProgram(screenProgram);
                 gl.uniform2f(screenProgram.uniformsCache.resolution, parameters.screenWidth, parameters.screenHeight);
                 gl.uniform1i(screenProgram.uniformsCache.texture, 1);
-                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.vertexAttribPointer(screenVertexPosition, 2, gl.FLOAT, false, 0, 0);
                 gl.activeTexture(gl.TEXTURE1);
                 gl.bindTexture(gl.TEXTURE_2D, frontTarget.texture);
