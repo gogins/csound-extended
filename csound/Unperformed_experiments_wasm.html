@@ -311,7 +311,7 @@ endin
             }
             var quality = 2, quality_levels = [0.5, 1, 2, 4, 8];
             var toolbar, compileButton, fullscreenButton, compileTimer, errorLines = [];
-            var code, canvas, gl, buffer, currentProgram, vertexPosition, screenVertexPosition, panButton;
+            var code, canvas, gl, vertex_buffer, currentProgram, vertexPosition, screenVertexPosition, panButton;
             var parameters = {
                 instruments: 4,
                 frames_per_second: 30,
@@ -546,8 +546,8 @@ endin
                 // enable dFdx, dFdy, fwidth
                 gl.getExtension('OES_standard_derivatives');
                 // Create vertex buffer (2 triangles)
-                buffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                vertex_buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([- 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0]), gl.STATIC_DRAW);
                 // Create surface buffer (coordinates at screen corners)
                 surface.buffer = gl.createBuffer();
