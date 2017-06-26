@@ -45,7 +45,7 @@
             {
                 background-color:transparent;
             }
-        .dg {
+            .dg {
                 font-family: Monaco, sans-serif;
                 font-size:8pt;
             }
@@ -338,7 +338,7 @@ endin
                 gk_MasterOutput_level: 0.4,
                 gk_overlap: 0.05,
                 gk_FM_Clang_level: 0,
-                Play: function() {                   
+                Play: function() {
                     if (typeof csound.is_playing === 'undefined') {
                         csound.is_playing = false;
                     }
@@ -355,7 +355,7 @@ endin
                     start_time_seconds = new Date().getTime() / 1000.0;
                 },
                 Stop: function() {
-                     csound.is_playing = false;
+                    csound.is_playing = false;
                     Silencio.saveDatGuiJson(gui);
                     csound.stop();
                 },
@@ -963,7 +963,7 @@ endin
             }
 
             var send_events = function() {
-               if (csound.isPlaying() === false) {
+               if (typeof csound.is_playing === 'undefined') {
                     return;
                }
                score.clear();
