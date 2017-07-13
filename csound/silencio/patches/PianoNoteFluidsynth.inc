@@ -12,6 +12,6 @@ k_space_bottom_to_top = p8
 i_phase = p9
 ; Use channel assigned in fluidLoad.
 i_channel = 0
-prints "PianoNoteFluid i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
+prints "PianoNoteFluid i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 fluidNote giFluidsynth, i_channel, i_midi_key, i_midi_velocity
 endin

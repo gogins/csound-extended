@@ -43,6 +43,7 @@
                 document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
                 console.warn = handleMessage;
             }
+            var csound_is_playing = false;
         </script>
     </head>
     <body style="background:black;">
@@ -803,8 +804,8 @@ scoreline_i "i \"Clear\" 0 -1"
                 }
             }
             renderer.render(scene, camera);
-            if (typeof csound !== 'undefined') {
-                if (csound.is_playing === true) {
+            if (typeof csound !== 'undefined' && csound !== null) {
+                if (csound_is_playing === true) {
                     score_time_cell = document.getElementById('Time_cell');
                     current_time_seconds = new Date().getTime() / 1000.0;
                     var score_time = current_time_seconds - start_time_seconds;
@@ -965,7 +966,7 @@ scoreline_i "i \"Clear\" 0 -1"
             // Protect against trying to call an undefined Csound.
             if (typeof csound != 'undefined') {
                 if (csound.module !== null) {
-                    if (csound.is_playing === true) {
+                    if (csound_is_playing === true) {
                         score.sendToCsound(csound);
                         var Chord_cell = document.getElementById('Chord_cell');
                         Chord_cell.innerHTML = chord.name();
@@ -1035,19 +1036,15 @@ scoreline_i "i \"Clear\" 0 -1"
             Notes_per_second: 8,
             Stride: 100,
             Play_Stop: function() {
-                if (typeof csound.is_playing === 'undefined') {
-                    csound.is_playing = false;
-                }
-                if (csound.is_playing === false) {
+                if (csound_is_playing === false) {
                     gui.revert();
                     csound.compileCsdText(document.getElementById('orc').value);
                     csound.start();
+                    csound_is_playing = true;
                     start_time_seconds = new Date().getTime() / 1000.0;
-                    csound.is_playing = true;
-                } else {
-                    csound.is_playing = false;
+                  } else {
+                    csound_is_playing = false;
                     csound.stop();
-                    csound.reset();
                 }
             },
             FM9: function() {
@@ -1184,7 +1181,7 @@ scoreline_i "i \"Clear\" 0 -1"
         }
         function gk_update(name, value) {
             if (typeof csound !== 'undefined') {
-                if (csound.is_playing === true) {
+                if (csound_is_playing === true) {
                     var numberValue = parseFloat(value);
                     csound.setControlChannel(name, numberValue);
                     csound.message(name + ': ' + numberValue + '\n');
@@ -1225,9 +1222,6 @@ scoreline_i "i \"Clear\" 0 -1"
             slider.onChange(on_parameter_change);
             return slider;
         };
-        if (typeof csound !== 'undefined') {
-            csound.is_playing = false;
-        }
        </script>
       </body>
 </html>
