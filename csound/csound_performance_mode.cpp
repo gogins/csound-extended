@@ -1,8 +1,13 @@
 /**
- * Compile with: g++ csound_performance_mode.cpp -o csound_performance_mode -std=c++11 -O2 -g -lcsound64
+ * Compile with:
+ * Linux:      g++ csound_performance_mode.cpp -o csound_performance_mode -std=c++11 -O2 -g -lcsound64
+ * mingw64:    g++ csound_performance_mode.cpp -o csound_performance_mode -std=c++11 -O2 -g -LC:/Program_Files/Csound6_x64/bin -lcsound64 -IC:/Program_Files/Csound6_x64/include
+ * MSVC amd64: Create a Visual Studio command-line project just for this file.
  */
 
 #include <csound/csound.h>
+#include <sndfile/sndfile.h>
+#include <csound/csPerfThread.cpp>
 #include <cstdio>
 #include <iostream>
 
@@ -28,7 +33,7 @@ instr Harpsichord
 // Adapted by Michael Gogins.
 //////////////////////////////////////////////
 insno = p1
-itime = p2  
+itime = p2
 iduration = p3
 ikey = p4
 ivelocity = p5
@@ -123,16 +128,17 @@ int main(int argc, const char *argv[])
     char csd[0x10000];
     std::sprintf(csd, csd_template, options, orc, sco);
     CSOUND *csound = nullptr;
-    double score_time = 0;
+	CsoundPerformanceThread *csoundPerformanceThread = nullptr;
+	double score_time = 0;
     double score_duration = 0;
     int result = 0;
     int kperiods = 0;
     std::cout << R"(
-    
+
 csoundCompileCsdText
 csoundStart
 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundCompileCsdText(csound, csd);
@@ -144,11 +150,11 @@ csoundPerformKsmps
     std::cout << "score_duration: " << score_duration << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundStart
 csoundCompileCsdText
 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -169,12 +175,12 @@ csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundStart
 csoundCompileOrc
 csoundReadScore
 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -193,12 +199,12 @@ csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundCompileOrc
 csoundReadScore
 csoundStart
 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -217,12 +223,12 @@ csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundReadScore
 csoundCompileOrc
 csoundStart
 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -241,12 +247,12 @@ csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundCompileOrc
 csoundStart
 csoundPerformKsmps
 csoundReadScore after 1st csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -268,12 +274,12 @@ csoundReadScore after 1st csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundStart
 csoundCompileOrc
 csoundPerformKsmps
 csoundReadScore after 1 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -295,12 +301,12 @@ csoundReadScore after 1 csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundCompileOrc
 csoundStart
-csoundPerformKsmps 
+csoundPerformKsmps
 csoundReadScore after 10 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -324,11 +330,11 @@ csoundReadScore after 10 csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundCompileOrc
-csoundPerformKsmps 
+csoundPerformKsmps
 csoundReadScore after 10 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -351,13 +357,13 @@ csoundReadScore after 10 csoundPerformKsmps
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
     std::cout << R"(
-    
+
 csoundCompileOrc
 csoundStart
 csoundStart
-csoundPerformKsmps 
+csoundPerformKsmps
 csoundReadScore after 10 csoundPerformKsmps
-    
+
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
@@ -381,36 +387,51 @@ csoundReadScore after 10 csoundPerformKsmps
     };
     std::cout << "result: " << result << std::endl;
     csoundDestroy(csound);
-    std::cout << R"(
-    
-csoundStart
-csoundStart
+	std::cout << R"(
+
+csoundCreate
+csoundPerformanceThread = new CsoundPerformanceThread(csound)
 csoundCompileOrc
-csoundPerformKsmps 
-csoundReadScore after 10 csoundPerformKsmps
-    
+csoundReadScore
+csoundStart
+csoundPerformanceThread->Play()
+csoundPerformanceThread->Join()
+
+    )";
+	csound = csoundCreate(0);
+	csoundPerformanceThread = new CsoundPerformanceThread(csound);
+	csoundSetOption(csound, "-d");
+	csoundSetOption(csound, "-m3");
+	csoundSetOption(csound, "-odac");
+	result = csoundCompileOrc(csound, orc);
+	result = csoundReadScore(csound, sco);
+	result = csoundStart(csound);
+	csoundPerformanceThread->Play();
+	csoundPerformanceThread->Join();
+	delete csoundPerformanceThread;
+	csoundDestroy(csound);
+	std::cout << R"(
+
+csoundCreate
+csoundPerformanceThread = new CsoundPerformanceThread(csound)
+csoundCompileOrc
+csoundReadScore
+csoundPerformanceThread->Play()
+csoundStart
+csoundPerformanceThread->Join()
+
     )";
     csound = csoundCreate(0);
-    csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
-    csoundSetOption(csound, "-odac");
-    csoundCompileOrc(csound, orc);
-    csoundStart(csound);
-    csoundStart(csound);
-    score_time = 0;
-    kperiods = 0;
-    while ((result = csoundPerformKsmps(csound)) == 0) {
-        kperiods++;
-        if (kperiods == 10) {
-            csoundReadScore(csound, sco);
-        }
-        score_time = csoundGetScoreTime(csound);
-        if (score_time > score_duration) {
-            std::cout << "Passed time." << std::endl;
-            break;
-        }
-    };
-    std::cout << "result: " << result << std::endl;
+	csoundPerformanceThread = new CsoundPerformanceThread(csound);
+	csoundSetOption(csound, "-d");
+	csoundSetOption(csound, "-m3");
+	csoundSetOption(csound, "-odac");
+	result = csoundCompileOrc(csound, orc);
+	result = csoundReadScore(csound, sco);
+	csoundPerformanceThread->Play();
+	result = csoundStart(csound);
+	csoundPerformanceThread->Join();
+	delete csoundPerformanceThread;
     csoundDestroy(csound);
     std::cout << "Finished." << std::endl;
     return 0;
