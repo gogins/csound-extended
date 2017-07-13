@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Csound Visual Music Example</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+        <style>
+            body {
+                background-color: #000000;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            button, select, a, a:visited {
+                padding: 8px 12px 8px 12px;
+                border: none;
+                border-radius: 5px;
+                margin-right: 5px;
+                color: #ffffff;
+                background-color: #000000;
+                opacity: 0.5;
+                font-family: Monospace;
+                font-size: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            button:hover, select:hover, a:hover {
+                opacity: 1;
+                box-shadow: 0 0 4px #FFF;
+            }
+            option {
+                color: #ffffff;
+                background-color: #000000;
+            }
+            ::-webkit-scrollbar
+            {
+                width:10px;
+            }
+            ::-webkit-scrollbar-track-piece
+            {
+                background-color:transparent;
+            }
+            ::-webkit-scrollbar-corner
+            {
+                background-color:transparent;
+            }
+        .dg {
+                font-family: Monaco, sans-serif;
+                font-size:8pt;
+            }
+        </style>
+        <script src="silencio/js/dat.gui.js"></script>
+        <script src='silencio/js/jquery.js'></script>
+        <script src='silencio/js/helpers.js'></script>
+        <script src="silencio/js/codemirror.js"></script>
+        <script src="silencio/js/glsl.js"></script>
+        <script src="silencio/js/tinycolor.js"></script>
+        <script src="silencio/js/Silencio.js"></script>
+        <script src="silencio/js/ChordSpace.js"></script>
+        <script src="silencio/js/sprintf.js"></script>
+    </head>
+    <body>
+        <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt;">
+            <col width=400px>
+            <col width=250px>
+            <th style="color:gold;text-align:left">Csound Visual Music Example
+            </p></td><td style="color:gold;text-align:right;"</th>
+             <tr>
+                <td>Time: </td><td id="Time_cell" style="color:LawnGreen;text-align:right;"></td>
+            </tr>
+            <tr>
+                <td>X: </td><td id="X_cell" style="color:SkyBlue;text-align:right;"></td>
+            </tr>
+            <tr>
+                <td>Y: </td><td id="Y_cell" style="color:SkyBlue;text-align:right;"></td>
+            </tr>
+             <tr>
+                <td>Chord: </td><td id="Chord_cell" style="color:SkyBlue;text-align:right;"></td>
+            </tr>
+            <tr>
+                <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
+                <td colspan=2><textarea id="console" style="width:100%;color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;overflow:auto;"></textarea></td>
+            </tr>
+        </table>
+        <div id = 'webgl_cell' class='canvas' style="position:absolute;left:1vw;color:#eee;top:1vw;"/>
+        <textarea class="code" id="orc" hidden rows=24 cols=80>
+sr = 48000
+ksmps = 100
+nchnls = 2
+0dbfs = 1
+
+connect "DelayedPluck", "outleft", "ReverbLeft", "inleft"
+connect "DelayedPluck", "outright", "ReverbRight", "inright"
+connect "FM_Clang", "outleft", "ReverbLeft", "inleft"
+connect "FM_Clang", "outright", "ReverbRight", "inright"
+connect "Harpsichord", "outleft", "Reverb2Left", "inleft"
+connect "Harpsichord", "outright", "Reverb2Right", "inright"
+connect "Plucked", "outleft", "ReverbLeft", "inleft"
+connect "Plucked", "outright", "ReverbRight", "inright"
+connect "Rhodes", "outleft", "Reverb2Left", "inleft"
+connect "Rhodes", "outright", "Reverb2Right", "inright"
+connect "STKPlucked", "outleft", "ReverbLeft", "inleft"
+connect "STKPlucked", "outright", "ReverbRight", "inright"
+connect "PianoOut", "outleft", "MasterOutput", "inleft"
+connect "PianoOut", "outright", "MasterOutput", "inright"
+connect "PianoOut", "outleft", "Reverb2Left", "inleft"
+connect "PianoOut", "outright", "Reverb2Right", "inright"
+connect "ReverbLeft", "outleft", "MasterOutput", "inleft"
+connect "ReverbRight", "outright", "MasterOutput", "inright"
+connect "Reverb2Left", "outleft", "MasterOutput", "inleft"
+connect "Reverb2Right", "outright", "MasterOutput", "inright"
+
+alwayson "Controls"
+alwayson "PianoOut"
+alwayson "ReverbLeft"
+alwayson "ReverbRight"
+alwayson "Reverb2Left"
+alwayson "Reverb2Right"
+alwayson "ParametricEQ"
+alwayson "MasterOutput"
+
+; define USE_PIANOTEQ #1#
+#ifdef USE_PIANOTEQ
+#include "PianoNotePianoteq.inc"
+#else
+#include "PianoNoteFluidsynth.inc"
+#endif
+#include "Harpsichord.inc"
+#include "FM_Clang.inc"
+#include "DelayedPlucked.inc"
+#include "Plucked.inc"
+#include "STKPlucked.inc"
+#include "Rhodes.inc"
+
+#ifdef USE_PIANOTEQ
+#include "PianoOutPianoteq.inc"
+#else
+#include "PianoOutFluidsynth.inc"
+#endif
+
+maxalloc 1, 8
+maxalloc 2, 8
+maxalloc 3, 8
+maxalloc 4, 8
+maxalloc 5, 8
+maxalloc 6, 8
+
+gk_Reverb_Feedback init 0.975
+gk_Delay_Modulation init 0.875
+
+instr ReverbLeft
+aleft init 0
+azero init 0
+aleft inleta "inleft"
+aleft, aright reverbsc aleft, azero, gk_Reverb_Feedback, 15000.
+outleta "outleft", aleft
+;;;;;;;;;;;;;;;;;;;;i
+prints "ReverbLeft  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr ReverbRight
+aleft init 0
+azero init 0
+aright inleta "inright"
+aleft, aright reverbsc azero, aright, gk_Reverb_Feedback, 15000.0
+outleta "outright", aright
+;;;;;;;;;;;;;;;;;;;;i
+prints "ReverbRight i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gk_Reverb2_Feedback init 0.975
+gk_Delay2_Modulation init 0.875
+
+instr Reverb2Left
+aleft init 0
+azero init 0
+aleft inleta "inleft"
+aleft, aright reverbsc aleft, azero, gk_Reverb2_Feedback, 15000.
+outleta "outleft", aleft
+;;;;;;;;;;;;;;;;;;;;i
+prints "Reverb2Left i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr Reverb2Right
+aleft init 0
+azero init 0
+aright inleta "inright"
+aleft, aright reverbsc azero, aright, gk_Reverb2_Feedback, 15000.0
+outleta "outright", aright
+;;;;;;;;;;;;;;;;;;;;i
+prints "Reverb2Righ i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+instr Controls
+    gk_FM_Clang_level chnget "gk_FM_Clang_level"
+    gk_DelayedPlucked_level chnget "gk_DelayedPlucked_level"
+    gk_Harpsichord_level chnget "gk_Harpsichord_level"
+    gk_Harpsichord_pick chnget "gk_Harpsichord_pick"
+    gk_Harpsichord_reflection chnget "gk_Harpsichord_reflection"
+    gk_Harpsichord_pluck chnget "gk_Harpsichord_pluck"
+    gk_MasterOutput_level chnget "gk_MasterOutput_level"
+    gk_Piano_level chnget "gk_Piano_level"
+    gk_Plucked_level chnget "gk_Plucked_level"
+    gk_STKPlucked_level chnget "gk_STKPlucked_level"
+    gk_Rhodes_level chnget "gk_Rhodes_level"
+    gk_Reverb_Feedback chnget "gk_Reverb_Feedback"
+    gk_Reverb2_Feedback chnget "gk_Reverb2_Feedback"
+    gk_overlap chnget "gk_overlap"
+;;;;;;;;;;;;;;;;;;;;i
+prints "Controls    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+
+gk_MasterOutput_level init 0
+gS_MasterOutput_filename init ""
+instr MasterOutput
+p3 = 60 * 7
+aleft inleta "inleft"
+aright inleta "inright"
+k_gain = ampdb(gk_MasterOutput_level)
+printks2 "Master gain: %f\n", k_gain
+iamp init 1
+iattack init 10
+idecay init 10
+isustain = p3 - (iattack + idecay)
+aenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+aleft butterlp aleft, 18000
+aright butterlp aright, 18000
+outs aleft * k_gain * aenvelope, aright * k_gain * aenvelope
+; We want something that will play on my phone.
+i_amplitude_adjustment = ampdbfs(-3) / 32767
+i_filename_length strlen gS_MasterOutput_filename
+if i_filename_length > 0 then
+prints sprintf("Output filename: %s\n", gS_MasterOutput_filename)
+fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
+endif
+prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+endin
+        </textarea>
+        <script id="example" type="x-shader/x-fragment">
+            precision mediump float;
+            uniform float time;
+            uniform float tempo;
+            uniform float zoom;
+            uniform float stride;
+            uniform vec2 mouse;
+            uniform vec2 resolution;
+            vec3 pal(float t, vec3 a, vec3 b, vec3 c, vec3 d)
+            {
+                return a + b * cos(6.28318 * (c * t + d));
+            }
+            void main(){
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                uv = uv * 2. - 1.;
+                uv.x *= resolution.x / resolution.y;
+                float e = time * tempo;
+                float d = 128. * mouse.x / resolution.x + 8.5;
+                vec2 g = uv * zoom;
+                uv = d * (floor(g) + .5) / zoom;
+                g = fract(g) * 2. - 1.;
+                float f = dot(uv, uv) - e;
+                vec4 c = vec4(
+                    pal(f *.5 + e,
+                        vec3(0.5, 0.5, 0.5),
+                        vec3(0.5, 0.5, 0.5),
+                        vec3(1.0, 1.0, 1.0),
+                        vec3(0.0, 0.10, 0.20)), 1.);
+                gl_FragColor = c * (1. - dot(g, g)) * .2 / abs((fract(f) - .5) * 8.);
+            }
+        </script>
+        <script id="fragmentShader" type="x-shader/x-fragment">
+            precision mediump float;
+            uniform vec2 resolution;
+            uniform sampler2D texture;
+            void main(){
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                gl_FragColor = texture2D(texture, uv);
+            }
+
+        </script>
+        <script id="vertexShader" type="x-shader/x-vertex">
+            precision mediump float;
+            attribute vec3 position;
+            void main(){
+                gl_Position = vec4(position, 1.0);
+            }
+        </script>
+        <script id="surfaceVertexShader" type="x-shader/x-vertex">
+            precision mediump float;
+            attribute vec3 position;
+            attribute vec2 surfacePosAttrib;
+            varying vec2 surfacePosition;
+            void main(){
+                surfacePosition = surfacePosAttrib;
+                gl_Position = vec4(position, 1.0);
+            }
+        </script>
+        <script>
+            /* jshint bitwise: true, strict:false */
+            "use strict";
+            try {
+                var csound = require('csound.node');
+                console.log('csound:', csound);
+                var fs = require('fs');
+                var nwgui = require('nw.gui');
+                var nw_window = nwgui.Window.get();
+                nw_window.on('close', function() {
+                    console.log('Closing down...');
+                    this.close(true);
+                    });
+                var score = new Silencio.Score();
+                var FM9 = ChordSpace.chordForName('FM9');
+                var Bb7 = ChordSpace.chordForName('Bb7');
+                var CM = ChordSpace.chordForName('CM');
+                var chord = FM9.clone();
+                var modality = chord.clone();
+                initialize_helper();
+                var compressor=initialize_compressor();
+                if (!window.requestAnimationFrame){
+                    window.requestAnimationFrame = (function(){
+                    return window.webkitRequestAnimationFrame ||
+                        window.mozRequestAnimationFrame ||
+                        window.oRequestAnimationFrame ||
+                        window.msRequestAnimationFrame ||
+                        function (callback, element){
+                            window.setTimeout(callback, 1000 / parameters.frames_per_second);
+                        };
+                })();
+            }
+            // Get older browsers safely through init code, so users can read the
+            // message about how to download newer browsers.
+            if (!Date.now){
+                Date.now = function(){
+                    return +new Date();
+                };
+            }
+            var quality = 2, quality_levels = [0.5, 1, 2, 4, 8];
+            var toolbar, compileButton, fullscreenButton, compileTimer, errorLines = [];
+            var code, canvas, gl, buffer, currentProgram, vertexPosition, screenVertexPosition, panButton;
+            var parameters = {
+                instruments: 4,
+                frames_per_second: 30,
+                startTime: Date.now(),
+                time: 0,
+                tempo: 0.025,
+                zoom: 64,
+                stride: 40,
+                mouseX: 0.5,
+                mouseY: 0.5,
+                screenWidth: 0,
+                screenHeight: 0,
+                duration: 4,
+                gk_DelayedPlucked_level: 0.5,
+                gk_Harpsichord_level: 0.5,
+                gk_Harpsichord_pick: 0.75,
+                gk_Harpsichord_reflection: 0.5,
+                gk_Harpsichord_pluck: 0.75,
+                gk_Piano_level: 0.5,
+                gk_Plucked_level: 0,
+                gk_STKPlucked_level: 0,
+                gk_Rhodes_level: 0.0,
+                gk_Reverb_Feedback: 0.975,
+                gk_Reverb2_Feedback: 0.7,
+                gk_MasterOutput_level: 0.4,
+                gk_overlap: 0.05,
+                gk_FM_Clang_level: 0,
+                Play: function() {
+                    Silencio.saveDatGuiJson(gui);
+                    try {
+                        csound.setMessageCallback(csoundMessage);
+                    } catch(e) {
+                        console.log(e);
+                    }
+                    gui.revert();
+                    csound.setOption('-m0');
+                    //csound.setOption('-j3');
+                    csound.setOption('--nodisplays');
+                    csound.setOption('-odac');
+                    var orc = document.getElementById('orc').value;
+                    csound.compileOrc(orc);
+                    csound.readScore('f 0 370\n');
+                    csound.start();
+                    csound.perform();
+                    start_time_seconds = new Date().getTime() / 1000.0;
+
+                },
+                Stop: function() {
+                    Silencio.saveDatGuiJson(gui);
+                    csound.stop();
+                },
+                Developer_tools: function() {
+                    nwgui.Window.get().showDevTools();
+                },
+                Close: function() {
+                    try {
+                        csound.stop();
+                        Silencio.saveDatGuiJson(gui);
+                        window.close();
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                CM: function() {
+                    chord = CM.clone();
+                    modality = chord.clone();
+                    csound.message('CM:\n' + chord.information());
+                },
+                FM9: function() {
+                    chord = FM9.clone();
+                    modality = chord.clone();
+                    csound.message('FM9:\n' + chord.information());
+                },
+                Bb7: function() {
+                    chord = Bb7.clone();
+                    modality = chord.clone();
+                    csound.message('Bb7:\n' + chord.information());
+                },
+                K: function() {
+                    chord = chord.K();
+                    csound.message('K():\n' + chord.information());
+                },
+                T1: function() {
+                    chord = chord.T(1);
+                    csound.message('T(1):\n' + chord.information());
+                },
+                T2: function() {
+                    chord = chord.T(2);
+                    csound.message('T(2):\n' + chord.information());
+                },
+                T3: function() {
+                    chord = chord.T(3);
+                    csound.message('T(3):\n' + chord.information());
+                },
+                T4: function() {
+                    chord = chord.T(4);
+                    csound.message('T(4):\n' + chord.information());
+                },
+                T5: function() {
+                    chord = chord.T(5);
+                    csound.message('T(5):\n' + chord.information());
+                },
+                T6: function() {
+                    chord = chord.T(6);
+                    csound.message('T(6):\n' + chord.information());
+                },
+                T7: function() {
+                    chord = chord.T(7);
+                    csound.message('T(7):\n' + chord.information());
+                },
+                T8: function() {
+                    chord = chord.T(8);
+                    csound.message('T(8):\n' + chord.information());
+                },
+                T9: function() {
+                    chord = chord.T(9);
+                    csound.message('T(9):\n' + chord.information());
+                },
+                T10: function() {
+                    chord = chord.T(10);
+                    csound.message('T(10):\n' + chord.information());
+                },
+                T11: function() {
+                    chord = chord.T(11);
+                    csound.message('T(11):\n' + chord.information());
+                },
+                J2_2: function() {
+                    var chords = chord.J(2);
+                    if (chords.length > 1) {
+                        chord = chords[1];
+                        csound.message('J(2,2):\n' + chord.information());
+                    }
+                },
+                J2_3: function() {
+                    var chords = chord.J(2);
+                    if (chords.length > 2) {
+                        chord = chords[2];
+                        csound.message('J(2,3):\n' + chord.information());
+                    }
+                },
+                J3_1: function() {
+                   var chords = chord.J(3);
+                    if (chords.length > 0) {
+                        chord = chords[0];
+                        csound.message('J(3,1):\n' + chord.information());
+                    }
+                },
+                T5: function() {
+                    chord = chord.T(5);
+                    csound.message('D():\n' + chord.information());
+                },
+            };
+            var surface = { centerX: 0, centerY: 0, width: 1, height: 1, isPanning: false, isZooming: false, lastX: 0, lastY: 0 },
+            frontTarget, backTarget, screenProgram, getWebGL, resizer = {}, compileOnChangeCode = true;
+            function csoundMessage(message) {
+                var messages_textarea = document.getElementById("console");
+                var existing = messages_textarea.value;
+                messages_textarea.value = existing + message;
+                messages_textarea.scrollTop = messages_textarea.scrollHeight;
+            }
+            var init = function(){
+                canvas = document.createElement('canvas');
+                canvas.style.display = 'block';
+                document.body.appendChild(canvas);
+                toolbar = document.createElement('div');
+                toolbar.style.position = 'absolute';
+                toolbar.style.top = '25px';
+                toolbar.style.left = '25px';
+                //document.body.appendChild(toolbar);
+                var rightside = document.createElement('div');
+                rightside.style.cssFloat = 'right';
+                toolbar.appendChild(rightside);
+                panButton = document.createElement('button');
+                panButton.textContent = 'pan/zoom';
+                panButton.style.cursor = 'move';
+                panButton.style.display = 'none';
+                panButton.title = "Pan: left-drag, Zoom: right-drag. Use 'hide code' for a large pan/zoom area.";
+                rightside.appendChild(panButton);
+                fullscreenButton = document.createElement('button');
+                fullscreenButton.textContent = 'fullscreen';
+                fullscreenButton.title = 'Press F11 to enter or leave fullscreen mode';
+                fullscreenButton.addEventListener('click', function (event){
+                    if (document.body.requestFullScreen){
+                        document.body.requestFullScreen();
+                    } else if (document.body.mozRequestFullScreen){
+                        document.body.mozRequestFullScreen();
+                    } else if (document.body.webkitRequestFullScreen){
+                        document.body.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+                }, false);
+               rightside.appendChild(fullscreenButton);
+               var button = document.createElement('a');
+               button.textContent = 'gallery';
+               button.href = '/';
+               rightside.appendChild(button);
+                var button = document.createElement('button');
+                button.textContent = 'show fragment';
+                button.addEventListener('click', function (event){
+                    if (isCodeVisible()){
+                        button.textContent = 'show fragment';
+                        code.getWrapperElement().style.display = 'none';
+                        compileButton.style.visibility = 'hidden';
+                        set_save_button('hidden');
+                        set_parent_button('hidden');
+                        ///stopHideUI();
+                    } else {
+                        button.textContent = 'hide fragment';
+                        code.getWrapperElement().style.display = '';
+                        compileButton.style.visibility = 'visible';
+                        set_save_button('visible');
+                        set_parent_button('visible');
+                    }
+                }, false);
+                toolbar.appendChild(button);
+                var select = document.createElement('select');
+                for (var i = 0; i < quality_levels.length; i ++){
+                    var option = document.createElement('option');
+                    option.textContent = quality_levels[i];
+                    if (quality_levels[i] == quality)option.selected = true;
+                    select.appendChild(option);
+                }
+                select.addEventListener('change', function (event){
+                    quality = quality_levels[event.target.selectedIndex];
+                    onWindowResize();
+                }, false);
+                toolbar.appendChild(select);
+                compileButton = document.createElement('button');
+                compileButton.textContent = 'compile';
+                compileButton.addEventListener('click', function (event){
+                    compile();
+                }, false);
+                toolbar.appendChild(compileButton);
+                // from helper.js
+                add_server_buttons();
+                gl = canvas.getContext('experimental-webgl', { preserveDrawingBuffer: true });
+                // enable dFdx, dFdy, fwidth
+                gl.getExtension('OES_standard_derivatives');
+                // Create vertex buffer (2 triangles)
+                buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([- 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0]), gl.STATIC_DRAW);
+                // Create surface buffer (coordinates at screen corners)
+                surface.buffer = gl.createBuffer();
+                code = CodeMirror(document.body, {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    indentWithTabs: false,
+                    tabSize: 4,
+                    indentUnit: 4,
+                    mode: "text/x-glsl",
+                    onChange: function (){
+                        if (compileOnChangeCode){
+                            clearTimeout(compileTimer);
+                            compileTimer = setTimeout(compile, 500);
+                        }
+                    }
+                });
+                code.getWrapperElement().style.display = '';
+                resizer.offsetMouseX = 0;
+                resizer.offsetMouseY = 0;
+                resizer.isResizing = false;
+                var size_ = 100;
+                resizer.currentWidth = size_;
+                resizer.currentHeight = size_;
+                resizer.minWidth = size_;
+                resizer.minHeight = size_;
+                resizer.maxWidth = size_;
+                resizer.maxHeight = size_;
+                resizer.element = document.createElement('div');
+                resizer.element.className = 'resizer';
+                code.getWrapperElement().appendChild(resizer.element);
+                resizer.element.addEventListener('mousedown', function (event){
+                    if (event.button !== 2){
+                        resizer.offsetMouseX = event.clientX - resizer.currentWidth;
+                        resizer.offsetMouseY = event.clientY - resizer.currentHeight;
+                        resizer.isResizing = true;
+                        event.preventDefault();
+                    }
+                }, false);
+
+                var surfaceMouseDown = function (event){
+                    if (event.shiftKey){
+                        resetSurface();
+                    }
+                    if (event.button === 0){
+                        surface.isPanning = true;
+                        document.body.style.cursor = 'move';
+                    } else {
+                        surface.isZooming = true;
+                        document.body.style.cursor = 'se-resize';
+                        panButton.style.cursor = 'se-resize';
+                    }
+                    surface.lastX = event.clientX;
+                    surface.lastY = event.clientY;
+                    event.preventDefault();
+                };
+
+                var noContextMenu = function (event){
+                    event.preventDefault();
+                };
+
+                canvas.addEventListener('mousedown', surfaceMouseDown, false);
+                panButton.addEventListener('mousedown', surfaceMouseDown, false);
+                canvas.addEventListener('contextmenu', noContextMenu, false);
+                panButton.addEventListener('contextmenu', noContextMenu, false);
+                var clientXLast, clientYLast;
+
+                document.addEventListener('mousemove', function (event){
+                    var clientX = event.clientX;
+                    var clientY = event.clientY;
+                    if (clientXLast == clientX && clientYLast == clientY)
+                        return;
+                    clientXLast = clientX;
+                    clientYLast = clientY;
+                    ///stopHideUI();
+                    var codeElement, dx, dy;
+                    parameters.mouseX = clientX / window.innerWidth;
+                    parameters.mouseY = 1 - clientY / window.innerHeight;
+                    if (resizer.isResizing){
+                        resizer.currentWidth = Math.max(Math.min(clientX - resizer.offsetMouseX, resizer.maxWidth), resizer.minWidth);
+                        resizer.currentHeight = Math.max(Math.min(clientY - resizer.offsetMouseY, resizer.maxHeight), resizer.minWidth);
+                        codeElement = code.getWrapperElement();
+                        codeElement.style.width = resizer.currentWidth + 'px';
+                        codeElement.style.height = resizer.currentHeight + 'px';
+                        code.refresh();
+                        event.preventDefault();
+                    } else if (surface.isPanning){
+                        dx = clientX - surface.lastX;
+                        dy = clientY - surface.lastY;
+                        surface.centerX -= dx * surface.width / window.innerWidth;
+                        surface.centerY += dy * surface.height / window.innerHeight;
+                        surface.lastX = clientX;
+                        surface.lastY = clientY;
+                        computeSurfaceCorners();
+                        event.preventDefault();
+                    } else if (surface.isZooming){
+                        dx = clientX - surface.lastX;
+                        dy = clientY - surface.lastY;
+                        surface.height *= Math.pow(0.997, dx + dy);
+                        surface.lastX = clientX;
+                        surface.lastY = clientY;
+                        computeSurfaceCorners();
+                        event.preventDefault();
+                    }
+                }, false);
+                function settleDown (event){
+                    resizer.isResizing = surface.isPanning = surface.isZooming = false;
+                    document.body.style.cursor = 'default';
+                    panButton.style.cursor = 'move';
+                }
+                function mouseLeave(event){
+                    settleDown(event);
+                }
+                document.addEventListener('mouseup', settleDown, false);
+                document.addEventListener('mouseleave', mouseLeave, false);
+                onWindowResize();
+                window.addEventListener('resize', onWindowResize, false);
+                load_url_code();
+                compileScreenProgram();
+            }
+
+            init();
+            animate();
+
+            function computeSurfaceCorners(){
+                if (gl) {
+                    surface.width = surface.height * parameters.screenWidth / parameters.screenHeight;
+                    var halfWidth = surface.width * 0.5, halfHeight = surface.height * 0.5;
+                    gl.bindBuffer(gl.ARRAY_BUFFER, surface.buffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                        surface.centerX - halfWidth, surface.centerY - halfHeight,
+                        surface.centerX + halfWidth, surface.centerY - halfHeight,
+                        surface.centerX - halfWidth, surface.centerY + halfHeight,
+                        surface.centerX + halfWidth, surface.centerY - halfHeight,
+                        surface.centerX + halfWidth, surface.centerY + halfHeight,
+                        surface.centerX - halfWidth, surface.centerY + halfHeight]), gl.STATIC_DRAW);
+                }
+            }
+
+            function resetSurface(){
+                surface.centerX = surface.centerY = 0;
+                surface.height = 1;
+                computeSurfaceCorners();
+            }
+
+            function compile(){
+                var program = gl.createProgram();
+                var fragment = code.getValue();
+                var vertex = document.getElementById('surfaceVertexShader').textContent;
+                var vs = createShader(vertex, gl.VERTEX_SHADER);
+                var fs = createShader(fragment, gl.FRAGMENT_SHADER);
+                if (vs === null || fs === null)return null;
+                gl.attachShader(program, vs);
+                gl.attachShader(program, fs);
+                gl.deleteShader(vs);
+                gl.deleteShader(fs);
+                gl.linkProgram(program);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)){
+                    var error = gl.getProgramInfoLog(program);
+                    compileButton.title = error;
+                    console.error(error);
+                    console.error('VALIDATE_STATUS: ' + gl.getProgramParameter(program, gl.VALIDATE_STATUS), 'ERROR: ' + gl.getError());
+                    compileButton.style.color = '#ff0000';
+                    compileButton.textContent = 'compiled with errors';
+                    set_save_button('hidden');
+                    return;
+                }
+                if (currentProgram){
+                    gl.deleteProgram(currentProgram);
+                    setURL(fragment);
+                }
+                currentProgram = program;
+                compileButton.style.color = '#00ff00';
+                compileButton.textContent = 'compiled successfully';
+                set_save_button('visible');
+                panButton.style.display = (fragment.indexOf('varying vec2 surfacePosition;')>= 0)? 'inline' : 'none';
+                cacheUniformLocation(program, 'time');
+                cacheUniformLocation(program, 'tempo');
+                cacheUniformLocation(program, 'zoom');
+                cacheUniformLocation(program, 'stride');
+                cacheUniformLocation(program, 'mouse');
+                cacheUniformLocation(program, 'resolution');
+                cacheUniformLocation(program, 'backbuffer');
+                cacheUniformLocation(program, 'surfaceSize');
+                gl.useProgram(currentProgram);
+                surface.positionAttribute = gl.getAttribLocation(currentProgram, "surfacePosAttrib");
+                gl.enableVertexAttribArray(surface.positionAttribute);
+                vertexPosition = gl.getAttribLocation(currentProgram, "position");
+                gl.enableVertexAttribArray(vertexPosition);
+            }
+
+            function compileScreenProgram(){
+                var program = gl.createProgram();
+                var fragment = document.getElementById('fragmentShader').textContent;
+                var vertex = document.getElementById('vertexShader').textContent;
+                var vs = createShader(vertex, gl.VERTEX_SHADER);
+                var fs = createShader(fragment, gl.FRAGMENT_SHADER);
+                gl.attachShader(program, vs);
+                gl.attachShader(program, fs);
+                gl.deleteShader(vs);
+                gl.deleteShader(fs);
+                gl.linkProgram(program);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)){
+                    console.error('VALIDATE_STATUS: ' + gl.getProgramParameter(program, gl.VALIDATE_STATUS), 'ERROR: ' + gl.getError());
+                    return;
+                }
+                screenProgram = program;
+                gl.useProgram(screenProgram);
+                cacheUniformLocation(program, 'resolution');
+                cacheUniformLocation(program, 'texture');
+                cacheUniformLocation(program, 'time');
+                cacheUniformLocation(program, 'tempo');
+                cacheUniformLocation(program, 'zoom');
+                cacheUniformLocation(program, 'stride');
+                cacheUniformLocation(program, 'mouse');
+                cacheUniformLocation(program, 'resolution');
+                cacheUniformLocation(program, 'backbuffer');
+                cacheUniformLocation(program, 'surfaceSize');
+                screenVertexPosition = gl.getAttribLocation(screenProgram, "position");
+                gl.enableVertexAttribArray(screenVertexPosition);
+            }
+
+            function cacheUniformLocation(program, label){
+                if (program.uniformsCache === undefined){
+                    program.uniformsCache = {};
+                }
+                program.uniformsCache[label] = gl.getUniformLocation(program, label);
+            }
+
+            function createTarget(width, height){
+                var target = {};
+                target.framebuffer = gl.createFramebuffer();
+                target.renderbuffer = gl.createRenderbuffer();
+                target.texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, target.texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+                gl.bindRenderbuffer(gl.RENDERBUFFER, target.renderbuffer);
+                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, target.renderbuffer);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                return target;
+            }
+
+            function createRenderTargets(){
+                frontTarget = createTarget(parameters.screenWidth, parameters.screenHeight);
+                backTarget = createTarget(parameters.screenWidth, parameters.screenHeight);
+            }
+
+            function htmlEncode(str){
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            function createShader(src, type){
+                var shader = gl.createShader(type);
+                var line, lineNum, lineError, index = 0, indexEnd;
+                while (errorLines.length > 0){
+                    line = errorLines.pop();
+                    code.setLineClass(line, null);
+                    code.clearMarker(line);
+                }
+                gl.shaderSource(shader, src);
+                gl.compileShader(shader);
+                compileButton.title = '';
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+                    var error = gl.getShaderInfoLog(shader);
+                    // Remove trailing linefeed, for FireFox's benefit.
+                    while ((error.length > 1)&& (error.charCodeAt(error.length - 1)< 32)){
+                        error = error.substring(0, error.length - 1);
+                    }
+                    compileButton.title = error;
+                    console.error(error);
+                    compileButton.style.color = '#ff0000';
+                    compileButton.textContent = 'compiled with errors';
+                    set_save_button('hidden');
+                    while (index >= 0){
+                        index = error.indexOf("ERROR: 0:", index);
+                        if (index < 0){ break; }
+                        index += 9;
+                        indexEnd = error.indexOf(':', index);
+                        if (indexEnd > index){
+                            lineNum = parseInt(error.substring(index, indexEnd));
+                            if ((!isNaN(lineNum))&& (lineNum > 0)){
+                                index = indexEnd + 1;
+                                indexEnd = error.indexOf("ERROR: 0:", index);
+                                lineError = htmlEncode((indexEnd > index)? error.substring(index, indexEnd): error.substring(index));
+                                line = code.setMarker(lineNum - 1, '<abbr title="' + lineError + '">' + lineNum + '</abbr>', "errorMarker");
+                                code.setLineClass(line, "errorLine");
+                                errorLines.push(line);
+                            }
+                        }
+                    }
+                    return null;
+                }
+                return shader;
+            }
+
+            function onWindowResize(event){
+                var isMaxWidth = ((resizer.currentWidth === resizer.maxWidth)|| (resizer.currentWidth === resizer.minWidth)),
+                    isMaxHeight = ((resizer.currentHeight === resizer.maxHeight)|| (resizer.currentHeight === resizer.minHeight));
+                toolbar.style.width = window.innerWidth - 47 + 'px';
+                resizer.isResizing = false;
+                resizer.maxWidth = window.innerWidth - 75;
+                resizer.maxHeight = window.innerHeight - 125;
+                if (isMaxWidth || (resizer.currentWidth > resizer.maxWidth)){
+                    resizer.currentWidth = resizer.maxWidth;
+                }
+                if (isMaxHeight || (resizer.currentHeight > resizer.maxHeight)){
+                    resizer.currentHeight = resizer.maxHeight;
+                }
+                if (resizer.currentWidth < resizer.minWidth){ resizer.currentWidth = resizer.minWidth; }
+                if (resizer.currentHeight < resizer.minHeight){ resizer.currentHeight = resizer.minHeight; }
+                code.getWrapperElement().style.top = '75px';
+                code.getWrapperElement().style.left = '25px';
+                code.getWrapperElement().style.width = resizer.currentWidth + 'px';
+                code.getWrapperElement().style.height = resizer.currentHeight + 'px';
+                canvas.width = window.innerWidth / quality;
+                canvas.height = window.innerHeight / quality;
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                parameters.screenWidth = canvas.width;
+                parameters.screenHeight = canvas.height;
+                computeSurfaceCorners();
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                createRenderTargets();
+            }
+
+            var old_pixels = null;
+            var new_pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+
+            // https://www.opengl.org/sdk/docs/man/html/glReadPixels.xhtml
+            // glReadPixels and glReadnPixels return values from each pixel
+            // with lower left corner at (x+i,y+j) for 0<=i<width and
+            // 0<=j<height. This pixel is said to be the ith column in the
+            // jth row. Pixels are returned in row order from the lowest to
+            // the highest row, left to right in each row.
+
+            var value_threshold = .95;
+            var instrument_count = 6;
+            var range = 72;
+            var bass = 28;
+            var dynamic_range = 6.0;
+            var softest = 40;
+            var maximum_value = 0;
+            var start_time_seconds = new Date().getTime() / 1000.0;
+
+            /**
+             * Converts an RGB color value to HSV. Conversion formula
+             * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+             * Assumes r, g, and b are contained in the set [0, 255] and
+             * returns h, s, and v in the set [0, 1].
+             *
+             * @param   Number  r       The red color value
+             * @param   Number  g       The green color value
+             * @param   Number  b       The blue color value
+             * @return  Array           The HSV representation
+             */
+            var rgb_to_hsv = function(r, g, b){
+                r = r / 255;
+                g = g / 255;
+                b = b / 255;
+                var max = Math.max(r, g, b);
+                var min = Math.min(r, g, b);
+                var h, s, v = max;
+                var d = max - min;
+                s = max === 0 ? 0 : d / max;
+                if (max == min){
+                    h = 0;
+                } else {
+                    // More efficient than switch?
+                    if        (max == r) {
+                        h = (g - b) / d + (g < b ? 6 : 0);
+                    } else if (max == g) {
+                        h = (b - r) / d + 2;
+                    } else if (max == b) {
+                        h = (r - g) / d + 4;
+                    }
+                    h /= 6;
+                }
+                return [h, s, v];
+            }
+
+            var create_on_event = function(score, x, y, h, v) {
+               ///var insno = ((x / gl.drawingBufferWidth) * instrument_count) + 1;
+               var insno = Math.floor((h * instrument_count) + 1);
+               var key = Math.floor((y / gl.drawingBufferHeight) * range + bass);
+               var velocity = Math.floor(v * dynamic_range + softest);
+               var pan = Math.random();
+               insno = insno + key / 1000;
+               score.add(0, parameters.duration, 144.0, insno, key, velocity, pan);
+            }
+
+            var create_off_event = function(score, x, y, h, v) {
+               ///var insno = ((x / gl.drawingBufferWidth) * instrument_count) + 1;
+               var insno = Math.floor((h * instrument_count) + 1);
+               var key = Math.floor((y / gl.drawingBufferHeight) * range + bass);
+               var velocity = Math.floor(v * dynamic_range + softest);
+               var pan = Math.random();
+               insno = insno + key / 1000;
+               score.add(parameters.duration, -1, 144.0, -insno, key, velocity, pan);
+            }
+
+            var send_events = function() {
+               if (csound.isPlaying() === false) {
+                    return;
+               }
+               score.clear();
+               maximum_value = 0;
+               var old_hsv;
+               var new_hsv;
+               // By row from bottom (0) to top (height - 1).
+               var stride = Math.floor(parameters.stride);
+               var offset = Math.floor(stride / 2);
+               for (var row_index = offset; row_index < gl.drawingBufferHeight; row_index += stride) {
+                  // By column from left (0) to right (width - 1).
+                  for (var column_index = offset; column_index < gl.drawingBufferWidth; column_index += stride) {
+                     var i = 4 * (row_index * gl.drawingBufferHeight + column_index);
+                     old_hsv = rgb_to_hsv(old_pixels[i + 0], old_pixels[i + 1], old_pixels[i + 2], old_pixels[i + 3]);
+                     new_hsv = rgb_to_hsv(new_pixels[i + 0], new_pixels[i + 1], new_pixels[i + 2], new_pixels[i + 3]);
+                     if (new_hsv[2] > maximum_value) {
+                        maximum_value = new_hsv[2];
+                     }
+                     if (isNaN(new_hsv[2]) || isNaN(old_hsv[2])) {
+                        console.warn(sprintf("Index out of range at row %d column %d.", row, column));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ('Indexing is wrong: isNaN for:' + new_hsv + ' or ' + old_hsv);
+                     }
+                     // On event.
+                     if ((old_hsv[2] < value_threshold) && (new_hsv[2] >= value_threshold)) {
+                        create_on_event(score, column_index, row_index, new_hsv[0], new_hsv[2]);
+                     }
+                     // Off event.
+                     if ((old_hsv[2] >= value_threshold) && (new_hsv[2] < value_threshold)) {
+                        create_off_event(score, column_index, row_index, new_hsv[0], new_hsv[2]);
+                     }
+                  }
+               }
+               score.temper();
+               ChordSpace.conformScoreToChord(score, chord, false);
+               score.sendToCsound(csound);
+            }
+
+            var score_time_cell = document.getElementById('Time_cell');
+            var X_cell = document.getElementById("X_cell");
+            var Y_cell = document.getElementById("Y_cell");
+            var Chord_cell = document.getElementById("Chord_cell");
+            var Notes_cell = document.getElementById("Notes_cell");
+
+            function render() {
+                if (!currentProgram) return;
+                parameters.time = Date.now() - parameters.startTime;
+                // Set uniforms for custom shader.
+                gl.useProgram(currentProgram);
+                gl.uniform1f(currentProgram.uniformsCache.time, parameters.time / 1000);
+                gl.uniform1f(currentProgram.uniformsCache.tempo, parameters.tempo);
+                gl.uniform1f(currentProgram.uniformsCache.zoom, parameters.zoom);
+                gl.uniform2f(currentProgram.uniformsCache.mouse, surface.lastX, surface.lastY);
+                gl.uniform1f(currentProgram.uniformsCache.stride, parameters.stride);
+                gl.uniform2f(currentProgram.uniformsCache.resolution, parameters.screenWidth, parameters.screenHeight);
+                gl.uniform1i(currentProgram.uniformsCache.backbuffer, 0);
+                gl.uniform2f(currentProgram.uniformsCache.surfaceSize, surface.width, surface.height);
+                gl.bindBuffer(gl.ARRAY_BUFFER, surface.buffer);
+                gl.vertexAttribPointer(surface.positionAttribute, 2, gl.FLOAT, false, 0, 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, false, 0, 0);
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, backTarget.texture);
+                // Render custom shader to front buffer
+                gl.bindFramebuffer(gl.FRAMEBUFFER, frontTarget.framebuffer);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                // Set uniforms for screen shader
+                gl.useProgram(screenProgram);
+                gl.uniform2f(screenProgram.uniformsCache.resolution, parameters.screenWidth, parameters.screenHeight);
+                gl.uniform1i(screenProgram.uniformsCache.texture, 1);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.vertexAttribPointer(screenVertexPosition, 2, gl.FLOAT, false, 0, 0);
+                gl.activeTexture(gl.TEXTURE1);
+                gl.bindTexture(gl.TEXTURE_2D, frontTarget.texture);
+                // Render front buffer to screen
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                old_pixels = new_pixels.slice();
+                // Use pixel buffer objects here?
+                gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, new_pixels);
+                send_events();
+                var current_time_seconds = new Date().getTime() / 1000.0;
+                var score_time = current_time_seconds - start_time_seconds;
+                score_time_cell.innerHTML = score_time.toFixed(3);
+                X_cell.innerHTML = parameters.mouseX.toFixed(3);
+                Y_cell.innerHTML = parameters.mouseY.toFixed(3);
+                Chord_cell.innerHTML = chord.name();
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                render();
+            }
+
+            var gui = null;
+            var default_json = {
+  "remembered": {
+    "Default": {
+      "0": {}
+    },
+    "undefined": {
+      "0": {
+        "duration": 4,
+        "tempo": 0.03269831796308114,
+        "zoom": 26.593321911518903,
+        "stride": 40,
+        "gk_Reverb_Feedback": 0.975,
+        "gk_Reverb2_Feedback": 0.9069649573637555,
+        "gk_MasterOutput_level": 0.4,
+        "gk_DelayedPlucked_level": 23.494926719278467,
+        "gk_FM_Clang_level": 9.064261555806084,
+        "gk_Harpsichord_level": 10.507328072153328,
+        "gk_Piano_level": -14.024802705749721,
+        "gk_Plucked_level": 9.064261555806084,
+        "gk_STKPlucked_level": 11.950394588500558
+      }
+    }
+  },
+  "closed": false,
+  "folders": {
+    "Master effects": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    },
+    "Instruments": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {
+        "DelayedPlucked": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        },
+        "FM Clang": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        },
+        "Harpsichord": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        },
+        "Piano": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        },
+        "Plucked": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        },
+        "STKPlucked": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        }
+      }
+    },
+    "Chords and transformations": {
+      "preset": "Default",
+      "closed": true,
+      "folders": {}
+    }
+  },
+  "preset": "undefined"
+};
+            window.onload = function() {
+                try {
+                    var temporary_json = Silencio.restoreDatGuiJson(default_json);
+                    default_json = temporary_json;
+                } catch(e) {
+                    console.warn(e);
+                }
+                gui = new dat.GUI({load: parameters, width: 300});
+                gui.remember(parameters);
+                gui.add(parameters, 'Play').name('Play [Ctrl-P]');
+                gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
+                gui.add(parameters, 'Developer_tools').name('Debugger');
+                gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
+                var Master = gui.addFolder('Master effects');
+                add_slider(Master, 'duration', 0, 8   ).name('Duration [Alt-D]').listen();
+                add_slider(Master, 'tempo', 0, .333334).name('Tempo    [Alt-T]').listen();
+                add_slider(Master, 'zoom', 0, 128     ).name('Zoom     [Alt-Z]').listen();
+                add_slider(Master, 'stride', 1, 100   ).name('Stride   [Alt-S]').listen();
+                add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
+                add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
+                add_slider(Master, 'gk_MasterOutput_level', -40, 40);
+                var intruments = gui.addFolder('Instruments');
+                var delayedplucked = intruments.addFolder('DelayedPlucked');
+                add_slider(delayedplucked, 'gk_DelayedPlucked_level', -40, 40);
+                var fmclang = intruments.addFolder('FM Clang');
+                add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
+                var Harpsichord = intruments.addFolder('Harpsichord');
+                add_slider(Harpsichord, 'gk_Harpsichord_level', -40, 40);
+                var Piano = intruments.addFolder('Piano');
+                add_slider(Piano, 'gk_Piano_level', -40, 40);
+                var Plucked = intruments.addFolder('Plucked');
+                add_slider(Plucked, 'gk_Plucked_level', -40, 40);
+                var STKPlucked = intruments.addFolder('STKPlucked');
+                add_slider(STKPlucked, 'gk_STKPlucked_level', -40, 40);
+                var Chords = gui.addFolder('Chords and transformations');
+                Chords.add(parameters, 'CM');
+                Chords.add(parameters, 'Bb7');
+                Chords.add(parameters, 'FM9');
+                Chords.add(parameters, 'K'   ).name('K()   [Ctrl-K]');
+                Chords.add(parameters, 'T1'  ).name('T(1)  [Ctrl-1]');
+                Chords.add(parameters, 'T2'  ).name('T(2)  [Ctrl-2]');
+                Chords.add(parameters, 'T3'  ).name('T(3)  [Ctrl-3]');
+                Chords.add(parameters, 'T4'  ).name('T(4)  [Ctrl-4]');
+                Chords.add(parameters, 'T5'  ).name('T(5)  [Ctrl-5]');
+                Chords.add(parameters, 'T6'  ).name('T(6)  [Ctrl-6]');
+                Chords.add(parameters, 'T7'  ).name('T(7)  [Ctrl-7]');
+                Chords.add(parameters, 'T8'  ).name('T(8)  [Ctrl-8]');
+                Chords.add(parameters, 'T9'  ).name('T(9)  [Ctrl-9]');
+                Chords.add(parameters, 'T10' ).name('T(10) [Ctrl-A]');
+                Chords.add(parameters, 'T11' ).name('T(11) [Ctrl-B]');
+                Chords.add(parameters, 'J2_2').name('J(2,2)');
+                Chords.add(parameters, 'J2_3').name('J(2,3)');
+                Chords.add(parameters, 'J3_1').name('J(3,1)');
+                Chords.add(parameters, 'T5'  ).name('D()   [Ctrl-D]');
+                gui.revert();
+            };
+            function gk_update(name, value) {
+                if (typeof csound !== 'undefined') {
+                    var numberValue = parseFloat(value);
+                    csound.setControlChannel(name, numberValue);
+                    csound.message(name + ': ' + numberValue + '\n');
+                }
+            }
+            function add_slider(gui_folder, token, minimum, maximum) {
+                var on_parameter_change = function(value) {
+                    if (token.startsWith('gk_')) {
+                        gk_update(token, value);
+                    }
+                    if (token == 'duration') {
+                        parameters.duration = parseFloat(value);
+                    }
+                    if (token == 'zoom') {
+                        parameters.zoom = parseFloat(value);
+                    }
+                    if (token == 'stride') {
+                        parameters.stride = parseFloat(value);
+                    }
+                    if (token == 'tempo') {
+                        parameters.tempo = parseFloat(value);
+                    }
+                };
+                var slider = gui_folder.add(parameters, token, minimum, maximum);
+                slider.onChange(on_parameter_change);
+                return slider;
+            };
+            // Used to find out what actually happens when a key is pressed.
+            function printKey(e) {
+              e = e || event;
+              //if (document.forms.keyform[e.type + 'Ignore'].checked) return
+              var evt = e.type;
+              while (evt.length < 10) evt += ' ';
+              var data = evt +
+                ' keyCode=' + e.keyCode +
+                ' which=' + e.which +
+                ' charCode=' + e.charCode +
+                ' char=' + String.fromCharCode(e.keyCode || e.charCode) +
+                (e.shiftKey ? ' +shift' : '') +
+                (e.ctrlKey ? ' +ctrl' : '') +
+                (e.altKey ? ' +alt' : '') +
+                (e.metaKey ? ' +meta' : '') + '\n';
+              logMessage(data);
+            }
+            function toggle_controls() {
+                $("#statistics").toggle();
+                gui.toggle();
+                gui.closed = true;
+                gui.closed = false;
+            }
+            $(document).on("keydown", function (e) {
+                //printKey(e);
+                var e_char = String.fromCharCode(e.keyCode || e.charCode);
+                if (e.ctrlKey === true) {
+                    if        (e_char === 'H') {
+                        toggle_controls();
+                    } else if (e_char === 'K') {
+                        parameters.K();
+                    } else if (e_char === '1') {
+                        parameters.T1();
+                    } else if (e_char === '2') {
+                        parameters.T2();
+                    } else if (e_char === '3') {
+                        parameters.T3();
+                    } else if (e_char === '4') {
+                        parameters.T4();
+                    } else if (e_char === '5') {
+                        parameters.T5();
+                    } else if (e_char === '6') {
+                        parameters.T6();
+                    } else if (e_char === '7') {
+                        parameters.T7();
+                    } else if (e_char === '8') {
+                        parameters.T8();
+                    } else if (e_char === '9') {
+                        parameters.T9();
+                    } else if (e_char === 'A') {
+                        parameters.T10();
+                    } else if (e_char === 'B') {
+                        parameters.T11();
+                    } else if (e_char === 'D') {
+                        parameters.T5();
+                     } else if (e_char === 'P') {
+                        parameters.Play();
+                    } else if (e_char === 'S') {
+                        parameters.Stop();
+                    } else if (e_char === 'X') {
+                        parameters.Close();
+                    }
+                } else if (e.altKey === true) {
+                    var factor = 1.05;
+                    if (e.shiftKey === true) {
+                        factor = 1 / 1.05;
+                    }
+                    if        (e_char === 'Z') {
+                        parameters.zoom *= factor;
+                        if (parameters.zoom < 0) {
+                            parameters.zoom = 0;
+                        } else if (parameters.zoom > 128) {
+                            parameters.zoom = 128;
+                        }
+                    } else if (e_char === 'T') {
+                        parameters.tempo *= factor;
+                        if (parameters.tempo < 0) {
+                            parameters.tempo = 0;
+                        } else if (parameters.tempo > .333334) {
+                            parameters.tempo = .333334;
+                        }
+                    } else if (e_char === 'S') {
+                        parameters.stride *= factor;
+                        if (parameters.stride < 1) {
+                            parameters.stride = 1;
+                        } else if (parameters.stride > 100) {
+                            parameters.stride = 100;
+                        }
+                    } else if (e_char === 'D') {
+                        parameters.duration *= factor;
+                        if (parameters.duration < 0) {
+                            parameters.duration = 0;
+                        } else if (parameters.duration > 8) {
+                            parameters.duration = 8;
+                        }
+                    }
+                }
+                return false;
+             });
+             } catch (err) {
+                alert(err);
+                console.log(err.message);
+                console.log(err.stack);
+            }
+        </script>
+    </body>
+</html>

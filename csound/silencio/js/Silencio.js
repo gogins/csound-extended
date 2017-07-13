@@ -146,8 +146,8 @@ tinycolor.js
             console.log('Restored dat.gui parameters from local filesystem: ' + parameters_filesystem_json);
             return JSON.parse(parameters_filesystem_json);
         } else {
-            console.log('Restored dat.gui parameters from default: ' + parameters_default_json);
-            return parameters_default_json;
+            console.log('Restored dat.gui parameters from default: ' + default_parameters_json);
+            return default_parameters_json;
         }
     };
 

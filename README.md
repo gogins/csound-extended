@@ -28,6 +28,8 @@ This repository contains samples of integrating HTML5 capabilities with Csound, 
 
 <a href="https://gogins.github.io/csound/Scrims_wasm.html">https://gogins.github.io/csound/Scrims_wasm.html</a>
 
+<a href="https://gogins.github.io/csound/Unperformed_experiments_wasm.html">https://gogins.github.io/csound/Unperformed_experiments_wasm.html</a>
+
 ## Playable Example Pieces Using Csound for PNaCl
 
 This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux.
