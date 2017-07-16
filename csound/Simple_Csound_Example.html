@@ -4,8 +4,8 @@
     <title>Simple Csound HTML5 Example</title>
 </head>
 <script type="text/javascript">
-    // "require" must be used to instantiate Csound in csound.node, 
-    // but in other environments, where Csound has already been instantiated 
+    // "require" must be used to instantiate Csound in csound.node,
+    // but in other environments, where Csound has already been instantiated
     // by the environment, this causes an exception that must be handled.
     try {
         var csound = require('csound.node');
@@ -35,15 +35,15 @@
     }
     var gk_FM_index_oninput = function(event) {
         var slider_value = parseFloat(event.target.value);
-        csound.setControlChannel(event.target.id, slider_value);    
+        csound.setControlChannel(event.target.id, slider_value);
     }
 </script>
 <body>
     <h1>Simple Csound HTML5 Example</h1>
     <h4>By Michael Gogins</h3>
-    <h4>2016</h4> 
-    <p>The purpose of this example is to provide the simplest possible <i>useful</i> example 
-    of running a Csound piece in a Web page. This example has been tested 
+    <h4>2016</h4>
+    <p>The purpose of this example is to provide the simplest possible <i>useful</i> example
+    of running a Csound piece in a Web page. This example has been tested
     in csound.node, CsoundQt, and Csound for Android. The following features are demonstrated:</p>
     <ul>
         <li>Instantiating Csound in csound.node, with fallback for other environments.
@@ -52,7 +52,7 @@
         <li>Displaying Csound's runtime and diagnostic messages, in real time, in an HTML text area.
         <li>Real-time control of a Csound instrument using an HTML input element (slider).
     </ul>
-    <p>Just examine the code of this page to see how these things are done, it is all quite simple. You can edit the 
+    <p>Just examine the code of this page to see how these things are done, it is all quite simple. You can edit the
     Csound code and run the piece again to hear your changes.</p>
     <label for=gk_FM_index>FM index</label>
     <input type=range min=0 max=4 value=1 id=gk_FM_index step=.001 oninput="gk_FM_index_oninput(event)"/>

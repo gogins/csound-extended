@@ -1,13 +1,13 @@
 {
-  "main": "GameOfLife3D_qt.csd",
-  "name": "GameOfLife3D_qt",
+  "main": "Simple_Csound_Example.html",
+  "name": "Simple_Csound_Example",
   "description": "Visual music for Csound and HTML5",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "GameOfLife3D_qt",
+    "title": "Simple_Csound_Example",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
