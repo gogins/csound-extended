@@ -27,6 +27,7 @@
         }
         var csd = document.getElementById('csd').value;
         csound.compileCsdText(csd);
+        csound.start();
         csound.perform();
     }
     var stop_onclick = function() {
