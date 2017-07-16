@@ -1,80 +1,98 @@
-#ifndef CSOUNDPROXY_H
-#define CSOUNDPROXY_H
+/*
+    Copyright (C) 2008-2016 Andres Cabrera
+    mantaraya36@gmail.com
+
+    This file is part of CsoundQt.
+
+    CsoundQt is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    CsoundQt is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Csound; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA
+*/
+
+#ifndef qcsound_H
+#define qcsound_H
 
 #include <QObject>
-#include <csound.hpp>
-#include <thread>
+#include <QDebug>
+#include <csound_threaded.hpp>
 
-/**
- * Note that Q_INVOKABLE methods that return values via a QWebChannel,
- * do so via a completion callback that must be passed as an additional
- * parameter to the method.
- */
-
-class QCsound : public QObject, public Csound
+class QCsound : public QObject
 {
     Q_OBJECT
-    bool csound_stop;
-    bool csound_finished;
-    std::thread *csound_thread;
-    QObject *message_callback;
 public:
     explicit QCsound(QObject *parent = 0);
-    Q_INVOKABLE int compileCsd(const QString &filename);
-    Q_INVOKABLE int compileCsdText(const QString &text);
-    Q_INVOKABLE int compileOrc(const QString &text);
-    Q_INVOKABLE double evalCode(const QString &text);
-    Q_INVOKABLE double get0dBFS();
-    Q_INVOKABLE int getApiVersion();
-    Q_INVOKABLE double getControlChannel(const QString &name);
-    Q_INVOKABLE int64_t getCurrentTimeSamples();
-    Q_INVOKABLE QString getEnv(const QString &name);
-    Q_INVOKABLE int getKsmps();
-    Q_INVOKABLE int getNchnls();
-    Q_INVOKABLE int getNchnlsInput();
-    Q_INVOKABLE QString getOutputName();
-    Q_INVOKABLE double getScoreOffsetSeconds();
-    Q_INVOKABLE double getScoreTime();
-    Q_INVOKABLE int getSr();
-    Q_INVOKABLE QString getStringChannel(const QString &name);
-    Q_INVOKABLE int getVersion();
-    Q_INVOKABLE bool isPlaying();
-    Q_INVOKABLE int isScorePending();
-    Q_INVOKABLE void message(const QString &text);
-    /**
-     * Starts a Csound performance in a separate thread of execution, which
-     * can be ended by calling stop(). Other API calls must/may then be used
-     * to compile a csd, orc, or sco. Csound messages are emitted via the
-     * updateMessages() signal.
-     */
-    Q_INVOKABLE int perform();
-    Q_INVOKABLE int perform_thread_routine();
-    Q_INVOKABLE int readScore(const QString &text);
-    Q_INVOKABLE void rewindScore();
-    /**
-     * @brief run -- Compiles and performs the CSD file. Csound messages are
-     * emitted via the updateMessages() signal.
-     * @param csd_ Text of CSD file.
-     */
-    void run(const QString &csd_);
-    Q_INVOKABLE int runUtility(const QString &command, int argc, char **argv);
-    Q_INVOKABLE int scoreEvent(char type, const double *pFields, long numFields);
-    Q_INVOKABLE void setControlChannel(const QString &name, double value);
-    Q_INVOKABLE int setGlobalEnv(const QString &name, const QString &value);
-    Q_INVOKABLE void setInput(const QString &name);
-    Q_INVOKABLE void setMessageCallback(QObject *callback);
-    Q_INVOKABLE int setOption(const QString &name);
-    Q_INVOKABLE void setOutput(const QString &name, const QString &type, const QString &format);
-    Q_INVOKABLE void setScoreOffsetSeconds(double value);
-    Q_INVOKABLE void setScorePending(bool value);
-    Q_INVOKABLE void setStringChannel(const QString &name, const QString &value);
-    Q_INVOKABLE void stop();
-    Q_INVOKABLE double tableGet(int table_number, int index);
-    Q_INVOKABLE int tableLength(int table_number);
-    Q_INVOKABLE void tableSet(int table_number, int index, double value);
+    virtual ~QCsound();
+    void setMessageCallback(void (*messageCallback)(CSOUND *csound, int level, const char *format, va_list valist));
+public slots:
+    ///void registerConsole(ConsoleWidget *console);
+    int cleanup();
+    int compileCsd(const QString &filename);
+    int compileCsdText(const QString &text);
+    int compileOrc(const QString &text);
+    double evalCode(const QString &text);
+    double get0dBFS();
+    int getApiVersion();
+    double getControlChannel(const QString &name);
+    CSOUND *getCsound();
+    qint64 getCurrentTimeSamples();
+    QString getEnv(const QString &name);
+    int getKsmps();
+    int getNchnls();
+    int getNchnlsInput();
+    QString getOutputName();
+    double getScoreOffsetSeconds();
+    double getScoreTime();
+    int getSr();
+    QString getStringChannel(const QString &name);
+    int getVersion();
+    bool isPlaying();
+    int isScorePending();
+    void message(const QString &text);
+    int perform();
+    int performKsmps();
+    int readScore(const QString &text);
+    void reset();
+    void rewindScore();
+    int runUtility(const QString &command, int argc, char **argv);
+    int scoreEvent(char type, const double *pFields, long numFields);
+    void setControlChannel(const QString &name, double value);
+    int setGlobalEnv(const QString &name, const QString &value);
+    void setHostData(void *host_data);
+    void setMessageCallback(QObject *callback);
+    void setInput(const QString &name);
+    int setOption(const QString &name);
+    void setOutput(const QString &name, const QString &type, const QString &format);
+    void setScoreOffsetSeconds(double value);
+    void setScorePending(bool value);
+    void setStringChannel(const QString &name, const QString &value);
+    int start();
+    void stop();
+    double tableGet(int table_number, int index);
+    int tableLength(int table_number);
+    void tableSet(int table_number, int index, double value);
 signals:
-    void updateMessages(const QString &line);
-    void updateStatus(const QString &message);
+    void passMessages(QString message);
+private:
+    static void csoundMessageCallback_(CSOUND *csound,
+                                             int attributes,
+                                             const char *format,
+                                             va_list args);
+    void csoundMessageCallback(int attributes,
+                               const char *format,
+                               va_list args);
+    QObject *message_callback;
+    CsoundThreaded csound;
 };
 
-#endif // CSOUNDPROXY_H
+#endif // CsoundHtmlWrapper_H

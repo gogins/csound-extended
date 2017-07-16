@@ -1121,6 +1121,10 @@ endin
             Play: function() {
                 try {
                     gui.revert();
+                 } catch (e) {
+                    console.log(e);
+                }
+                try {
                     csound.setMessageCallback(csoundMessage);
                 } catch (e) {
                     console.log(e);
@@ -1129,7 +1133,6 @@ endin
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
                 csound.compileOrc(document.getElementById('orc').value);
-                //csound.readScore('f 0 360\n');
                 csound.start();
                 csound.perform();
                 start_time_seconds = new Date().getTime() / 1000.0;

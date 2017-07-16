@@ -28,7 +28,7 @@ public:
     void run(const QString &csdtext);
     CSOUND *getCsound()
     {
-        return csound.GetCsound();
+        return csound.getCsound();
     }
     bool isPlaying() const
     {

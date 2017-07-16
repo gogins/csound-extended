@@ -156,8 +156,8 @@ MainWindow::MainWindow(QWidget *parent) :
     finished(true),
     thread(nullptr)
 {
-    csound.SetHostData(this);
-    csound.SetMessageCallback(&messageCallback);
+    csound.setHostData(this);
+    csound.setMessageCallback(&messageCallback);
     ui->setupUi(this);
     ui->htmlTab->page()->setWebChannel(&channel);
     channel.registerObject("csound", &csound);
@@ -169,7 +169,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    csound.Stop();
+    csound.stop();
     delete ui;
 }
 
@@ -270,7 +270,8 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Initializing Csound...");
         window.channel = new QWebChannel(qt.webChannelTransport, function(channel) {
         window.csound = channel.objects.csound;
-        csound.message("Initialized csound.\n");
+            console.log("Initialized Csound.")
+            csound.message("Initialized csound.\n");
         });
     } catch (e) {
         alert("initialize_csound error: " + e.message);
@@ -368,20 +369,20 @@ void MainWindow::run(const QString &csd_)
     qDebug() << "CHSound: " << __FUNCTION__;
     int result = 0;
     emit updateStatus("Csound is compiling...");
-    result = csound.CompileCsdText(csd_.toStdString().c_str());
-    result = csound.Start();
+    result = csound.compileCsdText(csd_.toStdString().c_str());
+    result = csound.start();
     emit updateStatus("Csound is running...");
     for (stop = false, finished = false;
          ((stop == false) && (finished == false)); )
     {
-        finished = csound.PerformKsmps();
+        finished = csound.performKsmps();
     }
     emit updateStatus("Csound has stopped.");
-    result = csound.Cleanup();
+    result = csound.cleanup();
     if (result) {
         emit updateStatus("Failed to clean up Csound performance.");
     }
-    csound.Reset();
+    csound.reset();
 }
 
 void MainWindow::runFile()

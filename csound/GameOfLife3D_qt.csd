@@ -110,13 +110,10 @@ Use right mouse button for devtools to debug or examine.
 		<p>A colorful version of <a href="http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" rel="external">Conway's Game of Life</a> in 3D, using <a href="https://github.com/mrdoob/three.js" rel="external">three.js</a>.</p>
 		<p><b>Click and drag</b> to rotate the view.<br>Use the <b>space bar</b> to stop and resume the cycles.<br><b>Mouse wheel</b> to get closer.</p>
 		<p><a href="http://www.clicktorelease.com/code/conway3d/#" class="button" id="toggleScreensaver">Go to screen saver mode</a></p>
-        <script type="text/javascript" src="silencio/js/widgets.js"></script>
 	</div>
 	<div id="container"></div>
 	<script type="text/javascript" src="silencio/js/three.js"></script>
 	<script type="text/javascript" src="silencio/js/Tween.js"></script>
-	<!-- <script type="text/javascript" src="silencio/js/RequestAnimationFrame.js"></script> -->
-	<!-- <script type="text/javascript" src="silencio/js/Detector.js"></script> -->
 	<script type="text/javascript" src="silencio/js/sprintf.js"></script>
 	<script type="text/javascript">
 	var isUserInteracting = false, pause = false,
@@ -124,14 +121,14 @@ Use right mouse button for devtools to debug or examine.
 	lon = 45, onMouseDownLon = 0,
 	lat = 45, onMouseDownLat = 0,
 	phi = 0, theta = 0;
-	var d = 140;http://127.0.0.1:34711
+	var d = 140;
     var timestepSeconds = 6.0;
 	var container;
 	var camera, scene, renderer,
 	geometry, material, mesh, cubes = [];
 	var light, light2;
 	window.addEventListener( 'load', init, false );
-	///TWEEN.start();
+	TWEEN.start();
 	var fov = 75;
 	var side = 6;
 	var size = 10;

@@ -1,21 +1,13 @@
 {
-<<<<<<< HEAD
-  "main": "Scrims_qt.html",
-  "name": "Scrims_qt",
-=======
-  "main": "csound_node_run.html",
-  "name": "csound_node_run",
->>>>>>> 92c9a4ae71f92ad9e8105fe5bc50d7c80be6a880
+  "main": "GameOfLife3D_qt.csd",
+  "name": "GameOfLife3D_qt",
+  "description": "Visual music for Csound and HTML5",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-<<<<<<< HEAD
-    "title": "Scrims_qt",
-=======
-    "title": "csound_node_run",
->>>>>>> 92c9a4ae71f92ad9e8105fe5bc50d7c80be6a880
+    "title": "GameOfLife3D_qt",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
@@ -24,6 +16,7 @@
     "fullscreen": true
   },
   "webkit": {
-    "plugin": true
+    "plugin": true,
+    "page-cache": false
   }
 }
