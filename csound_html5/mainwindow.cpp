@@ -170,7 +170,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     csound.stop();
-    delete ui;
+    //delete ui;
 }
 
 void MainWindow::on_updateMessages(const QString &line)
@@ -305,6 +305,7 @@ document.addEventListener("DOMContentLoaded", function() {
         channel.registerObject("csound", &csound);
         csound.message("Injected WebChannel 'csound' proxy into HTML page.\n");
         ui->htmlTab->setUrl(QUrl::fromLocalFile(htmlfile.fileName()));
+        ui->htmlTab->layout()->invalidate();
         csound.message("Loaded HTML page.\n");
     } else {
         ui->htmlTab->load(QUrl("about:blank"));
