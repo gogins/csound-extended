@@ -128,7 +128,8 @@ Use right mouse button for devtools to debug or examine.
 	geometry, material, mesh, cubes = [];
 	var light, light2;
 	window.addEventListener( 'load', init, false );
-	TWEEN.start();
+
+	TWEEN.update();
 	var fov = 75;
 	var side = 6;
 	var size = 10;
@@ -195,20 +196,20 @@ Use right mouse button for devtools to debug or examine.
 		}
 		var mesh = new THREE.Mesh( new THREE.SphereGeometry( 1000, 40, 40 ), new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
 		mesh.flipSided = true;
-		//mesh.receiveShadow = true;
+		mesh.receiveShadow = true;
 		scene.add( mesh );
-		light = new THREE.SpotLight( 0xff170f, 1 );//Math.random() * 0xffffff, 2 );
+		light = new THREE.SpotLight( 0xfff000 + Math.random() * 0x000fff, 2 );
 		light.position.set( 0, 500, 2000 );
 		light.castShadow = true;
 		scene.add( light );
-		light2 = new THREE.SpotLight( 0xffcf0f, 1 );//Math.random() * 0xffffff, 2 );
+		light2 = new THREE.SpotLight( 0xfff000 + Math.random() * 0x000fff, 2 );
 		light2.position.set( 0, -400, -1800 );
 		light2.castShadow = true;
 		scene.add( light2 );
         renderer = new THREE.WebGLRenderer( {antialias: true });
 		renderer.sortObjects = true;
         renderer.setSize( window.innerWidth, window.innerHeight );
-		//renderer.setClearColor( 0, 1 );
+		renderer.setClearColor( 0, 1 );
 		renderer.shadowCameraFov = camera.fov;
 		renderer.shadowMapBias = 0.0039;
 		renderer.shadowMapDarkness = 0.5;
@@ -347,10 +348,11 @@ Use right mouse button for devtools to debug or examine.
 		}
 		var scorechunk = scorelines.join("\n") + "\n";
         if (typeof csound !== 'undefined') {
+            csound.message("New iteration...\n");
             csound.message(scorechunk);
             csound.readScore(scorechunk);
         }
-		cells = nextGen;
+		cells = nextGen.slice();
 		for( var p = 0, m = cells.length; p < m; p++ ) {
 			tweens[ p ].to( { conway: cells[ p ].status?1:0 }, 1000 ).start();
 		}
@@ -358,7 +360,7 @@ Use right mouse button for devtools to debug or examine.
 	}
 
 	function render() {
-		if( !pause ) {
+		//if( !pause ) {
 			for( var p = 0, m = cells.length; p < m; p++ ) {
 				cubes[ p ].material.opacity = cubes[ p ].conway;
 				cubes[ p ].rotation.y = Math.PI * cubes[ p ].conway;
@@ -366,7 +368,7 @@ Use right mouse button for devtools to debug or examine.
 				if( s < .001 ) s = .001;
 				cubes[ p ].scale.set( s, s, s );
 			}
-		}
+		//}
 		if( !isUserInteracting ) lon += .1;
 		lat = Math.max( - 85, Math.min( 85, lat ) );
 		phi = ( 90 - lat ) * Math.PI / 180;

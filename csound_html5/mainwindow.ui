@@ -313,10 +313,10 @@ color: rgb(0, 255, 0);</string>
   </action>
   <action name="actionRun">
    <property name="text">
-    <string>Run</string>
+    <string>Play</string>
    </property>
    <property name="toolTip">
-    <string>Run this CSD file in Csound.</string>
+    <string>Play this CSD file in Csound.</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
