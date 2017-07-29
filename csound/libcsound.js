@@ -1640,16 +1640,21 @@ function integrateWasmJS(Module) {
   }
 
   function getBinary() {
-    var binary;
-    if (Module['wasmBinary']) {
-      binary = Module['wasmBinary'];
-      binary = new Uint8Array(binary);
-    } else if (Module['readBinary']) {
-      binary = Module['readBinary'](wasmBinaryFile);
-    } else {
-      throw "on the web, we need the wasm binary to be preloaded and set on Module['wasmBinary']. emcc.py will do that for you when generating HTML (but not JS)";
+    try {
+      var binary;
+      if (Module['wasmBinary']) {
+        binary = Module['wasmBinary'];
+        binary = new Uint8Array(binary);
+      } else if (Module['readBinary']) {
+        binary = Module['readBinary'](wasmBinaryFile);
+      } else {
+        throw "on the web, we need the wasm binary to be preloaded and set on Module['wasmBinary']. emcc.py will do that for you when generating HTML (but not JS)";
+      }
+      return binary;
     }
-    return binary;
+    catch (err) {
+      abort(err);
+    }
   }
 
   function getBinaryPromise() {
@@ -1737,7 +1742,7 @@ function integrateWasmJS(Module) {
       receiveInstance(output['instance']);
     }).catch(function(reason) {
       Module['printErr']('failed to asynchronously prepare wasm: ' + reason);
-      Module['quit'](1, reason);
+      abort(reason);
     });
     return {}; // no exports yet; we'll fill them in later
   }
@@ -1902,7 +1907,7 @@ function integrateWasmJS(Module) {
       } else if (curr === 'interpret-asm2wasm' || curr === 'interpret-s-expr' || curr === 'interpret-binary') {
         if (exports = doWasmPolyfill(global, env, providedBuffer, curr)) break;
       } else {
-        throw 'bad method: ' + curr;
+        abort('bad method: ' + curr);
       }
     }
 
@@ -1926,7 +1931,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = Runtime.GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 566720;
+STATICTOP = STATIC_BASE + 567264;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
 
 
@@ -1935,7 +1940,7 @@ memoryInitializer = Module["wasmJSMethod"].indexOf("asmjs") >= 0 || Module["wasm
 
 
 
-var STATIC_BUMP = 566720;
+var STATIC_BUMP = 567264;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
@@ -5541,6 +5546,13 @@ function copyTempDouble(ptr) {
   }
   }
 
+  
+  function _emscripten_memcpy_big(dest, src, num) {
+      HEAPU8.set(HEAPU8.subarray(src, src+num), dest);
+      return dest;
+    } 
+  Module["_memcpy"] = _memcpy;
+
   function _execl(/* ... */) {
       // int execl(const char *path, const char *arg0, ... /*, (char *)0 */);
       // http://pubs.opengroup.org/onlinepubs/009695399/functions/exec.html
@@ -5552,9 +5564,11 @@ function copyTempDouble(ptr) {
    
   Module["_pthread_mutex_lock"] = _pthread_mutex_lock;
 
-  function ___block_all_sigs() {
-  Module['printErr']('missing function: __block_all_sigs'); abort(-1);
-  }
+   
+  Module["_sbrk"] = _sbrk;
+
+   
+  Module["_memmove"] = _memmove;
 
   function _pthread_setcancelstate() { return 0; }
 
@@ -6449,7 +6463,7 @@ function copyTempDouble(ptr) {
       var w = SDL.estimateTextWidth(fontData, text);
       var h = fontData.size;
       var color = SDL.loadColorToCSSRGB(color); // XXX alpha breaks fonts?
-      var fontString = h + 'px ' + fontData.name + ', serif';
+      var fontString = SDL.makeFontString(h, fontData.name);
       var surf = SDL.makeSurface(w, h, 0, false, 'text:' + text); // bogus numbers..
       var surfData = SDL.surfaces[surf];
       surfData.ctx.save();
@@ -7552,9 +7566,17 @@ function copyTempDouble(ptr) {
           }
           default: throw 'Unhandled SDL event: ' + event.type;
         }
+      },makeFontString:function (height, fontName) {
+        if (fontName.charAt(0) != "'" && fontName.charAt(0) != '"') {
+          // https://developer.mozilla.org/ru/docs/Web/CSS/font-family
+          // Font family names containing whitespace should be quoted.
+          // BTW, quote all font names is easier than searching spaces
+          fontName = '"' + fontName + '"';
+        }
+        return height + 'px ' + fontName + ', serif';
       },estimateTextWidth:function (fontData, text) {
         var h = fontData.size;
-        var fontString = h + 'px ' + fontData.name;
+        var fontString = SDL.makeFontString(h, fontData.name);
         var tempCtx = SDL.ttfContext;
         tempCtx.save();
         tempCtx.font = fontString;
@@ -8394,7 +8416,12 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function _exit(status) {
+  
+  function __exit(status) {
+      // void _exit(int status);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/exit.html
+      Module['exit'](status);
+    }function _exit(status) {
       __exit(status);
     }
 
@@ -8479,6 +8506,20 @@ function copyTempDouble(ptr) {
   }
 
   function _pthread_detach() {}
+
+  function ___syscall301(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // unlinkat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), flags = SYSCALLS.get();
+      assert(flags === 0);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      FS.unlink(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
 
   function ___syscall15(which, varargs) {SYSCALLS.varargs = varargs;
   try {
@@ -8692,16 +8733,217 @@ function copyTempDouble(ptr) {
     }
 
   
-  function ___syscall51(which, varargs) {SYSCALLS.varargs = varargs;
+  var PIPEFS={BUCKET_BUFFER_SIZE:8192,mount:function (mount) {
+        // Do not pollute the real root directory or its child nodes with pipes
+        // Looks like it is OK to create another pseudo-root node not linked to the FS.root hierarchy this way
+        return FS.createNode(null, '/', 16384 | 511 /* 0777 */, 0);
+      },createPipe:function () {
+        var pipe = {
+          buckets: []
+        };
+  
+        pipe.buckets.push({
+          buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+          offset: 0,
+          roffset: 0
+        });
+  
+        var rName = PIPEFS.nextname();
+        var wName = PIPEFS.nextname();
+        var rNode = FS.createNode(PIPEFS.root, rName, 4096, 0);
+        var wNode = FS.createNode(PIPEFS.root, wName, 4096, 0);
+  
+        rNode.pipe = pipe;
+        wNode.pipe = pipe;
+  
+        var readableStream = FS.createStream({
+          path: rName,
+          node: rNode,
+          flags: FS.modeStringToFlags('r'),
+          seekable: false,
+          stream_ops: PIPEFS.stream_ops
+        });
+        rNode.stream = readableStream;
+  
+        var writableStream = FS.createStream({
+          path: wName,
+          node: wNode,
+          flags: FS.modeStringToFlags('w'),
+          seekable: false,
+          stream_ops: PIPEFS.stream_ops
+        });
+        wNode.stream = writableStream;
+  
+        return {
+          readable_fd: readableStream.fd,
+          writable_fd: writableStream.fd
+        };
+      },stream_ops:{poll:function (stream) {
+          var pipe = stream.node.pipe;
+  
+          if ((stream.flags & 2097155) === 1) {
+            return (256 | 4);
+          } else {
+            if (pipe.buckets.length > 0) {
+              for (var i = 0; i < pipe.buckets.length; i++) {
+                var bucket = pipe.buckets[i];
+                if (bucket.offset - bucket.roffset > 0) {
+                  return (64 | 1);
+                }
+              }
+            }
+          }
+  
+          return 0;
+        },ioctl:function (stream, request, varargs) {
+          return ERRNO_CODES.EINVAL;
+        },read:function (stream, buffer, offset, length, position /* ignored */) {
+          var pipe = stream.node.pipe;
+          var currentLength = 0;
+  
+          for (var i = 0; i < pipe.buckets.length; i++) {
+            var bucket = pipe.buckets[i];
+            currentLength += bucket.offset - bucket.roffset;
+          }
+  
+          assert(buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer));
+          var data = buffer.subarray(offset, offset + length);
+  
+          if (length <= 0) {
+            return 0;
+          }
+          if (currentLength == 0) {
+            // Behave as if the read end is always non-blocking
+            throw new FS.ErrnoError(ERRNO_CODES.EAGAIN);
+          }
+          var toRead = Math.min(currentLength, length);
+  
+          var totalRead = toRead;
+          var toRemove = 0;
+  
+          for (var i = 0; i < pipe.buckets.length; i++) {
+            var currBucket = pipe.buckets[i];
+            var bucketSize = currBucket.offset - currBucket.roffset;
+  
+            if (toRead <= bucketSize) {
+              var tmpSlice = currBucket.buffer.subarray(currBucket.roffset, currBucket.offset);
+              if (toRead < bucketSize) {
+                tmpSlice = tmpSlice.subarray(0, toRead);
+                currBucket.roffset += toRead;
+              } else {
+                toRemove++;
+              }
+              data.set(tmpSlice);
+              break;
+            } else {
+              var tmpSlice = currBucket.buffer.subarray(currBucket.roffset, currBucket.offset);
+              data.set(tmpSlice);
+              data = data.subarray(tmpSlice.byteLength);
+              toRead -= tmpSlice.byteLength;
+              toRemove++;
+            }
+          }
+  
+          if (toRemove && toRemove == pipe.buckets.length) {
+            // Do not generate excessive garbage in use cases such as
+            // write several bytes, read everything, write several bytes, read everything...
+            toRemove--;
+            pipe.buckets[toRemove].offset = 0;
+            pipe.buckets[toRemove].roffset = 0;
+          }
+  
+          pipe.buckets.splice(0, toRemove);
+  
+          return totalRead;
+        },write:function (stream, buffer, offset, length, position /* ignored */) {
+          var pipe = stream.node.pipe;
+  
+          assert(buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer));
+          var data = buffer.subarray(offset, offset + length);
+  
+          var dataLen = data.byteLength;
+          if (dataLen <= 0) {
+            return 0;
+          }
+  
+          var currBucket = null;
+  
+          if (pipe.buckets.length == 0) {
+            currBucket = {
+              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+              offset: 0,
+              roffset: 0
+            };
+            pipe.buckets.push(currBucket);
+          } else {
+            currBucket = pipe.buckets[pipe.buckets.length - 1];
+          }
+  
+          assert(currBucket.offset <= PIPEFS.BUCKET_BUFFER_SIZE);
+  
+          var freeBytesInCurrBuffer = PIPEFS.BUCKET_BUFFER_SIZE - currBucket.offset;
+          if (freeBytesInCurrBuffer >= dataLen) {
+            currBucket.buffer.set(data, currBucket.offset);
+            currBucket.offset += dataLen;
+            return dataLen;
+          } else if (freeBytesInCurrBuffer > 0) {
+            currBucket.buffer.set(data.subarray(0, freeBytesInCurrBuffer), currBucket.offset);
+            currBucket.offset += freeBytesInCurrBuffer;
+            data = data.subarray(freeBytesInCurrBuffer, data.byteLength);
+          }
+  
+          var numBuckets = (data.byteLength / PIPEFS.BUCKET_BUFFER_SIZE) | 0;
+          var remElements = data.byteLength % PIPEFS.BUCKET_BUFFER_SIZE;
+  
+          for (var i = 0; i < numBuckets; i++) {
+            var newBucket = {
+              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+              offset: PIPEFS.BUCKET_BUFFER_SIZE,
+              roffset: 0
+            };
+            pipe.buckets.push(newBucket);
+            newBucket.buffer.set(data.subarray(0, PIPEFS.BUCKET_BUFFER_SIZE));
+            data = data.subarray(PIPEFS.BUCKET_BUFFER_SIZE, data.byteLength);
+          }
+  
+          if (remElements > 0) {
+            var newBucket = {
+              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+              offset: data.byteLength,
+              roffset: 0
+            };
+            pipe.buckets.push(newBucket);
+            newBucket.buffer.set(data);
+          }
+  
+          return dataLen;
+        },close:function (stream) {
+          var pipe = stream.node.pipe;
+          pipe.buckets = null;
+        }},nextname:function () {
+        if (!PIPEFS.nextname.current) {
+          PIPEFS.nextname.current = 0;
+        }
+        return 'pipe[' + (PIPEFS.nextname.current++) + ']';
+      }};function ___syscall42(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // acct
-      return -ERRNO_CODES.ENOSYS; // unsupported features
+   // pipe
+      var fdPtr = SYSCALLS.get();
+  
+      if (fdPtr == 0) {
+        throw new FS.ErrnoError(ERRNO_CODES.EFAULT);
+      }
+  
+      var res = PIPEFS.createPipe();
+  
+      HEAP32[((fdPtr)>>2)]=res.readable_fd;
+      HEAP32[(((fdPtr)+(4))>>2)]=res.writable_fd;
+  
+      return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
-  }function ___syscall42() {
-  return ___syscall51.apply(null, arguments)
   }
 
   function _llvm_exp2_f32(x) {
@@ -8745,21 +8987,6 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall140(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // llseek
-      var stream = SYSCALLS.getStreamFromFD(), offset_high = SYSCALLS.get(), offset_low = SYSCALLS.get(), result = SYSCALLS.get(), whence = SYSCALLS.get();
-      // NOTE: offset_high is unused - Emscripten's off_t is 32-bit
-      var offset = offset_low;
-      FS.llseek(stream, offset, whence);
-      HEAP32[((result)>>2)]=stream.position;
-      if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
 
   function ___syscall268(which, varargs) {SYSCALLS.varargs = varargs;
   try {
@@ -9345,6 +9572,9 @@ function copyTempDouble(ptr) {
   }
   }
 
+   
+  Module["_memset"] = _memset;
+
   function _llvm_exp2_f64() {
   return _llvm_exp2_f32.apply(null, arguments)
   }
@@ -9367,6 +9597,15 @@ function copyTempDouble(ptr) {
       return _strftime(s, maxsize, format, tm); // no locale support yet
     }
 
+  function ___syscall51(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // acct
+      return -ERRNO_CODES.ENOSYS; // unsupported features
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
 
   function _gettimeofday(ptr) {
       var now = Date.now();
@@ -9387,14 +9626,11 @@ function copyTempDouble(ptr) {
   Module['printErr']('missing function: pthread_sigmask'); abort(-1);
   }
 
-  function __Exit(status) {
-      __exit(status);
-    }
-
   var _llvm_pow_f64=Math_pow;
 
-   
-  Module["_sbrk"] = _sbrk;
+  function ___block_all_sigs() {
+  Module['printErr']('missing function: __block_all_sigs'); abort(-1);
+  }
 
   function _pthread_cond_signal() { return 0; }
 
@@ -10247,11 +10483,16 @@ function copyTempDouble(ptr) {
   Module['printErr']('missing function: llvm_fma_f64'); abort(-1);
   }
 
-  function ___syscall269(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall140(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // fstatfs64
-      var stream = SYSCALLS.getStreamFromFD(), size = SYSCALLS.get(), buf = SYSCALLS.get();
-      return ___syscall([268, 0, size, buf], 0);
+   // llseek
+      var stream = SYSCALLS.getStreamFromFD(), offset_high = SYSCALLS.get(), offset_low = SYSCALLS.get(), result = SYSCALLS.get(), whence = SYSCALLS.get();
+      // NOTE: offset_high is unused - Emscripten's off_t is 32-bit
+      var offset = offset_low;
+      FS.llseek(stream, offset, whence);
+      HEAP32[((result)>>2)]=stream.position;
+      if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
+      return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
@@ -11100,14 +11341,11 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall301(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall269(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // unlinkat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), flags = SYSCALLS.get();
-      assert(flags === 0);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      FS.unlink(path);
-      return 0;
+   // fstatfs64
+      var stream = SYSCALLS.getStreamFromFD(), size = SYSCALLS.get(), buf = SYSCALLS.get();
+      return ___syscall([268, 0, size, buf], 0);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
@@ -11238,6 +11476,7 @@ if (ENVIRONMENT_IS_NODE) {
     _emscripten_get_now = Date.now;
   };
 ___buildEnvironment(ENV);;
+__ATINIT__.push(function() { PIPEFS.root = FS.mount(PIPEFS, {}, null); });;
 __ATINIT__.push(function() { SOCKFS.root = FS.mount(SOCKFS, {}, null); });;
 DYNAMICTOP_PTR = allocate(1, "i32", ALLOC_STATIC);
 
@@ -11791,7 +12030,7 @@ function jsCall_viiii(index,a1,a2,a3,a4) {
 
 Module.asmGlobalArg = { "Math": Math, "Int8Array": Int8Array, "Int16Array": Int16Array, "Int32Array": Int32Array, "Uint8Array": Uint8Array, "Uint16Array": Uint16Array, "Uint32Array": Uint32Array, "Float32Array": Float32Array, "Float64Array": Float64Array, "NaN": NaN, "Infinity": Infinity };
 
-Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "invoke_iiiiiiii": invoke_iiiiiiii, "jsCall_iiiiiiii": jsCall_iiiiiiii, "invoke_iiiiiid": invoke_iiiiiid, "jsCall_iiiiiid": jsCall_iiiiiid, "invoke_vif": invoke_vif, "jsCall_vif": jsCall_vif, "invoke_viiiii": invoke_viiiii, "jsCall_viiiii": jsCall_viiiii, "invoke_vi": invoke_vi, "jsCall_vi": jsCall_vi, "invoke_vii": invoke_vii, "jsCall_vii": jsCall_vii, "invoke_iiiiiii": invoke_iiiiiii, "jsCall_iiiiiii": jsCall_iiiiiii, "invoke_ii": invoke_ii, "jsCall_ii": jsCall_ii, "invoke_viijii": invoke_viijii, "jsCall_viijii": jsCall_viijii, "invoke_ffi": invoke_ffi, "jsCall_ffi": jsCall_ffi, "invoke_viiif": invoke_viiif, "jsCall_viiif": jsCall_viiif, "invoke_if": invoke_if, "jsCall_if": jsCall_if, "invoke_iiiiiiiiii": invoke_iiiiiiiiii, "jsCall_iiiiiiiiii": jsCall_iiiiiiiiii, "invoke_iiii": invoke_iiii, "jsCall_iiii": jsCall_iiii, "invoke_iiij": invoke_iiij, "jsCall_iiij": jsCall_iiij, "invoke_fif": invoke_fif, "jsCall_fif": jsCall_fif, "invoke_viiiffff": invoke_viiiffff, "jsCall_viiiffff": jsCall_viiiffff, "invoke_viiiiif": invoke_viiiiif, "jsCall_viiiiif": jsCall_viiiiif, "invoke_fii": invoke_fii, "jsCall_fii": jsCall_fii, "invoke_iiid": invoke_iiid, "jsCall_iiid": jsCall_iiid, "invoke_fiii": invoke_fiii, "jsCall_fiii": jsCall_fiii, "invoke_di": invoke_di, "jsCall_di": jsCall_di, "invoke_iiiiiiiiiii": invoke_iiiiiiiiiii, "jsCall_iiiiiiiiiii": jsCall_iiiiiiiiiii, "invoke_v": invoke_v, "jsCall_v": jsCall_v, "invoke_iif": invoke_iif, "jsCall_iif": jsCall_iif, "invoke_ji": invoke_ji, "jsCall_ji": jsCall_ji, "invoke_fi": invoke_fi, "jsCall_fi": jsCall_fi, "invoke_iii": invoke_iii, "jsCall_iii": jsCall_iii, "invoke_iiiiii": invoke_iiiiii, "jsCall_iiiiii": jsCall_iiiiii, "invoke_viiiiii": invoke_viiiiii, "jsCall_viiiiii": jsCall_viiiiii, "invoke_dii": invoke_dii, "jsCall_dii": jsCall_dii, "invoke_viiiiiii": invoke_viiiiiii, "jsCall_viiiiiii": jsCall_viiiiiii, "invoke_i": invoke_i, "jsCall_i": jsCall_i, "invoke_iiiii": invoke_iiiii, "jsCall_iiiii": jsCall_iiiii, "invoke_viiid": invoke_viiid, "jsCall_viiid": jsCall_viiid, "invoke_iiiiij": invoke_iiiiij, "jsCall_iiiiij": jsCall_iiiiij, "invoke_viii": invoke_viii, "jsCall_viii": jsCall_viii, "invoke_iiiiiiiiiifii": invoke_iiiiiiiiiifii, "jsCall_iiiiiiiiiifii": jsCall_iiiiiiiiiifii, "invoke_iiiiiiiii": invoke_iiiiiiiii, "jsCall_iiiiiiiii": jsCall_iiiiiiiii, "invoke_iiiiid": invoke_iiiiid, "jsCall_iiiiid": jsCall_iiiiid, "invoke_viiii": invoke_viiii, "jsCall_viiii": jsCall_viiii, "___syscall221": ___syscall221, "___syscall220": ___syscall220, "__inet_ntop6_raw": __inet_ntop6_raw, "___syscall66": ___syscall66, "___syscall64": ___syscall64, "___syscall63": ___syscall63, "___syscall60": ___syscall60, "___muldc3": ___muldc3, "___syscall212": ___syscall212, "_SDL_RWFromFile": _SDL_RWFromFile, "_atexit": _atexit, "_putenv": _putenv, "___assert_fail": ___assert_fail, "__ZSt18uncaught_exceptionv": __ZSt18uncaught_exceptionv, "_longjmp": _longjmp, "__write_sockaddr": __write_sockaddr, "_llvm_exp2_f64": _llvm_exp2_f64, "__addDays": __addDays, "_TTF_FontHeight": _TTF_FontHeight, "_SDL_GetError": _SDL_GetError, "_llvm_pow_f64": _llvm_pow_f64, "_setgrent": _setgrent, "___syscall331": ___syscall331, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_dag_end_task": _dag_end_task, "___syscall330": ___syscall330, "_sigfillset": _sigfillset, "___cxa_begin_catch": ___cxa_begin_catch, "_TTF_RenderText_Solid": _TTF_RenderText_Solid, "_getnameinfo": _getnameinfo, "___syscall152": ___syscall152, "_execl": _execl, "___syscall150": ___syscall150, "_clock": _clock, "_Mix_PlayMusic": _Mix_PlayMusic, "___syscall163": ___syscall163, "_pthread_setcancelstate": _pthread_setcancelstate, "___syscall75": ___syscall75, "___restore_sigs": ___restore_sigs, "___syscall77": ___syscall77, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_IMG_Load": _IMG_Load, "_Mix_FreeChunk": _Mix_FreeChunk, "__isLeapYear": __isLeapYear, "_globallock": _globallock, "_llvm_sqrt_f32": _llvm_sqrt_f32, "___cxa_atexit": ___cxa_atexit, "_gmtime_r": _gmtime_r, "___syscall153": ___syscall153, "___cxa_rethrow": ___cxa_rethrow, "_pthread_cleanup_push": _pthread_cleanup_push, "___syscall306": ___syscall306, "___syscall307": ___syscall307, "_Mix_HaltMusic": _Mix_HaltMusic, "_inet_addr": _inet_addr, "___syscall302": ___syscall302, "___syscall303": ___syscall303, "___syscall300": ___syscall300, "___syscall301": ___syscall301, "___syscall140": ___syscall140, "___syscall142": ___syscall142, "_posix_spawn_file_actions_adddup2": _posix_spawn_file_actions_adddup2, "___syscall144": ___syscall144, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall147": ___syscall147, "___block_all_sigs": ___block_all_sigs, "___syscall85": ___syscall85, "_csp_barrier_alloc": _csp_barrier_alloc, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "___syscall83": ___syscall83, "_pthread_cond_timedwait": _pthread_cond_timedwait, "___syscall132": ___syscall132, "___syscall125": ___syscall125, "___syscall122": ___syscall122, "___syscall121": ___syscall121, "___syscall118": ___syscall118, "___syscall268": ___syscall268, "_SDL_GetTicks": _SDL_GetTicks, "__arraySum": __arraySum, "_llvm_stackrestore": _llvm_stackrestore, "___cxa_free_exception": ___cxa_free_exception, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___syscall148": ___syscall148, "___clone": ___clone, "_SDL_LockSurface": _SDL_LockSurface, "_wait": _wait, "___setErrNo": ___setErrNo, "___syscall333": ___syscall333, "_llvm_pow_f32": _llvm_pow_f32, "_SDL_OpenAudio": _SDL_OpenAudio, "___syscall337": ___syscall337, "___syscall304": ___syscall304, "___syscall334": ___syscall334, "___resumeException": ___resumeException, "__read_sockaddr": __read_sockaddr, "_mktime": _mktime, "___syscall97": ___syscall97, "___syscall96": ___syscall96, "___syscall94": ___syscall94, "_nanosleep": _nanosleep, "___syscall91": ___syscall91, "_gmtime": _gmtime, "_setgroups": _setgroups, "_kill": _kill, "___syscall114": ___syscall114, "___syscall305": ___syscall305, "_pthread_once": _pthread_once, "___syscall181": ___syscall181, "_res_query": _res_query, "___syscall15": ___syscall15, "___syscall14": ___syscall14, "_pthread_detach": _pthread_detach, "_emscripten_get_now": _emscripten_get_now, "___syscall10": ___syscall10, "___syscall9": ___syscall9, "_pthread_sigmask": _pthread_sigmask, "_TTF_SizeText": _TTF_SizeText, "___syscall3": ___syscall3, "_asctime": _asctime, "___syscall1": ___syscall1, "_clock_gettime": _clock_gettime, "_llvm_exp2_f32": _llvm_exp2_f32, "___syscall6": ___syscall6, "___syscall5": ___syscall5, "___clock_gettime": ___clock_gettime, "_time": _time, "_gettimeofday": _gettimeofday, "___syscall308": ___syscall308, "___syscall209": ___syscall209, "_SDL_UpperBlitScaled": _SDL_UpperBlitScaled, "___syscall205": ___syscall205, "___syscall204": ___syscall204, "___syscall203": ___syscall203, "___syscall202": ___syscall202, "___syscall201": ___syscall201, "___syscall200": ___syscall200, "_pthread_cleanup_pop": _pthread_cleanup_pop, "__inet_pton4_raw": __inet_pton4_raw, "___syscall269": ___syscall269, "_pthread_join": _pthread_join, "___syscall102": ___syscall102, "_setitimer": _setitimer, "___syscall54": ___syscall54, "_sched_yield": _sched_yield, "_getgrent": _getgrent, "___syscall29": ___syscall29, "_csoundModuleInit_ftsamplebank": _csoundModuleInit_ftsamplebank, "___syscall20": ___syscall20, "__Exit": __Exit, "___cxa_allocate_exception": ___cxa_allocate_exception, "___syscall183": ___syscall183, "___buildEnvironment": ___buildEnvironment, "___syscall295": ___syscall295, "___syscall296": ___syscall296, "___syscall192": ___syscall192, "___syscall298": ___syscall298, "_llvm_sqrt_f64": _llvm_sqrt_f64, "___cxa_increment_exception_refcount": ___cxa_increment_exception_refcount, "_localtime_r": _localtime_r, "_tzset": _tzset, "___syscall12": ___syscall12, "___syscall218": ___syscall218, "___syscall219": ___syscall219, "___syscall191": ___syscall191, "___syscall197": ___syscall197, "___syscall196": ___syscall196, "___syscall195": ___syscall195, "___syscall194": ___syscall194, "___syscall211": ___syscall211, "___syscall199": ___syscall199, "___syscall198": ___syscall198, "___syscall214": ___syscall214, "___cxa_current_primary_exception": ___cxa_current_primary_exception, "_Mix_PlayChannel": _Mix_PlayChannel, "_strftime": _strftime, "_pthread_cond_signal": _pthread_cond_signal, "___cxa_end_catch": ___cxa_end_catch, "___syscall272": ___syscall272, "_getenv": _getenv, "___syscall36": ___syscall36, "___map_file": ___map_file, "___syscall33": ___syscall33, "_pthread_key_create": _pthread_key_create, "_pthread_setspecific": _pthread_setspecific, "__inet_ntop4_raw": __inet_ntop4_raw, "___syscall39": ___syscall39, "___syscall38": ___syscall38, "_sysconf": _sysconf, "___syscall340": ___syscall340, "___syscall180": ___syscall180, "_abort": _abort, "___syscall345": ___syscall345, "___syscall324": ___syscall324, "___syscall151": ___syscall151, "_localtime": _localtime, "___mulsc3": ___mulsc3, "___cxa_pure_virtual": ___cxa_pure_virtual, "_waitpid": _waitpid, "_pthread_getspecific": _pthread_getspecific, "_pthread_cond_wait": _pthread_cond_wait, "___lock": ___lock, "___syscall320": ___syscall320, "___syscall168": ___syscall168, "_dag_build": _dag_build, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "_SDL_CloseAudio": _SDL_CloseAudio, "_fork": _fork, "___gxx_personality_v0": ___gxx_personality_v0, "_asctime_r": _asctime_r, "__inet_pton6_raw": __inet_pton6_raw, "___syscall4": ___syscall4, "_usleep": _usleep, "___syscall193": ___syscall193, "___syscall297": ___syscall297, "_system": _system, "___cxa_decrement_exception_refcount": ___cxa_decrement_exception_refcount, "_SDL_FreeRW": _SDL_FreeRW, "_strftime_l": _strftime_l, "_SDL_PauseAudio": _SDL_PauseAudio, "_dag_reinit": _dag_reinit, "_Mix_LoadWAV_RW": _Mix_LoadWAV_RW, "_pthread_equal": _pthread_equal, "_IMG_Load_RW": _IMG_Load_RW, "_posix_spawn_file_actions_init": _posix_spawn_file_actions_init, "___cxa_rethrow_primary_exception": ___cxa_rethrow_primary_exception, "_pthread_mutex_destroy": _pthread_mutex_destroy, "_globalunlock": _globalunlock, "_posix_spawn": _posix_spawn, "_llvm_stacksave": _llvm_stacksave, "___syscall207": ___syscall207, "___syscall51": ___syscall51, "___syscall57": ___syscall57, "___syscall133": ___syscall133, "_endgrent": _endgrent, "___unlock": ___unlock, "_dag_get_task": _dag_get_task, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_exit": _exit, "___syscall34": ___syscall34, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_csp_orc_sa_print_list": _csp_orc_sa_print_list, "_llvm_fma_f64": _llvm_fma_f64, "___cxa_throw": ___cxa_throw, "_posix_spawn_file_actions_destroy": _posix_spawn_file_actions_destroy, "___wait": ___wait, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_SDL_UpperBlit": _SDL_UpperBlit, "_pthread_mutex_init": _pthread_mutex_init, "_SDL_RWFromConstMem": _SDL_RWFromConstMem, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "___dso_handle": ___dso_handle, "___environ": ___environ };
+Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "invoke_iiiiiiii": invoke_iiiiiiii, "jsCall_iiiiiiii": jsCall_iiiiiiii, "invoke_iiiiiid": invoke_iiiiiid, "jsCall_iiiiiid": jsCall_iiiiiid, "invoke_vif": invoke_vif, "jsCall_vif": jsCall_vif, "invoke_viiiii": invoke_viiiii, "jsCall_viiiii": jsCall_viiiii, "invoke_vi": invoke_vi, "jsCall_vi": jsCall_vi, "invoke_vii": invoke_vii, "jsCall_vii": jsCall_vii, "invoke_iiiiiii": invoke_iiiiiii, "jsCall_iiiiiii": jsCall_iiiiiii, "invoke_ii": invoke_ii, "jsCall_ii": jsCall_ii, "invoke_viijii": invoke_viijii, "jsCall_viijii": jsCall_viijii, "invoke_ffi": invoke_ffi, "jsCall_ffi": jsCall_ffi, "invoke_viiif": invoke_viiif, "jsCall_viiif": jsCall_viiif, "invoke_if": invoke_if, "jsCall_if": jsCall_if, "invoke_iiiiiiiiii": invoke_iiiiiiiiii, "jsCall_iiiiiiiiii": jsCall_iiiiiiiiii, "invoke_iiii": invoke_iiii, "jsCall_iiii": jsCall_iiii, "invoke_iiij": invoke_iiij, "jsCall_iiij": jsCall_iiij, "invoke_fif": invoke_fif, "jsCall_fif": jsCall_fif, "invoke_viiiffff": invoke_viiiffff, "jsCall_viiiffff": jsCall_viiiffff, "invoke_viiiiif": invoke_viiiiif, "jsCall_viiiiif": jsCall_viiiiif, "invoke_fii": invoke_fii, "jsCall_fii": jsCall_fii, "invoke_iiid": invoke_iiid, "jsCall_iiid": jsCall_iiid, "invoke_fiii": invoke_fiii, "jsCall_fiii": jsCall_fiii, "invoke_di": invoke_di, "jsCall_di": jsCall_di, "invoke_iiiiiiiiiii": invoke_iiiiiiiiiii, "jsCall_iiiiiiiiiii": jsCall_iiiiiiiiiii, "invoke_v": invoke_v, "jsCall_v": jsCall_v, "invoke_iif": invoke_iif, "jsCall_iif": jsCall_iif, "invoke_ji": invoke_ji, "jsCall_ji": jsCall_ji, "invoke_fi": invoke_fi, "jsCall_fi": jsCall_fi, "invoke_iii": invoke_iii, "jsCall_iii": jsCall_iii, "invoke_iiiiii": invoke_iiiiii, "jsCall_iiiiii": jsCall_iiiiii, "invoke_viiiiii": invoke_viiiiii, "jsCall_viiiiii": jsCall_viiiiii, "invoke_dii": invoke_dii, "jsCall_dii": jsCall_dii, "invoke_viiiiiii": invoke_viiiiiii, "jsCall_viiiiiii": jsCall_viiiiiii, "invoke_i": invoke_i, "jsCall_i": jsCall_i, "invoke_iiiii": invoke_iiiii, "jsCall_iiiii": jsCall_iiiii, "invoke_viiid": invoke_viiid, "jsCall_viiid": jsCall_viiid, "invoke_iiiiij": invoke_iiiiij, "jsCall_iiiiij": jsCall_iiiiij, "invoke_viii": invoke_viii, "jsCall_viii": jsCall_viii, "invoke_iiiiiiiiiifii": invoke_iiiiiiiiiifii, "jsCall_iiiiiiiiiifii": jsCall_iiiiiiiiiifii, "invoke_iiiiiiiii": invoke_iiiiiiiii, "jsCall_iiiiiiiii": jsCall_iiiiiiiii, "invoke_iiiiid": invoke_iiiiid, "jsCall_iiiiid": jsCall_iiiiid, "invoke_viiii": invoke_viiii, "jsCall_viiii": jsCall_viiii, "___syscall221": ___syscall221, "___syscall220": ___syscall220, "__inet_ntop6_raw": __inet_ntop6_raw, "___syscall66": ___syscall66, "___syscall64": ___syscall64, "___syscall63": ___syscall63, "___syscall60": ___syscall60, "___muldc3": ___muldc3, "___syscall212": ___syscall212, "_SDL_RWFromFile": _SDL_RWFromFile, "_atexit": _atexit, "_putenv": _putenv, "___assert_fail": ___assert_fail, "__ZSt18uncaught_exceptionv": __ZSt18uncaught_exceptionv, "_longjmp": _longjmp, "__write_sockaddr": __write_sockaddr, "_llvm_exp2_f64": _llvm_exp2_f64, "__addDays": __addDays, "_TTF_FontHeight": _TTF_FontHeight, "_SDL_GetError": _SDL_GetError, "_llvm_pow_f64": _llvm_pow_f64, "_setgrent": _setgrent, "___syscall331": ___syscall331, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_dag_end_task": _dag_end_task, "_SDL_OpenAudio": _SDL_OpenAudio, "_sigfillset": _sigfillset, "___cxa_begin_catch": ___cxa_begin_catch, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_getnameinfo": _getnameinfo, "___syscall152": ___syscall152, "_execl": _execl, "___syscall150": ___syscall150, "_clock": _clock, "_Mix_PlayMusic": _Mix_PlayMusic, "___syscall163": ___syscall163, "_pthread_setcancelstate": _pthread_setcancelstate, "___syscall75": ___syscall75, "___restore_sigs": ___restore_sigs, "___syscall77": ___syscall77, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_IMG_Load": _IMG_Load, "_Mix_FreeChunk": _Mix_FreeChunk, "__isLeapYear": __isLeapYear, "_globallock": _globallock, "_llvm_sqrt_f32": _llvm_sqrt_f32, "___cxa_atexit": ___cxa_atexit, "_gmtime_r": _gmtime_r, "___syscall153": ___syscall153, "___cxa_rethrow": ___cxa_rethrow, "_pthread_cleanup_push": _pthread_cleanup_push, "___syscall306": ___syscall306, "___syscall307": ___syscall307, "_Mix_HaltMusic": _Mix_HaltMusic, "_inet_addr": _inet_addr, "___syscall302": ___syscall302, "___syscall303": ___syscall303, "___syscall300": ___syscall300, "___syscall301": ___syscall301, "___syscall140": ___syscall140, "___syscall142": ___syscall142, "_posix_spawn_file_actions_adddup2": _posix_spawn_file_actions_adddup2, "___syscall144": ___syscall144, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall147": ___syscall147, "_pthread_cleanup_pop": _pthread_cleanup_pop, "___syscall85": ___syscall85, "_csp_barrier_alloc": _csp_barrier_alloc, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "___syscall83": ___syscall83, "_pthread_cond_timedwait": _pthread_cond_timedwait, "___syscall132": ___syscall132, "___syscall125": ___syscall125, "___syscall122": ___syscall122, "___syscall121": ___syscall121, "___syscall118": ___syscall118, "___syscall268": ___syscall268, "_SDL_GetTicks": _SDL_GetTicks, "__arraySum": __arraySum, "_llvm_stackrestore": _llvm_stackrestore, "___cxa_free_exception": ___cxa_free_exception, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___syscall148": ___syscall148, "___clone": ___clone, "_SDL_LockSurface": _SDL_LockSurface, "_wait": _wait, "___setErrNo": ___setErrNo, "___syscall333": ___syscall333, "_llvm_pow_f32": _llvm_pow_f32, "___syscall330": ___syscall330, "___syscall337": ___syscall337, "___syscall304": ___syscall304, "___syscall334": ___syscall334, "___resumeException": ___resumeException, "__read_sockaddr": __read_sockaddr, "_mktime": _mktime, "___syscall97": ___syscall97, "___syscall96": ___syscall96, "___syscall94": ___syscall94, "_nanosleep": _nanosleep, "___syscall91": ___syscall91, "_gmtime": _gmtime, "_setgroups": _setgroups, "_kill": _kill, "___syscall114": ___syscall114, "___syscall305": ___syscall305, "_pthread_once": _pthread_once, "___syscall181": ___syscall181, "_res_query": _res_query, "___syscall15": ___syscall15, "___syscall14": ___syscall14, "_pthread_detach": _pthread_detach, "_emscripten_get_now": _emscripten_get_now, "___syscall10": ___syscall10, "___syscall9": ___syscall9, "_pthread_sigmask": _pthread_sigmask, "_TTF_SizeText": _TTF_SizeText, "___syscall3": ___syscall3, "_asctime": _asctime, "___syscall1": ___syscall1, "_clock_gettime": _clock_gettime, "_llvm_exp2_f32": _llvm_exp2_f32, "___syscall6": ___syscall6, "___syscall5": ___syscall5, "___clock_gettime": ___clock_gettime, "_time": _time, "_gettimeofday": _gettimeofday, "___syscall308": ___syscall308, "___syscall209": ___syscall209, "_SDL_UpperBlitScaled": _SDL_UpperBlitScaled, "___syscall205": ___syscall205, "___syscall204": ___syscall204, "___syscall203": ___syscall203, "___syscall202": ___syscall202, "___syscall201": ___syscall201, "___syscall200": ___syscall200, "___block_all_sigs": ___block_all_sigs, "__inet_pton4_raw": __inet_pton4_raw, "___syscall269": ___syscall269, "_pthread_join": _pthread_join, "___syscall102": ___syscall102, "_setitimer": _setitimer, "___syscall54": ___syscall54, "_sched_yield": _sched_yield, "_getgrent": _getgrent, "___syscall29": ___syscall29, "_csoundModuleInit_ftsamplebank": _csoundModuleInit_ftsamplebank, "___syscall20": ___syscall20, "___cxa_allocate_exception": ___cxa_allocate_exception, "___syscall183": ___syscall183, "___buildEnvironment": ___buildEnvironment, "___syscall295": ___syscall295, "___syscall296": ___syscall296, "___syscall192": ___syscall192, "___syscall298": ___syscall298, "_llvm_sqrt_f64": _llvm_sqrt_f64, "___cxa_increment_exception_refcount": ___cxa_increment_exception_refcount, "_localtime_r": _localtime_r, "_tzset": _tzset, "___syscall12": ___syscall12, "___syscall218": ___syscall218, "___syscall219": ___syscall219, "___syscall191": ___syscall191, "___syscall197": ___syscall197, "___syscall196": ___syscall196, "___syscall195": ___syscall195, "___syscall194": ___syscall194, "___syscall211": ___syscall211, "___syscall199": ___syscall199, "___syscall198": ___syscall198, "___syscall214": ___syscall214, "___cxa_current_primary_exception": ___cxa_current_primary_exception, "_Mix_PlayChannel": _Mix_PlayChannel, "_strftime": _strftime, "_TTF_RenderText_Solid": _TTF_RenderText_Solid, "_pthread_cond_signal": _pthread_cond_signal, "___cxa_end_catch": ___cxa_end_catch, "___syscall272": ___syscall272, "_getenv": _getenv, "___syscall36": ___syscall36, "___map_file": ___map_file, "___syscall33": ___syscall33, "_pthread_key_create": _pthread_key_create, "_pthread_setspecific": _pthread_setspecific, "__inet_ntop4_raw": __inet_ntop4_raw, "___syscall39": ___syscall39, "___syscall38": ___syscall38, "_sysconf": _sysconf, "___syscall340": ___syscall340, "___syscall180": ___syscall180, "_abort": _abort, "___syscall345": ___syscall345, "___syscall324": ___syscall324, "___syscall151": ___syscall151, "_localtime": _localtime, "___mulsc3": ___mulsc3, "___cxa_pure_virtual": ___cxa_pure_virtual, "_waitpid": _waitpid, "_pthread_getspecific": _pthread_getspecific, "_pthread_cond_wait": _pthread_cond_wait, "___lock": ___lock, "___syscall320": ___syscall320, "___syscall168": ___syscall168, "_dag_build": _dag_build, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "_SDL_CloseAudio": _SDL_CloseAudio, "_fork": _fork, "___gxx_personality_v0": ___gxx_personality_v0, "_asctime_r": _asctime_r, "__inet_pton6_raw": __inet_pton6_raw, "___syscall4": ___syscall4, "_usleep": _usleep, "___syscall193": ___syscall193, "___syscall297": ___syscall297, "_system": _system, "___cxa_decrement_exception_refcount": ___cxa_decrement_exception_refcount, "_SDL_FreeRW": _SDL_FreeRW, "_strftime_l": _strftime_l, "_SDL_PauseAudio": _SDL_PauseAudio, "_dag_reinit": _dag_reinit, "_Mix_LoadWAV_RW": _Mix_LoadWAV_RW, "__exit": __exit, "_pthread_equal": _pthread_equal, "_IMG_Load_RW": _IMG_Load_RW, "_posix_spawn_file_actions_init": _posix_spawn_file_actions_init, "___cxa_rethrow_primary_exception": ___cxa_rethrow_primary_exception, "_pthread_mutex_destroy": _pthread_mutex_destroy, "_globalunlock": _globalunlock, "_posix_spawn": _posix_spawn, "_llvm_stacksave": _llvm_stacksave, "___syscall207": ___syscall207, "___syscall51": ___syscall51, "___syscall57": ___syscall57, "___syscall133": ___syscall133, "_endgrent": _endgrent, "___unlock": ___unlock, "_dag_get_task": _dag_get_task, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_exit": _exit, "___syscall34": ___syscall34, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_csp_orc_sa_print_list": _csp_orc_sa_print_list, "_llvm_fma_f64": _llvm_fma_f64, "___cxa_throw": ___cxa_throw, "_posix_spawn_file_actions_destroy": _posix_spawn_file_actions_destroy, "___wait": ___wait, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_SDL_UpperBlit": _SDL_UpperBlit, "_pthread_mutex_init": _pthread_mutex_init, "_SDL_RWFromConstMem": _SDL_RWFromConstMem, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "___dso_handle": ___dso_handle, "___environ": ___environ };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
@@ -11817,7 +12056,9 @@ var setThrew = Module["setThrew"] = function() { return Module["asm"]["setThrew"
 var _CsoundObj_compileCSD = Module["_CsoundObj_compileCSD"] = function() { return Module["asm"]["_CsoundObj_compileCSD"].apply(null, arguments) };
 var stackRestore = Module["stackRestore"] = function() { return Module["asm"]["stackRestore"].apply(null, arguments) };
 var _CsoundObj_setMidiCallbacks = Module["_CsoundObj_setMidiCallbacks"] = function() { return Module["asm"]["_CsoundObj_setMidiCallbacks"].apply(null, arguments) };
+var _memset = Module["_memset"] = function() { return Module["asm"]["_memset"].apply(null, arguments) };
 var _sbrk = Module["_sbrk"] = function() { return Module["asm"]["_sbrk"].apply(null, arguments) };
+var _memcpy = Module["_memcpy"] = function() { return Module["asm"]["_memcpy"].apply(null, arguments) };
 var _CsoundObj_play = Module["_CsoundObj_play"] = function() { return Module["asm"]["_CsoundObj_play"].apply(null, arguments) };
 var ___errno_location = Module["___errno_location"] = function() { return Module["asm"]["___errno_location"].apply(null, arguments) };
 var _CsoundObj_setStringChannel = Module["_CsoundObj_setStringChannel"] = function() { return Module["asm"]["_CsoundObj_setStringChannel"].apply(null, arguments) };
@@ -11852,7 +12093,7 @@ var ___cxa_can_catch = Module["___cxa_can_catch"] = function() { return Module["
 var _CsoundObj_getTable = Module["_CsoundObj_getTable"] = function() { return Module["asm"]["_CsoundObj_getTable"].apply(null, arguments) };
 var _round = Module["_round"] = function() { return Module["asm"]["_round"].apply(null, arguments) };
 var establishStackSpace = Module["establishStackSpace"] = function() { return Module["asm"]["establishStackSpace"].apply(null, arguments) };
-var __exit = Module["__exit"] = function() { return Module["asm"]["__exit"].apply(null, arguments) };
+var _memmove = Module["_memmove"] = function() { return Module["asm"]["_memmove"].apply(null, arguments) };
 var ___cxa_is_pointer_type = Module["___cxa_is_pointer_type"] = function() { return Module["asm"]["___cxa_is_pointer_type"].apply(null, arguments) };
 var _CsoundObj_getZerodBFS = Module["_CsoundObj_getZerodBFS"] = function() { return Module["asm"]["_CsoundObj_getZerodBFS"].apply(null, arguments) };
 var _CsoundObj_closeAudioOut = Module["_CsoundObj_closeAudioOut"] = function() { return Module["asm"]["_CsoundObj_closeAudioOut"].apply(null, arguments) };
@@ -12124,6 +12365,10 @@ Module['exit'] = Module.exit = exit;
 var abortDecorators = [];
 
 function abort(what) {
+  if (Module['onAbort']) {
+    Module['onAbort'](what);
+  }
+
   if (what !== undefined) {
     Module.print(what);
     Module.printErr(what);
@@ -12175,4 +12420,3 @@ run();
 
 
 
-//# sourceMappingURL=libcsound.js.map

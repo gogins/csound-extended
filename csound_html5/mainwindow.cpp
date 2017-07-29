@@ -24,7 +24,6 @@ CHSound is a bare-bones "front end" for editing and performing Csound pieces:
 
 3. Csound pieces written as HTML files. Csound appears as a "csound" object in the JavaScript context of this Web page. Do not use the Play and Stop buttons on the menu bar, you must use JavaScript code and/or HTML controls on the Web page with JavaScript event handlers to control the Csound performance.
 
-
 )";
 
 void messageCallback(CSOUND *csound, int level, const char *format, va_list valist)
