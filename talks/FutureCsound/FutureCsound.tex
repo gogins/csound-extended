@@ -1,0 +1,195 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \definecolor{links}{HTML}{2A1B81}
+  \hypersetup{colorlinks,linkcolor=,urlcolor=links}
+  %\usetheme{Frankfurt}
+  %\usecolortheme{seagull}
+  % or ...
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{attachfile}
+
+\title[Future Csound] % (optional, use only with long paper titles)
+{The Future of Csound}
+
+\author[Gogins] % (optional, use only with lots of authors)
+{Michael Gogins\\
+\url{http://michaelgogins.tumblr.com} 
+}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[Irreducible Productions] % (optional, but mostly needed)
+{
+  Irreducible Productions\\
+  New York
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[6 September 2017] % (optional, should be abbreviation of conference name)
+{6 September 2017}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Csound}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+\begin{document}
+\lstset{basicstyle=\ttfamily\tiny,commentstyle=\ttfamily\tiny,tabsize=2,breaklines,fontadjust=true,keepspaces=false,fancyvrb=true,showstringspaces=false,moredelim=[is][\textbf]{\\emph\{}{\}}}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{What Csound Is}
+    \begin{itemize}
+        \item     
+            To summarize for clarity: \textit{Csound is a sound programming 
+language and sound processing system}.
+        \item
+            Csound is used mainly for making computer music, but has other 
+uses such as data sonification, audio in computer games, 
+education, \textit{etc.}, and could have new uses in future.
+        \item
+            All functionality of Csound is available in the Csound shared 
+libary, with interfaces to most widely used programming languages.
+        \item
+            Csound runs on most widely used operating systems, and on the Web.
+        \item
+            Csound is old, going back to 1985, and has a long tradition with a 
+large body of work that still works thanks to backwards compatibility.
+        \item 
+            Csound is open source.
+    \end{itemize}    
+\end{frame}
+
+\begin{frame}{What Csound Could Be}
+    \begin{enumerate}
+        \item \textit{Software fragments}. Csound could unify the world of 
+music programming by serving as a standard sound engine. Not likely but the 
+closer the better.
+        \item \textit{Music fragments}. Csound could serve as a \textit{lingua 
+franca} for computer music. Not likely but the closer the 
+better.
+        \item Other systems vie for this role, notably:
+            \begin{description}
+             \item[Max] Widely taught because widely used for 
+commercial sound design.
+             \item[SuperCollider] Has a younger hipper community.
+             \item[WebAudio] Unit generator based audio synthesis in standard 
+HTML5. Probably will become more important.
+            \end{description}
+        \item But Csound is the most powerful, and has advantages that will 
+become more important in the future, such as multi-threading, and an existing 
+WebAssembly build.
+    \end{enumerate}    
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle<presentation>{Problems}
+    \begin{enumerate}
+        \item     
+            The Csound language is still clunky and lacks useful features such 
+as structures, classes, and closures.
+        \item
+            The Csound infrastructure is not complete on all platforms.
+        \item
+            The Csound API is not consistent on all platforms, especially 
+HTML5.
+        \item
+            The Csound build has a lot of external dependencies.
+        \item
+            We need more developers who understand the system.
+    \end{enumerate}    
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle<presentation>{Solutions}
+    \begin{enumerate}
+        \item     
+            Add structures, classes, and closures to the Csound language.
+        \item
+            Build all releases using online continuous integration systems.
+        \item
+            That means using a package manager or automated builds for all 
+third party dependencies.
+        \item
+            When that's working, simplify the build system.
+        \item
+            When that works, write scripts to do local builds by emulating the 
+CI build.
+    \end{enumerate}    
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle<presentation>{Further Out}
+    \begin{enumerate}
+        \item     
+            Try to get Csound to become an international standard. SAOL and 
+SASL were a stab in this direction that failed due to lack of a performant 
+reference implementation. Csound is performant enough. Not \textit{all} of 
+Csound needs to be in such a standard.
+        \item
+            Consider exposing Csound opcodes as WebAudio unit generators.
+        \item 
+            Make a WebAssembly-based showcase for Csound examples with a 
+real ``Wow!'' factor. Google's 
+\href{https://experiments.withgoogle.com/chrome}{Chrome Experiments} and the 
+\href{https://www.shadertoy.com/}{Shadertoy} website are models.
+    \end{enumerate}    
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle<presentation>{Recruiting Developers}
+    \begin{enumerate}
+        \item     
+            Follow through on the CI-oriented build systems for OS X, Linux, 
+and Windows. Cut down the overhead of getting Csound building!
+        \item   
+            Maynooth might be a template, consider working with teachers in 
+computer music courses who for various reasons might be amenable to typing 
+code instead of eating Max spaghetti.
+        \item   
+            Could this work together with Google Summer of Code?
+        \item   
+            Could people volunteer to help actual composers who might be 
+interested in using Csound but are scared of the learning curve?
+    \end{enumerate}    
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle<presentation>{For Me Personally}
+    \begin{enumerate}
+        \item     
+            For me personally, what I need from Csound is as 
+always...
+        \item   
+            Good stuff I can beg, borrow, or steal.
+        \item   
+            Fast working speed. I want Csound to be my playpen.
+        \item   
+            Not so much for sound design as for live performance, I've been 
+inspired by watching people patch modular analog synthesizers on stage. 
+Something like that would be nice for Csound and then good patches could be 
+saved and used in through-composed pieces.
+    \end{enumerate}    
+\end{frame}
+
+\end{document}
+
+
