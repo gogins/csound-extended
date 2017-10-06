@@ -7,7 +7,20 @@ This software is licensed under the terms of the
 GNU Lesser General Public License
 
 Part of Silencio, an algorithmic music composition library for Csound.
+
+REGARDING BLUE
+
+Steven Yi's Java program blue, for composing with Csound, uses the Nashorn
+JavaScript runtime and does not support the DOM or other objects found in a
+Web browser's JavaScript context. But, if Silencio.js is the first script loaded
+by Nashorn, proxies for such of those objects as are used by Silencio, such as
+`console.log`, are monkey-patched in.
+
 */
+if (typeof console === 'undefined') {
+    var console = {'log': print};
+}
+
 (function() {
 
     // All JavaScript dependencies of ChordSpace.js:
@@ -1413,25 +1426,7 @@ Part of Silencio, an algorithmic music composition library for Csound.
         var eopti = this.eOPTI().et();
         var eOP = this.eOP();
         var chordName = this.name();
-        return sprintf(`pitches:  %s  %s
-I:        %s
-eO:       %s  iseO:    %s
-eP:       %s  iseP:    %s
-eT:       %s  iseT:    %s
-          %s
-eI:       %s  iseI:    %s
-eV:       %s  iseV:    %s
-          %s
-eOP:      %s  iseOP:   %s
-pcs:      %s
-eOPT:     %s  iseOPT:  %s
-eOPTT:    %s
-          %s
-eOPI:     %s  iseOPI:  %s
-eOPTI:    %s  iseOPTI: %s
-eOPTTI:   %s
-          %s
-layer:      %6.2f`,
+        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nlayer:      %6.2f",
             this, chordName,
             this.I(),
             this.eO(), this.iseO(),

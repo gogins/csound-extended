@@ -56,6 +56,7 @@ by Nashorn, proxies for such of those objects as are used by Silencio, such as
 if (typeof console === 'undefined') {
     var console = {'log': print};
 }
+
 (function() {
     /**
     A Score is a matrix in which the rows are Events.
