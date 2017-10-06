@@ -44,7 +44,18 @@ TrackballControls.js
 sprintf.js
 tinycolor.js
 
+REGARDING BLUE
+
+Steven Yi's Java program blue, for composing with Csound, uses the Nashorn
+JavaScript runtime and does not support the DOM or other objects found in a
+Web browser's JavaScript context. But, if Silencio.js is the first script loaded
+by Nashorn, proxies for such of those objects as are used by Silencio, such as
+`console.log`, are monkey-patched in.
+
 */
+if (typeof console === 'undefined') {
+    var console = {'log': print};
+}
 (function() {
     /**
     A Score is a matrix in which the rows are Events.
@@ -1442,8 +1453,10 @@ tinycolor.js
         return this.map.values();
     };
 
-    console.log('browser:  ' + navigator.appName);
-    console.log('platform: ' + navigator.platform);
+    if (typeof navigator !== 'undefined') {
+        console.log('browser:  ' + navigator.appName);
+        console.log('platform: ' + navigator.platform);
+    }
 
     var Silencio = {
         eq_epsilon: eq_epsilon,
@@ -1475,7 +1488,7 @@ tinycolor.js
         });
     }
     // Browser: Expose to window
-    else {
+    else if (typeof window !== 'undefined') {
         window.Silencio = Silencio;
     }
 
