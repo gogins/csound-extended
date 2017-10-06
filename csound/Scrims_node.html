@@ -1465,7 +1465,7 @@ endin
                 Notes_per_second: 8,
                 Stride: 100,
                 Play: function() {
-                    //csound.stop();
+                    csound.stop();
                     try {
                         csound.setMessageCallback(csoundMessage);
                     } catch(e) {

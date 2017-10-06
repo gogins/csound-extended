@@ -149,7 +149,7 @@ void QCsound::message(const QString &text) {
 
 int QCsound::perform() {
     // Perform in a separate thread of execution.
-    return csound.Perform();
+    return csound.PerformAndReset();
 }
 
 int QCsound::performKsmps() {
@@ -230,6 +230,7 @@ int QCsound::start(){
 
 void QCsound::stop(){
     csound.Stop();
+    csound.Join();
 }
 
 double QCsound::tableGet(int table_number, int index){
@@ -255,6 +256,7 @@ void QCsound::csoundMessageCallback(int attributes,
                            const char *format,
                            va_list args)
 {
+    (void) attributes;
     QString message = QString::vasprintf(format, args);
     qDebug() << message;
     passMessages(message);
