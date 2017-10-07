@@ -1491,6 +1491,8 @@ if (typeof console === 'undefined') {
     // Browser: Expose to window
     else if (typeof window !== 'undefined') {
         window.Silencio = Silencio;
+    } else {
+        return Silencio;
     }
 
 })();
