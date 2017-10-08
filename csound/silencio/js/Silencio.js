@@ -48,13 +48,20 @@ REGARDING BLUE
 
 Steven Yi's Java program blue, for composing with Csound, uses the Nashorn
 JavaScript runtime and does not support the DOM or other objects found in a
-Web browser's JavaScript context. But, if Silencio.js is the first script loaded
-by Nashorn, proxies for such of those objects as are used by Silencio, such as
-`console.log`, are monkey-patched in.
+Web browser's JavaScript context. To use Silencio in blue:
+
+--  Load sprintf.js and tinycolor.js first.
+--  The following polyfill is enough to run some things.
 
 */
 if (typeof console === 'undefined') {
-    var console = {'log': print};
+    var global = this;
+    var window = this;
+    var process = {env: {}};
+    var console = {};
+    console.debug = print;
+    console.warn = print;
+    console.log = print;
 }
 
 (function() {

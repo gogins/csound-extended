@@ -49,7 +49,15 @@
 \subject{Csound}
 % This is only inserted into the PDF information catalog. Can be left
 % out. 
-\begin{document}
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=ynt,
+hyperref=true,
+backref=true
+]{biblatex}
+ 
+\addbibresource{gogins.bib}\begin{document}
 \lstset{basicstyle=\ttfamily\tiny,commentstyle=\ttfamily\tiny,tabsize=2,breaklines,fontadjust=true,keepspaces=false,fancyvrb=true,showstringspaces=false,moredelim=[is][\textbf]{\\emph\{}{\}}}
 
 \begin{frame}
@@ -62,19 +70,19 @@
             To summarize for clarity: \textit{Csound is a sound programming 
 language and sound processing system}.
         \item
-            Csound is used mainly for making computer music, but has other 
-uses such as data sonification, audio in computer games, 
-education, \textit{etc.}, and could have new uses in future.
+            Csound is used mainly for making computer music, but other 
+uses include data sonification, audio in computer games, 
+education, \textit{etc.}, perhaps more in future.
         \item
-            All functionality of Csound is available in the Csound shared 
-libary, with interfaces to most widely used programming languages.
+            All functionality is available in the Csound shared 
+libary, with interfaces to standard programming languages.
         \item
-            Csound runs on most widely used operating systems, and on the Web.
+            Csound runs on standard operating systems, \textit{and on the Web}.
         \item
             Csound is old, going back to 1985, and has a long tradition with a 
-large body of work that still works thanks to backwards compatibility.
+large body of works that still run thanks to backwards compatibility.
         \item 
-            Csound is open source.
+           \textit{ Csound is open source}.
     \end{itemize}    
 \end{frame}
 
@@ -91,12 +99,11 @@ better.
              \item[Max] Widely taught because widely used for 
 commercial sound design.
              \item[SuperCollider] Has a younger hipper community.
-             \item[WebAudio] Unit generator based audio synthesis in standard 
-HTML5. Probably will become more important.
+             \item[WebAudio] Unit generator synthesis in standard 
+HTML5. May become more important.
             \end{description}
-        \item But Csound is the most powerful, and has advantages that will 
-become more important in the future, such as multi-threading, and an existing 
-WebAssembly build.
+        \item But Csound is the most powerful, and has advantages for the 
+future, such as multi-threading and an existing WebAssembly build.
     \end{enumerate}    
 \end{frame}
 
@@ -125,14 +132,16 @@ HTML5.
             Add structures, classes, and closures to the Csound language.
         \item
             Build all releases using online continuous integration systems.
-        \item
-            That means using a package manager or automated builds for all 
-third party dependencies.
-        \item
-            When that's working, simplify the build system.
-        \item
-            When that works, write scripts to do local builds by emulating the 
-CI build.
+                \begin{enumerate}
+                    \item That means using a package manager or automated 
+builds for all third party dependencies.
+                \item
+                    When that's working, simplify the build system.
+                \item
+                    When that works, write scripts to do local builds.
+                \item
+                    \textit{This now exists for Windows with Visual Studio.}
+                \end{enumerate}
     \end{enumerate}    
 \end{frame}
 
@@ -145,7 +154,8 @@ SASL were a stab in this direction that failed due to lack of a performant
 reference implementation. Csound is performant enough. Not \textit{all} of 
 Csound needs to be in such a standard.
         \item
-            Consider exposing Csound opcodes as WebAudio unit generators.
+            Consider exposing Csound opcodes via WebAssembly as WebAudio unit 
+generators.
         \item 
             Make a WebAssembly-based showcase for Csound examples with a 
 real ``Wow!'' factor. Google's 
@@ -158,8 +168,8 @@ real ``Wow!'' factor. Google's
     \frametitle<presentation>{Recruiting Developers}
     \begin{enumerate}
         \item     
-            Follow through on the CI-oriented build systems for OS X, Linux, 
-and Windows. Cut down the overhead of getting Csound building!
+            Follow through on CI-oriented build systems for OS X and Linux. Cut 
+down the overhead of getting Csound building!
         \item   
             Maynooth might be a template, consider working with teachers in 
 computer music courses who for various reasons might be amenable to typing 

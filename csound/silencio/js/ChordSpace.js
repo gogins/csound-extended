@@ -12,13 +12,20 @@ REGARDING BLUE
 
 Steven Yi's Java program blue, for composing with Csound, uses the Nashorn
 JavaScript runtime and does not support the DOM or other objects found in a
-Web browser's JavaScript context. But, if Silencio.js is the first script loaded
-by Nashorn, proxies for such of those objects as are used by Silencio, such as
-`console.log`, are monkey-patched in.
+Web browser's JavaScript context. To use Silencio in blue:
+
+--  Load sprintf.js and tinycolor.js first.
+--  The following polyfill is enough to run some things.
 
 */
 if (typeof console === 'undefined') {
-    var console = {'log': print};
+    var global = this;
+    var window = this;
+    var process = {env: {}};
+    var console = {};
+    console.debug = print;
+    console.warn = print;
+    console.log = print;
 }
 
 (function() {
@@ -1759,16 +1766,19 @@ if (typeof console === 'undefined') {
     };
 
     // Creates a complete Silencio "note on" event for the
-    // indicated voice of the chord. The other parameters are used
-    // if the internal duration, channel, velocity, and pan of the
-    // chord are undefined.
+    // indicated voice of the chord.
     Chord.prototype.note = function(voice_, time_, duration_, channel_, velocity_, pan_) {
-        time_ = typeof time_ !== 'undefined' ? time_ : 0;
-        duration_ = typeof this.duration[voice_] !== 'undefined' ? this.duration[voice_] : duration_;
-        channel_ = typeof this.channel[voice_] !== 'undefined' ? this.channel[voice_] : channel_;
+        //duration_ = typeof this.duration[voice_] !== 'undefined' ? this.duration[voice_] : duration_;
+        //channel_ = typeof this.channel[voice_] !== 'undefined' ? this.channel[voice_] : channel_;
         var key_ = this.voices[voice_];
-        velocity_ = typeof this.velocity[voice_] !== 'undefined' ? this.velocity[voice_] : velocity_;
-        pan_ = typeof this.pan[voice_] !== 'undefined' ? this.pan[voice_] : pan_;
+        //velocity_ = typeof this.velocity[voice_] !== 'undefined' ? this.velocity[voice_] : velocity_;
+        //pan_ = typeof this.pan[voice_] !== 'undefined' ? this.pan[voice_] : pan_;
+        if (typeof time_ === 'undefined') {
+            time_ = 0;
+        }
+        if (typeof duration_ === 'undefined') {
+            duration_ = this.duration[voice_];
+        }
         var note_ = new Silencio.Event();
         note_.data[Silencio.Event.TIME] = time_;
         note_.data[Silencio.Event.DURATION] = duration_;
