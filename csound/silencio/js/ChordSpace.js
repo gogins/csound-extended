@@ -2463,8 +2463,10 @@ if (typeof console === 'undefined') {
         });
     }
     // Browser: Expose to window
-    else {
+    else if (typeof window !== 'undefined') {
         window.ChordSpace = ChordSpace;
+    } else {
+        return ChordSpace;
     }
 
 })();
