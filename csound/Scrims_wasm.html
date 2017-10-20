@@ -2,13 +2,13 @@
 <html>
     <head>
         <title>Scrims</title>
-        <script type="text/javascript" src="silencio/js/dat.gui.js"></script>
-        <script type="text/javascript" src="silencio/js/jquery.js"></script>
-        <script type="text/javascript" src="silencio/js/Silencio.js"></script>
-        <script type="text/javascript" src="silencio/js/ChordSpace.js"></script>
-        <script type="text/javascript" src="silencio/js/sprintf.js"></script>
-        <script type="text/javascript" src="silencio/js/three.js"></script>
-        <script type="text/javascript" src="csound.js"></script>
+        <script type="text/javascript" src="/silencio/js/dat.gui.js"></script>
+        <script type="text/javascript" src="/silencio/js/jquery.js"></script>
+        <script type="text/javascript" src="/silencio/js/Silencio.js"></script>
+        <script type="text/javascript" src="/silencio/js/ChordSpace.js"></script>
+        <script type="text/javascript" src="/silencio/js/sprintf.js"></script>
+        <script type="text/javascript" src="/silencio/js/three.js"></script>
+        <script type="text/javascript" src="/csound.js"></script>
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
@@ -47,13 +47,16 @@
         </script>
     </head>
     <body style="background:black;">
-         <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"/>
+        <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;">
+        </div>
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt">
             <col width=300px>
             <col width=150px>
-            <th style="color:gold;text-align:left">Scrims (WebAssembly version), by Michael Gogins.
-            Wait for "Csound: Ready."; click "Play/Stop"; adjust "Master effects" group "gk_MasterOutput_level" slider.</p></td><td style="color:gold;text-align:right;"</th>
+            <tr>
+            <th style="color:gold;text-align:left">Scrims (WebAssembly version), by Michael Gogins.</th>
+            <th>Wait for "Csound: Ready."; click "Play/Stop"; adjust "Master effects" group "gk_MasterOutput_level" slider.</th>
             <!-- Copyright (C) 2017 by Michael Gogins -->
+            </tr>
             <tr>
                 <td>Time: </td><td id="Time_cell" style="color:SkyBlue;text-align:right;"></td>
             </tr>
@@ -132,8 +135,8 @@ gk_FM_Clang_StWidth chnget "StWidth"
 gk_FM_Clang_StWidth init 0.01
 gk_FM_Clang_StMix chnget "StMix"
 gk_FM_Clang_DryWet chnget "RvbDryWet"
-gk_FM_Clang_Dry table gk_FM_Clang_DryWet,gi_FM_Clang_DryMap,1 ; map dry/wet control
-gk_FM_Clang_Wet table gk_FM_Clang_DryWet,gi_FM_Clang_WetMap,1 ;
+gk_FM_Clang_Dry table gk_FM_Clang_DryWet,gi_FM_Clang_DryMap,1 
+gk_FM_Clang_Wet table gk_FM_Clang_DryWet,gi_FM_Clang_WetMap,1 
 gk_FM_Clang_RvbSize chnget "RvbSize"
 gk_FM_Clang_Detune chnget "Detune"
 gk_FM_Clang_DtnMix chnget "DtnMix"
@@ -1221,7 +1224,7 @@ scoreline_i "i \"Clear\" 0 -1"
             var slider = gui_folder.add(parameters, token, minimum, maximum);
             slider.onChange(on_parameter_change);
             return slider;
-        };
+        }
        </script>
       </body>
 </html>
