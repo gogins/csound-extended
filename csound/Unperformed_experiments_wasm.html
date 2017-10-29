@@ -111,7 +111,6 @@
         <textarea class="code" id="orc" hidden rows=24 cols=80>
 <CsoundSynthesizer>
 <CsOptions>
--m1 -d
 </CsOptions>
 <CsInstruments>
 nchnls  = 2
@@ -800,6 +799,7 @@ scoreline_i "i \"Clear\" 0 420"
                         csound.is_playing = false;
                     }
                     if (csound.is_playing === false) {
+                        csound.start();
                         csound.perform();
                         gui.revert();
                         csound.compileCsdText(document.getElementById('orc').value);

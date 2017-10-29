@@ -1,13 +1,12 @@
 {
-  "main": "Scrims_node.html",
-  "name": "Scrims_node",
-  "description": "Visual music for Csound and HTML5",
+  "main": "Unperformed_experiments_wasm.html",
+  "name": "Unperformed_experiments_wasm",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_node",
+    "title": "Unperformed_experiments_wasm",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
@@ -16,7 +15,6 @@
     "fullscreen": true
   },
   "webkit": {
-    "plugin": true,
-    "page-cache": false
+    "plugin": true
   }
 }
