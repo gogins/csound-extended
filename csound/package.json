@@ -1,12 +1,13 @@
 {
-  "main": "Unperformed_experiments_wasm.html",
-  "name": "Unperformed_experiments_wasm",
+  "main": "Scrims_wasm.html",
+  "name": "Scrims_wasm",
+  "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Unperformed_experiments_wasm",
+    "title": "Scrims_wasm",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

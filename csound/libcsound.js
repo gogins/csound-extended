@@ -339,8 +339,12 @@ var Runtime = {
   },
   dynCall: function (sig, ptr, args) {
     if (args && args.length) {
+      assert(args.length == sig.length-1);
+      assert(('dynCall_' + sig) in Module, 'bad function pointer type - no table for sig \'' + sig + '\'');
       return Module['dynCall_' + sig].apply(null, [ptr].concat(args));
     } else {
+      assert(sig.length == 1);
+      assert(('dynCall_' + sig) in Module, 'bad function pointer type - no table for sig \'' + sig + '\'');
       return Module['dynCall_' + sig].call(null, ptr);
     }
   },
@@ -394,9 +398,9 @@ var Runtime = {
   getCompilerSetting: function (name) {
     throw 'You must build with -s RETAIN_COMPILER_SETTINGS=1 for Runtime.getCompilerSetting or emscripten_get_compiler_setting to work';
   },
-  stackAlloc: function (size) { var ret = STACKTOP;STACKTOP = (STACKTOP + size)|0;STACKTOP = (((STACKTOP)+15)&-16); return ret; },
-  staticAlloc: function (size) { var ret = STATICTOP;STATICTOP = (STATICTOP + size)|0;STATICTOP = (((STATICTOP)+15)&-16); return ret; },
-  dynamicAlloc: function (size) { var ret = HEAP32[DYNAMICTOP_PTR>>2];var end = (((ret + size + 15)|0) & -16);HEAP32[DYNAMICTOP_PTR>>2] = end;if (end >= TOTAL_MEMORY) {var success = enlargeMemory();if (!success) {HEAP32[DYNAMICTOP_PTR>>2] = ret;return 0;}}return ret;},
+  stackAlloc: function (size) { var ret = STACKTOP;STACKTOP = (STACKTOP + size)|0;STACKTOP = (((STACKTOP)+15)&-16);(assert((((STACKTOP|0) < (STACK_MAX|0))|0))|0); return ret; },
+  staticAlloc: function (size) { var ret = STATICTOP;STATICTOP = (STATICTOP + (assert(!staticSealed),size))|0;STATICTOP = (((STATICTOP)+15)&-16); return ret; },
+  dynamicAlloc: function (size) { assert(DYNAMICTOP_PTR);var ret = HEAP32[DYNAMICTOP_PTR>>2];var end = (((ret + size + 15)|0) & -16);HEAP32[DYNAMICTOP_PTR>>2] = end;if (end >= TOTAL_MEMORY) {var success = enlargeMemory();if (!success) {HEAP32[DYNAMICTOP_PTR>>2] = ret;return 0;}}return ret;},
   alignMemory: function (size,quantum) { var ret = size = Math.ceil((size)/(quantum ? quantum : 16))*(quantum ? quantum : 16); return ret; },
   makeBigInt: function (low,high,unsigned) { var ret = (unsigned ? ((+((low>>>0)))+((+((high>>>0)))*4294967296.0)) : ((+((low>>>0)))+((+((high|0)))*4294967296.0))); return ret; },
   GLOBAL_BASE: 1024,
@@ -473,6 +477,7 @@ var cwrap, ccall;
     var func = getCFunc(ident);
     var cArgs = [];
     var stack = 0;
+    assert(returnType !== 'array', 'Return type should not be "array".');
     if (args) {
       for (var i = 0; i < args.length; i++) {
         var converter = toC[argTypes[i]];
@@ -485,6 +490,10 @@ var cwrap, ccall;
       }
     }
     var ret = func.apply(null, cArgs);
+    if ((!opts || !opts.async) && typeof EmterpreterAsync === 'object') {
+      assert(!EmterpreterAsync.state, 'cannot start async op with normal JS calling ccall');
+    }
+    if (opts && opts.async) assert(!returnType, 'async ccalls cannot return values');
     if (returnType === 'string') ret = Pointer_stringify(ret);
     if (stack !== 0) {
       if (opts && opts.async) {
@@ -558,6 +567,7 @@ var cwrap, ccall;
       var strgfy = parseJSFunc(function(){return Pointer_stringify}).returnValue;
       funcstr += 'ret = ' + strgfy + '(ret);';
     }
+    funcstr += "if (typeof EmterpreterAsync === 'object') { assert(!EmterpreterAsync.state, 'cannot start async op with normal JS calling cwrap') }";
     if (!numericArgs) {
       // If we had a stack, restore it
       ensureJSsource();
@@ -685,6 +695,7 @@ function allocate(slab, types, allocator, ptr) {
       i++;
       continue;
     }
+    assert(type, 'Must know what type to store in allocate!');
 
     if (type == 'i64') type = 'i32'; // special case: we have one i32 here, and one i32 later
 
@@ -719,6 +730,7 @@ function Pointer_stringify(ptr, length) {
   var t;
   var i = 0;
   while (1) {
+    assert(ptr + i < TOTAL_MEMORY);
     t = HEAPU8[(((ptr)+(i))>>0)];
     hasUtf |= t;
     if (t == 0 && !length) break;
@@ -895,6 +907,7 @@ Module["stringToUTF8Array"] = stringToUTF8Array;
 // Returns the number of bytes written, EXCLUDING the null terminator.
 
 function stringToUTF8(str, outPtr, maxBytesToWrite) {
+  assert(typeof maxBytesToWrite == 'number', 'stringToUTF8(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!');
   return stringToUTF8Array(str, HEAPU8,outPtr, maxBytesToWrite);
 }
 Module["stringToUTF8"] = stringToUTF8;
@@ -931,6 +944,7 @@ Module["lengthBytesUTF8"] = lengthBytesUTF8;
 
 var UTF16Decoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-16le') : undefined;
 function UTF16ToString(ptr) {
+  assert(ptr % 2 == 0, 'Pointer passed to UTF16ToString must be aligned to two bytes!');
   var endPtr = ptr;
   // TextDecoder needs to know the byte length in advance, it doesn't stop on null terminator by itself.
   // Also, use the length info to avoid running tiny strings through TextDecoder, since .subarray() allocates garbage.
@@ -967,6 +981,8 @@ function UTF16ToString(ptr) {
 // Returns the number of bytes written, EXCLUDING the null terminator.
 
 function stringToUTF16(str, outPtr, maxBytesToWrite) {
+  assert(outPtr % 2 == 0, 'Pointer passed to stringToUTF16 must be aligned to two bytes!');
+  assert(typeof maxBytesToWrite == 'number', 'stringToUTF16(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!');
   // Backwards compatibility: if max bytes is not specified, assume unsafe unbounded write is allowed.
   if (maxBytesToWrite === undefined) {
     maxBytesToWrite = 0x7FFFFFFF;
@@ -995,6 +1011,7 @@ function lengthBytesUTF16(str) {
 
 
 function UTF32ToString(ptr) {
+  assert(ptr % 4 == 0, 'Pointer passed to UTF32ToString must be aligned to four bytes!');
   var i = 0;
 
   var str = '';
@@ -1027,6 +1044,8 @@ function UTF32ToString(ptr) {
 // Returns the number of bytes written, EXCLUDING the null terminator.
 
 function stringToUTF32(str, outPtr, maxBytesToWrite) {
+  assert(outPtr % 4 == 0, 'Pointer passed to stringToUTF32 must be aligned to four bytes!');
+  assert(typeof maxBytesToWrite == 'number', 'stringToUTF32(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!');
   // Backwards compatibility: if max bytes is not specified, assume unsafe unbounded write is allowed.
   if (maxBytesToWrite === undefined) {
     maxBytesToWrite = 0x7FFFFFFF;
@@ -1188,6 +1207,24 @@ var DYNAMIC_BASE, DYNAMICTOP_PTR; // dynamic area handled by sbrk
   staticSealed = false;
 
 
+// Initializes the stack cookie. Called at the startup of main and at the startup of each thread in pthreads mode.
+function writeStackCookie() {
+  assert((STACK_MAX & 3) == 0);
+  HEAPU32[(STACK_MAX >> 2)-1] = 0x02135467;
+  HEAPU32[(STACK_MAX >> 2)-2] = 0x89BACDFE;
+}
+
+function checkStackCookie() {
+  if (HEAPU32[(STACK_MAX >> 2)-1] != 0x02135467 || HEAPU32[(STACK_MAX >> 2)-2] != 0x89BACDFE) {
+    abort('Stack overflow! Stack cookie has been overwritten, expected hex dwords 0x89BACDFE and 0x02135467, but received 0x' + HEAPU32[(STACK_MAX >> 2)-2].toString(16) + ' ' + HEAPU32[(STACK_MAX >> 2)-1].toString(16));
+  }
+  // Also test the global address 0 for integrity. This check is not compatible with SAFE_SPLIT_MEMORY though, since that mode already tests all address 0 accesses on its own.
+  if (HEAP32[0] !== 0x63736d65 /* 'emsc' */) throw 'Runtime error: The application has corrupted its heap memory area (address zero)!';
+}
+
+function abortStackOverflow(allocSize) {
+  abort('Stack overflow! Attempted to allocate ' + allocSize + ' bytes on the stack, but stack has only ' + (STACK_MAX - Module['asm'].stackSave() + allocSize) + ' bytes available!');
+}
 
 function abortOnCannotGrowMemory() {
   abort('Cannot enlarge memory arrays. Either (1) compile with  -s TOTAL_MEMORY=X  with X higher than the current value ' + TOTAL_MEMORY + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
@@ -1214,12 +1251,14 @@ if (!Module['reallocBuffer']) Module['reallocBuffer'] = function(size) {
 
 function enlargeMemory() {
   // TOTAL_MEMORY is the current size of the actual array, and DYNAMICTOP is the new top.
+  assert(HEAP32[DYNAMICTOP_PTR>>2] > TOTAL_MEMORY); // This function should only ever be called after the ceiling of the dynamic heap has already been bumped to exceed the current total size of the asm.js heap.
 
 
   var PAGE_MULTIPLE = Module["usingWasm"] ? WASM_PAGE_SIZE : ASMJS_PAGE_SIZE; // In wasm, heap size must be a multiple of 64KB. In asm.js, they need to be multiples of 16MB.
   var LIMIT = 2147483648 - PAGE_MULTIPLE; // We can do one page short of 2GB as theoretical maximum.
 
   if (HEAP32[DYNAMICTOP_PTR>>2] > LIMIT) {
+    Module.printErr('Cannot enlarge memory, asked to go up to ' + HEAP32[DYNAMICTOP_PTR>>2] + ' bytes, but the limit is ' + LIMIT + ' bytes!');
     return false;
   }
 
@@ -1234,9 +1273,14 @@ function enlargeMemory() {
     }
   }
 
+  var start = Date.now();
 
   var replacement = Module['reallocBuffer'](TOTAL_MEMORY);
   if (!replacement || replacement.byteLength != TOTAL_MEMORY) {
+    Module.printErr('Failed to grow the heap from ' + OLD_TOTAL_MEMORY + ' bytes to ' + TOTAL_MEMORY + ' bytes, not enough memory!');
+    if (replacement) {
+      Module.printErr('Expected to get back a buffer of size ' + TOTAL_MEMORY + ' bytes, but instead got back a buffer of size ' + replacement.byteLength);
+    }
     // restore the state to before this call, we failed
     TOTAL_MEMORY = OLD_TOTAL_MEMORY;
     return false;
@@ -1247,7 +1291,11 @@ function enlargeMemory() {
   updateGlobalBuffer(replacement);
   updateGlobalBufferViews();
 
+  Module.printErr('enlarged memory arrays from ' + OLD_TOTAL_MEMORY + ' to ' + TOTAL_MEMORY + ', took ' + (Date.now() - start) + ' ms (has ArrayBuffer.transfer? ' + (!!ArrayBuffer.transfer) + ')');
 
+  if (!Module["usingWasm"]) {
+    Module.printErr('Warning: Enlarging memory arrays, this is not fast! ' + [OLD_TOTAL_MEMORY, TOTAL_MEMORY]);
+  }
 
 
   return true;
@@ -1266,21 +1314,27 @@ var TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 268435456;
 if (TOTAL_MEMORY < TOTAL_STACK) Module.printErr('TOTAL_MEMORY should be larger than TOTAL_STACK, was ' + TOTAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
 
 // Initialize the runtime's memory
+// check for full engine support (use string 'subarray' to avoid closure compiler confusion)
+assert(typeof Int32Array !== 'undefined' && typeof Float64Array !== 'undefined' && Int32Array.prototype.subarray !== undefined && Int32Array.prototype.set !== undefined,
+       'JS engine does not provide full typed array support');
 
 
 
 // Use a provided buffer, if there is one, or else allocate a new one
 if (Module['buffer']) {
   buffer = Module['buffer'];
+  assert(buffer.byteLength === TOTAL_MEMORY, 'provided buffer should be ' + TOTAL_MEMORY + ' bytes, but it is ' + buffer.byteLength);
 } else {
   // Use a WebAssembly memory where available
   if (typeof WebAssembly === 'object' && typeof WebAssembly.Memory === 'function') {
+    assert(TOTAL_MEMORY % WASM_PAGE_SIZE === 0);
     Module['wasmMemory'] = new WebAssembly.Memory({ 'initial': TOTAL_MEMORY / WASM_PAGE_SIZE });
     buffer = Module['wasmMemory'].buffer;
   } else
   {
     buffer = new ArrayBuffer(TOTAL_MEMORY);
   }
+  assert(buffer.byteLength === TOTAL_MEMORY);
 }
 updateGlobalBufferViews();
 
@@ -1347,21 +1401,25 @@ function preRun() {
 }
 
 function ensureInitRuntime() {
+  checkStackCookie();
   if (runtimeInitialized) return;
   runtimeInitialized = true;
   callRuntimeCallbacks(__ATINIT__);
 }
 
 function preMain() {
+  checkStackCookie();
   callRuntimeCallbacks(__ATMAIN__);
 }
 
 function exitRuntime() {
+  checkStackCookie();
   callRuntimeCallbacks(__ATEXIT__);
   runtimeExited = true;
 }
 
 function postRun() {
+  checkStackCookie();
   // compatibility - merge in anything from Module['postRun'] at this time
   if (Module['postRun']) {
     if (typeof Module['postRun'] == 'function') Module['postRun'] = [Module['postRun']];
@@ -1419,12 +1477,14 @@ function writeStringToMemory(string, buffer, dontAddNull) {
 Module["writeStringToMemory"] = writeStringToMemory;
 
 function writeArrayToMemory(array, buffer) {
+  assert(array.length >= 0, 'writeArrayToMemory array must have a length (should be an array or typed array)')
   HEAP8.set(array, buffer);
 }
 Module["writeArrayToMemory"] = writeArrayToMemory;
 
 function writeAsciiToMemory(str, buffer, dontAddNull) {
   for (var i = 0; i < str.length; ++i) {
+    assert(str.charCodeAt(i) === str.charCodeAt(i)&0xff);
     HEAP8[((buffer++)>>0)]=str.charCodeAt(i);
   }
   // Null-terminate the pointer to the HEAP.
@@ -1514,8 +1574,14 @@ var Math_trunc = Math.trunc;
 var runDependencies = 0;
 var runDependencyWatcher = null;
 var dependenciesFulfilled = null; // overridden to take different actions when all run dependencies are fulfilled
+var runDependencyTracking = {};
 
 function getUniqueRunDependency(id) {
+  var orig = id;
+  while (1) {
+    if (!runDependencyTracking[id]) return id;
+    id = orig + Math.random();
+  }
   return id;
 }
 
@@ -1524,6 +1590,33 @@ function addRunDependency(id) {
   if (Module['monitorRunDependencies']) {
     Module['monitorRunDependencies'](runDependencies);
   }
+  if (id) {
+    assert(!runDependencyTracking[id]);
+    runDependencyTracking[id] = 1;
+    if (runDependencyWatcher === null && typeof setInterval !== 'undefined') {
+      // Check for missing dependencies every few seconds
+      runDependencyWatcher = setInterval(function() {
+        if (ABORT) {
+          clearInterval(runDependencyWatcher);
+          runDependencyWatcher = null;
+          return;
+        }
+        var shown = false;
+        for (var dep in runDependencyTracking) {
+          if (!shown) {
+            shown = true;
+            Module.printErr('still waiting on run dependencies:');
+          }
+          Module.printErr('dependency: ' + dep);
+        }
+        if (shown) {
+          Module.printErr('(end of list)');
+        }
+      }, 10000);
+    }
+  } else {
+    Module.printErr('warning: run dependency added without ID');
+  }
 }
 Module["addRunDependency"] = addRunDependency;
 
@@ -1531,6 +1624,12 @@ function removeRunDependency(id) {
   runDependencies--;
   if (Module['monitorRunDependencies']) {
     Module['monitorRunDependencies'](runDependencies);
+  }
+  if (id) {
+    assert(runDependencyTracking[id]);
+    delete runDependencyTracking[id];
+  } else {
+    Module.printErr('warning: run dependency removed without ID');
   }
   if (runDependencies == 0) {
     if (runDependencyWatcher !== null) {
@@ -1777,9 +1876,15 @@ function integrateWasmJS() {
       }
     }
 
+    // Async compilation can be confusing when an error on the page overwrites Module
+    // (for example, if the order of elements is wrong, and the one defining Module is
+    // later), so we save Module and check it later.
+    var trueModule = Module;
     function receiveInstantiatedSource(output) {
       // 'output' is a WebAssemblyInstantiatedSource object which has both the module and instance.
       // receiveInstance() will swap in the exports (to Module.asm) so they can be called
+      assert(Module === trueModule, 'the Module object should not be replaced during async compilation - perhaps the order of HTML elements is wrong?');
+      trueModule = null;
       receiveInstance(output['instance']);
     }
     function instantiateArrayBuffer(receiver) {
@@ -1896,6 +2001,7 @@ function integrateWasmJS() {
           return null;
         }
       } catch(e) {
+        console.error('Module.reallocBuffer: Attempted to grow from ' + oldSize  + ' bytes to ' + size + ' bytes, but got error: ' + e);
         return null;
       }
     } else {
@@ -1974,7 +2080,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = Runtime.GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 569040;
+STATICTOP = STATIC_BASE + 549568;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
 
 
@@ -1983,12 +2089,14 @@ memoryInitializer = null;
 
 
 
-var STATIC_BUMP = 569040;
+var STATIC_BUMP = 549568;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
 /* no memory initializer */
 var tempDoublePtr = STATICTOP; STATICTOP += 16;
+
+assert(tempDoublePtr % 8 == 0);
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
 
@@ -2029,6 +2137,7 @@ function copyTempDouble(ptr) {
   
   function ___setErrNo(value) {
       if (Module['___errno_location']) HEAP32[((Module['___errno_location']())>>2)]=value;
+      else Module.printErr('failed to set errno from JS');
       return value;
     }
   
@@ -2041,6 +2150,12 @@ function copyTempDouble(ptr) {
     }function _posix_spawn() {
   return _fork.apply(null, arguments)
   }
+
+  function _dag_end_task() {
+  Module['printErr']('missing function: dag_end_task'); abort(-1);
+  }
+
+   
 
   
   var EXCEPTIONS={last:0,caught:[],infos:{},deAdjust:function (adjusted) {
@@ -2075,16 +2190,12 @@ function copyTempDouble(ptr) {
         if (!ptr) return;
         var info = EXCEPTIONS.infos[ptr];
         info.refcount = 0;
-      }};function ___cxa_decrement_exception_refcount(ptr) {
-      EXCEPTIONS.decRef(EXCEPTIONS.deAdjust(ptr));
+      }};function ___cxa_increment_exception_refcount(ptr) {
+      EXCEPTIONS.addRef(EXCEPTIONS.deAdjust(ptr));
     }
 
-  function _dag_end_task() {
-  Module['printErr']('missing function: dag_end_task'); abort(-1);
-  }
-
-  function _posix_spawn_file_actions_adddup2() {
-  Module['printErr']('missing function: posix_spawn_file_actions_adddup2'); abort(-1);
+  function _ogg_open() {
+  Module['printErr']('missing function: ogg_open'); abort(-1);
   }
 
   
@@ -2609,6 +2720,7 @@ function copyTempDouble(ptr) {
   
           if (buffer.subarray && (!node.contents || node.contents.subarray)) { // This write is from a typed array to a typed array?
             if (canOwn) {
+              assert(position === 0, 'canOwn must imply no weird position inside the file');
               node.contents = buffer.subarray(offset, offset + length);
               node.usedBytes = length;
               return length;
@@ -4514,6 +4626,7 @@ function copyTempDouble(ptr) {
           };
           this.setErrno(errno);
           this.message = ERRNO_MESSAGES[errno];
+          if (this.stack) this.stack = demangleAll(this.stack);
         };
         FS.ErrnoError.prototype = new Error();
         FS.ErrnoError.prototype.constructor = FS.ErrnoError;
@@ -5144,135 +5257,7 @@ function copyTempDouble(ptr) {
         return low;
       },getZero:function () {
         assert(SYSCALLS.get() === 0);
-      }};function ___syscall191(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // ugetrlimit
-      var resource = SYSCALLS.get(), rlim = SYSCALLS.get();
-      HEAP32[((rlim)>>2)]=-1;  // RLIM_INFINITY
-      HEAP32[(((rlim)+(4))>>2)]=-1;  // RLIM_INFINITY
-      HEAP32[(((rlim)+(8))>>2)]=-1;  // RLIM_INFINITY
-      HEAP32[(((rlim)+(12))>>2)]=-1;  // RLIM_INFINITY
-      return 0; // just report no limits
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___cxa_increment_exception_refcount(ptr) {
-      EXCEPTIONS.addRef(EXCEPTIONS.deAdjust(ptr));
-    }
-
-  function ___syscall193(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // truncate64
-      var path = SYSCALLS.getStr(), zero = SYSCALLS.getZero(), length = SYSCALLS.get64();
-      FS.truncate(path, length);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall192(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // mmap2
-      var addr = SYSCALLS.get(), len = SYSCALLS.get(), prot = SYSCALLS.get(), flags = SYSCALLS.get(), fd = SYSCALLS.get(), off = SYSCALLS.get()
-      off <<= 12; // undo pgoffset
-      var ptr;
-      var allocated = false;
-      if (fd === -1) {
-        ptr = _memalign(PAGE_SIZE, len);
-        if (!ptr) return -ERRNO_CODES.ENOMEM;
-        _memset(ptr, 0, len);
-        allocated = true;
-      } else {
-        var info = FS.getStream(fd);
-        if (!info) return -ERRNO_CODES.EBADF;
-        var res = FS.mmap(info, HEAPU8, addr, len, off, prot, flags);
-        ptr = res.ptr;
-        allocated = res.allocated;
-      }
-      SYSCALLS.mappings[ptr] = { malloc: ptr, len: len, allocated: allocated, fd: fd, flags: flags };
-      return ptr;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall195(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // SYS_stat64
-      var path = SYSCALLS.getStr(), buf = SYSCALLS.get();
-      return SYSCALLS.doStat(FS.stat, path, buf);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall194(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // ftruncate64
-      var fd = SYSCALLS.get(), zero = SYSCALLS.getZero(), length = SYSCALLS.get64();
-      FS.ftruncate(fd, length);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall197(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // SYS_fstat64
-      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get();
-      return SYSCALLS.doStat(FS.stat, stream.path, buf);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall196(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // SYS_lstat64
-      var path = SYSCALLS.getStr(), buf = SYSCALLS.get();
-      return SYSCALLS.doStat(FS.lstat, path, buf);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  
-  function ___syscall202(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getgid32
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }function ___syscall199() {
-  return ___syscall202.apply(null, arguments)
-  }
-
-  function ___syscall198(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // lchown32
-      var path = SYSCALLS.getStr(), owner = SYSCALLS.get(), group = SYSCALLS.get();
-      FS.chown(path, owner, group); // XXX we ignore the 'l' aspect, and do the same as chown
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall118(which, varargs) {SYSCALLS.varargs = varargs;
+      }};function ___syscall118(which, varargs) {SYSCALLS.varargs = varargs;
   try {
    // fsync
       var stream = SYSCALLS.getStreamFromFD();
@@ -5295,12 +5280,17 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function _llvm_stackrestore(p) {
-      var self = _llvm_stacksave;
-      var ret = self.LLVM_SAVEDSTACKS[p];
-      self.LLVM_SAVEDSTACKS.splice(p, 1);
-      Runtime.stackRestore(ret);
-    }
+  function ___syscall297(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // mknodat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), mode = SYSCALLS.get(), dev = SYSCALLS.get();
+      path = SYSCALLS.calculateAt(dirfd, path);
+      return SYSCALLS.doMknod(path, mode, dev);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
 
   function _posix_spawn_file_actions_init() {
   Module['printErr']('missing function: posix_spawn_file_actions_init'); abort(-1);
@@ -5342,47 +5332,16 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function _pthread_mutex_init() {}
+  function _aiff_caf_find_channel_layout_tag() {
+  Module['printErr']('missing function: aiff_caf_find_channel_layout_tag'); abort(-1);
+  }
 
   var _llvm_pow_f32=Math_pow;
 
-  function ___syscall218(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall51(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // mincore
-      return -ERRNO_CODES.ENOSYS; // unsupported feature
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall219(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // madvise
-      return 0; // advice is welcome, but ignored
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall146(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // writev
-      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get();
-      return SYSCALLS.doWritev(stream, iov, iovcnt);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall212(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // chown32
-      var path = SYSCALLS.getStr(), owner = SYSCALLS.get(), group = SYSCALLS.get();
-      FS.chown(path, owner, group);
-      return 0;
+   // acct
+      return -ERRNO_CODES.ENOSYS; // unsupported features
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
@@ -5390,20 +5349,6 @@ function copyTempDouble(ptr) {
   }
 
    
-
-  function ___syscall211(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getresgid32
-      var ruid = SYSCALLS.get(), euid = SYSCALLS.get(), suid = SYSCALLS.get();
-      HEAP32[((ruid)>>2)]=0;
-      HEAP32[((euid)>>2)]=0;
-      HEAP32[((suid)>>2)]=0;
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
 
   function ___syscall54(which, varargs) {SYSCALLS.varargs = varargs;
   try {
@@ -5534,72 +5479,50 @@ function copyTempDouble(ptr) {
       return ret;
     }
 
-  function ___syscall39(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // mkdir
-      var path = SYSCALLS.getStr(), mode = SYSCALLS.get();
-      return SYSCALLS.doMkdir(path, mode);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall38(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // rename
-      var old_path = SYSCALLS.getStr(), new_path = SYSCALLS.getStr();
-      FS.rename(old_path, new_path);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___clone() {
-  Module['printErr']('missing function: __clone'); abort(-1);
-  }
-
-  function ___muldc3() {
-  Module['printErr']('missing function: __muldc3'); abort(-1);
-  }
-
-  function ___syscall33(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // access
-      var path = SYSCALLS.getStr(), amode = SYSCALLS.get();
-      return SYSCALLS.doAccess(path, amode);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _pthread_cleanup_push(routine, arg) {
-      __ATEXIT__.push(function() { Module['dynCall_vi'](routine, arg) })
-      _pthread_cleanup_push.level = __ATEXIT__.length;
+  
+  
+  
+  function ___cxa_free_exception(ptr) {
+      try {
+        return _free(ptr);
+      } catch(e) { // XXX FIXME
+        Module.printErr('exception during cxa_free_exception: ' + e);
+      }
+    }function ___cxa_end_catch() {
+      // Clear state flag.
+      Module['setThrew'](0);
+      // Call destructor if one is registered then clear it.
+      var ptr = EXCEPTIONS.caught.pop();
+      if (ptr) {
+        EXCEPTIONS.decRef(EXCEPTIONS.deAdjust(ptr));
+        EXCEPTIONS.last = 0; // XXX in decRef?
+      }
+    }function ___cxa_rethrow() {
+      var ptr = EXCEPTIONS.caught.pop();
+      if (!EXCEPTIONS.infos[ptr].rethrown) {
+        // Only pop if the corresponding push was through rethrow_primary_exception
+        EXCEPTIONS.caught.push(ptr)
+        EXCEPTIONS.infos[ptr].rethrown = true;
+      }
+      EXCEPTIONS.last = ptr;
+      throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s DISABLE_EXCEPTION_CATCHING=0 or DISABLE_EXCEPTION_CATCHING=2 to catch.";
+    }function ___cxa_rethrow_primary_exception(ptr) {
+      if (!ptr) return;
+      EXCEPTIONS.caught.push(ptr);
+      EXCEPTIONS.infos[ptr].rethrown = true;
+      ___cxa_rethrow();
     }
 
-  function ___syscall36(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // sync
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
+  function _psf_fclose() {
+  Module['printErr']('missing function: psf_fclose'); abort(-1);
   }
 
-  function ___syscall34(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // nice
-      var inc = SYSCALLS.get();
-      return -ERRNO_CODES.EPERM; // no meaning to nice for our single-process environment
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
+  function _u_bitwidth_to_subformat() {
+  Module['printErr']('missing function: u_bitwidth_to_subformat'); abort(-1);
   }
+
+  function _psf_get_format_info() {
+  Module['printErr']('missing function: psf_get_format_info'); abort(-1);
   }
 
   
@@ -5608,2255 +5531,468 @@ function copyTempDouble(ptr) {
       return dest;
     } 
 
-  function _execl(/* ... */) {
-      // int execl(const char *path, const char *arg0, ... /*, (char *)0 */);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/exec.html
-      // We don't support executing external code.
-      ___setErrNo(ERRNO_CODES.ENOEXEC);
-      return -1;
-    }
+  function _psf_fseek() {
+  Module['printErr']('missing function: psf_fseek'); abort(-1);
+  }
+
+  function ___syscall205(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getgroups32
+      var size = SYSCALLS.get(), list = SYSCALLS.get();
+      if (size < 1) return -ERRNO_CODES.EINVAL;
+      HEAP32[((list)>>2)]=0;
+      return 1;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  
+  function ___syscall214(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // setgid32
+      var uid = SYSCALLS.get();
+      if (uid !== 0) return -ERRNO_CODES.EPERM;
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }function ___syscall204() {
+  return ___syscall214.apply(null, arguments)
+  }
+
+  function ___syscall207(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fchown32
+      var fd = SYSCALLS.get(), owner = SYSCALLS.get(), group = SYSCALLS.get();
+      FS.fchown(fd, owner, group);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  
+  function ___syscall202(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getgid32
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }function ___syscall201() {
+  return ___syscall202.apply(null, arguments)
+  }
+
+  function ___syscall200() {
+  return ___syscall202.apply(null, arguments)
+  }
+
+  function ___syscall203() {
+  return ___syscall214.apply(null, arguments)
+  }
+
+
+  function _psf_get_format_major_count() {
+  Module['printErr']('missing function: psf_get_format_major_count'); abort(-1);
+  }
+
+  function ___syscall195(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // SYS_stat64
+      var path = SYSCALLS.getStr(), buf = SYSCALLS.get();
+      return SYSCALLS.doStat(FS.stat, path, buf);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  
+  function ___syscall211(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getresgid32
+      var ruid = SYSCALLS.get(), euid = SYSCALLS.get(), suid = SYSCALLS.get();
+      HEAP32[((ruid)>>2)]=0;
+      HEAP32[((euid)>>2)]=0;
+      HEAP32[((suid)>>2)]=0;
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }function ___syscall209() {
+  return ___syscall211.apply(null, arguments)
+  }
 
    
 
-   
+  function ___syscall163(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // mremap
+      return -ERRNO_CODES.ENOMEM; // never succeed
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
 
-   
+  function _psf_get_format_subtype_count() {
+  Module['printErr']('missing function: psf_get_format_subtype_count'); abort(-1);
+  }
 
-  function _pthread_setcancelstate() { return 0; }
+  function _setgrent() {
+  Module['printErr']('missing function: setgrent'); abort(-1);
+  }
 
-  
-  
-  
-  
-  function _emscripten_set_main_loop_timing(mode, value) {
-      Browser.mainLoop.timingMode = mode;
-      Browser.mainLoop.timingValue = value;
-  
-      if (!Browser.mainLoop.func) {
-        return 1; // Return non-zero on failure, can't set timing mode when there is no main loop.
-      }
-  
-      if (mode == 0 /*EM_TIMING_SETTIMEOUT*/) {
-        Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_setTimeout() {
-          var timeUntilNextTick = Math.max(0, Browser.mainLoop.tickStartTime + value - _emscripten_get_now())|0;
-          setTimeout(Browser.mainLoop.runner, timeUntilNextTick); // doing this each time means that on exception, we stop
-        };
-        Browser.mainLoop.method = 'timeout';
-      } else if (mode == 1 /*EM_TIMING_RAF*/) {
-        Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_rAF() {
-          Browser.requestAnimationFrame(Browser.mainLoop.runner);
-        };
-        Browser.mainLoop.method = 'rAF';
-      } else if (mode == 2 /*EM_TIMING_SETIMMEDIATE*/) {
-        if (!window['setImmediate']) {
-          // Emulate setImmediate. (note: not a complete polyfill, we don't emulate clearImmediate() to keep code size to minimum, since not needed)
-          var setImmediates = [];
-          var emscriptenMainLoopMessageId = 'setimmediate';
-          function Browser_setImmediate_messageHandler(event) {
-            if (event.source === window && event.data === emscriptenMainLoopMessageId) {
-              event.stopPropagation();
-              setImmediates.shift()();
-            }
-          }
-          window.addEventListener("message", Browser_setImmediate_messageHandler, true);
-          window['setImmediate'] = function Browser_emulated_setImmediate(func) {
-            setImmediates.push(func);
-            if (ENVIRONMENT_IS_WORKER) {
-              if (Module['setImmediates'] === undefined) Module['setImmediates'] = [];
-              Module['setImmediates'].push(func);
-              window.postMessage({target: emscriptenMainLoopMessageId}); // In --proxy-to-worker, route the message via proxyClient.js
-            } else window.postMessage(emscriptenMainLoopMessageId, "*"); // On the main thread, can just send the message to itself.
-          }
-        }
-        Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_setImmediate() {
-          window['setImmediate'](Browser.mainLoop.runner);
-        };
-        Browser.mainLoop.method = 'immediate';
-      }
+  function _broadcast_var_get() {
+  Module['printErr']('missing function: broadcast_var_get'); abort(-1);
+  }
+
+  function ___syscall20(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getpid
+      return PROCINFO.pid;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _dag_get_task() {
+  Module['printErr']('missing function: dag_get_task'); abort(-1);
+  }
+
+  function _atexit(func, arg) {
+      __ATEXIT__.unshift({ func: func, arg: arg });
+    }
+
+  function _psf_binheader_writef() {
+  Module['printErr']('missing function: psf_binheader_writef'); abort(-1);
+  }
+
+  function ___lock() {}
+
+  function _clock() {
+      if (_clock.start === undefined) _clock.start = Date.now();
+      return ((Date.now() - _clock.start) * (1000000 / 1000))|0;
+    }
+
+  function ___clone() {
+  Module['printErr']('missing function: __clone'); abort(-1);
+  }
+
+  function _psf_calc_signal_max() {
+  Module['printErr']('missing function: psf_calc_signal_max'); abort(-1);
+  }
+
+  function _psf_calc_max_all_channels() {
+  Module['printErr']('missing function: psf_calc_max_all_channels'); abort(-1);
+  }
+
+  function _pthread_detach() {}
+
+  function _alaw_init() {
+  Module['printErr']('missing function: alaw_init'); abort(-1);
+  }
+
+  function _psf_is_pipe() {
+  Module['printErr']('missing function: psf_is_pipe'); abort(-1);
+  }
+
+  function ___syscall10(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // unlink
+      var path = SYSCALLS.getStr();
+      FS.unlink(path);
       return 0;
-    }
-  
-  function _emscripten_get_now() { abort() }function _emscripten_set_main_loop(func, fps, simulateInfiniteLoop, arg, noSetTiming) {
-      Module['noExitRuntime'] = true;
-  
-      assert(!Browser.mainLoop.func, 'emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.');
-  
-      Browser.mainLoop.func = func;
-      Browser.mainLoop.arg = arg;
-  
-      var browserIterationFunc;
-      if (typeof arg !== 'undefined') {
-        browserIterationFunc = function() {
-          Module['dynCall_vi'](func, arg);
-        };
-      } else {
-        browserIterationFunc = function() {
-          Module['dynCall_v'](func);
-        };
-      }
-  
-      var thisMainLoopId = Browser.mainLoop.currentlyRunningMainloop;
-  
-      Browser.mainLoop.runner = function Browser_mainLoop_runner() {
-        if (ABORT) return;
-        if (Browser.mainLoop.queue.length > 0) {
-          var start = Date.now();
-          var blocker = Browser.mainLoop.queue.shift();
-          blocker.func(blocker.arg);
-          if (Browser.mainLoop.remainingBlockers) {
-            var remaining = Browser.mainLoop.remainingBlockers;
-            var next = remaining%1 == 0 ? remaining-1 : Math.floor(remaining);
-            if (blocker.counted) {
-              Browser.mainLoop.remainingBlockers = next;
-            } else {
-              // not counted, but move the progress along a tiny bit
-              next = next + 0.5; // do not steal all the next one's progress
-              Browser.mainLoop.remainingBlockers = (8*remaining + next)/9;
-            }
-          }
-          console.log('main loop blocker "' + blocker.name + '" took ' + (Date.now() - start) + ' ms'); //, left: ' + Browser.mainLoop.remainingBlockers);
-          Browser.mainLoop.updateStatus();
-          
-          // catches pause/resume main loop from blocker execution
-          if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
-          
-          setTimeout(Browser.mainLoop.runner, 0);
-          return;
-        }
-  
-        // catch pauses from non-main loop sources
-        if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
-  
-        // Implement very basic swap interval control
-        Browser.mainLoop.currentFrameNumber = Browser.mainLoop.currentFrameNumber + 1 | 0;
-        if (Browser.mainLoop.timingMode == 1/*EM_TIMING_RAF*/ && Browser.mainLoop.timingValue > 1 && Browser.mainLoop.currentFrameNumber % Browser.mainLoop.timingValue != 0) {
-          // Not the scheduled time to render this frame - skip.
-          Browser.mainLoop.scheduler();
-          return;
-        } else if (Browser.mainLoop.timingMode == 0/*EM_TIMING_SETTIMEOUT*/) {
-          Browser.mainLoop.tickStartTime = _emscripten_get_now();
-        }
-  
-        // Signal GL rendering layer that processing of a new frame is about to start. This helps it optimize
-        // VBO double-buffering and reduce GPU stalls.
-  
-  
-        if (Browser.mainLoop.method === 'timeout' && Module.ctx) {
-          Module.printErr('Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!');
-          Browser.mainLoop.method = ''; // just warn once per call to set main loop
-        }
-  
-        Browser.mainLoop.runIter(browserIterationFunc);
-  
-  
-        // catch pauses from the main loop itself
-        if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
-  
-        // Queue new audio data. This is important to be right after the main loop invocation, so that we will immediately be able
-        // to queue the newest produced audio samples.
-        // TODO: Consider adding pre- and post- rAF callbacks so that GL.newRenderingFrameStarted() and SDL.audio.queueNewAudioData()
-        //       do not need to be hardcoded into this function, but can be more generic.
-        if (typeof SDL === 'object' && SDL.audio && SDL.audio.queueNewAudioData) SDL.audio.queueNewAudioData();
-  
-        Browser.mainLoop.scheduler();
-      }
-  
-      if (!noSetTiming) {
-        if (fps && fps > 0) _emscripten_set_main_loop_timing(0/*EM_TIMING_SETTIMEOUT*/, 1000.0 / fps);
-        else _emscripten_set_main_loop_timing(1/*EM_TIMING_RAF*/, 1); // Do rAF by rendering each frame (no decimating)
-  
-        Browser.mainLoop.scheduler();
-      }
-  
-      if (simulateInfiniteLoop) {
-        throw 'SimulateInfiniteLoop';
-      }
-    }var Browser={mainLoop:{scheduler:null,method:"",currentlyRunningMainloop:0,func:null,arg:0,timingMode:0,timingValue:0,currentFrameNumber:0,queue:[],pause:function () {
-          Browser.mainLoop.scheduler = null;
-          Browser.mainLoop.currentlyRunningMainloop++; // Incrementing this signals the previous main loop that it's now become old, and it must return.
-        },resume:function () {
-          Browser.mainLoop.currentlyRunningMainloop++;
-          var timingMode = Browser.mainLoop.timingMode;
-          var timingValue = Browser.mainLoop.timingValue;
-          var func = Browser.mainLoop.func;
-          Browser.mainLoop.func = null;
-          _emscripten_set_main_loop(func, 0, false, Browser.mainLoop.arg, true /* do not set timing and call scheduler, we will do it on the next lines */);
-          _emscripten_set_main_loop_timing(timingMode, timingValue);
-          Browser.mainLoop.scheduler();
-        },updateStatus:function () {
-          if (Module['setStatus']) {
-            var message = Module['statusMessage'] || 'Please wait...';
-            var remaining = Browser.mainLoop.remainingBlockers;
-            var expected = Browser.mainLoop.expectedBlockers;
-            if (remaining) {
-              if (remaining < expected) {
-                Module['setStatus'](message + ' (' + (expected - remaining) + '/' + expected + ')');
-              } else {
-                Module['setStatus'](message);
-              }
-            } else {
-              Module['setStatus']('');
-            }
-          }
-        },runIter:function (func) {
-          if (ABORT) return;
-          if (Module['preMainLoop']) {
-            var preRet = Module['preMainLoop']();
-            if (preRet === false) {
-              return; // |return false| skips a frame
-            }
-          }
-          try {
-            func();
-          } catch (e) {
-            if (e instanceof ExitStatus) {
-              return;
-            } else {
-              if (e && typeof e === 'object' && e.stack) Module.printErr('exception thrown: ' + [e, e.stack]);
-              throw e;
-            }
-          }
-          if (Module['postMainLoop']) Module['postMainLoop']();
-        }},isFullscreen:false,pointerLock:false,moduleContextCreatedCallbacks:[],workers:[],init:function () {
-        if (!Module["preloadPlugins"]) Module["preloadPlugins"] = []; // needs to exist even in workers
-  
-        if (Browser.initted) return;
-        Browser.initted = true;
-  
-        try {
-          new Blob();
-          Browser.hasBlobConstructor = true;
-        } catch(e) {
-          Browser.hasBlobConstructor = false;
-          console.log("warning: no blob constructor, cannot create blobs with mimetypes");
-        }
-        Browser.BlobBuilder = typeof MozBlobBuilder != "undefined" ? MozBlobBuilder : (typeof WebKitBlobBuilder != "undefined" ? WebKitBlobBuilder : (!Browser.hasBlobConstructor ? console.log("warning: no BlobBuilder") : null));
-        Browser.URLObject = typeof window != "undefined" ? (window.URL ? window.URL : window.webkitURL) : undefined;
-        if (!Module.noImageDecoding && typeof Browser.URLObject === 'undefined') {
-          console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available.");
-          Module.noImageDecoding = true;
-        }
-  
-        // Support for plugins that can process preloaded files. You can add more of these to
-        // your app by creating and appending to Module.preloadPlugins.
-        //
-        // Each plugin is asked if it can handle a file based on the file's name. If it can,
-        // it is given the file's raw data. When it is done, it calls a callback with the file's
-        // (possibly modified) data. For example, a plugin might decompress a file, or it
-        // might create some side data structure for use later (like an Image element, etc.).
-  
-        var imagePlugin = {};
-        imagePlugin['canHandle'] = function imagePlugin_canHandle(name) {
-          return !Module.noImageDecoding && /\.(jpg|jpeg|png|bmp)$/i.test(name);
-        };
-        imagePlugin['handle'] = function imagePlugin_handle(byteArray, name, onload, onerror) {
-          var b = null;
-          if (Browser.hasBlobConstructor) {
-            try {
-              b = new Blob([byteArray], { type: Browser.getMimetype(name) });
-              if (b.size !== byteArray.length) { // Safari bug #118630
-                // Safari's Blob can only take an ArrayBuffer
-                b = new Blob([(new Uint8Array(byteArray)).buffer], { type: Browser.getMimetype(name) });
-              }
-            } catch(e) {
-              Runtime.warnOnce('Blob constructor present but fails: ' + e + '; falling back to blob builder');
-            }
-          }
-          if (!b) {
-            var bb = new Browser.BlobBuilder();
-            bb.append((new Uint8Array(byteArray)).buffer); // we need to pass a buffer, and must copy the array to get the right data range
-            b = bb.getBlob();
-          }
-          var url = Browser.URLObject.createObjectURL(b);
-          var img = new Image();
-          img.onload = function img_onload() {
-            assert(img.complete, 'Image ' + name + ' could not be decoded');
-            var canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            Module["preloadedImages"][name] = canvas;
-            Browser.URLObject.revokeObjectURL(url);
-            if (onload) onload(byteArray);
-          };
-          img.onerror = function img_onerror(event) {
-            console.log('Image ' + url + ' could not be decoded');
-            if (onerror) onerror();
-          };
-          img.src = url;
-        };
-        Module['preloadPlugins'].push(imagePlugin);
-  
-        var audioPlugin = {};
-        audioPlugin['canHandle'] = function audioPlugin_canHandle(name) {
-          return !Module.noAudioDecoding && name.substr(-4) in { '.ogg': 1, '.wav': 1, '.mp3': 1 };
-        };
-        audioPlugin['handle'] = function audioPlugin_handle(byteArray, name, onload, onerror) {
-          var done = false;
-          function finish(audio) {
-            if (done) return;
-            done = true;
-            Module["preloadedAudios"][name] = audio;
-            if (onload) onload(byteArray);
-          }
-          function fail() {
-            if (done) return;
-            done = true;
-            Module["preloadedAudios"][name] = new Audio(); // empty shim
-            if (onerror) onerror();
-          }
-          if (Browser.hasBlobConstructor) {
-            try {
-              var b = new Blob([byteArray], { type: Browser.getMimetype(name) });
-            } catch(e) {
-              return fail();
-            }
-            var url = Browser.URLObject.createObjectURL(b); // XXX we never revoke this!
-            var audio = new Audio();
-            audio.addEventListener('canplaythrough', function() { finish(audio) }, false); // use addEventListener due to chromium bug 124926
-            audio.onerror = function audio_onerror(event) {
-              if (done) return;
-              console.log('warning: browser could not fully decode audio ' + name + ', trying slower base64 approach');
-              function encode64(data) {
-                var BASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-                var PAD = '=';
-                var ret = '';
-                var leftchar = 0;
-                var leftbits = 0;
-                for (var i = 0; i < data.length; i++) {
-                  leftchar = (leftchar << 8) | data[i];
-                  leftbits += 8;
-                  while (leftbits >= 6) {
-                    var curr = (leftchar >> (leftbits-6)) & 0x3f;
-                    leftbits -= 6;
-                    ret += BASE[curr];
-                  }
-                }
-                if (leftbits == 2) {
-                  ret += BASE[(leftchar&3) << 4];
-                  ret += PAD + PAD;
-                } else if (leftbits == 4) {
-                  ret += BASE[(leftchar&0xf) << 2];
-                  ret += PAD;
-                }
-                return ret;
-              }
-              audio.src = 'data:audio/x-' + name.substr(-3) + ';base64,' + encode64(byteArray);
-              finish(audio); // we don't wait for confirmation this worked - but it's worth trying
-            };
-            audio.src = url;
-            // workaround for chrome bug 124926 - we do not always get oncanplaythrough or onerror
-            Browser.safeSetTimeout(function() {
-              finish(audio); // try to use it even though it is not necessarily ready to play
-            }, 10000);
-          } else {
-            return fail();
-          }
-        };
-        Module['preloadPlugins'].push(audioPlugin);
-  
-        // Canvas event setup
-  
-        function pointerLockChange() {
-          Browser.pointerLock = document['pointerLockElement'] === Module['canvas'] ||
-                                document['mozPointerLockElement'] === Module['canvas'] ||
-                                document['webkitPointerLockElement'] === Module['canvas'] ||
-                                document['msPointerLockElement'] === Module['canvas'];
-        }
-        var canvas = Module['canvas'];
-        if (canvas) {
-          // forced aspect ratio can be enabled by defining 'forcedAspectRatio' on Module
-          // Module['forcedAspectRatio'] = 4 / 3;
-          
-          canvas.requestPointerLock = canvas['requestPointerLock'] ||
-                                      canvas['mozRequestPointerLock'] ||
-                                      canvas['webkitRequestPointerLock'] ||
-                                      canvas['msRequestPointerLock'] ||
-                                      function(){};
-          canvas.exitPointerLock = document['exitPointerLock'] ||
-                                   document['mozExitPointerLock'] ||
-                                   document['webkitExitPointerLock'] ||
-                                   document['msExitPointerLock'] ||
-                                   function(){}; // no-op if function does not exist
-          canvas.exitPointerLock = canvas.exitPointerLock.bind(document);
-  
-          document.addEventListener('pointerlockchange', pointerLockChange, false);
-          document.addEventListener('mozpointerlockchange', pointerLockChange, false);
-          document.addEventListener('webkitpointerlockchange', pointerLockChange, false);
-          document.addEventListener('mspointerlockchange', pointerLockChange, false);
-  
-          if (Module['elementPointerLock']) {
-            canvas.addEventListener("click", function(ev) {
-              if (!Browser.pointerLock && Module['canvas'].requestPointerLock) {
-                Module['canvas'].requestPointerLock();
-                ev.preventDefault();
-              }
-            }, false);
-          }
-        }
-      },createContext:function (canvas, useWebGL, setInModule, webGLContextAttributes) {
-        if (useWebGL && Module.ctx && canvas == Module.canvas) return Module.ctx; // no need to recreate GL context if it's already been created for this canvas.
-  
-        var ctx;
-        var contextHandle;
-        if (useWebGL) {
-          // For GLES2/desktop GL compatibility, adjust a few defaults to be different to WebGL defaults, so that they align better with the desktop defaults.
-          var contextAttributes = {
-            antialias: false,
-            alpha: false
-          };
-  
-          if (webGLContextAttributes) {
-            for (var attribute in webGLContextAttributes) {
-              contextAttributes[attribute] = webGLContextAttributes[attribute];
-            }
-          }
-  
-          contextHandle = GL.createContext(canvas, contextAttributes);
-          if (contextHandle) {
-            ctx = GL.getContext(contextHandle).GLctx;
-          }
-        } else {
-          ctx = canvas.getContext('2d');
-        }
-  
-        if (!ctx) return null;
-  
-        if (setInModule) {
-          if (!useWebGL) assert(typeof GLctx === 'undefined', 'cannot set in module if GLctx is used, but we are a non-GL context that would replace it');
-  
-          Module.ctx = ctx;
-          if (useWebGL) GL.makeContextCurrent(contextHandle);
-          Module.useWebGL = useWebGL;
-          Browser.moduleContextCreatedCallbacks.forEach(function(callback) { callback() });
-          Browser.init();
-        }
-        return ctx;
-      },destroyContext:function (canvas, useWebGL, setInModule) {},fullscreenHandlersInstalled:false,lockPointer:undefined,resizeCanvas:undefined,requestFullscreen:function (lockPointer, resizeCanvas, vrDevice) {
-        Browser.lockPointer = lockPointer;
-        Browser.resizeCanvas = resizeCanvas;
-        Browser.vrDevice = vrDevice;
-        if (typeof Browser.lockPointer === 'undefined') Browser.lockPointer = true;
-        if (typeof Browser.resizeCanvas === 'undefined') Browser.resizeCanvas = false;
-        if (typeof Browser.vrDevice === 'undefined') Browser.vrDevice = null;
-  
-        var canvas = Module['canvas'];
-        function fullscreenChange() {
-          Browser.isFullscreen = false;
-          var canvasContainer = canvas.parentNode;
-          if ((document['fullscreenElement'] || document['mozFullScreenElement'] ||
-               document['msFullscreenElement'] || document['webkitFullscreenElement'] ||
-               document['webkitCurrentFullScreenElement']) === canvasContainer) {
-            canvas.exitFullscreen = document['exitFullscreen'] ||
-                                    document['cancelFullScreen'] ||
-                                    document['mozCancelFullScreen'] ||
-                                    document['msExitFullscreen'] ||
-                                    document['webkitCancelFullScreen'] ||
-                                    function() {};
-            canvas.exitFullscreen = canvas.exitFullscreen.bind(document);
-            if (Browser.lockPointer) canvas.requestPointerLock();
-            Browser.isFullscreen = true;
-            if (Browser.resizeCanvas) Browser.setFullscreenCanvasSize();
-          } else {
-            
-            // remove the full screen specific parent of the canvas again to restore the HTML structure from before going full screen
-            canvasContainer.parentNode.insertBefore(canvas, canvasContainer);
-            canvasContainer.parentNode.removeChild(canvasContainer);
-            
-            if (Browser.resizeCanvas) Browser.setWindowedCanvasSize();
-          }
-          if (Module['onFullScreen']) Module['onFullScreen'](Browser.isFullscreen);
-          if (Module['onFullscreen']) Module['onFullscreen'](Browser.isFullscreen);
-          Browser.updateCanvasDimensions(canvas);
-        }
-  
-        if (!Browser.fullscreenHandlersInstalled) {
-          Browser.fullscreenHandlersInstalled = true;
-          document.addEventListener('fullscreenchange', fullscreenChange, false);
-          document.addEventListener('mozfullscreenchange', fullscreenChange, false);
-          document.addEventListener('webkitfullscreenchange', fullscreenChange, false);
-          document.addEventListener('MSFullscreenChange', fullscreenChange, false);
-        }
-  
-        // create a new parent to ensure the canvas has no siblings. this allows browsers to optimize full screen performance when its parent is the full screen root
-        var canvasContainer = document.createElement("div");
-        canvas.parentNode.insertBefore(canvasContainer, canvas);
-        canvasContainer.appendChild(canvas);
-  
-        // use parent of canvas as full screen root to allow aspect ratio correction (Firefox stretches the root to screen size)
-        canvasContainer.requestFullscreen = canvasContainer['requestFullscreen'] ||
-                                            canvasContainer['mozRequestFullScreen'] ||
-                                            canvasContainer['msRequestFullscreen'] ||
-                                           (canvasContainer['webkitRequestFullscreen'] ? function() { canvasContainer['webkitRequestFullscreen'](Element['ALLOW_KEYBOARD_INPUT']) } : null) ||
-                                           (canvasContainer['webkitRequestFullScreen'] ? function() { canvasContainer['webkitRequestFullScreen'](Element['ALLOW_KEYBOARD_INPUT']) } : null);
-  
-        if (vrDevice) {
-          canvasContainer.requestFullscreen({ vrDisplay: vrDevice });
-        } else {
-          canvasContainer.requestFullscreen();
-        }
-      },requestFullScreen:function (lockPointer, resizeCanvas, vrDevice) {
-          Module.printErr('Browser.requestFullScreen() is deprecated. Please call Browser.requestFullscreen instead.');
-          Browser.requestFullScreen = function(lockPointer, resizeCanvas, vrDevice) {
-            return Browser.requestFullscreen(lockPointer, resizeCanvas, vrDevice);
-          }
-          return Browser.requestFullscreen(lockPointer, resizeCanvas, vrDevice);
-      },nextRAF:0,fakeRequestAnimationFrame:function (func) {
-        // try to keep 60fps between calls to here
-        var now = Date.now();
-        if (Browser.nextRAF === 0) {
-          Browser.nextRAF = now + 1000/60;
-        } else {
-          while (now + 2 >= Browser.nextRAF) { // fudge a little, to avoid timer jitter causing us to do lots of delay:0
-            Browser.nextRAF += 1000/60;
-          }
-        }
-        var delay = Math.max(Browser.nextRAF - now, 0);
-        setTimeout(func, delay);
-      },requestAnimationFrame:function requestAnimationFrame(func) {
-        if (typeof window === 'undefined') { // Provide fallback to setTimeout if window is undefined (e.g. in Node.js)
-          Browser.fakeRequestAnimationFrame(func);
-        } else {
-          if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = window['requestAnimationFrame'] ||
-                                           window['mozRequestAnimationFrame'] ||
-                                           window['webkitRequestAnimationFrame'] ||
-                                           window['msRequestAnimationFrame'] ||
-                                           window['oRequestAnimationFrame'] ||
-                                           Browser.fakeRequestAnimationFrame;
-          }
-          window.requestAnimationFrame(func);
-        }
-      },safeCallback:function (func) {
-        return function() {
-          if (!ABORT) return func.apply(null, arguments);
-        };
-      },allowAsyncCallbacks:true,queuedAsyncCallbacks:[],pauseAsyncCallbacks:function () {
-        Browser.allowAsyncCallbacks = false;
-      },resumeAsyncCallbacks:function () { // marks future callbacks as ok to execute, and synchronously runs any remaining ones right now
-        Browser.allowAsyncCallbacks = true;
-        if (Browser.queuedAsyncCallbacks.length > 0) {
-          var callbacks = Browser.queuedAsyncCallbacks;
-          Browser.queuedAsyncCallbacks = [];
-          callbacks.forEach(function(func) {
-            func();
-          });
-        }
-      },safeRequestAnimationFrame:function (func) {
-        return Browser.requestAnimationFrame(function() {
-          if (ABORT) return;
-          if (Browser.allowAsyncCallbacks) {
-            func();
-          } else {
-            Browser.queuedAsyncCallbacks.push(func);
-          }
-        });
-      },safeSetTimeout:function (func, timeout) {
-        Module['noExitRuntime'] = true;
-        return setTimeout(function() {
-          if (ABORT) return;
-          if (Browser.allowAsyncCallbacks) {
-            func();
-          } else {
-            Browser.queuedAsyncCallbacks.push(func);
-          }
-        }, timeout);
-      },safeSetInterval:function (func, timeout) {
-        Module['noExitRuntime'] = true;
-        return setInterval(function() {
-          if (ABORT) return;
-          if (Browser.allowAsyncCallbacks) {
-            func();
-          } // drop it on the floor otherwise, next interval will kick in
-        }, timeout);
-      },getMimetype:function (name) {
-        return {
-          'jpg': 'image/jpeg',
-          'jpeg': 'image/jpeg',
-          'png': 'image/png',
-          'bmp': 'image/bmp',
-          'ogg': 'audio/ogg',
-          'wav': 'audio/wav',
-          'mp3': 'audio/mpeg'
-        }[name.substr(name.lastIndexOf('.')+1)];
-      },getUserMedia:function (func) {
-        if(!window.getUserMedia) {
-          window.getUserMedia = navigator['getUserMedia'] ||
-                                navigator['mozGetUserMedia'];
-        }
-        window.getUserMedia(func);
-      },getMovementX:function (event) {
-        return event['movementX'] ||
-               event['mozMovementX'] ||
-               event['webkitMovementX'] ||
-               0;
-      },getMovementY:function (event) {
-        return event['movementY'] ||
-               event['mozMovementY'] ||
-               event['webkitMovementY'] ||
-               0;
-      },getMouseWheelDelta:function (event) {
-        var delta = 0;
-        switch (event.type) {
-          case 'DOMMouseScroll': 
-            delta = event.detail;
-            break;
-          case 'mousewheel': 
-            delta = event.wheelDelta;
-            break;
-          case 'wheel': 
-            delta = event['deltaY'];
-            break;
-          default:
-            throw 'unrecognized mouse wheel event: ' + event.type;
-        }
-        return delta;
-      },mouseX:0,mouseY:0,mouseMovementX:0,mouseMovementY:0,touches:{},lastTouches:{},calculateMouseEvent:function (event) { // event should be mousemove, mousedown or mouseup
-        if (Browser.pointerLock) {
-          // When the pointer is locked, calculate the coordinates
-          // based on the movement of the mouse.
-          // Workaround for Firefox bug 764498
-          if (event.type != 'mousemove' &&
-              ('mozMovementX' in event)) {
-            Browser.mouseMovementX = Browser.mouseMovementY = 0;
-          } else {
-            Browser.mouseMovementX = Browser.getMovementX(event);
-            Browser.mouseMovementY = Browser.getMovementY(event);
-          }
-          
-          // check if SDL is available
-          if (typeof SDL != "undefined") {
-          	Browser.mouseX = SDL.mouseX + Browser.mouseMovementX;
-          	Browser.mouseY = SDL.mouseY + Browser.mouseMovementY;
-          } else {
-          	// just add the mouse delta to the current absolut mouse position
-          	// FIXME: ideally this should be clamped against the canvas size and zero
-          	Browser.mouseX += Browser.mouseMovementX;
-          	Browser.mouseY += Browser.mouseMovementY;
-          }        
-        } else {
-          // Otherwise, calculate the movement based on the changes
-          // in the coordinates.
-          var rect = Module["canvas"].getBoundingClientRect();
-          var cw = Module["canvas"].width;
-          var ch = Module["canvas"].height;
-  
-          // Neither .scrollX or .pageXOffset are defined in a spec, but
-          // we prefer .scrollX because it is currently in a spec draft.
-          // (see: http://www.w3.org/TR/2013/WD-cssom-view-20131217/)
-          var scrollX = ((typeof window.scrollX !== 'undefined') ? window.scrollX : window.pageXOffset);
-          var scrollY = ((typeof window.scrollY !== 'undefined') ? window.scrollY : window.pageYOffset);
-  
-          if (event.type === 'touchstart' || event.type === 'touchend' || event.type === 'touchmove') {
-            var touch = event.touch;
-            if (touch === undefined) {
-              return; // the "touch" property is only defined in SDL
-  
-            }
-            var adjustedX = touch.pageX - (scrollX + rect.left);
-            var adjustedY = touch.pageY - (scrollY + rect.top);
-  
-            adjustedX = adjustedX * (cw / rect.width);
-            adjustedY = adjustedY * (ch / rect.height);
-  
-            var coords = { x: adjustedX, y: adjustedY };
-            
-            if (event.type === 'touchstart') {
-              Browser.lastTouches[touch.identifier] = coords;
-              Browser.touches[touch.identifier] = coords;
-            } else if (event.type === 'touchend' || event.type === 'touchmove') {
-              var last = Browser.touches[touch.identifier];
-              if (!last) last = coords;
-              Browser.lastTouches[touch.identifier] = last;
-              Browser.touches[touch.identifier] = coords;
-            } 
-            return;
-          }
-  
-          var x = event.pageX - (scrollX + rect.left);
-          var y = event.pageY - (scrollY + rect.top);
-  
-          // the canvas might be CSS-scaled compared to its backbuffer;
-          // SDL-using content will want mouse coordinates in terms
-          // of backbuffer units.
-          x = x * (cw / rect.width);
-          y = y * (ch / rect.height);
-  
-          Browser.mouseMovementX = x - Browser.mouseX;
-          Browser.mouseMovementY = y - Browser.mouseY;
-          Browser.mouseX = x;
-          Browser.mouseY = y;
-        }
-      },asyncLoad:function (url, onload, onerror, noRunDep) {
-        var dep = !noRunDep ? getUniqueRunDependency('al ' + url) : '';
-        Module['readAsync'](url, function(arrayBuffer) {
-          assert(arrayBuffer, 'Loading data file "' + url + '" failed (no arrayBuffer).');
-          onload(new Uint8Array(arrayBuffer));
-          if (dep) removeRunDependency(dep);
-        }, function(event) {
-          if (onerror) {
-            onerror();
-          } else {
-            throw 'Loading data file "' + url + '" failed.';
-          }
-        });
-        if (dep) addRunDependency(dep);
-      },resizeListeners:[],updateResizeListeners:function () {
-        var canvas = Module['canvas'];
-        Browser.resizeListeners.forEach(function(listener) {
-          listener(canvas.width, canvas.height);
-        });
-      },setCanvasSize:function (width, height, noUpdates) {
-        var canvas = Module['canvas'];
-        Browser.updateCanvasDimensions(canvas, width, height);
-        if (!noUpdates) Browser.updateResizeListeners();
-      },windowedWidth:0,windowedHeight:0,setFullscreenCanvasSize:function () {
-        // check if SDL is available   
-        if (typeof SDL != "undefined") {
-        	var flags = HEAPU32[((SDL.screen+Runtime.QUANTUM_SIZE*0)>>2)];
-        	flags = flags | 0x00800000; // set SDL_FULLSCREEN flag
-        	HEAP32[((SDL.screen+Runtime.QUANTUM_SIZE*0)>>2)]=flags
-        }
-        Browser.updateResizeListeners();
-      },setWindowedCanvasSize:function () {
-        // check if SDL is available       
-        if (typeof SDL != "undefined") {
-        	var flags = HEAPU32[((SDL.screen+Runtime.QUANTUM_SIZE*0)>>2)];
-        	flags = flags & ~0x00800000; // clear SDL_FULLSCREEN flag
-        	HEAP32[((SDL.screen+Runtime.QUANTUM_SIZE*0)>>2)]=flags
-        }
-        Browser.updateResizeListeners();
-      },updateCanvasDimensions:function (canvas, wNative, hNative) {
-        if (wNative && hNative) {
-          canvas.widthNative = wNative;
-          canvas.heightNative = hNative;
-        } else {
-          wNative = canvas.widthNative;
-          hNative = canvas.heightNative;
-        }
-        var w = wNative;
-        var h = hNative;
-        if (Module['forcedAspectRatio'] && Module['forcedAspectRatio'] > 0) {
-          if (w/h < Module['forcedAspectRatio']) {
-            w = Math.round(h * Module['forcedAspectRatio']);
-          } else {
-            h = Math.round(w / Module['forcedAspectRatio']);
-          }
-        }
-        if (((document['fullscreenElement'] || document['mozFullScreenElement'] ||
-             document['msFullscreenElement'] || document['webkitFullscreenElement'] ||
-             document['webkitCurrentFullScreenElement']) === canvas.parentNode) && (typeof screen != 'undefined')) {
-           var factor = Math.min(screen.width / w, screen.height / h);
-           w = Math.round(w * factor);
-           h = Math.round(h * factor);
-        }
-        if (Browser.resizeCanvas) {
-          if (canvas.width  != w) canvas.width  = w;
-          if (canvas.height != h) canvas.height = h;
-          if (typeof canvas.style != 'undefined') {
-            canvas.style.removeProperty( "width");
-            canvas.style.removeProperty("height");
-          }
-        } else {
-          if (canvas.width  != wNative) canvas.width  = wNative;
-          if (canvas.height != hNative) canvas.height = hNative;
-          if (typeof canvas.style != 'undefined') {
-            if (w != wNative || h != hNative) {
-              canvas.style.setProperty( "width", w + "px", "important");
-              canvas.style.setProperty("height", h + "px", "important");
-            } else {
-              canvas.style.removeProperty( "width");
-              canvas.style.removeProperty("height");
-            }
-          }
-        }
-      },wgetRequests:{},nextWgetRequestHandle:0,getNextWgetRequestHandle:function () {
-        var handle = Browser.nextWgetRequestHandle;
-        Browser.nextWgetRequestHandle++;
-        return handle;
-      }};
-  
-  
-  
-  
-  
-  
-  
-  function _SDL_CloseAudio() {
-      if (SDL.audio) {
-        _SDL_PauseAudio(1);
-        _free(SDL.audio.buffer);
-        SDL.audio = null;
-        SDL.allocateChannels(0);
-      }
-    }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  var _environ=STATICTOP; STATICTOP += 16;;var ___environ=_environ;function ___buildEnvironment(env) {
-      // WARNING: Arbitrary limit!
-      var MAX_ENV_VALUES = 64;
-      var TOTAL_ENV_SIZE = 1024;
-  
-      // Statically allocate memory for the environment.
-      var poolPtr;
-      var envPtr;
-      if (!___buildEnvironment.called) {
-        ___buildEnvironment.called = true;
-        // Set default values. Use string keys for Closure Compiler compatibility.
-        ENV['USER'] = ENV['LOGNAME'] = 'web_user';
-        ENV['PATH'] = '/';
-        ENV['PWD'] = '/';
-        ENV['HOME'] = '/home/web_user';
-        ENV['LANG'] = 'C';
-        ENV['_'] = Module['thisProgram'];
-        // Allocate memory.
-        poolPtr = allocate(TOTAL_ENV_SIZE, 'i8', ALLOC_STATIC);
-        envPtr = allocate(MAX_ENV_VALUES * 4,
-                          'i8*', ALLOC_STATIC);
-        HEAP32[((envPtr)>>2)]=poolPtr;
-        HEAP32[((_environ)>>2)]=envPtr;
-      } else {
-        envPtr = HEAP32[((_environ)>>2)];
-        poolPtr = HEAP32[((envPtr)>>2)];
-      }
-  
-      // Collect key=value lines.
-      var strings = [];
-      var totalSize = 0;
-      for (var key in env) {
-        if (typeof env[key] === 'string') {
-          var line = key + '=' + env[key];
-          strings.push(line);
-          totalSize += line.length;
-        }
-      }
-      if (totalSize > TOTAL_ENV_SIZE) {
-        throw new Error('Environment size exceeded TOTAL_ENV_SIZE!');
-      }
-  
-      // Make new.
-      var ptrSize = 4;
-      for (var i = 0; i < strings.length; i++) {
-        var line = strings[i];
-        writeAsciiToMemory(line, poolPtr);
-        HEAP32[(((envPtr)+(i * ptrSize))>>2)]=poolPtr;
-        poolPtr += line.length + 1;
-      }
-      HEAP32[(((envPtr)+(strings.length * ptrSize))>>2)]=0;
-    }var ENV={};function _getenv(name) {
-      // char *getenv(const char *name);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/getenv.html
-      if (name === 0) return 0;
-      name = Pointer_stringify(name);
-      if (!ENV.hasOwnProperty(name)) return 0;
-  
-      if (_getenv.ret) _free(_getenv.ret);
-      _getenv.ret = allocate(intArrayFromString(ENV[name]), 'i8', ALLOC_NORMAL);
-      return _getenv.ret;
-    }
-  
-  function _putenv(string) {
-      // int putenv(char *string);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/putenv.html
-      // WARNING: According to the standard (and the glibc implementation), the
-      //          string is taken by reference so future changes are reflected.
-      //          We copy it instead, possibly breaking some uses.
-      if (string === 0) {
-        ___setErrNo(ERRNO_CODES.EINVAL);
-        return -1;
-      }
-      string = Pointer_stringify(string);
-      var splitPoint = string.indexOf('=')
-      if (string === '' || string.indexOf('=') === -1) {
-        ___setErrNo(ERRNO_CODES.EINVAL);
-        return -1;
-      }
-      var name = string.slice(0, splitPoint);
-      var value = string.slice(splitPoint + 1);
-      if (!(name in ENV) || ENV[name] !== value) {
-        ENV[name] = value;
-        ___buildEnvironment(ENV);
-      }
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall9(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // link
+      var oldpath = SYSCALLS.get(), newpath = SYSCALLS.get();
+      return -ERRNO_CODES.EMLINK; // no hardlinks for us
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall1(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // exit
+      var status = SYSCALLS.get();
+      Module['exit'](status);
       return 0;
-    }
-  
-  function _SDL_RWFromConstMem(mem, size) {
-      var id = SDL.rwops.length; // TODO: recycle ids when they are null
-      SDL.rwops.push({ bytes: mem, count: size });
-      return id;
-    }function _TTF_FontHeight(font) {
-      var fontData = SDL.fonts[font];
-      return fontData.size;
-    }function _TTF_SizeText(font, text, w, h) {
-      var fontData = SDL.fonts[font];
-      if (w) {
-        HEAP32[((w)>>2)]=SDL.estimateTextWidth(fontData, Pointer_stringify(text));
-      }
-      if (h) {
-        HEAP32[((h)>>2)]=fontData.size;
-      }
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _globalunlock() {
+  Module['printErr']('missing function: globalunlock'); abort(-1);
+  }
+
+  function ___syscall3(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // read
+      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get();
+      return FS.read(stream, HEAP8,buf, count);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall5(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // open
+      var pathname = SYSCALLS.getStr(), flags = SYSCALLS.get(), mode = SYSCALLS.get() // optional TODO
+      var stream = FS.open(pathname, flags, mode);
+      return stream.fd;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _globallock() {
+  Module['printErr']('missing function: globallock'); abort(-1);
+  }
+
+  function ___syscall6(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // close
+      var stream = SYSCALLS.getStreamFromFD();
+      FS.close(stream);
       return 0;
-    }function _TTF_RenderText_Solid(font, text, color) {
-      // XXX the font and color are ignored
-      text = Pointer_stringify(text) || ' '; // if given an empty string, still return a valid surface
-      var fontData = SDL.fonts[font];
-      var w = SDL.estimateTextWidth(fontData, text);
-      var h = fontData.size;
-      var color = SDL.loadColorToCSSRGB(color); // XXX alpha breaks fonts?
-      var fontString = SDL.makeFontString(h, fontData.name);
-      var surf = SDL.makeSurface(w, h, 0, false, 'text:' + text); // bogus numbers..
-      var surfData = SDL.surfaces[surf];
-      surfData.ctx.save();
-      surfData.ctx.fillStyle = color;
-      surfData.ctx.font = fontString;
-      // use bottom alligment, because it works 
-      // same in all browsers, more info here:
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=737852
-      surfData.ctx.textBaseline = 'bottom';
-      surfData.ctx.fillText(text, 0, h|0);
-      surfData.ctx.restore();
-      return surf;
-    }function _Mix_HaltMusic() {
-      var audio = SDL.music.audio;
-      if (audio) {
-        audio.src = audio.src; // rewind <media> element
-        audio.currentPosition = 0; // rewind Web Audio graph playback.
-        audio.pause();
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _llvm_stacksave() {
+      var self = _llvm_stacksave;
+      if (!self.LLVM_SAVEDSTACKS) {
+        self.LLVM_SAVEDSTACKS = [];
       }
-      SDL.music.audio = null;
-      if (SDL.hookMusicFinished) {
-        Module['dynCall_v'](SDL.hookMusicFinished);
-      }
-      return 0;
-    }function _Mix_PlayMusic(id, loops) {
-      // Pause old music if it exists.
-      if (SDL.music.audio) {
-        if (!SDL.music.audio.paused) Module.printErr('Music is already playing. ' + SDL.music.source);
-        SDL.music.audio.pause();
-      }
-      var info = SDL.audios[id];
-      var audio;
-      if (info.webAudio) { // Play via Web Audio API
-        // Create an instance of the WebAudio object.
-        audio = {};
-        audio.resource = info; // This new webAudio object is an instance that refers to this existing resource.
-        audio.paused = false;
-        audio.currentPosition = 0;
-        audio.play = function() { SDL.playWebAudio(this); }
-        audio.pause = function() { SDL.pauseWebAudio(this); }
-      } else if (info.audio) { // Play via the <audio> element
-        audio = info.audio;
-      }
-      audio['onended'] = function() { if (SDL.music.audio == this) _Mix_HaltMusic(); } // will send callback
-      audio.loop = loops != 0; // TODO: handle N loops for finite N
-      audio.volume = SDL.music.volume;
-      SDL.music.audio = audio;
-      audio.play();
-      return 0;
-    }function _Mix_FreeChunk(id) {
-      SDL.audios[id] = null;
-    }function _Mix_LoadWAV_RW(rwopsID, freesrc) {
-      var rwops = SDL.rwops[rwopsID];
-  
-  
-      if (rwops === undefined)
-        return 0;
-  
-      var filename = '';
-      var audio;
-      var webAudio;
-      var bytes;
-  
-      if (rwops.filename !== undefined) {
-        filename = PATH.resolve(rwops.filename);
-        var raw = Module["preloadedAudios"][filename];
-        if (!raw) {
-          if (raw === null) Module.printErr('Trying to reuse preloaded audio, but freePreloadedMediaOnUse is set!');
-          if (!Module.noAudioDecoding) Runtime.warnOnce('Cannot find preloaded audio ' + filename);
-  
-          // see if we can read the file-contents from the in-memory FS
-          try {
-            bytes = FS.readFile(filename);
-          } catch (e) {
-            Module.printErr('Couldn\'t find file for: ' + filename);
-            return 0;
-          }
-        }
-        if (Module['freePreloadedMediaOnUse']) {
-          Module["preloadedAudios"][filename] = null;
-        }
-        audio = raw;
-      }
-      else if (rwops.bytes !== undefined) {
-        // For Web Audio context buffer decoding, we must make a clone of the audio data, but for <media> element,
-        // a view to existing data is sufficient.
-        if (SDL.webAudioAvailable()) bytes = HEAPU8.buffer.slice(rwops.bytes, rwops.bytes + rwops.count);
-        else bytes = HEAPU8.subarray(rwops.bytes, rwops.bytes + rwops.count);
-      }
-      else {
-        return 0;
-      }
-  
-      var arrayBuffer = bytes ? bytes.buffer || bytes : bytes;
-  
-      // To allow user code to work around browser bugs with audio playback on <audio> elements an Web Audio, enable
-      // the user code to hook in a callback to decide on a file basis whether each file should use Web Audio or <audio> for decoding and playback.
-      // In particular, see https://bugzilla.mozilla.org/show_bug.cgi?id=654787 and ?id=1012801 for tradeoffs.
-      var canPlayWithWebAudio = Module['SDL_canPlayWithWebAudio'] === undefined || Module['SDL_canPlayWithWebAudio'](filename, arrayBuffer);
-  
-      if (bytes !== undefined && SDL.webAudioAvailable() && canPlayWithWebAudio) {
-        audio = undefined;
-        webAudio = {};
-        // The audio decoding process is asynchronous, which gives trouble if user code plays the audio data back immediately
-        // after loading. Therefore prepare an array of callback handlers to run when this audio decoding is complete, which
-        // will then start the playback (with some delay).
-        webAudio.onDecodeComplete = []; // While this member array exists, decoding hasn't finished yet.
-        function onDecodeComplete(data) {
-          webAudio.decodedBuffer = data;
-          // Call all handlers that were waiting for this decode to finish, and clear the handler list.
-          webAudio.onDecodeComplete.forEach(function(e) { e(); });
-          webAudio.onDecodeComplete = undefined; // Don't allow more callback handlers since audio has finished decoding.
-        }
-  
-        SDL.audioContext['decodeAudioData'](arrayBuffer, onDecodeComplete);
-      } else if (audio === undefined && bytes) {
-        // Here, we didn't find a preloaded audio but we either were passed a filepath for
-        // which we loaded bytes, or we were passed some bytes
-        var blob = new Blob([bytes], {type: rwops.mimetype});
-        var url = URL.createObjectURL(blob);
-        audio = new Audio();
-        audio.src = url;
-        audio.mozAudioChannelType = 'content'; // bugzilla 910340
-      }
-  
-      var id = SDL.audios.length;
-      // Keep the loaded audio in the audio arrays, ready for playback
-      SDL.audios.push({
-        source: filename,
-        audio: audio, // Points to the <audio> element, if loaded
-        webAudio: webAudio // Points to a Web Audio -specific resource object, if loaded
-      });
-      return id;
-    }function _Mix_PlayChannel(channel, id, loops) {
-      // TODO: handle fixed amount of N loops. Currently loops either 0 or infinite times.
-  
-      // Get the audio element associated with the ID
-      var info = SDL.audios[id];
-      if (!info) return -1;
-      if (!info.audio && !info.webAudio) return -1;
-  
-      // If the user asks us to allocate a channel automatically, get the first
-      // free one.
-      if (channel == -1) {
-        for (var i = SDL.channelMinimumNumber; i < SDL.numChannels; i++) {
-          if (!SDL.channels[i].audio) {
-            channel = i;
-            break;
-          }
-        }
-        if (channel == -1) {
-          Module.printErr('All ' + SDL.numChannels + ' channels in use!');
-          return -1;
-        }
-      }
-      var channelInfo = SDL.channels[channel];
-      var audio;
-      if (info.webAudio) {
-        // Create an instance of the WebAudio object.
-        audio = {};
-        audio.resource = info; // This new object is an instance that refers to this existing resource.
-        audio.paused = false;
-        audio.currentPosition = 0;
-        // Make our instance look similar to the instance of a <media> to make api simple.
-        audio.play = function() { SDL.playWebAudio(this); }
-        audio.pause = function() { SDL.pauseWebAudio(this); }
-      } else {
-        // We clone the audio node to utilize the preloaded audio buffer, since
-        // the browser has already preloaded the audio file.
-        audio = info.audio.cloneNode(true);
-        audio.numChannels = info.audio.numChannels;
-        audio.frequency = info.audio.frequency;
-      }
-      audio['onended'] = function SDL_audio_onended() { // TODO: cache these
-        if (channelInfo.audio == this) { channelInfo.audio.paused = true; channelInfo.audio = null; }
-        if (SDL.channelFinished) Runtime.getFuncWrapper(SDL.channelFinished, 'vi')(channel);
-      }
-      channelInfo.audio = audio;
-      // TODO: handle N loops. Behavior matches Mix_PlayMusic
-      audio.loop = loops != 0;
-      audio.volume = channelInfo.volume;
-      audio.play();
-      return channel;
-    }function _SDL_LockSurface(surf) {
-      var surfData = SDL.surfaces[surf];
-  
-      surfData.locked++;
-      if (surfData.locked > 1) return 0;
-  
-      if (!surfData.buffer) {
-        surfData.buffer = _malloc(surfData.width * surfData.height * 4);
-        HEAP32[(((surf)+(20))>>2)]=surfData.buffer;
-      }
-  
-      // Mark in C/C++-accessible SDL structure
-      // SDL_Surface has the following fields: Uint32 flags, SDL_PixelFormat *format; int w, h; Uint16 pitch; void *pixels; ...
-      // So we have fields all of the same size, and 5 of them before us.
-      // TODO: Use macros like in library.js
-      HEAP32[(((surf)+(20))>>2)]=surfData.buffer;
-  
-      if (surf == SDL.screen && Module.screenIsReadOnly && surfData.image) return 0;
-  
-      if (SDL.defaults.discardOnLock) {
-        if (!surfData.image) {
-          surfData.image = surfData.ctx.createImageData(surfData.width, surfData.height);
-        }
-        if (!SDL.defaults.opaqueFrontBuffer) return;
-      } else {
-        surfData.image = surfData.ctx.getImageData(0, 0, surfData.width, surfData.height);
-      }
-  
-      // Emulate desktop behavior and kill alpha values on the locked surface. (very costly!) Set SDL.defaults.opaqueFrontBuffer = false
-      // if you don't want this.
-      if (surf == SDL.screen && SDL.defaults.opaqueFrontBuffer) {
-        var data = surfData.image.data;
-        var num = data.length;
-        for (var i = 0; i < num/4; i++) {
-          data[i*4+3] = 255; // opacity, as canvases blend alpha
-        }
-      }
-  
-      if (SDL.defaults.copyOnLock && !SDL.defaults.discardOnLock) {
-        // Copy pixel data to somewhere accessible to 'C/C++'
-        if (surfData.isFlagSet(0x00200000 /* SDL_HWPALETTE */)) {
-          // If this is neaded then
-          // we should compact the data from 32bpp to 8bpp index.
-          // I think best way to implement this is use
-          // additional colorMap hash (color->index).
-          // Something like this:
-          //
-          // var size = surfData.width * surfData.height;
-          // var data = '';
-          // for (var i = 0; i<size; i++) {
-          //   var color = SDL.translateRGBAToColor(
-          //     surfData.image.data[i*4   ], 
-          //     surfData.image.data[i*4 +1], 
-          //     surfData.image.data[i*4 +2], 
-          //     255);
-          //   var index = surfData.colorMap[color];
-          //   HEAP8[(((surfData.buffer)+(i))>>0)]=index;
-          // }
-          throw 'CopyOnLock is not supported for SDL_LockSurface with SDL_HWPALETTE flag set' + new Error().stack;
-        } else {
-          HEAPU8.set(surfData.image.data, surfData.buffer);
-        }
-      }
-  
-      return 0;
+      self.LLVM_SAVEDSTACKS.push(Runtime.stackSave());
+      return self.LLVM_SAVEDSTACKS.length-1;
     }
+
+  function _psf_fsync() {
+  Module['printErr']('missing function: psf_fsync'); abort(-1);
+  }
+
+  function ___syscall148(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fdatasync
+      var stream = SYSCALLS.getStreamFromFD();
+      return 0; // we can't do anything synchronously; the in-memory FS is already synced to
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _id3_skip() {
+  Module['printErr']('missing function: id3_skip'); abort(-1);
+  }
+
+  function ___syscall142(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // newselect
+      // readfds are supported,
+      // writefds checks socket open status
+      // exceptfds not supported
+      // timeout is always 0 - fully async
+      var nfds = SYSCALLS.get(), readfds = SYSCALLS.get(), writefds = SYSCALLS.get(), exceptfds = SYSCALLS.get(), timeout = SYSCALLS.get();
   
-  function _SDL_FreeRW(rwopsID) {
-      SDL.rwops[rwopsID] = null;
-      while (SDL.rwops.length > 0 && SDL.rwops[SDL.rwops.length-1] === null) {
-        SDL.rwops.pop();
+      assert(nfds <= 64, 'nfds must be less than or equal to 64');  // fd sets have 64 bits // TODO: this could be 1024 based on current musl headers
+      assert(!exceptfds, 'exceptfds not supported');
+  
+      var total = 0;
+      
+      var srcReadLow = (readfds ? HEAP32[((readfds)>>2)] : 0),
+          srcReadHigh = (readfds ? HEAP32[(((readfds)+(4))>>2)] : 0);
+      var srcWriteLow = (writefds ? HEAP32[((writefds)>>2)] : 0),
+          srcWriteHigh = (writefds ? HEAP32[(((writefds)+(4))>>2)] : 0);
+      var srcExceptLow = (exceptfds ? HEAP32[((exceptfds)>>2)] : 0),
+          srcExceptHigh = (exceptfds ? HEAP32[(((exceptfds)+(4))>>2)] : 0);
+  
+      var dstReadLow = 0,
+          dstReadHigh = 0;
+      var dstWriteLow = 0,
+          dstWriteHigh = 0;
+      var dstExceptLow = 0,
+          dstExceptHigh = 0;
+  
+      var allLow = (readfds ? HEAP32[((readfds)>>2)] : 0) |
+                   (writefds ? HEAP32[((writefds)>>2)] : 0) |
+                   (exceptfds ? HEAP32[((exceptfds)>>2)] : 0);
+      var allHigh = (readfds ? HEAP32[(((readfds)+(4))>>2)] : 0) |
+                    (writefds ? HEAP32[(((writefds)+(4))>>2)] : 0) |
+                    (exceptfds ? HEAP32[(((exceptfds)+(4))>>2)] : 0);
+  
+      function check(fd, low, high, val) {
+        return (fd < 32 ? (low & val) : (high & val));
       }
-    }function _IMG_Load_RW(rwopsID, freeSrc) {
-      try {
-        // stb_image integration support
-        var cleanup = function() {
-          if (rwops && freeSrc) _SDL_FreeRW(rwopsID);
-        }
-        var addCleanup = function(func) {
-          var old = cleanup;
-          cleanup = function added_cleanup() {
-            old();
-            func();
-          }
-        }
-        var callStbImage = function(func, params) {
-          var x = Module['_malloc'](4);
-          var y = Module['_malloc'](4);
-          var comp = Module['_malloc'](4);
-          addCleanup(function() {
-            Module['_free'](x);
-            Module['_free'](y);
-            Module['_free'](comp);
-            if (data) Module['_stbi_image_free'](data);
-          });
-          var data = Module['_' + func].apply(null, params.concat([x, y, comp, 0]));
-          if (!data) return null;
-          return {
-            rawData: true,
-            data: data,
-            width: HEAP32[((x)>>2)],
-            height: HEAP32[((y)>>2)],
-            size: HEAP32[((x)>>2)] * HEAP32[((y)>>2)] * HEAP32[((comp)>>2)],
-            bpp: HEAP32[((comp)>>2)]
-          };
+  
+      for (var fd = 0; fd < nfds; fd++) {
+        var mask = 1 << (fd % 32);
+        if (!(check(fd, allLow, allHigh, mask))) {
+          continue;  // index isn't in the set
         }
   
-        var rwops = SDL.rwops[rwopsID];
-        if (rwops === undefined) {
-          return 0;
+        var stream = FS.getStream(fd);
+        if (!stream) throw new FS.ErrnoError(ERRNO_CODES.EBADF);
+  
+        var flags = SYSCALLS.DEFAULT_POLLMASK;
+  
+        if (stream.stream_ops.poll) {
+          flags = stream.stream_ops.poll(stream);
         }
   
-        var filename = rwops.filename;
-        if (filename === undefined) {
-          Runtime.warnOnce('Only file names that have been preloaded are supported for IMG_Load_RW. Consider using STB_IMAGE=1 if you want synchronous image decoding (see settings.js), or package files with --use-preload-plugins');
-          return 0;
+        if ((flags & 1) && check(fd, srcReadLow, srcReadHigh, mask)) {
+          fd < 32 ? (dstReadLow = dstReadLow | mask) : (dstReadHigh = dstReadHigh | mask);
+          total++;
         }
-  
-        if (!raw) {
-          filename = PATH.resolve(filename);
-          var raw = Module["preloadedImages"][filename];
-          if (!raw) {
-            if (raw === null) Module.printErr('Trying to reuse preloaded image, but freePreloadedMediaOnUse is set!');
-            Runtime.warnOnce('Cannot find preloaded image ' + filename);
-            Runtime.warnOnce('Cannot find preloaded image ' + filename + '. Consider using STB_IMAGE=1 if you want synchronous image decoding (see settings.js), or package files with --use-preload-plugins');
-            return 0;
-          } else if (Module['freePreloadedMediaOnUse']) {
-            Module["preloadedImages"][filename] = null;
-          }
+        if ((flags & 4) && check(fd, srcWriteLow, srcWriteHigh, mask)) {
+          fd < 32 ? (dstWriteLow = dstWriteLow | mask) : (dstWriteHigh = dstWriteHigh | mask);
+          total++;
         }
-  
-        var surf = SDL.makeSurface(raw.width, raw.height, 0, false, 'load:' + filename);
-        var surfData = SDL.surfaces[surf];
-        surfData.ctx.globalCompositeOperation = "copy";
-        if (!raw.rawData) {
-          surfData.ctx.drawImage(raw, 0, 0, raw.width, raw.height, 0, 0, raw.width, raw.height);
-        } else {
-          var imageData = surfData.ctx.getImageData(0, 0, surfData.width, surfData.height);
-          if (raw.bpp == 4) {
-            // rgba
-            imageData.data.set(HEAPU8.subarray((raw.data),(raw.data+raw.size)));
-          } else if (raw.bpp == 3) {
-            // rgb
-            var pixels = raw.size/3;
-            var data = imageData.data;
-            var sourcePtr = raw.data;
-            var destPtr = 0;
-            for (var i = 0; i < pixels; i++) {
-              data[destPtr++] = HEAPU8[((sourcePtr++)>>0)];
-              data[destPtr++] = HEAPU8[((sourcePtr++)>>0)];
-              data[destPtr++] = HEAPU8[((sourcePtr++)>>0)];
-              data[destPtr++] = 255;
-            }
-          } else if (raw.bpp == 2) {
-            // grayscale + alpha
-            var pixels = raw.size;
-            var data = imageData.data;
-            var sourcePtr = raw.data;
-            var destPtr = 0;
-            for (var i = 0; i < pixels; i++) {
-              var gray = HEAPU8[((sourcePtr++)>>0)];
-              var alpha = HEAPU8[((sourcePtr++)>>0)];
-              data[destPtr++] = gray;
-              data[destPtr++] = gray;
-              data[destPtr++] = gray;
-              data[destPtr++] = alpha;
-            }
-          } else if (raw.bpp == 1) {
-            // grayscale
-            var pixels = raw.size;
-            var data = imageData.data;
-            var sourcePtr = raw.data;
-            var destPtr = 0;
-            for (var i = 0; i < pixels; i++) {
-              var value = HEAPU8[((sourcePtr++)>>0)];
-              data[destPtr++] = value;
-              data[destPtr++] = value;
-              data[destPtr++] = value;
-              data[destPtr++] = 255;
-            }
-          } else {
-            Module.printErr('cannot handle bpp ' + raw.bpp);
-            return 0;
-          }
-          surfData.ctx.putImageData(imageData, 0, 0);
+        if ((flags & 2) && check(fd, srcExceptLow, srcExceptHigh, mask)) {
+          fd < 32 ? (dstExceptLow = dstExceptLow | mask) : (dstExceptHigh = dstExceptHigh | mask);
+          total++;
         }
-        surfData.ctx.globalCompositeOperation = "source-over";
-        // XXX SDL does not specify that loaded images must have available pixel data, in fact
-        //     there are cases where you just want to blit them, so you just need the hardware
-        //     accelerated version. However, code everywhere seems to assume that the pixels
-        //     are in fact available, so we retrieve it here. This does add overhead though.
-        _SDL_LockSurface(surf);
-        surfData.locked--; // The surface is not actually locked in this hack
-        if (SDL.GL) {
-          // After getting the pixel data, we can free the canvas and context if we do not need to do 2D canvas blitting
-          surfData.canvas = surfData.ctx = null;
-        }
-        return surf;
-      } finally {
-        cleanup();
       }
-    }
   
-  function _SDL_RWFromFile(_name, mode) {
-      var id = SDL.rwops.length; // TODO: recycle ids when they are null
-      var name = Pointer_stringify(_name)
-      SDL.rwops.push({ filename: name, mimetype: Browser.getMimetype(name) });
-      return id;
-    }function _IMG_Load(filename){
-      var rwops = _SDL_RWFromFile(filename);
-      var result = _IMG_Load_RW(rwops, 1);
-      return result;
-    }function _SDL_UpperBlitScaled(src, srcrect, dst, dstrect) {
-      return SDL.blitSurface(src, srcrect, dst, dstrect, true);
-    }function _SDL_UpperBlit(src, srcrect, dst, dstrect) {
-      return SDL.blitSurface(src, srcrect, dst, dstrect, false);
-    }function _SDL_GetTicks() {
-      return (Date.now() - SDL.startTime)|0;
-    }var SDL={defaults:{width:320,height:200,copyOnLock:true,discardOnLock:false,opaqueFrontBuffer:true},version:null,surfaces:{},canvasPool:[],events:[],fonts:[null],audios:[null],rwops:[null],music:{audio:null,volume:1},mixerFrequency:22050,mixerFormat:32784,mixerNumChannels:2,mixerChunkSize:1024,channelMinimumNumber:0,GL:false,glAttributes:{0:3,1:3,2:2,3:0,4:0,5:1,6:16,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:0,15:1,16:0,17:0,18:0},keyboardState:null,keyboardMap:{},canRequestFullscreen:false,isRequestingFullscreen:false,textInput:false,startTime:null,initFlags:0,buttonState:0,modState:0,DOMButtons:[0,0,0],DOMEventToSDLEvent:{},TOUCH_DEFAULT_ID:0,eventHandler:null,eventHandlerContext:null,eventHandlerTemp:0,keyCodes:{16:1249,17:1248,18:1250,20:1081,33:1099,34:1102,35:1101,36:1098,37:1104,38:1106,39:1103,40:1105,44:316,45:1097,46:127,91:1251,93:1125,96:1122,97:1113,98:1114,99:1115,100:1116,101:1117,102:1118,103:1119,104:1120,105:1121,106:1109,107:1111,109:1110,110:1123,111:1108,112:1082,113:1083,114:1084,115:1085,116:1086,117:1087,118:1088,119:1089,120:1090,121:1091,122:1092,123:1093,124:1128,125:1129,126:1130,127:1131,128:1132,129:1133,130:1134,131:1135,132:1136,133:1137,134:1138,135:1139,144:1107,160:94,161:33,162:34,163:35,164:36,165:37,166:38,167:95,168:40,169:41,170:42,171:43,172:124,173:45,174:123,175:125,176:126,181:127,182:129,183:128,188:44,190:46,191:47,192:96,219:91,220:92,221:93,222:39,224:1251},scanCodes:{8:42,9:43,13:40,27:41,32:44,35:204,39:53,44:54,46:55,47:56,48:39,49:30,50:31,51:32,52:33,53:34,54:35,55:36,56:37,57:38,58:203,59:51,61:46,91:47,92:49,93:48,96:52,97:4,98:5,99:6,100:7,101:8,102:9,103:10,104:11,105:12,106:13,107:14,108:15,109:16,110:17,111:18,112:19,113:20,114:21,115:22,116:23,117:24,118:25,119:26,120:27,121:28,122:29,127:76,305:224,308:226,316:70},loadRect:function (rect) {
-        return {
-          x: HEAP32[((rect + 0)>>2)],
-          y: HEAP32[((rect + 4)>>2)],
-          w: HEAP32[((rect + 8)>>2)],
-          h: HEAP32[((rect + 12)>>2)]
-        };
-      },updateRect:function (rect, r) {
-        HEAP32[((rect)>>2)]=r.x;
-        HEAP32[(((rect)+(4))>>2)]=r.y;
-        HEAP32[(((rect)+(8))>>2)]=r.w;
-        HEAP32[(((rect)+(12))>>2)]=r.h;
-      },intersectionOfRects:function (first, second) {
-        var leftX = Math.max(first.x, second.x);
-        var leftY = Math.max(first.y, second.y);
-        var rightX = Math.min(first.x + first.w, second.x + second.w);
-        var rightY = Math.min(first.y + first.h, second.y + second.h);
-  
-        return {
-          x: leftX,
-          y: leftY,
-          w: Math.max(leftX, rightX) - leftX,
-          h: Math.max(leftY, rightY) - leftY
-        }
-      },checkPixelFormat:function (fmt) {
-      },loadColorToCSSRGB:function (color) {
-        var rgba = HEAP32[((color)>>2)];
-        return 'rgb(' + (rgba&255) + ',' + ((rgba >> 8)&255) + ',' + ((rgba >> 16)&255) + ')';
-      },loadColorToCSSRGBA:function (color) {
-        var rgba = HEAP32[((color)>>2)];
-        return 'rgba(' + (rgba&255) + ',' + ((rgba >> 8)&255) + ',' + ((rgba >> 16)&255) + ',' + (((rgba >> 24)&255)/255) + ')';
-      },translateColorToCSSRGBA:function (rgba) {
-        return 'rgba(' + (rgba&0xff) + ',' + (rgba>>8 & 0xff) + ',' + (rgba>>16 & 0xff) + ',' + (rgba>>>24)/0xff + ')';
-      },translateRGBAToCSSRGBA:function (r, g, b, a) {
-        return 'rgba(' + (r&0xff) + ',' + (g&0xff) + ',' + (b&0xff) + ',' + (a&0xff)/255 + ')';
-      },translateRGBAToColor:function (r, g, b, a) {
-        return r | g << 8 | b << 16 | a << 24;
-      },makeSurface:function (width, height, flags, usePageCanvas, source, rmask, gmask, bmask, amask) {
-        flags = flags || 0;
-        var is_SDL_HWSURFACE = flags & 0x00000001;
-        var is_SDL_HWPALETTE = flags & 0x00200000;
-        var is_SDL_OPENGL = flags & 0x04000000;
-  
-        var surf = _malloc(60);
-        var pixelFormat = _malloc(44);
-        //surface with SDL_HWPALETTE flag is 8bpp surface (1 byte)
-        var bpp = is_SDL_HWPALETTE ? 1 : 4;
-        var buffer = 0;
-  
-        // preemptively initialize this for software surfaces,
-        // otherwise it will be lazily initialized inside of SDL_LockSurface
-        if (!is_SDL_HWSURFACE && !is_SDL_OPENGL) {
-          buffer = _malloc(width * height * 4);
-        }
-  
-        HEAP32[((surf)>>2)]=flags;
-        HEAP32[(((surf)+(4))>>2)]=pixelFormat;
-        HEAP32[(((surf)+(8))>>2)]=width;
-        HEAP32[(((surf)+(12))>>2)]=height;
-        HEAP32[(((surf)+(16))>>2)]=width * bpp;  // assuming RGBA or indexed for now,
-                                                                                          // since that is what ImageData gives us in browsers
-        HEAP32[(((surf)+(20))>>2)]=buffer;
-  
-        HEAP32[(((surf)+(36))>>2)]=0;
-        HEAP32[(((surf)+(40))>>2)]=0;
-        HEAP32[(((surf)+(44))>>2)]=Module["canvas"].width;
-        HEAP32[(((surf)+(48))>>2)]=Module["canvas"].height;
-  
-        HEAP32[(((surf)+(56))>>2)]=1;
-  
-        HEAP32[((pixelFormat)>>2)]=-2042224636;
-        HEAP32[(((pixelFormat)+(4))>>2)]=0;// TODO
-        HEAP8[(((pixelFormat)+(8))>>0)]=bpp * 8;
-        HEAP8[(((pixelFormat)+(9))>>0)]=bpp;
-  
-        HEAP32[(((pixelFormat)+(12))>>2)]=rmask || 0x000000ff;
-        HEAP32[(((pixelFormat)+(16))>>2)]=gmask || 0x0000ff00;
-        HEAP32[(((pixelFormat)+(20))>>2)]=bmask || 0x00ff0000;
-        HEAP32[(((pixelFormat)+(24))>>2)]=amask || 0xff000000;
-  
-        // Decide if we want to use WebGL or not
-        SDL.GL = SDL.GL || is_SDL_OPENGL;
-        var canvas;
-        if (!usePageCanvas) {
-          if (SDL.canvasPool.length > 0) {
-            canvas = SDL.canvasPool.pop();
-          } else {
-            canvas = document.createElement('canvas');
-          }
-          canvas.width = width;
-          canvas.height = height;
-        } else {
-          canvas = Module['canvas'];
-        }
-  
-        var webGLContextAttributes = {
-          antialias: ((SDL.glAttributes[13 /*SDL_GL_MULTISAMPLEBUFFERS*/] != 0) && (SDL.glAttributes[14 /*SDL_GL_MULTISAMPLESAMPLES*/] > 1)),
-          depth: (SDL.glAttributes[6 /*SDL_GL_DEPTH_SIZE*/] > 0),
-          stencil: (SDL.glAttributes[7 /*SDL_GL_STENCIL_SIZE*/] > 0),
-          alpha: (SDL.glAttributes[3 /*SDL_GL_ALPHA_SIZE*/] > 0)
-        };
-        
-        var ctx = Browser.createContext(canvas, is_SDL_OPENGL, usePageCanvas, webGLContextAttributes);
-              
-        SDL.surfaces[surf] = {
-          width: width,
-          height: height,
-          canvas: canvas,
-          ctx: ctx,
-          surf: surf,
-          buffer: buffer,
-          pixelFormat: pixelFormat,
-          alpha: 255,
-          flags: flags,
-          locked: 0,
-          usePageCanvas: usePageCanvas,
-          source: source,
-  
-          isFlagSet: function(flag) {
-            return flags & flag;
-          }
-        };
-  
-        return surf;
-      },copyIndexedColorData:function (surfData, rX, rY, rW, rH) {
-        // HWPALETTE works with palette
-        // setted by SDL_SetColors
-        if (!surfData.colors) {
-          return;
-        }
-        
-        var fullWidth  = Module['canvas'].width;
-        var fullHeight = Module['canvas'].height;
-  
-        var startX  = rX || 0;
-        var startY  = rY || 0;
-        var endX    = (rW || (fullWidth - startX)) + startX;
-        var endY    = (rH || (fullHeight - startY)) + startY;
-        
-        var buffer  = surfData.buffer;
-  
-        if (!surfData.image.data32) {
-          surfData.image.data32 = new Uint32Array(surfData.image.data.buffer);
-        }
-        var data32   = surfData.image.data32;
-  
-        var colors32 = surfData.colors32;
-  
-        for (var y = startY; y < endY; ++y) {
-          var base = y * fullWidth;
-          for (var x = startX; x < endX; ++x) {
-            data32[base + x] = colors32[HEAPU8[((buffer + base + x)>>0)]];
-          }
-        }
-      },freeSurface:function (surf) {
-        var refcountPointer = surf + 56;
-        var refcount = HEAP32[((refcountPointer)>>2)];
-        if (refcount > 1) {
-          HEAP32[((refcountPointer)>>2)]=refcount - 1;
-          return;
-        }
-  
-        var info = SDL.surfaces[surf];
-        if (!info.usePageCanvas && info.canvas) SDL.canvasPool.push(info.canvas);
-        if (info.buffer) _free(info.buffer);
-        _free(info.pixelFormat);
-        _free(surf);
-        SDL.surfaces[surf] = null;
-  
-        if (surf === SDL.screen) {
-          SDL.screen = null;
-        }
-      },blitSurface__deps:["SDL_LockSurface"],blitSurface:function (src, srcrect, dst, dstrect, scale) {
-        var srcData = SDL.surfaces[src];
-        var dstData = SDL.surfaces[dst];
-        var sr, dr;
-        if (srcrect) {
-          sr = SDL.loadRect(srcrect);
-        } else {
-          sr = { x: 0, y: 0, w: srcData.width, h: srcData.height };
-        }
-        if (dstrect) {
-          dr = SDL.loadRect(dstrect);
-        } else {
-          dr = { x: 0, y: 0, w: srcData.width, h: srcData.height };
-        }
-        if (dstData.clipRect) {
-          var widthScale = (!scale || sr.w === 0) ? 1 : sr.w / dr.w;
-          var heightScale = (!scale || sr.h === 0) ? 1 : sr.h / dr.h;
-          
-          dr = SDL.intersectionOfRects(dstData.clipRect, dr);
-          
-          sr.w = dr.w * widthScale;
-          sr.h = dr.h * heightScale;
-          
-          if (dstrect) {
-            SDL.updateRect(dstrect, dr);
-          }
-        }
-        var blitw, blith;
-        if (scale) {
-          blitw = dr.w; blith = dr.h;
-        } else {
-          blitw = sr.w; blith = sr.h;
-        }
-        if (sr.w === 0 || sr.h === 0 || blitw === 0 || blith === 0) {
-          return 0;
-        }
-        var oldAlpha = dstData.ctx.globalAlpha;
-        dstData.ctx.globalAlpha = srcData.alpha/255;
-        dstData.ctx.drawImage(srcData.canvas, sr.x, sr.y, sr.w, sr.h, dr.x, dr.y, blitw, blith);
-        dstData.ctx.globalAlpha = oldAlpha;
-        if (dst != SDL.screen) {
-          // XXX As in IMG_Load, for compatibility we write out |pixels|
-          Runtime.warnOnce('WARNING: copying canvas data to memory for compatibility');
-          _SDL_LockSurface(dst);
-          dstData.locked--; // The surface is not actually locked in this hack
-        }
-        return 0;
-      },downFingers:{},savedKeydown:null,receiveEvent:function (event) {
-        function unpressAllPressedKeys() {
-          // Un-press all pressed keys: TODO
-          for (var code in SDL.keyboardMap) {
-            SDL.events.push({
-              type: 'keyup',
-              keyCode: SDL.keyboardMap[code]
-            });
-          }
-        };
-        switch(event.type) {
-          case 'touchstart': case 'touchmove': {
-            event.preventDefault();
-  
-            var touches = [];
-            
-            // Clear out any touchstart events that we've already processed
-            if (event.type === 'touchstart') {
-              for (var i = 0; i < event.touches.length; i++) {
-                var touch = event.touches[i];
-                if (SDL.downFingers[touch.identifier] != true) {
-                  SDL.downFingers[touch.identifier] = true;
-                  touches.push(touch);
-                }
-              }
-            } else {
-              touches = event.touches;
-            }
-            
-            var firstTouch = touches[0];
-            if (firstTouch) {
-              if (event.type == 'touchstart') {
-                SDL.DOMButtons[0] = 1;
-              }
-              var mouseEventType;
-              switch(event.type) {
-                case 'touchstart': mouseEventType = 'mousedown'; break;
-                case 'touchmove': mouseEventType = 'mousemove'; break;
-              }
-              var mouseEvent = {
-                type: mouseEventType,
-                button: 0,
-                pageX: firstTouch.clientX,
-                pageY: firstTouch.clientY
-              };
-              SDL.events.push(mouseEvent);
-            }
-  
-            for (var i = 0; i < touches.length; i++) {
-              var touch = touches[i];
-              SDL.events.push({
-                type: event.type,
-                touch: touch
-              });
-            };
-            break;
-          }
-          case 'touchend': {
-            event.preventDefault();
-            
-            // Remove the entry in the SDL.downFingers hash
-            // because the finger is no longer down.
-            for(var i = 0; i < event.changedTouches.length; i++) {
-              var touch = event.changedTouches[i];
-              if (SDL.downFingers[touch.identifier] === true) {
-                delete SDL.downFingers[touch.identifier];
-              }
-            }
-  
-            var mouseEvent = {
-              type: 'mouseup',
-              button: 0,
-              pageX: event.changedTouches[0].clientX,
-              pageY: event.changedTouches[0].clientY
-            };
-            SDL.DOMButtons[0] = 0;
-            SDL.events.push(mouseEvent);
-            
-            for (var i = 0; i < event.changedTouches.length; i++) {
-              var touch = event.changedTouches[i];
-              SDL.events.push({
-                type: 'touchend',
-                touch: touch
-              });
-            };
-            break;
-          }
-          case 'DOMMouseScroll': case 'mousewheel': case 'wheel':
-            var delta = -Browser.getMouseWheelDelta(event); // Flip the wheel direction to translate from browser wheel direction (+:down) to SDL direction (+:up)
-            delta = (delta == 0) ? 0 : (delta > 0 ? Math.max(delta, 1) : Math.min(delta, -1)); // Quantize to integer so that minimum scroll is at least +/- 1.
-  
-            // Simulate old-style SDL events representing mouse wheel input as buttons
-            var button = delta > 0 ? 3 /*SDL_BUTTON_WHEELUP-1*/ : 4 /*SDL_BUTTON_WHEELDOWN-1*/; // Subtract one since JS->C marshalling is defined to add one back.
-            SDL.events.push({ type: 'mousedown', button: button, pageX: event.pageX, pageY: event.pageY });
-            SDL.events.push({ type: 'mouseup', button: button, pageX: event.pageX, pageY: event.pageY });
-  
-            // Pass a delta motion event.
-            SDL.events.push({ type: 'wheel', deltaX: 0, deltaY: delta });
-            event.preventDefault(); // If we don't prevent this, then 'wheel' event will be sent again by the browser as 'DOMMouseScroll' and we will receive this same event the second time.
-            break;
-          case 'mousemove':
-            if (SDL.DOMButtons[0] === 1) {
-              SDL.events.push({
-                type: 'touchmove',
-                touch: {
-                  identifier: 0,
-                  deviceID: -1,
-                  pageX: event.pageX,
-                  pageY: event.pageY
-                }
-              });
-            }
-            if (Browser.pointerLock) {
-              // workaround for firefox bug 750111
-              if ('mozMovementX' in event) {
-                event['movementX'] = event['mozMovementX'];
-                event['movementY'] = event['mozMovementY'];
-              }
-              // workaround for Firefox bug 782777
-              if (event['movementX'] == 0 && event['movementY'] == 0) {
-                // ignore a mousemove event if it doesn't contain any movement info
-                // (without pointer lock, we infer movement from pageX/pageY, so this check is unnecessary)
-                event.preventDefault();
-                return;
-              }
-            }
-            // fall through
-          case 'keydown': case 'keyup': case 'keypress': case 'mousedown': case 'mouseup':
-            // If we preventDefault on keydown events, the subsequent keypress events
-            // won't fire. However, it's fine (and in some cases necessary) to
-            // preventDefault for keys that don't generate a character. Otherwise,
-            // preventDefault is the right thing to do in general.
-            if (event.type !== 'keydown' || (!SDL.unicode && !SDL.textInput) || (event.keyCode === 8 /* backspace */ || event.keyCode === 9 /* tab */)) {
-              event.preventDefault();
-            }
-  
-            if (event.type == 'mousedown') {
-              SDL.DOMButtons[event.button] = 1;
-              SDL.events.push({
-                type: 'touchstart',
-                touch: {
-                  identifier: 0,
-                  deviceID: -1,
-                  pageX: event.pageX,
-                  pageY: event.pageY
-                }
-              });
-            } else if (event.type == 'mouseup') {
-              // ignore extra ups, can happen if we leave the canvas while pressing down, then return,
-              // since we add a mouseup in that case
-              if (!SDL.DOMButtons[event.button]) {
-                return;
-              }
-  
-              SDL.events.push({
-                type: 'touchend',
-                touch: {
-                  identifier: 0,
-                  deviceID: -1,
-                  pageX: event.pageX,
-                  pageY: event.pageY
-                }
-              });
-              SDL.DOMButtons[event.button] = 0;
-            }
-  
-            // We can only request fullscreen as the result of user input.
-            // Due to this limitation, we toggle a boolean on keydown which
-            // SDL_WM_ToggleFullScreen will check and subsequently set another
-            // flag indicating for us to request fullscreen on the following
-            // keyup. This isn't perfect, but it enables SDL_WM_ToggleFullScreen
-            // to work as the result of a keypress (which is an extremely
-            // common use case).
-            if (event.type === 'keydown' || event.type === 'mousedown') {
-              SDL.canRequestFullscreen = true;
-            } else if (event.type === 'keyup' || event.type === 'mouseup') {
-              if (SDL.isRequestingFullscreen) {
-                Module['requestFullscreen'](/*lockPointer=*/true, /*resizeCanvas=*/true);
-                SDL.isRequestingFullscreen = false;
-              }
-              SDL.canRequestFullscreen = false;
-            }
-  
-            // SDL expects a unicode character to be passed to its keydown events.
-            // Unfortunately, the browser APIs only provide a charCode property on
-            // keypress events, so we must backfill in keydown events with their
-            // subsequent keypress event's charCode.
-            if (event.type === 'keypress' && SDL.savedKeydown) {
-              // charCode is read-only
-              SDL.savedKeydown.keypressCharCode = event.charCode;
-              SDL.savedKeydown = null;
-            } else if (event.type === 'keydown') {
-              SDL.savedKeydown = event;
-            }
-  
-            // Don't push keypress events unless SDL_StartTextInput has been called.
-            if (event.type !== 'keypress' || SDL.textInput) {
-              SDL.events.push(event);
-            }
-            break;
-          case 'mouseout':
-            // Un-press all pressed mouse buttons, because we might miss the release outside of the canvas
-            for (var i = 0; i < 3; i++) {
-              if (SDL.DOMButtons[i]) {
-                SDL.events.push({
-                  type: 'mouseup',
-                  button: i,
-                  pageX: event.pageX,
-                  pageY: event.pageY
-                });
-                SDL.DOMButtons[i] = 0;
-              }
-            }
-            event.preventDefault();
-            break;
-          case 'focus':
-            SDL.events.push(event);
-            event.preventDefault();
-            break;
-          case 'blur':
-            SDL.events.push(event);
-            unpressAllPressedKeys();
-            event.preventDefault();
-            break;
-          case 'visibilitychange':
-            SDL.events.push({
-              type: 'visibilitychange',
-              visible: !document.hidden
-            });
-            unpressAllPressedKeys();
-            event.preventDefault();
-            break;
-          case 'unload':
-            if (Browser.mainLoop.runner) {
-              SDL.events.push(event);
-              // Force-run a main event loop, since otherwise this event will never be caught!
-              Browser.mainLoop.runner();
-            }
-            return;
-          case 'resize':
-            SDL.events.push(event);
-            // manually triggered resize event doesn't have a preventDefault member
-            if (event.preventDefault) {
-              event.preventDefault();
-            }
-            break;
-        }
-        if (SDL.events.length >= 10000) {
-          Module.printErr('SDL event queue full, dropping events');
-          SDL.events = SDL.events.slice(0, 10000);
-        }
-        // If we have a handler installed, this will push the events to the app
-        // instead of the app polling for them.
-        SDL.flushEventsToHandler();
-        return;
-      },lookupKeyCodeForEvent:function (event) {
-          var code = event.keyCode;
-          if (code >= 65 && code <= 90) {
-            code += 32; // make lowercase for SDL
-          } else {
-            code = SDL.keyCodes[event.keyCode] || event.keyCode;
-            // If this is one of the modifier keys (224 | 1<<10 - 227 | 1<<10), and the event specifies that it is
-            // a right key, add 4 to get the right key SDL key code.
-            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT && code >= (224 | 1<<10) && code <= (227 | 1<<10)) {
-              code += 4;
-            }
-          }
-          return code;
-      },handleEvent:function (event) {
-        if (event.handled) return;
-        event.handled = true;
-  
-        switch (event.type) {
-          case 'touchstart': case 'touchend': case 'touchmove': {
-            Browser.calculateMouseEvent(event);
-            break;
-          }
-          case 'keydown': case 'keyup': {
-            var down = event.type === 'keydown';
-            var code = SDL.lookupKeyCodeForEvent(event);
-            HEAP8[(((SDL.keyboardState)+(code))>>0)]=down;
-            // TODO: lmeta, rmeta, numlock, capslock, KMOD_MODE, KMOD_RESERVED
-            SDL.modState = (HEAP8[(((SDL.keyboardState)+(1248))>>0)] ? 0x0040 : 0) | // KMOD_LCTRL
-              (HEAP8[(((SDL.keyboardState)+(1249))>>0)] ? 0x0001 : 0) | // KMOD_LSHIFT
-              (HEAP8[(((SDL.keyboardState)+(1250))>>0)] ? 0x0100 : 0) | // KMOD_LALT
-              (HEAP8[(((SDL.keyboardState)+(1252))>>0)] ? 0x0080 : 0) | // KMOD_RCTRL
-              (HEAP8[(((SDL.keyboardState)+(1253))>>0)] ? 0x0002 : 0) | // KMOD_RSHIFT
-              (HEAP8[(((SDL.keyboardState)+(1254))>>0)] ? 0x0200 : 0); //  KMOD_RALT
-            if (down) {
-              SDL.keyboardMap[code] = event.keyCode; // save the DOM input, which we can use to unpress it during blur
-            } else {
-              delete SDL.keyboardMap[code];
-            }
-  
-            break;
-          }
-          case 'mousedown': case 'mouseup':
-            if (event.type == 'mousedown') {
-              // SDL_BUTTON(x) is defined as (1 << ((x)-1)).  SDL buttons are 1-3,
-              // and DOM buttons are 0-2, so this means that the below formula is
-              // correct.
-              SDL.buttonState |= 1 << event.button;
-            } else if (event.type == 'mouseup') {
-              SDL.buttonState &= ~(1 << event.button);
-            }
-            // fall through
-          case 'mousemove': {
-            Browser.calculateMouseEvent(event);
-            break;
-          }
-        }
-      },flushEventsToHandler:function () {
-        if (!SDL.eventHandler) return;
-  
-        while (SDL.pollEvent(SDL.eventHandlerTemp)) {
-          Module['dynCall_iii'](SDL.eventHandler, SDL.eventHandlerContext, SDL.eventHandlerTemp);
-        }
-      },pollEvent:function (ptr) {
-        if (SDL.initFlags & 0x200 && SDL.joystickEventState) {
-          // If SDL_INIT_JOYSTICK was supplied AND the joystick system is configured
-          // to automatically query for events, query for joystick events.
-          SDL.queryJoysticks();
-        }
-        if (ptr) {
-          while (SDL.events.length > 0) {
-            if (SDL.makeCEvent(SDL.events.shift(), ptr) !== false) return 1;
-          }
-          return 0;
-        } else {
-          // XXX: somewhat risky in that we do not check if the event is real or not (makeCEvent returns false) if no pointer supplied
-          return SDL.events.length > 0;
-        }
-      },makeCEvent:function (event, ptr) {
-        if (typeof event === 'number') {
-          // This is a pointer to a copy of a native C event that was SDL_PushEvent'ed
-          _memcpy(ptr, event, 28);
-          _free(event); // the copy is no longer needed
-          return;
-        }
-  
-        SDL.handleEvent(event);
-  
-        switch (event.type) {
-          case 'keydown': case 'keyup': {
-            var down = event.type === 'keydown';
-            //Module.print('Received key event: ' + event.keyCode);
-            var key = SDL.lookupKeyCodeForEvent(event);
-            var scan;
-            if (key >= 1024) {
-              scan = key - 1024;
-            } else {
-              scan = SDL.scanCodes[key] || key;
-            }
-  
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP8[(((ptr)+(8))>>0)]=down ? 1 : 0;
-            HEAP8[(((ptr)+(9))>>0)]=0; // TODO
-            HEAP32[(((ptr)+(12))>>2)]=scan;
-            HEAP32[(((ptr)+(16))>>2)]=key;
-            HEAP16[(((ptr)+(20))>>1)]=SDL.modState;
-            // some non-character keys (e.g. backspace and tab) won't have keypressCharCode set, fill in with the keyCode.
-            HEAP32[(((ptr)+(24))>>2)]=event.keypressCharCode || key;
-  
-            break;
-          }
-          case 'keypress': {
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            // Not filling in windowID for now
-            var cStr = intArrayFromString(String.fromCharCode(event.charCode));
-            for (var i = 0; i < cStr.length; ++i) {
-              HEAP8[(((ptr)+(8 + i))>>0)]=cStr[i];
-            }
-            break;
-          }
-          case 'mousedown': case 'mouseup': case 'mousemove': {
-            if (event.type != 'mousemove') {
-              var down = event.type === 'mousedown';
-              HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-              HEAP32[(((ptr)+(4))>>2)]=0;
-              HEAP32[(((ptr)+(8))>>2)]=0;
-              HEAP32[(((ptr)+(12))>>2)]=0;
-              HEAP8[(((ptr)+(16))>>0)]=event.button+1; // DOM buttons are 0-2, SDL 1-3
-              HEAP8[(((ptr)+(17))>>0)]=down ? 1 : 0;
-              HEAP32[(((ptr)+(20))>>2)]=Browser.mouseX;
-              HEAP32[(((ptr)+(24))>>2)]=Browser.mouseY;
-            } else {
-              HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-              HEAP32[(((ptr)+(4))>>2)]=0;
-              HEAP32[(((ptr)+(8))>>2)]=0;
-              HEAP32[(((ptr)+(12))>>2)]=0;
-              HEAP32[(((ptr)+(16))>>2)]=SDL.buttonState;
-              HEAP32[(((ptr)+(20))>>2)]=Browser.mouseX;
-              HEAP32[(((ptr)+(24))>>2)]=Browser.mouseY;
-              HEAP32[(((ptr)+(28))>>2)]=Browser.mouseMovementX;
-              HEAP32[(((ptr)+(32))>>2)]=Browser.mouseMovementY;
-            }
-            break;
-          }
-          case 'wheel': {
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP32[(((ptr)+(16))>>2)]=event.deltaX;
-            HEAP32[(((ptr)+(20))>>2)]=event.deltaY; 
-            break;       
-          }
-          case 'touchstart': case 'touchend': case 'touchmove': {
-            var touch = event.touch;
-            if (!Browser.touches[touch.identifier]) break;
-            var w = Module['canvas'].width;
-            var h = Module['canvas'].height;
-            var x = Browser.touches[touch.identifier].x / w;
-            var y = Browser.touches[touch.identifier].y / h;
-            var lx = Browser.lastTouches[touch.identifier].x / w;
-            var ly = Browser.lastTouches[touch.identifier].y / h;
-            var dx = x - lx;
-            var dy = y - ly;
-            if (touch['deviceID'] === undefined) touch.deviceID = SDL.TOUCH_DEFAULT_ID;
-            if (dx === 0 && dy === 0 && event.type === 'touchmove') return false; // don't send these if nothing happened
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP32[(((ptr)+(4))>>2)]=_SDL_GetTicks();
-            (tempI64 = [touch.deviceID>>>0,(tempDouble=touch.deviceID,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((ptr)+(8))>>2)]=tempI64[0],HEAP32[(((ptr)+(12))>>2)]=tempI64[1]);
-            (tempI64 = [touch.identifier>>>0,(tempDouble=touch.identifier,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((ptr)+(16))>>2)]=tempI64[0],HEAP32[(((ptr)+(20))>>2)]=tempI64[1]);
-            HEAPF32[(((ptr)+(24))>>2)]=x;
-            HEAPF32[(((ptr)+(28))>>2)]=y;
-            HEAPF32[(((ptr)+(32))>>2)]=dx;
-            HEAPF32[(((ptr)+(36))>>2)]=dy;
-            if (touch.force !== undefined) {
-              HEAPF32[(((ptr)+(40))>>2)]=touch.force;
-            } else { // No pressure data, send a digital 0/1 pressure.
-              HEAPF32[(((ptr)+(40))>>2)]=event.type == "touchend" ? 0 : 1;
-            }
-            break;
-          }
-          case 'unload': {
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            break;
-          }
-          case 'resize': {
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP32[(((ptr)+(4))>>2)]=event.w;
-            HEAP32[(((ptr)+(8))>>2)]=event.h;
-            break;
-          }
-          case 'joystick_button_up': case 'joystick_button_down': {
-            var state = event.type === 'joystick_button_up' ? 0 : 1;
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP8[(((ptr)+(4))>>0)]=event.index;
-            HEAP8[(((ptr)+(5))>>0)]=event.button;
-            HEAP8[(((ptr)+(6))>>0)]=state;
-            break;
-          }
-          case 'joystick_axis_motion': {
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP8[(((ptr)+(4))>>0)]=event.index;
-            HEAP8[(((ptr)+(5))>>0)]=event.axis;
-            HEAP32[(((ptr)+(8))>>2)]=SDL.joystickAxisValueConversion(event.value);
-            break;
-          }
-          case 'focus': {
-            var SDL_WINDOWEVENT_FOCUS_GAINED = 12 /* SDL_WINDOWEVENT_FOCUS_GAINED */;
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP32[(((ptr)+(4))>>2)]=0;
-            HEAP8[(((ptr)+(8))>>0)]=SDL_WINDOWEVENT_FOCUS_GAINED;
-            break;
-          }
-          case 'blur': {
-            var SDL_WINDOWEVENT_FOCUS_LOST = 13 /* SDL_WINDOWEVENT_FOCUS_LOST */;
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP32[(((ptr)+(4))>>2)]=0;
-            HEAP8[(((ptr)+(8))>>0)]=SDL_WINDOWEVENT_FOCUS_LOST;
-            break;
-          }
-          case 'visibilitychange': {
-            var SDL_WINDOWEVENT_SHOWN  = 1 /* SDL_WINDOWEVENT_SHOWN */;
-            var SDL_WINDOWEVENT_HIDDEN = 2 /* SDL_WINDOWEVENT_HIDDEN */;
-            var visibilityEventID = event.visible ? SDL_WINDOWEVENT_SHOWN : SDL_WINDOWEVENT_HIDDEN;
-            HEAP32[((ptr)>>2)]=SDL.DOMEventToSDLEvent[event.type];
-            HEAP32[(((ptr)+(4))>>2)]=0;
-            HEAP8[(((ptr)+(8))>>0)]=visibilityEventID;
-            break;
-          }
-          default: throw 'Unhandled SDL event: ' + event.type;
-        }
-      },makeFontString:function (height, fontName) {
-        if (fontName.charAt(0) != "'" && fontName.charAt(0) != '"') {
-          // https://developer.mozilla.org/ru/docs/Web/CSS/font-family
-          // Font family names containing whitespace should be quoted.
-          // BTW, quote all font names is easier than searching spaces
-          fontName = '"' + fontName + '"';
-        }
-        return height + 'px ' + fontName + ', serif';
-      },estimateTextWidth:function (fontData, text) {
-        var h = fontData.size;
-        var fontString = SDL.makeFontString(h, fontData.name);
-        var tempCtx = SDL.ttfContext;
-        tempCtx.save();
-        tempCtx.font = fontString;
-        var ret = tempCtx.measureText(text).width | 0;
-        tempCtx.restore();
-        return ret;
-      },allocateChannels:function (num) { // called from Mix_AllocateChannels and init
-        if (SDL.numChannels && SDL.numChannels >= num && num != 0) return;
-        SDL.numChannels = num;
-        SDL.channels = [];
-        for (var i = 0; i < num; i++) {
-          SDL.channels[i] = {
-            audio: null,
-            volume: 1.0
-          };
-        }
-      },setGetVolume:function (info, volume) {
-        if (!info) return 0;
-        var ret = info.volume * 128; // MIX_MAX_VOLUME
-        if (volume != -1) {
-          info.volume = Math.min(Math.max(volume, 0), 128) / 128;
-          if (info.audio) {
-            try {
-              info.audio.volume = info.volume; // For <audio> element
-              if (info.audio.webAudioGainNode) info.audio.webAudioGainNode['gain']['value'] = info.volume; // For WebAudio playback
-            } catch(e) {
-              Module.printErr('setGetVolume failed to set audio volume: ' + e);
-            }
-          }
-        }
-        return ret;
-      },setPannerPosition:function (info, x, y, z) {
-        if (!info) return;
-        if (info.audio) {
-          if (info.audio.webAudioPannerNode) {
-            info.audio.webAudioPannerNode['setPosition'](x, y, z);
-          }
-        }
-      },playWebAudio:function (audio) {
-        if (!audio) return;
-        if (audio.webAudioNode) return; // This instance is already playing, don't start again.
-        if (!SDL.webAudioAvailable()) return;
-        try {
-          var webAudio = audio.resource.webAudio;
-          audio.paused = false;
-          if (!webAudio.decodedBuffer) {
-            if (webAudio.onDecodeComplete === undefined) abort("Cannot play back audio object that was not loaded");
-            webAudio.onDecodeComplete.push(function() { if (!audio.paused) SDL.playWebAudio(audio); });
-            return;
-          }
-          audio.webAudioNode = SDL.audioContext['createBufferSource']();
-          audio.webAudioNode['buffer'] = webAudio.decodedBuffer;
-          audio.webAudioNode['loop'] = audio.loop;
-          audio.webAudioNode['onended'] = function() { audio['onended'](); } // For <media> element compatibility, route the onended signal to the instance.
-  
-          audio.webAudioPannerNode = SDL.audioContext['createPanner']();
-          // avoid Chrome bug
-          // If posz = 0, the sound will come from only the right.
-          // By posz = -0.5 (slightly ahead), the sound will come from right and left correctly.
-          audio.webAudioPannerNode["setPosition"](0, 0, -.5);
-          audio.webAudioPannerNode['panningModel'] = 'equalpower';
-  
-          // Add an intermediate gain node to control volume.
-          audio.webAudioGainNode = SDL.audioContext['createGain']();
-          audio.webAudioGainNode['gain']['value'] = audio.volume;
-  
-          audio.webAudioNode['connect'](audio.webAudioPannerNode);
-          audio.webAudioPannerNode['connect'](audio.webAudioGainNode);
-          audio.webAudioGainNode['connect'](SDL.audioContext['destination']);
-  
-          audio.webAudioNode['start'](0, audio.currentPosition);
-          audio.startTime = SDL.audioContext['currentTime'] - audio.currentPosition;
-        } catch(e) {
-          Module.printErr('playWebAudio failed: ' + e);
-        }
-      },pauseWebAudio:function (audio) {
-        if (!audio) return;
-        if (audio.webAudioNode) {
-          try {
-            // Remember where we left off, so that if/when we resume, we can restart the playback at a proper place.
-            audio.currentPosition = (SDL.audioContext['currentTime'] - audio.startTime) % audio.resource.webAudio.decodedBuffer.duration;
-            // Important: When we reach here, the audio playback is stopped by the user. But when calling .stop() below, the Web Audio
-            // graph will send the onended signal, but we don't want to process that, since pausing should not clear/destroy the audio
-            // channel.
-            audio.webAudioNode['onended'] = undefined;
-            audio.webAudioNode.stop(0); // 0 is a default parameter, but WebKit is confused by it #3861
-            audio.webAudioNode = undefined;
-          } catch(e) {
-            Module.printErr('pauseWebAudio failed: ' + e);
-          }
-        }
-        audio.paused = true;
-      },openAudioContext:function () {
-        // Initialize Web Audio API if we haven't done so yet. Note: Only initialize Web Audio context ever once on the web page,
-        // since initializing multiple times fails on Chrome saying 'audio resources have been exhausted'.
-        if (!SDL.audioContext) {
-          if (typeof(AudioContext) !== 'undefined') SDL.audioContext = new AudioContext();
-          else if (typeof(webkitAudioContext) !== 'undefined') SDL.audioContext = new webkitAudioContext();
-        }
-      },webAudioAvailable:function () { return !!SDL.audioContext; },fillWebAudioBufferFromHeap:function (heapPtr, sizeSamplesPerChannel, dstAudioBuffer) {
-        // The input audio data is interleaved across the channels, i.e. [L, R, L, R, L, R, ...] and is either 8-bit or 16-bit as
-        // supported by the SDL API. The output audio wave data for Web Audio API must be in planar buffers of [-1,1]-normalized Float32 data,
-        // so perform a buffer conversion for the data.
-        var numChannels = SDL.audio.channels;
-        for(var c = 0; c < numChannels; ++c) {
-          var channelData = dstAudioBuffer['getChannelData'](c);
-          if (channelData.length != sizeSamplesPerChannel) {
-            throw 'Web Audio output buffer length mismatch! Destination size: ' + channelData.length + ' samples vs expected ' + sizeSamplesPerChannel + ' samples!';
-          }
-          if (SDL.audio.format == 0x8010 /*AUDIO_S16LSB*/) {
-            for(var j = 0; j < sizeSamplesPerChannel; ++j) {
-              channelData[j] = (HEAP16[(((heapPtr)+((j*numChannels + c)*2))>>1)]) / 0x8000;
-            }
-          } else if (SDL.audio.format == 0x0008 /*AUDIO_U8*/) {
-            for(var j = 0; j < sizeSamplesPerChannel; ++j) {
-              var v = (HEAP8[(((heapPtr)+(j*numChannels + c))>>0)]);
-              channelData[j] = ((v >= 0) ? v-128 : v+128) /128;
-            }
-          }
-        }
-      },debugSurface:function (surfData) {
-        console.log('dumping surface ' + [surfData.surf, surfData.source, surfData.width, surfData.height]);
-        var image = surfData.ctx.getImageData(0, 0, surfData.width, surfData.height);
-        var data = image.data;
-        var num = Math.min(surfData.width, surfData.height);
-        for (var i = 0; i < num; i++) {
-          console.log('   diagonal ' + i + ':' + [data[i*surfData.width*4 + i*4 + 0], data[i*surfData.width*4 + i*4 + 1], data[i*surfData.width*4 + i*4 + 2], data[i*surfData.width*4 + i*4 + 3]]);
-        }
-      },joystickEventState:1,lastJoystickState:{},joystickNamePool:{},recordJoystickState:function (joystick, state) {
-        // Standardize button state.
-        var buttons = new Array(state.buttons.length);
-        for (var i = 0; i < state.buttons.length; i++) {
-          buttons[i] = SDL.getJoystickButtonState(state.buttons[i]);
-        }
-  
-        SDL.lastJoystickState[joystick] = {
-          buttons: buttons,
-          axes: state.axes.slice(0),
-          timestamp: state.timestamp,
-          index: state.index,
-          id: state.id
-        };
-      },getJoystickButtonState:function (button) {
-        if (typeof button === 'object') {
-          // Current gamepad API editor's draft (Firefox Nightly)
-          // https://dvcs.w3.org/hg/gamepad/raw-file/default/gamepad.html#idl-def-GamepadButton
-          return button['pressed'];
-        } else {
-          // Current gamepad API working draft (Firefox / Chrome Stable)
-          // http://www.w3.org/TR/2012/WD-gamepad-20120529/#gamepad-interface
-          return button > 0;
-        }
-      },queryJoysticks:function () {
-        for (var joystick in SDL.lastJoystickState) {
-          var state = SDL.getGamepad(joystick - 1);
-          var prevState = SDL.lastJoystickState[joystick];
-          // If joystick was removed, state returns null.
-          if (typeof state === 'undefined') return;
-          // Check only if the timestamp has differed.
-          // NOTE: Timestamp is not available in Firefox.
-          if (typeof state.timestamp !== 'number' || state.timestamp !== prevState.timestamp) {
-            var i;
-            for (i = 0; i < state.buttons.length; i++) {
-              var buttonState = SDL.getJoystickButtonState(state.buttons[i]);
-              // NOTE: The previous state already has a boolean representation of
-              //       its button, so no need to standardize its button state here.
-              if (buttonState !== prevState.buttons[i]) {
-                // Insert button-press event.
-                SDL.events.push({
-                  type: buttonState ? 'joystick_button_down' : 'joystick_button_up',
-                  joystick: joystick,
-                  index: joystick - 1,
-                  button: i
-                });
-              }
-            }
-            for (i = 0; i < state.axes.length; i++) {
-              if (state.axes[i] !== prevState.axes[i]) {
-                // Insert axes-change event.
-                SDL.events.push({
-                  type: 'joystick_axis_motion',
-                  joystick: joystick,
-                  index: joystick - 1,
-                  axis: i,
-                  value: state.axes[i]
-                });
-              }
-            }
-  
-            SDL.recordJoystickState(joystick, state);
-          }
-        }
-      },joystickAxisValueConversion:function (value) {
-        // Make sure value is properly clamped
-        value = Math.min(1, Math.max(value, -1));
-        // Ensures that 0 is 0, 1 is 32767, and -1 is 32768.
-        return Math.ceil(((value+1) * 32767.5) - 32768);
-      },getGamepads:function () {
-        var fcn = navigator.getGamepads || navigator.webkitGamepads || navigator.mozGamepads || navigator.gamepads || navigator.webkitGetGamepads;
-        if (fcn !== undefined) {
-          // The function must be applied on the navigator object.
-          return fcn.apply(navigator);
-        } else {
-          return [];
-        }
-      },getGamepad:function (deviceIndex) {
-        var gamepads = SDL.getGamepads();
-        if (gamepads.length > deviceIndex && deviceIndex >= 0) {
-          return gamepads[deviceIndex];
-        }
-        return null;
-      }};function _SDL_PauseAudio(pauseOn) {
-      if (!SDL.audio) {
-        return;
+      if (readfds) {
+        HEAP32[((readfds)>>2)]=dstReadLow;
+        HEAP32[(((readfds)+(4))>>2)]=dstReadHigh;
       }
-      if (pauseOn) {
-        if (SDL.audio.timer !== undefined) {
-          clearTimeout(SDL.audio.timer);
-          SDL.audio.numAudioTimersPending = 0;
-          SDL.audio.timer = undefined;
-        }
-      } else if (!SDL.audio.timer) {
-        // Start the audio playback timer callback loop.
-        SDL.audio.numAudioTimersPending = 1;
-        SDL.audio.timer = Browser.safeSetTimeout(SDL.audio.caller, 1);
+      if (writefds) {
+        HEAP32[((writefds)>>2)]=dstWriteLow;
+        HEAP32[(((writefds)+(4))>>2)]=dstWriteHigh;
       }
-      SDL.audio.paused = pauseOn;
-    }
+      if (exceptfds) {
+        HEAP32[((exceptfds)>>2)]=dstExceptLow;
+        HEAP32[(((exceptfds)+(4))>>2)]=dstExceptHigh;
+      }
+      
+      return total;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall140(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // llseek
+      var stream = SYSCALLS.getStreamFromFD(), offset_high = SYSCALLS.get(), offset_low = SYSCALLS.get(), result = SYSCALLS.get(), whence = SYSCALLS.get();
+      // NOTE: offset_high is unused - Emscripten's off_t is 32-bit
+      var offset = offset_low;
+      FS.llseek(stream, offset, whence);
+      HEAP32[((result)>>2)]=stream.position;
+      if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall268(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // statfs64
+      var path = SYSCALLS.getStr(), size = SYSCALLS.get(), buf = SYSCALLS.get();
+      assert(size === 64);
+      // NOTE: None of the constants here are true. We're just returning safe and
+      //       sane values.
+      HEAP32[(((buf)+(4))>>2)]=4096;
+      HEAP32[(((buf)+(40))>>2)]=4096;
+      HEAP32[(((buf)+(8))>>2)]=1000000;
+      HEAP32[(((buf)+(12))>>2)]=500000;
+      HEAP32[(((buf)+(16))>>2)]=500000;
+      HEAP32[(((buf)+(20))>>2)]=FS.nextInode;
+      HEAP32[(((buf)+(24))>>2)]=1000000;
+      HEAP32[(((buf)+(28))>>2)]=42;
+      HEAP32[(((buf)+(44))>>2)]=2;  // ST_NOSUID
+      HEAP32[(((buf)+(36))>>2)]=255;
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall146(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // writev
+      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get();
+      return SYSCALLS.doWritev(stream, iov, iovcnt);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall147(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getsid
+      var pid = SYSCALLS.get();
+      if (pid && pid !== PROCINFO.pid) return -ERRNO_CODES.ESRCH;
+      return PROCINFO.sid;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall144(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // msync
+      var addr = SYSCALLS.get(), len = SYSCALLS.get(), flags = SYSCALLS.get();
+      var info = SYSCALLS.mappings[addr];
+      if (!info) return 0;
+      SYSCALLS.doMsync(addr, FS.getStream(info.fd), len, info.flags);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall145(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // readv
+      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get();
+      return SYSCALLS.doReadv(stream, iov, iovcnt);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___cxa_atexit() {
+  return _atexit.apply(null, arguments)
+  }
+
+  function _psf_get_signal_max() {
+  Module['printErr']('missing function: psf_get_signal_max'); abort(-1);
+  }
 
   
   function __ZSt18uncaught_exceptionv() { // std::uncaught_exception()
@@ -7902,124 +6038,198 @@ function copyTempDouble(ptr) {
       // typeinfo defined. Best-efforts match just in case.
       thrown = HEAP32[((thrown)>>2)]; // undo indirection
       return ((Runtime.setTempRet0(throwntype),thrown)|0);
-    }function ___gxx_personality_v0() {
+    }function ___cxa_throw(ptr, type, destructor) {
+      EXCEPTIONS.infos[ptr] = {
+        ptr: ptr,
+        adjusted: ptr,
+        type: type,
+        destructor: destructor,
+        refcount: 0,
+        caught: false,
+        rethrown: false
+      };
+      EXCEPTIONS.last = ptr;
+      if (!("uncaught_exception" in __ZSt18uncaught_exceptionv)) {
+        __ZSt18uncaught_exceptionv.uncaught_exception = 1;
+      } else {
+        __ZSt18uncaught_exceptionv.uncaught_exception++;
+      }
+      throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s DISABLE_EXCEPTION_CATCHING=0 or DISABLE_EXCEPTION_CATCHING=2 to catch.";
     }
 
-  
-  function _wait(stat_loc) {
-      // pid_t wait(int *stat_loc);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/wait.html
-      // Makes no sense in a single-process environment.
-      ___setErrNo(ERRNO_CODES.ECHILD);
-      return -1;
-    }function _waitpid() {
-  return _wait.apply(null, arguments)
+  function _pthread_mutex_init() {}
+
+  function _double64_be_read() {
+  Module['printErr']('missing function: double64_be_read'); abort(-1);
   }
 
-  function ___syscall205(which, varargs) {SYSCALLS.varargs = varargs;
+  function _pthread_equal(x, y) { return x == y }
+
+   
+
+  function ___mulsc3() {
+  Module['printErr']('missing function: __mulsc3'); abort(-1);
+  }
+
+  
+  function _usleep(useconds) {
+      // int usleep(useconds_t useconds);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/usleep.html
+      // We're single-threaded, so use a busy loop. Super-ugly.
+      var msec = useconds / 1000;
+      if ((ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && self['performance'] && self['performance']['now']) {
+        var start = self['performance']['now']();
+        while (self['performance']['now']() - start < msec) {
+          // Do nothing.
+        }
+      } else {
+        var start = Date.now();
+        while (Date.now() - start < msec) {
+          // Do nothing.
+        }
+      }
+      return 0;
+    }function _nanosleep(rqtp, rmtp) {
+      // int nanosleep(const struct timespec  *rqtp, struct timespec *rmtp);
+      var seconds = HEAP32[((rqtp)>>2)];
+      var nanoseconds = HEAP32[(((rqtp)+(4))>>2)];
+      if (rmtp !== 0) {
+        HEAP32[((rmtp)>>2)]=0;
+        HEAP32[(((rmtp)+(4))>>2)]=0;
+      }
+      return _usleep((seconds * 1e6) + (nanoseconds / 1000));
+    }
+
+  function ___syscall4(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // getgroups32
-      var size = SYSCALLS.get(), list = SYSCALLS.get();
-      if (size < 1) return -ERRNO_CODES.EINVAL;
-      HEAP32[((list)>>2)]=0;
-      return 1;
+   // write
+      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get();
+      return FS.write(stream, HEAP8,buf, count);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
 
-  
-  function ___syscall214(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall94(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // setgid32
-      var uid = SYSCALLS.get();
-      if (uid !== 0) return -ERRNO_CODES.EPERM;
+   // fchmod
+      var fd = SYSCALLS.get(), mode = SYSCALLS.get();
+      FS.fchmod(fd, mode);
       return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
-  }function ___syscall204() {
-  return ___syscall214.apply(null, arguments)
   }
 
-  function _csoundModuleInit_ftsamplebank() {
-  Module['printErr']('missing function: csoundModuleInit_ftsamplebank'); abort(-1);
-  }
-
-  function ___syscall168(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall97(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // poll
-      var fds = SYSCALLS.get(), nfds = SYSCALLS.get(), timeout = SYSCALLS.get();
-      var nonzero = 0;
-      for (var i = 0; i < nfds; i++) {
-        var pollfd = fds + 8 * i;
-        var fd = HEAP32[((pollfd)>>2)];
-        var events = HEAP16[(((pollfd)+(4))>>1)];
-        var mask = 32;
-        var stream = FS.getStream(fd);
-        if (stream) {
-          mask = SYSCALLS.DEFAULT_POLLMASK;
-          if (stream.stream_ops.poll) {
-            mask = stream.stream_ops.poll(stream);
-          }
+   // setpriority
+      return -ERRNO_CODES.EPERM;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall96(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getpriority
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall91(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // munmap
+      var addr = SYSCALLS.get(), len = SYSCALLS.get();
+      // TODO: support unmmap'ing parts of allocations
+      var info = SYSCALLS.mappings[addr];
+      if (!info) return 0;
+      if (len === info.len) {
+        var stream = FS.getStream(info.fd);
+        SYSCALLS.doMsync(addr, stream, len, info.flags)
+        FS.munmap(stream);
+        SYSCALLS.mappings[addr] = null;
+        if (info.allocated) {
+          _free(info.malloc);
         }
-        mask &= events | 8 | 16;
-        if (mask) nonzero++;
-        HEAP16[(((pollfd)+(6))>>1)]=mask;
       }
-      return nonzero;
+      return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
 
-  function ___syscall200() {
-  return ___syscall202.apply(null, arguments)
+  function _psf_log_printf() {
+  Module['printErr']('missing function: psf_log_printf'); abort(-1);
   }
 
-  function ___syscall203() {
-  return ___syscall214.apply(null, arguments)
-  }
-
-
-  function _kill(pid, sig) {
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/kill.html
-      // Makes no sense in a single-process environment.
-  	  // Should kill itself somtimes depending on `pid`
-      ___setErrNo(ERRNO_CODES.EPERM);
-      return -1;
-    }
-
-  function ___syscall183(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getcwd
-      var buf = SYSCALLS.get(), size = SYSCALLS.get();
-      if (size === 0) return -ERRNO_CODES.EINVAL;
-      var cwd = FS.cwd();
-      var cwdLengthInBytes = lengthBytesUTF8(cwd);
-      if (size < cwdLengthInBytes + 1) return -ERRNO_CODES.ERANGE;
-      stringToUTF8(cwd, buf, size);
-      return buf;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall209() {
-  return ___syscall211.apply(null, arguments)
+  function _posix_spawn_file_actions_destroy() {
+  Module['printErr']('missing function: posix_spawn_file_actions_destroy'); abort(-1);
   }
 
    
 
-  function ___syscall40(which, varargs) {SYSCALLS.varargs = varargs;
+  function _csp_orc_sa_print_list() {
+  Module['printErr']('missing function: csp_orc_sa_print_list'); abort(-1);
+  }
+
+  function _psf_set_stdio() {
+  Module['printErr']('missing function: psf_set_stdio'); abort(-1);
+  }
+
+  function _gettimeofday(ptr) {
+      var now = Date.now();
+      HEAP32[((ptr)>>2)]=(now/1000)|0; // seconds
+      HEAP32[(((ptr)+(4))>>2)]=((now % 1000)*1000)|0; // microseconds
+      return 0;
+    }
+
+  function _psf_use_rsrc() {
+  Module['printErr']('missing function: psf_use_rsrc'); abort(-1);
+  }
+
+  function _pthread_sigmask() {
+  Module['printErr']('missing function: pthread_sigmask'); abort(-1);
+  }
+
+  function ___block_all_sigs() {
+  Module['printErr']('missing function: __block_all_sigs'); abort(-1);
+  }
+
+  function _pthread_mutex_destroy() {}
+
+  function ___syscall121(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // rmdir
-      var path = SYSCALLS.getStr();
-      FS.rmdir(path);
+   // setdomainname
+      return -ERRNO_CODES.EPERM;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall122(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // uname
+      var buf = SYSCALLS.get();
+      if (!buf) return -ERRNO_CODES.EFAULT
+      var layout = {"sysname":0,"nodename":65,"domainname":325,"machine":260,"version":195,"release":130,"__size__":390};
+      function copyString(element, value) {
+        var offset = layout[element];
+        writeAsciiToMemory(value, buf + offset);
+      }
+      copyString('sysname', 'Emscripten');
+      copyString('nodename', 'emscripten');
+      copyString('release', '1.0');
+      copyString('version', '#1');
+      copyString('machine', 'x86-JS');
       return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
@@ -8027,86 +6237,211 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall163(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall125(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // mremap
-      return -ERRNO_CODES.ENOMEM; // never succeed
+   // mprotect
+      return 0; // let's not and say we did
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
 
-  function _endgrent() {
-  Module['printErr']('missing function: endgrent'); abort(-1);
-  }
-
-  function _setgrent() {
-  Module['printErr']('missing function: setgrent'); abort(-1);
-  }
-
-  function ___syscall20(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall64(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // getpid
-      return PROCINFO.pid;
+   // getppid
+      return PROCINFO.ppid;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
 
-  function _dag_get_task() {
-  Module['printErr']('missing function: dag_get_task'); abort(-1);
+  function ___syscall66(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // setsid
+      return 0; // no-op
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
   }
 
-  function _dag_build() {
-  Module['printErr']('missing function: dag_build'); abort(-1);
+  function ___syscall60(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // umask
+      var mask = SYSCALLS.get();
+      var old = SYSCALLS.umask;
+      SYSCALLS.umask = mask;
+      return old;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
   }
 
-  function _atexit(func, arg) {
-      __ATEXIT__.unshift({ func: func, arg: arg });
+  function _sysconf(name) {
+      // long sysconf(int name);
+      // http://pubs.opengroup.org/onlinepubs/009695399/functions/sysconf.html
+      switch(name) {
+        case 30: return PAGE_SIZE;
+        case 85:
+          var maxHeapSize = 2*1024*1024*1024 - 65536;
+          return maxHeapSize / PAGE_SIZE;
+        case 132:
+        case 133:
+        case 12:
+        case 137:
+        case 138:
+        case 15:
+        case 235:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+        case 149:
+        case 13:
+        case 10:
+        case 236:
+        case 153:
+        case 9:
+        case 21:
+        case 22:
+        case 159:
+        case 154:
+        case 14:
+        case 77:
+        case 78:
+        case 139:
+        case 80:
+        case 81:
+        case 82:
+        case 68:
+        case 67:
+        case 164:
+        case 11:
+        case 29:
+        case 47:
+        case 48:
+        case 95:
+        case 52:
+        case 51:
+        case 46:
+          return 200809;
+        case 79:
+          return 0;
+        case 27:
+        case 246:
+        case 127:
+        case 128:
+        case 23:
+        case 24:
+        case 160:
+        case 161:
+        case 181:
+        case 182:
+        case 242:
+        case 183:
+        case 184:
+        case 243:
+        case 244:
+        case 245:
+        case 165:
+        case 178:
+        case 179:
+        case 49:
+        case 50:
+        case 168:
+        case 169:
+        case 175:
+        case 170:
+        case 171:
+        case 172:
+        case 97:
+        case 76:
+        case 32:
+        case 173:
+        case 35:
+          return -1;
+        case 176:
+        case 177:
+        case 7:
+        case 155:
+        case 8:
+        case 157:
+        case 125:
+        case 126:
+        case 92:
+        case 93:
+        case 129:
+        case 130:
+        case 131:
+        case 94:
+        case 91:
+          return 1;
+        case 74:
+        case 60:
+        case 69:
+        case 70:
+        case 4:
+          return 1024;
+        case 31:
+        case 42:
+        case 72:
+          return 32;
+        case 87:
+        case 26:
+        case 33:
+          return 2147483647;
+        case 34:
+        case 1:
+          return 47839;
+        case 38:
+        case 36:
+          return 99;
+        case 43:
+        case 37:
+          return 2048;
+        case 0: return 2097152;
+        case 3: return 65536;
+        case 28: return 32768;
+        case 44: return 32767;
+        case 75: return 16384;
+        case 39: return 1000;
+        case 89: return 700;
+        case 71: return 256;
+        case 40: return 255;
+        case 2: return 100;
+        case 180: return 64;
+        case 25: return 20;
+        case 5: return 16;
+        case 6: return 6;
+        case 73: return 4;
+        case 84: {
+          if (typeof navigator === 'object') return navigator['hardwareConcurrency'] || 1;
+          return 1;
+        }
+      }
+      ___setErrNo(ERRNO_CODES.EINVAL);
+      return -1;
     }
 
-  function ___restore_sigs() {
-  Module['printErr']('missing function: __restore_sigs'); abort(-1);
+  function ___syscall63(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // dup2
+      var old = SYSCALLS.getStreamFromFD(), suggestFD = SYSCALLS.get();
+      if (old.fd === suggestFD) return suggestFD;
+      return SYSCALLS.doDup(old.path, old.flags, suggestFD);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
   }
 
-
-  function ___assert_fail(condition, filename, line, func) {
-      ABORT = true;
-      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [filename ? Pointer_stringify(filename) : 'unknown filename', line, func ? Pointer_stringify(func) : 'unknown function'] + ' at ' + stackTrace();
-    }
-
-  function _dag_reinit() {
-  Module['printErr']('missing function: dag_reinit'); abort(-1);
-  }
-
-  function ___lock() {}
-
-  function _pthread_mutexattr_init() {}
-
-  function _clock() {
-      if (_clock.start === undefined) _clock.start = Date.now();
-      return ((Date.now() - _clock.start) * (1000000 / 1000))|0;
-    }
+  function ___wait() {}
 
   
-  function __inet_pton4_raw(str) {
-      var b = str.split('.');
-      for (var i = 0; i < 4; i++) {
-        var tmp = Number(b[i]);
-        if (isNaN(tmp)) return null;
-        b[i] = tmp;
-      }
-      return (b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24)) >>> 0;
-    }function _inet_addr(ptr) {
-      var addr = __inet_pton4_raw(Pointer_stringify(ptr));
-      if (addr === null) {
-        return -1;
-      }
-      return addr;
-    }
-
   
   function __isLeapYear(year) {
         return year%4 === 0 && (year%100 !== 0 || year%400 === 0);
@@ -8444,1791 +6779,30 @@ function copyTempDouble(ptr) {
   
       writeArrayToMemory(bytes, s);
       return bytes.length-1;
-    }
-
-  function ___syscall272(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fadvise64_64
-      return 0; // your advice is important to us (but we can't use it)
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  
-  function __exit(status) {
-      // void _exit(int status);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/exit.html
-      Module['exit'](status);
-    }function _exit(status) {
-      __exit(status);
-    }
-
-  
-  var PTHREAD_SPECIFIC={};function _pthread_setspecific(key, value) {
-      if (!(key in PTHREAD_SPECIFIC)) {
-        return ERRNO_CODES.EINVAL;
-      }
-      PTHREAD_SPECIFIC[key] = value;
-      return 0;
-    }
-
-  
-  var ___tm_formatted=STATICTOP; STATICTOP += 48;;
-  
-  
-  function _mktime(tmPtr) {
-      _tzset();
-      var date = new Date(HEAP32[(((tmPtr)+(20))>>2)] + 1900,
-                          HEAP32[(((tmPtr)+(16))>>2)],
-                          HEAP32[(((tmPtr)+(12))>>2)],
-                          HEAP32[(((tmPtr)+(8))>>2)],
-                          HEAP32[(((tmPtr)+(4))>>2)],
-                          HEAP32[((tmPtr)>>2)],
-                          0);
-  
-      // There's an ambiguous hour when the time goes back; the tm_isdst field is
-      // used to disambiguate it.  Date() basically guesses, so we fix it up if it
-      // guessed wrong, or fill in tm_isdst with the guess if it's -1.
-      var dst = HEAP32[(((tmPtr)+(32))>>2)];
-      var guessedOffset = date.getTimezoneOffset();
-      var start = new Date(date.getFullYear(), 0, 1);
-      var summerOffset = new Date(2000, 6, 1).getTimezoneOffset();
-      var winterOffset = start.getTimezoneOffset();
-      var dstOffset = Math.min(winterOffset, summerOffset); // DST is in December in South
-      if (dst < 0) {
-        // Attention: some regions don't have DST at all.
-        HEAP32[(((tmPtr)+(32))>>2)]=Number(summerOffset != winterOffset && dstOffset == guessedOffset);
-      } else if ((dst > 0) != (dstOffset == guessedOffset)) {
-        var nonDstOffset = Math.max(winterOffset, summerOffset);
-        var trueOffset = dst > 0 ? dstOffset : nonDstOffset;
-        // Don't try setMinutes(date.getMinutes() + ...) -- it's messed up.
-        date.setTime(date.getTime() + (trueOffset - guessedOffset)*60000);
-      }
-  
-      HEAP32[(((tmPtr)+(24))>>2)]=date.getDay();
-      var yday = ((date.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))|0;
-      HEAP32[(((tmPtr)+(28))>>2)]=yday;
-  
-      return (date.getTime() / 1000)|0;
-    }function _asctime_r(tmPtr, buf) {
-      var date = {
-        tm_sec: HEAP32[((tmPtr)>>2)],
-        tm_min: HEAP32[(((tmPtr)+(4))>>2)],
-        tm_hour: HEAP32[(((tmPtr)+(8))>>2)],
-        tm_mday: HEAP32[(((tmPtr)+(12))>>2)],
-        tm_mon: HEAP32[(((tmPtr)+(16))>>2)],
-        tm_year: HEAP32[(((tmPtr)+(20))>>2)],
-        tm_wday: HEAP32[(((tmPtr)+(24))>>2)]
-      };
-      var days = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
-      var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-      var s = days[date.tm_wday] + ' ' + months[date.tm_mon] +
-          (date.tm_mday < 10 ? '  ' : ' ') + date.tm_mday +
-          (date.tm_hour < 10 ? ' 0' : ' ') + date.tm_hour +
-          (date.tm_min < 10 ? ':0' : ':') + date.tm_min +
-          (date.tm_sec < 10 ? ':0' : ':') + date.tm_sec +
-          ' ' + (1900 + date.tm_year) + "\n";
-  
-      // asctime_r is specced to behave in an undefined manner if the algorithm would attempt
-      // to write out more than 26 bytes (including the null terminator).
-      // See http://pubs.opengroup.org/onlinepubs/9699919799/functions/asctime.html
-      // Our undefined behavior is to truncate the write to at most 26 bytes, including null terminator.
-      stringToUTF8(s, buf, 26);
-      return buf;
-    }function _asctime(tmPtr) {
-      return _asctime_r(tmPtr, ___tm_formatted);
-    }
-
-  function ___syscall201() {
-  return ___syscall202.apply(null, arguments)
-  }
-
-  function _pthread_detach() {}
-
-  function ___syscall301(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // unlinkat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), flags = SYSCALLS.get();
-      assert(flags === 0);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      FS.unlink(path);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall15(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // chmod
-      var path = SYSCALLS.getStr(), mode = SYSCALLS.get();
-      FS.chmod(path, mode);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall14(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // mknod
-      var path = SYSCALLS.getStr(), mode = SYSCALLS.get(), dev = SYSCALLS.get();
-      return SYSCALLS.doMknod(path, mode, dev);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  
-  function _gmtime_r(time, tmPtr) {
-      var date = new Date(HEAP32[((time)>>2)]*1000);
-      HEAP32[((tmPtr)>>2)]=date.getUTCSeconds();
-      HEAP32[(((tmPtr)+(4))>>2)]=date.getUTCMinutes();
-      HEAP32[(((tmPtr)+(8))>>2)]=date.getUTCHours();
-      HEAP32[(((tmPtr)+(12))>>2)]=date.getUTCDate();
-      HEAP32[(((tmPtr)+(16))>>2)]=date.getUTCMonth();
-      HEAP32[(((tmPtr)+(20))>>2)]=date.getUTCFullYear()-1900;
-      HEAP32[(((tmPtr)+(24))>>2)]=date.getUTCDay();
-      HEAP32[(((tmPtr)+(36))>>2)]=0;
-      HEAP32[(((tmPtr)+(32))>>2)]=0;
-      var start = Date.UTC(date.getUTCFullYear(), 0, 1, 0, 0, 0, 0);
-      var yday = ((date.getTime() - start) / (1000 * 60 * 60 * 24))|0;
-      HEAP32[(((tmPtr)+(28))>>2)]=yday;
-      HEAP32[(((tmPtr)+(40))>>2)]=___tm_timezone;
-  
-      return tmPtr;
-    }function _gmtime(time) {
-      return _gmtime_r(time, ___tm_current);
-    }
-
-  function ___syscall10(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // unlink
-      var path = SYSCALLS.getStr();
-      FS.unlink(path);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall9(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // link
-      var oldpath = SYSCALLS.get(), newpath = SYSCALLS.get();
-      return -ERRNO_CODES.EMLINK; // no hardlinks for us
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  
-  
-  
-  function ___cxa_free_exception(ptr) {
-      try {
-        return _free(ptr);
-      } catch(e) { // XXX FIXME
-      }
-    }function ___cxa_end_catch() {
-      // Clear state flag.
-      Module['setThrew'](0);
-      // Call destructor if one is registered then clear it.
-      var ptr = EXCEPTIONS.caught.pop();
-      if (ptr) {
-        EXCEPTIONS.decRef(EXCEPTIONS.deAdjust(ptr));
-        EXCEPTIONS.last = 0; // XXX in decRef?
-      }
-    }function ___cxa_rethrow() {
-      var ptr = EXCEPTIONS.caught.pop();
-      if (!EXCEPTIONS.infos[ptr].rethrown) {
-        // Only pop if the corresponding push was through rethrow_primary_exception
-        EXCEPTIONS.caught.push(ptr)
-        EXCEPTIONS.infos[ptr].rethrown = true;
-      }
-      EXCEPTIONS.last = ptr;
-      throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s DISABLE_EXCEPTION_CATCHING=0 or DISABLE_EXCEPTION_CATCHING=2 to catch.";
-    }function ___cxa_rethrow_primary_exception(ptr) {
-      if (!ptr) return;
-      EXCEPTIONS.caught.push(ptr);
-      EXCEPTIONS.infos[ptr].rethrown = true;
-      ___cxa_rethrow();
-    }
-
-  function ___syscall306(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fchmodat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), mode = SYSCALLS.get(), flags = SYSCALLS.get();
-      assert(flags === 0);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      FS.chmod(path, mode);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___cxa_begin_catch(ptr) {
-      var info = EXCEPTIONS.infos[ptr];
-      if (info && !info.caught) {
-        info.caught = true;
-        __ZSt18uncaught_exceptionv.uncaught_exception--;
-      }
-      if (info) info.rethrown = false;
-      EXCEPTIONS.caught.push(ptr);
-      EXCEPTIONS.addRef(EXCEPTIONS.deAdjust(ptr));
-      return ptr;
-    }
-
-  function ___syscall1(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // exit
-      var status = SYSCALLS.get();
-      Module['exit'](status);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _globalunlock() {
-  Module['printErr']('missing function: globalunlock'); abort(-1);
-  }
-
-  function ___syscall3(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // read
-      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get();
-      return FS.read(stream, HEAP8,buf, count);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall12(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // chdir
-      var path = SYSCALLS.getStr();
-      FS.chdir(path);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall5(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // open
-      var pathname = SYSCALLS.getStr(), flags = SYSCALLS.get(), mode = SYSCALLS.get() // optional TODO
-      var stream = FS.open(pathname, flags, mode);
-      return stream.fd;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall4(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // write
-      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get();
-      return FS.write(stream, HEAP8,buf, count);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall297(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // mknodat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), mode = SYSCALLS.get(), dev = SYSCALLS.get();
-      path = SYSCALLS.calculateAt(dirfd, path);
-      return SYSCALLS.doMknod(path, mode, dev);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-
-  function _llvm_stacksave() {
-      var self = _llvm_stacksave;
-      if (!self.LLVM_SAVEDSTACKS) {
-        self.LLVM_SAVEDSTACKS = [];
-      }
-      self.LLVM_SAVEDSTACKS.push(Runtime.stackSave());
-      return self.LLVM_SAVEDSTACKS.length-1;
-    }
-
-  
-  var PIPEFS={BUCKET_BUFFER_SIZE:8192,mount:function (mount) {
-        // Do not pollute the real root directory or its child nodes with pipes
-        // Looks like it is OK to create another pseudo-root node not linked to the FS.root hierarchy this way
-        return FS.createNode(null, '/', 16384 | 511 /* 0777 */, 0);
-      },createPipe:function () {
-        var pipe = {
-          buckets: []
-        };
-  
-        pipe.buckets.push({
-          buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
-          offset: 0,
-          roffset: 0
-        });
-  
-        var rName = PIPEFS.nextname();
-        var wName = PIPEFS.nextname();
-        var rNode = FS.createNode(PIPEFS.root, rName, 4096, 0);
-        var wNode = FS.createNode(PIPEFS.root, wName, 4096, 0);
-  
-        rNode.pipe = pipe;
-        wNode.pipe = pipe;
-  
-        var readableStream = FS.createStream({
-          path: rName,
-          node: rNode,
-          flags: FS.modeStringToFlags('r'),
-          seekable: false,
-          stream_ops: PIPEFS.stream_ops
-        });
-        rNode.stream = readableStream;
-  
-        var writableStream = FS.createStream({
-          path: wName,
-          node: wNode,
-          flags: FS.modeStringToFlags('w'),
-          seekable: false,
-          stream_ops: PIPEFS.stream_ops
-        });
-        wNode.stream = writableStream;
-  
-        return {
-          readable_fd: readableStream.fd,
-          writable_fd: writableStream.fd
-        };
-      },stream_ops:{poll:function (stream) {
-          var pipe = stream.node.pipe;
-  
-          if ((stream.flags & 2097155) === 1) {
-            return (256 | 4);
-          } else {
-            if (pipe.buckets.length > 0) {
-              for (var i = 0; i < pipe.buckets.length; i++) {
-                var bucket = pipe.buckets[i];
-                if (bucket.offset - bucket.roffset > 0) {
-                  return (64 | 1);
-                }
-              }
-            }
-          }
-  
-          return 0;
-        },ioctl:function (stream, request, varargs) {
-          return ERRNO_CODES.EINVAL;
-        },read:function (stream, buffer, offset, length, position /* ignored */) {
-          var pipe = stream.node.pipe;
-          var currentLength = 0;
-  
-          for (var i = 0; i < pipe.buckets.length; i++) {
-            var bucket = pipe.buckets[i];
-            currentLength += bucket.offset - bucket.roffset;
-          }
-  
-          assert(buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer));
-          var data = buffer.subarray(offset, offset + length);
-  
-          if (length <= 0) {
-            return 0;
-          }
-          if (currentLength == 0) {
-            // Behave as if the read end is always non-blocking
-            throw new FS.ErrnoError(ERRNO_CODES.EAGAIN);
-          }
-          var toRead = Math.min(currentLength, length);
-  
-          var totalRead = toRead;
-          var toRemove = 0;
-  
-          for (var i = 0; i < pipe.buckets.length; i++) {
-            var currBucket = pipe.buckets[i];
-            var bucketSize = currBucket.offset - currBucket.roffset;
-  
-            if (toRead <= bucketSize) {
-              var tmpSlice = currBucket.buffer.subarray(currBucket.roffset, currBucket.offset);
-              if (toRead < bucketSize) {
-                tmpSlice = tmpSlice.subarray(0, toRead);
-                currBucket.roffset += toRead;
-              } else {
-                toRemove++;
-              }
-              data.set(tmpSlice);
-              break;
-            } else {
-              var tmpSlice = currBucket.buffer.subarray(currBucket.roffset, currBucket.offset);
-              data.set(tmpSlice);
-              data = data.subarray(tmpSlice.byteLength);
-              toRead -= tmpSlice.byteLength;
-              toRemove++;
-            }
-          }
-  
-          if (toRemove && toRemove == pipe.buckets.length) {
-            // Do not generate excessive garbage in use cases such as
-            // write several bytes, read everything, write several bytes, read everything...
-            toRemove--;
-            pipe.buckets[toRemove].offset = 0;
-            pipe.buckets[toRemove].roffset = 0;
-          }
-  
-          pipe.buckets.splice(0, toRemove);
-  
-          return totalRead;
-        },write:function (stream, buffer, offset, length, position /* ignored */) {
-          var pipe = stream.node.pipe;
-  
-          assert(buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer));
-          var data = buffer.subarray(offset, offset + length);
-  
-          var dataLen = data.byteLength;
-          if (dataLen <= 0) {
-            return 0;
-          }
-  
-          var currBucket = null;
-  
-          if (pipe.buckets.length == 0) {
-            currBucket = {
-              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
-              offset: 0,
-              roffset: 0
-            };
-            pipe.buckets.push(currBucket);
-          } else {
-            currBucket = pipe.buckets[pipe.buckets.length - 1];
-          }
-  
-          assert(currBucket.offset <= PIPEFS.BUCKET_BUFFER_SIZE);
-  
-          var freeBytesInCurrBuffer = PIPEFS.BUCKET_BUFFER_SIZE - currBucket.offset;
-          if (freeBytesInCurrBuffer >= dataLen) {
-            currBucket.buffer.set(data, currBucket.offset);
-            currBucket.offset += dataLen;
-            return dataLen;
-          } else if (freeBytesInCurrBuffer > 0) {
-            currBucket.buffer.set(data.subarray(0, freeBytesInCurrBuffer), currBucket.offset);
-            currBucket.offset += freeBytesInCurrBuffer;
-            data = data.subarray(freeBytesInCurrBuffer, data.byteLength);
-          }
-  
-          var numBuckets = (data.byteLength / PIPEFS.BUCKET_BUFFER_SIZE) | 0;
-          var remElements = data.byteLength % PIPEFS.BUCKET_BUFFER_SIZE;
-  
-          for (var i = 0; i < numBuckets; i++) {
-            var newBucket = {
-              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
-              offset: PIPEFS.BUCKET_BUFFER_SIZE,
-              roffset: 0
-            };
-            pipe.buckets.push(newBucket);
-            newBucket.buffer.set(data.subarray(0, PIPEFS.BUCKET_BUFFER_SIZE));
-            data = data.subarray(PIPEFS.BUCKET_BUFFER_SIZE, data.byteLength);
-          }
-  
-          if (remElements > 0) {
-            var newBucket = {
-              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
-              offset: data.byteLength,
-              roffset: 0
-            };
-            pipe.buckets.push(newBucket);
-            newBucket.buffer.set(data);
-          }
-  
-          return dataLen;
-        },close:function (stream) {
-          var pipe = stream.node.pipe;
-          pipe.buckets = null;
-        }},nextname:function () {
-        if (!PIPEFS.nextname.current) {
-          PIPEFS.nextname.current = 0;
-        }
-        return 'pipe[' + (PIPEFS.nextname.current++) + ']';
-      }};function ___syscall42(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // pipe
-      var fdPtr = SYSCALLS.get();
-  
-      if (fdPtr == 0) {
-        throw new FS.ErrnoError(ERRNO_CODES.EFAULT);
-      }
-  
-      var res = PIPEFS.createPipe();
-  
-      HEAP32[((fdPtr)>>2)]=res.readable_fd;
-      HEAP32[(((fdPtr)+(4))>>2)]=res.writable_fd;
-  
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _llvm_exp2_f32(x) {
-      return Math.pow(2, x);
-    }
-
-  function ___syscall308(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // pselect
-      return -ERRNO_CODES.ENOSYS; // unsupported feature
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall304(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // symlinkat
-      var target = SYSCALLS.get(), newdirfd = SYSCALLS.get(), linkpath = SYSCALLS.get();
-      linkpath = SYSCALLS.calculateAt(newdirfd, linkpath);
-      FS.symlink(target, linkpath);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall305(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // readlinkat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), buf = SYSCALLS.get(), bufsize = SYSCALLS.get();
-      path = SYSCALLS.calculateAt(dirfd, path);
-      return SYSCALLS.doReadlink(path, buf, bufsize);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-
-  function ___syscall268(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // statfs64
-      var path = SYSCALLS.getStr(), size = SYSCALLS.get(), buf = SYSCALLS.get();
-      assert(size === 64);
-      // NOTE: None of the constants here are true. We're just returning safe and
-      //       sane values.
-      HEAP32[(((buf)+(4))>>2)]=4096;
-      HEAP32[(((buf)+(40))>>2)]=4096;
-      HEAP32[(((buf)+(8))>>2)]=1000000;
-      HEAP32[(((buf)+(12))>>2)]=500000;
-      HEAP32[(((buf)+(16))>>2)]=500000;
-      HEAP32[(((buf)+(20))>>2)]=FS.nextInode;
-      HEAP32[(((buf)+(24))>>2)]=1000000;
-      HEAP32[(((buf)+(28))>>2)]=42;
-      HEAP32[(((buf)+(44))>>2)]=2;  // ST_NOSUID
-      HEAP32[(((buf)+(36))>>2)]=255;
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall300(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fstatat64
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), buf = SYSCALLS.get(), flags = SYSCALLS.get();
-      var nofollow = flags & 256;
-      flags = flags & (~256);
-      assert(!flags, flags);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      return SYSCALLS.doStat(nofollow ? FS.lstat : FS.stat, path, buf);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall147(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getsid
-      var pid = SYSCALLS.get();
-      if (pid && pid !== PROCINFO.pid) return -ERRNO_CODES.ESRCH;
-      return PROCINFO.sid;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall302(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // renameat
-      var olddirfd = SYSCALLS.get(), oldpath = SYSCALLS.getStr(), newdirfd = SYSCALLS.get(), newpath = SYSCALLS.getStr();
-      oldpath = SYSCALLS.calculateAt(olddirfd, oldpath);
-      newpath = SYSCALLS.calculateAt(newdirfd, newpath);
-      FS.rename(oldpath, newpath);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall145(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // readv
-      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get();
-      return SYSCALLS.doReadv(stream, iov, iovcnt);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___cxa_atexit() {
-  return _atexit.apply(null, arguments)
-  }
-
-
-  
-  function _emscripten_get_now_is_monotonic() {
-      // return whether emscripten_get_now is guaranteed monotonic; the Date.now
-      // implementation is not :(
-      return ENVIRONMENT_IS_NODE || (typeof dateNow !== 'undefined') ||
-          ((ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && self['performance'] && self['performance']['now']);
-    }function _clock_gettime(clk_id, tp) {
-      // int clock_gettime(clockid_t clk_id, struct timespec *tp);
-      var now;
-      if (clk_id === 0) {
-        now = Date.now();
-      } else if (clk_id === 1 && _emscripten_get_now_is_monotonic()) {
-        now = _emscripten_get_now();
-      } else {
-        ___setErrNo(ERRNO_CODES.EINVAL);
-        return -1;
-      }
-      HEAP32[((tp)>>2)]=(now/1000)|0; // seconds
-      HEAP32[(((tp)+(4))>>2)]=((now % 1000)*1000*1000)|0; // nanoseconds
-      return 0;
-    }
-
-   
-
-  function ___cxa_throw(ptr, type, destructor) {
-      EXCEPTIONS.infos[ptr] = {
-        ptr: ptr,
-        adjusted: ptr,
-        type: type,
-        destructor: destructor,
-        refcount: 0,
-        caught: false,
-        rethrown: false
-      };
-      EXCEPTIONS.last = ptr;
-      if (!("uncaught_exception" in __ZSt18uncaught_exceptionv)) {
-        __ZSt18uncaught_exceptionv.uncaught_exception = 1;
-      } else {
-        __ZSt18uncaught_exceptionv.uncaught_exception++;
-      }
-      throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s DISABLE_EXCEPTION_CATCHING=0 or DISABLE_EXCEPTION_CATCHING=2 to catch.";
-    }
-
-  function ___syscall181(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // pwrite64
-      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get(), zero = SYSCALLS.getZero(), offset = SYSCALLS.get64();
-      return FS.write(stream, HEAP8,buf, count, offset);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _pthread_cleanup_pop() {
-      assert(_pthread_cleanup_push.level == __ATEXIT__.length, 'cannot pop if something else added meanwhile!');
-      __ATEXIT__.pop();
-      _pthread_cleanup_push.level = __ATEXIT__.length;
-    }
-
-  function _res_query() {
-  Module['printErr']('missing function: res_query'); abort(-1);
-  }
-
-  
-  var Sockets={BUFFER_SIZE:10240,MAX_BUFFER_SIZE:10485760,nextFd:1,fds:{},nextport:1,maxport:65535,peer:null,connections:{},portmap:{},localAddr:4261412874,addrPool:[33554442,50331658,67108874,83886090,100663306,117440522,134217738,150994954,167772170,184549386,201326602,218103818,234881034]};
-  
-  
-  function __inet_pton6_raw(str) {
-      var words;
-      var w, offset, z, i;
-      /* http://home.deds.nl/~aeron/regex/ */
-      var valid6regx = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i
-      var parts = [];
-      if (!valid6regx.test(str)) {
-        return null;
-      }
-      if (str === "::") {
-        return [0, 0, 0, 0, 0, 0, 0, 0];
-      }
-      // Z placeholder to keep track of zeros when splitting the string on ":"
-      if (str.indexOf("::") === 0) {
-        str = str.replace("::", "Z:"); // leading zeros case
-      } else {
-        str = str.replace("::", ":Z:");
-      }
-  
-      if (str.indexOf(".") > 0) {
-        // parse IPv4 embedded stress
-        str = str.replace(new RegExp('[.]', 'g'), ":");
-        words = str.split(":");
-        words[words.length-4] = parseInt(words[words.length-4]) + parseInt(words[words.length-3])*256;
-        words[words.length-3] = parseInt(words[words.length-2]) + parseInt(words[words.length-1])*256;
-        words = words.slice(0, words.length-2);
-      } else {
-        words = str.split(":");
-      }
-  
-      offset = 0; z = 0;
-      for (w=0; w < words.length; w++) {
-        if (typeof words[w] === 'string') {
-          if (words[w] === 'Z') {
-            // compressed zeros - write appropriate number of zero words
-            for (z = 0; z < (8 - words.length+1); z++) {
-              parts[w+z] = 0;
-            }
-            offset = z-1;
-          } else {
-            // parse hex to field to 16-bit value and write it in network byte-order
-            parts[w+offset] = _htons(parseInt(words[w],16));
-          }
-        } else {
-          // parsed IPv4 words
-          parts[w+offset] = words[w];
-        }
-      }
-      return [
-        (parts[1] << 16) | parts[0],
-        (parts[3] << 16) | parts[2],
-        (parts[5] << 16) | parts[4],
-        (parts[7] << 16) | parts[6]
-      ];
-    }var DNS={address_map:{id:1,addrs:{},names:{}},lookup_name:function (name) {
-        // If the name is already a valid ipv4 / ipv6 address, don't generate a fake one.
-        var res = __inet_pton4_raw(name);
-        if (res !== null) {
-          return name;
-        }
-        res = __inet_pton6_raw(name);
-        if (res !== null) {
-          return name;
-        }
-  
-        // See if this name is already mapped.
-        var addr;
-  
-        if (DNS.address_map.addrs[name]) {
-          addr = DNS.address_map.addrs[name];
-        } else {
-          var id = DNS.address_map.id++;
-          assert(id < 65535, 'exceeded max address mappings of 65535');
-  
-          addr = '172.29.' + (id & 0xff) + '.' + (id & 0xff00);
-  
-          DNS.address_map.names[addr] = name;
-          DNS.address_map.addrs[name] = addr;
-        }
-  
-        return addr;
-      },lookup_addr:function (addr) {
-        if (DNS.address_map.names[addr]) {
-          return DNS.address_map.names[addr];
-        }
-  
-        return null;
-      }};
-  
-  
-  function __inet_ntop4_raw(addr) {
-      return (addr & 0xff) + '.' + ((addr >> 8) & 0xff) + '.' + ((addr >> 16) & 0xff) + '.' + ((addr >> 24) & 0xff)
-    }
-  
-  function __inet_ntop6_raw(ints) {
-      //  ref:  http://www.ietf.org/rfc/rfc2373.txt - section 2.5.4
-      //  Format for IPv4 compatible and mapped  128-bit IPv6 Addresses
-      //  128-bits are split into eight 16-bit words
-      //  stored in network byte order (big-endian)
-      //  |                80 bits               | 16 |      32 bits        |
-      //  +-----------------------------------------------------------------+
-      //  |               10 bytes               |  2 |      4 bytes        |
-      //  +--------------------------------------+--------------------------+
-      //  +               5 words                |  1 |      2 words        |
-      //  +--------------------------------------+--------------------------+
-      //  |0000..............................0000|0000|    IPv4 ADDRESS     | (compatible)
-      //  +--------------------------------------+----+---------------------+
-      //  |0000..............................0000|FFFF|    IPv4 ADDRESS     | (mapped)
-      //  +--------------------------------------+----+---------------------+
-      var str = "";
-      var word = 0;
-      var longest = 0;
-      var lastzero = 0;
-      var zstart = 0;
-      var len = 0;
-      var i = 0;
-      var parts = [
-        ints[0] & 0xffff,
-        (ints[0] >> 16),
-        ints[1] & 0xffff,
-        (ints[1] >> 16),
-        ints[2] & 0xffff,
-        (ints[2] >> 16),
-        ints[3] & 0xffff,
-        (ints[3] >> 16)
-      ];
-  
-      // Handle IPv4-compatible, IPv4-mapped, loopback and any/unspecified addresses
-  
-      var hasipv4 = true;
-      var v4part = "";
-      // check if the 10 high-order bytes are all zeros (first 5 words)
-      for (i = 0; i < 5; i++) {
-        if (parts[i] !== 0) { hasipv4 = false; break; }
-      }
-  
-      if (hasipv4) {
-        // low-order 32-bits store an IPv4 address (bytes 13 to 16) (last 2 words)
-        v4part = __inet_ntop4_raw(parts[6] | (parts[7] << 16));
-        // IPv4-mapped IPv6 address if 16-bit value (bytes 11 and 12) == 0xFFFF (6th word)
-        if (parts[5] === -1) {
-          str = "::ffff:";
-          str += v4part;
-          return str;
-        }
-        // IPv4-compatible IPv6 address if 16-bit value (bytes 11 and 12) == 0x0000 (6th word)
-        if (parts[5] === 0) {
-          str = "::";
-          //special case IPv6 addresses
-          if(v4part === "0.0.0.0") v4part = ""; // any/unspecified address
-          if(v4part === "0.0.0.1") v4part = "1";// loopback address
-          str += v4part;
-          return str;
-        }
-      }
-  
-      // Handle all other IPv6 addresses
-  
-      // first run to find the longest contiguous zero words
-      for (word = 0; word < 8; word++) {
-        if (parts[word] === 0) {
-          if (word - lastzero > 1) {
-            len = 0;
-          }
-          lastzero = word;
-          len++;
-        }
-        if (len > longest) {
-          longest = len;
-          zstart = word - longest + 1;
-        }
-      }
-  
-      for (word = 0; word < 8; word++) {
-        if (longest > 1) {
-          // compress contiguous zeros - to produce "::"
-          if (parts[word] === 0 && word >= zstart && word < (zstart + longest) ) {
-            if (word === zstart) {
-              str += ":";
-              if (zstart === 0) str += ":"; //leading zeros case
-            }
-            continue;
-          }
-        }
-        // converts 16-bit words from big-endian to little-endian before converting to hex string
-        str += Number(_ntohs(parts[word] & 0xffff)).toString(16);
-        str += word < 7 ? ":" : "";
-      }
-      return str;
-    }function __read_sockaddr(sa, salen) {
-      // family / port offsets are common to both sockaddr_in and sockaddr_in6
-      var family = HEAP16[((sa)>>1)];
-      var port = _ntohs(HEAP16[(((sa)+(2))>>1)]);
-      var addr;
-  
-      switch (family) {
-        case 2:
-          if (salen !== 16) {
-            return { errno: ERRNO_CODES.EINVAL };
-          }
-          addr = HEAP32[(((sa)+(4))>>2)];
-          addr = __inet_ntop4_raw(addr);
-          break;
-        case 10:
-          if (salen !== 28) {
-            return { errno: ERRNO_CODES.EINVAL };
-          }
-          addr = [
-            HEAP32[(((sa)+(8))>>2)],
-            HEAP32[(((sa)+(12))>>2)],
-            HEAP32[(((sa)+(16))>>2)],
-            HEAP32[(((sa)+(20))>>2)]
-          ];
-          addr = __inet_ntop6_raw(addr);
-          break;
-        default:
-          return { errno: ERRNO_CODES.EAFNOSUPPORT };
-      }
-  
-      return { family: family, addr: addr, port: port };
-    }function _getnameinfo(sa, salen, node, nodelen, serv, servlen, flags) {
-      var info = __read_sockaddr(sa, salen);
-      if (info.errno) {
-        return -6;
-      }
-      var port = info.port;
-      var addr = info.addr;
-  
-      var overflowed = false;
-  
-      if (node && nodelen) {
-        var lookup;
-        if ((flags & 1) || !(lookup = DNS.lookup_addr(addr))) {
-          if (flags & 8) {
-            return -2;
-          }
-        } else {
-          addr = lookup;
-        }
-        var numBytesWrittenExclNull = stringToUTF8(addr, node, nodelen);
-  
-        if (numBytesWrittenExclNull+1 >= nodelen) {
-          overflowed = true;
-        }
-      }
-  
-      if (serv && servlen) {
-        port = '' + port;
-        var numBytesWrittenExclNull = stringToUTF8(port, serv, servlen);
-  
-        if (numBytesWrittenExclNull+1 >= servlen) {
-          overflowed = true;
-        }
-      }
-  
-      if (overflowed) {
-        // Note: even when we overflow, getnameinfo() is specced to write out the truncated results.
-        return -12;
-      }
-  
-      return 0;
-    }
-
-  function _pthread_equal(x, y) { return x == y }
-
-   
-
-  function ___mulsc3() {
-  Module['printErr']('missing function: __mulsc3'); abort(-1);
-  }
-
-  
-  var PTHREAD_SPECIFIC_NEXT_KEY=1;function _pthread_key_create(key, destructor) {
-      if (key == 0) {
-        return ERRNO_CODES.EINVAL;
-      }
-      HEAP32[((key)>>2)]=PTHREAD_SPECIFIC_NEXT_KEY;
-      // values start at 0
-      PTHREAD_SPECIFIC[PTHREAD_SPECIFIC_NEXT_KEY] = 0;
-      PTHREAD_SPECIFIC_NEXT_KEY++;
-      return 0;
-    }
-
-  
-  function _usleep(useconds) {
-      // int usleep(useconds_t useconds);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/usleep.html
-      // We're single-threaded, so use a busy loop. Super-ugly.
-      var msec = useconds / 1000;
-      if ((ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && self['performance'] && self['performance']['now']) {
-        var start = self['performance']['now']();
-        while (self['performance']['now']() - start < msec) {
-          // Do nothing.
-        }
-      } else {
-        var start = Date.now();
-        while (Date.now() - start < msec) {
-          // Do nothing.
-        }
-      }
-      return 0;
-    }function _nanosleep(rqtp, rmtp) {
-      // int nanosleep(const struct timespec  *rqtp, struct timespec *rmtp);
-      var seconds = HEAP32[((rqtp)>>2)];
-      var nanoseconds = HEAP32[(((rqtp)+(4))>>2)];
-      if (rmtp !== 0) {
-        HEAP32[((rmtp)>>2)]=0;
-        HEAP32[(((rmtp)+(4))>>2)]=0;
-      }
-      return _usleep((seconds * 1e6) + (nanoseconds / 1000));
-    }
-
-  function _system(command) {
-      // int system(const char *command);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/system.html
-      // Can't call external programs.
-      ___setErrNo(ERRNO_CODES.EAGAIN);
-      return -1;
-    }
-
-  function ___syscall94(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fchmod
-      var fd = SYSCALLS.get(), mode = SYSCALLS.get();
-      FS.fchmod(fd, mode);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall97(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // setpriority
-      return -ERRNO_CODES.EPERM;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall96(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getpriority
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  
-  function ___syscall153(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // munlockall
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }function ___syscall151() {
-  return ___syscall153.apply(null, arguments)
-  }
-
-  function ___syscall150() {
-  return ___syscall153.apply(null, arguments)
-  }
-
-
-  function ___syscall152() {
-  return ___syscall153.apply(null, arguments)
-  }
-
-  function ___syscall91(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // munmap
-      var addr = SYSCALLS.get(), len = SYSCALLS.get();
-      // TODO: support unmmap'ing parts of allocations
-      var info = SYSCALLS.mappings[addr];
-      if (!info) return 0;
-      if (len === info.len) {
-        var stream = FS.getStream(info.fd);
-        SYSCALLS.doMsync(addr, stream, len, info.flags)
-        FS.munmap(stream);
-        SYSCALLS.mappings[addr] = null;
-        if (info.allocated) {
-          _free(info.malloc);
-        }
-      }
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _pthread_cond_timedwait() { return 0; }
-
-  function ___syscall6(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // close
-      var stream = SYSCALLS.getStreamFromFD();
-      FS.close(stream);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _SDL_GetError() {
-      if (!SDL.errorMessage) {
-        SDL.errorMessage = allocate(intArrayFromString("unknown SDL-emscripten error"), 'i8', ALLOC_NORMAL);
-      }
-      return SDL.errorMessage;
-    }
-
-  function _posix_spawn_file_actions_destroy() {
-  Module['printErr']('missing function: posix_spawn_file_actions_destroy'); abort(-1);
-  }
-
-
-  function ___syscall75(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // setrlimit
-      return 0; // no-op
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-   
-
-  function _llvm_exp2_f64() {
-  return _llvm_exp2_f32.apply(null, arguments)
-  }
-
-  function _pthread_mutexattr_destroy() {}
-
-  function _sched_yield() {
-      return 0;
-    }
-
-   
-
-  function _csp_orc_sa_print_list() {
-  Module['printErr']('missing function: csp_orc_sa_print_list'); abort(-1);
-  }
-
-
-  function _strftime_l(s, maxsize, format, tm) {
+    }function _strftime_l(s, maxsize, format, tm) {
       return _strftime(s, maxsize, format, tm); // no locale support yet
-    }
-
-  function ___syscall51(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // acct
-      return -ERRNO_CODES.ENOSYS; // unsupported features
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _gettimeofday(ptr) {
-      var now = Date.now();
-      HEAP32[((ptr)>>2)]=(now/1000)|0; // seconds
-      HEAP32[(((ptr)+(4))>>2)]=((now % 1000)*1000)|0; // microseconds
-      return 0;
-    }
-
-  function ___map_file(pathname, size) {
-      ___setErrNo(ERRNO_CODES.EPERM);
-      return -1;
-    }
-
-   
-
-  function _pthread_sigmask() {
-  Module['printErr']('missing function: pthread_sigmask'); abort(-1);
-  }
-
-  var _llvm_pow_f64=Math_pow;
-
-  function ___block_all_sigs() {
-  Module['printErr']('missing function: __block_all_sigs'); abort(-1);
-  }
-
-  function _pthread_cond_signal() { return 0; }
-
-  function ___syscall29(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // pause
-      return -ERRNO_CODES.EINTR; // we can't pause
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _csp_barrier_alloc() {
-  Module['printErr']('missing function: csp_barrier_alloc'); abort(-1);
-  }
-
-   
-
-  function _pthread_mutex_destroy() {}
-
-  function ___syscall85(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // readlink
-      var path = SYSCALLS.getStr(), buf = SYSCALLS.get(), bufsize = SYSCALLS.get();
-      return SYSCALLS.doReadlink(path, buf, bufsize);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall121(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // setdomainname
-      return -ERRNO_CODES.EPERM;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall122(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // uname
-      var buf = SYSCALLS.get();
-      if (!buf) return -ERRNO_CODES.EFAULT
-      var layout = {"sysname":0,"nodename":65,"domainname":325,"machine":260,"version":195,"release":130,"__size__":390};
-      function copyString(element, value) {
-        var offset = layout[element];
-        writeAsciiToMemory(value, buf + offset);
-      }
-      copyString('sysname', 'Emscripten');
-      copyString('nodename', 'emscripten');
-      copyString('release', '1.0');
-      copyString('version', '#1');
-      copyString('machine', 'x86-JS');
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-   
-
-  function ___syscall125(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // mprotect
-      return 0; // let's not and say we did
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _SDL_OpenAudio(desired, obtained) {
-      try {
-        SDL.audio = {
-          freq: HEAPU32[((desired)>>2)],
-          format: HEAPU16[(((desired)+(4))>>1)],
-          channels: HEAPU8[(((desired)+(6))>>0)],
-          samples: HEAPU16[(((desired)+(8))>>1)], // Samples in the CB buffer per single sound channel.
-          callback: HEAPU32[(((desired)+(16))>>2)],
-          userdata: HEAPU32[(((desired)+(20))>>2)],
-          paused: true,
-          timer: null
-        };
-        // The .silence field tells the constant sample value that corresponds to the safe un-skewed silence value for the wave data.
-        if (SDL.audio.format == 0x0008 /*AUDIO_U8*/) {
-          SDL.audio.silence = 128; // Audio ranges in [0, 255], so silence is half-way in between.
-        } else if (SDL.audio.format == 0x8010 /*AUDIO_S16LSB*/) {
-          SDL.audio.silence = 0; // Signed data in range [-32768, 32767], silence is 0.
-        } else {
-          throw 'Invalid SDL audio format ' + SDL.audio.format + '!';
-        }
-        // Round the desired audio frequency up to the next 'common' frequency value.
-        // Web Audio API spec states 'An implementation must support sample-rates in at least the range 22050 to 96000.'
-        if (SDL.audio.freq <= 0) {
-          throw 'Unsupported sound frequency ' + SDL.audio.freq + '!';
-        } else if (SDL.audio.freq <= 22050) {
-          SDL.audio.freq = 22050; // Take it safe and clamp everything lower than 22kHz to that.
-        } else if (SDL.audio.freq <= 32000) {
-          SDL.audio.freq = 32000;
-        } else if (SDL.audio.freq <= 44100) {
-          SDL.audio.freq = 44100;
-        } else if (SDL.audio.freq <= 48000) {
-          SDL.audio.freq = 48000;
-        } else if (SDL.audio.freq <= 96000) {
-          SDL.audio.freq = 96000;
-        } else {
-          throw 'Unsupported sound frequency ' + SDL.audio.freq + '!';
-        }
-        if (SDL.audio.channels == 0) {
-          SDL.audio.channels = 1; // In SDL both 0 and 1 mean mono.
-        } else if (SDL.audio.channels < 0 || SDL.audio.channels > 32) {
-          throw 'Unsupported number of audio channels for SDL audio: ' + SDL.audio.channels + '!';
-        } else if (SDL.audio.channels != 1 && SDL.audio.channels != 2) { // Unsure what SDL audio spec supports. Web Audio spec supports up to 32 channels.
-          console.log('Warning: Using untested number of audio channels ' + SDL.audio.channels);
-        }
-        if (SDL.audio.samples < 128 || SDL.audio.samples > 524288 /* arbitrary cap */) {
-          throw 'Unsupported audio callback buffer size ' + SDL.audio.samples + '!';
-        } else if ((SDL.audio.samples & (SDL.audio.samples-1)) != 0) {
-          throw 'Audio callback buffer size ' + SDL.audio.samples + ' must be a power-of-two!';
-        }
-        
-        var totalSamples = SDL.audio.samples*SDL.audio.channels;
-        SDL.audio.bytesPerSample = (SDL.audio.format == 0x0008 /*AUDIO_U8*/ || SDL.audio.format == 0x8008 /*AUDIO_S8*/) ? 1 : 2;
-        SDL.audio.bufferSize = totalSamples*SDL.audio.bytesPerSample;
-        SDL.audio.bufferDurationSecs = SDL.audio.bufferSize / SDL.audio.bytesPerSample / SDL.audio.channels / SDL.audio.freq; // Duration of a single queued buffer in seconds.
-        SDL.audio.bufferingDelay = 50 / 1000; // Audio samples are played with a constant delay of this many seconds to account for browser and jitter.
-        SDL.audio.buffer = _malloc(SDL.audio.bufferSize);
-        
-        // To account for jittering in frametimes, always have multiple audio buffers queued up for the audio output device.
-        // This helps that we won't starve that easily if a frame takes long to complete.
-        SDL.audio.numSimultaneouslyQueuedBuffers = Module['SDL_numSimultaneouslyQueuedBuffers'] || 5;
-  
-        // Pulls and queues new audio data if appropriate. This function gets "over-called" in both requestAnimationFrames and
-        // setTimeouts to ensure that we get the finest granularity possible and as many chances from the browser to fill
-        // new audio data. This is because setTimeouts alone have very poor granularity for audio streaming purposes, but also
-        // the application might not be using emscripten_set_main_loop to drive the main loop, so we cannot rely on that alone.
-        SDL.audio.queueNewAudioData = function SDL_queueNewAudioData() {
-          if (!SDL.audio) return;
-  
-          for(var i = 0; i < SDL.audio.numSimultaneouslyQueuedBuffers; ++i) {
-            // Only queue new data if we don't have enough audio data already in queue. Otherwise skip this time slot
-            // and wait to queue more in the next time the callback is run.
-            var secsUntilNextPlayStart = SDL.audio.nextPlayTime - SDL.audioContext['currentTime'];
-            if (secsUntilNextPlayStart >= SDL.audio.bufferingDelay + SDL.audio.bufferDurationSecs*SDL.audio.numSimultaneouslyQueuedBuffers) return;
-  
-            // Ask SDL audio data from the user code.
-            Module['dynCall_viii'](SDL.audio.callback, SDL.audio.userdata, SDL.audio.buffer, SDL.audio.bufferSize);
-            // And queue it to be played after the currently playing audio stream.
-            SDL.audio.pushAudio(SDL.audio.buffer, SDL.audio.bufferSize);
-          }
-        } 
-  
-  
-        // Create a callback function that will be routinely called to ask more audio data from the user application.
-        SDL.audio.caller = function SDL_audioCaller() {
-          if (!SDL.audio) return;
-  
-          --SDL.audio.numAudioTimersPending;
-  
-          SDL.audio.queueNewAudioData();
-  
-          // Queue this callback function to be called again later to pull more audio data.
-          var secsUntilNextPlayStart = SDL.audio.nextPlayTime - SDL.audioContext['currentTime'];
-  
-          // Queue the next audio frame push to be performed half-way when the previously queued buffer has finished playing.
-          var preemptBufferFeedSecs = SDL.audio.bufferDurationSecs/2.0;
-  
-          if (SDL.audio.numAudioTimersPending < SDL.audio.numSimultaneouslyQueuedBuffers) {
-            ++SDL.audio.numAudioTimersPending;
-            SDL.audio.timer = Browser.safeSetTimeout(SDL.audio.caller, Math.max(0.0, 1000.0*(secsUntilNextPlayStart-preemptBufferFeedSecs)));
-  
-            // If we are risking starving, immediately queue an extra buffer.
-            if (SDL.audio.numAudioTimersPending < SDL.audio.numSimultaneouslyQueuedBuffers) {
-              ++SDL.audio.numAudioTimersPending;
-              Browser.safeSetTimeout(SDL.audio.caller, 1.0);
-            }
-          }
-        };
-        
-        SDL.audio.audioOutput = new Audio();
-  
-        // Initialize Web Audio API if we haven't done so yet. Note: Only initialize Web Audio context ever once on the web page,
-        // since initializing multiple times fails on Chrome saying 'audio resources have been exhausted'.
-        SDL.openAudioContext();
-        if (!SDL.audioContext) throw 'Web Audio API is not available!';
-        SDL.audio.nextPlayTime = 0; // Time in seconds when the next audio block is due to start.
-        
-        // The pushAudio function with a new audio buffer whenever there is new audio data to schedule to be played back on the device.
-        SDL.audio.pushAudio=function(ptr,sizeBytes) {
-          try {
-            if (SDL.audio.paused) return;
-  
-            var sizeSamples = sizeBytes / SDL.audio.bytesPerSample; // How many samples fit in the callback buffer?
-            var sizeSamplesPerChannel = sizeSamples / SDL.audio.channels; // How many samples per a single channel fit in the cb buffer?
-            if (sizeSamplesPerChannel != SDL.audio.samples) {
-              throw 'Received mismatching audio buffer size!';
-            }
-            // Allocate new sound buffer to be played.
-            var source = SDL.audioContext['createBufferSource']();
-            var soundBuffer = SDL.audioContext['createBuffer'](SDL.audio.channels,sizeSamplesPerChannel,SDL.audio.freq);
-            source['connect'](SDL.audioContext['destination']);
-  
-            SDL.fillWebAudioBufferFromHeap(ptr, sizeSamplesPerChannel, soundBuffer);
-            // Workaround https://bugzilla.mozilla.org/show_bug.cgi?id=883675 by setting the buffer only after filling. The order is important here!
-            source['buffer'] = soundBuffer;
-            
-            // Schedule the generated sample buffer to be played out at the correct time right after the previously scheduled
-            // sample buffer has finished.
-            var curtime = SDL.audioContext['currentTime'];
-            // Don't ever start buffer playbacks earlier from current time than a given constant 'SDL.audio.bufferingDelay', since a browser 
-            // may not be able to mix that audio clip in immediately, and there may be subsequent jitter that might cause the stream to starve.
-            var playtime = Math.max(curtime + SDL.audio.bufferingDelay, SDL.audio.nextPlayTime);
-            if (typeof source['start'] !== 'undefined') {
-              source['start'](playtime); // New Web Audio API: sound sources are started with a .start() call.
-            } else if (typeof source['noteOn'] !== 'undefined') {
-              source['noteOn'](playtime); // Support old Web Audio API specification which had the .noteOn() API.
-            }
-            /*
-            // Uncomment to debug SDL buffer feed starves.
-            if (SDL.audio.curBufferEnd) {
-              var thisBufferStart = Math.round(playtime * SDL.audio.freq);
-              if (thisBufferStart != SDL.audio.curBufferEnd) console.log('SDL starved ' + (thisBufferStart - SDL.audio.curBufferEnd) + ' samples!');
-            }
-            SDL.audio.curBufferEnd = Math.round(playtime * SDL.audio.freq + sizeSamplesPerChannel);
-            */
-            
-            SDL.audio.nextPlayTime = playtime + SDL.audio.bufferDurationSecs;
-          } catch(e) {
-            console.log('Web Audio API error playing back audio: ' + e.toString());
-          }
-        }
-  
-        if (obtained) {
-          // Report back the initialized audio parameters.
-          HEAP32[((obtained)>>2)]=SDL.audio.freq;
-          HEAP16[(((obtained)+(4))>>1)]=SDL.audio.format;
-          HEAP8[(((obtained)+(6))>>0)]=SDL.audio.channels;
-          HEAP8[(((obtained)+(7))>>0)]=SDL.audio.silence;
-          HEAP16[(((obtained)+(8))>>1)]=SDL.audio.samples;
-          HEAP32[(((obtained)+(16))>>2)]=SDL.audio.callback;
-          HEAP32[(((obtained)+(20))>>2)]=SDL.audio.userdata;
-        }
-        SDL.allocateChannels(32);
-  
-      } catch(e) {
-        console.log('Initializing SDL audio threw an exception: "' + e.toString() + '"! Continuing without audio.');
-        SDL.audio = null;
-        SDL.allocateChannels(0);
-        if (obtained) {
-          HEAP32[((obtained)>>2)]=0;
-          HEAP16[(((obtained)+(4))>>1)]=0;
-          HEAP8[(((obtained)+(6))>>0)]=0;
-          HEAP8[(((obtained)+(7))>>0)]=0;
-          HEAP16[(((obtained)+(8))>>1)]=0;
-          HEAP32[(((obtained)+(16))>>2)]=0;
-          HEAP32[(((obtained)+(20))>>2)]=0;
-        }
-      }
-      if (!SDL.audio) {
-        return -1;
-      }
-      return 0;
-    }
-
-  function _globallock() {
-  Module['printErr']('missing function: globallock'); abort(-1);
-  }
-
-  function ___syscall324(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fallocate
-      var stream = SYSCALLS.getStreamFromFD(), mode = SYSCALLS.get(), offset = SYSCALLS.get64(), len = SYSCALLS.get64();
-      assert(mode === 0);
-      FS.allocate(stream, offset, len);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall64(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getppid
-      return PROCINFO.ppid;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall77(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // getrusage
-      var who = SYSCALLS.get(), usage = SYSCALLS.get();
-      _memset(usage, 0, 136);
-      HEAP32[((usage)>>2)]=1; // fake some values
-      HEAP32[(((usage)+(4))>>2)]=2;
-      HEAP32[(((usage)+(8))>>2)]=3;
-      HEAP32[(((usage)+(12))>>2)]=4;
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall66(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // setsid
-      return 0; // no-op
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall60(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // umask
-      var mask = SYSCALLS.get();
-      var old = SYSCALLS.umask;
-      SYSCALLS.umask = mask;
-      return old;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function _sysconf(name) {
-      // long sysconf(int name);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/sysconf.html
-      switch(name) {
-        case 30: return PAGE_SIZE;
-        case 85:
-          var maxHeapSize = 2*1024*1024*1024 - 65536;
-          return maxHeapSize / PAGE_SIZE;
-        case 132:
-        case 133:
-        case 12:
-        case 137:
-        case 138:
-        case 15:
-        case 235:
-        case 16:
-        case 17:
-        case 18:
-        case 19:
-        case 20:
-        case 149:
-        case 13:
-        case 10:
-        case 236:
-        case 153:
-        case 9:
-        case 21:
-        case 22:
-        case 159:
-        case 154:
-        case 14:
-        case 77:
-        case 78:
-        case 139:
-        case 80:
-        case 81:
-        case 82:
-        case 68:
-        case 67:
-        case 164:
-        case 11:
-        case 29:
-        case 47:
-        case 48:
-        case 95:
-        case 52:
-        case 51:
-        case 46:
-          return 200809;
-        case 79:
-          return 0;
-        case 27:
-        case 246:
-        case 127:
-        case 128:
-        case 23:
-        case 24:
-        case 160:
-        case 161:
-        case 181:
-        case 182:
-        case 242:
-        case 183:
-        case 184:
-        case 243:
-        case 244:
-        case 245:
-        case 165:
-        case 178:
-        case 179:
-        case 49:
-        case 50:
-        case 168:
-        case 169:
-        case 175:
-        case 170:
-        case 171:
-        case 172:
-        case 97:
-        case 76:
-        case 32:
-        case 173:
-        case 35:
-          return -1;
-        case 176:
-        case 177:
-        case 7:
-        case 155:
-        case 8:
-        case 157:
-        case 125:
-        case 126:
-        case 92:
-        case 93:
-        case 129:
-        case 130:
-        case 131:
-        case 94:
-        case 91:
-          return 1;
-        case 74:
-        case 60:
-        case 69:
-        case 70:
-        case 4:
-          return 1024;
-        case 31:
-        case 42:
-        case 72:
-          return 32;
-        case 87:
-        case 26:
-        case 33:
-          return 2147483647;
-        case 34:
-        case 1:
-          return 47839;
-        case 38:
-        case 36:
-          return 99;
-        case 43:
-        case 37:
-          return 2048;
-        case 0: return 2097152;
-        case 3: return 65536;
-        case 28: return 32768;
-        case 44: return 32767;
-        case 75: return 16384;
-        case 39: return 1000;
-        case 89: return 700;
-        case 71: return 256;
-        case 40: return 255;
-        case 2: return 100;
-        case 180: return 64;
-        case 25: return 20;
-        case 5: return 16;
-        case 6: return 6;
-        case 73: return 4;
-        case 84: {
-          if (typeof navigator === 'object') return navigator['hardwareConcurrency'] || 1;
-          return 1;
-        }
-      }
-      ___setErrNo(ERRNO_CODES.EINVAL);
-      return -1;
-    }
-
-  function ___syscall63(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // dup2
-      var old = SYSCALLS.getStreamFromFD(), suggestFD = SYSCALLS.get();
-      if (old.fd === suggestFD) return suggestFD;
-      return SYSCALLS.doDup(old.path, old.flags, suggestFD);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall334(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // pwritev
-      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get(), offset = SYSCALLS.get();
-      return SYSCALLS.doWritev(stream, iov, iovcnt, offset);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall320(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // utimensat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), times = SYSCALLS.get(), flags = SYSCALLS.get();
-      assert(flags === 0);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      var seconds = HEAP32[((times)>>2)];
-      var nanoseconds = HEAP32[(((times)+(4))>>2)];
-      var atime = (seconds*1000) + (nanoseconds/(1000*1000));
-      times += 8;
-      seconds = HEAP32[((times)>>2)];
-      nanoseconds = HEAP32[(((times)+(4))>>2)];
-      var mtime = (seconds*1000) + (nanoseconds/(1000*1000));
-      FS.utime(path, atime, mtime);
-      return 0;  
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___wait() {}
-
-  function _pthread_mutexattr_settype() {}
-
-  function _sigfillset(set) {
-      HEAP32[((set)>>2)]=-1>>>0;
-      return 0;
     }
 
   function _abort() {
       Module['abort']();
     }
 
-  function _pthread_cond_destroy() { return 0; }
-
-  function _pthread_once(ptr, func) {
-      if (!_pthread_once.seen) _pthread_once.seen = {};
-      if (ptr in _pthread_once.seen) return;
-      Module['dynCall_v'](func);
-      _pthread_once.seen[ptr] = 1;
-    }
-
-  function ___syscall41(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // dup
-      var old = SYSCALLS.getStreamFromFD();
-      return FS.open(old.path, old.flags, 0).fd;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
+  function _float32_init() {
+  Module['printErr']('missing function: float32_init'); abort(-1);
   }
 
-  function ___unlock() {}
+  function _psf_rand_int32() {
+  Module['printErr']('missing function: psf_rand_int32'); abort(-1);
+  }
 
-  function _pthread_getspecific(key) {
+  
+  var PTHREAD_SPECIFIC={};function _pthread_getspecific(key) {
       return PTHREAD_SPECIFIC[key] || 0;
     }
+
+  function ___muldc3() {
+  Module['printErr']('missing function: __muldc3'); abort(-1);
+  }
 
   function ___syscall221(which, varargs) {SYSCALLS.varargs = varargs;
   try {
@@ -10284,35 +6858,19 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall148(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fdatasync
-      var stream = SYSCALLS.getStreamFromFD();
-      return 0; // we can't do anything synchronously; the in-memory FS is already synced to
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
+  function _broadcast_var_alloc() {
+  Module['printErr']('missing function: broadcast_var_alloc'); abort(-1);
   }
 
-  function ___syscall133(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fchdir
-      var stream = SYSCALLS.getStreamFromFD();
-      FS.chdir(stream.path);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
+  function _psf_fwrite() {
+  Module['printErr']('missing function: psf_fwrite'); abort(-1);
   }
 
-  function ___syscall132(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall334(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // getpgid
-      var pid = SYSCALLS.get();
-      if (pid && pid !== PROCINFO.pid) return -ERRNO_CODES.ESRCH;
-      return PROCINFO.pgid;
+   // pwritev
+      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get(), offset = SYSCALLS.get();
+      return SYSCALLS.doWritev(stream, iov, iovcnt, offset);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
@@ -10363,18 +6921,15 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___cxa_allocate_exception(size) {
-      return _malloc(size);
-    }
-
-  function ___syscall345(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // sendmmsg
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
+  
+  function _wait(stat_loc) {
+      // pid_t wait(int *stat_loc);
+      // http://pubs.opengroup.org/onlinepubs/009695399/functions/wait.html
+      // Makes no sense in a single-process environment.
+      ___setErrNo(ERRNO_CODES.ECHILD);
+      return -1;
+    }function _waitpid() {
+  return _wait.apply(null, arguments)
   }
 
   function ___cxa_pure_virtual() {
@@ -10382,116 +6937,41 @@ function copyTempDouble(ptr) {
       throw 'Pure virtual function called!';
     }
 
-  function _longjmp(env, value) {
+  
+   function _longjmp(env, value) {
       Module['setThrew'](env, value || 1);
       throw 'longjmp';
     }
 
-   
+  function _psf_get_max_all_channels() {
+  Module['printErr']('missing function: psf_get_max_all_channels'); abort(-1);
+  }
 
-  function _pthread_cond_wait() { return 0; }
-
-  function ___clock_gettime() {
+  
+  
+  function _emscripten_get_now() { abort() }
+  
+  function _emscripten_get_now_is_monotonic() {
+      // return whether emscripten_get_now is guaranteed monotonic; the Date.now
+      // implementation is not :(
+      return ENVIRONMENT_IS_NODE || (typeof dateNow !== 'undefined') ||
+          ((ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && self['performance'] && self['performance']['now']);
+    }function _clock_gettime(clk_id, tp) {
+      // int clock_gettime(clockid_t clk_id, struct timespec *tp);
+      var now;
+      if (clk_id === 0) {
+        now = Date.now();
+      } else if (clk_id === 1 && _emscripten_get_now_is_monotonic()) {
+        now = _emscripten_get_now();
+      } else {
+        ___setErrNo(ERRNO_CODES.EINVAL);
+        return -1;
+      }
+      HEAP32[((tp)>>2)]=(now/1000)|0; // seconds
+      HEAP32[(((tp)+(4))>>2)]=((now % 1000)*1000*1000)|0; // nanoseconds
+      return 0;
+    }function ___clock_gettime() {
   return _clock_gettime.apply(null, arguments)
-  }
-
-  function ___syscall142(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // newselect
-      // readfds are supported,
-      // writefds checks socket open status
-      // exceptfds not supported
-      // timeout is always 0 - fully async
-      var nfds = SYSCALLS.get(), readfds = SYSCALLS.get(), writefds = SYSCALLS.get(), exceptfds = SYSCALLS.get(), timeout = SYSCALLS.get();
-  
-      assert(nfds <= 64, 'nfds must be less than or equal to 64');  // fd sets have 64 bits // TODO: this could be 1024 based on current musl headers
-      assert(!exceptfds, 'exceptfds not supported');
-  
-      var total = 0;
-      
-      var srcReadLow = (readfds ? HEAP32[((readfds)>>2)] : 0),
-          srcReadHigh = (readfds ? HEAP32[(((readfds)+(4))>>2)] : 0);
-      var srcWriteLow = (writefds ? HEAP32[((writefds)>>2)] : 0),
-          srcWriteHigh = (writefds ? HEAP32[(((writefds)+(4))>>2)] : 0);
-      var srcExceptLow = (exceptfds ? HEAP32[((exceptfds)>>2)] : 0),
-          srcExceptHigh = (exceptfds ? HEAP32[(((exceptfds)+(4))>>2)] : 0);
-  
-      var dstReadLow = 0,
-          dstReadHigh = 0;
-      var dstWriteLow = 0,
-          dstWriteHigh = 0;
-      var dstExceptLow = 0,
-          dstExceptHigh = 0;
-  
-      var allLow = (readfds ? HEAP32[((readfds)>>2)] : 0) |
-                   (writefds ? HEAP32[((writefds)>>2)] : 0) |
-                   (exceptfds ? HEAP32[((exceptfds)>>2)] : 0);
-      var allHigh = (readfds ? HEAP32[(((readfds)+(4))>>2)] : 0) |
-                    (writefds ? HEAP32[(((writefds)+(4))>>2)] : 0) |
-                    (exceptfds ? HEAP32[(((exceptfds)+(4))>>2)] : 0);
-  
-      function check(fd, low, high, val) {
-        return (fd < 32 ? (low & val) : (high & val));
-      }
-  
-      for (var fd = 0; fd < nfds; fd++) {
-        var mask = 1 << (fd % 32);
-        if (!(check(fd, allLow, allHigh, mask))) {
-          continue;  // index isn't in the set
-        }
-  
-        var stream = FS.getStream(fd);
-        if (!stream) throw new FS.ErrnoError(ERRNO_CODES.EBADF);
-  
-        var flags = SYSCALLS.DEFAULT_POLLMASK;
-  
-        if (stream.stream_ops.poll) {
-          flags = stream.stream_ops.poll(stream);
-        }
-  
-        if ((flags & 1) && check(fd, srcReadLow, srcReadHigh, mask)) {
-          fd < 32 ? (dstReadLow = dstReadLow | mask) : (dstReadHigh = dstReadHigh | mask);
-          total++;
-        }
-        if ((flags & 4) && check(fd, srcWriteLow, srcWriteHigh, mask)) {
-          fd < 32 ? (dstWriteLow = dstWriteLow | mask) : (dstWriteHigh = dstWriteHigh | mask);
-          total++;
-        }
-        if ((flags & 2) && check(fd, srcExceptLow, srcExceptHigh, mask)) {
-          fd < 32 ? (dstExceptLow = dstExceptLow | mask) : (dstExceptHigh = dstExceptHigh | mask);
-          total++;
-        }
-      }
-  
-      if (readfds) {
-        HEAP32[((readfds)>>2)]=dstReadLow;
-        HEAP32[(((readfds)+(4))>>2)]=dstReadHigh;
-      }
-      if (writefds) {
-        HEAP32[((writefds)>>2)]=dstWriteLow;
-        HEAP32[(((writefds)+(4))>>2)]=dstWriteHigh;
-      }
-      if (exceptfds) {
-        HEAP32[((exceptfds)>>2)]=dstExceptLow;
-        HEAP32[(((exceptfds)+(4))>>2)]=dstExceptHigh;
-      }
-      
-      return total;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall180(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // pread64
-      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get(), zero = SYSCALLS.getZero(), offset = SYSCALLS.get64();
-      return FS.read(stream, HEAP8,buf, count, offset);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
   }
 
   function _pthread_join() {}
@@ -10509,54 +6989,28 @@ function copyTempDouble(ptr) {
       }
     }
 
-  function _llvm_fma_f64() {
-  Module['printErr']('missing function: llvm_fma_f64'); abort(-1);
+  function _vox_adpcm_init() {
+  Module['printErr']('missing function: vox_adpcm_init'); abort(-1);
   }
 
-  function ___syscall140(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall269(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // llseek
-      var stream = SYSCALLS.getStreamFromFD(), offset_high = SYSCALLS.get(), offset_low = SYSCALLS.get(), result = SYSCALLS.get(), whence = SYSCALLS.get();
-      // NOTE: offset_high is unused - Emscripten's off_t is 32-bit
-      var offset = offset_low;
-      FS.llseek(stream, offset, whence);
-      HEAP32[((result)>>2)]=stream.position;
-      if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
-      return 0;
+   // fstatfs64
+      var stream = SYSCALLS.getStreamFromFD(), size = SYSCALLS.get(), buf = SYSCALLS.get();
+      return ___syscall([268, 0, size, buf], 0);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
 
-  function ___syscall307(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // faccessat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), amode = SYSCALLS.get(), flags = SYSCALLS.get();
-      assert(flags === 0);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      return SYSCALLS.doAccess(path, amode);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
+  function _psf_log_SF_INFO() {
+  Module['printErr']('missing function: psf_log_SF_INFO'); abort(-1);
   }
 
   function _setitimer() {
       throw 'setitimer() is not implemented yet';
     }
-
-  function ___syscall207(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fchown32
-      var fd = SYSCALLS.get(), owner = SYSCALLS.get(), group = SYSCALLS.get();
-      FS.fchown(fd, owner, group);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
 
   
   var SOCKFS={mount:function (mount) {
@@ -11151,6 +7605,241 @@ function copyTempDouble(ptr) {
           return res;
         }}};
   
+  
+  function __inet_pton4_raw(str) {
+      var b = str.split('.');
+      for (var i = 0; i < 4; i++) {
+        var tmp = Number(b[i]);
+        if (isNaN(tmp)) return null;
+        b[i] = tmp;
+      }
+      return (b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24)) >>> 0;
+    }
+  
+  function __inet_pton6_raw(str) {
+      var words;
+      var w, offset, z, i;
+      /* http://home.deds.nl/~aeron/regex/ */
+      var valid6regx = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i
+      var parts = [];
+      if (!valid6regx.test(str)) {
+        return null;
+      }
+      if (str === "::") {
+        return [0, 0, 0, 0, 0, 0, 0, 0];
+      }
+      // Z placeholder to keep track of zeros when splitting the string on ":"
+      if (str.indexOf("::") === 0) {
+        str = str.replace("::", "Z:"); // leading zeros case
+      } else {
+        str = str.replace("::", ":Z:");
+      }
+  
+      if (str.indexOf(".") > 0) {
+        // parse IPv4 embedded stress
+        str = str.replace(new RegExp('[.]', 'g'), ":");
+        words = str.split(":");
+        words[words.length-4] = parseInt(words[words.length-4]) + parseInt(words[words.length-3])*256;
+        words[words.length-3] = parseInt(words[words.length-2]) + parseInt(words[words.length-1])*256;
+        words = words.slice(0, words.length-2);
+      } else {
+        words = str.split(":");
+      }
+  
+      offset = 0; z = 0;
+      for (w=0; w < words.length; w++) {
+        if (typeof words[w] === 'string') {
+          if (words[w] === 'Z') {
+            // compressed zeros - write appropriate number of zero words
+            for (z = 0; z < (8 - words.length+1); z++) {
+              parts[w+z] = 0;
+            }
+            offset = z-1;
+          } else {
+            // parse hex to field to 16-bit value and write it in network byte-order
+            parts[w+offset] = _htons(parseInt(words[w],16));
+          }
+        } else {
+          // parsed IPv4 words
+          parts[w+offset] = words[w];
+        }
+      }
+      return [
+        (parts[1] << 16) | parts[0],
+        (parts[3] << 16) | parts[2],
+        (parts[5] << 16) | parts[4],
+        (parts[7] << 16) | parts[6]
+      ];
+    }var DNS={address_map:{id:1,addrs:{},names:{}},lookup_name:function (name) {
+        // If the name is already a valid ipv4 / ipv6 address, don't generate a fake one.
+        var res = __inet_pton4_raw(name);
+        if (res !== null) {
+          return name;
+        }
+        res = __inet_pton6_raw(name);
+        if (res !== null) {
+          return name;
+        }
+  
+        // See if this name is already mapped.
+        var addr;
+  
+        if (DNS.address_map.addrs[name]) {
+          addr = DNS.address_map.addrs[name];
+        } else {
+          var id = DNS.address_map.id++;
+          assert(id < 65535, 'exceeded max address mappings of 65535');
+  
+          addr = '172.29.' + (id & 0xff) + '.' + (id & 0xff00);
+  
+          DNS.address_map.names[addr] = name;
+          DNS.address_map.addrs[name] = addr;
+        }
+  
+        return addr;
+      },lookup_addr:function (addr) {
+        if (DNS.address_map.names[addr]) {
+          return DNS.address_map.names[addr];
+        }
+  
+        return null;
+      }};
+  
+  
+  var Sockets={BUFFER_SIZE:10240,MAX_BUFFER_SIZE:10485760,nextFd:1,fds:{},nextport:1,maxport:65535,peer:null,connections:{},portmap:{},localAddr:4261412874,addrPool:[33554442,50331658,67108874,83886090,100663306,117440522,134217738,150994954,167772170,184549386,201326602,218103818,234881034]};
+  
+  function __inet_ntop4_raw(addr) {
+      return (addr & 0xff) + '.' + ((addr >> 8) & 0xff) + '.' + ((addr >> 16) & 0xff) + '.' + ((addr >> 24) & 0xff)
+    }
+  
+  function __inet_ntop6_raw(ints) {
+      //  ref:  http://www.ietf.org/rfc/rfc2373.txt - section 2.5.4
+      //  Format for IPv4 compatible and mapped  128-bit IPv6 Addresses
+      //  128-bits are split into eight 16-bit words
+      //  stored in network byte order (big-endian)
+      //  |                80 bits               | 16 |      32 bits        |
+      //  +-----------------------------------------------------------------+
+      //  |               10 bytes               |  2 |      4 bytes        |
+      //  +--------------------------------------+--------------------------+
+      //  +               5 words                |  1 |      2 words        |
+      //  +--------------------------------------+--------------------------+
+      //  |0000..............................0000|0000|    IPv4 ADDRESS     | (compatible)
+      //  +--------------------------------------+----+---------------------+
+      //  |0000..............................0000|FFFF|    IPv4 ADDRESS     | (mapped)
+      //  +--------------------------------------+----+---------------------+
+      var str = "";
+      var word = 0;
+      var longest = 0;
+      var lastzero = 0;
+      var zstart = 0;
+      var len = 0;
+      var i = 0;
+      var parts = [
+        ints[0] & 0xffff,
+        (ints[0] >> 16),
+        ints[1] & 0xffff,
+        (ints[1] >> 16),
+        ints[2] & 0xffff,
+        (ints[2] >> 16),
+        ints[3] & 0xffff,
+        (ints[3] >> 16)
+      ];
+  
+      // Handle IPv4-compatible, IPv4-mapped, loopback and any/unspecified addresses
+  
+      var hasipv4 = true;
+      var v4part = "";
+      // check if the 10 high-order bytes are all zeros (first 5 words)
+      for (i = 0; i < 5; i++) {
+        if (parts[i] !== 0) { hasipv4 = false; break; }
+      }
+  
+      if (hasipv4) {
+        // low-order 32-bits store an IPv4 address (bytes 13 to 16) (last 2 words)
+        v4part = __inet_ntop4_raw(parts[6] | (parts[7] << 16));
+        // IPv4-mapped IPv6 address if 16-bit value (bytes 11 and 12) == 0xFFFF (6th word)
+        if (parts[5] === -1) {
+          str = "::ffff:";
+          str += v4part;
+          return str;
+        }
+        // IPv4-compatible IPv6 address if 16-bit value (bytes 11 and 12) == 0x0000 (6th word)
+        if (parts[5] === 0) {
+          str = "::";
+          //special case IPv6 addresses
+          if(v4part === "0.0.0.0") v4part = ""; // any/unspecified address
+          if(v4part === "0.0.0.1") v4part = "1";// loopback address
+          str += v4part;
+          return str;
+        }
+      }
+  
+      // Handle all other IPv6 addresses
+  
+      // first run to find the longest contiguous zero words
+      for (word = 0; word < 8; word++) {
+        if (parts[word] === 0) {
+          if (word - lastzero > 1) {
+            len = 0;
+          }
+          lastzero = word;
+          len++;
+        }
+        if (len > longest) {
+          longest = len;
+          zstart = word - longest + 1;
+        }
+      }
+  
+      for (word = 0; word < 8; word++) {
+        if (longest > 1) {
+          // compress contiguous zeros - to produce "::"
+          if (parts[word] === 0 && word >= zstart && word < (zstart + longest) ) {
+            if (word === zstart) {
+              str += ":";
+              if (zstart === 0) str += ":"; //leading zeros case
+            }
+            continue;
+          }
+        }
+        // converts 16-bit words from big-endian to little-endian before converting to hex string
+        str += Number(_ntohs(parts[word] & 0xffff)).toString(16);
+        str += word < 7 ? ":" : "";
+      }
+      return str;
+    }function __read_sockaddr(sa, salen) {
+      // family / port offsets are common to both sockaddr_in and sockaddr_in6
+      var family = HEAP16[((sa)>>1)];
+      var port = _ntohs(HEAP16[(((sa)+(2))>>1)]);
+      var addr;
+  
+      switch (family) {
+        case 2:
+          if (salen !== 16) {
+            return { errno: ERRNO_CODES.EINVAL };
+          }
+          addr = HEAP32[(((sa)+(4))>>2)];
+          addr = __inet_ntop4_raw(addr);
+          break;
+        case 10:
+          if (salen !== 28) {
+            return { errno: ERRNO_CODES.EINVAL };
+          }
+          addr = [
+            HEAP32[(((sa)+(8))>>2)],
+            HEAP32[(((sa)+(12))>>2)],
+            HEAP32[(((sa)+(16))>>2)],
+            HEAP32[(((sa)+(20))>>2)]
+          ];
+          addr = __inet_ntop6_raw(addr);
+          break;
+        default:
+          return { errno: ERRNO_CODES.EAFNOSUPPORT };
+      }
+  
+      return { family: family, addr: addr, port: port };
+    }
+  
   function __write_sockaddr(sa, family, addr, port) {
       switch (family) {
         case 2:
@@ -11359,6 +8048,1143 @@ function copyTempDouble(ptr) {
   }
   }
 
+  function ___syscall219(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // madvise
+      return 0; // advice is welcome, but ignored
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _getgrent() {
+  Module['printErr']('missing function: getgrent'); abort(-1);
+  }
+
+
+  function ___syscall303(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // linkat
+      return -ERRNO_CODES.EMLINK; // no hardlinks for us
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___cxa_decrement_exception_refcount(ptr) {
+      EXCEPTIONS.decRef(EXCEPTIONS.deAdjust(ptr));
+    }
+
+  function ___syscall191(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // ugetrlimit
+      var resource = SYSCALLS.get(), rlim = SYSCALLS.get();
+      HEAP32[((rlim)>>2)]=-1;  // RLIM_INFINITY
+      HEAP32[(((rlim)+(4))>>2)]=-1;  // RLIM_INFINITY
+      HEAP32[(((rlim)+(8))>>2)]=-1;  // RLIM_INFINITY
+      HEAP32[(((rlim)+(12))>>2)]=-1;  // RLIM_INFINITY
+      return 0; // just report no limits
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall193(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // truncate64
+      var path = SYSCALLS.getStr(), zero = SYSCALLS.getZero(), length = SYSCALLS.get64();
+      FS.truncate(path, length);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall192(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // mmap2
+      var addr = SYSCALLS.get(), len = SYSCALLS.get(), prot = SYSCALLS.get(), flags = SYSCALLS.get(), fd = SYSCALLS.get(), off = SYSCALLS.get()
+      off <<= 12; // undo pgoffset
+      var ptr;
+      var allocated = false;
+      if (fd === -1) {
+        ptr = _memalign(PAGE_SIZE, len);
+        if (!ptr) return -ERRNO_CODES.ENOMEM;
+        _memset(ptr, 0, len);
+        allocated = true;
+      } else {
+        var info = FS.getStream(fd);
+        if (!info) return -ERRNO_CODES.EBADF;
+        var res = FS.mmap(info, HEAPU8, addr, len, off, prot, flags);
+        ptr = res.ptr;
+        allocated = res.allocated;
+      }
+      SYSCALLS.mappings[ptr] = { malloc: ptr, len: len, allocated: allocated, fd: fd, flags: flags };
+      return ptr;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _kill(pid, sig) {
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/kill.html
+      // Makes no sense in a single-process environment.
+  	  // Should kill itself somtimes depending on `pid`
+      Module.printErr('Calling stub instead of kill()');
+      ___setErrNo(ERRNO_CODES.EPERM);
+      return -1;
+    }
+
+  function ___syscall194(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // ftruncate64
+      var fd = SYSCALLS.get(), zero = SYSCALLS.getZero(), length = SYSCALLS.get64();
+      FS.ftruncate(fd, length);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall197(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // SYS_fstat64
+      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get();
+      return SYSCALLS.doStat(FS.stat, stream.path, buf);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall196(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // SYS_lstat64
+      var path = SYSCALLS.getStr(), buf = SYSCALLS.get();
+      return SYSCALLS.doStat(FS.lstat, path, buf);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall199() {
+  return ___syscall202.apply(null, arguments)
+  }
+
+  function ___syscall198(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // lchown32
+      var path = SYSCALLS.getStr(), owner = SYSCALLS.get(), group = SYSCALLS.get();
+      FS.chown(path, owner, group); // XXX we ignore the 'l' aspect, and do the same as chown
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _dither_init() {
+  Module['printErr']('missing function: dither_init'); abort(-1);
+  }
+
+  function _llvm_stackrestore(p) {
+      var self = _llvm_stacksave;
+      var ret = self.LLVM_SAVEDSTACKS[p];
+      self.LLVM_SAVEDSTACKS.splice(p, 1);
+      Runtime.stackRestore(ret);
+    }
+
+  function _append_snprintf() {
+  Module['printErr']('missing function: append_snprintf'); abort(-1);
+  }
+
+  function _csp_barrier_alloc() {
+  Module['printErr']('missing function: csp_barrier_alloc'); abort(-1);
+  }
+
+  function _psf_asciiheader_printf() {
+  Module['printErr']('missing function: psf_asciiheader_printf'); abort(-1);
+  }
+
+  function _psf_get_format_subtype() {
+  Module['printErr']('missing function: psf_get_format_subtype'); abort(-1);
+  }
+
+  function ___syscall218(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // mincore
+      return -ERRNO_CODES.ENOSYS; // unsupported feature
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _aiff_caf_of_channel_layout_tag() {
+  Module['printErr']('missing function: aiff_caf_of_channel_layout_tag'); abort(-1);
+  }
+
+  function ___syscall212(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // chown32
+      var path = SYSCALLS.getStr(), owner = SYSCALLS.get(), group = SYSCALLS.get();
+      FS.chown(path, owner, group);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+
+  function _pcm_init() {
+  Module['printErr']('missing function: pcm_init'); abort(-1);
+  }
+
+  function ___syscall39(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // mkdir
+      var path = SYSCALLS.getStr(), mode = SYSCALLS.get();
+      return SYSCALLS.doMkdir(path, mode);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall38(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // rename
+      var old_path = SYSCALLS.getStr(), new_path = SYSCALLS.getStr();
+      FS.rename(old_path, new_path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall33(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // access
+      var path = SYSCALLS.getStr(), amode = SYSCALLS.get();
+      return SYSCALLS.doAccess(path, amode);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function __exit(status) {
+      // void _exit(int status);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/exit.html
+      Module['exit'](status);
+    }
+
+  function _pthread_cleanup_push(routine, arg) {
+      __ATEXIT__.push(function() { Module['dynCall_vi'](routine, arg) })
+      _pthread_cleanup_push.level = __ATEXIT__.length;
+    }
+
+  function ___syscall36(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // sync
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall34(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // nice
+      var inc = SYSCALLS.get();
+      return -ERRNO_CODES.EPERM; // no meaning to nice for our single-process environment
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _psf_open_rsrc() {
+  Module['printErr']('missing function: psf_open_rsrc'); abort(-1);
+  }
+
+  function _psf_get_filelen() {
+  Module['printErr']('missing function: psf_get_filelen'); abort(-1);
+  }
+
+  function _execl(/* ... */) {
+      // int execl(const char *path, const char *arg0, ... /*, (char *)0 */);
+      // http://pubs.opengroup.org/onlinepubs/009695399/functions/exec.html
+      // We don't support executing external code.
+      ___setErrNo(ERRNO_CODES.ENOEXEC);
+      return -1;
+    }
+
+   
+
+  function ___gxx_personality_v0() {
+    }
+
+  function _psf_get_date_str() {
+  Module['printErr']('missing function: psf_get_date_str'); abort(-1);
+  }
+
+  function _csoundModuleInit_ftsamplebank() {
+  Module['printErr']('missing function: csoundModuleInit_ftsamplebank'); abort(-1);
+  }
+
+  function _psf_ftruncate() {
+  Module['printErr']('missing function: psf_ftruncate'); abort(-1);
+  }
+
+  function _broadcast_var_set() {
+  Module['printErr']('missing function: broadcast_var_set'); abort(-1);
+  }
+
+  
+  var PIPEFS={BUCKET_BUFFER_SIZE:8192,mount:function (mount) {
+        // Do not pollute the real root directory or its child nodes with pipes
+        // Looks like it is OK to create another pseudo-root node not linked to the FS.root hierarchy this way
+        return FS.createNode(null, '/', 16384 | 511 /* 0777 */, 0);
+      },createPipe:function () {
+        var pipe = {
+          buckets: []
+        };
+  
+        pipe.buckets.push({
+          buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+          offset: 0,
+          roffset: 0
+        });
+  
+        var rName = PIPEFS.nextname();
+        var wName = PIPEFS.nextname();
+        var rNode = FS.createNode(PIPEFS.root, rName, 4096, 0);
+        var wNode = FS.createNode(PIPEFS.root, wName, 4096, 0);
+  
+        rNode.pipe = pipe;
+        wNode.pipe = pipe;
+  
+        var readableStream = FS.createStream({
+          path: rName,
+          node: rNode,
+          flags: FS.modeStringToFlags('r'),
+          seekable: false,
+          stream_ops: PIPEFS.stream_ops
+        });
+        rNode.stream = readableStream;
+  
+        var writableStream = FS.createStream({
+          path: wName,
+          node: wNode,
+          flags: FS.modeStringToFlags('w'),
+          seekable: false,
+          stream_ops: PIPEFS.stream_ops
+        });
+        wNode.stream = writableStream;
+  
+        return {
+          readable_fd: readableStream.fd,
+          writable_fd: writableStream.fd
+        };
+      },stream_ops:{poll:function (stream) {
+          var pipe = stream.node.pipe;
+  
+          if ((stream.flags & 2097155) === 1) {
+            return (256 | 4);
+          } else {
+            if (pipe.buckets.length > 0) {
+              for (var i = 0; i < pipe.buckets.length; i++) {
+                var bucket = pipe.buckets[i];
+                if (bucket.offset - bucket.roffset > 0) {
+                  return (64 | 1);
+                }
+              }
+            }
+          }
+  
+          return 0;
+        },ioctl:function (stream, request, varargs) {
+          return ERRNO_CODES.EINVAL;
+        },read:function (stream, buffer, offset, length, position /* ignored */) {
+          var pipe = stream.node.pipe;
+          var currentLength = 0;
+  
+          for (var i = 0; i < pipe.buckets.length; i++) {
+            var bucket = pipe.buckets[i];
+            currentLength += bucket.offset - bucket.roffset;
+          }
+  
+          assert(buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer));
+          var data = buffer.subarray(offset, offset + length);
+  
+          if (length <= 0) {
+            return 0;
+          }
+          if (currentLength == 0) {
+            // Behave as if the read end is always non-blocking
+            throw new FS.ErrnoError(ERRNO_CODES.EAGAIN);
+          }
+          var toRead = Math.min(currentLength, length);
+  
+          var totalRead = toRead;
+          var toRemove = 0;
+  
+          for (var i = 0; i < pipe.buckets.length; i++) {
+            var currBucket = pipe.buckets[i];
+            var bucketSize = currBucket.offset - currBucket.roffset;
+  
+            if (toRead <= bucketSize) {
+              var tmpSlice = currBucket.buffer.subarray(currBucket.roffset, currBucket.offset);
+              if (toRead < bucketSize) {
+                tmpSlice = tmpSlice.subarray(0, toRead);
+                currBucket.roffset += toRead;
+              } else {
+                toRemove++;
+              }
+              data.set(tmpSlice);
+              break;
+            } else {
+              var tmpSlice = currBucket.buffer.subarray(currBucket.roffset, currBucket.offset);
+              data.set(tmpSlice);
+              data = data.subarray(tmpSlice.byteLength);
+              toRead -= tmpSlice.byteLength;
+              toRemove++;
+            }
+          }
+  
+          if (toRemove && toRemove == pipe.buckets.length) {
+            // Do not generate excessive garbage in use cases such as
+            // write several bytes, read everything, write several bytes, read everything...
+            toRemove--;
+            pipe.buckets[toRemove].offset = 0;
+            pipe.buckets[toRemove].roffset = 0;
+          }
+  
+          pipe.buckets.splice(0, toRemove);
+  
+          return totalRead;
+        },write:function (stream, buffer, offset, length, position /* ignored */) {
+          var pipe = stream.node.pipe;
+  
+          assert(buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer));
+          var data = buffer.subarray(offset, offset + length);
+  
+          var dataLen = data.byteLength;
+          if (dataLen <= 0) {
+            return 0;
+          }
+  
+          var currBucket = null;
+  
+          if (pipe.buckets.length == 0) {
+            currBucket = {
+              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+              offset: 0,
+              roffset: 0
+            };
+            pipe.buckets.push(currBucket);
+          } else {
+            currBucket = pipe.buckets[pipe.buckets.length - 1];
+          }
+  
+          assert(currBucket.offset <= PIPEFS.BUCKET_BUFFER_SIZE);
+  
+          var freeBytesInCurrBuffer = PIPEFS.BUCKET_BUFFER_SIZE - currBucket.offset;
+          if (freeBytesInCurrBuffer >= dataLen) {
+            currBucket.buffer.set(data, currBucket.offset);
+            currBucket.offset += dataLen;
+            return dataLen;
+          } else if (freeBytesInCurrBuffer > 0) {
+            currBucket.buffer.set(data.subarray(0, freeBytesInCurrBuffer), currBucket.offset);
+            currBucket.offset += freeBytesInCurrBuffer;
+            data = data.subarray(freeBytesInCurrBuffer, data.byteLength);
+          }
+  
+          var numBuckets = (data.byteLength / PIPEFS.BUCKET_BUFFER_SIZE) | 0;
+          var remElements = data.byteLength % PIPEFS.BUCKET_BUFFER_SIZE;
+  
+          for (var i = 0; i < numBuckets; i++) {
+            var newBucket = {
+              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+              offset: PIPEFS.BUCKET_BUFFER_SIZE,
+              roffset: 0
+            };
+            pipe.buckets.push(newBucket);
+            newBucket.buffer.set(data.subarray(0, PIPEFS.BUCKET_BUFFER_SIZE));
+            data = data.subarray(PIPEFS.BUCKET_BUFFER_SIZE, data.byteLength);
+          }
+  
+          if (remElements > 0) {
+            var newBucket = {
+              buffer: new Uint8Array(PIPEFS.BUCKET_BUFFER_SIZE),
+              offset: data.byteLength,
+              roffset: 0
+            };
+            pipe.buckets.push(newBucket);
+            newBucket.buffer.set(data);
+          }
+  
+          return dataLen;
+        },close:function (stream) {
+          var pipe = stream.node.pipe;
+          pipe.buckets = null;
+        }},nextname:function () {
+        if (!PIPEFS.nextname.current) {
+          PIPEFS.nextname.current = 0;
+        }
+        return 'pipe[' + (PIPEFS.nextname.current++) + ']';
+      }};function ___syscall42(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // pipe
+      var fdPtr = SYSCALLS.get();
+  
+      if (fdPtr == 0) {
+        throw new FS.ErrnoError(ERRNO_CODES.EFAULT);
+      }
+  
+      var res = PIPEFS.createPipe();
+  
+      HEAP32[((fdPtr)>>2)]=res.readable_fd;
+      HEAP32[(((fdPtr)+(4))>>2)]=res.writable_fd;
+  
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall40(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // rmdir
+      var path = SYSCALLS.getStr();
+      FS.rmdir(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall41(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // dup
+      var old = SYSCALLS.getStreamFromFD();
+      return FS.open(old.path, old.flags, 0).fd;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+
+  function _endgrent() {
+  Module['printErr']('missing function: endgrent'); abort(-1);
+  }
+
+  function _pthread_mutexattr_init() {}
+
+  function _psf_binheader_readf() {
+  Module['printErr']('missing function: psf_binheader_readf'); abort(-1);
+  }
+
+  function _dag_build() {
+  Module['printErr']('missing function: dag_build'); abort(-1);
+  }
+
+  function _pthread_cond_signal() { return 0; }
+
+  function ___restore_sigs() {
+  Module['printErr']('missing function: __restore_sigs'); abort(-1);
+  }
+
+  function _dag_reinit() {
+  Module['printErr']('missing function: dag_reinit'); abort(-1);
+  }
+
+  function _pthread_cond_wait() { return 0; }
+
+  function _inet_addr(ptr) {
+      var addr = __inet_pton4_raw(Pointer_stringify(ptr));
+      if (addr === null) {
+        return -1;
+      }
+      return addr;
+    }
+
+  function ___syscall272(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fadvise64_64
+      return 0; // your advice is important to us (but we can't use it)
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _exit(status) {
+      __exit(status);
+    }
+
+  function _pthread_setspecific(key, value) {
+      if (!(key in PTHREAD_SPECIFIC)) {
+        return ERRNO_CODES.EINVAL;
+      }
+      PTHREAD_SPECIFIC[key] = value;
+      return 0;
+    }
+
+  
+  var ___tm_formatted=STATICTOP; STATICTOP += 48;;
+  
+  
+  function _mktime(tmPtr) {
+      _tzset();
+      var date = new Date(HEAP32[(((tmPtr)+(20))>>2)] + 1900,
+                          HEAP32[(((tmPtr)+(16))>>2)],
+                          HEAP32[(((tmPtr)+(12))>>2)],
+                          HEAP32[(((tmPtr)+(8))>>2)],
+                          HEAP32[(((tmPtr)+(4))>>2)],
+                          HEAP32[((tmPtr)>>2)],
+                          0);
+  
+      // There's an ambiguous hour when the time goes back; the tm_isdst field is
+      // used to disambiguate it.  Date() basically guesses, so we fix it up if it
+      // guessed wrong, or fill in tm_isdst with the guess if it's -1.
+      var dst = HEAP32[(((tmPtr)+(32))>>2)];
+      var guessedOffset = date.getTimezoneOffset();
+      var start = new Date(date.getFullYear(), 0, 1);
+      var summerOffset = new Date(2000, 6, 1).getTimezoneOffset();
+      var winterOffset = start.getTimezoneOffset();
+      var dstOffset = Math.min(winterOffset, summerOffset); // DST is in December in South
+      if (dst < 0) {
+        // Attention: some regions don't have DST at all.
+        HEAP32[(((tmPtr)+(32))>>2)]=Number(summerOffset != winterOffset && dstOffset == guessedOffset);
+      } else if ((dst > 0) != (dstOffset == guessedOffset)) {
+        var nonDstOffset = Math.max(winterOffset, summerOffset);
+        var trueOffset = dst > 0 ? dstOffset : nonDstOffset;
+        // Don't try setMinutes(date.getMinutes() + ...) -- it's messed up.
+        date.setTime(date.getTime() + (trueOffset - guessedOffset)*60000);
+      }
+  
+      HEAP32[(((tmPtr)+(24))>>2)]=date.getDay();
+      var yday = ((date.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))|0;
+      HEAP32[(((tmPtr)+(28))>>2)]=yday;
+  
+      return (date.getTime() / 1000)|0;
+    }function _asctime_r(tmPtr, buf) {
+      var date = {
+        tm_sec: HEAP32[((tmPtr)>>2)],
+        tm_min: HEAP32[(((tmPtr)+(4))>>2)],
+        tm_hour: HEAP32[(((tmPtr)+(8))>>2)],
+        tm_mday: HEAP32[(((tmPtr)+(12))>>2)],
+        tm_mon: HEAP32[(((tmPtr)+(16))>>2)],
+        tm_year: HEAP32[(((tmPtr)+(20))>>2)],
+        tm_wday: HEAP32[(((tmPtr)+(24))>>2)]
+      };
+      var days = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
+      var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+      var s = days[date.tm_wday] + ' ' + months[date.tm_mon] +
+          (date.tm_mday < 10 ? '  ' : ' ') + date.tm_mday +
+          (date.tm_hour < 10 ? ' 0' : ' ') + date.tm_hour +
+          (date.tm_min < 10 ? ':0' : ':') + date.tm_min +
+          (date.tm_sec < 10 ? ':0' : ':') + date.tm_sec +
+          ' ' + (1900 + date.tm_year) + "\n";
+  
+      // asctime_r is specced to behave in an undefined manner if the algorithm would attempt
+      // to write out more than 26 bytes (including the null terminator).
+      // See http://pubs.opengroup.org/onlinepubs/9699919799/functions/asctime.html
+      // Our undefined behavior is to truncate the write to at most 26 bytes, including null terminator.
+      stringToUTF8(s, buf, 26);
+      return buf;
+    }function _asctime(tmPtr) {
+      return _asctime_r(tmPtr, ___tm_formatted);
+    }
+
+  function ___syscall168(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // poll
+      var fds = SYSCALLS.get(), nfds = SYSCALLS.get(), timeout = SYSCALLS.get();
+      var nonzero = 0;
+      for (var i = 0; i < nfds; i++) {
+        var pollfd = fds + 8 * i;
+        var fd = HEAP32[((pollfd)>>2)];
+        var events = HEAP16[(((pollfd)+(4))>>1)];
+        var mask = 32;
+        var stream = FS.getStream(fd);
+        if (stream) {
+          mask = SYSCALLS.DEFAULT_POLLMASK;
+          if (stream.stream_ops.poll) {
+            mask = stream.stream_ops.poll(stream);
+          }
+        }
+        mask &= events | 8 | 16;
+        if (mask) nonzero++;
+        HEAP16[(((pollfd)+(6))>>1)]=mask;
+      }
+      return nonzero;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _psf_store_string() {
+  Module['printErr']('missing function: psf_store_string'); abort(-1);
+  }
+
+  function _pthread_setcancelstate() { return 0; }
+
+  function _ulaw_init() {
+  Module['printErr']('missing function: ulaw_init'); abort(-1);
+  }
+
+  function _double64_be_write() {
+  Module['printErr']('missing function: double64_be_write'); abort(-1);
+  }
+
+  function _psf_ftell() {
+  Module['printErr']('missing function: psf_ftell'); abort(-1);
+  }
+
+  function ___syscall15(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // chmod
+      var path = SYSCALLS.getStr(), mode = SYSCALLS.get();
+      FS.chmod(path, mode);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall14(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // mknod
+      var path = SYSCALLS.getStr(), mode = SYSCALLS.get(), dev = SYSCALLS.get();
+      return SYSCALLS.doMknod(path, mode, dev);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _wav_w64_ima_init() {
+  Module['printErr']('missing function: wav_w64_ima_init'); abort(-1);
+  }
+
+  
+  function _gmtime_r(time, tmPtr) {
+      var date = new Date(HEAP32[((time)>>2)]*1000);
+      HEAP32[((tmPtr)>>2)]=date.getUTCSeconds();
+      HEAP32[(((tmPtr)+(4))>>2)]=date.getUTCMinutes();
+      HEAP32[(((tmPtr)+(8))>>2)]=date.getUTCHours();
+      HEAP32[(((tmPtr)+(12))>>2)]=date.getUTCDate();
+      HEAP32[(((tmPtr)+(16))>>2)]=date.getUTCMonth();
+      HEAP32[(((tmPtr)+(20))>>2)]=date.getUTCFullYear()-1900;
+      HEAP32[(((tmPtr)+(24))>>2)]=date.getUTCDay();
+      HEAP32[(((tmPtr)+(36))>>2)]=0;
+      HEAP32[(((tmPtr)+(32))>>2)]=0;
+      var start = Date.UTC(date.getUTCFullYear(), 0, 1, 0, 0, 0, 0);
+      var yday = ((date.getTime() - start) / (1000 * 60 * 60 * 24))|0;
+      HEAP32[(((tmPtr)+(28))>>2)]=yday;
+      HEAP32[(((tmPtr)+(40))>>2)]=___tm_timezone;
+  
+      return tmPtr;
+    }function _gmtime(time) {
+      return _gmtime_r(time, ___tm_current);
+    }
+
+  function ___syscall12(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // chdir
+      var path = SYSCALLS.getStr();
+      FS.chdir(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _psf_location_string_count() {
+  Module['printErr']('missing function: psf_location_string_count'); abort(-1);
+  }
+
+  function ___cxa_begin_catch(ptr) {
+      var info = EXCEPTIONS.infos[ptr];
+      if (info && !info.caught) {
+        info.caught = true;
+        __ZSt18uncaught_exceptionv.uncaught_exception--;
+      }
+      if (info) info.rethrown = false;
+      EXCEPTIONS.caught.push(ptr);
+      EXCEPTIONS.addRef(EXCEPTIONS.deAdjust(ptr));
+      return ptr;
+    }
+
+  function _getnameinfo(sa, salen, node, nodelen, serv, servlen, flags) {
+      var info = __read_sockaddr(sa, salen);
+      if (info.errno) {
+        return -6;
+      }
+      var port = info.port;
+      var addr = info.addr;
+  
+      var overflowed = false;
+  
+      if (node && nodelen) {
+        var lookup;
+        if ((flags & 1) || !(lookup = DNS.lookup_addr(addr))) {
+          if (flags & 8) {
+            return -2;
+          }
+        } else {
+          addr = lookup;
+        }
+        var numBytesWrittenExclNull = stringToUTF8(addr, node, nodelen);
+  
+        if (numBytesWrittenExclNull+1 >= nodelen) {
+          overflowed = true;
+        }
+      }
+  
+      if (serv && servlen) {
+        port = '' + port;
+        var numBytesWrittenExclNull = stringToUTF8(port, serv, servlen);
+  
+        if (numBytesWrittenExclNull+1 >= servlen) {
+          overflowed = true;
+        }
+      }
+  
+      if (overflowed) {
+        // Note: even when we overflow, getnameinfo() is specced to write out the truncated results.
+        return -12;
+      }
+  
+      return 0;
+    }
+
+
+
+  function _double64_init() {
+  Module['printErr']('missing function: double64_init'); abort(-1);
+  }
+
+  function _llvm_exp2_f32(x) {
+      return Math.pow(2, x);
+    }
+
+  function ___syscall308(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // pselect
+      return -ERRNO_CODES.ENOSYS; // unsupported feature
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _pchk4_store() {
+  Module['printErr']('missing function: pchk4_store'); abort(-1);
+  }
+
+  function ___syscall304(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // symlinkat
+      var target = SYSCALLS.get(), newdirfd = SYSCALLS.get(), linkpath = SYSCALLS.get();
+      linkpath = SYSCALLS.calculateAt(newdirfd, linkpath);
+      FS.symlink(target, linkpath);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall305(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // readlinkat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), buf = SYSCALLS.get(), bufsize = SYSCALLS.get();
+      path = SYSCALLS.calculateAt(dirfd, path);
+      return SYSCALLS.doReadlink(path, buf, bufsize);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall306(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fchmodat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), mode = SYSCALLS.get(), flags = SYSCALLS.get();
+      assert(flags === 0);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      FS.chmod(path, mode);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall307(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // faccessat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), amode = SYSCALLS.get(), flags = SYSCALLS.get();
+      assert(flags === 0);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      return SYSCALLS.doAccess(path, amode);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall300(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fstatat64
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), buf = SYSCALLS.get(), flags = SYSCALLS.get();
+      var nofollow = flags & 256;
+      flags = flags & (~256);
+      assert(!flags, flags);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      return SYSCALLS.doStat(nofollow ? FS.lstat : FS.stat, path, buf);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall301(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // unlinkat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), flags = SYSCALLS.get();
+      assert(flags === 0);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      FS.unlink(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall302(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // renameat
+      var olddirfd = SYSCALLS.get(), oldpath = SYSCALLS.getStr(), newdirfd = SYSCALLS.get(), newpath = SYSCALLS.getStr();
+      oldpath = SYSCALLS.calculateAt(olddirfd, oldpath);
+      newpath = SYSCALLS.calculateAt(newdirfd, newpath);
+      FS.rename(oldpath, newpath);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _psf_fread() {
+  Module['printErr']('missing function: psf_fread'); abort(-1);
+  }
+
+  function ___syscall29(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // pause
+      return -ERRNO_CODES.EINTR; // we can't pause
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+   
+
+  function _psf_get_format_major() {
+  Module['printErr']('missing function: psf_get_format_major'); abort(-1);
+  }
+
+  function _res_query() {
+  Module['printErr']('missing function: res_query'); abort(-1);
+  }
+
+  function _msadpcm_write_adapt_coeffs() {
+  Module['printErr']('missing function: msadpcm_write_adapt_coeffs'); abort(-1);
+  }
+
+  function _psf_get_format_simple() {
+  Module['printErr']('missing function: psf_get_format_simple'); abort(-1);
+  }
+
+  function _wav_w64_msadpcm_init() {
+  Module['printErr']('missing function: wav_w64_msadpcm_init'); abort(-1);
+  }
+
+  function _aiff_ima_init() {
+  Module['printErr']('missing function: aiff_ima_init'); abort(-1);
+  }
+
+  
+  var PTHREAD_SPECIFIC_NEXT_KEY=1;function _pthread_key_create(key, destructor) {
+      if (key == 0) {
+        return ERRNO_CODES.EINVAL;
+      }
+      HEAP32[((key)>>2)]=PTHREAD_SPECIFIC_NEXT_KEY;
+      // values start at 0
+      PTHREAD_SPECIFIC[PTHREAD_SPECIFIC_NEXT_KEY] = 0;
+      PTHREAD_SPECIFIC_NEXT_KEY++;
+      return 0;
+    }
+
+  function _system(command) {
+      // int system(const char *command);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/system.html
+      // Can't call external programs.
+      ___setErrNo(ERRNO_CODES.EAGAIN);
+      return -1;
+    }
+
+  
+  function ___syscall153(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // munlockall
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }function ___syscall151() {
+  return ___syscall153.apply(null, arguments)
+  }
+
+  function ___syscall150() {
+  return ___syscall153.apply(null, arguments)
+  }
+
+
+  function ___syscall152() {
+  return ___syscall153.apply(null, arguments)
+  }
+
+  function _pthread_cond_timedwait() { return 0; }
+
+
+  function _gsm610_init() {
+  Module['printErr']('missing function: gsm610_init'); abort(-1);
+  }
+
+   
+
+  function _llvm_exp2_f64() {
+  return _llvm_exp2_f32.apply(null, arguments)
+  }
+
+  function _pthread_mutexattr_destroy() {}
+
+  function _sched_yield() {
+      return 0;
+    }
+
+  
+  
+  
+  
+  var _environ=STATICTOP; STATICTOP += 16;;var ___environ=_environ;function ___buildEnvironment(env) {
+      // WARNING: Arbitrary limit!
+      var MAX_ENV_VALUES = 64;
+      var TOTAL_ENV_SIZE = 1024;
+  
+      // Statically allocate memory for the environment.
+      var poolPtr;
+      var envPtr;
+      if (!___buildEnvironment.called) {
+        ___buildEnvironment.called = true;
+        // Set default values. Use string keys for Closure Compiler compatibility.
+        ENV['USER'] = ENV['LOGNAME'] = 'web_user';
+        ENV['PATH'] = '/';
+        ENV['PWD'] = '/';
+        ENV['HOME'] = '/home/web_user';
+        ENV['LANG'] = 'C';
+        ENV['_'] = Module['thisProgram'];
+        // Allocate memory.
+        poolPtr = allocate(TOTAL_ENV_SIZE, 'i8', ALLOC_STATIC);
+        envPtr = allocate(MAX_ENV_VALUES * 4,
+                          'i8*', ALLOC_STATIC);
+        HEAP32[((envPtr)>>2)]=poolPtr;
+        HEAP32[((_environ)>>2)]=envPtr;
+      } else {
+        envPtr = HEAP32[((_environ)>>2)];
+        poolPtr = HEAP32[((envPtr)>>2)];
+      }
+  
+      // Collect key=value lines.
+      var strings = [];
+      var totalSize = 0;
+      for (var key in env) {
+        if (typeof env[key] === 'string') {
+          var line = key + '=' + env[key];
+          strings.push(line);
+          totalSize += line.length;
+        }
+      }
+      if (totalSize > TOTAL_ENV_SIZE) {
+        throw new Error('Environment size exceeded TOTAL_ENV_SIZE!');
+      }
+  
+      // Make new.
+      var ptrSize = 4;
+      for (var i = 0; i < strings.length; i++) {
+        var line = strings[i];
+        writeAsciiToMemory(line, poolPtr);
+        HEAP32[(((envPtr)+(i * ptrSize))>>2)]=poolPtr;
+        poolPtr += line.length + 1;
+      }
+      HEAP32[(((envPtr)+(strings.length * ptrSize))>>2)]=0;
+    }var ENV={};function _getenv(name) {
+      // char *getenv(const char *name);
+      // http://pubs.opengroup.org/onlinepubs/009695399/functions/getenv.html
+      if (name === 0) return 0;
+      name = Pointer_stringify(name);
+      if (!ENV.hasOwnProperty(name)) return 0;
+  
+      if (_getenv.ret) _free(_getenv.ret);
+      _getenv.ret = allocate(intArrayFromString(ENV[name]), 'i8', ALLOC_NORMAL);
+      return _getenv.ret;
+    }
+
+  function ___map_file(pathname, size) {
+      ___setErrNo(ERRNO_CODES.EPERM);
+      return -1;
+    }
+
+  function _s_bitwidth_to_subformat() {
+  Module['printErr']('missing function: s_bitwidth_to_subformat'); abort(-1);
+  }
+
+   
+
+  function _psf_close_rsrc() {
+  Module['printErr']('missing function: psf_close_rsrc'); abort(-1);
+  }
+
+  var _llvm_pow_f64=Math_pow;
+
+   
+
   function ___syscall83(which, varargs) {SYSCALLS.varargs = varargs;
   try {
    // symlink
@@ -11371,16 +9197,232 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall269(which, varargs) {SYSCALLS.varargs = varargs;
+  function _psf_set_string() {
+  Module['printErr']('missing function: psf_set_string'); abort(-1);
+  }
+
+  function ___syscall85(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // fstatfs64
-      var stream = SYSCALLS.getStreamFromFD(), size = SYSCALLS.get(), buf = SYSCALLS.get();
-      return ___syscall([268, 0, size, buf], 0);
+   // readlink
+      var path = SYSCALLS.getStr(), buf = SYSCALLS.get(), bufsize = SYSCALLS.get();
+      return SYSCALLS.doReadlink(path, buf, bufsize);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
+
+   
+
+  function _psf_get_format_simple_count() {
+  Module['printErr']('missing function: psf_get_format_simple_count'); abort(-1);
+  }
+
+  function ___syscall320(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // utimensat
+      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), times = SYSCALLS.get(), flags = SYSCALLS.get();
+      assert(flags === 0);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      var seconds = HEAP32[((times)>>2)];
+      var nanoseconds = HEAP32[(((times)+(4))>>2)];
+      var atime = (seconds*1000) + (nanoseconds/(1000*1000));
+      times += 8;
+      seconds = HEAP32[((times)>>2)];
+      nanoseconds = HEAP32[(((times)+(4))>>2)];
+      var mtime = (seconds*1000) + (nanoseconds/(1000*1000));
+      FS.utime(path, atime, mtime);
+      return 0;  
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall324(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fallocate
+      var stream = SYSCALLS.getStreamFromFD(), mode = SYSCALLS.get(), offset = SYSCALLS.get64(), len = SYSCALLS.get64();
+      assert(mode === 0);
+      FS.allocate(stream, offset, len);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+
+  function ___syscall77(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getrusage
+      var who = SYSCALLS.get(), usage = SYSCALLS.get();
+      _memset(usage, 0, 136);
+      HEAP32[((usage)>>2)]=1; // fake some values
+      HEAP32[(((usage)+(4))>>2)]=2;
+      HEAP32[(((usage)+(8))>>2)]=3;
+      HEAP32[(((usage)+(12))>>2)]=4;
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___assert_fail(condition, filename, line, func) {
+      ABORT = true;
+      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [filename ? Pointer_stringify(filename) : 'unknown filename', line, func ? Pointer_stringify(func) : 'unknown function'] + ' at ' + stackTrace();
+    }
+
+  function ___syscall75(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // setrlimit
+      return 0; // no-op
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _pthread_mutexattr_settype() {}
+
+  function _sigfillset(set) {
+      HEAP32[((set)>>2)]=-1>>>0;
+      return 0;
+    }
+
+  function _pthread_cond_destroy() { return 0; }
+
+  function _pthread_once(ptr, func) {
+      if (!_pthread_once.seen) _pthread_once.seen = {};
+      if (ptr in _pthread_once.seen) return;
+      Module['dynCall_v'](func);
+      _pthread_once.seen[ptr] = 1;
+    }
+
+  function ___unlock() {}
+
+  function _psf_instrument_alloc() {
+  Module['printErr']('missing function: psf_instrument_alloc'); abort(-1);
+  }
+
+  function _posix_spawn_file_actions_adddup2() {
+  Module['printErr']('missing function: posix_spawn_file_actions_adddup2'); abort(-1);
+  }
+
+  function _dwvw_init() {
+  Module['printErr']('missing function: dwvw_init'); abort(-1);
+  }
+
+  function ___syscall133(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // fchdir
+      var stream = SYSCALLS.getStreamFromFD();
+      FS.chdir(stream.path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall132(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getpgid
+      var pid = SYSCALLS.get();
+      if (pid && pid !== PROCINFO.pid) return -ERRNO_CODES.ESRCH;
+      return PROCINFO.pgid;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _audio_detect() {
+  Module['printErr']('missing function: audio_detect'); abort(-1);
+  }
+
+  function ___cxa_allocate_exception(size) {
+      return _malloc(size);
+    }
+
+  function _psf_file_valid() {
+  Module['printErr']('missing function: psf_file_valid'); abort(-1);
+  }
+
+   
+
+  function _psf_fopen() {
+  Module['printErr']('missing function: psf_fopen'); abort(-1);
+  }
+
+  function _psf_sanitize_string() {
+  Module['printErr']('missing function: psf_sanitize_string'); abort(-1);
+  }
+
+  function _psf_default_seek() {
+  Module['printErr']('missing function: psf_default_seek'); abort(-1);
+  }
+
+  function ___syscall183(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // getcwd
+      var buf = SYSCALLS.get(), size = SYSCALLS.get();
+      if (size === 0) return -ERRNO_CODES.EINVAL;
+      var cwd = FS.cwd();
+      var cwdLengthInBytes = lengthBytesUTF8(cwd);
+      if (size < cwdLengthInBytes + 1) return -ERRNO_CODES.ERANGE;
+      stringToUTF8(cwd, buf, size);
+      return buf;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall180(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // pread64
+      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get(), zero = SYSCALLS.getZero(), offset = SYSCALLS.get64();
+      return FS.read(stream, HEAP8,buf, count, offset);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___syscall181(which, varargs) {SYSCALLS.varargs = varargs;
+  try {
+   // pwrite64
+      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get(), count = SYSCALLS.get(), zero = SYSCALLS.getZero(), offset = SYSCALLS.get64();
+      return FS.write(stream, HEAP8,buf, count, offset);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _psf_get_string() {
+  Module['printErr']('missing function: psf_get_string'); abort(-1);
+  }
+
+  function _llvm_fma_f64() {
+  Module['printErr']('missing function: llvm_fma_f64'); abort(-1);
+  }
+
+  function _psf_init_files() {
+  Module['printErr']('missing function: psf_init_files'); abort(-1);
+  }
+
+  function _psf_memset() {
+  Module['printErr']('missing function: psf_memset'); abort(-1);
+  }
+
+  function _pthread_cleanup_pop() {
+      assert(_pthread_cleanup_push.level == __ATEXIT__.length, 'cannot pop if something else added meanwhile!');
+      __ATEXIT__.pop();
+      _pthread_cleanup_push.level = __ATEXIT__.length;
+    }
 
   function ___syscall340(which, varargs) {SYSCALLS.varargs = varargs;
   try {
@@ -11399,17 +9441,13 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function _getgrent() {
-  Module['printErr']('missing function: getgrent'); abort(-1);
+  function _psf_set_file() {
+  Module['printErr']('missing function: psf_set_file'); abort(-1);
   }
 
-  function ___syscall144(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___syscall345(which, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // msync
-      var addr = SYSCALLS.get(), len = SYSCALLS.get(), flags = SYSCALLS.get();
-      var info = SYSCALLS.mappings[addr];
-      if (!info) return 0;
-      SYSCALLS.doMsync(addr, FS.getStream(info.fd), len, info.flags);
+   // sendmmsg
       return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
@@ -11424,16 +9462,6 @@ function copyTempDouble(ptr) {
       }
       return ret;
     }
-
-  function ___syscall303(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // linkat
-      return -ERRNO_CODES.EMLINK; // no hardlinks for us
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
 
   var _llvm_nacl_atomic_cmpxchg_i32=undefined;
 
@@ -11479,14 +9507,6 @@ function copyTempDouble(ptr) {
 FS.staticInit();__ATINIT__.unshift(function() { if (!Module["noFSInit"] && !FS.init.initialized) FS.init() });__ATMAIN__.push(function() { FS.ignorePermissions = false });__ATEXIT__.push(function() { FS.quit() });Module["FS_createFolder"] = FS.createFolder;Module["FS_createPath"] = FS.createPath;Module["FS_createDataFile"] = FS.createDataFile;Module["FS_createPreloadedFile"] = FS.createPreloadedFile;Module["FS_createLazyFile"] = FS.createLazyFile;Module["FS_createLink"] = FS.createLink;Module["FS_createDevice"] = FS.createDevice;Module["FS_unlink"] = FS.unlink;;
 __ATINIT__.unshift(function() { TTY.init() });__ATEXIT__.push(function() { TTY.shutdown() });;
 if (ENVIRONMENT_IS_NODE) { var fs = require("fs"); var NODEJS_PATH = require("path"); NODEFS.staticInit(); };
-Module["requestFullScreen"] = function Module_requestFullScreen(lockPointer, resizeCanvas, vrDevice) { Module.printErr("Module.requestFullScreen is deprecated. Please call Module.requestFullscreen instead."); Module["requestFullScreen"] = Module["requestFullscreen"]; Browser.requestFullScreen(lockPointer, resizeCanvas, vrDevice) };
-  Module["requestFullscreen"] = function Module_requestFullscreen(lockPointer, resizeCanvas, vrDevice) { Browser.requestFullscreen(lockPointer, resizeCanvas, vrDevice) };
-  Module["requestAnimationFrame"] = function Module_requestAnimationFrame(func) { Browser.requestAnimationFrame(func) };
-  Module["setCanvasSize"] = function Module_setCanvasSize(width, height, noUpdates) { Browser.setCanvasSize(width, height, noUpdates) };
-  Module["pauseMainLoop"] = function Module_pauseMainLoop() { Browser.mainLoop.pause() };
-  Module["resumeMainLoop"] = function Module_resumeMainLoop() { Browser.mainLoop.resume() };
-  Module["getUserMedia"] = function Module_getUserMedia() { Browser.getUserMedia() }
-  Module["createContext"] = function Module_createContext(canvas, useWebGL, setInModule, webGLContextAttributes) { return Browser.createContext(canvas, useWebGL, setInModule, webGLContextAttributes) };
 if (ENVIRONMENT_IS_NODE) {
     _emscripten_get_now = function _emscripten_get_now_actual() {
       var t = process['hrtime']();
@@ -11501,9 +9521,9 @@ if (ENVIRONMENT_IS_NODE) {
   } else {
     _emscripten_get_now = Date.now;
   };
-___buildEnvironment(ENV);;
-__ATINIT__.push(function() { PIPEFS.root = FS.mount(PIPEFS, {}, null); });;
 __ATINIT__.push(function() { SOCKFS.root = FS.mount(SOCKFS, {}, null); });;
+__ATINIT__.push(function() { PIPEFS.root = FS.mount(PIPEFS, {}, null); });;
+___buildEnvironment(ENV);;
 DYNAMICTOP_PTR = allocate(1, "i32", ALLOC_STATIC);
 
 STACK_BASE = STACKTOP = Runtime.alignMemory(STATICTOP);
@@ -11515,6 +9535,10 @@ DYNAMIC_BASE = Runtime.alignMemory(STACK_MAX);
 HEAP32[DYNAMICTOP_PTR>>2] = DYNAMIC_BASE;
 
 staticSealed = true; // seal the static portion of memory
+
+assert(DYNAMIC_BASE < TOTAL_MEMORY, "TOTAL_MEMORY not big enough for stack");
+
+var ASSERTIONS = true;
 
 // All functions here should be maybeExported from jsifier.js
 
@@ -11559,9 +9583,89 @@ var intArrayToString = ASSERTIONS ?
 Module["intArrayFromString"] = intArrayFromString;
 Module["intArrayToString"] = intArrayToString;
 
-Module['wasmTableSize'] = 6504;
+function nullFunc_iiiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-Module['wasmMaxTableSize'] = 6504;
+function nullFunc_iiiiiid(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_vif(x) { Module["printErr"]("Invalid function pointer called with signature 'vif'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_vi(x) { Module["printErr"]("Invalid function pointer called with signature 'vi'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_vii(x) { Module["printErr"]("Invalid function pointer called with signature 'vii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_ii(x) { Module["printErr"]("Invalid function pointer called with signature 'ii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viijii(x) { Module["printErr"]("Invalid function pointer called with signature 'viijii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_ffi(x) { Module["printErr"]("Invalid function pointer called with signature 'ffi'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiif(x) { Module["printErr"]("Invalid function pointer called with signature 'viiif'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_if(x) { Module["printErr"]("Invalid function pointer called with signature 'if'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiij(x) { Module["printErr"]("Invalid function pointer called with signature 'iiij'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_fif(x) { Module["printErr"]("Invalid function pointer called with signature 'fif'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiiffff(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiffff'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiiiif(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiiif'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_fii(x) { Module["printErr"]("Invalid function pointer called with signature 'fii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiid(x) { Module["printErr"]("Invalid function pointer called with signature 'iiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_fiii(x) { Module["printErr"]("Invalid function pointer called with signature 'fiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_di(x) { Module["printErr"]("Invalid function pointer called with signature 'di'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiiiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_v(x) { Module["printErr"]("Invalid function pointer called with signature 'v'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iif(x) { Module["printErr"]("Invalid function pointer called with signature 'iif'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_ji(x) { Module["printErr"]("Invalid function pointer called with signature 'ji'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_fi(x) { Module["printErr"]("Invalid function pointer called with signature 'fi'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iii(x) { Module["printErr"]("Invalid function pointer called with signature 'iii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_dii(x) { Module["printErr"]("Invalid function pointer called with signature 'dii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_i(x) { Module["printErr"]("Invalid function pointer called with signature 'i'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiij(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiij'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viii(x) { Module["printErr"]("Invalid function pointer called with signature 'viii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiiiiiiifii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiiiiifii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_iiiiid(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+function nullFunc_viiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+
+Module['wasmTableSize'] = 6224;
+
+Module['wasmMaxTableSize'] = 6224;
 
 function invoke_iiiiiiii(index,a1,a2,a3,a4,a5,a6,a7) {
   try {
@@ -12005,19 +10109,6 @@ function jsCall_iiiii(index,a1,a2,a3,a4) {
     return Runtime.functionPointers[index](a1,a2,a3,a4);
 }
 
-function invoke_viiid(index,a1,a2,a3,a4) {
-  try {
-    Module["dynCall_viiid"](index,a1,a2,a3,a4);
-  } catch(e) {
-    if (typeof e !== 'number' && e !== 'longjmp') throw e;
-    Module["setThrew"](1, 0);
-  }
-}
-
-function jsCall_viiid(index,a1,a2,a3,a4) {
-    Runtime.functionPointers[index](a1,a2,a3,a4);
-}
-
 function invoke_iiiiij(index,a1,a2,a3,a4,a5,a6) {
   try {
     return Module["dynCall_iiiiij"](index,a1,a2,a3,a4,a5,a6);
@@ -12098,123 +10189,847 @@ function jsCall_viiii(index,a1,a2,a3,a4) {
 
 Module.asmGlobalArg = { "Math": Math, "Int8Array": Int8Array, "Int16Array": Int16Array, "Int32Array": Int32Array, "Uint8Array": Uint8Array, "Uint16Array": Uint16Array, "Uint32Array": Uint32Array, "Float32Array": Float32Array, "Float64Array": Float64Array, "NaN": NaN, "Infinity": Infinity, "byteLength": byteLength };
 
-Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "invoke_iiiiiiii": invoke_iiiiiiii, "jsCall_iiiiiiii": jsCall_iiiiiiii, "invoke_iiiiiid": invoke_iiiiiid, "jsCall_iiiiiid": jsCall_iiiiiid, "invoke_vif": invoke_vif, "jsCall_vif": jsCall_vif, "invoke_viiiii": invoke_viiiii, "jsCall_viiiii": jsCall_viiiii, "invoke_vi": invoke_vi, "jsCall_vi": jsCall_vi, "invoke_vii": invoke_vii, "jsCall_vii": jsCall_vii, "invoke_iiiiiii": invoke_iiiiiii, "jsCall_iiiiiii": jsCall_iiiiiii, "invoke_ii": invoke_ii, "jsCall_ii": jsCall_ii, "invoke_viijii": invoke_viijii, "jsCall_viijii": jsCall_viijii, "invoke_ffi": invoke_ffi, "jsCall_ffi": jsCall_ffi, "invoke_viiif": invoke_viiif, "jsCall_viiif": jsCall_viiif, "invoke_if": invoke_if, "jsCall_if": jsCall_if, "invoke_iiiiiiiiii": invoke_iiiiiiiiii, "jsCall_iiiiiiiiii": jsCall_iiiiiiiiii, "invoke_iiii": invoke_iiii, "jsCall_iiii": jsCall_iiii, "invoke_iiij": invoke_iiij, "jsCall_iiij": jsCall_iiij, "invoke_fif": invoke_fif, "jsCall_fif": jsCall_fif, "invoke_viiiffff": invoke_viiiffff, "jsCall_viiiffff": jsCall_viiiffff, "invoke_viiiiif": invoke_viiiiif, "jsCall_viiiiif": jsCall_viiiiif, "invoke_fii": invoke_fii, "jsCall_fii": jsCall_fii, "invoke_iiid": invoke_iiid, "jsCall_iiid": jsCall_iiid, "invoke_fiii": invoke_fiii, "jsCall_fiii": jsCall_fiii, "invoke_di": invoke_di, "jsCall_di": jsCall_di, "invoke_iiiiiiiiiii": invoke_iiiiiiiiiii, "jsCall_iiiiiiiiiii": jsCall_iiiiiiiiiii, "invoke_v": invoke_v, "jsCall_v": jsCall_v, "invoke_iif": invoke_iif, "jsCall_iif": jsCall_iif, "invoke_ji": invoke_ji, "jsCall_ji": jsCall_ji, "invoke_fi": invoke_fi, "jsCall_fi": jsCall_fi, "invoke_iii": invoke_iii, "jsCall_iii": jsCall_iii, "invoke_iiiiii": invoke_iiiiii, "jsCall_iiiiii": jsCall_iiiiii, "invoke_viiiiii": invoke_viiiiii, "jsCall_viiiiii": jsCall_viiiiii, "invoke_dii": invoke_dii, "jsCall_dii": jsCall_dii, "invoke_viiiiiii": invoke_viiiiiii, "jsCall_viiiiiii": jsCall_viiiiiii, "invoke_i": invoke_i, "jsCall_i": jsCall_i, "invoke_iiiii": invoke_iiiii, "jsCall_iiiii": jsCall_iiiii, "invoke_viiid": invoke_viiid, "jsCall_viiid": jsCall_viiid, "invoke_iiiiij": invoke_iiiiij, "jsCall_iiiiij": jsCall_iiiiij, "invoke_viii": invoke_viii, "jsCall_viii": jsCall_viii, "invoke_iiiiiiiiiifii": invoke_iiiiiiiiiifii, "jsCall_iiiiiiiiiifii": jsCall_iiiiiiiiiifii, "invoke_iiiiiiiii": invoke_iiiiiiiii, "jsCall_iiiiiiiii": jsCall_iiiiiiiii, "invoke_iiiiid": invoke_iiiiid, "jsCall_iiiiid": jsCall_iiiiid, "invoke_viiii": invoke_viiii, "jsCall_viiii": jsCall_viiii, "___syscall221": ___syscall221, "___syscall220": ___syscall220, "__inet_ntop6_raw": __inet_ntop6_raw, "___syscall66": ___syscall66, "___syscall64": ___syscall64, "___syscall63": ___syscall63, "___syscall60": ___syscall60, "___muldc3": ___muldc3, "___syscall212": ___syscall212, "_SDL_RWFromFile": _SDL_RWFromFile, "_atexit": _atexit, "_putenv": _putenv, "___assert_fail": ___assert_fail, "__ZSt18uncaught_exceptionv": __ZSt18uncaught_exceptionv, "_longjmp": _longjmp, "__write_sockaddr": __write_sockaddr, "_llvm_exp2_f64": _llvm_exp2_f64, "__addDays": __addDays, "_TTF_FontHeight": _TTF_FontHeight, "_SDL_GetError": _SDL_GetError, "_llvm_pow_f64": _llvm_pow_f64, "_setgrent": _setgrent, "___syscall331": ___syscall331, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_dag_end_task": _dag_end_task, "_SDL_OpenAudio": _SDL_OpenAudio, "_sigfillset": _sigfillset, "___cxa_begin_catch": ___cxa_begin_catch, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_getnameinfo": _getnameinfo, "___syscall152": ___syscall152, "_execl": _execl, "___syscall150": ___syscall150, "_clock": _clock, "_Mix_PlayMusic": _Mix_PlayMusic, "___syscall163": ___syscall163, "_pthread_setcancelstate": _pthread_setcancelstate, "___syscall75": ___syscall75, "___restore_sigs": ___restore_sigs, "___syscall77": ___syscall77, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_IMG_Load": _IMG_Load, "_Mix_FreeChunk": _Mix_FreeChunk, "__isLeapYear": __isLeapYear, "_globallock": _globallock, "___cxa_atexit": ___cxa_atexit, "_gmtime_r": _gmtime_r, "___syscall153": ___syscall153, "___cxa_rethrow": ___cxa_rethrow, "_pthread_cleanup_push": _pthread_cleanup_push, "___syscall306": ___syscall306, "___syscall307": ___syscall307, "_Mix_HaltMusic": _Mix_HaltMusic, "_inet_addr": _inet_addr, "___syscall302": ___syscall302, "___syscall303": ___syscall303, "___syscall300": ___syscall300, "___syscall301": ___syscall301, "___syscall140": ___syscall140, "___syscall142": ___syscall142, "_posix_spawn_file_actions_adddup2": _posix_spawn_file_actions_adddup2, "___syscall144": ___syscall144, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall147": ___syscall147, "_pthread_cleanup_pop": _pthread_cleanup_pop, "___syscall85": ___syscall85, "_csp_barrier_alloc": _csp_barrier_alloc, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "___syscall83": ___syscall83, "_pthread_cond_timedwait": _pthread_cond_timedwait, "___syscall132": ___syscall132, "___syscall125": ___syscall125, "___syscall122": ___syscall122, "___syscall121": ___syscall121, "___syscall118": ___syscall118, "___syscall268": ___syscall268, "_SDL_GetTicks": _SDL_GetTicks, "__arraySum": __arraySum, "_llvm_stackrestore": _llvm_stackrestore, "___cxa_free_exception": ___cxa_free_exception, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___syscall148": ___syscall148, "___clone": ___clone, "_SDL_LockSurface": _SDL_LockSurface, "_wait": _wait, "___setErrNo": ___setErrNo, "___syscall333": ___syscall333, "_llvm_pow_f32": _llvm_pow_f32, "___syscall330": ___syscall330, "___syscall337": ___syscall337, "___syscall304": ___syscall304, "___syscall334": ___syscall334, "___resumeException": ___resumeException, "__read_sockaddr": __read_sockaddr, "_mktime": _mktime, "___syscall97": ___syscall97, "___syscall96": ___syscall96, "___syscall94": ___syscall94, "_nanosleep": _nanosleep, "___syscall91": ___syscall91, "_gmtime": _gmtime, "_setgroups": _setgroups, "_kill": _kill, "___syscall114": ___syscall114, "___syscall305": ___syscall305, "_pthread_once": _pthread_once, "___syscall181": ___syscall181, "_res_query": _res_query, "___syscall15": ___syscall15, "___syscall14": ___syscall14, "_pthread_detach": _pthread_detach, "_emscripten_get_now": _emscripten_get_now, "___syscall10": ___syscall10, "___syscall9": ___syscall9, "_pthread_sigmask": _pthread_sigmask, "_TTF_SizeText": _TTF_SizeText, "___syscall3": ___syscall3, "_asctime": _asctime, "___syscall1": ___syscall1, "_clock_gettime": _clock_gettime, "_llvm_exp2_f32": _llvm_exp2_f32, "___syscall6": ___syscall6, "___syscall5": ___syscall5, "___clock_gettime": ___clock_gettime, "_time": _time, "_gettimeofday": _gettimeofday, "___syscall308": ___syscall308, "___syscall209": ___syscall209, "_SDL_UpperBlitScaled": _SDL_UpperBlitScaled, "___syscall205": ___syscall205, "___syscall204": ___syscall204, "___syscall203": ___syscall203, "___syscall202": ___syscall202, "___syscall201": ___syscall201, "___syscall200": ___syscall200, "___block_all_sigs": ___block_all_sigs, "__inet_pton4_raw": __inet_pton4_raw, "___syscall269": ___syscall269, "_pthread_join": _pthread_join, "___syscall102": ___syscall102, "_setitimer": _setitimer, "___syscall54": ___syscall54, "_sched_yield": _sched_yield, "_getgrent": _getgrent, "___syscall29": ___syscall29, "_csoundModuleInit_ftsamplebank": _csoundModuleInit_ftsamplebank, "___syscall20": ___syscall20, "___cxa_allocate_exception": ___cxa_allocate_exception, "___syscall183": ___syscall183, "___buildEnvironment": ___buildEnvironment, "___syscall295": ___syscall295, "___syscall296": ___syscall296, "___syscall192": ___syscall192, "___syscall298": ___syscall298, "___cxa_increment_exception_refcount": ___cxa_increment_exception_refcount, "_localtime_r": _localtime_r, "_tzset": _tzset, "___syscall12": ___syscall12, "___syscall218": ___syscall218, "___syscall219": ___syscall219, "___syscall191": ___syscall191, "___syscall197": ___syscall197, "___syscall196": ___syscall196, "___syscall195": ___syscall195, "___syscall194": ___syscall194, "___syscall211": ___syscall211, "___syscall199": ___syscall199, "___syscall198": ___syscall198, "___syscall214": ___syscall214, "___cxa_current_primary_exception": ___cxa_current_primary_exception, "_Mix_PlayChannel": _Mix_PlayChannel, "_strftime": _strftime, "_TTF_RenderText_Solid": _TTF_RenderText_Solid, "_pthread_cond_signal": _pthread_cond_signal, "___cxa_end_catch": ___cxa_end_catch, "___syscall272": ___syscall272, "_getenv": _getenv, "___syscall36": ___syscall36, "___map_file": ___map_file, "___syscall33": ___syscall33, "_pthread_key_create": _pthread_key_create, "_pthread_setspecific": _pthread_setspecific, "__inet_ntop4_raw": __inet_ntop4_raw, "___syscall39": ___syscall39, "___syscall38": ___syscall38, "_sysconf": _sysconf, "___syscall340": ___syscall340, "___syscall180": ___syscall180, "_abort": _abort, "___syscall345": ___syscall345, "___syscall324": ___syscall324, "___syscall151": ___syscall151, "_localtime": _localtime, "___mulsc3": ___mulsc3, "___cxa_pure_virtual": ___cxa_pure_virtual, "_waitpid": _waitpid, "_pthread_getspecific": _pthread_getspecific, "_pthread_cond_wait": _pthread_cond_wait, "___lock": ___lock, "___syscall320": ___syscall320, "___syscall168": ___syscall168, "_dag_build": _dag_build, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "_SDL_CloseAudio": _SDL_CloseAudio, "_fork": _fork, "___gxx_personality_v0": ___gxx_personality_v0, "_asctime_r": _asctime_r, "__inet_pton6_raw": __inet_pton6_raw, "___syscall4": ___syscall4, "_usleep": _usleep, "___syscall193": ___syscall193, "___syscall297": ___syscall297, "_system": _system, "___cxa_decrement_exception_refcount": ___cxa_decrement_exception_refcount, "_SDL_FreeRW": _SDL_FreeRW, "_strftime_l": _strftime_l, "_SDL_PauseAudio": _SDL_PauseAudio, "_dag_reinit": _dag_reinit, "_Mix_LoadWAV_RW": _Mix_LoadWAV_RW, "__exit": __exit, "_pthread_equal": _pthread_equal, "_IMG_Load_RW": _IMG_Load_RW, "_posix_spawn_file_actions_init": _posix_spawn_file_actions_init, "___cxa_rethrow_primary_exception": ___cxa_rethrow_primary_exception, "_pthread_mutex_destroy": _pthread_mutex_destroy, "_globalunlock": _globalunlock, "_posix_spawn": _posix_spawn, "_llvm_stacksave": _llvm_stacksave, "___syscall207": ___syscall207, "___syscall51": ___syscall51, "___syscall57": ___syscall57, "___syscall133": ___syscall133, "_endgrent": _endgrent, "___unlock": ___unlock, "_dag_get_task": _dag_get_task, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_exit": _exit, "___syscall34": ___syscall34, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_csp_orc_sa_print_list": _csp_orc_sa_print_list, "_llvm_fma_f64": _llvm_fma_f64, "___cxa_throw": ___cxa_throw, "_posix_spawn_file_actions_destroy": _posix_spawn_file_actions_destroy, "___wait": ___wait, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_SDL_UpperBlit": _SDL_UpperBlit, "_pthread_mutex_init": _pthread_mutex_init, "_SDL_RWFromConstMem": _SDL_RWFromConstMem, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "___dso_handle": ___dso_handle, "___environ": ___environ };
+Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_vif": nullFunc_vif, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_vi": nullFunc_vi, "nullFunc_vii": nullFunc_vii, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_ii": nullFunc_ii, "nullFunc_viijii": nullFunc_viijii, "nullFunc_ffi": nullFunc_ffi, "nullFunc_viiif": nullFunc_viiif, "nullFunc_if": nullFunc_if, "nullFunc_iiiiiiiiii": nullFunc_iiiiiiiiii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiij": nullFunc_iiij, "nullFunc_fif": nullFunc_fif, "nullFunc_viiiffff": nullFunc_viiiffff, "nullFunc_viiiiif": nullFunc_viiiiif, "nullFunc_fii": nullFunc_fii, "nullFunc_iiid": nullFunc_iiid, "nullFunc_fiii": nullFunc_fiii, "nullFunc_di": nullFunc_di, "nullFunc_iiiiiiiiiii": nullFunc_iiiiiiiiiii, "nullFunc_v": nullFunc_v, "nullFunc_iif": nullFunc_iif, "nullFunc_ji": nullFunc_ji, "nullFunc_fi": nullFunc_fi, "nullFunc_iii": nullFunc_iii, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_dii": nullFunc_dii, "nullFunc_viiiiiii": nullFunc_viiiiiii, "nullFunc_i": nullFunc_i, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_viii": nullFunc_viii, "nullFunc_iiiiiiiiiifii": nullFunc_iiiiiiiiiifii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_viiii": nullFunc_viiii, "invoke_iiiiiiii": invoke_iiiiiiii, "jsCall_iiiiiiii": jsCall_iiiiiiii, "invoke_iiiiiid": invoke_iiiiiid, "jsCall_iiiiiid": jsCall_iiiiiid, "invoke_vif": invoke_vif, "jsCall_vif": jsCall_vif, "invoke_viiiii": invoke_viiiii, "jsCall_viiiii": jsCall_viiiii, "invoke_vi": invoke_vi, "jsCall_vi": jsCall_vi, "invoke_vii": invoke_vii, "jsCall_vii": jsCall_vii, "invoke_iiiiiii": invoke_iiiiiii, "jsCall_iiiiiii": jsCall_iiiiiii, "invoke_ii": invoke_ii, "jsCall_ii": jsCall_ii, "invoke_viijii": invoke_viijii, "jsCall_viijii": jsCall_viijii, "invoke_ffi": invoke_ffi, "jsCall_ffi": jsCall_ffi, "invoke_viiif": invoke_viiif, "jsCall_viiif": jsCall_viiif, "invoke_if": invoke_if, "jsCall_if": jsCall_if, "invoke_iiiiiiiiii": invoke_iiiiiiiiii, "jsCall_iiiiiiiiii": jsCall_iiiiiiiiii, "invoke_iiii": invoke_iiii, "jsCall_iiii": jsCall_iiii, "invoke_iiij": invoke_iiij, "jsCall_iiij": jsCall_iiij, "invoke_fif": invoke_fif, "jsCall_fif": jsCall_fif, "invoke_viiiffff": invoke_viiiffff, "jsCall_viiiffff": jsCall_viiiffff, "invoke_viiiiif": invoke_viiiiif, "jsCall_viiiiif": jsCall_viiiiif, "invoke_fii": invoke_fii, "jsCall_fii": jsCall_fii, "invoke_iiid": invoke_iiid, "jsCall_iiid": jsCall_iiid, "invoke_fiii": invoke_fiii, "jsCall_fiii": jsCall_fiii, "invoke_di": invoke_di, "jsCall_di": jsCall_di, "invoke_iiiiiiiiiii": invoke_iiiiiiiiiii, "jsCall_iiiiiiiiiii": jsCall_iiiiiiiiiii, "invoke_v": invoke_v, "jsCall_v": jsCall_v, "invoke_iif": invoke_iif, "jsCall_iif": jsCall_iif, "invoke_ji": invoke_ji, "jsCall_ji": jsCall_ji, "invoke_fi": invoke_fi, "jsCall_fi": jsCall_fi, "invoke_iii": invoke_iii, "jsCall_iii": jsCall_iii, "invoke_iiiiii": invoke_iiiiii, "jsCall_iiiiii": jsCall_iiiiii, "invoke_viiiiii": invoke_viiiiii, "jsCall_viiiiii": jsCall_viiiiii, "invoke_dii": invoke_dii, "jsCall_dii": jsCall_dii, "invoke_viiiiiii": invoke_viiiiiii, "jsCall_viiiiiii": jsCall_viiiiiii, "invoke_i": invoke_i, "jsCall_i": jsCall_i, "invoke_iiiii": invoke_iiiii, "jsCall_iiiii": jsCall_iiiii, "invoke_iiiiij": invoke_iiiiij, "jsCall_iiiiij": jsCall_iiiiij, "invoke_viii": invoke_viii, "jsCall_viii": jsCall_viii, "invoke_iiiiiiiiiifii": invoke_iiiiiiiiiifii, "jsCall_iiiiiiiiiifii": jsCall_iiiiiiiiiifii, "invoke_iiiiiiiii": invoke_iiiiiiiii, "jsCall_iiiiiiiii": jsCall_iiiiiiiii, "invoke_iiiiid": invoke_iiiiid, "jsCall_iiiiid": jsCall_iiiiid, "invoke_viiii": invoke_viiii, "jsCall_viiii": jsCall_viiii, "___syscall221": ___syscall221, "___syscall220": ___syscall220, "_strftime_l": _strftime_l, "__inet_ntop6_raw": __inet_ntop6_raw, "___syscall66": ___syscall66, "_psf_log_printf": _psf_log_printf, "___syscall63": ___syscall63, "___syscall60": ___syscall60, "_wait": _wait, "___muldc3": ___muldc3, "_msadpcm_write_adapt_coeffs": _msadpcm_write_adapt_coeffs, "___setErrNo": ___setErrNo, "___assert_fail": ___assert_fail, "_psf_get_filelen": _psf_get_filelen, "__ZSt18uncaught_exceptionv": __ZSt18uncaught_exceptionv, "_longjmp": _longjmp, "__write_sockaddr": __write_sockaddr, "_llvm_exp2_f64": _llvm_exp2_f64, "__addDays": __addDays, "_setitimer": _setitimer, "_setgrent": _setgrent, "_llvm_pow_f32": _llvm_pow_f32, "_pthread_cond_destroy": _pthread_cond_destroy, "_psf_fwrite": _psf_fwrite, "_dag_end_task": _dag_end_task, "_aiff_caf_find_channel_layout_tag": _aiff_caf_find_channel_layout_tag, "_sigfillset": _sigfillset, "_endgrent": _endgrent, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_psf_fread": _psf_fread, "___syscall153": ___syscall153, "___syscall64": ___syscall64, "_execl": _execl, "___syscall150": ___syscall150, "_clock": _clock, "___cxa_throw": ___cxa_throw, "_abort": _abort, "_pthread_setcancelstate": _pthread_setcancelstate, "___syscall75": ___syscall75, "_llvm_stacksave": _llvm_stacksave, "___syscall77": ___syscall77, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_dag_get_task": _dag_get_task, "__isLeapYear": __isLeapYear, "_psf_location_string_count": _psf_location_string_count, "_globallock": _globallock, "_gmtime_r": _gmtime_r, "___cxa_atexit": ___cxa_atexit, "_psf_set_stdio": _psf_set_stdio, "___syscall125": ___syscall125, "_psf_ftruncate": _psf_ftruncate, "_csp_barrier_alloc": _csp_barrier_alloc, "_gsm610_init": _gsm610_init, "_pthread_cleanup_push": _pthread_cleanup_push, "_sysconf": _sysconf, "___syscall306": ___syscall306, "___syscall307": ___syscall307, "___syscall304": ___syscall304, "___syscall305": ___syscall305, "___syscall302": ___syscall302, "___syscall303": ___syscall303, "___syscall300": ___syscall300, "___syscall301": ___syscall301, "___syscall140": ___syscall140, "_pthread_cond_timedwait": _pthread_cond_timedwait, "___syscall142": ___syscall142, "_pthread_sigmask": _pthread_sigmask, "___syscall144": ___syscall144, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall147": ___syscall147, "___block_all_sigs": ___block_all_sigs, "___syscall85": ___syscall85, "___cxa_rethrow": ___cxa_rethrow, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "___syscall83": ___syscall83, "_double64_be_read": _double64_be_read, "_psf_get_format_subtype": _psf_get_format_subtype, "___syscall122": ___syscall122, "_broadcast_var_set": _broadcast_var_set, "___syscall121": ___syscall121, "_broadcast_var_alloc": _broadcast_var_alloc, "___syscall118": ___syscall118, "___syscall268": ___syscall268, "_nanosleep": _nanosleep, "_llvm_stackrestore": _llvm_stackrestore, "___cxa_free_exception": ___cxa_free_exception, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "_psf_sanitize_string": _psf_sanitize_string, "_psf_get_format_subtype_count": _psf_get_format_subtype_count, "___clone": ___clone, "_psf_set_file": _psf_set_file, "_psf_init_files": _psf_init_files, "_psf_store_string": _psf_store_string, "_psf_rand_int32": _psf_rand_int32, "___syscall333": ___syscall333, "_append_snprintf": _append_snprintf, "___syscall331": ___syscall331, "___syscall330": ___syscall330, "___syscall337": ___syscall337, "_wav_w64_msadpcm_init": _wav_w64_msadpcm_init, "___syscall334": ___syscall334, "___resumeException": ___resumeException, "_psf_default_seek": _psf_default_seek, "_mktime": _mktime, "___syscall97": ___syscall97, "___syscall96": ___syscall96, "___syscall94": ___syscall94, "_psf_binheader_readf": _psf_binheader_readf, "___syscall91": ___syscall91, "_gmtime": _gmtime, "_dwvw_init": _dwvw_init, "_setgroups": _setgroups, "_pthread_mutex_destroy": _pthread_mutex_destroy, "_kill": _kill, "___syscall114": ___syscall114, "___syscall163": ___syscall163, "_psf_get_string": _psf_get_string, "_pthread_once": _pthread_once, "_res_query": _res_query, "___syscall15": ___syscall15, "___syscall14": ___syscall14, "_pthread_detach": _pthread_detach, "_emscripten_get_now": _emscripten_get_now, "___syscall10": ___syscall10, "___syscall9": ___syscall9, "_posix_spawn_file_actions_adddup2": _posix_spawn_file_actions_adddup2, "___syscall3": ___syscall3, "___syscall148": ___syscall148, "___syscall1": ___syscall1, "_clock_gettime": _clock_gettime, "_llvm_exp2_f32": _llvm_exp2_f32, "___syscall6": ___syscall6, "___syscall5": ___syscall5, "___clock_gettime": ___clock_gettime, "_double64_be_write": _double64_be_write, "_time": _time, "_gettimeofday": _gettimeofday, "___syscall308": ___syscall308, "___syscall209": ___syscall209, "___syscall207": ___syscall207, "___syscall205": ___syscall205, "___syscall204": ___syscall204, "___syscall203": ___syscall203, "___syscall202": ___syscall202, "___syscall201": ___syscall201, "___syscall200": ___syscall200, "_pthread_cleanup_pop": _pthread_cleanup_pop, "__inet_pton4_raw": __inet_pton4_raw, "___syscall269": ___syscall269, "_pthread_join": _pthread_join, "___syscall102": ___syscall102, "_llvm_pow_f64": _llvm_pow_f64, "_psf_get_signal_max": _psf_get_signal_max, "_psf_use_rsrc": _psf_use_rsrc, "_psf_asciiheader_printf": _psf_asciiheader_printf, "_sched_yield": _sched_yield, "_tzset": _tzset, "_getgrent": _getgrent, "___unlock": ___unlock, "___syscall29": ___syscall29, "_csoundModuleInit_ftsamplebank": _csoundModuleInit_ftsamplebank, "___syscall211": ___syscall211, "___syscall20": ___syscall20, "___cxa_allocate_exception": ___cxa_allocate_exception, "___syscall183": ___syscall183, "___syscall193": ___syscall193, "_psf_get_format_major": _psf_get_format_major, "_psf_memset": _psf_memset, "___syscall295": ___syscall295, "___syscall296": ___syscall296, "___syscall297": ___syscall297, "___syscall298": ___syscall298, "___cxa_increment_exception_refcount": ___cxa_increment_exception_refcount, "_localtime_r": _localtime_r, "_psf_instrument_alloc": _psf_instrument_alloc, "___syscall12": ___syscall12, "___syscall218": ___syscall218, "___syscall219": ___syscall219, "___syscall191": ___syscall191, "___syscall197": ___syscall197, "___syscall196": ___syscall196, "___syscall195": ___syscall195, "___cxa_end_catch": ___cxa_end_catch, "_aiff_caf_of_channel_layout_tag": _aiff_caf_of_channel_layout_tag, "___syscall212": ___syscall212, "___syscall198": ___syscall198, "___syscall214": ___syscall214, "___cxa_current_primary_exception": ___cxa_current_primary_exception, "___cxa_begin_catch": ___cxa_begin_catch, "_strftime": _strftime, "_pchk4_store": _pchk4_store, "_vox_adpcm_init": _vox_adpcm_init, "_pthread_cond_signal": _pthread_cond_signal, "___syscall34": ___syscall34, "___syscall194": ___syscall194, "___syscall272": ___syscall272, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_getenv": _getenv, "___syscall36": ___syscall36, "_ogg_open": _ogg_open, "___syscall33": ___syscall33, "_pthread_key_create": _pthread_key_create, "_csp_orc_sa_print_list": _csp_orc_sa_print_list, "__inet_ntop4_raw": __inet_ntop4_raw, "___syscall39": ___syscall39, "___syscall38": ___syscall38, "_ulaw_init": _ulaw_init, "_psf_calc_max_all_channels": _psf_calc_max_all_channels, "_psf_get_format_info": _psf_get_format_info, "_getnameinfo": _getnameinfo, "___syscall340": ___syscall340, "_psf_fopen": _psf_fopen, "___syscall180": ___syscall180, "___syscall181": ___syscall181, "___syscall345": ___syscall345, "___syscall324": ___syscall324, "___syscall151": ___syscall151, "_asctime": _asctime, "_localtime": _localtime, "_psf_open_rsrc": _psf_open_rsrc, "___mulsc3": ___mulsc3, "_psf_fclose": _psf_fclose, "___cxa_pure_virtual": ___cxa_pure_virtual, "_waitpid": _waitpid, "_pthread_getspecific": _pthread_getspecific, "_pthread_cond_wait": _pthread_cond_wait, "___lock": ___lock, "___syscall4": ___syscall4, "_llvm_fma_f64": _llvm_fma_f64, "___syscall320": ___syscall320, "___syscall168": ___syscall168, "_float32_init": _float32_init, "___buildEnvironment": ___buildEnvironment, "_dag_build": _dag_build, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "_psf_get_date_str": _psf_get_date_str, "___syscall192": ___syscall192, "_fork": _fork, "___gxx_personality_v0": ___gxx_personality_v0, "__inet_pton6_raw": __inet_pton6_raw, "_psf_get_format_major_count": _psf_get_format_major_count, "__read_sockaddr": __read_sockaddr, "_usleep": _usleep, "_broadcast_var_get": _broadcast_var_get, "_pcm_init": _pcm_init, "_id3_skip": _id3_skip, "_system": _system, "_double64_init": _double64_init, "___cxa_decrement_exception_refcount": ___cxa_decrement_exception_refcount, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_psf_file_valid": _psf_file_valid, "_alaw_init": _alaw_init, "_dag_reinit": _dag_reinit, "_psf_get_format_simple_count": _psf_get_format_simple_count, "_psf_calc_signal_max": _psf_calc_signal_max, "___syscall152": ___syscall152, "_s_bitwidth_to_subformat": _s_bitwidth_to_subformat, "_psf_get_format_simple": _psf_get_format_simple, "__exit": __exit, "_psf_close_rsrc": _psf_close_rsrc, "_pthread_equal": _pthread_equal, "_posix_spawn_file_actions_init": _posix_spawn_file_actions_init, "_psf_get_max_all_channels": _psf_get_max_all_channels, "__arraySum": __arraySum, "_asctime_r": _asctime_r, "_globalunlock": _globalunlock, "_posix_spawn": _posix_spawn, "_psf_fsync": _psf_fsync, "___restore_sigs": ___restore_sigs, "___syscall51": ___syscall51, "___syscall57": ___syscall57, "___syscall133": ___syscall133, "___syscall54": ___syscall54, "_psf_binheader_writef": _psf_binheader_writef, "___syscall132": ___syscall132, "_exit": _exit, "_u_bitwidth_to_subformat": _u_bitwidth_to_subformat, "_psf_is_pipe": _psf_is_pipe, "_audio_detect": _audio_detect, "_pthread_setspecific": _pthread_setspecific, "_psf_ftell": _psf_ftell, "___syscall199": ___syscall199, "_dither_init": _dither_init, "_wav_w64_ima_init": _wav_w64_ima_init, "___cxa_rethrow_primary_exception": ___cxa_rethrow_primary_exception, "_psf_set_string": _psf_set_string, "___wait": ___wait, "_psf_fseek": _psf_fseek, "_posix_spawn_file_actions_destroy": _posix_spawn_file_actions_destroy, "_aiff_ima_init": _aiff_ima_init, "_atexit": _atexit, "_pthread_mutex_init": _pthread_mutex_init, "_inet_addr": _inet_addr, "_psf_log_SF_INFO": _psf_log_SF_INFO, "___map_file": ___map_file, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "___dso_handle": ___dso_handle, "___environ": ___environ };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
 
+var real__CsoundObj_setTable = asm["_CsoundObj_setTable"]; asm["_CsoundObj_setTable"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_setTable.apply(null, arguments);
+};
+
+var real__CsoundObj_getKsmps = asm["_CsoundObj_getKsmps"]; asm["_CsoundObj_getKsmps"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getKsmps.apply(null, arguments);
+};
+
+var real__CsoundObj_new = asm["_CsoundObj_new"]; asm["_CsoundObj_new"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_new.apply(null, arguments);
+};
+
+var real__strlen = asm["_strlen"]; asm["_strlen"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__strlen.apply(null, arguments);
+};
+
+var real__CsoundObj_reset = asm["_CsoundObj_reset"]; asm["_CsoundObj_reset"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_reset.apply(null, arguments);
+};
+
+var real__CsoundObj_closeAudioOut = asm["_CsoundObj_closeAudioOut"]; asm["_CsoundObj_closeAudioOut"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_closeAudioOut.apply(null, arguments);
+};
+
+var real__CsoundObj_getInputBuffer = asm["_CsoundObj_getInputBuffer"]; asm["_CsoundObj_getInputBuffer"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getInputBuffer.apply(null, arguments);
+};
+
+var real__CsoundObj_destroy = asm["_CsoundObj_destroy"]; asm["_CsoundObj_destroy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_destroy.apply(null, arguments);
+};
+
+var real__CsoundObj_render = asm["_CsoundObj_render"]; asm["_CsoundObj_render"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_render.apply(null, arguments);
+};
+
+var real__CsoundObj_prepareRT = asm["_CsoundObj_prepareRT"]; asm["_CsoundObj_prepareRT"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_prepareRT.apply(null, arguments);
+};
+
+var real__CsoundObj_midiInClose = asm["_CsoundObj_midiInClose"]; asm["_CsoundObj_midiInClose"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_midiInClose.apply(null, arguments);
+};
+
+var real__pthread_mutex_trylock = asm["_pthread_mutex_trylock"]; asm["_pthread_mutex_trylock"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__pthread_mutex_trylock.apply(null, arguments);
+};
+
+var real__CsoundObj_pause = asm["_CsoundObj_pause"]; asm["_CsoundObj_pause"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_pause.apply(null, arguments);
+};
+
+var real__CsoundObj_compileOrc = asm["_CsoundObj_compileOrc"]; asm["_CsoundObj_compileOrc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_compileOrc.apply(null, arguments);
+};
+
+var real__fflush = asm["_fflush"]; asm["_fflush"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__fflush.apply(null, arguments);
+};
+
+var real_setTempRet0 = asm["setTempRet0"]; asm["setTempRet0"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_setTempRet0.apply(null, arguments);
+};
+
+var real_setThrew = asm["setThrew"]; asm["setThrew"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_setThrew.apply(null, arguments);
+};
+
+var real__CsoundObj_compileCSD = asm["_CsoundObj_compileCSD"]; asm["_CsoundObj_compileCSD"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_compileCSD.apply(null, arguments);
+};
+
+var real_stackRestore = asm["stackRestore"]; asm["stackRestore"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_stackRestore.apply(null, arguments);
+};
+
+var real__CsoundObj_setMidiCallbacks = asm["_CsoundObj_setMidiCallbacks"]; asm["_CsoundObj_setMidiCallbacks"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_setMidiCallbacks.apply(null, arguments);
+};
+
+var real__sbrk = asm["_sbrk"]; asm["_sbrk"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__sbrk.apply(null, arguments);
+};
+
+var real__CsoundObj_play = asm["_CsoundObj_play"]; asm["_CsoundObj_play"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_play.apply(null, arguments);
+};
+
+var real____errno_location = asm["___errno_location"]; asm["___errno_location"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real____errno_location.apply(null, arguments);
+};
+
+var real__CsoundObj_setStringChannel = asm["_CsoundObj_setStringChannel"]; asm["_CsoundObj_setStringChannel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_setStringChannel.apply(null, arguments);
+};
+
+var real__CsoundObj_getOutputChannelCount = asm["_CsoundObj_getOutputChannelCount"]; asm["_CsoundObj_getOutputChannelCount"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getOutputChannelCount.apply(null, arguments);
+};
+
+var real__CsoundObj_getTableLength = asm["_CsoundObj_getTableLength"]; asm["_CsoundObj_getTableLength"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getTableLength.apply(null, arguments);
+};
+
+var real_stackAlloc = asm["stackAlloc"]; asm["stackAlloc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_stackAlloc.apply(null, arguments);
+};
+
+var real__CsoundObj_evaluateCode = asm["_CsoundObj_evaluateCode"]; asm["_CsoundObj_evaluateCode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_evaluateCode.apply(null, arguments);
+};
+
+var real_stackSave = asm["stackSave"]; asm["stackSave"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_stackSave.apply(null, arguments);
+};
+
+var real_getTempRet0 = asm["getTempRet0"]; asm["getTempRet0"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_getTempRet0.apply(null, arguments);
+};
+
+var real__ntohs = asm["_ntohs"]; asm["_ntohs"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__ntohs.apply(null, arguments);
+};
+
+var real__htonl = asm["_htonl"]; asm["_htonl"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__htonl.apply(null, arguments);
+};
+
+var real__realloc = asm["_realloc"]; asm["_realloc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__realloc.apply(null, arguments);
+};
+
+var real__CsoundObj_getScoreTime = asm["_CsoundObj_getScoreTime"]; asm["_CsoundObj_getScoreTime"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getScoreTime.apply(null, arguments);
+};
+
+var real__pthread_mutex_unlock = asm["_pthread_mutex_unlock"]; asm["_pthread_mutex_unlock"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__pthread_mutex_unlock.apply(null, arguments);
+};
+
+var real__CsoundObj_midiInOpen = asm["_CsoundObj_midiInOpen"]; asm["_CsoundObj_midiInOpen"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_midiInOpen.apply(null, arguments);
+};
+
+var real___GLOBAL__I_000101 = asm["__GLOBAL__I_000101"]; asm["__GLOBAL__I_000101"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real___GLOBAL__I_000101.apply(null, arguments);
+};
+
+var real__llvm_bswap_i16 = asm["_llvm_bswap_i16"]; asm["_llvm_bswap_i16"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__llvm_bswap_i16.apply(null, arguments);
+};
+
+var real__emscripten_get_global_libc = asm["_emscripten_get_global_libc"]; asm["_emscripten_get_global_libc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__emscripten_get_global_libc.apply(null, arguments);
+};
+
+var real__CsoundObj_readScore = asm["_CsoundObj_readScore"]; asm["_CsoundObj_readScore"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_readScore.apply(null, arguments);
+};
+
+var real___GLOBAL__sub_I_iostream_cpp = asm["__GLOBAL__sub_I_iostream_cpp"]; asm["__GLOBAL__sub_I_iostream_cpp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real___GLOBAL__sub_I_iostream_cpp.apply(null, arguments);
+};
+
+var real__htons = asm["_htons"]; asm["_htons"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__htons.apply(null, arguments);
+};
+
+var real__pthread_cond_broadcast = asm["_pthread_cond_broadcast"]; asm["_pthread_cond_broadcast"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__pthread_cond_broadcast.apply(null, arguments);
+};
+
+var real__CsoundObj_getInputChannelCount = asm["_CsoundObj_getInputChannelCount"]; asm["_CsoundObj_getInputChannelCount"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getInputChannelCount.apply(null, arguments);
+};
+
+var real__llvm_bswap_i32 = asm["_llvm_bswap_i32"]; asm["_llvm_bswap_i32"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__llvm_bswap_i32.apply(null, arguments);
+};
+
+var real__CsoundObj_getControlChannel = asm["_CsoundObj_getControlChannel"]; asm["_CsoundObj_getControlChannel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getControlChannel.apply(null, arguments);
+};
+
+var real__CsoundObj_openAudioOut = asm["_CsoundObj_openAudioOut"]; asm["_CsoundObj_openAudioOut"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_openAudioOut.apply(null, arguments);
+};
+
+var real__testSetjmp = asm["_testSetjmp"]; asm["_testSetjmp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__testSetjmp.apply(null, arguments);
+};
+
+var real__saveSetjmp = asm["_saveSetjmp"]; asm["_saveSetjmp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__saveSetjmp.apply(null, arguments);
+};
+
+var real__free = asm["_free"]; asm["_free"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__free.apply(null, arguments);
+};
+
+var real____cxa_can_catch = asm["___cxa_can_catch"]; asm["___cxa_can_catch"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real____cxa_can_catch.apply(null, arguments);
+};
+
+var real__CsoundObj_getTable = asm["_CsoundObj_getTable"]; asm["_CsoundObj_getTable"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getTable.apply(null, arguments);
+};
+
+var real__round = asm["_round"]; asm["_round"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__round.apply(null, arguments);
+};
+
+var real_establishStackSpace = asm["establishStackSpace"]; asm["establishStackSpace"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_establishStackSpace.apply(null, arguments);
+};
+
+var real__memmove = asm["_memmove"]; asm["_memmove"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__memmove.apply(null, arguments);
+};
+
+var real____cxa_is_pointer_type = asm["___cxa_is_pointer_type"]; asm["___cxa_is_pointer_type"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real____cxa_is_pointer_type.apply(null, arguments);
+};
+
+var real__CsoundObj_getZerodBFS = asm["_CsoundObj_getZerodBFS"]; asm["_CsoundObj_getZerodBFS"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getZerodBFS.apply(null, arguments);
+};
+
+var real__CsoundObj_pushMidiMessage = asm["_CsoundObj_pushMidiMessage"]; asm["_CsoundObj_pushMidiMessage"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_pushMidiMessage.apply(null, arguments);
+};
+
+var real__CsoundObj_setOutputChannelCallback = asm["_CsoundObj_setOutputChannelCallback"]; asm["_CsoundObj_setOutputChannelCallback"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_setOutputChannelCallback.apply(null, arguments);
+};
+
+var real__CsoundObj_getOutputBuffer = asm["_CsoundObj_getOutputBuffer"]; asm["_CsoundObj_getOutputBuffer"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_getOutputBuffer.apply(null, arguments);
+};
+
+var real__malloc = asm["_malloc"]; asm["_malloc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__malloc.apply(null, arguments);
+};
+
+var real__pthread_mutex_lock = asm["_pthread_mutex_lock"]; asm["_pthread_mutex_lock"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__pthread_mutex_lock.apply(null, arguments);
+};
+
+var real__CsoundObj_performKsmps = asm["_CsoundObj_performKsmps"]; asm["_CsoundObj_performKsmps"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_performKsmps.apply(null, arguments);
+};
+
+var real__roundf = asm["_roundf"]; asm["_roundf"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__roundf.apply(null, arguments);
+};
+
+var real__CsoundObj_setControlChannel = asm["_CsoundObj_setControlChannel"]; asm["_CsoundObj_setControlChannel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_setControlChannel.apply(null, arguments);
+};
+
+var real__CsoundObj_setOption = asm["_CsoundObj_setOption"]; asm["_CsoundObj_setOption"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__CsoundObj_setOption.apply(null, arguments);
+};
 Module["asm"] = asm;
-var _CsoundObj_setTable = Module["_CsoundObj_setTable"] = function() {  return Module["asm"]["_CsoundObj_setTable"].apply(null, arguments) };
-var _CsoundObj_getKsmps = Module["_CsoundObj_getKsmps"] = function() {  return Module["asm"]["_CsoundObj_getKsmps"].apply(null, arguments) };
-var runPostSets = Module["runPostSets"] = function() {  return Module["asm"]["runPostSets"].apply(null, arguments) };
-var _CsoundObj_new = Module["_CsoundObj_new"] = function() {  return Module["asm"]["_CsoundObj_new"].apply(null, arguments) };
-var _strlen = Module["_strlen"] = function() {  return Module["asm"]["_strlen"].apply(null, arguments) };
-var _CsoundObj_reset = Module["_CsoundObj_reset"] = function() {  return Module["asm"]["_CsoundObj_reset"].apply(null, arguments) };
-var _CsoundObj_pushMidiMessage = Module["_CsoundObj_pushMidiMessage"] = function() {  return Module["asm"]["_CsoundObj_pushMidiMessage"].apply(null, arguments) };
-var _CsoundObj_getInputBuffer = Module["_CsoundObj_getInputBuffer"] = function() {  return Module["asm"]["_CsoundObj_getInputBuffer"].apply(null, arguments) };
-var _CsoundObj_destroy = Module["_CsoundObj_destroy"] = function() {  return Module["asm"]["_CsoundObj_destroy"].apply(null, arguments) };
-var _CsoundObj_render = Module["_CsoundObj_render"] = function() {  return Module["asm"]["_CsoundObj_render"].apply(null, arguments) };
-var _CsoundObj_prepareRT = Module["_CsoundObj_prepareRT"] = function() {  return Module["asm"]["_CsoundObj_prepareRT"].apply(null, arguments) };
-var _pthread_mutex_trylock = Module["_pthread_mutex_trylock"] = function() {  return Module["asm"]["_pthread_mutex_trylock"].apply(null, arguments) };
-var _CsoundObj_pause = Module["_CsoundObj_pause"] = function() {  return Module["asm"]["_CsoundObj_pause"].apply(null, arguments) };
-var _CsoundObj_compileOrc = Module["_CsoundObj_compileOrc"] = function() {  return Module["asm"]["_CsoundObj_compileOrc"].apply(null, arguments) };
-var _fflush = Module["_fflush"] = function() {  return Module["asm"]["_fflush"].apply(null, arguments) };
-var setTempRet0 = Module["setTempRet0"] = function() {  return Module["asm"]["setTempRet0"].apply(null, arguments) };
-var setThrew = Module["setThrew"] = function() {  return Module["asm"]["setThrew"].apply(null, arguments) };
-var _CsoundObj_compileCSD = Module["_CsoundObj_compileCSD"] = function() {  return Module["asm"]["_CsoundObj_compileCSD"].apply(null, arguments) };
-var stackRestore = Module["stackRestore"] = function() {  return Module["asm"]["stackRestore"].apply(null, arguments) };
-var _CsoundObj_setMidiCallbacks = Module["_CsoundObj_setMidiCallbacks"] = function() {  return Module["asm"]["_CsoundObj_setMidiCallbacks"].apply(null, arguments) };
-var _memset = Module["_memset"] = function() {  return Module["asm"]["_memset"].apply(null, arguments) };
-var _sbrk = Module["_sbrk"] = function() {  return Module["asm"]["_sbrk"].apply(null, arguments) };
-var _memcpy = Module["_memcpy"] = function() {  return Module["asm"]["_memcpy"].apply(null, arguments) };
-var _CsoundObj_play = Module["_CsoundObj_play"] = function() {  return Module["asm"]["_CsoundObj_play"].apply(null, arguments) };
-var ___errno_location = Module["___errno_location"] = function() {  return Module["asm"]["___errno_location"].apply(null, arguments) };
-var _CsoundObj_setStringChannel = Module["_CsoundObj_setStringChannel"] = function() {  return Module["asm"]["_CsoundObj_setStringChannel"].apply(null, arguments) };
-var _CsoundObj_getOutputChannelCount = Module["_CsoundObj_getOutputChannelCount"] = function() {  return Module["asm"]["_CsoundObj_getOutputChannelCount"].apply(null, arguments) };
-var _CsoundObj_getTableLength = Module["_CsoundObj_getTableLength"] = function() {  return Module["asm"]["_CsoundObj_getTableLength"].apply(null, arguments) };
-var stackAlloc = Module["stackAlloc"] = function() {  return Module["asm"]["stackAlloc"].apply(null, arguments) };
-var _CsoundObj_evaluateCode = Module["_CsoundObj_evaluateCode"] = function() {  return Module["asm"]["_CsoundObj_evaluateCode"].apply(null, arguments) };
-var _CsoundObj_getOutputBuffer = Module["_CsoundObj_getOutputBuffer"] = function() {  return Module["asm"]["_CsoundObj_getOutputBuffer"].apply(null, arguments) };
-var getTempRet0 = Module["getTempRet0"] = function() {  return Module["asm"]["getTempRet0"].apply(null, arguments) };
-var _ntohs = Module["_ntohs"] = function() {  return Module["asm"]["_ntohs"].apply(null, arguments) };
-var _htonl = Module["_htonl"] = function() {  return Module["asm"]["_htonl"].apply(null, arguments) };
-var _realloc = Module["_realloc"] = function() {  return Module["asm"]["_realloc"].apply(null, arguments) };
-var _CsoundObj_getScoreTime = Module["_CsoundObj_getScoreTime"] = function() {  return Module["asm"]["_CsoundObj_getScoreTime"].apply(null, arguments) };
-var _pthread_mutex_unlock = Module["_pthread_mutex_unlock"] = function() {  return Module["asm"]["_pthread_mutex_unlock"].apply(null, arguments) };
-var stackSave = Module["stackSave"] = function() {  return Module["asm"]["stackSave"].apply(null, arguments) };
-var __GLOBAL__I_000101 = Module["__GLOBAL__I_000101"] = function() {  return Module["asm"]["__GLOBAL__I_000101"].apply(null, arguments) };
-var _llvm_bswap_i16 = Module["_llvm_bswap_i16"] = function() {  return Module["asm"]["_llvm_bswap_i16"].apply(null, arguments) };
-var _emscripten_get_global_libc = Module["_emscripten_get_global_libc"] = function() {  return Module["asm"]["_emscripten_get_global_libc"].apply(null, arguments) };
-var _FileList_getFileNameString = Module["_FileList_getFileNameString"] = function() {  return Module["asm"]["_FileList_getFileNameString"].apply(null, arguments) };
-var _CsoundObj_readScore = Module["_CsoundObj_readScore"] = function() {  return Module["asm"]["_CsoundObj_readScore"].apply(null, arguments) };
-var __GLOBAL__sub_I_iostream_cpp = Module["__GLOBAL__sub_I_iostream_cpp"] = function() {  return Module["asm"]["__GLOBAL__sub_I_iostream_cpp"].apply(null, arguments) };
-var _htons = Module["_htons"] = function() {  return Module["asm"]["_htons"].apply(null, arguments) };
-var _pthread_cond_broadcast = Module["_pthread_cond_broadcast"] = function() {  return Module["asm"]["_pthread_cond_broadcast"].apply(null, arguments) };
-var _CsoundObj_getInputChannelCount = Module["_CsoundObj_getInputChannelCount"] = function() {  return Module["asm"]["_CsoundObj_getInputChannelCount"].apply(null, arguments) };
-var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {  return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments) };
-var _CsoundObj_getControlChannel = Module["_CsoundObj_getControlChannel"] = function() {  return Module["asm"]["_CsoundObj_getControlChannel"].apply(null, arguments) };
-var _CsoundObj_openAudioOut = Module["_CsoundObj_openAudioOut"] = function() {  return Module["asm"]["_CsoundObj_openAudioOut"].apply(null, arguments) };
-var _testSetjmp = Module["_testSetjmp"] = function() {  return Module["asm"]["_testSetjmp"].apply(null, arguments) };
-var _saveSetjmp = Module["_saveSetjmp"] = function() {  return Module["asm"]["_saveSetjmp"].apply(null, arguments) };
-var _free = Module["_free"] = function() {  return Module["asm"]["_free"].apply(null, arguments) };
-var ___cxa_can_catch = Module["___cxa_can_catch"] = function() {  return Module["asm"]["___cxa_can_catch"].apply(null, arguments) };
-var _CsoundObj_getTable = Module["_CsoundObj_getTable"] = function() {  return Module["asm"]["_CsoundObj_getTable"].apply(null, arguments) };
-var _round = Module["_round"] = function() {  return Module["asm"]["_round"].apply(null, arguments) };
-var establishStackSpace = Module["establishStackSpace"] = function() {  return Module["asm"]["establishStackSpace"].apply(null, arguments) };
-var _memmove = Module["_memmove"] = function() {  return Module["asm"]["_memmove"].apply(null, arguments) };
-var ___cxa_is_pointer_type = Module["___cxa_is_pointer_type"] = function() {  return Module["asm"]["___cxa_is_pointer_type"].apply(null, arguments) };
-var _CsoundObj_getZerodBFS = Module["_CsoundObj_getZerodBFS"] = function() {  return Module["asm"]["_CsoundObj_getZerodBFS"].apply(null, arguments) };
-var _CsoundObj_closeAudioOut = Module["_CsoundObj_closeAudioOut"] = function() {  return Module["asm"]["_CsoundObj_closeAudioOut"].apply(null, arguments) };
-var _CsoundObj_setOutputChannelCallback = Module["_CsoundObj_setOutputChannelCallback"] = function() {  return Module["asm"]["_CsoundObj_setOutputChannelCallback"].apply(null, arguments) };
-var _malloc = Module["_malloc"] = function() {  return Module["asm"]["_malloc"].apply(null, arguments) };
-var _FileList_getFileCount = Module["_FileList_getFileCount"] = function() {  return Module["asm"]["_FileList_getFileCount"].apply(null, arguments) };
-var _pthread_mutex_lock = Module["_pthread_mutex_lock"] = function() {  return Module["asm"]["_pthread_mutex_lock"].apply(null, arguments) };
-var _CsoundObj_performKsmps = Module["_CsoundObj_performKsmps"] = function() {  return Module["asm"]["_CsoundObj_performKsmps"].apply(null, arguments) };
-var _emscripten_replace_memory = Module["_emscripten_replace_memory"] = function() {  return Module["asm"]["_emscripten_replace_memory"].apply(null, arguments) };
-var _roundf = Module["_roundf"] = function() {  return Module["asm"]["_roundf"].apply(null, arguments) };
-var _CsoundObj_setControlChannel = Module["_CsoundObj_setControlChannel"] = function() {  return Module["asm"]["_CsoundObj_setControlChannel"].apply(null, arguments) };
-var _CsoundObj_setOption = Module["_CsoundObj_setOption"] = function() {  return Module["asm"]["_CsoundObj_setOption"].apply(null, arguments) };
-var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = function() {  return Module["asm"]["dynCall_iiiiiiii"].apply(null, arguments) };
-var dynCall_iiiiiid = Module["dynCall_iiiiiid"] = function() {  return Module["asm"]["dynCall_iiiiiid"].apply(null, arguments) };
-var dynCall_vif = Module["dynCall_vif"] = function() {  return Module["asm"]["dynCall_vif"].apply(null, arguments) };
-var dynCall_viiiii = Module["dynCall_viiiii"] = function() {  return Module["asm"]["dynCall_viiiii"].apply(null, arguments) };
-var dynCall_vi = Module["dynCall_vi"] = function() {  return Module["asm"]["dynCall_vi"].apply(null, arguments) };
-var dynCall_vii = Module["dynCall_vii"] = function() {  return Module["asm"]["dynCall_vii"].apply(null, arguments) };
-var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {  return Module["asm"]["dynCall_iiiiiii"].apply(null, arguments) };
-var dynCall_ii = Module["dynCall_ii"] = function() {  return Module["asm"]["dynCall_ii"].apply(null, arguments) };
-var dynCall_viijii = Module["dynCall_viijii"] = function() {  return Module["asm"]["dynCall_viijii"].apply(null, arguments) };
-var dynCall_ffi = Module["dynCall_ffi"] = function() {  return Module["asm"]["dynCall_ffi"].apply(null, arguments) };
-var dynCall_viiif = Module["dynCall_viiif"] = function() {  return Module["asm"]["dynCall_viiif"].apply(null, arguments) };
-var dynCall_if = Module["dynCall_if"] = function() {  return Module["asm"]["dynCall_if"].apply(null, arguments) };
-var dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = function() {  return Module["asm"]["dynCall_iiiiiiiiii"].apply(null, arguments) };
-var dynCall_iiii = Module["dynCall_iiii"] = function() {  return Module["asm"]["dynCall_iiii"].apply(null, arguments) };
-var dynCall_iiij = Module["dynCall_iiij"] = function() {  return Module["asm"]["dynCall_iiij"].apply(null, arguments) };
-var dynCall_fif = Module["dynCall_fif"] = function() {  return Module["asm"]["dynCall_fif"].apply(null, arguments) };
-var dynCall_viiiffff = Module["dynCall_viiiffff"] = function() {  return Module["asm"]["dynCall_viiiffff"].apply(null, arguments) };
-var dynCall_viiiiif = Module["dynCall_viiiiif"] = function() {  return Module["asm"]["dynCall_viiiiif"].apply(null, arguments) };
-var dynCall_fii = Module["dynCall_fii"] = function() {  return Module["asm"]["dynCall_fii"].apply(null, arguments) };
-var dynCall_iiid = Module["dynCall_iiid"] = function() {  return Module["asm"]["dynCall_iiid"].apply(null, arguments) };
-var dynCall_fiii = Module["dynCall_fiii"] = function() {  return Module["asm"]["dynCall_fiii"].apply(null, arguments) };
-var dynCall_di = Module["dynCall_di"] = function() {  return Module["asm"]["dynCall_di"].apply(null, arguments) };
-var dynCall_iiiiiiiiiii = Module["dynCall_iiiiiiiiiii"] = function() {  return Module["asm"]["dynCall_iiiiiiiiiii"].apply(null, arguments) };
-var dynCall_v = Module["dynCall_v"] = function() {  return Module["asm"]["dynCall_v"].apply(null, arguments) };
-var dynCall_iif = Module["dynCall_iif"] = function() {  return Module["asm"]["dynCall_iif"].apply(null, arguments) };
-var dynCall_ji = Module["dynCall_ji"] = function() {  return Module["asm"]["dynCall_ji"].apply(null, arguments) };
-var dynCall_fi = Module["dynCall_fi"] = function() {  return Module["asm"]["dynCall_fi"].apply(null, arguments) };
-var dynCall_iii = Module["dynCall_iii"] = function() {  return Module["asm"]["dynCall_iii"].apply(null, arguments) };
-var dynCall_iiiiii = Module["dynCall_iiiiii"] = function() {  return Module["asm"]["dynCall_iiiiii"].apply(null, arguments) };
-var dynCall_viiiiii = Module["dynCall_viiiiii"] = function() {  return Module["asm"]["dynCall_viiiiii"].apply(null, arguments) };
-var dynCall_dii = Module["dynCall_dii"] = function() {  return Module["asm"]["dynCall_dii"].apply(null, arguments) };
-var dynCall_viiiiiii = Module["dynCall_viiiiiii"] = function() {  return Module["asm"]["dynCall_viiiiiii"].apply(null, arguments) };
-var dynCall_i = Module["dynCall_i"] = function() {  return Module["asm"]["dynCall_i"].apply(null, arguments) };
-var dynCall_iiiii = Module["dynCall_iiiii"] = function() {  return Module["asm"]["dynCall_iiiii"].apply(null, arguments) };
-var dynCall_viiid = Module["dynCall_viiid"] = function() {  return Module["asm"]["dynCall_viiid"].apply(null, arguments) };
-var dynCall_iiiiij = Module["dynCall_iiiiij"] = function() {  return Module["asm"]["dynCall_iiiiij"].apply(null, arguments) };
-var dynCall_viii = Module["dynCall_viii"] = function() {  return Module["asm"]["dynCall_viii"].apply(null, arguments) };
-var dynCall_iiiiiiiiiifii = Module["dynCall_iiiiiiiiiifii"] = function() {  return Module["asm"]["dynCall_iiiiiiiiiifii"].apply(null, arguments) };
-var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = function() {  return Module["asm"]["dynCall_iiiiiiiii"].apply(null, arguments) };
-var dynCall_iiiiid = Module["dynCall_iiiiid"] = function() {  return Module["asm"]["dynCall_iiiiid"].apply(null, arguments) };
-var dynCall_viiii = Module["dynCall_viiii"] = function() {  return Module["asm"]["dynCall_viiii"].apply(null, arguments) };
+var _CsoundObj_setTable = Module["_CsoundObj_setTable"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_setTable"].apply(null, arguments) };
+var _CsoundObj_getKsmps = Module["_CsoundObj_getKsmps"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getKsmps"].apply(null, arguments) };
+var runPostSets = Module["runPostSets"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["runPostSets"].apply(null, arguments) };
+var _CsoundObj_new = Module["_CsoundObj_new"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_new"].apply(null, arguments) };
+var _strlen = Module["_strlen"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_strlen"].apply(null, arguments) };
+var _CsoundObj_reset = Module["_CsoundObj_reset"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_reset"].apply(null, arguments) };
+var _CsoundObj_closeAudioOut = Module["_CsoundObj_closeAudioOut"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_closeAudioOut"].apply(null, arguments) };
+var _CsoundObj_getInputBuffer = Module["_CsoundObj_getInputBuffer"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getInputBuffer"].apply(null, arguments) };
+var _CsoundObj_destroy = Module["_CsoundObj_destroy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_destroy"].apply(null, arguments) };
+var _CsoundObj_render = Module["_CsoundObj_render"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_render"].apply(null, arguments) };
+var _CsoundObj_prepareRT = Module["_CsoundObj_prepareRT"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_prepareRT"].apply(null, arguments) };
+var _CsoundObj_midiInClose = Module["_CsoundObj_midiInClose"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_midiInClose"].apply(null, arguments) };
+var _pthread_mutex_trylock = Module["_pthread_mutex_trylock"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_pthread_mutex_trylock"].apply(null, arguments) };
+var _CsoundObj_pause = Module["_CsoundObj_pause"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_pause"].apply(null, arguments) };
+var _CsoundObj_compileOrc = Module["_CsoundObj_compileOrc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_compileOrc"].apply(null, arguments) };
+var _fflush = Module["_fflush"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_fflush"].apply(null, arguments) };
+var setTempRet0 = Module["setTempRet0"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["setTempRet0"].apply(null, arguments) };
+var setThrew = Module["setThrew"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["setThrew"].apply(null, arguments) };
+var _CsoundObj_compileCSD = Module["_CsoundObj_compileCSD"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_compileCSD"].apply(null, arguments) };
+var stackRestore = Module["stackRestore"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["stackRestore"].apply(null, arguments) };
+var _CsoundObj_setMidiCallbacks = Module["_CsoundObj_setMidiCallbacks"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_setMidiCallbacks"].apply(null, arguments) };
+var _memset = Module["_memset"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_memset"].apply(null, arguments) };
+var _sbrk = Module["_sbrk"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_sbrk"].apply(null, arguments) };
+var _memcpy = Module["_memcpy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_memcpy"].apply(null, arguments) };
+var _CsoundObj_play = Module["_CsoundObj_play"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_play"].apply(null, arguments) };
+var ___errno_location = Module["___errno_location"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["___errno_location"].apply(null, arguments) };
+var _CsoundObj_setStringChannel = Module["_CsoundObj_setStringChannel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_setStringChannel"].apply(null, arguments) };
+var _CsoundObj_getOutputChannelCount = Module["_CsoundObj_getOutputChannelCount"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getOutputChannelCount"].apply(null, arguments) };
+var _CsoundObj_getTableLength = Module["_CsoundObj_getTableLength"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getTableLength"].apply(null, arguments) };
+var stackAlloc = Module["stackAlloc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["stackAlloc"].apply(null, arguments) };
+var _CsoundObj_evaluateCode = Module["_CsoundObj_evaluateCode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_evaluateCode"].apply(null, arguments) };
+var stackSave = Module["stackSave"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["stackSave"].apply(null, arguments) };
+var getTempRet0 = Module["getTempRet0"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["getTempRet0"].apply(null, arguments) };
+var _ntohs = Module["_ntohs"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_ntohs"].apply(null, arguments) };
+var _htonl = Module["_htonl"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_htonl"].apply(null, arguments) };
+var _realloc = Module["_realloc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_realloc"].apply(null, arguments) };
+var _CsoundObj_getScoreTime = Module["_CsoundObj_getScoreTime"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getScoreTime"].apply(null, arguments) };
+var _pthread_mutex_unlock = Module["_pthread_mutex_unlock"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_pthread_mutex_unlock"].apply(null, arguments) };
+var _CsoundObj_midiInOpen = Module["_CsoundObj_midiInOpen"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_midiInOpen"].apply(null, arguments) };
+var __GLOBAL__I_000101 = Module["__GLOBAL__I_000101"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["__GLOBAL__I_000101"].apply(null, arguments) };
+var _llvm_bswap_i16 = Module["_llvm_bswap_i16"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_llvm_bswap_i16"].apply(null, arguments) };
+var _emscripten_get_global_libc = Module["_emscripten_get_global_libc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_emscripten_get_global_libc"].apply(null, arguments) };
+var _CsoundObj_readScore = Module["_CsoundObj_readScore"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_readScore"].apply(null, arguments) };
+var __GLOBAL__sub_I_iostream_cpp = Module["__GLOBAL__sub_I_iostream_cpp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["__GLOBAL__sub_I_iostream_cpp"].apply(null, arguments) };
+var _htons = Module["_htons"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_htons"].apply(null, arguments) };
+var _pthread_cond_broadcast = Module["_pthread_cond_broadcast"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_pthread_cond_broadcast"].apply(null, arguments) };
+var _CsoundObj_getInputChannelCount = Module["_CsoundObj_getInputChannelCount"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getInputChannelCount"].apply(null, arguments) };
+var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments) };
+var _CsoundObj_getControlChannel = Module["_CsoundObj_getControlChannel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getControlChannel"].apply(null, arguments) };
+var _CsoundObj_openAudioOut = Module["_CsoundObj_openAudioOut"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_openAudioOut"].apply(null, arguments) };
+var _testSetjmp = Module["_testSetjmp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_testSetjmp"].apply(null, arguments) };
+var _saveSetjmp = Module["_saveSetjmp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_saveSetjmp"].apply(null, arguments) };
+var _free = Module["_free"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_free"].apply(null, arguments) };
+var ___cxa_can_catch = Module["___cxa_can_catch"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["___cxa_can_catch"].apply(null, arguments) };
+var _CsoundObj_getTable = Module["_CsoundObj_getTable"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getTable"].apply(null, arguments) };
+var _round = Module["_round"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_round"].apply(null, arguments) };
+var establishStackSpace = Module["establishStackSpace"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["establishStackSpace"].apply(null, arguments) };
+var _memmove = Module["_memmove"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_memmove"].apply(null, arguments) };
+var ___cxa_is_pointer_type = Module["___cxa_is_pointer_type"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["___cxa_is_pointer_type"].apply(null, arguments) };
+var _CsoundObj_getZerodBFS = Module["_CsoundObj_getZerodBFS"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getZerodBFS"].apply(null, arguments) };
+var _CsoundObj_pushMidiMessage = Module["_CsoundObj_pushMidiMessage"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_pushMidiMessage"].apply(null, arguments) };
+var _CsoundObj_setOutputChannelCallback = Module["_CsoundObj_setOutputChannelCallback"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_setOutputChannelCallback"].apply(null, arguments) };
+var _CsoundObj_getOutputBuffer = Module["_CsoundObj_getOutputBuffer"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_getOutputBuffer"].apply(null, arguments) };
+var _malloc = Module["_malloc"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_malloc"].apply(null, arguments) };
+var _pthread_mutex_lock = Module["_pthread_mutex_lock"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_pthread_mutex_lock"].apply(null, arguments) };
+var _CsoundObj_performKsmps = Module["_CsoundObj_performKsmps"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_performKsmps"].apply(null, arguments) };
+var _emscripten_replace_memory = Module["_emscripten_replace_memory"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_emscripten_replace_memory"].apply(null, arguments) };
+var _roundf = Module["_roundf"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_roundf"].apply(null, arguments) };
+var _CsoundObj_setControlChannel = Module["_CsoundObj_setControlChannel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_setControlChannel"].apply(null, arguments) };
+var _CsoundObj_setOption = Module["_CsoundObj_setOption"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_CsoundObj_setOption"].apply(null, arguments) };
+var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiii"].apply(null, arguments) };
+var dynCall_iiiiiid = Module["dynCall_iiiiiid"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiid"].apply(null, arguments) };
+var dynCall_vif = Module["dynCall_vif"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_vif"].apply(null, arguments) };
+var dynCall_viiiii = Module["dynCall_viiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiiii"].apply(null, arguments) };
+var dynCall_vi = Module["dynCall_vi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_vi"].apply(null, arguments) };
+var dynCall_vii = Module["dynCall_vii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_vii"].apply(null, arguments) };
+var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiii"].apply(null, arguments) };
+var dynCall_ii = Module["dynCall_ii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_ii"].apply(null, arguments) };
+var dynCall_viijii = Module["dynCall_viijii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viijii"].apply(null, arguments) };
+var dynCall_ffi = Module["dynCall_ffi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_ffi"].apply(null, arguments) };
+var dynCall_viiif = Module["dynCall_viiif"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiif"].apply(null, arguments) };
+var dynCall_if = Module["dynCall_if"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_if"].apply(null, arguments) };
+var dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiiiii"].apply(null, arguments) };
+var dynCall_iiii = Module["dynCall_iiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiii"].apply(null, arguments) };
+var dynCall_iiij = Module["dynCall_iiij"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiij"].apply(null, arguments) };
+var dynCall_fif = Module["dynCall_fif"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_fif"].apply(null, arguments) };
+var dynCall_viiiffff = Module["dynCall_viiiffff"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiiffff"].apply(null, arguments) };
+var dynCall_viiiiif = Module["dynCall_viiiiif"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiiiif"].apply(null, arguments) };
+var dynCall_fii = Module["dynCall_fii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_fii"].apply(null, arguments) };
+var dynCall_iiid = Module["dynCall_iiid"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiid"].apply(null, arguments) };
+var dynCall_fiii = Module["dynCall_fiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_fiii"].apply(null, arguments) };
+var dynCall_di = Module["dynCall_di"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_di"].apply(null, arguments) };
+var dynCall_iiiiiiiiiii = Module["dynCall_iiiiiiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiiiiii"].apply(null, arguments) };
+var dynCall_v = Module["dynCall_v"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_v"].apply(null, arguments) };
+var dynCall_iif = Module["dynCall_iif"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iif"].apply(null, arguments) };
+var dynCall_ji = Module["dynCall_ji"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_ji"].apply(null, arguments) };
+var dynCall_fi = Module["dynCall_fi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_fi"].apply(null, arguments) };
+var dynCall_iii = Module["dynCall_iii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iii"].apply(null, arguments) };
+var dynCall_iiiiii = Module["dynCall_iiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiii"].apply(null, arguments) };
+var dynCall_viiiiii = Module["dynCall_viiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiiiii"].apply(null, arguments) };
+var dynCall_dii = Module["dynCall_dii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_dii"].apply(null, arguments) };
+var dynCall_viiiiiii = Module["dynCall_viiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiiiiii"].apply(null, arguments) };
+var dynCall_i = Module["dynCall_i"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_i"].apply(null, arguments) };
+var dynCall_iiiii = Module["dynCall_iiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiii"].apply(null, arguments) };
+var dynCall_iiiiij = Module["dynCall_iiiiij"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiij"].apply(null, arguments) };
+var dynCall_viii = Module["dynCall_viii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viii"].apply(null, arguments) };
+var dynCall_iiiiiiiiiifii = Module["dynCall_iiiiiiiiiifii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiiiiifii"].apply(null, arguments) };
+var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiiii"].apply(null, arguments) };
+var dynCall_iiiiid = Module["dynCall_iiiiid"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiid"].apply(null, arguments) };
+var dynCall_viiii = Module["dynCall_viiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiii"].apply(null, arguments) };
 ;
 Runtime.stackAlloc = Module['stackAlloc'];
 Runtime.stackSave = Module['stackSave'];
@@ -12244,6 +11059,9 @@ if (memoryInitializer) {
     addRunDependency('memory initializer');
     var applyMemoryInitializer = function(data) {
       if (data.byteLength) data = new Uint8Array(data);
+      for (var i = 0; i < data.length; i++) {
+        assert(HEAPU8[Runtime.GLOBAL_BASE + i] === 0, "area for memory initializer should not have been touched before it's loaded");
+      }
       HEAPU8.set(data, Runtime.GLOBAL_BASE);
       // Delete the typed array that contains the large blob of the memory initializer request response so that
       // we won't keep unnecessary memory lying around. However, keep the XHR object itself alive so that e.g.
@@ -12308,6 +11126,8 @@ dependenciesFulfilled = function runCaller() {
 }
 
 Module['callMain'] = Module.callMain = function callMain(args) {
+  assert(runDependencies == 0, 'cannot call main when async dependencies remain! (listen on __ATMAIN__)');
+  assert(__ATPRERUN__.length == 0, 'cannot call main when preRun functions remain to be called');
 
   args = args || [];
 
@@ -12372,6 +11192,7 @@ function run(args) {
     return;
   }
 
+  writeStackCookie();
 
   preRun();
 
@@ -12388,6 +11209,9 @@ function run(args) {
 
     preMain();
 
+    if (ENVIRONMENT_IS_WEB && preloadStartTime !== null) {
+      Module.printErr('pre-main prep time: ' + (Date.now() - preloadStartTime) + ' ms');
+    }
 
     if (Module['onRuntimeInitialized']) Module['onRuntimeInitialized']();
 
@@ -12407,15 +11231,18 @@ function run(args) {
   } else {
     doRun();
   }
+  checkStackCookie();
 }
 Module['run'] = Module.run = run;
 
 function exit(status, implicit) {
   if (implicit && Module['noExitRuntime']) {
+    Module.printErr('exit(' + status + ') implicitly called by end of main(), but noExitRuntime, so not exiting the runtime (you can use emscripten_force_exit, if you want to force a true shutdown)');
     return;
   }
 
   if (Module['noExitRuntime']) {
+    Module.printErr('exit(' + status + ') called, but noExitRuntime, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)');
   } else {
 
     ABORT = true;
@@ -12452,7 +11279,7 @@ function abort(what) {
   ABORT = true;
   EXITSTATUS = 1;
 
-  var extra = '\nIf this abort() is unexpected, build with -s ASSERTIONS=1 which can give more information.';
+  var extra = '';
 
   var output = 'abort(' + what + ') at ' + stackTrace() + extra;
   if (abortDecorators) {

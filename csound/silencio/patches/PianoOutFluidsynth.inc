@@ -31,8 +31,8 @@ a_bsignal, a_spatial_reverb_send Spatialize a_signal, gk_Piano_front_to_back, gk
 outletv "outbformat", a_bsignal
 outleta "out", a_spatial_reverb_send
 #else
-outleta "outleft", a_out_left
-outleta "outright", a_out_right
+outleta "outleft", a_out_left * .01
+outleta "outright", a_out_right *.01
 #endif
 prints "PianoOutFluids i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
 endin

@@ -102,8 +102,8 @@ connect "Rhodes", "outleft", "Reverb2Left", "inleft"
 connect "Rhodes", "outright", "Reverb2Right", "inright"
 connect "STKPlucked", "outleft", "ReverbLeft", "inleft"
 connect "STKPlucked", "outright", "ReverbRight", "inright"
-connect "PianoOut", "outleft", "MasterOutput", "inleft"
-connect "PianoOut", "outright", "MasterOutput", "inright"
+;connect "PianoOut", "outleft", "MasterOutput", "inleft"
+;connect "PianoOut", "outright", "MasterOutput", "inright"
 connect "PianoOut", "outleft", "Reverb2Left", "inleft"
 connect "PianoOut", "outright", "Reverb2Right", "inright"
 connect "ReverbLeft", "outleft", "MasterOutput", "inleft"
@@ -373,6 +373,7 @@ endin
                     }
                     gui.revert();
                     csound.setOption('-m0');
+                    csound.setOption('-nchnls=2');
                     //csound.setOption('-j3');
                     csound.setOption('--nodisplays');
                     csound.setOption('-odac');
@@ -1020,7 +1021,7 @@ endin
                      }
                      // Off event.
                      if ((old_hsv[2] >= value_threshold) && (new_hsv[2] < value_threshold)) {
-                        create_off_event(score, column_index, row_index, new_hsv[0], new_hsv[2]);
+                        //create_off_event(score, column_index, row_index, new_hsv[0], new_hsv[2]);
                      }
                   }
                }
