@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title
+<link rel="stylesheet" type="text/css" href="csound.css" />
+</head>
+<h1>OSCraw</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-o dac
+</CsOptions>
+<CsInstruments>
+
+instr	1
+ kwhen  init 0
+ kmetro metro 1
+ kwhen += kmetro
+ OSCsend kwhen, "127.0.0.1",7771, "/foo/bar", "f", kwhen
+endin
+
+instr 2
+Smess[] init 3
+top:
+Smess,ka OSCraw 7771
+kn = 0
+while kn < ka do
+  printf ": %s ", kn+1, Smess[kn]
+  kn += 1
+od
+printf "%d items\n", ka, kn
+if ka > 0 kgoto top
+endin
+
+</CsInstruments>
+<CsScore>
+i1 0 10
+i2 0 10
+</CsScore>
+</CsoundSynthesizer></textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+console.log(message);
+var messages_textarea = document.getElementById("console");
+var existing = messages_textarea.value;
+messages_textarea.value = existing + message.data;
+messages_textarea.scrollTop = messages_textarea.scrollHeight;
+}
+function sleep (time) {
+return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+csound.stop();
+sleep(500).then(() => {
+    var csd = document.getElementById('csd').value;
+    csound.compileCsdText(csd);
+})
+}
+function stop_onclick () {
+csound.stop();
+}
+</script>
+<div id="engine"></div>
+</body>
+</html>

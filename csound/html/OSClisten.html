@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="OSCinit.html" title="OSCinit" />
-    <link rel="next" href="OSCsend.html" title="OSCsend" />
+    <link rel="next" href="OSCraw.html" title="OSCraw" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="OSCinit.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="OSCsend.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="OSCraw.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525030128"></a>
+        <a id="idm45948027964048"></a>
         <h2>Description</h2>
         <p>
       On each k-cycle looks to see if an OSC message has been send to
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525023856"></a>
+        <a id="idm45948027922688"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kans <span class="command"><strong>OSClisten</strong></span> ihandle, idest, itype [, xdata1, xdata2, ...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1525025264"></a>
+        <a id="idm45948027920576"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span>
@@ -80,7 +80,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525022448"></a>
+        <a id="idm45948027916016"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kans</em></span> -- set to 1 if a new message was
@@ -99,7 +99,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525021040"></a>
+        <a id="idm45948027912064"></a>
         <h2>Example</h2>
         <p>
       The example shows a pair of floating point numbers being received
@@ -131,15 +131,15 @@ ex:
 
       </p>
         <div class="example">
-          <a id="idm1525007216"></a>
+          <a id="idm45948027896864"></a>
           <p class="title">
-            <strong>Example 616. Example of the OSC opcodes.</strong>
+            <strong>Example 630. Example of the OSC opcodes.</strong>
           </p>
           <div class="example-contents">
             <p>The following two .csd files demonstrate the usage of the OSC opcodes in csound. The first file, <a class="ulink" href="examples/OSCmidisend.csd.html" target="_top"> (click here to play) <em class="citetitle">OSCmidisend.csd</em></a>, transforms received real-time MIDI messages into OSC data. The second file, <a class="ulink" href="examples/OSCmidircv.csd.html" target="_top"> (click here to play) <em class="citetitle">OSCmidircv.csd</em></a>, can take these OSC messages, and intrepret them to generate sound from note messages, and store controller values. It will use controller number 7 to control volume. Note that these files are designed to be on the same machine, but if a different host address (in the IPADDRESS macro) is used, they can be separate machines on a network, or connected through the internet.</p>
             <p>CSD file to send OSC messages:</p>
             <div class="refsect1">
-              <a id="idm1348644592"></a>
+              <a id="idm45947851109968"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -182,7 +182,7 @@ ex:
             </div>
             <p>CSD file to receive OSC messages:</p>
             <div class="refsect1">
-              <a id="idm1349804784"></a>
+              <a id="idm45947852021296"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="c1">; network_recv.csd</span>
@@ -288,7 +288,7 @@ ex:
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525000944"></a>
+        <a id="idm45948027890672"></a>
         <h2>See Also</h2>
         <p>
         <a class="link" href="OSCsend.html" title="OSCsend"><em class="citetitle">OSCsend</em></a>,
@@ -297,7 +297,7 @@ ex:
         <p> More information on this opcode: <a class="ulink" href="http://www.youtube.com/watch?v=JX1C3TqP_9Y" target="_top"><em class="citetitle">http://www.youtube.com/watch?v=JX1C3TqP_9Y</em></a>  , made by Andrés Cabrera </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525260784"></a>
+        <a id="idm45948027886272"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -325,14 +325,14 @@ ex:
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="OSCsend.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="OSCraw.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">OSCinit </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> OSCsend</td>
+          <td width="40%" align="right" valign="top"> OSCraw</td>
         </tr>
       </table>
     </div>

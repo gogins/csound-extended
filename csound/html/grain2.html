@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1542924784"></a>
+        <a id="idm45948046078672"></a>
         <h2>Description</h2>
         <p>
       Generate granular synthesis textures. <span class="emphasis"><em>grain2</em></span> is simpler to use, but <a class="link" href="grain3.html" title="grain3"><em class="citetitle">grain3</em></a> offers more control.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1542926448"></a>
+        <a id="idm45948046076000"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>grain2</strong></span> kcps, kfmd, kgdur, iovrlp, kfn, iwfn [, irpow] \
       [, iseed] [, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1542926960"></a>
+        <a id="idm45948046073632"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iovrlp</em></span> -- (fixed) number of overlapping grains.
@@ -63,11 +63,11 @@
         <p>
       <span class="emphasis"><em>irpow</em></span> (optional, default=0) -- this value controls the distribution of grain frequency variation.  If <span class="emphasis"><em>irpow</em></span> is positive, the random distribution (<span class="emphasis"><em>x</em></span> is in the range -1 to 1) is </p>
         <div class="literallayout">
-          <p>abs(x) ˆ ((1 / irpow) - 1);</p>
+          <p>abs(x) ^ ((1 / irpow) - 1);</p>
         </div>
         <p> for negative <span class="emphasis"><em>irpow</em></span> values, it is </p>
         <div class="literallayout">
-          <p>(1 - abs(x)) ˆ ((-1 / irpow) - 1)</p>
+          <p>(1 - abs(x)) ^ ((-1 / irpow) - 1)</p>
         </div>
         <p>Setting <span class="emphasis"><em>irpow</em></span> to -1, 0, or 1 will result in uniform distribution (this is also faster to calculate). The image below shows some examples for <span class="emphasis"><em>irpow</em></span>. The default value of <span class="emphasis"><em>irpow</em></span> is 0.
     </p>
@@ -107,7 +107,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1542902640"></a>
+        <a id="idm45948046052144"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- output signal.
@@ -143,21 +143,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm1542897264"></a>
+        <a id="idm45948046041472"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the grain2 opcode. It uses the file <a class="ulink" href="examples/grain2.csd.html" target="_top"> (click here to play) <em class="citetitle">grain2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1542890864"></a>
+          <a id="idm45948046039616"></a>
           <p class="title">
-            <strong>Example 383. Example of the grain2 opcode.</strong>
+            <strong>Example 390. Example of the grain2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1373029872"></a>
+              <a id="idm45947876188576"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -272,14 +272,14 @@ a<span class="n">Rl</span>	<span class="nb">butterlp</span> a<span class="n">Rl<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1542892784"></a>
+        <a id="idm45948046035296"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="grain3.html" title="grain3"><em class="citetitle">grain3</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1542895472"></a>
+        <a id="idm45948046033184"></a>
         <h2>Credits</h2>
         <p>
       </p>

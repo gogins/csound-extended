@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484648560"></a>
+        <a id="idm45947987256864"></a>
         <h2>Description</h2>
         <p>
       Experimental version of <a class="link" href="scanu.html" title="scanu"><em class="citetitle">scanu</em></a>. Allows much larger matrices and is faster and smaller but removes some (unused?) flexibility.  If liked, it will replace the older opcode as it is syntax compatible but extended.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484644080"></a>
+        <a id="idm45947987184368"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>xscanu</strong></span> init, irate, ifnvel, ifnmass, ifnstif, ifncentr, ifndamp, kmass, \
       kstif, kcentr, kdamp, ileft, iright, kpos, kstrngth, ain, idisp, id</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1484647408"></a>
+        <a id="idm45947987182192"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>init</em></span> -- the initial position of the masses. If this is a negative number, then the absolute of init signifies the table to use as a hammer shape. If init &gt; 0, the length of it should be the same as the intended mass number, otherwise it can be anything.
@@ -101,7 +101,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484625136"></a>
+        <a id="idm45947987168496"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kmass</em></span> -- scales the masses
@@ -126,7 +126,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484631280"></a>
+        <a id="idm45947987161552"></a>
         <h2>Matrix Format</h2>
         <p>
       The new matrix format is a list of connections, one per line linking point x to point y.   There is no weight given to the link; it is assumed to be unity.  The list is proceeded by the line &lt;MATRIX&gt; and ends with a &lt;/MATRIX&gt; line
@@ -160,20 +160,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484623600"></a>
+        <a id="idm45947987158256"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the xscanu opcode. It uses the file <a class="ulink" href="examples/xscanu.csd.html" target="_top"> (click here to play) <em class="citetitle">xscanu.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1484618480"></a>
+          <a id="idm45947987156400"></a>
           <p class="title">
-            <strong>Example 1117. Example of the xscanu opcode.</strong>
+            <strong>Example 1140. Example of the xscanu opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1302351600"></a>
+              <a id="idm45947808869792"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -285,7 +285,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484623216"></a>
+        <a id="idm45947987150768"></a>
         <h2>See Also</h2>
         <p>
 More information on Scanned Synthesis (as well as several other matrices) is available on the <a class="ulink" href="http://www.csounds.com/scanned/" target="_top"><em class="citetitle">Scanned Synthesis page</em></a> at cSounds.com.
@@ -297,7 +297,7 @@ More information on Scanned Synthesis (as well as several other matrices) is ava
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1484610032"></a>
+        <a id="idm45947987144944"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch.</p>
         <p>New in version 4.20</p>

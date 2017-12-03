@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525957488"></a>
+        <a id="idm45948029107152"></a>
         <h2>Description</h2>
         <p>
         <span class="emphasis"><em>olabuffer</em></span> This opcode takes 1 dimensional k-rate arrays that contain sequential frames of audio and sums them based on an overlap factor resulting in an audio signal output. This is useful for frame based audio processing such as spectral analysis/synthesis.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525950448"></a>
+        <a id="idm45948029105344"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>olabuffer</strong></span> kin, ioverlap</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1525950960"></a>
+        <a id="idm45948029103232"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ioverlap</em></span> -- The amount of overlaps per k-array input frame sample size. For example for an input window size of 1024, and a hop size of 256 the overlap factor would be 4. The overlap factor must be larger than or equal to ksmps and must also be an integer multiple of the input k-rate array sample count.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525944688"></a>
+        <a id="idm45948029101312"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout</em></span> -- The resulting audio signal from the added input frames.
@@ -66,21 +66,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525948656"></a>
+        <a id="idm45948029099248"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the olabuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd.html" target="_top"> (click here to play) <em class="citetitle">framebuffer.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1525943920"></a>
+          <a id="idm45948029097360"></a>
           <p class="title">
-            <strong>Example 603. Example of the olabuffer opcode.</strong>
+            <strong>Example 617. Example of the olabuffer opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1350652272"></a>
+              <a id="idm45947852858400"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -119,7 +119,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525946096"></a>
+        <a id="idm45948029093072"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="olabuffer.html" title="olabuffer"><em class="citetitle">olabuffer</em></a>
@@ -128,7 +128,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1525934832"></a>
+        <a id="idm45948029089168"></a>
         <h2>Credits</h2>
         <p>
       </p>

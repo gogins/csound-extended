@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1545493232"></a>
+        <a id="idm45948049171248"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>fout</em></span> outputs <span class="emphasis"><em>N</em></span> a-rate signals to a specified file of <span class="emphasis"><em>N</em></span> channels.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1545493360"></a>
+        <a id="idm45948049165920"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>fout</strong></span> ifilename, iformat, aout1 [, aout2, aout3,...,aoutN]</pre>
         <pre class="synopsis"><span class="command"><strong>fout</strong></span> ifilename, iformat, array[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1545497712"></a>
+        <a id="idm45948049162688"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilename</em></span> -- the output file's name (in double-quotes).
@@ -62,6 +62,9 @@
       </p>
         <div class="itemizedlist">
           <ul class="itemizedlist" style="list-style-type: disc; ">
+            <li class="listitem">
+              <p>-1 - format exactly as per global csound output format flags (-A, -W, --format=..., etc).</p>
+            </li>
             <li class="listitem">
               <p>0 - 32-bit floating point samples without header (binary PCM multichannel file)</p>
             </li>
@@ -92,6 +95,9 @@
             <li class="listitem">
               <p>9 - 64-bit floats with a header (see iformat=2).</p>
             </li>
+            <li class="listitem">
+              <p> 50 - ogg-vorbis format.</p>
+            </li>
           </ul>
         </div>
         <p>
@@ -99,7 +105,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1545479536"></a>
+        <a id="idm45948049083360"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout1,... aoutN</em></span> -- signals to be written to the file. In the case of raw files, the expected range of audio signals is determined by the selected sample format; for sound files with a header like WAV and AIFF, the audio signals should be in the range -0dbfs to 0dbfs.
@@ -135,21 +141,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm1545473520"></a>
+        <a id="idm45948049066896"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the fout opcode. It uses the file <a class="ulink" href="examples/fout.csd.html" target="_top"> (click here to play) <em class="citetitle">fout.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1545467248"></a>
+          <a id="idm45948049065040"></a>
           <p class="title">
-            <strong>Example 335. Example of the fout opcode.</strong>
+            <strong>Example 342. Example of the fout opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1379281776"></a>
+              <a id="idm45947881581008"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -216,13 +222,13 @@ a<span class="n">llL</span><span class="p">,</span> a<span class="n">llR</span> 
 
       </p>
         <div class="example">
-          <a id="idm1545465584"></a>
+          <a id="idm45948049058416"></a>
           <p class="title">
-            <strong>Example 336. Example of the fout opcode to save the contents of an f-table.</strong>
+            <strong>Example 343. Example of the fout opcode to save the contents of an f-table.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1378937328"></a>
+              <a id="idm45947881089168"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -270,7 +276,7 @@ a<span class="n">llL</span><span class="p">,</span> a<span class="n">llR</span> 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1545466608"></a>
+        <a id="idm45948049056464"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fiopen.html" title="fiopen"><em class="citetitle">fiopen</em></a>,
@@ -281,7 +287,7 @@ a<span class="n">llL</span><span class="p">,</span> a<span class="n">llR</span> 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1545456240"></a>
+        <a id="idm45948049050576"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="diff.html" title="diff" />
+    <link rel="prev" href="diode_ladder.html" title="diode_ladder" />
     <link rel="next" href="diskgrain.html" title="diskgrain" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">directory</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="diff.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="diode_ladder.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="diskgrain.html">Next</a></td>
         </tr>
@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1557472624"></a>
+        <a id="idm45948061097392"></a>
         <h2>Description</h2>
         <p>
       Reads a directory for files and passes them to a string array. Users can set the file type by passing a file extension as a string.  
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1557473904"></a>
+        <a id="idm45948061093248"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">SFiles[] <span class="command"><strong>directory</strong></span> SDirectory[, SExtention]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1557472240"></a>
+        <a id="idm45948061091072"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>SDirectory</em></span> -- a string that identifies the directory to browse for files
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1557471856"></a>
+        <a id="idm45948061030256"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>SFiles[]</em></span> -- a string array that holds the names of all files of a given type found in the directory.
@@ -85,19 +85,19 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idm1557468016"></a>
+        <a id="idm45948061027216"></a>
         <h2>Example</h2>
         <p>
       This example shows how directory can be used to browse for .wav files in a fixed location. <span class="emphasis"><em>printf_i</em></span> is then used to print the file names. It uses the file <a class="ulink" href="examples/directory.csd.html" target="_top"> (click here to play) <em class="citetitle">directory.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1557464432"></a>
+          <a id="idm45948061024832"></a>
           <p class="title">
-            <strong>Example 208. Example of the directory opcode.</strong>
+            <strong>Example 211. Example of the directory opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1392354032"></a>
+              <a id="idm45947894856528"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,7 +130,7 @@ i<span class="n">NumberOfFiles</span> <span class="nb">lenarray</span> S<span cl
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1557466736"></a>
+        <a id="idm45948061022912"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -150,14 +150,14 @@ i<span class="n">NumberOfFiles</span> <span class="nb">lenarray</span> S<span cl
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="diff.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="diode_ladder.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="diskgrain.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">diff </td>
+          <td width="40%" align="left" valign="top">diode_ladder </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>adsr</title
+<link rel="stylesheet" type="text/css" href="csound.css" />
+</head>
+<h1>midiout_i</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+</p>
+<p>
+<input type="button" value="Play" onclick="start_onclick()"/>
+<input type="button" value="Stop" onclick="stop_onclick()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac -Ma -Q1 ;;;realtime audio out and midi out and midi in (all midi inputs)
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2 ; Changed for PNaCl output from: = 2
+0dbfs  = 1
+
+instr 1
+
+midiout_i	192, 1, 21, 0	;program change to instr. 21
+inum notnum
+ivel veloc
+midion 1, inum, ivel
+
+endin
+</CsInstruments>
+<CsScore>
+
+i 1 0 3  80 100		;play note for 3 seconds
+
+e
+</CsScore>
+</CsoundSynthesizer>
+
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+<script type="text/javascript" src="../../csound.js"></script>
+<script>
+function handleMessage(message) {
+console.log(message);
+var messages_textarea = document.getElementById("console");
+var existing = messages_textarea.value;
+messages_textarea.value = existing + message.data;
+messages_textarea.scrollTop = messages_textarea.scrollHeight;
+}
+function sleep (time) {
+return new Promise((resolve) => setTimeout(resolve, time));
+}
+function start_onclick() {
+csound.stop();
+sleep(500).then(() => {
+    var csd = document.getElementById('csd').value;
+    csound.compileCsdText(csd);
+})
+}
+function stop_onclick () {
+csound.stop();
+}
+</script>
+<div id="engine"></div>
+</body>
+</html>

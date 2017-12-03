@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1496391424"></a>
+        <a id="idm45947999053888"></a>
         <h2>Description</h2>
         <p>
        Copies a pvs frame from a t-variable or k-rate array. Currently only AMP+FREQ is produced. This opcode requires the t-type to be defined, which means it only works in the new bison/flex-based parser.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1496392448"></a>
+        <a id="idm45947999052480"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>tab2pvs</strong></span> tvar|karr[][,ihopsize, iwinsize, iwintype]</pre>
         <pre class="synopsis">fsig <span class="command"><strong>tab2pvs</strong></span> kmags[], kfreqs[][,ihopsize, iwinsize, iwintype]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1496394368"></a>
+        <a id="idm45947998988208"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tvar</em></span> -- k-rate array (or t-variable) containing the input. It is produced at every k-period, but may not contain a new frame, pvs frames are produced at their own frame rate that is independent of kr. The size of this vector will determine the fftsize, N = size - 2.
@@ -74,14 +74,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1496387456"></a>
+        <a id="idm45947998980864"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm1496380544"></a>
+          <a id="idm45947998979936"></a>
           <p class="title">
-            <strong>Example 972. Example</strong>
+            <strong>Example 994. Example</strong>
           </p>
           <div class="example-contents"><pre class="programlisting">
 karr[] init 1026
@@ -94,7 +94,7 @@ aout pvsynth fsig1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1496380928"></a>
+        <a id="idm45947998977440"></a>
         <h2>Credits</h2>
         <p>
       </p>

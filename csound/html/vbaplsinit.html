@@ -39,19 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491833584"></a>
+        <a id="idm45947994517152"></a>
         <h2>Description</h2>
         <p>
       Configures VBAP output according to loudspeaker parameters.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491832432"></a>
+        <a id="idm45947994472944"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vbaplsinit</strong></span> idim, ilsnum [, idir1] [, idir2] [...] [, idir32]</pre>
+        <pre class="synopsis"><span class="command"><strong>vbaplsinit</strong></span> idim, ilsnum, ilsarray</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1491830896"></a>
+        <a id="idm45947994469616"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idim</em></span> -- dimensionality of loudspeaker
@@ -78,6 +79,10 @@
       <span class="emphasis"><em>azi2</em></span>, <span class="emphasis"><em>ele2</em></span>, etc.).
     </p>
         <p>
+      <span class="emphasis"><em>ilsarray</em></span> -- a one dimesional array of the
+      data as described above.
+    </p>
+        <p>
       </p>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note">
@@ -98,27 +103,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491818096"></a>
+        <a id="idm45947994459904"></a>
         <h2>Performance</h2>
         <p>
       VBAP distributes the signal using loudspeaker data configured with <span class="emphasis"><em>vbaplsinit</em></span>. The signal is applied to, at most, two loudspeakers in 2-D loudspeaker configurations, and three loudspeakers in 3-D loudspeaker configurations. If the virtual source is panned outside the region spanned by loudspeakers, the nearest loudspeakers are used in panning.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491821680"></a>
+        <a id="idm45947994457920"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vbaplsinit opcode. It uses the file <a class="ulink" href="examples/vbaplsinit.csd.html" target="_top"> (click here to play) <em class="citetitle">vbaplsinit.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1491825520"></a>
+          <a id="idm45947994456064"></a>
           <p class="title">
-            <strong>Example 1036. Example of the vbaplsinit opcode.</strong>
+            <strong>Example 1059. Example of the vbaplsinit opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1310572784"></a>
+              <a id="idm45947815015296"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -168,14 +173,14 @@ a<span class="n">BR</span> <span class="o">=</span> a<span class="n">4</span> 		
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491812464"></a>
+        <a id="idm45947994451680"></a>
         <h2>Reference</h2>
         <p>
       Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491816304"></a>
+        <a id="idm45947994449568"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vbap.html" title="vbap"><em class="citetitle">vbap</em></a>,
@@ -191,7 +196,7 @@ a<span class="n">BR</span> <span class="o">=</span> a<span class="n">4</span> 		
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1491804272"></a>
+        <a id="idm45947994438816"></a>
         <h2>Credits</h2>
         <p>
       </p>

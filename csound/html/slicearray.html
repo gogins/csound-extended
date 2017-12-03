@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1506542192"></a>
+        <a id="idm45948009214400"></a>
         <h2>Description</h2>
         <p>
       Take a slice of a vector (one-dimensional k-rate array).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1506541552"></a>
+        <a id="idm45948009173216"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis">karray <span class="command"><strong>slicearray</strong></span> kinarray, istart, iend</pre>
+        <pre class="synopsis">karray <span class="command"><strong>slicearray</strong></span> kinarray, istart, iend [,istride]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1506543472"></a>
+        <a id="idm45948009170992"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istart</em></span> -- index of the first part of the answer.
@@ -59,22 +59,25 @@
         <p>
       <span class="emphasis"><em>iend</em></span> -- index of the first element of the answer.
     </p>
+        <p>
+      <span class="emphasis"><em>istride</em></span> -- increment for source elements (optional), defaults to 1.
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm1506540784"></a>
+        <a id="idm45948009167584"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the slicearray opcode. It uses the file <a class="ulink" href="examples/slicearray.csd.html" target="_top"> (click here to play) <em class="citetitle">slicearray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1506794224"></a>
+          <a id="idm45948009165728"></a>
           <p class="title">
-            <strong>Example 881. Example of the slicearray opcode.</strong>
+            <strong>Example 900. Example of the slicearray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1326181232"></a>
+              <a id="idm45947830403312"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -104,10 +107,13 @@ k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1
 <span class="c1">;build new arrays for the slices</span>
 k<span class="n">Arr1</span><span class="p">[]</span> <span class="nb">init</span>    <span class="mi">5</span>
 k<span class="n">Arr2</span><span class="p">[]</span> <span class="nb">init</span>    <span class="mi">4</span>
+k<span class="n">Arr3</span><span class="p">[]</span> <span class="nb">init</span>    <span class="mi">3</span>
 
 <span class="c1">;put in first five and last four elements</span>
 k<span class="n">Arr1</span>   <span class="nb">slicearray</span> k<span class="n">Arr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span>
 k<span class="n">Arr2</span>   <span class="nb">slicearray</span> k<span class="n">Arr</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span>
+<span class="c1">; and three values from 1, 1+2 and 1+2+3</span>
+k<span class="n">Arr3</span>   <span class="nb">slicearray</span> k<span class="n">Arr</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span>
 
 <span class="c1">;print the content</span>
         <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">kArr1 = slice from index 0 to index 4</span><span class="se">\n</span><span class="s">"</span>
@@ -120,6 +126,12 @@ k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1
 k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
   <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Arr2</span><span class="p">)</span> <span class="k">do</span>
         <span class="nb">printf</span>  <span class="s">"kArr2[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">Arr2</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
+  <span class="k">od</span>
+        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">kArr3 = slice from index 1 to index 5 inc2</span><span class="se">\n</span><span class="s">"</span>
+k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
+  <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Arr3</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">printf</span>  <span class="s">"kArr3[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> k<span class="n">Arr3</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
 k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
   <span class="k">od</span>
 
@@ -140,14 +152,14 @@ k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1506473328"></a>
+        <a id="idm45948009161440"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm1506478064"></a>
+        <a id="idm45948009159392"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -165,6 +177,7 @@ k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1
         <p>
     </p>
         <p>New in version 6.00</p>
+        <p>istride argument new in 6.10</p>
       </div>
     </div>
     <div class="navfooter">

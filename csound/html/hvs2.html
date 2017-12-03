@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1540909808"></a>
+        <a id="idm45948044484352"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>hvs2</em></span> allows two-dimensional Hyper Vectorial Synthesis (HVS) controlled by externally-updated k-variables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1540909936"></a>
+        <a id="idm45948044482624"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>hvs2</strong></span> kx, ky, inumParms, inumPointsX, inumPointsY, iOutTab, iPositionsTab, iSnapTab [, iConfigTab]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1540915440"></a>
+        <a id="idm45948044480496"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inumParms</em></span> - number of parameters controlled by the HVS. Each HVS snapshot is made up of <span class="emphasis"><em>inumParms</em></span> elements.
@@ -73,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1540905072"></a>
+        <a id="idm45948044469696"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kx, ky</em></span> -  these are externally-modified variables which controls the motion of the pointer in the HVS matrix cube (or square or line in case of HVS matrices made up of less than 3 dimensions). The range of these input arguments must be 0 to 1.
@@ -94,7 +94,7 @@
       Snapshot order, as stored into the <span class="emphasis"><em>iSnapTab</em></span>, can or cannot follow the order of the pivot-points numbers. In fact it is possible to alter this order by means the <span class="emphasis"><em>iPositionsTab</em></span>, a table that remaps the position of each snapshot in relation to the pivot points. The <span class="emphasis"><em>iPositionsTab</em></span> is made up of the positions of the snapshots (contained in the <span class="emphasis"><em>iSnapTab</em></span>) in the two-dimensional grid. Each subsequent element is actually a pointer representing the position in the <span class="emphasis"><em>iSnapTab</em></span>. For example, in a 2-dimensional HVS matrix such as the following (in this case having <span class="emphasis"><em>inumPointsX</em></span> = 3 and <span class="emphasis"><em>inumPointsY</em></span> = 5:
     </p>
         <div class="table">
-          <a id="idm1540893680"></a>
+          <a id="idm45948044457792"></a>
           <p class="title">
             <strong>Table 10. </strong>
           </p>
@@ -165,21 +165,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1541132400"></a>
+        <a id="idm45948044435424"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the hvs2 opcode. It uses the file <a class="ulink" href="examples/hvs2.csd.html" target="_top"> (click here to play) <em class="citetitle">hvs2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1541136496"></a>
+          <a id="idm45948044433568"></a>
           <p class="title">
-            <strong>Example 404. Example of the hvs2 opcode.</strong>
+            <strong>Example 411. Example of the hvs2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1370365424"></a>
+              <a id="idm45947873581936"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -188,55 +188,77 @@
 -odac           -iadc     -d     <span class="c1">;;;RT audio I/O</span>
 <span class="nt">&lt;/CsOptions&gt;</span>
 <span class="nt">&lt;CsInstruments&gt;</span>
+
 <span class="vg">sr</span><span class="o">=</span><span class="mi">44100</span>
 <span class="vg">ksmps</span><span class="o">=</span><span class="mi">100</span>
 <span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
+
 <span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+
 gi<span class="n">numLinesX</span> <span class="nb">init</span>	<span class="mi">4</span>
 gi<span class="n">numLinesY</span> <span class="nb">init</span>	<span class="mi">4</span>
 gi<span class="n">numParms</span>	<span class="nb">init</span>	<span class="mi">3</span>
+
 gi<span class="n">OutTab</span>	<span class="nb">ftgen</span>	<span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>      <span class="mi">0</span>
 gi<span class="n">PosTab</span>	<span class="nb">ftgen</span>	<span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>     <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span>
 gi<span class="n">SnapTab</span>	<span class="nb">ftgen</span>	<span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>     <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> \
                               <span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span>    <span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span>
+
 <span class="nb">tb0_init</span>	gi<span class="n">OutTab</span>
+
         <span class="nb">FLpanel</span>	<span class="s">"Prova HVS2"</span><span class="p">,</span><span class="mi">600</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span>
+
 gk<span class="n">1</span><span class="p">,</span>    gk<span class="n">2</span><span class="p">,</span>   i<span class="n">h1</span><span class="p">,</span> i<span class="n">h2</span>  <span class="nb">FLjoy</span>   <span class="s">"HVS controller XY"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>     <span class="mi">1</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>     <span class="o">-</span><span class="mi">1</span><span class="p">,</span>     <span class="o">-</span><span class="mi">1</span><span class="p">,</span>     <span class="mi">300</span><span class="p">,</span>    <span class="mi">300</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span> 
+
 <span class="c1">; *ihandle,                      *numlinesX,   *numlinesY, *iwidth, *iheight, *ix, *iy,*image;</span>
 gi<span class="n">handle</span>	<span class="nb">FLhvsBox</span>	gi<span class="n">numLinesX</span><span class="p">,</span>   gi<span class="n">numLinesY</span><span class="p">,</span>  <span class="mi">300</span><span class="p">,</span>   <span class="mi">300</span><span class="p">,</span>      <span class="mi">300</span><span class="p">,</span>  <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span>
+
         <span class="nb">FLpanel_end</span>
         <span class="nb">FLrun</span>
 
+
 	<span class="kd">instr</span>	<span class="nf">1</span>
+
 <span class="c1">; Smooth control signals to avoid clicks</span>
 k<span class="n">x</span> <span class="nb">portk</span> gk<span class="n">1</span><span class="p">,</span> <span class="mf">0.02</span>
 k<span class="n">y</span> <span class="nb">portk</span> gk<span class="n">2</span><span class="p">,</span> <span class="mf">0.02</span>
+
 <span class="c1">;              kx,  ky,  inumParms,  inumlinesX,  inumlinesY,  iOutTab,  iPosTab,  iSnapTab [, iConfigTab]</span>
         <span class="nb">hvs2</span>  k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> gi<span class="n">numParms</span><span class="p">,</span> gi<span class="n">numLinesX</span><span class="p">,</span> gi<span class="n">numLinesY</span><span class="p">,</span> gi<span class="n">OutTab</span><span class="p">,</span> gi<span class="n">PosTab</span><span class="p">,</span> gi<span class="n">SnapTab</span>  <span class="c1">;, iConfigTab</span>
+
 <span class="c1">;                       *kx, *ky, *ihandle;</span>
         <span class="nb">FLhvsBoxSetValue</span> gk<span class="n">1</span><span class="p">,</span> gk<span class="n">2</span><span class="p">,</span> gi<span class="n">handle</span>
+
 k<span class="n">0</span>	<span class="nb">init</span>	<span class="mi">0</span>
 k<span class="n">1</span>	<span class="nb">init</span>	<span class="mi">1</span>
 k<span class="n">2</span>	<span class="nb">init</span>	<span class="mi">2</span>
+
 <span class="nb">printk2</span>	<span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">)</span>
 <span class="nb">printk2</span>	<span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">),</span> <span class="mi">10</span>
 <span class="nb">printk2</span>	<span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">),</span> <span class="mi">20</span>
+
   k<span class="n">ris</span> <span class="nb">init</span> <span class="mf">0.003</span>
   k<span class="n">dur</span> <span class="nb">init</span> <span class="mf">0.02</span>
   k<span class="n">dec</span> <span class="nb">init</span> <span class="mf">0.007</span>
+
 <span class="c1">; Make parameters of synthesis depend on the table values produced by hvs</span>
 a<span class="n">res1</span> <span class="nb">fof</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> \
       <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span>
 a<span class="n">res2</span> <span class="nb">fof</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">tb0</span><span class="p">(</span>k<span class="n">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> \
       <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span>
+
 <span class="nb">outs</span> a<span class="n">res1</span><span class="p">,</span> a<span class="n">res2</span>
 	<span class="kd">endin</span>
+
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">10</span> <span class="mi">1</span>  <span class="c1">;Sine wave</span>
 <span class="nb">f</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1024</span> <span class="mi">19</span> <span class="mf">0.5</span> <span class="mf">0.5</span> <span class="mi">270</span> <span class="mf">0.5</span>  <span class="c1">;Grain envelope table</span>
+
 <span class="nb">f</span><span class="mi">0</span> <span class="mi">3600</span>
+
 <span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">3600</span>
+
 <span class="nt">&lt;/CsScore&gt;</span>
 <span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
@@ -249,14 +271,14 @@ a<span class="n">res2</span> <span class="nb">fof</span> <span class="mf">0.2</s
       Here is second example of the hvs2 opcode. It uses the file <a class="ulink" href="examples/hvs2-2.csd.html" target="_top"> (click here to play) <em class="citetitle">hvs2-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1541135856"></a>
+          <a id="idm45948044428288"></a>
           <p class="title">
-            <strong>Example 405. Second example of the hvs2 opcode.</strong>
+            <strong>Example 412. Second example of the hvs2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1369700592"></a>
+              <a id="idm45947873749440"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -368,7 +390,7 @@ a<span class="n">hp</span> <span class="nb">butterlp</span> a<span class="n">1</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1541122288"></a>
+        <a id="idm45948044424000"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="hvs1.html" title="hvs1"><em class="citetitle">hvs1</em></a>,
@@ -377,7 +399,7 @@ a<span class="n">hp</span> <span class="nb">butterlp</span> a<span class="n">1</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1541128432"></a>
+        <a id="idm45948044420032"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

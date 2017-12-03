@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1504010928"></a>
+        <a id="idm45948006535728"></a>
         <h2>Description</h2>
         <p>
       This opcode positions the input sound in a 3D space, with optional simulation of room acoustics, in various output formats. With <span class="emphasis"><em>spat3di</em></span>, sound source position is set at i-time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1504003248"></a>
+        <a id="idm45948006533968"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aW, aX, aY, aZ <span class="command"><strong>spat3di</strong></span> ain, iX, iY, iZ, idist, ift, imode [, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1504006448"></a>
+        <a id="idm45948006531760"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iX</em></span> -- Sound source X coordinate in meters (positive: right, negative: left)
@@ -89,7 +89,7 @@ delay = distance / 340 (in seconds)<br />
       </p>
         <div class="literallayout">
           <p><br />
-distance = sqrt(iXˆ2 + iYˆ2 + iZˆ2)<br />
+distance = sqrt(iX^2 + iY^2 + iZ^2)<br />
       </p>
         </div>
         <p>
@@ -99,8 +99,8 @@ distance = sqrt(iXˆ2 + iYˆ2 + iZˆ2)<br />
       </p>
         <div class="literallayout">
           <p><br />
-distance from left mic = sqrt((iX + idist/2)ˆ2 + iYˆ2 + iZˆ2)<br />
-distance from right mic = sqrt((iX - idist/2)ˆ2 + iYˆ2 + iZˆ2)<br />
+distance from left mic = sqrt((iX + idist/2)^2 + iY^2 + iZ^2)<br />
+distance from right mic = sqrt((iX - idist/2)^2 + iY^2 + iZ^2)<br />
       </p>
         </div>
         <p>
@@ -276,7 +276,7 @@ aright  =  aY + aZ<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1503962288"></a>
+        <a id="idm45948006482208"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> -- Input signal
@@ -374,14 +374,14 @@ aright  =  aY + aZ<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1504204464"></a>
+        <a id="idm45948006451616"></a>
         <h2>Examples</h2>
         <p>
       See the examples for <a class="link" href="spat3d.html" title="spat3d"><em class="citetitle">spat3d</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1504202160"></a>
+        <a id="idm45948006449424"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="spat3d.html" title="spat3d"><em class="citetitle">spat3d</em></a>, 
@@ -389,7 +389,7 @@ aright  =  aY + aZ<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1504192560"></a>
+        <a id="idm45948006446352"></a>
         <h2>Credits</h2>
         <p>
       </p>

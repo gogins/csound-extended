@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1519269744"></a>
+        <a id="idm45948021914064"></a>
         <h2>Description</h2>
         <p>
       Computes <span class="emphasis"><em>xarg</em></span> to the power of <span class="emphasis"><em>kpow</em></span> (or <span class="emphasis"><em>ipow</em></span>) and scales the result by <span class="emphasis"><em>inorm</em></span>.
@@ -48,21 +48,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1519266928"></a>
+        <a id="idm45948021910656"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>pow</strong></span> aarg, kpow [, inorm]</pre>
         <pre class="synopsis">ires <span class="command"><strong>pow</strong></span> iarg, ipow [, inorm]</pre>
-        <pre class="synopsis">kres <span class="command"><strong>pow</strong></span> karg, kpow [, inorm]</pre>
+        <pre class="synopsis">kres <span class="command"><strong>pow</strong></span> karg, kpow [,
+    inorm]</pre>
+        <pre class="synopsis">ires[] <span class="command"><strong>pow</strong></span> iarg[], ipow[] </pre>
+        <pre class="synopsis">kres[] <span class="command"><strong>pow</strong></span> karg[], kpow[]</pre>
+        <pre class="synopsis">ires[] <span class="command"><strong>pow</strong></span> iarg[], ipow </pre>
+        <pre class="synopsis">kres[] <span class="command"><strong>pow</strong></span> karg[], kpow </pre>
       </div>
       <div class="refsect1">
-        <a id="idm1519257712"></a>
+        <a id="idm45948021899936"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inorm</em></span> (optional, default=1) -- The number to divide the result (default to 1). This is especially useful if you are doing powers of a- or k- signals where samples out of range are extremely common!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1519256816"></a>
+        <a id="idm45948021897888"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aarg</em></span>, <span class="emphasis"><em>iarg</em></span>, <span class="emphasis"><em>karg</em></span> -- the base.
@@ -81,7 +86,7 @@
             <tr>
               <td align="left" valign="top">
                 <p>
-        Use <span class="emphasis"><em>ˆ</em></span> with caution in arithmetical statements, as the precedence may not be correct. New in Csound version 3.493.
+        Use <span class="emphasis"><em>^</em></span> with caution in arithmetical statements, as the precedence may not be correct. New in Csound version 3.493.
       </p>
               </td>
             </tr>
@@ -89,20 +94,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm1519262960"></a>
+        <a id="idm45948021892576"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pow opcode. It uses the file <a class="ulink" href="examples/pow.csd.html" target="_top"> (click here to play) <em class="citetitle">pow.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1519258352"></a>
+          <a id="idm45948021890800"></a>
           <p class="title">
-            <strong>Example 693. Example of the pow opcode.</strong>
+            <strong>Example 711. Example of the pow opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1340785776"></a>
+              <a id="idm45947846190272"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -158,7 +163,7 @@ a<span class="n">sig</span>	  <span class="o">=</span> <span class="nb">round</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1519250928"></a>
+        <a id="idm45948021885584"></a>
         <h2>Credits</h2>
         <p>
       </p>

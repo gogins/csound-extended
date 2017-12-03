@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="divz.html" title="divz" />
-    <link rel="next" href="downsamp.html" title="downsamp" />
+    <link rel="next" href="dot.html" title="dot" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="divz.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="downsamp.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="dot.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1556850672"></a>
+        <a id="idm45948060404416"></a>
         <h2>Description</h2>
         <p>
       A fast and robust method for approximating sound propagation, achieving convincing Doppler shifts without having to solve equations. The method computes frequency shifts based on reading an input delay line at a delay time computed from the distance between source and mic and the speed of sound. One instance of the opcode is required for each dimension of space through which the sound source moves. If the source sound moves at a constant speed from in front of the microphone, through the microphone, to behind the microphone, then the output will be frequency shifted above the source frequency at a constant frequency while the source approaches, then discontinuously will be shifted below the source frequency at a constant frequency as the source recedes from the microphone. If the source sound moves at a constant speed through a point to one side of the microphone, then the rate of change of position will not be constant, and the familiar Doppler frequency shift typical of a siren or engine approaching and receding along a road beside a listener will be heard.
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm1556841328"></a>
+        <a id="idm45948060399328"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ashifted <span class="command"><strong>doppler</strong></span> asource, ksourceposition, kmicposition [, isoundspeed, ifiltercutoff]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1556839920"></a>
+        <a id="idm45948060397152"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isoundspeed</em></span> (optional, default=340.29) -- Speed of sound in meters/second.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1556843376"></a>
+        <a id="idm45948060336752"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asource</em></span> -- Input signal at the sound source.
@@ -74,21 +74,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1556838512"></a>
+        <a id="idm45948060333312"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the doppler opcode. It uses the file <a class="ulink" href="examples/doppler.csd.html" target="_top"> (click here to play) <em class="citetitle">doppler.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1556834416"></a>
+          <a id="idm45948060331456"></a>
           <p class="title">
-            <strong>Example 217. Example of the doppler opcode.</strong>
+            <strong>Example 220. Example of the doppler opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1391725680"></a>
+              <a id="idm45947895924288"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -138,7 +138,7 @@ a<span class="n">output</span>       <span class="nb">doppler</span> a<span clas
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1556837104"></a>
+        <a id="idm45948060325088"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -166,14 +166,14 @@ a<span class="n">output</span>       <span class="nb">doppler</span> a<span clas
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="downsamp.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="dot.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">divz </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> downsamp</td>
+          <td width="40%" align="right" valign="top"> dot</td>
         </tr>
       </table>
     </div>

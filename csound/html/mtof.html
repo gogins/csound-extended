@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1528358512"></a>
+        <a id="idm45948031379568"></a>
         <h2>Description</h2>
         <p>
 	  Convert a midi note number value to cycles per second, taking
@@ -47,13 +47,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1528361840"></a>
+        <a id="idm45948031378256"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ifreq <span class="command"><strong>mtof</strong></span> imidi</pre>
         <pre class="synopsis">kfreq <span class="command"><strong>mtof</strong></span> kmidi</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1528356592"></a>
+        <a id="idm45948031333392"></a>
         <h2>Performance</h2>
         <p>
 	  <span class="emphasis"><em>kmidi</em></span> / <span class="emphasis"><em>imidi</em></span> -- Midi
@@ -65,19 +65,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1528348656"></a>
+        <a id="idm45948031329824"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mtof opcode. It uses the file <a class="ulink" href="examples/mtof-ftom.csd.html" target="_top"> (click here to play) <em class="citetitle">mtof-ftom.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1528348016"></a>
+          <a id="idm45948031326784"></a>
           <p class="title">
-            <strong>Example 570. Example of the mtof opcode.</strong>
+            <strong>Example 584. Example of the mtof opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1352701936"></a>
+              <a id="idm45947855121760"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -85,10 +85,10 @@
 <span class="nt">&lt;CsInstruments&gt;</span>
 
 <span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
-<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">A4</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">A4</span> <span class="o">=</span> <span class="mi">440</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
     k<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span><span class="mi">69</span><span class="p">)</span>
@@ -113,8 +113,7 @@
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
-<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">10</span>
-
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
 <span class="nt">&lt;/CsScore&gt;</span>
 <span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
@@ -125,7 +124,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1528350576"></a>
+        <a id="idm45948031325024"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpsmidinn.html" title="cpsmidinn"><em class="citetitle">cpsmidinn</em></a>, 
@@ -137,7 +136,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1528341488"></a>
+        <a id="idm45948031319568"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
         <p>New in version 6.09</p>

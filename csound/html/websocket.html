@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1486165744"></a>
+        <a id="idm45947988876064"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>websocket</em></span> reads and writes <span class="emphasis"><em>N</em></span> signals and arrays using a websocket connection.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1486172400"></a>
+        <a id="idm45947988873984"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">xout1[, xout2, xout3, ..., xoutN] <span class="command"><strong>websocket</strong></span> iport, xin</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1486166384"></a>
+        <a id="idm45947988809696"></a>
         <h2>Initialization</h2>
         <p>
         <span class="emphasis"><em>iport</em></span> the local web port to read/write data.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1486158576"></a>
+        <a id="idm45947988808032"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xout1,... xoutN</em></span> -- The output variables which contain data received from a websocket. On the web side the websocket must send data using a protocol name that matches the output variable name e.g. "ksignal" for a k-rate variable. If an array is intended to be received from a websocket it must be first initialised before being used as an output to the opcode. Otherwise the opcode doesn't know what size data to expect from the websocket. When sending data to a websocket from the web page it must be sent as a 32 or 64 bit array, depending on the build of Csound that is being used. 
@@ -92,21 +92,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1486159600"></a>
+        <a id="idm45947988802240"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the websocket opcode. It uses the file <a class="ulink" href="examples/websocket.csd.html" target="_top"> (click here to play) <em class="citetitle">websocket.csd</em></a> and <a class="ulink" href="examples/websocket.html" target="_top"><em class="citetitle">websocket.html</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1486163312"></a>
+          <a id="idm45947988799520"></a>
           <p class="title">
-            <strong>Example 1096. Example of the websocket opcode.</strong>
+            <strong>Example 1119. Example of the websocket opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1304768496"></a>
+              <a id="idm45947808987120"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -139,7 +139,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1486154864"></a>
+        <a id="idm45947988795232"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="OSClisten.html" title="OSClisten"><em class="citetitle">OSClisten</em></a>
@@ -147,7 +147,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1486153968"></a>
+        <a id="idm45947988792256"></a>
         <h2>Credits</h2>
         <p>
       </p>

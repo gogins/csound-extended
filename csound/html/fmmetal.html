@@ -9,8 +9,8 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="fmbell.html" title="fmbell" />
-    <link rel="next" href="fmpercfl.html" title="fmpercfl" />
+    <link rel="prev" href="fmin.html" title="fmin" />
+    <link rel="next" href="fmod.html" title="fmod" />
   </head>
   <body>
     <div class="navheader">
@@ -19,9 +19,9 @@
           <th colspan="3" align="center">fmmetal</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="fmbell.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="fmin.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="fmpercfl.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="fmod.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1546440688"></a>
+        <a id="idm45948050261568"></a>
         <h2>Description</h2>
         <p>
       Uses FM synthesis to create a <span class="quote">“<span class="quote">Heavy Metal</span>”</span> sound. It comes from a family of FM sounds, all using 4 basic oscillators and various architectures, as used in the TX81Z synthesizer.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1546434800"></a>
+        <a id="idm45948050195520"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>fmmetal</strong></span> kamp, kfreq, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, \
       ifn4, ivfn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1546440176"></a>
+        <a id="idm45948050193200"></a>
         <h2>Initialization</h2>
         <p>
       All these opcodes take 5 tables for initialization. The first 4 are the basic inputs and the last is the low frequency oscillator (LFO) used for vibrato. The last table should usually be a sine wave.
@@ -97,7 +97,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm1546688240"></a>
+        <a id="idm45948050183392"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -131,21 +131,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1546686832"></a>
+        <a id="idm45948050175232"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fmmetal opcode. It uses the file <a class="ulink" href="examples/fmmetal.csd.html" target="_top"> (click here to play) <em class="citetitle">fmmetal.csd</em></a>, and <a class="ulink" href="examples/twopeaks.aiff" target="_top"><em class="citetitle">twopeaks.aiff</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1546681072"></a>
+          <a id="idm45948050172528"></a>
           <p class="title">
-            <strong>Example 320. Example of the fmmetal opcode.</strong>
+            <strong>Example 326. Example of the fmmetal opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1379931120"></a>
+              <a id="idm45947882249568"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -200,7 +200,7 @@ a<span class="n">sig</span> <span class="nb">fmmetal</span> <span class="mf">.5<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1546675184"></a>
+        <a id="idm45948050168208"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fmb3.html" title="fmb3"><em class="citetitle">fmb3</em></a>,
@@ -211,7 +211,7 @@ a<span class="n">sig</span> <span class="nb">fmmetal</span> <span class="mf">.5<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1546678768"></a>
+        <a id="idm45948050162256"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -235,18 +235,18 @@ a<span class="n">sig</span> <span class="nb">fmmetal</span> <span class="mf">.5<
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="fmbell.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="fmin.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="fmpercfl.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="fmod.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">fmbell </td>
+          <td width="40%" align="left" valign="top">fmin </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> fmpercfl</td>
+          <td width="40%" align="right" valign="top"> fmod</td>
         </tr>
       </table>
     </div>

@@ -38,24 +38,24 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1487499520"></a>
+        <a id="idm45947989957392"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vstparamset </strong></span>instance, kparam, kvalue</pre>
         <pre class="synopsis">kvalue <span class="command"><strong>vstparamget </strong></span>instance, kparam</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1487490432"></a>
+        <a id="idm45947989882016"></a>
         <h2>Description</h2>
         <p><span class="emphasis"><em>vstparamset</em></span> and <span class="emphasis"><em>vstparamget</em></span> are used for parameter comunication to and from a VST plugin.</p>
       </div>
       <div class="refsect1">
-        <a id="idm1487495040"></a>
+        <a id="idm45947989880128"></a>
         <h2>Initialization</h2>
         <p><span class="emphasis"><em>instance</em></span> - the number which identifies the
       plugin, to be passed to other vst4cs opcodes.</p>
       </div>
       <div class="refsect1">
-        <a id="idm1487495168"></a>
+        <a id="idm45947989878464"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kparam</em></span> - The number of the parameter to set or get.</p>
         <p><span class="emphasis"><em>kvalue</em></span> - the value to set, or the the value returned by the plugin.</p>
@@ -64,20 +64,20 @@
       plugin with vstinit. Note that the VST protocol specifies that all parameter values must lie between 0.0 and 1.0, inclusive.</p>
       </div>
       <div class="refsect1">
-        <a id="idm1487489664"></a>
+        <a id="idm45947989874992"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the use of the <span class="emphasis"><em>vstparamset</em></span> opcode. It uses the file <a class="ulink" href="examples/vst4cs.csd.html" target="_top"> (click here to play) <em class="citetitle">vst4cs.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1487496448"></a>
+          <a id="idm45947989872688"></a>
           <p class="title">
-            <strong>Example 1087. Example of the <span class="emphasis"><em>vstparamset</em></span> opcode.</strong>
+            <strong>Example 1110. Example of the <span class="emphasis"><em>vstparamset</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1305033840"></a>
+              <a id="idm45947809582016"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -153,7 +153,7 @@ a<span class="n">left</span><span class="p">,</span> a<span class="n">right</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1487485440"></a>
+        <a id="idm45947989867968"></a>
         <h2>Credits</h2>
         <p>By: Andrés Cabrera and Michael Gogins</p>
         <p>Uses code from Hermann Seib's VSTHost and Thomas Grill's vst~

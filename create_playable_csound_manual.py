@@ -19,10 +19,12 @@ import shutil
 import traceback
 
 source_home = r'''D:\msys64\home\restore\manual'''
+source_home = r'''/home/mkg/csound/manual'''
 source_html_directory = os.path.join(source_home, 'html')
 source_examples_directory = os.path.join(source_html_directory, 'examples')
 
 target_home = r'''C:\Users\restore\gogins.github.io'''
+target_home = r'''/home/mkg/gogins.github.io'''
 target_html_directory = os.path.join(target_home, 'csound', 'html')
 target_examples_directory = os.path.join(target_html_directory, 'examples')
 
