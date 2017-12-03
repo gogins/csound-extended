@@ -6,7 +6,7 @@
 </head>
 <h1>xtratim-2</h1>
 <p>
-This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
 </p>
 <p>
 <input type="button" value="Play" onclick="start_onclick()"/>
@@ -24,7 +24,7 @@ This example will play if your Web browser is a desktop version of Google Chrome
 ;xtratim example by Jonathan Murphy Dec. 2006
 sr = 44100
 ksmps = 10
-nchnls = 2 ; Changed for PNaCl output from: = 2
+nchnls = 2 ; Changed for WebAssembly output from: = 2
 
 	    ; sine wave for oscillators
 gisin	    ftgen     1, 0, 4096, 10, 1
@@ -103,7 +103,7 @@ f 0 3600 ;dummy table to wait for realtime MIDI events
 <h3>Csound Messages</h3>
 <textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
 </textarea>
-<script type="text/javascript" src="../../csound.js"></script>
+<script type="text/javascript" src="/csound/csound.js"></script>
 <script>
 function handleMessage(message) {
 console.log(message);
@@ -120,6 +120,8 @@ csound.stop();
 sleep(500).then(() => {
     var csd = document.getElementById('csd').value;
     csound.compileCsdText(csd);
+    csound.start();
+    csound.perform();
 })
 }
 function stop_onclick () {

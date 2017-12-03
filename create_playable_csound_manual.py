@@ -5,7 +5,7 @@ Copyright (c) 2017 by Michael Gogins.
 Licensed under the terms of the GNU Lesser Public License version 2
 
 This Python script creates a modified version of the Csound Reference Manual
-in which the example CSDs will play online in Google Chrome using the PNaCl
+in which the example CSDs will play online in Google Chrome using the WebAssembly
 build of Csound. The target is the gogins.github.io GitHub repository.
 '''
 
@@ -53,7 +53,7 @@ def format_playable_example(filename, text):
         fout.write(html_filename)
         chunk = '''</h1>
 <p>
-This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
 </p>
 <p>
 <input type="button" value="Play" onclick="start_onclick()"/>
@@ -61,13 +61,13 @@ This example will play if your Web browser is a desktop version of Google Chrome
 <p>
 <textarea id="csd" style="width: 100%; height: 50%;font-size:12px;">'''
         fout.write(chunk)
-        text = text.replace('nchnls ', 'nchnls = 2 ; Changed for PNaCl output from: ')
+        text = text.replace('nchnls ', 'nchnls = 2 ; Changed for WebAssembly output from: ')
         fout.write(text)
         chunk = '''</textarea>
 <h3>Csound Messages</h3>
 <textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
 </textarea>
-<script type="text/javascript" src="../../csound.js"></script>
+<script type="text/javascript" src="/csound/csound.js"></script>
 <script>
 function handleMessage(message) {
 console.log(message);
@@ -84,6 +84,8 @@ csound.stop();
 sleep(500).then(() => {
     var csd = document.getElementById('csd').value;
     csound.compileCsdText(csd);
+    csound.start();
+    csound.perform();
 })
 }
 function stop_onclick () {

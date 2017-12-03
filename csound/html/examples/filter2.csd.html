@@ -6,7 +6,7 @@
 </head>
 <h1>filter2</h1>
 <p>
-This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
 </p>
 <p>
 <input type="button" value="Play" onclick="start_onclick()"/>
@@ -24,7 +24,7 @@ This example will play if your Web browser is a desktop version of Google Chrome
 
 sr = 44100
 ksmps = 32
-nchnls = 2 ; Changed for PNaCl output from: = 2
+nchnls = 2 ; Changed for WebAssembly output from: = 2
 0dbfs  = 1
 
 instr 1	 ; 2 saw waves of which one is slightly detuned
@@ -53,7 +53,7 @@ e
 <h3>Csound Messages</h3>
 <textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
 </textarea>
-<script type="text/javascript" src="../../csound.js"></script>
+<script type="text/javascript" src="/csound/csound.js"></script>
 <script>
 function handleMessage(message) {
 console.log(message);
@@ -70,6 +70,8 @@ csound.stop();
 sleep(500).then(() => {
     var csd = document.getElementById('csd').value;
     csound.compileCsdText(csd);
+    csound.start();
+    csound.perform();
 })
 }
 function stop_onclick () {
