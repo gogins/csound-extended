@@ -197,7 +197,7 @@ var CsoundObj = function() {
         var outputChannelCount = _getOutputChannelCount(csound_obj_);
         var audioProcessNode = audioContext.createScriptProcessor(0, inputChannelCount, outputChannelCount);
         bufferFrameCount = audioProcessNode.bufferSize;
-        // console.error("bufferFrameCount = " + bufferFrameCount);
+        console.info("audioProcessNode.bufferSize (WebAudio frames per buffer): " +  bufferFrameCount);
         audioProcessNode.inputCount = inputChannelCount;
         audioProcessNode.outputCount = outputChannelCount;
         return audioProcessNode;
@@ -292,9 +292,9 @@ var CsoundObj = function() {
         var inputChannelN = audioProcessNode.inputCount;
         var outputChannelN = audioProcessNode.outputCount;
         var spin = _getInputBuffer(csound_obj_);
-        var spinBuffer = new Float32Array(Module.HEAP8.buffer, spin, ksmps * inputChannelN);
+        var spinBuffer = new Float64Array(Module.HEAP8.buffer, spin, ksmps * inputChannelN);
         var spout = _getOutputBuffer(csound_obj_);
-        var spoutBuffer = new Float32Array(Module.HEAP8.buffer, spout, ksmps * outputChannelN);
+        var spoutBuffer = new Float64Array(Module.HEAP8.buffer, spout, ksmps * outputChannelN);
         var zerodBFS = _getZerodBFS(csound_obj_);
         that.running = true;
         var csoundFrameI = 0;

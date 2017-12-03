@@ -1808,7 +1808,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = Runtime.GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 584688;
+STATICTOP = STATIC_BASE + 584656;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
 
 
@@ -1817,7 +1817,7 @@ memoryInitializer = null;
 
 
 
-var STATIC_BUMP = 584688;
+var STATIC_BUMP = 584656;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
