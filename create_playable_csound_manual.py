@@ -52,7 +52,7 @@ def format_playable_example(filename, text):
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
-        messages_textarea.value = existing + "\n" + message;
+        messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;        
     }
     var moduleDidLoad = function() {
