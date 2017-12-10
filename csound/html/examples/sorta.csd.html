@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>sorta</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-n
+</CsOptions>
+<CsInstruments>
+
+instr 1
+ kArr[] fillarray 1,3,2,7,4
+ kSorted[] sorta kArr
+ kn = 0
+ while kn < lenarray(kSorted) do
+  printk2 kSorted[kn]
+  kn += 1
+ od
+ turnoff
+endin
+
+
+</CsInstruments>
+<CsScore>
+i1 0 1
+</CsScore>
+</CsoundSynthesizer></textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

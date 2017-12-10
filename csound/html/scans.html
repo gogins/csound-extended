@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1510381424"></a>
+        <a id="idm45948013082512"></a>
         <h2>Description</h2>
         <p>
       Generate audio output using scanned synthesis.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1510388336"></a>
+        <a id="idm45948013081168"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>scans</strong></span> kamp, kfreq, ifn, id [, iorder]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1510383728"></a>
+        <a id="idm45948013078960"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- ftable containing the scanning trajectory.  This is a series of numbers that contains addresses of masses.  The order of these addresses is used as the scan path.  It should not contain values greater than the number of masses, or negative numbers. See the <a class="link" href="SiggenScanTop.html" title="Scanned Synthesis"><em class="citetitle">introduction to the scanned synthesis section</em></a>.
@@ -69,7 +69,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1510372848"></a>
+        <a id="idm45948013027088"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- output amplitude.  Note that the resulting amplitude is also dependent on instantaneous value in the wavetable.  This number is effectively the scaling factor of the wavetable.
@@ -85,14 +85,14 @@
       Here is an example of the scanned synthesis. It uses the file <a class="ulink" href="examples/scans.csd.html" target="_top"> (click here to play) <em class="citetitle">scans.csd</em></a>, and <a class="ulink" href="examples/string-128.matrix" target="_top"><em class="citetitle">string-128.matrix</em></a>.
       </p>
         <div class="example">
-          <a id="idm1510365424"></a>
+          <a id="idm45948013021008"></a>
           <p class="title">
-            <strong>Example 832. Example of the scans opcode.</strong>
+            <strong>Example 851. Example of the scans opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1330992368"></a>
+              <a id="idm45947834657856"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -161,13 +161,13 @@ a<span class="n">1</span>  <span class="nb">scans</span> <span class="nb">ampdb<
       Here is another example of the scanned synthesis, using samples as excitation signal. It uses the file <a class="ulink" href="examples/scans-2.csd.html" target="_top"> (click here to play) <em class="citetitle">scans-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1510364144"></a>
+          <a id="idm45948013015680"></a>
           <p class="title">
-            <strong>Example 833. Second example of the scans opcode.</strong>
+            <strong>Example 852. Second example of the scans opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1330514688"></a>
+              <a id="idm45947834639904"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -239,7 +239,7 @@ a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1510365936"></a>
+        <a id="idm45948013013712"></a>
         <h2>See Also</h2>
         <p>
       The matrix file <span class="quote">“<span class="quote">string-128.matrix</span>”</span>, as well as several other matrices, is also available in a <a class="ulink" href="http://www.csounds.com/scanned/zip/scanmatrices.zip" target="_top"><em class="citetitle">zipped file</em></a> from the <a class="ulink" href="http://www.csounds.com/scanned/" target="_top"><em class="citetitle">Scanned Synthesis page</em></a> at cSounds.com.
@@ -247,7 +247,7 @@ a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</
         <p> More information on this opcode: <a class="ulink" href="http://www.csounds.com/stevenyi/scanned/yi_scannedSynthesis.html" target="_top"><em class="citetitle">http://www.csounds.com/stevenyi/scanned/yi_scannedSynthesis.html</em></a>  , written by Steven Yi </p>
       </div>
       <div class="refsect1">
-        <a id="idm1510363120"></a>
+        <a id="idm45948013008832"></a>
         <h2>Credits</h2>
         <p>
       </p>

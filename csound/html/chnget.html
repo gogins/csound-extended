@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562705408"></a>
+        <a id="idm45948066424672"></a>
         <h2>Description</h2>
         <p>
       Reads data from a channel of the inward named software bus.
@@ -48,15 +48,16 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562709632"></a>
+        <a id="idm45948066422080"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ival <span class="command"><strong>chnget</strong></span> Sname</pre>
         <pre class="synopsis">kval <span class="command"><strong>chnget</strong></span> Sname</pre>
         <pre class="synopsis">aval <span class="command"><strong>chnget</strong></span> Sname</pre>
         <pre class="synopsis">Sval <span class="command"><strong>chnget</strong></span> Sname</pre>
+        <pre class="synopsis">Sval <span class="command"><strong>chngetks</strong></span> Sname</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1562698240"></a>
+        <a id="idm45948066414240"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sname</em></span> -- a string that identifies a channel
@@ -70,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562695808"></a>
+        <a id="idm45948066410816"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval</em></span> -- the control value read at performance time.
@@ -78,9 +79,15 @@
         <p>
       <span class="emphasis"><em>aval</em></span> -- the audio signal read at performance time.
     </p>
+        <p>
+      <span class="emphasis"><em>Sval</em></span> -- the string value read at
+      k-rate. The chnget opcode works both at i-time and perf-time,
+      whereas chngetks works only at perf-time. String variables are only
+      updated if the channel has changed.
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562696576"></a>
+        <a id="idm45948066407248"></a>
         <h2>Example</h2>
         <p>
       The example shows the software bus being used as an asynchronous
@@ -105,13 +112,13 @@
       Here is another example of the chnget opcode. It uses the file <a class="ulink" href="examples/chnget.csd.html" target="_top"> (click here to play) <em class="citetitle">chnget.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1562684160"></a>
+          <a id="idm45948066395664"></a>
           <p class="title">
-            <strong>Example 121. Example of the chnget opcode.</strong>
+            <strong>Example 123. Example of the chnget opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1399285104"></a>
+              <a id="idm45947900744432"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -204,7 +211,7 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>    <
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562683904"></a>
+        <a id="idm45948066393744"></a>
         <h2>Credits</h2>
         <p>
       </p>

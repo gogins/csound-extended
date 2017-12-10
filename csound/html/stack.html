@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1431740144"></a>
+        <a id="idm45947932282112"></a>
         <h2>Description</h2>
         <p>
       Initializes and sets the size of the global stack.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1431736176"></a>
+        <a id="idm45947932240864"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>stack</strong></span>  iStackSize</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1431737456"></a>
+        <a id="idm45947932238960"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iStackSize</em></span>  - size of the stack in bytes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1431735920"></a>
+        <a id="idm45947932237312"></a>
         <h2>Performance</h2>
         <p>
       Csound implements a single global stack. Initializing the stack with the <span class="emphasis"><em>stack</em></span> opcode is not required - it is optional, and if not done, the first use of <a class="link" href="push.html" title="push"><em class="citetitle">push</em></a> or <a class="link" href="push_f.html" title="push_f"><em class="citetitle">push_f</em></a> will automatically create a stack of 32768 bytes. Otherwise, <span class="emphasis"><em>stack</em></span> is normally called from the orchestra header, and takes a stack size parameter in bytes (there is an upper limit of about 16 MB). Once set, the stack size is fixed and cannot be changed during performance.
@@ -80,20 +80,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1431718640"></a>
+        <a id="idm45947932218592"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the stack opcode. It uses the file <a class="ulink" href="examples/stack.csd.html" target="_top"> (click here to play) <em class="citetitle">stack.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1431717360"></a>
+          <a id="idm45947932216736"></a>
           <p class="title">
-            <strong>Example 1206. Example of the stack opcode.</strong>
+            <strong>Example 1236. Example of the stack opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1290798320"></a>
+              <a id="idm45947795732848"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,7 +142,7 @@ k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1431721968"></a>
+        <a id="idm45947932212448"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="pop.html" title="pop"><em class="citetitle">pop</em></a>,
@@ -153,7 +153,7 @@ k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0<
         <p>Using this opcode is somewhat hackish, as you can read here: <a class="ulink" href="http://csound.1045644.n5.nabble.com/passing-a-string-to-a-UDO-td1099284.html" target="_top">http://csound.1045644.n5.nabble.com/passing-a-string-to-a-UDO-td1099284.html</a></p>
       </div>
       <div class="refsect1">
-        <a id="idm1431712496"></a>
+        <a id="idm45947932206624"></a>
         <h2>Credits</h2>
         <p>By: Istvan Varga.</p>
         <p>2006</p>

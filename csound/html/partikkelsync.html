@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="partikkel.html" title="partikkel" />
+    <link rel="prev" href="partikkelset.html" title="partikkelset" />
     <link rel="next" href="passign.html" title="passign" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">partikkelsync</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="partikkel.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="partikkelset.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="passign.html">Next</a></td>
         </tr>
@@ -40,19 +40,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522211824"></a>
+        <a id="idm45948024728096"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>partikkelsync</em></span> is an opcode for outputting <a class="link" href="partikkel.html" title="partikkel"><em class="citetitle">partikkel</em></a>'s grain scheduler clock pulse and phase. <span class="emphasis"><em>partikkelsync</em></span>'s output can be used to synchronize other instances of the <a class="link" href="partikkel.html" title="partikkel"><em class="citetitle">partikkel</em></a> opcode to the same clock.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522204144"></a>
+        <a id="idm45948024724272"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">async [,aphase] <span class="command"><strong>partikkelsync</strong></span> iopcode_id</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1522204784"></a>
+        <a id="idm45948024722064"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iopcode_id</em></span> -- the opcode id, linking an
@@ -60,7 +60,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522203632"></a>
+        <a id="idm45948024718992"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>async</em></span> -- trigger pulse signal. 
@@ -75,20 +75,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522192880"></a>
+        <a id="idm45948024713040"></a>
         <h2>Example</h2>
         <p>
       Here is an example of the partikkelsync opcodes. It uses the file <a class="ulink" href="examples/partikkelsync.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkelsync.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1522191088"></a>
+          <a id="idm45948024711152"></a>
           <p class="title">
-            <strong>Example 650. Example with soft sync of two partikkel generators.</strong>
+            <strong>Example 668. Example with soft sync of two partikkel generators.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1346238192"></a>
+              <a id="idm45947847193664"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -268,13 +268,13 @@ iMaxSync	= p8		; max soft sync amount (increasing to this value during length of
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522193136"></a>
+        <a id="idm45948024706848"></a>
         <h2>See Also</h2>
         <p><a class="link" href="partikkel.html" title="partikkel"><em class="citetitle">partikkel</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522195440"></a>
+        <a id="idm45948024704928"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -303,14 +303,14 @@ iMaxSync	= p8		; max soft sync amount (increasing to this value during length of
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="partikkel.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="partikkelset.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="passign.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">partikkel </td>
+          <td width="40%" align="left" valign="top">partikkelset </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

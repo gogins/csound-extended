@@ -1,16 +1,37 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>adsr</title
-<link rel="stylesheet" type="text/css" href="csound.css" />
-</head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
 <h1>jacko</h1>
 <p>
-This example will play if your Web browser is a desktop version of Google Chrome with PNaCl enabled. You can edit and replay the code. At this time, most but not all examples will run in PNaCl.
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
 </p>
 <p>
-<input type="button" value="Play" onclick="start_onclick()"/>
-<input type="button" value="Stop" onclick="stop_onclick()"/>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
 <p>
 <textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
 <CsOptions>
@@ -26,7 +47,7 @@ sr    	   = 48000
 	   ; The control rate must be BOTH a power of 2 (for Jack)
 	   ; AND go evenly into sr. This is about the only one that works!
 ksmps 	   = 128
-nchnls = 2 ; Changed for PNaCl output from: 	   = 2
+nchnls = 2 ; Changed for WebAssembly output from: 	   = 2
 0dbfs 	   = 1
 
 	   JackoInit		"default", "csound"
@@ -119,29 +140,5 @@ e 2
 <h3>Csound Messages</h3>
 <textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
 </textarea>
-<script type="text/javascript" src="../../csound.js"></script>
-<script>
-function handleMessage(message) {
-console.log(message);
-var messages_textarea = document.getElementById("console");
-var existing = messages_textarea.value;
-messages_textarea.value = existing + message.data;
-messages_textarea.scrollTop = messages_textarea.scrollHeight;
-}
-function sleep (time) {
-return new Promise((resolve) => setTimeout(resolve, time));
-}
-function start_onclick() {
-csound.stop();
-sleep(500).then(() => {
-    var csd = document.getElementById('csd').value;
-    csound.compileCsdText(csd);
-})
-}
-function stop_onclick () {
-csound.stop();
-}
-</script>
-<div id="engine"></div>
 </body>
 </html>

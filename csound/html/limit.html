@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="lfo.html" title="lfo" />
-    <link rel="next" href="line.html" title="line" />
+    <link rel="next" href="limit1.html" title="limit1" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="lfo.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="line.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="limit1.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,21 +39,23 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm1537332592"></a>
+        <a id="idm45948040589792"></a>
         <h2>Description</h2>
         <p>
       Sets the lower and upper limits of the value it processes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1537340144"></a>
+        <a id="idm45948040588608"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>limit</strong></span> asig, klow, khigh</pre>
         <pre class="synopsis">ires <span class="command"><strong>limit</strong></span> isig, ilow, ihigh</pre>
         <pre class="synopsis">kres <span class="command"><strong>limit</strong></span> ksig, klow, khigh</pre>
+        <pre class="synopsis">ires[] <span class="command"><strong>limit</strong></span> isig[], ilow, ihigh</pre>
+        <pre class="synopsis">kres[] <span class="command"><strong>limit</strong></span> ksig[], klow, khigh</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1537331184"></a>
+        <a id="idm45948040501728"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isig</em></span> -- input signal
@@ -66,7 +68,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1537327856"></a>
+        <a id="idm45948040498432"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xsig</em></span> -- input signal
@@ -85,20 +87,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1537322992"></a>
+        <a id="idm45948040491856"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the limit opcode. It uses the file <a class="ulink" href="examples/limit.csd.html" target="_top"> (click here to play) <em class="citetitle">limit.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1537322480"></a>
+          <a id="idm45948040490000"></a>
           <p class="title">
-            <strong>Example 445. Example of the limit opcode.</strong>
+            <strong>Example 455. Example of the limit opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1366181872"></a>
+              <a id="idm45947868031504"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -161,7 +163,7 @@ a<span class="n">sig</span>  <span class="nb">mirror</span>  a<span class="n">in
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1537320560"></a>
+        <a id="idm45948040485712"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="mirror.html" title="mirror"><em class="citetitle">mirror</em></a>,
@@ -169,7 +171,7 @@ a<span class="n">sig</span>  <span class="nb">mirror</span>  a<span class="n">in
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1537317488"></a>
+        <a id="idm45948040482704"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -194,14 +196,14 @@ a<span class="n">sig</span>  <span class="nb">mirror</span>  a<span class="n">in
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="line.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="limit1.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">lfo </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> line</td>
+          <td width="40%" align="right" valign="top"> limit1</td>
         </tr>
       </table>
     </div>

@@ -37,20 +37,20 @@
         <p>csound</p>
       </div>
       <div class="refsect1">
-        <a id="idm1591370736"></a>
+        <a id="idm45948088250720"></a>
         <h2>Description</h2>
         <p>
         The <span class="emphasis"><em>csound</em></span> command executes Csound.
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm1591373424"></a>
+        <a id="idm45948088249088"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [orchname]  [scorename]</pre>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [csdfilename]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1591361776"></a>
+        <a id="idm45948088167904"></a>
         <h2>Csound command line flags</h2>
         <p>
         Listed below are the command line flags available in Csound6 in alphabetical order. Various platform
@@ -249,7 +249,7 @@
             <dd>
               <p>
               list audio devices (x=out, output devices only; x=in,
-	      input; else input and output) and exit.
+              input; else input and output) and exit.
             </p>
             </dd>
             <dt>
@@ -712,8 +712,8 @@
                   <tr>
                     <td align="left" valign="top">
                       <p>
-	    The -L flag is only valid on *NIX systems which have pipes. It doesn't work on Windows.
-	  </p>
+      The -L flag is only valid on *NIX systems which have pipes. It doesn't work on Windows.
+    </p>
                     </td>
                   </tr>
                 </table>
@@ -942,7 +942,7 @@
             <dd>
               <p>
              list midi devices (x=out, output devices only; x=in,
-	      input; else input and output) and exit.
+        input; else input and output) and exit.
             </p>
             </dd>
             <dt>
@@ -1151,8 +1151,8 @@
             </dt>
             <dd>
               <p>
-	    Load plugin library <span class="emphasis"><em>LIBNAME</em></span>.
-	  </p>
+      Load plugin library <span class="emphasis"><em>LIBNAME</em></span>.
+    </p>
             </dd>
             <dt>
               <a id="FlagMinuMinusOrc"></a>
@@ -1160,9 +1160,9 @@
             </dt>
             <dd>
               <p>
-	    Set the argument as the orchestrra file.  Used when not
+      Set the argument as the orchestrra file.  Used when not
             score is required&gt;.  (Csound 5.18 and later).
-	  </p>
+    </p>
             </dd>
             <dt>
               <a id="FlagsMinusMinusKsmps"></a>
@@ -1188,8 +1188,39 @@
             </dt>
             <dd>
               <p>
-            Set UDP port on which to listen instruments/orchestra code
+            Set UDP port on which to listen for commands and instruments/orchestra code
             (implies --daemon) 
+          </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusUdpEcho"></a>
+              <span class="term">--udp-echo<a id="IndexMinusUdpEcho" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+            Switches on printing of UDP commands on the terminal. Any
+            messages received by the UDP server are echoed (whether
+            they are valid commands or not).
+          </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusUdpConsole"></a>
+              <span class="term">--udp-console=address:port<a id="IndexFlagsMinusUdpConsole" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+            Redirects the console messages to a remote address:port
+	    via UDP.
+          </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusUdpMirrorConsole"></a>
+              <span class="term">--udp-mirror-console=address:port<a id="IndexFlagsMinusUdpMirrorConsole" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+            Mirrors the console messages to a remote address:port
+	    via UDP.
           </p>
             </dd>
             <dt>

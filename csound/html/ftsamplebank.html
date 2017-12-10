@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1544371184"></a>
+        <a id="idm45948047658416"></a>
         <h2>Description</h2>
         <p>
       Reads a directory for sound files and loads them to a series of GEN01 function tables. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1544372080"></a>
+        <a id="idm45948047592528"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis">iNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, iFirstTableNumber, iTrigger, iSkipTime, iFormat, iChannel,</pre>
+        <pre class="synopsis">iNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, iFirstTableNumber, iSkipTime, iFormat, iChannel,</pre>
         <pre class="synopsis">kNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, kFirstTableNumber, kTrigger, kSkipTime, kFormat, kChannel,</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1544371696"></a>
+        <a id="idm45948047588992"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>SDirectory</em></span> -- a string that identifies the directory to browse for files
@@ -61,7 +61,7 @@
       <span class="emphasis"><em>FirstTableNumber</em></span> -- this sets the number of the first table into which a soundfile will be loaded 
     </p>
         <p>
-      <span class="emphasis"><em>Trigger</em></span> -- updates the tables when kTrigger is 1
+      <span class="emphasis"><em>Trigger</em></span> -- updates the tables when kTrigger is 1, only applicable to k-rate version. 
     </p>
         <p>
       <span class="emphasis"><em>SkipTime</em></span> -- begin reading at <span class="emphasis"><em>skiptime</em></span> seconds into the file.
@@ -86,7 +86,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1544364144"></a>
+        <a id="idm45948047579440"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>iNumberOfFile</em></span> -- the number of tables that have been created
@@ -113,19 +113,19 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idm1544357360"></a>
+        <a id="idm45948047575632"></a>
         <h2>Example</h2>
         <p>
       This example shows ftsamplebank browsing for samples in a fixed location. It loads all samples it finds into GEN01 function tables and then playsa them back in a sequence, one every second. It uses the file <a class="ulink" href="examples/ftsamplebank.csd.html" target="_top"> (click here to play) <em class="citetitle">ftsamplebank.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1544360688"></a>
+          <a id="idm45948047573616"></a>
           <p class="title">
-            <strong>Example 359. Example of the ftsamplebank opcode.</strong>
+            <strong>Example 366. Example of the ftsamplebank opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1375367664"></a>
+              <a id="idm45947877798064"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,8 +142,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
    i<span class="n">FirstTableNumber</span> <span class="o">=</span> <span class="mi">60</span><span class="c1">;</span>
    i<span class="n">FileCount</span> <span class="nb">init</span> <span class="mi">0</span>
-   i<span class="n">Trig</span> <span class="o">=</span> <span class="mi">1</span>
-   i<span class="n">NumberOfFiles</span> <span class="nb">ftsamplebank</span> <span class="s">"./examples/"</span><span class="p">,</span> i<span class="n">FirstTableNumber</span><span class="p">,</span> i<span class="n">Trig</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span>
+   i<span class="n">NumberOfFiles</span> <span class="nb">ftsamplebank</span> <span class="s">"./examples/"</span><span class="p">,</span> i<span class="n">FirstTableNumber</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span>
 
    <span class="k">until</span> i<span class="n">FileCount</span><span class="o">&gt;=</span>i<span class="n">NumberOfFiles</span> <span class="k">do</span>
 	<span class="nb">event_i</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> i<span class="n">FileCount</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">FirstTableNumber</span><span class="o">+</span>i<span class="n">FileCount</span>
@@ -171,7 +170,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1544358256"></a>
+        <a id="idm45948047571696"></a>
         <h2>Credits</h2>
         <p>
       </p>

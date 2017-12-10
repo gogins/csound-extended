@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562584192"></a>
+        <a id="idm45948066306032"></a>
         <h2>Description</h2>
         <p>
       Write to a channel of the named software bus. Implies declaring the
@@ -48,15 +48,16 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562583168"></a>
+        <a id="idm45948066303472"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> ival, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> kval, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> aval, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> Sval, Sname</pre>
+        <pre class="synopsis"><span class="command"><strong>chnsetks</strong></span> Sval, Sname</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1562576768"></a>
+        <a id="idm45948066257648"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sname</em></span> -- a string that indicates which
@@ -70,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562574080"></a>
+        <a id="idm45948066254208"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval</em></span> -- the control value to write at performance
@@ -80,9 +81,15 @@
       <span class="emphasis"><em>aval</em></span> -- the audio signal to write at performance
       time.
     </p>
+        <p>
+      <span class="emphasis"><em>Sval</em></span> -- the string value to write at
+      perf-time. The opcode chnset with strings works at both i- and
+      perf-time, whereas chnsetks works only a perf-time. Channel
+      contents are only updated if the string variable is modified.
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562577792"></a>
+        <a id="idm45948066250672"></a>
         <h2>Example</h2>
         <p>
       The example shows the software bus being used to write pitch
@@ -105,13 +112,13 @@
       Here is another example of the chnset opcode. It uses the file <a class="ulink" href="examples/chnset.csd.html" target="_top"> (click here to play) <em class="citetitle">chnset.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1562570368"></a>
+          <a id="idm45948066239840"></a>
           <p class="title">
-            <strong>Example 123. Example of the chnset opcode.</strong>
+            <strong>Example 125. Example of the chnset opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1399150704"></a>
+              <a id="idm45947901137408"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -204,7 +211,7 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>    <
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1562569984"></a>
+        <a id="idm45948066237920"></a>
         <h2>Credits</h2>
         <p>
       </p>

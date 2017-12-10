@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1502442736"></a>
+        <a id="idm45948004779456"></a>
         <h2>Description</h2>
         <p>
       This opcode is based on the clarinet model, with the addition of a two-port register hole and a three-port dynamic tonehole implementation.</p>
@@ -48,12 +48,12 @@
       As a result, both the tonehole and register hole will have variable influence on the playing frequency, which is dependent on the length of the air column. In addition, the highest playing freqeuency is limited by these fixed lengths.</p>
       </div>
       <div class="refsect1">
-        <a id="idm1502445424"></a>
+        <a id="idm45948004718432"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKBlowHole</strong></span> ifrequency, iamplitude, [kreed, kv1[, knoise, kv2[, khole, kv3[, kreg, kv4[, kbreath, kv5]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1502444144"></a>
+        <a id="idm45948004716208"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -63,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1502445040"></a>
+        <a id="idm45948004713680"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kreed</em></span> -- controller 2, stiffness of reed. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>knoise</em></span> -- controller 4, gain of noise. Value range of kv2 is 0-127.</p>
@@ -72,7 +72,7 @@
         <p><span class="emphasis"><em>kbreath</em></span> -- controller 128, breath pressure. Value range of kv5 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idm1502436592"></a>
+        <a id="idm45948004709200"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Notes">
             <tr>
@@ -98,20 +98,20 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm1502438128"></a>
+        <a id="idm45948004704720"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKBlowHole opcode. It uses the file <a class="ulink" href="examples/STKBlowHole.csd.html" target="_top"> (click here to play) <em class="citetitle">STKBlowHole.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm1502430448"></a>
+          <a id="idm45948004702848"></a>
           <p class="title">
-            <strong>Example 903. Example of the STKBlowHole opcode.</strong>
+            <strong>Example 925. Example of the STKBlowHole opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1323425136"></a>
+              <a id="idm45947828592896"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -154,7 +154,7 @@ a<span class="n">sig</span>	<span class="nb">STKBlowHole</span>	<span class="nb"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1502426992"></a>
+        <a id="idm45948004700928"></a>
         <h2>Credits</h2>
         <p>
       </p>

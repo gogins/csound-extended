@@ -38,20 +38,20 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm1566657792"></a>
+        <a id="idm45948070471504"></a>
         <h2>Description</h2>
         <p>
             <span class="emphasis"><em>ATSadd</em></span> reads from an ATS analysis file and uses the data to perform additive synthesis using an internal array of interpolating oscillators.
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm1566660864"></a>
+        <a id="idm45948070466672"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>ATSadd</strong></span> ktimepnt, kfmod, iatsfile, ifn, ipartials[, ipartialoffset, \
         ipartialincr, igatefn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1566663936"></a>
+        <a id="idm45948070464416"></a>
         <h2>Initialization</h2>
         <p>
             <span class="emphasis"><em>iatsfile</em></span> – the ATS number (n in ats.n) or the name in quotes of the analysis file made using <a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">ATS</em></a>.
@@ -69,7 +69,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm1566648960"></a>
+        <a id="idm45948070383264"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>ktimepnt</em></span> – The time pointer in seconds used to index the ATS file. Used for <span class="emphasis"><em>ATSadd</em></span> exactly the same as for <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>.</p>
         <p><span class="emphasis"><em>ATSadd</em></span> and <a class="link" href="ATSaddnz.html" title="ATSaddnz"><em class="citetitle">ATSaddnz</em></a> are based on <a class="link" href="pvadd.html" title="pvadd"><em class="citetitle">pvadd</em></a> by Richard Karpen and use files created by Juan Pampin's ATS (<a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">Analysis - Transformation - Synthesis</em></a>).
@@ -80,7 +80,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm1566646400"></a>
+        <a id="idm45948070373296"></a>
         <h2>Examples</h2>
         <pre class="programlisting">  ktime <span class="opc">line</span>   0, p3, 2.5
   asig  <span class="opc">ATSadd</span> ktime, 1, "clarinet.ats", 1, 20, 2
@@ -89,20 +89,20 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm1566646016"></a>
+        <a id="idm45948070367824"></a>
         <h2>Examples</h2>
         <p>
-      Here is a complete example of the ATSadd opcode. It uses the file <a class="ulink" href="examples/ATSadd.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSadd.csd</em></a>.<br><a class="ulink" href="examples/ATSadd.csd.html" target="_top">Play</a>
+      Here is a complete example of the ATSadd opcode. It uses the file <a class="ulink" href="examples/ATSadd.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSadd.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm1566642048"></a>
+          <a id="idm45948070365952"></a>
           <p class="title">
-            <strong>Example 60. Example of the ATSadd opcode.</strong>
+            <strong>Example 61. Example of the ATSadd opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1405334512"></a>
+              <a id="idm45947907377696"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -133,7 +133,7 @@ a<span class="n">sig</span>	<span class="nb">ATSadd</span>	k<span class="n">time
 <span class="c1">;sine wave.</span>
 <span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> 
 <span class="nb">e</span>
 
 <span class="nt">&lt;/CsScore&gt;</span>
@@ -150,13 +150,13 @@ a<span class="n">sig</span>	<span class="nb">ATSadd</span>	k<span class="n">time
       Here is another example of the ATSadd opcode. It uses the file <a class="ulink" href="examples/ATSadd-2.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSadd-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1566632064"></a>
+          <a id="idm45948070361504"></a>
           <p class="title">
-            <strong>Example 61. Example 2 of the ATSadd opcode.</strong>
+            <strong>Example 62. Example 2 of the ATSadd opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1405149808"></a>
+              <a id="idm45947907378784"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -220,20 +220,20 @@ a<span class="n">sig</span>      <span class="nb">ATSadd</span>    k<span class=
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1566639616"></a>
+        <a id="idm45948070359584"></a>
         <h2>See also</h2>
-        <p><a class="link" href="ATSread.html" title="ATSread"><em class="citetitle">ATSread</em></a>,
-            <a class="link" href="ATSreadnz.html" title="ATSreadnz"><em class="citetitle">ATSreadnz</em></a>,
-            <a class="link" href="ATSinfo.html" title="ATSinfo"><em class="citetitle">ATSinfo</em></a>,
-            <a class="link" href="ATSbufread.html" title="ATSbufread"><em class="citetitle">ATSbufread</em></a>,
-            <a class="link" href="ATScross.html" title="ATScross"><em class="citetitle">ATScross</em></a>,
-            <a class="link" href="ATSinterpread.html" title="ATSinterpread"><em class="citetitle">ATSinterpread</em></a>,
-            <a class="link" href="ATSpartialtap.html" title="ATSpartialtap"><em class="citetitle">ATSpartialtap</em></a>,
-            <a class="link" href="ATSaddnz.html" title="ATSaddnz"><em class="citetitle">ATSaddnz</em></a>,
+        <p><a class="link" href="ATSread.html" title="ATSread"><em class="citetitle">ATSread</em></a>, 
+            <a class="link" href="ATSreadnz.html" title="ATSreadnz"><em class="citetitle">ATSreadnz</em></a>, 
+            <a class="link" href="ATSinfo.html" title="ATSinfo"><em class="citetitle">ATSinfo</em></a>, 
+            <a class="link" href="ATSbufread.html" title="ATSbufread"><em class="citetitle">ATSbufread</em></a>, 
+            <a class="link" href="ATScross.html" title="ATScross"><em class="citetitle">ATScross</em></a>, 
+            <a class="link" href="ATSinterpread.html" title="ATSinterpread"><em class="citetitle">ATSinterpread</em></a>, 
+            <a class="link" href="ATSpartialtap.html" title="ATSpartialtap"><em class="citetitle">ATSpartialtap</em></a>, 
+            <a class="link" href="ATSaddnz.html" title="ATSaddnz"><em class="citetitle">ATSaddnz</em></a>, 
             <a class="link" href="ATSsinnoi.html" title="ATSsinnoi"><em class="citetitle">ATSsinnoi</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm1566628736"></a>
+        <a id="idm45948070350112"></a>
         <h2>Credits</h2>
         <p>
             </p>

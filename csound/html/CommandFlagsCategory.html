@@ -1126,8 +1126,39 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-            Set UDP port on which to listen instruments/orchestra code
+            Set UDP port on which to listen for commands and instruments/orchestra code
             (implies --daemon)
+          </p>
+          </dd>
+          <dt>
+            <a id="FlagsCatMinusUdpEcho"></a>
+            <span class="term">--udp-echo<a id="IndexCatMinusUdpEcho" class="indexterm"></a></span>
+          </dt>
+          <dd>
+            <p>
+            Switches on printing of UDP commands on the terminal. Any
+            messages received by the UDP server are echoed (whether
+            they are valid commands or not).
+          </p>
+          </dd>
+          <dt>
+            <a id="FlagsCatMinusUdpConsole"></a>
+            <span class="term">--udp-console=address:port<a id="IndexCatMinusUdpConsole" class="indexterm"></a></span>
+          </dt>
+          <dd>
+            <p>
+            Redirects the console messages to a remote address:port
+	    via UDP.
+          </p>
+          </dd>
+          <dt>
+            <a id="FlagsCatMinusUdpMirrorConsole"></a>
+            <span class="term">--udp-mirror-console=address:port<a id="IndexCatMinusUdpMirrorConsole" class="indexterm"></a></span>
+          </dt>
+          <dd>
+            <p>
+            Mirrors the console messages to a remote address:port
+	    via UDP.
           </p>
           </dd>
           <dt>

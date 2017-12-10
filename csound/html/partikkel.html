@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="partials.html" title="partials" />
-    <link rel="next" href="partikkelsync.html" title="partikkelsync" />
+    <link rel="next" href="partikkelget.html" title="partikkelget" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="partials.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="partikkelsync.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="partikkelget.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -42,7 +42,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522099568"></a>
+        <a id="idm45948025096048"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>partikkel</em></span> was conceived after reading Curtis Roads' book
@@ -66,11 +66,12 @@
       each grain is enabled via an auxillary audio input
       (<span class="emphasis"><em>awavfm</em></span>). Trainlet synthesis is available, and trainlets can be
       mixed with wavetable based grains. Up to 8 separate audio
-      outputs can be used.
+      outputs can be used. Fractional output values will distribute a grain between two outputs 
+      and a "panning law" table can be devised to control the amplitude scaling between output pairs.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522102256"></a>
+        <a id="idm45948025090960"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1 [, a2, a3, a4, a5, a6, a7, a8] <span class="command"><strong>partikkel</strong></span> agrainfreq, \
               kdistribution, idisttab, async, kenv2amt, ienv2tab, ienv_attack, \
@@ -80,10 +81,10 @@
               ichannelmasks, krandommask, kwaveform1, kwaveform2, kwaveform3, \
               kwaveform4, iwaveamptab, asamplepos1, asamplepos2, asamplepos3, \
               asamplepos4, kwavekey1, kwavekey2, kwavekey3, kwavekey4, imax_grains \
-              [, iopcode_id]</pre>
+              [, iopcode_id, ipanlaws]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm1522102384"></a>
+        <a id="idm45948025088128"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idisttab</em></span> -- function table number,
@@ -145,12 +146,15 @@
         <p>
       <span class="emphasis"><em>ichannelmasks</em></span> -- function table number, see <span class="emphasis"><em>igainmasks</em></span>
       for a description of how the values in the table are read. Range
-      is 0 to N, where N is the number of output channels minus 1. A
+      is 0 to N, where N is the number of output channels. A
       value of zero will send the grain to audio output 1 from the
       opcode. Fractional values are allowed, e.g. a value of 3.5 will
-      mix the grain equally to outputs 4 and 5. The user is
-      responsible for keeping the values in range, no range checking
-      is done. The opcode will crash with out of range values. A
+      mix the grain equally to outputs 4 and 5. The channelmask value wraps 
+      around from the last to the first output, so that a vaalue of N-0.5 will
+      mix the grain equally between the last and the first output. If another panning law 
+      between outputs is desired, this can be described in the <span class="emphasis"><em>ipanlaws</em></span> 
+      table. The user is responsible for keeping the values in range, 
+      the opcode will crash with out of range values. A
       default table might be selected by using -1 as the ftable
       number, for <span class="emphasis"><em>ichannelmasks</em></span> the default disables channel masking
       (all grains are given a channel masking value of 0 and are sent
@@ -209,9 +213,22 @@
       instance of <span class="emphasis"><em>partikkel</em></span> to an instance of <a class="link" href="partikkelsync.html" title="partikkelsync"><em class="citetitle">partikkelsync</em></a>, the linked <span class="emphasis"><em>partikkelsync</em></span> will output trigger pulses synchronized to <span class="emphasis"><em>partikkel</em></span>'s grain maker scheduler. 
       The default value is zero, which means no connection to any <span class="emphasis"><em>partikkelsync</em></span> instances.
     </p>
+        <p> 
+      <span class="emphasis"><em>ipanlaws</em></span> -- function table number. The table describes the panning curve used for fractional channelmask values. 
+      Fractional channelmask values will mix a grain to two neighbouring outputs, with the relative gain set by the fractional value. 
+      By default (if no <span class="emphasis"><em>ipanlaws</em></span> table is described, a linear gain relationship is used, so that a channelmask value of e.g. 1.5 distributes 
+      the grain with 0.5 gain to output 2 and 0.5 gain to output 3. The <span class="emphasis"><em>ipanlaws</em></span> table can be used to describe other gain control curves (panning laws).
+      The table should contain 8 such gain control curves, each governing the panning between two neighbouring outputs. 
+      The curves should appear one after another in the table, in a concatenated fashion. GEN 18 can be used to create this table from separate panning curve tables (see example below). 
+      The first curve describes the panning law between output 1 and output 2, the next is for panning between outputs 2 and 3, and so on. 
+      The last curve describes the panning law between the last and the first output. The table is indexed by the channelmask value such that one output 
+      (of an output pair goverened by the panning law) uses the index (tablesize/8*channelmask) while the other of the two outputs reads the value at index 
+      (tablesize/8*(int(channelmask+1)-frac(channelmask))). This means that if the panning law value halfway between these two channel masks is e.g. 0.7 
+      (which would give approximately equal power panning), then each of those two outputs will use 0.7 as the gain value.    
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522079472"></a>
+        <a id="idm45948025052496"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xgrainfreq</em></span> -- number of grains per
@@ -359,20 +376,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522053616"></a>
+        <a id="idm45948025016848"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the partikkel opcode. It uses the file <a class="ulink" href="examples/partikkel.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkel.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1522305776"></a>
+          <a id="idm45948025014992"></a>
           <p class="title">
-            <strong>Example 648. Example of the partikkel opcode.</strong>
+            <strong>Example 663. Example of the partikkel opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm1346151664"></a>
+              <a id="idm45947851109040"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -461,13 +478,13 @@ a<span class="n">sig</span>	<span class="nb">partikkel</span> k<span class="n">g
       Here is another example of the partikkel opcode. It uses the file <a class="ulink" href="examples/partikkel-2.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkel-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm1522304240"></a>
+          <a id="idm45948025009680"></a>
           <p class="title">
-            <strong>Example 649. Example 2 of the partikkel opcode.</strong>
+            <strong>Example 664. Example 2 of the partikkel opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm1345504368"></a>
+              <a id="idm45947849491536"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -626,9 +643,86 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>		<sp
         </div>
         <p><br class="example-break" />
     </p>
+        <p>
+      Here is an example of using panning laws with channelmasks in partikkel. It uses the file <a class="ulink" href="examples/partikkel-panlaws.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkel-panlaws.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idm45948025006720"></a>
+          <p class="title">
+            <strong>Example 665. Example with panning laws with channel masks.</strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idm45947849492176"></a>
+              <pre class="programlisting">
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Select audio/midi flags here according to platform</span>
+<span class="c1">; Audio out  </span>
+-odac           <span class="c1">;;;RT audio </span>
+<span class="c1">; For Non-realtime ouput leave only the line below:</span>
+<span class="c1">; -o partikkel-panlaws.wav -W ;;; for file output any platform</span>
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+
+<span class="vg">nchnls</span> 	<span class="o">=</span> <span class="mi">4</span>
+<span class="vg">0dbfs</span>	<span class="o">=</span> <span class="mi">1</span>
+
+gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">65536</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">Cosine</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">90</span>
+gi<span class="n">SigmoRise</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8193</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">SigmoFall</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8193</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">LinUp</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">ConcaveUp</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">ConvexUp</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span>
+gi<span class="n">PanLaws</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> 
+    gi<span class="n">LinUp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> 
+    gi<span class="n">ConcaveUp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2047</span><span class="p">,</span>  
+    gi<span class="n">ConvexUp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">3071</span><span class="p">,</span>  
+    gi<span class="n">SigmoRise</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3072</span><span class="p">,</span> <span class="mi">4095</span>
+
+<span class="kd">instr</span> <span class="nf">1</span>
+
+<span class="c1">; channel masking table, using just one single mask here</span>
+i<span class="n">channelmasks</span>	<span class="nb">ftgentmp</span>	<span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span>
+
+<span class="c1">; continuously write to masking table, </span>
+<span class="c1">; slowly panning the grains from output to output </span>
+<span class="c1">; over a 10 second period</span>
+k<span class="n">chn</span> <span class="nb">phasor</span> <span class="mf">0.1</span>
+k<span class="n">chn</span> <span class="o">=</span> k<span class="n">chn</span><span class="o">*</span><span class="mi">4</span>
+<span class="nb">tablew</span> k<span class="n">chn</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> i<span class="n">channelmasks</span>
+
+<span class="c1">; init unused arate signals</span>
+a<span class="n">wavfm</span> <span class="o">=</span> <span class="mi">0</span>
+a<span class="n">samplepos1</span>	<span class="o">=</span> <span class="mi">0</span>
+a<span class="n">sync</span> <span class="o">=</span> <span class="mi">0</span>
+
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span> <span class="nb">partikkel</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> gi<span class="n">SigmoRise</span><span class="p">,</span> gi<span class="n">SigmoFall</span><span class="p">,</span> 
+    <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">ampdbfs</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> a<span class="n">wavfm</span><span class="p">,</span> 
+    <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> gi<span class="n">Cosine</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">channelmasks</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> 
+    gi<span class="n">Sine</span><span class="p">,</span> gi<span class="n">Sine</span><span class="p">,</span> gi<span class="n">Sine</span><span class="p">,</span> gi<span class="n">Sine</span><span class="p">,</span> 
+    <span class="o">-</span><span class="mi">1</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> 
+    <span class="mi">440</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> gi<span class="n">PanLaws</span>
+
+<span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> a<span class="n">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> a<span class="n">4</span>
+        
+<span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">12</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522310640"></a>
+        <a id="idm45948025004880"></a>
         <h2>See Also</h2>
         <p><a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>,
       <a class="link" href="fof2.html" title="fof2"><em class="citetitle">fof2</em></a>,
@@ -641,11 +735,13 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>		<sp
       <a class="link" href="sndwarpst.html" title="sndwarpst"><em class="citetitle">sndwarpst</em></a>,
       <a class="link" href="syncgrain.html" title="syncgrain"><em class="citetitle">syncgrain</em></a>,
       <a class="link" href="syncloop.html" title="syncloop"><em class="citetitle">syncloop</em></a>,
+      <a class="link" href="partikkelget.html" title="partikkelget"><em class="citetitle">partikkelget</em></a>
+      <a class="link" href="partikkelset.html" title="partikkelset"><em class="citetitle">partikkelset</em></a>
       <a class="link" href="partikkelsync.html" title="partikkelsync"><em class="citetitle">partikkelsync</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm1522296176"></a>
+        <a id="idm45948024990384"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -681,14 +777,14 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>		<sp
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="partikkelsync.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="partikkelget.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">partials </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> partikkelsync</td>
+          <td width="40%" align="right" valign="top"> partikkelget</td>
         </tr>
       </table>
     </div>
