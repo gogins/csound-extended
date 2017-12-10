@@ -62,7 +62,9 @@ Thanks to Peter Billam for the Lua MIDI package
 ]]
 print(string.format("Platform: %s\n", platform))
 print('Current directory: "' .. cwd .. '".\n')
-print('Invoking script: "' .. arg[0] .. '".\n')
+if arg ~= nil then
+    print('Invoking script: "' .. arg[0] .. '".\n')
+end
 end
 
 function Silencio.clone(object)
@@ -918,11 +920,16 @@ end
 
 function Score:sendToCsound()
     self:sort()
-    local buffer = ffi.new('double[11]')
+    local buffer = {}
     for index, event in ipairs(self) do
-        event:toBuffer(buffer)
-        self.csoundApi.csoundScoreEvent(self.csound, 105, buffer, 11)
+        table.insert(buffer, event:csoundIStatement())
     end
+    self.csoundApi.csoundReadScore(self.csound, table.concat(buffer, '\n'))
+    --local buffer = ffi.new('double[11]')
+    --for index, event in ipairs(self) do
+    --    event:toBuffer(buffer)
+    --    self.csoundApi.csoundScoreEvent(self.csound, 105, buffer, 11)
+    --end
     self.csoundApi.csoundMessage(csound, 'Sent %.0f score events to Csound.\n', #self)
 end
 
