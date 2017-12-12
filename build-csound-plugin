@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Building Csound application $1..."
+g++ -std=c++11 -O2 -g %$.cpp -lcsound64 -o $1
