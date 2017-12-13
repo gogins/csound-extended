@@ -1,3 +1,4 @@
 #!/bin/sh
+clear
 echo "Building Csound application $1..."
-g++ -std=c++11 -O2 -g %$.cpp -lcsound64 -o $1
+g++ -std=c++11 -O2 -g $1.cpp -lcsound64 -lpthread -o $1

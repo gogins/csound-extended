@@ -1,3 +1,4 @@
 #!/bin/sh
-echo "Building Csound application $1..."
-g++ -std=c++11 -O2 -g %$.cpp -lcsound64 -o $1
+clear
+echo "Building Csound plugin $1..."
+g++ -std=c++11 -O2 -g $1.cpp -lcsound64 -shared -fPIC -o $1
