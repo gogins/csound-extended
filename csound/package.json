@@ -1,12 +1,12 @@
 {
-  "main": "Scrims_node.html",
-  "name": "Scrims_node",
+  "main": "message.4.6.html",
+  "name": "message.4.6",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_node",
+    "title": "message.4.6",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
