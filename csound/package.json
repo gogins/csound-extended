@@ -1,6 +1,7 @@
 {
   "main": "Scrims_node.html",
   "name": "Scrims_node",
+  "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,

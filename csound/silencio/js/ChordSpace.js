@@ -424,7 +424,7 @@ if (typeof console === 'undefined') {
 
     Chord.prototype.setDuration = function(value) {
         for (var voice = 0; voice < this.voices.length; voice++) {
-            this.voices[voice] = value;
+            this.duration[voice] = value;
         }
     };
 

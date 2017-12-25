@@ -8,7 +8,7 @@ TARGET   = CHSound
 TEMPLATE = app
 # for R -multiline strings before Qt 5.6
 CONFIG   += c++11
-QT       += core gui widgets
+QT       += core gui widgets opengl
 QT       += network webenginewidgets webchannel
 linux:CSOUND_HOME = /usr/local
 win32-msvc2015:CSOUND_HOME = C:/Program_Files/Csound_x64
