@@ -35,7 +35,8 @@ f the GNU Lesser General Public
 
 QCsound::QCsound(QObject *parent) :
     QObject(parent),
-    message_callback(nullptr)
+    message_callback(nullptr),
+    csound_web_view(nullptr)
 {
     csound.SetHostData(this);
     csound.SetMessageCallback(QCsound::csoundMessageCallback_);
@@ -260,6 +261,14 @@ void QCsound::csoundMessageCallback(int attributes,
     QString message = QString::vasprintf(format, args);
     qDebug() << message;
     passMessages(message);
-    // TODO: Now call the JavaScript callback with the message.
+    for (int i = 0, n = message.length(); i < n; i++) {
+        if (message[i] == '\n') {
+            QString code = QString("console.log(\"%1\\n\");").arg(csound_messages_buffer);
+            csound_web_view->evaluateJavaScript(code);
+            csound_messages_buffer.clear();
+        } else {
+            csound_messages_buffer.append(message[i]);
+        }
+    }
 }
 

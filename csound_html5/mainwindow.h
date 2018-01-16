@@ -23,6 +23,7 @@ public:
     bool stop;
     bool finished;
     std::thread *thread;
+    QString csound_messages_buffer;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void run(const QString &csdtext);

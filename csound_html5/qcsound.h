@@ -26,6 +26,9 @@
 #include <QObject>
 #include <QDebug>
 #include <csound_threaded.hpp>
+#include <csoundwebview.h>
+
+class CsoundWebView;
 
 class QCsound : public QObject
 {
@@ -34,6 +37,7 @@ public:
     explicit QCsound(QObject *parent = 0);
     virtual ~QCsound();
     void setMessageCallback(void (*messageCallback)(CSOUND *csound, int level, const char *format, va_list valist));
+    CsoundWebView *csound_web_view;
 public slots:
     ///void registerConsole(ConsoleWidget *console);
     int cleanup();
@@ -93,6 +97,7 @@ private:
                                va_list args);
     QObject *message_callback;
     CsoundThreaded csound;
+    QString csound_messages_buffer;
 };
 
 #endif // CsoundHtmlWrapper_H

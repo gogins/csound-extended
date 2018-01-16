@@ -26,16 +26,26 @@ CHSound is a bare-bones "front end" for editing and performing Csound pieces:
 
 )";
 
-void messageCallback(CSOUND *csound, int level, const char *format, va_list valist)
+void messageCallback(CSOUND *csound, int attributes, const char *format, va_list args)
 {
-    (void) level;
+    (void) attributes;
     auto hostdata = csoundGetHostData(csound);
-    MainWindow *mainWindow = (MainWindow *)hostdata;
-    char buffer[0x1002];
-    vsnprintf(buffer, 0x1000, format, valist);
-    // Using signal and slot makes this thread-safe.
-    QString qbuffer = buffer;
-    emit mainWindow->updateMessages(qbuffer);
+    MainWindow *main_window = (MainWindow *)hostdata;
+    QString message = QString::vasprintf(format, args);
+    qDebug() << message;
+    emit main_window->updateMessages(message);
+    for (int i = 0, n = message.length(); i < n; i++) {
+        auto c = message[i];
+        if (c == '\n') {
+            QString code = QString("console.log(\"%1\\n\");").arg(main_window->csound_messages_buffer);
+            if (main_window->ui->htmlTab != nullptr) {
+                main_window->ui->htmlTab->page()->runJavaScript(code);
+            }
+            main_window->csound_messages_buffer.clear();
+        } else {
+            main_window->csound_messages_buffer.append(c);
+        }
+    }
 }
 
 void scatterArgs(const std::string buffer,
@@ -70,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     csound.setHostData(this);
     csound.setMessageCallback(&messageCallback);
+    csound.csound_web_view = ui->htmlTab;
     ui->setupUi(this);
     ui->htmlTab->page()->setWebChannel(&channel);
     channel.registerObject("csound", &csound);
@@ -157,6 +168,7 @@ void MainWindow::replaceBrowser(int which)
         ui->portalTab->layout()->addWidget(ui->portalView);
         ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     }
+    csound.csound_web_view = ui->htmlTab;
 }
 
 void MainWindow::saveAndLoadHtml()
