@@ -395,10 +395,13 @@ color: rgb(0, 255, 0);</string>
   </action>
   <action name="actionShowLicenseTab">
    <property name="text">
-    <string>License</string>
+    <string>About</string>
+   </property>
+   <property name="iconText">
+    <string>About</string>
    </property>
    <property name="toolTip">
-    <string>Show the Csound license.</string>
+    <string>Shows the Csound license and describes this program.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+5</string>

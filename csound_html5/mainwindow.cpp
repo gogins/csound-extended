@@ -8,7 +8,10 @@
 extern "C" int argdecode(CSOUND *csound, int size, char **argv);
 
 static QString license = R"(
-# Csound with HTML5
+# CSOUND WITH HTML5
+
+Copyright Michael Gogins
+http://gogins.github.io
 
 ## License
 
@@ -16,14 +19,21 @@ This software is licensed under the terms of the GNU Lesser General Public Licen
 
 ## Introduction
 
-CHSound is a bare-bones "front end" for editing and performing Csound pieces:
+CHSound is a bare-bones "front end" for editing and performing the following types of Csound pieces:
 
 1. Csound pieces written using standard CSD files. Use the Play and Stop buttons on the menu bar to control the Csound performance.
 
 2. Csound pieces written using standard CSD files with an <html> element that contains an embedded HTML5 page. Csound appears as a "csound" object in the JavaScript context of this Web page. Use the Play and Stop buttons on the menu bar to control the Csound performance.
 
-3. Csound pieces written as HTML files. Csound appears as a "csound" object in the JavaScript context of this Web page. Do not use the Play and Stop buttons on the menu bar, you must use JavaScript code and/or HTML controls on the Web page with JavaScript event handlers to control the Csound performance.
+3. Csound pieces written as HTML files. Csound appears as a "csound" object in the JavaScript context of this Web page. Instead of the Play and Stop buttons on the menu bar, you must use JavaScript code and/or HTML controls on the Web page with JavaScript event handlers to control the Csound performance.
 
+If the piece uses HTML or JavaScript, the `debug` button will open a window with the Chrome DevTools enabled. This serves as a source debugger for JavaScript, in which you can set breakpoints, view values, and so on. HTML-enabled pieces provide debugging information on `http://localhost:8080` if you want to use an external browser as a debugger.
+
+All of Csound's runtime messages are printed to the `console.log` function in the JavaScript context. You can assign your own function to `console.log` if you want to handle the Csound messages yourself, for example by displaying them in a TextArea.
+
+## Installation
+
+Currently CHSound must be built from source code maintained at `http://gogins.github.io`. Clone this repository, and build the project on Linux using GCC or Clang with Qt SDK 5.8 or higher, or on Windows using Microsoft Visual Studio 2015 or higher with Qt SDK 5.8 or higher. Of course the project depends on Csound, either as an installed library, or as built by you from sources at `https://github.com/csound/csound`.
 )";
 
 void messageCallback(CSOUND *csound, int attributes, const char *format, va_list args)
