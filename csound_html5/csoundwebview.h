@@ -22,7 +22,7 @@ class CsoundWebView : public QWebEngineView
   static const QString kUrlBlank;
   CsoundWebView(QWidget* parent = 0);
   virtual ~CsoundWebView();
- public slots:
+public slots:
   QVariant evaluateJavaScript(const QString& scriptSource);
   bool acceptNavigationRequest(const QUrl &url, QWebEnginePage::NavigationType type, bool isMainFrame);
  signals:

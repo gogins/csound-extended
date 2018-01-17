@@ -7,6 +7,8 @@ const QString CsoundWebView::kUrlBlank = "about:blank";
 CsoundWebView::CsoundWebView(QWidget* parent) :
     QWebEngineView(parent) {
     qDebug() << "CHSound: " << __FUNCTION__ << QThread::currentThreadId();
+    settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled,true);
+
 }
 
 CsoundWebView::~CsoundWebView() {

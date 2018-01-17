@@ -36,12 +36,13 @@ public:
         return ((stop == false) && (finished == false));
     }
     void replaceBrowser(int which);
+    void acceptFullScreen(QWebEngineFullScreenRequest request);
 public slots:
     void newCsd();
-    void openCsd();
-    void saveCsd();
+    void openFile();
+    void saveFile();
     void saveAndLoadHtml();
-    void saveCsdAs();
+    void saveFileAs();
     /**
      * @brief runFile -- Run the contents of the editor. CSD files are run
      * using Csound in the calling process, HTML is run using the
@@ -54,6 +55,7 @@ public slots:
     void makeFullScreen();
     void showCsdTab();
     void showHtmlTab();
+    void showDebugTab();
     void showManualTab();
     void showPortalTab();
     void showLicenseTab();

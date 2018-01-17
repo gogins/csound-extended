@@ -238,10 +238,10 @@ document.addEventListener("DOMContentLoaded", function() {
     repaint();
 }
 
-void MainWindow::openCsd()
+void MainWindow::openFile()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
-    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco);;HTML files (*.htm, *.html);;All files (*.*)"));
+    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco *htm *html);;All files (*.*)"));
     if (filename.size() > 0) {
         QFile file(filename);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -263,7 +263,7 @@ void MainWindow::openCsd()
     }
 }
 
-void MainWindow::saveCsd()
+void MainWindow::saveFile()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
     QFile file(filename);
@@ -279,14 +279,14 @@ void MainWindow::saveCsd()
     this->statusBar()->showMessage("Saved as " + filename);
 }
 
-void MainWindow::saveCsdAs()
+void MainWindow::saveFileAs()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
     auto newfilename = QFileDialog::getSaveFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco)"));
     if (newfilename.size() > 0) {
         filename = newfilename;
     }
-    saveCsd();
+    saveFile();
 }
 
 void MainWindow::run(const QString &csd_)
@@ -313,7 +313,7 @@ void MainWindow::run(const QString &csd_)
 void MainWindow::runFile()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
-    saveCsd();
+    saveFile();
     if (ui->csdEdit->toPlainText().indexOf("</html>", 0, Qt::CaseInsensitive) != -1) {
         saveAndLoadHtml();
     } else {
@@ -399,7 +399,7 @@ void MainWindow::on_urlEdit_returnPressed()
 void MainWindow::makeFullScreen()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
-    if (this->isFullScreen()) {
+    if (isFullScreen()) {
         showNormal();
     } else {
         showFullScreen();
@@ -415,8 +415,18 @@ void MainWindow::showCsdTab()
 void MainWindow::showHtmlTab()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
+    replaceBrowser(1);
     saveAndLoadHtml();
     ui->tabs->setCurrentIndex(1);
+}
+
+void MainWindow::showDebugTab()
+{
+    qDebug() << "CHSound: " << __FUNCTION__;
+    auto debugger = new CsoundWebView();
+    debugger->setAttribute(Qt::WA_DeleteOnClose);
+    debugger->setUrl(QUrl("http://localhost:8080"));
+    debugger->show();
 }
 
 void MainWindow::showManualTab()

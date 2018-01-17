@@ -35,8 +35,8 @@ f the GNU Lesser General Public
 
 QCsound::QCsound(QObject *parent) :
     QObject(parent),
-    message_callback(nullptr),
-    csound_web_view(nullptr)
+    csound_web_view(nullptr),
+  message_callback(nullptr)
 {
     csound.SetHostData(this);
     csound.SetMessageCallback(QCsound::csoundMessageCallback_);
@@ -44,13 +44,6 @@ QCsound::QCsound(QObject *parent) :
 
 QCsound::~QCsound() {
 }
-
-//void QCsound::registerConsole(ConsoleWidget *console_){
-//    console = console_;
-//    if (console != nullptr) {
-//             connect(this, SIGNAL(passMessages(QString)), console, SLOT(appendMessage(QString)));
-//    }
-//}
 
 int QCsound::cleanup() {
     return csound.Cleanup();

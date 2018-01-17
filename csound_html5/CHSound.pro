@@ -22,6 +22,7 @@ HEADERS  += \
     mainwindow.h
 FORMS    += \
     mainwindow.ui
+RC_ICONS = cs.png
 message("All configuration is via CMake variable CSOUND_HOME.")
 message("These point to installation directories, not source directories.")
 linux:INCLUDEPATH += $$CSOUND_HOME/include/csound
@@ -46,7 +47,6 @@ for(var, $$list($$enumerate_vars())) {
     message($$var "=" $$eval($$var))
 }
 
-RESOURCES +=
 
 DISTFILES += \
     04_Styles.csd \

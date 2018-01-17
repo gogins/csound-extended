@@ -22,6 +22,10 @@
   <property name="windowTitle">
    <string>Csound</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>cs.ico</normaloff>cs.ico</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">font: 8pt &quot;Courier New&quot;;</string>
   </property>
@@ -265,6 +269,7 @@ color: rgb(0, 255, 0);</string>
    <addaction name="separator"/>
    <addaction name="actionShowCsdTab"/>
    <addaction name="actionShowHTMLTab"/>
+   <addaction name="actionDebug"/>
    <addaction name="actionShowManualTab"/>
    <addaction name="actionShowPortalTab"/>
    <addaction name="actionShowLicenseTab"/>
@@ -399,6 +404,17 @@ color: rgb(0, 255, 0);</string>
     <string>Ctrl+5</string>
    </property>
   </action>
+  <action name="actionDebug">
+   <property name="text">
+    <string>Debug</string>
+   </property>
+   <property name="toolTip">
+    <string>Show JavaScript DevTools...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -416,54 +432,6 @@ color: rgb(0, 255, 0);</string>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>newCsd()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>472</x>
-     <y>196</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionOpen</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>openCsd()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>472</x>
-     <y>196</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSave</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveCsd()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>472</x>
-     <y>196</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSave_as</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveCsdAs()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -619,18 +587,83 @@ color: rgb(0, 255, 0);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSave</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_as</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveFileAs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOpen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDebug</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showDebugTab()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>updateMessages(QString)</signal>
   <slot>newCsd()</slot>
-  <slot>openCsd()</slot>
-  <slot>saveCsd()</slot>
-  <slot>saveCsdAs()</slot>
+  <slot>openFile()</slot>
+  <slot>saveFile()</slot>
+  <slot>saveFileAs()</slot>
   <slot>runCsd()</slot>
   <slot>stopCsd()</slot>
   <slot>makeFullScreen()</slot>
   <slot>showCsdTab()</slot>
   <slot>showHtmlTab()</slot>
+  <slot>showDebugTab()</slot>
   <slot>showManualTab()</slot>
   <slot>showPortalTab()</slot>
   <slot>showLicenseTab()</slot>
