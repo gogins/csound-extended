@@ -252,6 +252,11 @@ void MainWindow::openFile()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
     filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco *htm *html);;All files (*.*)"));
+    loadFile(filename);
+}
+
+void MainWindow::loadFile(const QString &filepath) {
+    filename = filepath;
     if (filename.size() > 0) {
         QFile file(filename);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {

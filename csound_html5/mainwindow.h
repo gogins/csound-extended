@@ -38,6 +38,7 @@ public:
     void replaceBrowser(int which);
     void acceptFullScreen(QWebEngineFullScreenRequest request);
 public slots:
+    void loadFile(const QString &filepath);
     void newCsd();
     void openFile();
     void saveFile();
