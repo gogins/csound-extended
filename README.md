@@ -4,7 +4,7 @@ Version 0.1.0
 Michael Gogins
 
 This repository contains various extensions to Csound that have been moved out of 
-the core Csound Git repository at xxx. These extensions include:
+the core Csound Git repository at https://github.com/csound/csound. These extensions include:
 
 1. CsoundAC, an algorithmic composition library designed to be used with Csound, 
    with C++, Python, Java, and Lua interfaces.
@@ -12,9 +12,9 @@ the core Csound Git repository at xxx. These extensions include:
 2. CsoundVST, Csound in the form of a VST plugin.
 
 3. csound.node, a C++ add-on that embeds Csound in the JavaScript context of Web 
-   pages running in nwjs from xxx.
+   pages running in nwjs from https://nwjs.io/.
    
-4. CHSound, a lightweight editor and "front end" for Csound that embeds HTML5 capabilities 
+4. CsoundHtml5, a lightweight editor and "front end" for Csound that embeds HTML5 capabilities 
    for Csound.
 
 This repository uses the core Csound repository, and some other third-party dependencies, 
