@@ -19,3 +19,6 @@
 [submodule "dependencies/libmusicxml"]
 	path = dependencies/libmusicxml
 	url = https://github.com/grame-cncm/libmusicxml.git
+[submodule "dependencies/link"]
+	path = dependencies/link
+	url = https://github.com/Ableton/link.git

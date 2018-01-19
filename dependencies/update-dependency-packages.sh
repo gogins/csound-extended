@@ -6,6 +6,8 @@ sudo apt-get install libeigen3-dev
 echo "Updating FLTK 1.3..."
 sudo apt-get install libfltk1.3-dev
 sudo apt-get install libfltk-images1.3
+echo "Updating fluidsynth..."
+sudo apt-get install libfluidsynth-dev
 echo "Updating PortAudio..."
 sudo apt-get install portaudio19-dev
 echo "Updating PortMidi..."
