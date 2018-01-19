@@ -1,4 +1,0 @@
-302c302
-<     LDFLAGS+=-fno-pie -no-pie
----
->     LDFLAGS+=-fno-pie
