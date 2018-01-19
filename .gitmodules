@@ -1,0 +1,3 @@
+[submodule "dependencies/csound"]
+	path = dependencies/csound
+	url = https://github.com/csound/csound.git
