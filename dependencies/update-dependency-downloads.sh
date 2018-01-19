@@ -10,7 +10,7 @@ tar xvf gmm-5.1.tar.gz
 echo "Updating VST SDK..."
 wget "http://download.steinberg.net/sdk_downloads/vstsdk368_08_11_2017_build_121.zip"
 7z x -y "vstsdk368_08_11_2017_build_121.zip"
-rm *.zip
-rm *.gz
+rm *.zip*
+rm *.gz*
 ls -ll
 echo "Finished updating all direct downloads required for csound-extended."

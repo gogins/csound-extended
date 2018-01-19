@@ -1,6 +1,6 @@
 # DEPENDENCIES
 
-This directly and its scripts acquire, configure, and build all dependencies 
+This directory and its scripts acquire, configure, and build all dependencies 
 for csound-extended and, thus, for Csound itself.
 
 ## Acquiring Dependencies
@@ -17,3 +17,10 @@ cross-platform way.
 Some few of these dependencies are header file only, but all the others are 
 configured and built here and so referenced from the Csound build, and other 
 builds, in this project.
+
+# Csound
+
+Csound itself is, of course, a dependency of csound-extended. However, Csound 
+is not maintained from this repository. It is included as a submodule and 
+built here. The reason it is a submodule is that CsoundForAndroid and, 
+potentially, other projects must build Csound from sources.

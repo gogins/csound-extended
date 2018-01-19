@@ -22,3 +22,6 @@
 [submodule "dependencies/link"]
 	path = dependencies/link
 	url = https://github.com/Ableton/link.git
+[submodule "dependencies/stk"]
+	path = dependencies/stk
+	url = https://github.com/thestk/stk.git
