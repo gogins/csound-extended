@@ -16,6 +16,3 @@
 [submodule "dependencies/luajit-2.0"]
 	path = dependencies/luajit-2.0
 	url = http://luajit.org/git/luajit-2.0.git
-[submodule "dependencies/vst3sdk"]
-	path = dependencies/vst3sdk
-	url = https://github.com/steinbergmedia/vst3sdk.git
