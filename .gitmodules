@@ -16,3 +16,6 @@
 [submodule "dependencies/luajit-2.0"]
 	path = dependencies/luajit-2.0
 	url = http://luajit.org/git/luajit-2.0.git
+[submodule "dependencies/libmusicxml"]
+	path = dependencies/libmusicxml
+	url = https://github.com/grame-cncm/libmusicxml.git

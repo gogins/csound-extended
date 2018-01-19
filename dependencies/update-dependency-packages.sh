@@ -10,4 +10,6 @@ echo "Updating PortAudio..."
 sudo apt-get install portaudio19-dev
 echo "Updating PortMidi..."
 sudo apt-get install libportmidi-dev
+echo "Updating PortSMF..."
+sudo apt-get install libportsmf-dev
 echo "Finished updating all Debian packages required for csound-extended."
