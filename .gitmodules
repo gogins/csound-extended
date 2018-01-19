@@ -10,3 +10,9 @@
 [submodule "dependencies/oboe"]
 	path = dependencies/oboe
 	url = https://github.com/google/oboe.git
+[submodule "dependencies/portaudio"]
+	path = dependencies/portaudio
+	url = https://git.assembla.com/portaudio.git
+[submodule "dependencies/luajit-2.0"]
+	path = dependencies/luajit-2.0
+	url = http://luajit.org/git/luajit-2.0.git
