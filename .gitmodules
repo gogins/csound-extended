@@ -7,3 +7,6 @@
 [submodule "dependencies/eigen"]
 	path = dependencies/eigen
 	url = https://github.com/RLovelett/eigen.git
+[submodule "dependencies/oboe"]
+	path = dependencies/oboe
+	url = https://github.com/google/oboe.git
