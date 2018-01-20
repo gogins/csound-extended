@@ -25,3 +25,6 @@
 [submodule "dependencies/stk"]
 	path = dependencies/stk
 	url = https://github.com/thestk/stk.git
+[submodule "dependencies/liblo"]
+	path = dependencies/liblo
+	url = https://github.com/radarsat1/liblo.git
