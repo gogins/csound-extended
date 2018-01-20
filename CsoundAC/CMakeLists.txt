@@ -12,7 +12,6 @@ option(USE_SYSTEM_PORTSMF ON)
 find_library(MUSICXML_LIBRARY musicxml2)
 find_package(FLTK)
 check_deps(BUILD_CSOUND_AC EIGEN3_INCLUDE_PATH)
-##find_package(Eigen3 NO_MODULE)
 find_package(SWIG)
 find_package(PythonLibs)
 find_library(PORTSMF_LIBRARY portSMF)
@@ -116,8 +115,8 @@ if(BUILD_CSOUND_AC)
     endif()
 
     install(TARGETS libCsoundAC
-        LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-        ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR})
+        LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
+        ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
 
     if(SWIG_FOUND)
         message(STATUS "SWIG_USE_FILE: " ${SWIG_USE_FILE})
@@ -149,9 +148,9 @@ if(BUILD_CSOUND_AC)
        	endif()
 
         set_target_properties(${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${BUILD_LIB_DIR}
-            LIBRARY_OUTPUT_DIRECTORY ${BUILD_LIB_DIR}
-            ARCHIVE_OUTPUT_DIRECTORY ${BUILD_LIB_DIR})
+            RUNTIME_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
+            LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
+            ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
         install(TARGETS ${SWIG_MODULE_CsoundAC_REAL_NAME}
             LIBRARY DESTINATION "${PYTHON_MODULE_INSTALL_DIR}"
@@ -180,9 +179,9 @@ if(BUILD_CSOUND_AC)
         target_include_directories(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PRIVATE ${LUA_H_PATH})
 
         set_target_properties(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${BUILD_LIB_DIR}
-            LIBRARY_OUTPUT_DIRECTORY ${BUILD_LIB_DIR}
-            ARCHIVE_OUTPUT_DIRECTORY ${BUILD_LIB_DIR}
+            RUNTIME_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
+            LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
+            ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
             PREFIX "")
 
         install(TARGETS luaCsoundAC

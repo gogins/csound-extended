@@ -1,6 +1,8 @@
 # Build CsoundVST
 
 include(CheckIncludeFiles)
+find_package(VSTSDK2X)
+find_package(FLTK)
 
 option(BUILD_CSOUND_VST "Build CsoundVST plugin (needs C++ interface, FLTK, VST SDK)" OFF)
 IF(APPLE)

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 message("B E G I N N I N G   Q M A K E   C O N F I G U R A T I O N . . .")
-TARGET   = CHSound
+TARGET   = CsoundHtml5
 TEMPLATE = app
 # for R -multiline strings before Qt 5.6
 CONFIG   += c++11
@@ -46,7 +46,6 @@ message("QMAKE_CXXFLAGS: " $$QMAKE_CXXFLAGS)
 for(var, $$list($$enumerate_vars())) {
     message($$var "=" $$eval($$var))
 }
-
 
 DISTFILES += \
     04_Styles.csd \
