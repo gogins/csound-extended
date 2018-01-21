@@ -6,6 +6,8 @@
 #include <thread>
 #include "csoundwebview.h"
 #include "qcsound.h"
+#include "finddialog.h"
+#include "findreplacedialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +26,8 @@ public:
     bool finished;
     std::thread *thread;
     QString csound_messages_buffer;
+    FindDialog *find_dialog;
+    FindReplaceDialog *find_replace_dialog;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void run(const QString &csdtext);
@@ -60,9 +64,18 @@ public slots:
     void showManualTab();
     void showPortalTab();
     void showLicenseTab();
+    void findDialog();
+    void findReplaceDialog();
+    void readSettings();
+    void writeSettings();
+    void closeEvent(QCloseEvent *event);
+    void showContextMenu(const QPoint &point);
 signals:
     void updateMessages(const QString &line);
     void updateStatus(const QString &message);
+protected:
+    void createActions();
+    void contextMenuEvent(QContextMenuEvent *event);
 private slots:
     void on_backButton_clicked();
     void on_loadButton_clicked();

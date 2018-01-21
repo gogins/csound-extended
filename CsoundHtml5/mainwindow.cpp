@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     thread(nullptr)
 {
     csound.setHostData(this);
-    csound.setMessageCallback(&messageCallback);
+    csound.setMessageCallback(&messageCallback);    
     csound.csound_web_view = ui->htmlTab;
     ui->setupUi(this);
     ui->htmlTab->page()->setWebChannel(&channel);
@@ -98,6 +98,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     ui->licenseEdit->setPlainText(license);
     ui->csdEdit->createStandardContextMenu();
+    ui->csdEdit->setContextMenuPolicy(Qt::CustomContextMenu);
+    find_dialog = new FindDialog(this);
+    find_dialog->setModal(false);
+    find_dialog->setTextEdit(ui->csdEdit);
+    find_replace_dialog = new FindReplaceDialog(this);
+    find_replace_dialog->setModal(false);
+    find_replace_dialog->setTextEdit(ui->csdEdit);
+    createActions();
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -134,7 +143,7 @@ nchnls = 2
 </CsoundSynthesizer>
 )";
     ui->csdEdit->clear();
-    ui->csdEdit->appendPlainText(csd);
+    ui->csdEdit->append(csd);
     ui->csdEdit->moveCursor (QTextCursor::Start);
 }
 
@@ -465,4 +474,60 @@ void MainWindow::showLicenseTab()
 {
     qDebug() << "CHSound: " << __FUNCTION__;
     ui->tabs->setCurrentIndex(4);
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu *menu = ui->csdEdit->createStandardContextMenu();
+    menu->addSeparator();
+    menu->addAction(ui->actionFind);
+    menu->addAction(ui->actionReplace);
+    menu->addAction(ui->actionFindNext);
+    menu->addAction(ui->actionFindPrevious);
+    menu->exec(event->globalPos());
+}
+
+void MainWindow::showContextMenu(const QPoint &point)
+{
+    QMenu *menu = ui->csdEdit->createStandardContextMenu();
+    menu->addSeparator();
+    menu->addAction(ui->actionFind);
+    menu->addAction(ui->actionReplace);
+    menu->addAction(ui->actionFindNext);
+    menu->addAction(ui->actionFindPrevious);
+    menu->exec(point);
+}
+void MainWindow::findDialog() {
+    find_dialog->show();
+}
+
+void MainWindow::findReplaceDialog() {
+    find_replace_dialog->show();
+}
+
+void MainWindow::writeSettings() {
+    QSettings settings("QtFindReplaceDialog", "QtFindReplaceDialogExample");
+    find_dialog->writeSettings(settings);
+    find_replace_dialog->writeSettings(settings);
+}
+
+void MainWindow::readSettings() {
+    QSettings settings("QtFindReplaceDialog", "QtFindReplaceDialogExample");
+    find_dialog->readSettings(settings);
+    find_replace_dialog->readSettings(settings);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    writeSettings();
+    stopCsd();
+    event->accept();
+}
+
+void MainWindow::createActions() {
+    connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(findDialog()));
+    connect(ui->actionReplace, SIGNAL(triggered()), this, SLOT(findReplaceDialog()));
+    connect(ui->actionFindNext, SIGNAL(triggered()), find_dialog, SLOT(findNext()));
+    connect(ui->actionFindPrevious, SIGNAL(triggered()), find_dialog, SLOT(findPrev()));
+    connect(ui->csdEdit, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint&)));
 }

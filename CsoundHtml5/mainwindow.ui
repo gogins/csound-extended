@@ -70,7 +70,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QPlainTextEdit" name="csdEdit">
+          <widget class="QTextEdit" name="csdEdit">
            <property name="font">
             <font>
              <family>Courier New</family>
@@ -418,6 +418,44 @@ color: rgb(0, 255, 0);</string>
     <string>Ctrl+D</string>
    </property>
   </action>
+  <action name="actionFind">
+   <property name="text">
+    <string>Find...</string>
+   </property>
+   <property name="toolTip">
+    <string>Find text in the editor...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionReplace">
+   <property name="text">
+    <string>Find and replace</string>
+   </property>
+   <property name="toolTip">
+    <string>Find and replace in the editor...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionFindNext">
+   <property name="text">
+    <string>Find next</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionFindPrevious">
+   <property name="text">
+    <string>Find previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F3</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -567,22 +605,6 @@ color: rgb(0, 255, 0);</string>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>489</x>
-     <y>309</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>MainWindow</sender>
-   <signal>updateMessages(QString)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>on_updateMessages(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>489</x>
-     <y>309</y>
     </hint>
     <hint type="destinationlabel">
      <x>489</x>

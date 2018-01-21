@@ -15,13 +15,24 @@ win32-msvc2015:CSOUND_HOME = C:/Program_Files/Csound_x64
 SOURCES += main.cpp \
     csoundwebview.cpp \
     qcsound.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    finddialog.cpp \
+    findform.cpp \
+    findreplacedialog.cpp \
+    findreplaceform.cpp
 HEADERS  += \
     csoundwebview.h \
     qcsound.h \
-    mainwindow.h
+    mainwindow.h \
+    finddialog.h \
+    findform.h \
+    findreplacedialog.h \
+    findreplaceform.h \
+    findreplace_global.h
 FORMS    += \
-    mainwindow.ui
+    mainwindow.ui \
+    findreplacedialog.ui \
+    findreplaceform.ui
 RC_ICONS = cs.png
 message("All configuration is via CMake variable CSOUND_HOME.")
 message("These point to installation directories, not source directories.")
