@@ -4,6 +4,7 @@ echo
 echo "Updating Eigen3..."
 sudo apt-get install libeigen3-dev
 echo "Updating FLTK 1.3..."
+sudo apt-get install fluid
 sudo apt-get install libfltk1.3-dev
 sudo apt-get install libfltk-images1.3
 echo "Updating fluidsynth..."

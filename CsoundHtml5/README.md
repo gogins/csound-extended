@@ -7,7 +7,6 @@ License, which is the same license as used for Csound.
 
 ## Introduction
 
-
 CsoundHtml5 is a simple, efficient "front end" for editing and performing 
 Csound pieces: standard .csd files, .csd files embedded <html> element, or 
 .html pages in which Csound is embedded.
@@ -45,3 +44,11 @@ Scrims_qt.html in the csound directory, and compare it with Scrims_node.html.
 This project requires a recent version of the Qt SDK with QtWebEngine support.
 The only external dependency is a recent version of Csound. CsoundHtml5 should
 build and run on Windows, Linux, and OS X.
+
+## Building 
+
+Patch FindFLTK.cmake in Cmake:
+
+    # include(${FLTK_DIR}/FLTKConfig.cmake)
+    include("${FLTK_DIR}/FLTKConfig.cmake")
+
