@@ -129,4 +129,4 @@ This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is hos
 
 ## CHSound
 
-The ```csound_html5``` directory contains a prototype program written with the Qt SDK and its QtWebEngine browser with a JavaScript interface to Csound, for editing and performing pieces that use JavaScript and HTML5 to compose and Csound to render audio.
+The ```csound_html5``` directory used to contains a prototype program written with the Qt SDK and its QtWebEngine browser with a JavaScript interface to Csound, for editing and performing pieces that use JavaScript and HTML5 to compose and Csound to render audio. This program has graduated to being a real program and is now hosted at https://github.com/gogins/csound-extended.
