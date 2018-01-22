@@ -7,7 +7,7 @@ cd build-linux
 rm -f CMakeCache.txt
 cmake ..
 make -j6
-# make install
-sudo make package
+make install
+make package
 cd ..
 echo "Finished building all for Linux."
