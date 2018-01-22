@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "Pulling from submodule repositories..."
 cd csound
+git checkout develop
 echo "Pulling from `pwd`..."
 git pull
 cd ..

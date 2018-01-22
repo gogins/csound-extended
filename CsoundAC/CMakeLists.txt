@@ -28,6 +28,8 @@ if(NOT LUAJIT_LIBRARY AND WIN32)
 endif()
 find_path(LUA_H_PATH lua.h PATH_SUFFIXES luajit-2.0)
 
+include_directories(SYSTEM ${CSOUND_INCLUDE_PATH})
+
 check_deps(BUILD_CSOUND_AC BUILD_CXX_INTERFACE FLTK_FOUND LIBSNDFILE_LIBRARY EIGEN3_INCLUDE_PATH)
 check_deps(BUILD_CSOUND_AC_PYTHON_INTERFACE SWIG_FOUND PYTHONLIBS_FOUND BUILD_CSOUND_AC)
 check_deps(BUILD_CSOUND_AC_LUA_INTERFACE SWIG_FOUND LUAJIT_LIBRARY BUILD_CSOUND_AC)
@@ -82,15 +84,16 @@ if(BUILD_CSOUND_AC)
         add_library(libCsoundAC SHARED ${libcsoundac_SRCS})
     endif()
 
+    target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
 
     set_target_properties(libCsoundAC PROPERTIES
-        SOVERSION ${APIVERSION}
+        SOVERSION "${APIVERSION}"
         OUTPUT_NAME CsoundAC
-        RUNTIME_OUTPUT_DIRECTORY ${BUILD_BIN_DIR}
-        LIBRARY_OUTPUT_DIRECTORY ${BUILD_LIB_DIR}
-        ARCHIVE_OUTPUT_DIRECTORY ${BUILD_LIB_DIR})
+        RUNTIME_OUTPUT_DIRECTORY "${BUILD_BIN_DIR}"
+        LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
+        ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
     target_link_libraries(libCsoundAC PRIVATE libcsnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY})
     if(USE_SYSTEM_PORTSMF)
@@ -147,6 +150,7 @@ if(BUILD_CSOUND_AC)
                 LINK_FLAGS "-undefined dynamic_lookup")
        	endif()
 
+        target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
         set_target_properties(${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
             LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
@@ -155,7 +159,7 @@ if(BUILD_CSOUND_AC)
         install(TARGETS ${SWIG_MODULE_CsoundAC_REAL_NAME}
             LIBRARY DESTINATION "${PYTHON_MODULE_INSTALL_DIR}"
             ARCHIVE DESTINATION "${PYTHON_MODULE_INSTALL_DIR}")
-        install(FILES ${BUILD_LIB_DIR}/CsoundAC.py
+        install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
             DESTINATION ${PYTHON_MODULE_INSTALL_DIR})
     endif()
 
