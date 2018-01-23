@@ -18,6 +18,11 @@ These extensions include:
 
 4.  CsoundVST, Csound in the form of a VST plugin.
 
+5.  Csound for Android, almost all features of Csound in an Android app that 
+    also integrates Csound with HTML5. Please note, dependencies of Csound 
+    for Android are fetched from the core Csound repository, and rebuilt 
+    using the Android NDK.
+
 This repository uses the core Csound repository, and some other third-party 
 dependencies, as Git submodules, packages, or direct source downloads. There 
 is one CMake build for it all.
@@ -30,7 +35,9 @@ the future be adapted to build for Windows or OS X.
 
 This build is highly automated. Many dependencies are local. All dependencies 
 are fetched automatically. Most targets are built for release with debug 
-information. There are few (ideally, no) configuration options. 
+information. There are few (ideally, no) configuration options. When the 
+build is complete, all targets have been installed and a number of package 
+files have been produced.
 
 To build on Linux:
 
@@ -38,12 +45,23 @@ To build on Linux:
 
 2.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
+    
+3.  Patch the VST aeffect.h header at about line 60, thus enabling the 
+    VST2 SDK to be used flawlessly with GCC on Linux:
+
+```
+    // MKG changed:
+    // #define VSTCALLBACK __cdecl
+    #define VSTCALLBACK 
+```
 
 3.  Execute `bash build-linux.sh`. For each target, the build produces an 
     installation, some archives, and a Debian package.
 
 6.  To make clean, execute `bash clean-linux.sh`. This simply deletes all 
     contents of the build directory.
+
+Or, to do all of the above in one step, execute `fresh-build-linux.sh`.
 
 Building for Android is similar.
 

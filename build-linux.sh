@@ -11,6 +11,6 @@ make -j6
 sudo make install
 sudo make package
 echo "Debian package contents:"
-dpkg -c *.deb
+find . -name '*.deb' -exec "dpkg -c" { }\; 
 cd ..
 echo "Finished building all for Linux."
