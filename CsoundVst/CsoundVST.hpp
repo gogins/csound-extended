@@ -46,14 +46,14 @@
 #ifndef __CSOUNDVST_H
 #define __CSOUNDVST_H
 
-#include <Platform.hpp>
 // Hack to compile all this GNU stuff on Windows.
 #ifdef _MSC_VER
 #include <windows.h>
 #include <mmsystem.h>
 #endif
 #include "public.sdk/source/vst2.x/audioeffectx.h"
-#include <float-version.h>
+#include "float-version.h"
+#include "Platform.hpp"
 #include <CppSound.hpp>
 #include <list>
 

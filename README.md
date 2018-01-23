@@ -34,19 +34,16 @@ information. There are few (ideally, no) configuration options.
 
 To build on Linux:
 
-1.  Change to the root directory of the repository.
+1.  Change to the root directory of this repository.
 
 2.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
 
-3.  Execute `bash build-linux.sh." For each target, the build produces a 
-    local installation, some archives, and a Debian package.
-    
-4.  If you want a system installation, execute `install-linux.sh`. This 
-    installs all of the Debian packages.
-    
-5.  To make clean, execute `clean-linux.sh`. This simply deletes all contents 
-    of the build directory.
+3.  Execute `bash build-linux.sh`. For each target, the build produces an 
+    installation, some archives, and a Debian package.
+
+6.  To make clean, execute `bash clean-linux.sh`. This simply deletes all 
+    contents of the build directory.
 
 Building for Android is similar.
 
