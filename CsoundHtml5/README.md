@@ -11,7 +11,7 @@ CsoundHtml5 is a simple, efficient "front end" for editing and performing
 Csound pieces: standard .csd files, .csd files embedded <html> element, or 
 .html pages in which Csound is embedded.
 
-HTML files in CsoundHtml5 run in a Qt WebView browser in which Csound has 
+HTML files in CsoundHtml5 run in a QtWebEngine browser in which Csound has 
 been embedded in the form of a Csound object with many of the methods of the 
 regular C++ Csound API. The JavaScript API methods and names are otherwise 
 roughly the same as found in CsoundQt, Csound for Android, csound.node, and 
@@ -32,7 +32,7 @@ completion callback that will be called with the return value of the method
 when it becomes available.
 
 One major difference is that the Csound API for CsoundHtml5, which uses the 
-QWebChannel for creating a proxy for the Csound shared library, is completely 
+QWebChannel to create a proxy for the Csound shared library, is completely 
 asynchronous. If a return value for an API call is required, it must be 
 obtained by passing a callback function as the last parameter of the API call.
 
