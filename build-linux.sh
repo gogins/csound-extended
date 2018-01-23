@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Building all for Linux..."
+mkdir -p build-linux
 cd dependencies
 bash build-link.sh
 cd ..

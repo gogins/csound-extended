@@ -4,19 +4,22 @@ message("CMAKE BUILD SYSTEM FOR CSOUND-EXTENDED")
 message("Execute \"cd dependencies;./update-dependencies.sh;cd..\" before build!")
 message("Repeat only when dependencies change.")
 message("There are NO configuration options in this build.")
-message("But if there ARE configuration variables, set them here.")
+message("But if there ARE configuration variables, set them in the ")
+message(" optional \"custom-variables.cmake\" file in this directory.")
+include("custom-variables.cmake" OPTIONAL RESULT_VARIABLE CSOUND_EXTENDED_CUSTOM_CONFIGURATION)
+message("CSOUND_EXTENDED_CUSTOM_CONFIGURATION: ${CSOUND_EXTENDED_CUSTOM_CONFIGURATION}")
+
+project(csound-extended)
 
 # A certain amount of the following has been copied from the core Csound project,
 # and hoisted up here to enable paths etc. to be set for all projects here.
-
-project(csound-extended)
 
 # These are the real targets: the packages.
 
 set (CPACK_GENERATOR TGZ; DEB)
 set (CPACK_DEBIAN_PACKAGE_ARCHITECTURE "`dpkg --print-architecture`")
 set (CPACK_DEBIAN_PACKAGE_MAINTAINER "csound-devel@listserv.heanet.ie")
-set (CPACK_DEBIAN_PACKAGE_DESCRIPTION "Csound is a sound and music processing language.")
+set (CPACK_DEBIAN_PACKAGE_DESCRIPTION "csound-extended is an extended release of Csound, the sound and music processing language.")
 
 # Top-level CMake configuration.
 
