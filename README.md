@@ -38,7 +38,7 @@ all required dependencies as well as csound-extended.
 Currently, the only supported operating systems are Linux and Android. The 
 code is generally "cross-platform" in nature and this build system could in 
 the future be adapted to build for Windows or OS X.
-
+ 
 ### Building on Linux
 
 The build script involves some user interaction for sudo or deletions. 
@@ -65,7 +65,11 @@ Or, to do all of the above in one step, execute `fresh-build-linux.sh`.
 
 ### Building for Android
 
-Building for Android is similar.
+Building for Android is similar. 
+
+You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21, 
+GDB, the NDK, and build tools 26.0.1.
+
 
 ## License
 
