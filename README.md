@@ -27,6 +27,12 @@ This repository uses the core Csound repository, and some other third-party
 dependencies, as Git submodules, packages, or direct source downloads. There 
 is one CMake build for it all.
 
+## Installation
+
+Currently this project is in an alpha stage of development. Right now building 
+from sources is the best way to install it. The build scripts _should_ install 
+all required dependencies as well as csound-extended.
+
 ## Building
 
 Currently, the only supported operating systems are Linux and Android. The 
