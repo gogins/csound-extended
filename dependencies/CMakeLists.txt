@@ -2,7 +2,7 @@ include(ExternalProject)
 
 add_subdirectory(csound)
 add_subdirectory(liblo/cmake)
-add_subdirectory(libmusicxml/build)
+add_subdirectory(libmusicxml/cmake)
 add_subdirectory(portaudio)
 
 ExternalProject_Add(libsndfile

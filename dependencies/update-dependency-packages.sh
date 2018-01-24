@@ -1,7 +1,19 @@
 #!/bin/bash
 echo "Updating all Debian packages required for csound-extended..."
 echo
-echo "Updating Eigen3..."
+echo "Updating build-essential..."
+sudo apt-get install build-essential
+echo "Updating automake..."
+sudo apt-get install automake
+echo "Updating autoconf..."
+sudo apt-get install autoconf
+echo "Updating autotools..."
+sudo apt-get install autotools
+echo "Updating libtool..."
+sudo apt-get install libtool
+echo "Updating autogen..."
+sudo apt-get install autogen
+echo "Updating libeigen3-dev..."
 sudo apt-get install libeigen3-dev
 echo "Updating FLTK 1.3..."
 sudo apt-get install fluid
@@ -15,4 +27,11 @@ echo "Updating PortMidi..."
 sudo apt-get install libportmidi-dev
 echo "Updating PortSMF..."
 sudo apt-get install libportsmf-dev
+echo "Updating gcc-aarch64-linux-gnu..."
+sudo apt-get install gcc-aarch64-linux-gnu
+echo "Updating LLVM..."
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main"
+sudo apt-get update
+sudo apt-get install -y clang-5.0
 echo "Finished updating all Debian packages required for csound-extended."
