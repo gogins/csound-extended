@@ -33,35 +33,31 @@ Currently, the only supported operating systems are Linux and Android. The
 code is generally "cross-platform" in nature and this build system could in 
 the future be adapted to build for Windows or OS X.
 
-This build is highly automated. Many dependencies are local. All dependencies 
-are fetched automatically. Most targets are built for release with debug 
-information. There are few (ideally, no) configuration options. When the 
-build is complete, all targets have been installed and a number of package 
-files have been produced.
+### Building on Linux
 
-To build on Linux:
+The build script involves some user interaction for sudo or deletions. 
+Otherwise, the build is highly automated. Many dependencies are local. All 
+dependencies are fetched automatically. Most targets are built for release 
+with debug information. There are few (ideally, no) configuration options. 
+When the build is complete, all targets have been installed and a number of 
+package files have been produced.
+
+To build on Linux for the first time, change to the root directory and execute 
+`fresh-build-linux.sh`, which does the following:
 
 1.  Change to the root directory of this repository.
 
 2.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
     
-3.  Patch the VST aeffect.h header at about line 60, thus enabling the 
-    VST2 SDK to be used flawlessly with GCC on Linux:
-
-```
-    // MKG changed:
-    // #define VSTCALLBACK __cdecl
-    #define VSTCALLBACK 
-```
-
 3.  Execute `bash build-linux.sh`. For each target, the build produces an 
     installation, some archives, and a Debian package.
 
-6.  To make clean, execute `bash clean-linux.sh`. This simply deletes all 
-    contents of the build directory.
+4.  To make clean, execute `bash clean-linux.sh`. 
 
 Or, to do all of the above in one step, execute `fresh-build-linux.sh`.
+
+### Building for Android
 
 Building for Android is similar.
 
