@@ -70,6 +70,11 @@ Building for Android is similar.
 You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21, 
 GDB, the NDK, and build tools 26.0.1.
 
+Please note, some NDK dependencies are built in their own subdirectories, 
+and some are built in OTHER subdirectories with their own makefiles that 
+refer to source files in the original subdirectories. There is a naming 
+convention.
+
 
 ## License
 
