@@ -49,373 +49,396 @@ import android.webkit.JavascriptInterface;
 import android.webkit.JavascriptInterface;
 %}
 #else
-#include "csound.hpp"
+#include "csound_threaded.hpp"
 #include <oboe/Oboe.h>
 #endif
 
 /**
- * The purpose of this class is to expose as much as possible of the C++ form 
- * of the Csound API found in the Csound class as a Java object in the 
- * JavaScript context of the WebKit WebView in Android applications, such as 
- * the Csound for Android app; and, to do this in a form that closely follows 
- * the API signatures and the Csound performance lifecycle defined in the 
+ * The purpose of this class is to expose as much as possible of the C++ form
+ * of the Csound API found in the Csound class as a Java object in the
+ * JavaScript context of the WebKit WebView in Android applications, such as
+ * the Csound for Android app; and, to do this in a form that closely follows
+ * the API signatures and the Csound performance lifecycle defined in the
  * CsoundThreaded class that is similarly exposed in csound.node and CsoundQt.
- * The Google Oboe library (https://github.com/google/oboe) is used to 
+ * The Google Oboe library (https://github.com/google/oboe) is used to
  * interface with the Android audio driver.
  */
- 
+
 #ifdef SWIG
 
-// All methods of the CsoundOboe object to be exposed to the JavaScript context 
-// must have their generated Java method signatures annotated here with 
+// All methods of the CsoundOboe object to be exposed to the JavaScript context
+// must have their generated Java method signatures annotated here with
 // "@JavascriptInterface". Please keep these in alphabetical order.
-// This should expose the "core" of the Csound API without futher ado in a 
-// manner that is consistent with Csound's JavaScript interface on other HTML5 
+// This should expose the "core" of the Csound API without futher ado in a
+// manner that is consistent with Csound's JavaScript interface on other HTML5
 // environments.
 
-%javamethodmodifiers CsoundOboe::cleanup() 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::compileCsd(const char *csd) 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::compileCsdText(const char *text) 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::compileOrc(const char *text) 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::evalCode(const char *text) 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::get0dBFS() 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getAPIVersion() 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getVersion() 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getAudioChannel(const char *name, MYFLT *samples)
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getChannel(const char *name)
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getControlChannel(const char *name)
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getCurrentTimeSamples()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getEnv(const char *name)
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getKr()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getKsmps()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getMessageLevel()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getNchnls()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getNchnlsInput()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getOutputName()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getScoreOffsetSeconds()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getScoreTime()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getSr()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::getStringChannel(const char *name, char *string)
-%{@JavascriptInterface 
-public 
-%}  
+%javamethodmodifiers CsoundOboe::cleanup()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::compileCsd(const char *csd)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::compileCsdText(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::compileOrc(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::evalCode(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::get0dBFS()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getAPIVersion()
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::getVersion()
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::inputMessage(const char *text) 
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getAudioChannel(const char *name, MYFLT *samples)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getChannel(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getControlChannel(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getCurrentTimeSamples()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getEnv(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getKr()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getKsmps()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getMessageLevel()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getNchnls()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getNchnlsInput()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getOutputName()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getScoreOffsetSeconds()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getScoreTime()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getSr()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getStringChannel(const char *name, char *string)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getVersion()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::inputMessage(const char *text)
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::isScorePending()
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::keyPressed(char c)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::message(const char *text)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::perform()
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::readScore(const char *text)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::reset()
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::rewindScore()
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setControlChannel(const char *name, double value)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setGlobalEnv(const char *name, const char *value)
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::setInput(const char *text) 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::setOption(const char *text) 
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::setInput(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::setOption(const char *text)
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setOutput(const char *name,const char *type,const char *format)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setScoreOffsetSeconds(double time)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setScorePending(int pending)
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setStringChannel(const char *name, char *string)
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::start() 
-%{@JavascriptInterface 
-public 
-%}  
-%javamethodmodifiers CsoundOboe::stop() 
-%{@JavascriptInterface 
-public 
-%}  
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::start()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::stop()
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::tableGet(int table, int index)
-%{@JavascriptInterface 
-public 
+%{@JavascriptInterface
+public
 %}
 %javamethodmodifiers CsoundOboe::tableLength(int table)
-%{@JavascriptInterface 
-public 
+%{@JavascriptInterface
+public
 %}
 %javamethodmodifiers CsoundOboe::tableSet(int table, int index, double value)
-%{@JavascriptInterface 
-public 
+%{@JavascriptInterface
+public
 %}
 %javamethodmodifiers CsoundOboe::isPlaying()
-%{@JavascriptInterface 
-public 
+%{@JavascriptInterface
+public
 %}
 #endif
 
 class PUBLIC CsoundOboe : public Csound, public oboe::AudioStreamCallback
 {
 public:
-    CsoundOboe() : 
-        timeout_nanoseconds(1000000),
-        frames_per_kperiod(0),
-        is_playing(false),
-        audio_stream_in(0),
-        spin(0),
-        input_channel_count(0),
-        spin_size(0),
-        spout(0),
-        output_channel_count(0),
-        spout_size(0),
-        audio_stream_out(0),
-        short_buffer(0),
-        float_buffer(0),
-        zerodBFS(1)
+    CsoundOboe()
     {
+        internal_reset();
+    }
+    virtual void internal_reset() {
+        timeout_nanoseconds = 1000000;
+        frames_per_kperiod = 0;
+        is_playing = false;
+        audio_stream_in = 0;
+        spin = 0;
+        input_channel_count = 0;
+        spin_size = 0;
+        spout = 0;
+        output_channel_count = 0;
+        spout_size = 0;
+        audio_stream_out = 0;
     }
     virtual ~CsoundOboe()
     {
     }
-    /** 
-     * This is the Oboe audio callback. It fires when the audio output stream 
-     * needs audio data, i.e. once per kperiod. The audio _input_ stream is 
-     * read in a blocking fashion.
-     */
     oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream,
             void *audio_data,
             int32_t frame_count)
     {
         int csound_result = 0;
-        int frames_read = 0;
-        if (input_channel_count > 0 && audio_stream_in) {
-            frames_read = audio_stream_in->read(audio_data, frame_count, timeout_nanoseconds);
-            // If ksmps input audio frames have not yet been consumed, tell the 
-            // Oboe driver to continue.
-            if (frames_read == frame_count) {
-                return oboe::DataCallbackResult::Continue;
+        if (oboeStream->getDirection() == oboe::Direction::Input) {
+            // Enqueue input samples to the audio fifo.
+            if (is_playing == false) {
+                return oboe::DataCallbackResult::Stop;
             }
-            // Otherwise, copy the input stream audio to Csound.
-            // The buffer type may differ by platform.
-            if (frames_read >= 0) {
-                if (oboe_audio_format == oboe::AudioFormat::Float){
-                    float_buffer = static_cast<float *>(audio_data);
-                    for (int i = 0; i < frames_per_kperiod; i++) {
-                        for (int j = 0; j < output_channel_count; j++) {
-                            spin[i * output_channel_count + j] = float_buffer[i * output_channel_count + j];
+            if (input_channel_count > 0 && audio_stream_in) {
+                if (frame_count > 0) {
+                    if (oboe_audio_format == oboe::AudioFormat::Float) {
+                        float_buffer = static_cast<float *>(audio_data);
+                        for (int i = 0; i < frame_count; i++) {
+                            for (int j = 0; j < input_channel_count; j++) {
+                                float sample = float_buffer[i * input_channel_count + j];
+                                audio_fifo.push(sample);
+                            }
+                        }
+                    } else {
+                        short_buffer = static_cast<int16_t *>(audio_data);
+                        for (int i = 0; i < frame_count; i++) {
+                            for (int j = 0; j < input_channel_count; j++) {
+                                float sample = short_buffer[i * input_channel_count + j];
+                                audio_fifo.push(sample);
+                            }
                         }
                     }
-                } else {
-                    short_buffer = static_cast<int16_t *>(audio_data);
-                    for (int i = 0; i < frames_per_kperiod; i++) {
-                        for (int j = 0; j < output_channel_count; j++) {
-                            spin[i * output_channel_count + j] = short_buffer[i * output_channel_count + j] * 32767;
-                        }
+                }
+            }
+         } else {
+            // Dequeue input samples from the audio fifo.
+            // This blocks until enough samples have been enqueued
+            // by the input stream callback.
+            if (input_channel_count > 0 && audio_stream_in) {
+                for (int i = 0; i < frames_per_kperiod; i++) {
+                    for (int j = 0; j < input_channel_count; j++) {
+                        float sample = 0;
+                        audio_fifo.wait_and_pop(sample);
+                        spin[i * input_channel_count + j] = sample;
                     }
-                }            
-            }
-        }
-        // Consume one kperiod of audio input from spin,
-        // and produce one kperiod of audio output to spout.
-        csound_result = PerformKsmps();
-        // If the Csound performance has finished, tell the Oboe driver 
-        // to stop.
-        if (csound_result) {
-            is_playing = false;
-            return oboe::DataCallbackResult::Stop;
-            audio_stream_out->requestStop();
-        }
-        // Otherwise, copy the Csound output audio to the Oboe output 
-        // buffer. The buffer type may differ by platform.
-        if (oboe_audio_format == oboe::AudioFormat::Float){
-            float_buffer = static_cast<float *>(audio_data);
-            for (int i = 0; i < frames_per_kperiod; i++) {
-                for (int j = 0; j < output_channel_count; j++) {
-                    float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j];
                 }
             }
-        } else {
-            short_buffer = static_cast<int16_t *>(audio_data);
-            for (int i = 0; i < frames_per_kperiod; i++) {
-                for (int j = 0; j < output_channel_count; j++) {
-                    short_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j] * 32767;
+            // Produce one kperiod of audio output to spout.
+            csound_result = PerformKsmps();
+            // If the Csound performance has finished, tell the Oboe driver
+            // to stop.
+            if (csound_result) {
+                is_playing = false;
+                return oboe::DataCallbackResult::Stop;
+            }
+            // Otherwise, copy the Csound output audio to the Oboe output
+            // buffer. Oboe's audio sample format may differ by platform.
+            if (oboe_audio_format == oboe::AudioFormat::Float){
+                float_buffer = static_cast<float *>(audio_data);
+                for (int i = 0; i < frames_per_kperiod; i++) {
+                    for (int j = 0; j < output_channel_count; j++) {
+                        float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j];
+                    }
+                }
+            } else {
+                short_buffer = static_cast<int16_t *>(audio_data);
+                for (int i = 0; i < frames_per_kperiod; i++) {
+                    for (int j = 0; j < output_channel_count; j++) {
+                        short_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j];
+                    }
                 }
             }
-        }            
+        }
         return oboe::DataCallbackResult::Continue;
     }
     virtual int Start()
     {
         Message("CsoundOboe::Start...\n");
-        // If and only if -odac, enable host-implemented audio.
-        std::string output_name = GetOutputName();
-        auto position = output_name.find("dac");
         int csound_result = 0;
+        // If and only if -odac, enable host-implemented audio.
+        // Need a better way to identify input and output.
+        const char *output_name = GetOutputName();
+        if (output_name == nullptr) {
+            return -1;
+        }
+        std::string output_name_string = output_name;
+        auto position = output_name_string.find("dac");
         if (position != std::string::npos) {
-            zerodBFS = Get0dBFS();
+            internal_reset();
             SetHostImplementedAudioIO(1, 0);
             csound_result = Csound::Start();
             if (csound_result != 0) {
-                Message("Csound::Start returned: %d.\n", csound_result);
+                Message("Csound::Start error: %d.\n", csound_result);
                 return csound_result;
             }
             oboe::Result result;
-            // Create the oboe input and output streams.
-            audio_stream_builder.setCallback(this);
-            audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
-            audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
-            audio_stream_builder.setSampleRate(GetSr());
             frames_per_kperiod = GetKsmps();
-            audio_stream_builder.setFramesPerCallback(frames_per_kperiod);
-            if (input_channel_count > 0) {
-                spin = GetSpin();
-                input_channel_count = GetNchnlsInput();
-                spin_size = sizeof(MYFLT) * frames_per_kperiod * input_channel_count;
-                audio_stream_builder.setChannelCount(input_channel_count);
-                audio_stream_builder.setDirection(oboe::Direction::Input);
-                result = audio_stream_builder.openStream(&audio_stream_in);
-                if (result != oboe::Result::OK){
-                    Message("CsoundOboe::Start: Failed to create Oboe input stream stream. Error: %s.\n", oboe::convertToText(result));
-                    return -1;
-                } 
-                // We assume that Oboe's input format is always the same as
-                // its output format! But input and output may open without 
-                // the other.
-                oboe_audio_format = audio_stream_in->getFormat();
-                Message("CsoundOboe::Start: Audio input stream format is: %s.\n", oboe::convertToText(oboe_audio_format));           
-                Message("CsoundOboe::Start: Starting Oboe audio input stream...\n");
-                // Is this correct?
-                audio_stream_in->start();
+            input_channel_count = GetNchnlsInput();
+            output_channel_count = GetNchnls();
+            const char *input_name = GetInputName();
+            if (input_name != nullptr) {
+                std::string input_name_string = input_name;
+                auto position = input_name_string.find("adc");
+                if (position != std::string::npos) {
+                    Message("CsoundOboe::Start: Creating Oboe input stream stream...\n");
+                    float sample = 0;
+                    while(audio_fifo.try_pop(sample)) {};
+                    spin = GetSpin();
+                    input_channel_count = GetNchnlsInput();
+                    spin_size = sizeof(MYFLT) * frames_per_kperiod * input_channel_count;
+                    audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
+                    audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
+                    audio_stream_builder.setCallback(this);
+                    audio_stream_builder.setSampleRate(GetSr());
+                    audio_stream_builder.setFramesPerCallback(frames_per_kperiod);
+                    audio_stream_builder.setChannelCount(input_channel_count);
+                    audio_stream_builder.setDirection(oboe::Direction::Input);
+                    result = audio_stream_builder.openStream(&audio_stream_in);
+                    if (result != oboe::Result::OK){
+                        Message("CsoundOboe::Start: Failed to create Oboe input stream. Error: %s.\n", oboe::convertToText(result));
+                        return -1;
+                    }
+                    // We assume that Oboe's input format is always the same as
+                    // its output format! But input and output may open without
+                    // the other.
+                    oboe_audio_format = audio_stream_in->getFormat();
+                    Message("CsoundOboe::Start: Audio input stream format is: %s.\n", oboe::convertToText(oboe_audio_format));
+                }
             }
             spout = GetSpout();
-            output_channel_count = GetNchnls();
             spout_size = sizeof(MYFLT) * frames_per_kperiod * output_channel_count;
+            audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
+            audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
+            audio_stream_builder.setCallback(this);
+            audio_stream_builder.setSampleRate(GetSr());
+            audio_stream_builder.setFramesPerCallback(frames_per_kperiod);
             audio_stream_builder.setChannelCount(output_channel_count);
             audio_stream_builder.setDirection(oboe::Direction::Output);
             result = audio_stream_builder.openStream(&audio_stream_out);
-            if (result != oboe::Result::OK){
-                Message("CsoundOboe::Start: Failed to create Oboe output stream stream. Error: %s.\n", oboe::convertToText(result));
+            if (result != oboe::Result::OK) {
+                Message("CsoundOboe::Start: Failed to create Oboe output stream. Error: %s.\n", oboe::convertToText(result));
                 return -1;
-            }                
+            }
             // Start oboe.
             oboe_audio_format = audio_stream_out->getFormat();
-            Message("CsoundOboe::Start: Audio output stream format is: %s.\n", oboe::convertToText(oboe_audio_format));           
-            Message("CsoundOboe::Start: Starting Oboe audio output stream...\n");
-            audio_stream_out->requestStart();
+            Message("CsoundOboe::Start: Audio output stream format is: %s.\n", oboe::convertToText(oboe_audio_format));
+            Message("CsoundOboe::Start: Starting Oboe audio streams...\n");
+            is_playing = true;
+            if(audio_stream_in != nullptr) {
+                audio_stream_in->start();
+            }
+            audio_stream_out->start();
         } else {
             csound_result = Csound::Start();
             if (csound_result != 0) {
                 Message("Csound::Start returned: %d.\n", csound_result);
                 return csound_result;
             }
-        }
-        // Start Csound.
-        is_playing = true;
+            is_playing = true;
+         }
         return 0;
     }
     /**
@@ -439,13 +462,13 @@ public:
         }
         Csound::Stop();
     }
-    // For the purpose of making the Csound API consistent across all of the 
-    // JavaScript-enabled platforms supported by Csound, all methods exposed 
-    // to the JavaScript context are redeclared here in camel case, and are 
-    // implemented by delegating to the real definitions declared with initial 
-    // caps. These methods also are annotated for exposure to WebKit by SWIG 
-    // at the head of this file. NOTE: Please keep these methods in 
-    // alphabetical order. Also, it is IMPERATIVE to keep the semantics 
+    // For the purpose of making the Csound API consistent across all of the
+    // JavaScript-enabled platforms supported by Csound, all methods exposed
+    // to the JavaScript context are redeclared here in camel case, and are
+    // implemented by delegating to the real definitions declared with initial
+    // caps. These methods also are annotated for exposure to WebKit by SWIG
+    // at the head of this file. NOTE: Please keep these methods in
+    // alphabetical order. Also, it is IMPERATIVE to keep the semantics
     // completely consistent with csound.hpp.
     virtual int cleanup(){
         return Cleanup();
@@ -630,9 +653,9 @@ protected:
     oboe::AudioStream *audio_stream_out;
     int16_t *short_buffer;
     float *float_buffer;
-    MYFLT zerodBFS;
     oboe::AudioFormat oboe_audio_format;
     oboe::AudioStreamBuilder audio_stream_builder;
+    concurrent_queue<float> audio_fifo;
 };
 
 #endif  // __CSOUND_OBOE_HPP__
