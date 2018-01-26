@@ -1,18 +1,20 @@
 #!/bin/bash
 echo "Building all for Android..."
 echo
-if [ -z "ANDROID_SDK_ROOT" ]; then
-    echo "ERROR: ANDROID_SDK_ROOT is not set. Please set this variable to point to the root directory of your Android SDK installation to continue.";
-    exit;
-fi
-
 if [ -z "$ANDROID_NDK_ROOT" ]; then
     echo "ERROR: ANDROID_NDK_ROOT is not set. Please set this variable to point to the root directory of your Android Native Development Kit installation to continue.";
     exit;
 fi
-
+if [ -z "ANDROID_SDK_ROOT" ]; then
+    echo "ERROR: ANDROID_SDK_ROOT is not set. Please set this variable to point to the root directory of your Android SDK installation to continue.";
+    exit;
+fi
+if [ -z "CSOUND_SRC_ROOT" ]; then
+    echo "ERROR: CSOUND_SRC_ROOT is not set. Please set this variable to point to the dependencies/csound directory of this project to continue.";
+    exit;
+fi
 if [ -z "NDK_MODULE_PATH" ]; then
-    echo "ERROR: NDK_MODULE_PATH is not set. Please set this variable to point to the android/pluginlibs directory of this project to continue.";
+    echo "ERROR: NDK_MODULE_PATH is not set. Please set this variable to point to the ndk-libraries directory of this project to continue.";
     exit;
 fi
 MACHINE="$(uname -s)"
@@ -23,17 +25,28 @@ esac
 echo "NDK_BUILD_COMMAND: $NDK_BUILD_CMD"
 echo
 
-cd ndk-modules
+cd ndk-libraries
 
-echo "Building Oboe audio driver library..."
-cd oboe-csound
+cd doppler-opcodes
+echo "Building `pwd`..."
 $NDK_BUILD_CMD $1
 if [ $? -eq 0 ]; then
     echo OK
 else
-    echo "Not building Oboe audio driver library..."
+    echo "Not building `pwd` library..."
 fi
 cd ..
+
+cd link_opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
+
 
 echo "Building luajit-2.1..."
 cd luajit-2.0
@@ -73,6 +86,32 @@ fi
 find . -name *.so* -delete
 cd ..
 
+echo "Building Oboe audio driver library..."
+cd oboe-csound
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building Oboe audio driver library..."
+fi
+cd ..
+
+#fluidsynth-android
+#fluidsynth-opcodes
+#liblo-android
+#libsndfile-android
+#link
+luajit-2.0
+luajit-opcodes
+oboe
+# Done: oboe-csound
+osc-opcodes
+patches
+scansyn-opcodes
+signalflowgraph-opcodes
+stdutil-opcodes
+# stk
+stk-opcodes
 
 
 cd ..

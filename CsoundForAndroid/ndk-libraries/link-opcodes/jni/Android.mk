@@ -2,7 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-CSOUND_SRC_ROOT := ../../../..
 ABLETON_LINK_HOME :=/home/mkg/link
 
 LOCAL_MODULE   := ableton_link_opcodes 

@@ -28,7 +28,6 @@
 #ifndef FLOAT_VERSION_H
 #define FLOAT_VERSION_H
 
-// Let CMake define USE_DOUBLE or not.
-// #cmakedefine USE_DOUBLE
+#define USE_DOUBLE
 
 #endif
