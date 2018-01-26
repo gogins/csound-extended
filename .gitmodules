@@ -46,3 +46,6 @@
 [submodule "CsoundForAndroid/dependencies/liblo-android"]
 	path = CsoundForAndroid/dependencies/liblo-android
 	url = https://bitbucket.org/michael_gogins/liblo-android
+[submodule "CsoundForAndroid/dependencies/link"]
+	path = CsoundForAndroid/dependencies/link
+	url = https://github.com/Ableton/link.git
