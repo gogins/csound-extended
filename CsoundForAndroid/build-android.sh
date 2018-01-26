@@ -156,4 +156,31 @@ fi
 cd ..
 
 cd ..
+
+echo "Building CsoundAndroid library..."
+if [[ "$unamestr" == 'Darwin' ]]; then
+    cp -r ./pluginlibs/oboe-android $NDK_MODULE_PATH
+fi
+cd CsoundAndroid
+
+bash build.sh $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo FAIL
+    exit
+fi 
+cd ..
+
+if [[ "$unamestr" != 'Darwin' ]]; then
+echo "Installing binaries for the Csound for Android app..."
+rm -rf CsoundForAndroid/CsoundAndroid/src/main/java/csnd6
+cp -r CsoundAndroid/src/csnd6  CsoundForAndroid/CsoundAndroid/src/main/java/
+rm -rf CsoundForAndroid/CsoundAndroid/src/main/jniLibs
+cp -r CsoundAndroid/libs  CsoundForAndroid/CsoundAndroid/src/main/jniLibs
+cd CsoundForAndroid/CsoundApplication
+./install_libs.sh
+cd ..
+cd ..
+
 echo "Finished building all for Android."
