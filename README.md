@@ -72,9 +72,9 @@ GDB, the NDK, and build tools 26.0.1.
 
 Please note, some NDK dependencies are built in their own subdirectories, 
 and some are built in OTHER subdirectories with their own makefiles that 
-refer to source files in the original subdirectories. There is a naming 
-convention: `link` is the original Git repository for the Ableton Link Kit 
-which we do not build, and `link-opcodes` is our subdirectory which we do 
+refer to source files in the ORIGINAL subdirectories. There is a naming 
+convention, e.g. `link` is the original Git repository for the Ableton Link 
+Kit which we do not build, and `link-opcodes` is our subdirectory which we do 
 build and which includes files from the `link` subdirectory.
 
 ## License

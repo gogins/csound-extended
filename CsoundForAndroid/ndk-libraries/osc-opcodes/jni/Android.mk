@@ -2,13 +2,11 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-CSOUND_SRC_ROOT := ../../../..
-
 LIBLO_SRC_DIR := $(NDK_MODULE_PATH)/liblo-android/jni
 
 LOCAL_MODULE   := OSC
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../H $(LOCAL_PATH)/../../../../include $(LOCAL_PATH)/../../../.. $(LOCAL_PATH)/../../../ $(LIBLO_SRC_DIR) $(LOCAL_PATH)/../../../../Opcodes $(LOCAL_PATH)/../../../CsoundAndroid/jni 
+LOCAL_C_INCLUDES := $(CSOUND_SRC_ROOT)/H $(CSOUND_SRC_ROOT)/include $(CSOUND_SRC_ROOT)/ $(LIBLO_SRC_DIR) $(CSOUND_SRC_ROOT)/Opcodes $(LOCAL_PATH)/../../../CsoundAndroid/jni 
 LOCAL_CFLAGS := -DENABLE_THREADS -D__BUILDING_LIBCSOUND -DENABLE_NEW_PARSER -DLINUX -DHAVE_DIRENT_H -DHAVE_FCNTL_H -DHAVE_UNISTD_H -DHAVE_STDINT_H -DHAVE_SYS_TIME_H -DHAVE_SYS_TYPES_H -DHAVE_TERMIOS_H 
 LOCAL_CPPFLAGS :=$(LOCAL_CFLAGS)
 # For using assembler code.

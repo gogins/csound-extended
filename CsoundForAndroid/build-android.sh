@@ -37,7 +37,16 @@ else
 fi
 cd ..
 
-cd link_opcodes
+cd fluidsynth-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+c
+cd link-opcodes
 echo "Building `pwd`..."
 $NDK_BUILD_CMD $1
 if [ $? -eq 0 ]; then
@@ -47,9 +56,9 @@ else
 fi
 cd ..
 
-
 echo "Building luajit-2.1..."
 cd luajit-2.0
+
 # The luajit library can't be compiled with the clang NDK, so we cross-compile using gcc.
 # We have to turn large file support OFF.
 # PREFIX and ARM produce directories compatible with ndk-build.
@@ -86,33 +95,65 @@ fi
 find . -name *.so* -delete
 cd ..
 
-echo "Building Oboe audio driver library..."
-cd oboe-csound
+cd luajit-opcodes
+echo "Building `pwd`..."
 $NDK_BUILD_CMD $1
 if [ $? -eq 0 ]; then
     echo OK
 else
-    echo "Not building Oboe audio driver library..."
+    echo "Not building `pwd` library..."
 fi
 cd ..
 
-#fluidsynth-android
-#fluidsynth-opcodes
-#liblo-android
-#libsndfile-android
-#link
-luajit-2.0
-luajit-opcodes
-oboe
-# Done: oboe-csound
-osc-opcodes
-patches
-scansyn-opcodes
-signalflowgraph-opcodes
-stdutil-opcodes
-# stk
-stk-opcodes
+cd osc-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
 
+cd scansyn-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
+
+cd signalflowgraph-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
+
+cd stdutil-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
+
+cd stk-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
 
 cd ..
 echo "Finished building all for Android."
