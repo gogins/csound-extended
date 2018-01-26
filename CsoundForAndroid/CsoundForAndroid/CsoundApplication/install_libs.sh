@@ -24,7 +24,7 @@ find $JNILIBS -name "*.so" -ls
 # Also copy other resources used by Csound opcodes.
 
 mkdir -p src/main/assets/samples/
-cp -f ../../../samples/* src/main/assets/samples
+find ../../.. -wholename "*/csound/samples/*" -exec cp -f {} src/main/assets/samples ';'
 
 
 
