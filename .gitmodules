@@ -28,24 +28,24 @@
 [submodule "dependencies/liblo"]
 	path = dependencies/liblo
 	url = https://github.com/radarsat1/liblo.git
-[submodule "CsoundForAndroid/dependencies/libsndfile-android"]
-	path = CsoundForAndroid/dependencies/libsndfile-android
+[submodule "CsoundForAndroid/ndk-libraries/libsndfile-android"]
+	path = CsoundForAndroid/ndk-libraries/libsndfile-android
 	url = http://bitbucket.org/kunstmusik/libsndfile-android.git
-[submodule "CsoundForAndroid/dependencies/oboe"]
-	path = CsoundForAndroid/dependencies/oboe
+[submodule "CsoundForAndroid/ndk-libraries/oboe"]
+	path = CsoundForAndroid/ndk-libraries/oboe
 	url = https://github.com/google/oboe.git
-[submodule "CsoundForAndroid/dependencies/fluidsynth-android"]
+[submodule "CsoundForAndroid/ndk-libraries/fluidsynth-android"]
 	path = CsoundForAndroid/ndk-libraries/fluidsynth-android
 	url = http://bitbucket.org/kunstmusik/fluidsynth-android.git
-[submodule "CsoundForAndroid/dependencies/luajit-2.0"]
-	path = CsoundForAndroid/dependencies/luajit-2.0
+[submodule "CsoundForAndroid/ndk-libraries/luajit-2.0"]
+	path = CsoundForAndroid/ndk-libraries/luajit-2.0
 	url = http://luajit.org/git/luajit-2.0.git
-[submodule "CsoundForAndroid/dependencies/stk"]
-	path = CsoundForAndroid/dependencies/stk
+[submodule "CsoundForAndroid/ndk-libraries/stk"]
+	path = CsoundForAndroid/ndk-libraries/stk
 	url = http://github.com/thestk/stk.git
-[submodule "CsoundForAndroid/dependencies/liblo-android"]
-	path = CsoundForAndroid/dependencies/liblo-android
+[submodule "CsoundForAndroid/ndk-libraries/liblo-android"]
+	path = CsoundForAndroid/ndk-libraries/liblo-android
 	url = https://bitbucket.org/michael_gogins/liblo-android
-[submodule "CsoundForAndroid/dependencies/link"]
-	path = CsoundForAndroid/dependencies/link
+[submodule "CsoundForAndroid/ndk-libraries/link"]
+	path = CsoundForAndroid/ndk-libraries/link
 	url = https://github.com/Ableton/link.git
