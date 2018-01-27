@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Building all for Android..."
+echo "Building all native libraries for Android..."
 echo
 if [ -z "$ANDROID_NDK_ROOT" ]; then
     echo "ERROR: ANDROID_NDK_ROOT is not set. Please set this variable to point to the root directory of your Android Native Development Kit installation to continue.";
@@ -170,7 +170,6 @@ else
 fi 
 cd ..
 
-if [[ "$unamestr" != 'Darwin' ]]; then
 echo "Installing binaries for the Csound for Android app..."
 rm -rf CsoundForAndroid/CsoundAndroid/src/main/java/csnd6
 cp -r CsoundAndroid/src/csnd6  CsoundForAndroid/CsoundAndroid/src/main/java/
@@ -181,4 +180,4 @@ bash install_libs.sh
 cd ..
 cd ..
 
-echo "Finished building all for Android."
+echo "Finished building all native libraries for Android."
