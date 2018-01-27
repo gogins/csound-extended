@@ -14,14 +14,14 @@ find $NDK_MODULE_PATH -wholename "*/libs/armeabi-v7a/*.so" -exec cp -f {} $JNILI
 
 rm -f $JNILIBS/arm64-v8a/libsndfile.so
 rm -f $JNILIBS/armeabi-v7a/libsndfile.so
-rm -f $JNILIBS/arm64-v8a/libgnustl_shared.so
-rm -f $JNILIBS/armeabi-v7a/libgnustl_shared.so
+rm -f $JNILIBS/arm64-v8a/libc++_shared.so
+rm -f $JNILIBS/armeabi-v7a/libc++_shared.so
 
 echo "These are the built and copied native libraries for the Csound for Android app:"
 find ../../CsoundAndroid/libs -name "*.so" -ls
 find $JNILIBS -name "*.so" -ls
 
-# Also copy other resources used by Csound opcodes.
+# Also copy any other resources used by Csound opcodes.
 
 mkdir -p src/main/assets/samples/
 find ../../.. -wholename "*/csound/samples/*" -exec cp -f {} src/main/assets/samples ';'

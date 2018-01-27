@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Cleaning all Linux artifacts from `pwd`..."
-find . -wholename "ndk-libraries/*.o" -ls
-find . -wholename "ndk-libraries/*.a" -ls
-find . -wholename "ndk-libraries/*.so" -ls
+find ndk-libraries -name "*.o" -delete
+find ndk-libraries -name "*.a" -delete
+find ndk-libraries -name "*.so" -delete
 cd ..
