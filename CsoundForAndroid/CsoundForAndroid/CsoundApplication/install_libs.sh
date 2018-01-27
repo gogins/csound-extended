@@ -17,7 +17,7 @@ rm -f $JNILIBS/armeabi-v7a/libsndfile.so
 rm -f $JNILIBS/arm64-v8a/libgnustl_shared.so
 rm -f $JNILIBS/armeabi-v7a/libgnustl_shared.so
 
-echo "These are the built and copied libs for the Csound for Android app:"
+echo "These are the built and copied native libraries for the Csound for Android app:"
 find ../../CsoundAndroid/libs -name "*.so" -ls
 find $JNILIBS -name "*.so" -ls
 
