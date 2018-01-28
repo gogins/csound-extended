@@ -79,7 +79,6 @@ import csnd6.CsoundOboe;
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends Activity implements CsoundObjListener,
         CsoundObj.MessagePoster, SharedPreferences.OnSharedPreferenceChangeListener {
-    boolean use_oboe = true;
     Uri templateUri = null;
     Button newButton = null;
     Button openButton = null;
@@ -88,7 +87,6 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
     ToggleButton startStopButton = null;
     MenuItem helpItem = null;
     MenuItem aboutItem = null;
-    JSCsoundObj csound_obj = null;
     CsoundOboe csound_oboe = null;
     CsoundUI csoundUI = null;
     File csound_file = null;
@@ -607,7 +605,7 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
     protected void onDestroy() {
         super.onDestroy();
         try {
-            csound_obj.stop();
+            csound_oboe.stop();
         } catch (Exception e) {
             Log.e("error", "could not stop csound");
         }
@@ -653,11 +651,6 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
         SADIR = sharedPreferences.getString("SADIR", SADIR);
         INCDIR = sharedPreferences.getString("INCDIR", INCDIR);
         String driver = sharedPreferences.getString("audioDriver", "");
-        if (driver.equalsIgnoreCase("2")) {
-            use_oboe = true;
-        } else {
-            use_oboe = false;
-        }
         // Pre-load plugin opcodes, not only to ensure that Csound
         // can load them, but for easier debugging if they fail to load.
         File file = new File(OPCODE6DIR);
@@ -848,13 +841,6 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
                     csnd6.csndJNI.csoundSetGlobalEnv("SADIR", SADIR);
                     csnd6.csndJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
                     String driver = sharedPreferences.getString("audioDriver", "");
-                    if (driver.equalsIgnoreCase("2")) {
-                        use_oboe = true;
-                    } else {
-                        use_oboe = false;
-                    }
-                    if (use_oboe == true) {
-                        csound_obj = null;
                         csound_oboe = new csnd6.CsoundOboe();
                         oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.GetCsound()) {
                             @Override
@@ -863,34 +849,14 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
                                 postMessage(msg);
                             }
                         };
-                        oboe_callback_wrapper.SetMessageCallback();
+                        //oboe_callback_wrapper.SetMessageCallback();
                         webView.addJavascriptInterface(csound_oboe, "csound");
                         webView.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
-                    } else {
-                        csound_oboe = null;
-                        csound_obj = new JSCsoundObj();
-                        csoundUI = new CsoundUI(csound_obj);
-                        csound_obj.messagePoster = CsoundAppActivity.this;
-                        csound_obj.setMessageLoggingEnabled(true);
-                        webView.addJavascriptInterface(csound_obj, "csound");
-                        webView.addJavascriptInterface(CsoundAppActivity.this,
-                                "csoundApp");
-                    }
                     // Csound will not be in scope of any JavaScript on the page
                     // until the page is reloaded. Also, we want to show any edits
                     // to the page.
                     parseWebLayout();
                     postMessageClear("Csound is starting...\n");
-                    if (use_oboe == false) {
-                        String framesPerBuffer = audioManager
-                                .getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
-                        postMessage("Android sample frames per audio buffer: "
-                                + framesPerBuffer + "\n");
-                        String framesPerSecond = audioManager
-                                .getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-                        postMessage("Android sample frames per second: "
-                                + framesPerSecond + "\n");
-                    }
                     // Make sure this stuff really got packaged.
                     String samples[] = null;
                     try {
@@ -898,142 +864,109 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (use_oboe == true) {
-                        if (screenLayout.equals("4") || screenLayout.equals("5")) {
-                            // Add slider handlers.
-                            for (int i = 0; i < 5; i++) {
-                                SeekBar seekBar = sliders.get(i);
-                                final String channelName = "slider" + (i + 1);
-                                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                                    public void onStopTrackingTouch(SeekBar seekBar) {
-                                        // TODO Auto-generated method stub
-                                    }
+                    if (screenLayout.equals("4") || screenLayout.equals("5")) {
+                        // Add slider handlers.
+                        for (int i = 0; i < 5; i++) {
+                            SeekBar seekBar = sliders.get(i);
+                            final String channelName = "slider" + (i + 1);
+                            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                public void onStopTrackingTouch(SeekBar seekBar) {
+                                    // TODO Auto-generated method stub
+                                }
 
-                                    public void onStartTrackingTouch(SeekBar seekBar) {
-                                        // TODO Auto-generated method stub
-                                    }
+                                public void onStartTrackingTouch(SeekBar seekBar) {
+                                    // TODO Auto-generated method stub
+                                }
 
-                                    public void onProgressChanged(SeekBar seekBar, int progress,
-                                                                  boolean fromUser) {
-                                        if (fromUser) {
-                                            double value = progress / (double) seekBar.getMax();
-                                            csound_oboe.SetChannel(channelName, value);
-                                        }
+                                public void onProgressChanged(SeekBar seekBar, int progress,
+                                                              boolean fromUser) {
+                                    if (fromUser) {
+                                        double value = progress / (double) seekBar.getMax();
+                                        csound_oboe.SetChannel(channelName, value);
                                     }
-                                });
-                            }
-                            // Add button handlers.
-                            for (int i = 0; i < 5; i++) {
-                                Button button = buttons.get(i);
-                                final String channelName = "butt" + (i + 1);
-                                button.setOnClickListener(new OnClickListener() {
-                                    public void onClick(View v) {
-                                        csound_oboe.SetChannel(channelName, 1.0);
-                                    }
-                                });
-                            }
-                            // Add trackpad handler.
-                            pad.setOnTouchListener(new View.OnTouchListener() {
-                                public boolean onTouch(View v, MotionEvent event) {
-                                    int action = event.getAction() & MotionEvent.ACTION_MASK;
-                                    double xpos = 0;
-                                    double ypos = 0;
-                                    boolean selected = false;
-                                    switch (action) {
-                                        case MotionEvent.ACTION_DOWN:
-                                        case MotionEvent.ACTION_POINTER_DOWN:
-                                            pad.setPressed(true);
-                                            selected = true;
-                                            break;
-                                        case MotionEvent.ACTION_POINTER_UP:
-                                        case MotionEvent.ACTION_UP:
-                                            selected = false;
-                                            pad.setPressed(false);
-                                            break;
-                                        case MotionEvent.ACTION_MOVE:
-                                            break;
-                                    }
-                                    if (selected == true) {
-                                        xpos = event.getX() / v.getWidth();
-                                        ypos = 1. - (event.getY() / v.getHeight());
-                                    }
-                                    csound_oboe.SetChannel("trackpad.x", xpos);
-                                    csound_oboe.SetChannel("trackpad.y", ypos);
-                                    return true;
                                 }
                             });
-                            // Add motion handler.
-                            SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-                            List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-                            if (sensors.size() > 0) {
-                                Sensor sensor = sensors.get(0);
-                                SensorEventListener motionListener = new SensorEventListener() {
-                                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                                        // Not used.
-                                    }
-                                    public void onSensorChanged(SensorEvent event) {
-                                        double accelerometerX = event.values[0];
-                                        double accelerometerY = event.values[1];
-                                        double accelerometerZ = event.values[2];
-                                        csound_oboe.SetChannel("accelerometerX", accelerometerX);
-                                        csound_oboe.SetChannel("accelerometerY", accelerometerY);
-                                        csound_oboe.SetChannel("accelerometerZ", accelerometerZ);
-                                    }
-                                };
-                                int microseconds = 1000000 / 20;
-                                sensorManager.registerListener(motionListener, sensor, microseconds);
-                            }
                         }
-                    } else {
-                        // We hook up the builtin widgets only if they are
-                        // actually being used, otherwise they prevent names from
-                        // being used for HTML channels.
-                        if (screenLayout.equals("4") || screenLayout.equals("5")) {
-                            String channelName;
-                            for (int i = 0; i < 5; i++) {
-                                channelName = "slider" + (i + 1);
-                                csoundUI.addSlider(sliders.get(i), channelName, 0., 1.);
-                                channelName = "butt" + (i + 1);
-                                csoundUI.addButton(buttons.get(i), channelName, 1);
-                            }
-                            csoundUI.addButton(pad, "trackpad", 1);
+                        // Add button handlers.
+                        for (int i = 0; i < 5; i++) {
+                            Button button = buttons.get(i);
+                            final String channelName = "butt" + (i + 1);
+                            button.setOnClickListener(new OnClickListener() {
+                                public void onClick(View v) {
+                                    csound_oboe.SetChannel(channelName, 1.0);
+                                }
+                            });
                         }
-                        CsoundMotion motion = new CsoundMotion(csound_obj);
-                        motion.enableAccelerometer(CsoundAppActivity.this);
-                        csound_obj.addListener(CsoundAppActivity.this);
+                        // Add trackpad handler.
+                        pad.setOnTouchListener(new View.OnTouchListener() {
+                            public boolean onTouch(View v, MotionEvent event) {
+                                int action = event.getAction() & MotionEvent.ACTION_MASK;
+                                double xpos = 0;
+                                double ypos = 0;
+                                boolean selected = false;
+                                switch (action) {
+                                    case MotionEvent.ACTION_DOWN:
+                                    case MotionEvent.ACTION_POINTER_DOWN:
+                                        pad.setPressed(true);
+                                        selected = true;
+                                        break;
+                                    case MotionEvent.ACTION_POINTER_UP:
+                                    case MotionEvent.ACTION_UP:
+                                        selected = false;
+                                        pad.setPressed(false);
+                                        break;
+                                    case MotionEvent.ACTION_MOVE:
+                                        break;
+                                }
+                                if (selected == true) {
+                                    xpos = event.getX() / v.getWidth();
+                                    ypos = 1. - (event.getY() / v.getHeight());
+                                }
+                                csound_oboe.SetChannel("trackpad.x", xpos);
+                                csound_oboe.SetChannel("trackpad.y", ypos);
+                                return true;
+                            }
+                        });
+                        // Add motion handler.
+                        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+                        if (sensors.size() > 0) {
+                            Sensor sensor = sensors.get(0);
+                            SensorEventListener motionListener = new SensorEventListener() {
+                                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                                    // Not used.
+                                }
+                                public void onSensorChanged(SensorEvent event) {
+                                    double accelerometerX = event.values[0];
+                                    double accelerometerY = event.values[1];
+                                    double accelerometerZ = event.values[2];
+                                    csound_oboe.SetChannel("accelerometerX", accelerometerX);
+                                    csound_oboe.SetChannel("accelerometerY", accelerometerY);
+                                    csound_oboe.SetChannel("accelerometerZ", accelerometerZ);
+                                }
+                            };
+                            int microseconds = 1000000 / 20;
+                            sensorManager.registerListener(motionListener, sensor, microseconds);
+                        }
                     }
                     // If the Csound file is a CSD, start Csound;
                     // otherwise, do not start Csound, and assume the
                     // file is HTML with JavaScript that will call
                     // csound_obj.perform() as in csound.node().
                     if (csound_file.toString().toLowerCase().endsWith(".csd")) {
-                        if (use_oboe == true) {
-                            int result = 0;
-                            result = csound_oboe.compileCsd(csound_file.getAbsolutePath());
-                            result = csound_oboe.start();
-                            result = csound_oboe.perform();
-                        } else {
-                            csound_obj.startCsound(csound_file);
-                        }
+                        int result = 0;
+                        result = csound_oboe.compileCsd(csound_file.getAbsolutePath());
+                        result = csound_oboe.start();
+                        result = csound_oboe.perform();
                     }
                     // Make sure this is still set after starting.
                     String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
                             "OPCODE6DIR");
-                    if (use_oboe == true) {
                         csound_oboe.Message(
                                 "OPCODE6DIR has been set to: " + getOPCODE6DIR
                                         + "\n");
-                    } else {
-                        csound_obj.Message(
-                                "OPCODE6DIR has been set to: " + getOPCODE6DIR
-                                        + "\n");
-                    }
                 } else {
-                    if (use_oboe == true) {
-                        csound_oboe.stop();
-                    } else {
-                        csound_obj.stop();
-                    }
+                    csound_oboe.stop();
                     postMessage("Csound has been stopped.\n");
                 }
             }
