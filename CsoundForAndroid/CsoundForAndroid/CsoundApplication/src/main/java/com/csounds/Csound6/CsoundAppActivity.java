@@ -66,10 +66,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.csounds.CsoundObj;
-import com.csounds.CsoundObjListener;
-import com.csounds.bindings.motion.CsoundMotion;
-import com.csounds.bindings.ui.CsoundUI;
 
 import csnd6.Csound;
 import csnd6.CsoundCallbackWrapper;
@@ -77,8 +73,8 @@ import csnd6.CsoundOboe;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 @SuppressWarnings("unused")
-public class CsoundAppActivity extends Activity implements CsoundObjListener,
-        CsoundObj.MessagePoster, SharedPreferences.OnSharedPreferenceChangeListener {
+public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
+        CsoundObj.MessagePoster, */ SharedPreferences.OnSharedPreferenceChangeListener {
     Uri templateUri = null;
     Button newButton = null;
     Button openButton = null;
@@ -88,7 +84,6 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
     MenuItem helpItem = null;
     MenuItem aboutItem = null;
     CsoundOboe csound_oboe = null;
-    CsoundUI csoundUI = null;
     File csound_file = null;
     Button pad = null;
     WebView webView = null;
@@ -148,18 +143,6 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
             java.lang.System.err.println(e.toString());
             // java.lang.System.exit(1);
         }
-    }
-
-    public void csoundObjStarted(CsoundObj csoundObj) {
-    }
-
-    public void csoundObjCompleted(CsoundObj csoundObj) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                startStopButton.setChecked(false);
-                postMessage("Csound has finished.\n");
-            }
-        });
     }
 
     @Override
@@ -584,14 +567,6 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
         if (key.equals(SettingsActivity.KEY_LIST_PREFERENCE)) {
             setScreenLayout(sharedPreferences);
         }
-        if (key.equals(SettingsActivity.KEY_AUDIO_DRIVER_PREFERENCE)) {
-            String driver = sharedPreferences.getString("audioDriver", "");
-            if (driver.equalsIgnoreCase("2")) {
-                use_oboe = true;
-            } else {
-                use_oboe = false;
-            }
-        }
     }
 
     private void OnFileChosen(File file) {
@@ -849,7 +824,7 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
                                 postMessage(msg);
                             }
                         };
-                        //oboe_callback_wrapper.SetMessageCallback();
+                        oboe_callback_wrapper.SetMessageCallback();
                         webView.addJavascriptInterface(csound_oboe, "csound");
                         webView.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
                     // Csound will not be in scope of any JavaScript on the page
@@ -900,31 +875,31 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
                         // Add trackpad handler.
                         pad.setOnTouchListener(new View.OnTouchListener() {
                             public boolean onTouch(View v, MotionEvent event) {
-                                int action = event.getAction() & MotionEvent.ACTION_MASK;
-                                double xpos = 0;
-                                double ypos = 0;
-                                boolean selected = false;
-                                switch (action) {
-                                    case MotionEvent.ACTION_DOWN:
-                                    case MotionEvent.ACTION_POINTER_DOWN:
-                                        pad.setPressed(true);
-                                        selected = true;
-                                        break;
-                                    case MotionEvent.ACTION_POINTER_UP:
-                                    case MotionEvent.ACTION_UP:
-                                        selected = false;
-                                        pad.setPressed(false);
-                                        break;
-                                    case MotionEvent.ACTION_MOVE:
-                                        break;
-                                }
-                                if (selected == true) {
-                                    xpos = event.getX() / v.getWidth();
-                                    ypos = 1. - (event.getY() / v.getHeight());
-                                }
-                                csound_oboe.SetChannel("trackpad.x", xpos);
-                                csound_oboe.SetChannel("trackpad.y", ypos);
-                                return true;
+                            int action = event.getAction() & MotionEvent.ACTION_MASK;
+                            double xpos = 0;
+                            double ypos = 0;
+                            boolean selected = false;
+                            switch (action) {
+                                case MotionEvent.ACTION_DOWN:
+                                case MotionEvent.ACTION_POINTER_DOWN:
+                                    pad.setPressed(true);
+                                    selected = true;
+                                    break;
+                                case MotionEvent.ACTION_POINTER_UP:
+                                case MotionEvent.ACTION_UP:
+                                    selected = false;
+                                    pad.setPressed(false);
+                                    break;
+                                case MotionEvent.ACTION_MOVE:
+                                    break;
+                            }
+                            if (selected == true) {
+                                xpos = event.getX() / v.getWidth();
+                                ypos = 1. - (event.getY() / v.getHeight());
+                            }
+                            csound_oboe.SetChannel("trackpad.x", xpos);
+                            csound_oboe.SetChannel("trackpad.y", ypos);
+                            return true;
                             }
                         });
                         // Add motion handler.
@@ -1103,25 +1078,13 @@ public class CsoundAppActivity extends Activity implements CsoundObjListener,
 
     @JavascriptInterface
     public void setControlChannel(String channelName, double value) {
-        if (csound_obj != null) {
-            Csound csound_ = csound_obj.getCsound();
-            if (csound_ != null) {
-                // This call is thread-safe.
-                csound_.SetChannel(channelName, value);
-            }
-        }
+        csound_oboe.SetChannel(channelName, value);
     }
 
     @JavascriptInterface
     public double getControlChannel(String channelName) {
         double value = 0;
-        if (csound_obj != null) {
-            Csound csound_ = csound_obj.getCsound();
-            if (csound_ != null) {
-                // This call is thread-safe.
-                value = csound_.GetChannel(channelName);
-            }
-        }
+        value = csound_oboe.GetChannel(channelName);
         return value;
     }
 }

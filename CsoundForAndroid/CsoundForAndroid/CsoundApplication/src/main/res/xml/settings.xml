@@ -11,10 +11,4 @@
         android:defaultValue="5"
         android:entries="@array/layoutEntries"
         android:entryValues="@array/layoutValues" />
-    <ListPreference
-        android:title="Audio Driver"
-        android:key="audioDriver"
-        android:defaultValue="1"
-        android:entries="@array/audioDriverEntries"
-        android:entryValues="@array/audioDriverValues" />
 </PreferenceScreen>
