@@ -105,6 +105,16 @@ else
 fi
 cd ..
 
+cd oboe-csound
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
+
 cd osc-opcodes
 echo "Building `pwd`..."
 $NDK_BUILD_CMD $1

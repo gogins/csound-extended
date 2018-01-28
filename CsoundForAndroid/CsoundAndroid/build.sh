@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "Building csoundandroid.so..."
+echo "Building libcsoundandroid.so..."
 MACHINE="$(uname -s)"
 case "${MACHINE}" in 
   MINGW*) NDK_BUILD_CMD=$ANDROID_NDK_ROOT/ndk-build.cmd;;
@@ -16,7 +16,7 @@ bison -d -pcsound_orc --report=itemset -o jni/csound_orcparse.c $CSOUND_SRC_ROOT
 rm -rf src/csnd6
 mkdir -p src/csnd6
 
-swig -java -package csnd6 -D__BUILDING_LIBCSOUND -DENABLE_NEW_PARSER -DPARCS -DHAVE_DIRENT_H -DHAVE_FCNTL_H -DHAVE_UNISTD_H -DHAVE_STDINT_H -DHAVE_SYS_TIME_H -DHAVE_SYS_TYPES_H -DHAVE_TERMIOS_H -includeall -verbose -outdir src/csnd6 -c++ -I$CSOUND_SRC_ROOT/H -I$CSOUND_SRC_ROOT/include -I$CSOUND_SRC_ROOT/Engine -I$CSOUND_SRC_ROOT/ -I$CSOUND_SRC_ROOT/interfaces -I/System/Library/Frameworks/Python.framework/Headers -I/System/Library/Frameworks/JavaVM.framework/Headers -I./jni -I/usr/local/include -o jni/java_interfaceJAVA_wrap.cpp android_interface.i
+swig -java -package csnd6 -D__BUILDING_LIBCSOUND -DENABLE_NEW_PARSER -DPARCS -DHAVE_DIRENT_H -DHAVE_FCNTL_H -DHAVE_UNISTD_H -DHAVE_STDINT_H -DHAVE_SYS_TIME_H -DHAVE_SYS_TYPES_H -DHAVE_TERMIOS_H -includeall -verbose -outdir src/csnd6 -c++ -I$NDK_MODULE_PATH/oboe/include -I$CSOUND_SRC_ROOT/H -I$CSOUND_SRC_ROOT/include -I$CSOUND_SRC_ROOT/Engine -I$CSOUND_SRC_ROOT/ -I$CSOUND_SRC_ROOT/interfaces -I/System/Library/Frameworks/Python.framework/Headers -I/System/Library/Frameworks/JavaVM.framework/Headers -I./jni -I/usr/local/include -o jni/java_interfaceJAVA_wrap.cpp android_interface.i
 
 # ADJUST SWIG CODE FOR ANDROID and DIRECTORS
 sed -i.bak "s/AttachCurrentThread((void \*\*)/AttachCurrentThread(/" jni/java_interfaceJAVA_wrap.cpp 
@@ -25,6 +25,6 @@ sed -i.bak "s/AttachCurrentThread((void \*\*)/AttachCurrentThread(/" jni/java_in
 cd jni
 
 $NDK_BUILD_CMD V=1 -j6 $1
-echo "Finished building csoundandroid.so."
+echo "Finished building libcsoundandroid.so."
 
 

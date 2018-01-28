@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/CsoundAndroid/CsoundAndroid.iml" filepath="$PROJECT_DIR$/CsoundAndroid/CsoundAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/CsoundApplication/CsoundApplication.iml" filepath="$PROJECT_DIR$/CsoundApplication/CsoundApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/CsoundForAndroid.iml" filepath="$PROJECT_DIR$/CsoundForAndroid.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CsoundForAndroid.iml" filepath="$PROJECT_DIR$/CsoundForAndroid.iml" />
     </modules>
   </component>
 </project>
