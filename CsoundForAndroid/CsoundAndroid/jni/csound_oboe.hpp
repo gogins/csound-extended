@@ -298,7 +298,7 @@ public:
                         float_buffer = static_cast<float *>(audio_data);
                         for (int i = 0; i < frame_count; i++) {
                             for (int j = 0; j < input_channel_count; j++) {
-                                float sample = float_buffer[i * input_channel_count + j];
+                                float sample = float_buffer[i * input_channel_count + j] * 32767.f;
                                 audio_fifo.push(sample);
                             }
                         }
@@ -340,7 +340,7 @@ public:
                 float_buffer = static_cast<float *>(audio_data);
                 for (int i = 0; i < frames_per_kperiod; i++) {
                     for (int j = 0; j < output_channel_count; j++) {
-                        float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j];
+                        float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j] / 32767.f;
                     }
                 }
             } else {
