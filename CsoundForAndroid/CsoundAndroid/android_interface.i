@@ -84,7 +84,6 @@ typedef unsigned int uint32_t;
 %include "CsoundFile.hpp"
 %include "CppSound.hpp"
 %include "Soundfile.hpp"
-%include "oboe/Oboe.h"
 %include "csound_oboe.hpp"
 
 
