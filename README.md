@@ -8,7 +8,8 @@ out of the core Csound Git repository at https://github.com/csound/csound.
 These extensions include:
 
 1.  CsoundAC, an algorithmic composition library designed to be used with 
-    Csound, with C++, Python, Java, and Lua interfaces.
+    Csound. Csound is written in C++ and has C++, Python, Java, and Lua 
+    interfaces.
    
 2.  csound.node, a C++ add-on that embeds Csound in the JavaScript context of 
     Web pages running in nwjs from https://nwjs.io/.
@@ -25,7 +26,7 @@ These extensions include:
 
 This repository uses the core Csound repository, and some other third-party 
 dependencies, as Git submodules, packages, or direct source downloads. There 
-is one CMake build for it all.
+is one build system for it all.
 
 ## Installation
 
@@ -67,15 +68,49 @@ Or, to do all of the above in one step, execute `fresh-build-linux.sh`.
 
 Building for Android is similar. 
 
-You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21, 
-GDB, the NDK, and build tools 26.0.1.
-
 Please note, some NDK dependencies are built in their own subdirectories, 
 and some are built in OTHER subdirectories with their own makefiles that 
 refer to source files in the ORIGINAL subdirectories. There is a naming 
 convention, e.g. `link` is the original Git repository for the Ableton Link 
 Kit which we do not build, and `link-opcodes` is our subdirectory which we do 
 build and which includes files from the `link` subdirectory.
+
+Prerequisites for building include:
+
+1.  You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21, 
+    GDB, LLDB, the NDK, and build tools 26.0.1.
+
+2.  In order to enable local NDK builds, you must set the following 
+    environment variables:
+    
+    2.1.    `ANDROID_NDK_ROOT` with the full pathname of your Android Native 
+            Development kit, typically `$ANDROID_SDK_ROOT/ndk-bundle`.
+    2.2.    `ANDROID_SDK_ROOT` with the full pathname of your Android Software 
+            Development kit, perhaps something like `~/Android/Sdk`.
+    2.3.    `CSOUND_SRC_ROOT` with the full pathname to this repository's 
+            `dependencies/csound` subdirectory.
+    2.4.    `NDK_MODULE_PATH` with the full pathname to this repository's 
+            `CsoundForAndroid/ndk-libraries` subdirectory.
+
+To build for Android on Linux for the first time, change to the 
+CsoundForAndroid subdirectory of this repository and execute 
+`fresh-build-android.sh`, which does the following:
+
+1.  Execute `bash update-dependencies`. Do this periodically or whenever 
+    you think a dependency has changed.
+    
+2.  Execute `bash build-android.sh`. The build system compiles all native 
+    libraries, including the Csound library `libcsoundandroid.so`, required 
+    by the Csound for Android app, and copies them to the 
+    appropriate subdirectories for further building and packaging.
+    
+3.  Run Android Studio and load the `CsoundForAndroid/build.gradle` project.
+
+4.  Attach an Android device, enable USB debugging on it, and debug the 
+    CsoundApplication project.
+    
+5.  For a production build, apply to me for the signing key, build for 
+    release, and generate a signed `.apk`.
 
 ## License
 
