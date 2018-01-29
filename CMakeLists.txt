@@ -16,10 +16,10 @@ project(csound-extended)
 
 # These are the real targets: the packages.
 
-set (CPACK_GENERATOR TGZ; DEB)
-set (CPACK_DEBIAN_PACKAGE_ARCHITECTURE "`dpkg --print-architecture`")
-set (CPACK_DEBIAN_PACKAGE_MAINTAINER "csound-devel@listserv.heanet.ie")
-set (CPACK_DEBIAN_PACKAGE_DESCRIPTION "csound-extended is an extended release of Csound, the sound and music processing language.")
+set(CPACK_GENERATOR TGZ; DEB)
+set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "`dpkg --print-architecture`")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "csound-devel@listserv.heanet.ie")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "csound-extended is an extended release of Csound, the sound and music processing language.")
 
 # Top-level CMake configuration.
 

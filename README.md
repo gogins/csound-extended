@@ -65,8 +65,8 @@ The build script involves some user interaction for sudo or deletions.
 Otherwise, the build is highly automated. Many dependencies are local. All 
 dependencies are fetched automatically. Most targets are built for release 
 with debug information. There are few (ideally, no) configuration options. 
-When the build is complete, all targets have been installed and a number of 
-package files have been produced.
+When the build is complete, all targets have been installed and the package 
+files have been generated.
 
 To build on Linux for the first time, change to the root directory of the 
 csound-extended repository and execute `fresh-build-linux.sh`, which does 

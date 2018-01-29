@@ -33,7 +33,7 @@ FORMS    += \
     mainwindow.ui \
     findreplacedialog.ui \
     findreplaceform.ui
-RC_ICONS = cs.png
+RC_ICONS = cs.ico
 message("All configuration is via CMake variable CSOUND_HOME.")
 message("These point to installation directories, not source directories.")
 linux:INCLUDEPATH += $$CSOUND_HOME/include/csound

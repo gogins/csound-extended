@@ -676,6 +676,22 @@ color: rgb(0, 255, 0);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>updateMessages(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_updateMessages(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>489</x>
+     <y>309</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>updateMessages(QString)</signal>

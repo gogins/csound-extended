@@ -19,7 +19,7 @@ This software is licensed under the terms of the GNU Lesser General Public Licen
 
 ## Introduction
 
-CHSound is a bare-bones "front end" for editing and performing the following types of Csound pieces:
+CsoundHtml5 is a bare-bones "front end" for editing and performing the following types of Csound pieces:
 
 1. Csound pieces written using standard CSD files. Use the Play and Stop buttons on the menu bar to control the Csound performance.
 
@@ -33,7 +33,7 @@ All of Csound's runtime messages are printed to the `console.log` function in th
 
 ## Installation
 
-Currently CHSound must be built from source code maintained at `http://gogins.github.io`. Clone this repository, and build the project on Linux using GCC or Clang with Qt SDK 5.8 or higher, or on Windows using Microsoft Visual Studio 2015 or higher with Qt SDK 5.8 or higher. Of course the project depends on Csound, either as an installed library, or as built by you from sources at `https://github.com/csound/csound`.
+Currently CsoundHtml5 must be built from source code maintained at `http://gogins.github.io`. Clone this repository, and build the project on Linux using GCC or Clang with Qt SDK 5.8 or higher, or on Windows using Microsoft Visual Studio 2015 or higher with Qt SDK 5.8 or higher. Of course the project depends on Csound, either as an installed library, or as built by you from sources at `https://github.com/csound/csound`.
 )";
 
 void messageCallback(CSOUND *csound, int attributes, const char *format, va_list args)
@@ -83,7 +83,7 @@ void scatterArgs(const std::string buffer,
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    settings("Irreducible Productions", "CHSound"),
+    settings("Irreducible Productions", "CsoundHtml5"),
     stop(true),
     finished(true),
     thread(nullptr)
@@ -124,7 +124,7 @@ void MainWindow::on_updateMessages(const QString &line)
 
 void MainWindow::newCsd()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     auto csd = R"(<CsoundSynthesizer>
 <CsOptions>
 -odac
@@ -192,7 +192,7 @@ void MainWindow::replaceBrowser(int which)
 
 void MainWindow::saveAndLoadHtml()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
 #if (QT_VERSION < 0x050800)
     replaceBrowser(1);
 #endif
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 void MainWindow::openFile()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco *htm *html);;All files (*.*)"));
     loadFile(filename);
 }
@@ -289,7 +289,7 @@ void MainWindow::loadFile(const QString &filepath) {
 
 void MainWindow::saveFile()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         return;
@@ -305,7 +305,7 @@ void MainWindow::saveFile()
 
 void MainWindow::saveFileAs()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     auto newfilename = QFileDialog::getSaveFileName(this, tr("Open file"), "", tr("Csound files (*.csd *.orc *.sco)"));
     if (newfilename.size() > 0) {
         filename = newfilename;
@@ -315,7 +315,7 @@ void MainWindow::saveFileAs()
 
 void MainWindow::run(const QString &csd_)
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     int result = 0;
     emit updateStatus("Csound is compiling...");
     result = csound.compileCsdText(csd_.toStdString().c_str());
@@ -336,7 +336,7 @@ void MainWindow::run(const QString &csd_)
 
 void MainWindow::runFile()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     saveFile();
     if (ui->csdEdit->toPlainText().indexOf("</html>", 0, Qt::CaseInsensitive) != -1) {
         saveAndLoadHtml();
@@ -350,7 +350,7 @@ void MainWindow::runFile()
 
 void MainWindow::runCsdText(const QString &csdText)
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     if (thread != nullptr) {
         stop = true;
         thread->join();
@@ -363,7 +363,7 @@ void MainWindow::runCsdText(const QString &csdText)
 
 void MainWindow::stopCsd()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     stop = true;
     if (thread != 0) {
         thread->join();
@@ -374,39 +374,39 @@ void MainWindow::stopCsd()
 
 void MainWindow::on_backButton_clicked()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     ui->portalView->back();
 }
 
 void MainWindow::on_loadButton_clicked()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     QUrl url(ui->urlEdit->text());
     ui->portalView->load(url);
 }
 
 void MainWindow::on_csoundHomeButton_clicked()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     QUrl url("http://csound.github.io/");
     ui->portalView->load(url);
 }
 
 void MainWindow::on_forwardButton_clicked()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     ui->portalView->forward();
 }
 
 void MainWindow::on_stopLoadingButton_clicked()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     ui->portalView->stop();
 }
 
 void MainWindow::on_googleButton_clicked()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     QUrl url("http://google.com/");
     ui->portalView->load(url);
     ui->portalView->setFocus();
@@ -414,7 +414,7 @@ void MainWindow::on_googleButton_clicked()
 
 void MainWindow::on_urlEdit_returnPressed()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     QUrl url(ui->urlEdit->text());
     ui->portalView->load(url);
     ui->portalView->setFocus();
@@ -422,7 +422,7 @@ void MainWindow::on_urlEdit_returnPressed()
 
 void MainWindow::makeFullScreen()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     if (isFullScreen()) {
         showNormal();
     } else {
@@ -432,13 +432,13 @@ void MainWindow::makeFullScreen()
 
 void MainWindow::showCsdTab()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     ui->tabs->setCurrentIndex(0);
 }
 
 void MainWindow::showHtmlTab()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     replaceBrowser(1);
     saveAndLoadHtml();
     ui->tabs->setCurrentIndex(1);
@@ -446,7 +446,7 @@ void MainWindow::showHtmlTab()
 
 void MainWindow::showDebugTab()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     auto debugger = new CsoundWebView();
     debugger->setAttribute(Qt::WA_DeleteOnClose);
     debugger->setUrl(QUrl("http://localhost:8080"));
@@ -455,7 +455,7 @@ void MainWindow::showDebugTab()
 
 void MainWindow::showManualTab()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     replaceBrowser(2);
     ui->tabs->setCurrentIndex(2);
     ui->manualTab->updateGeometry();
@@ -463,7 +463,7 @@ void MainWindow::showManualTab()
 
 void MainWindow::showPortalTab()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     replaceBrowser(3);
     ui->tabs->setCurrentIndex(3);
     ui->portalView->updateGeometry();
@@ -472,7 +472,7 @@ void MainWindow::showPortalTab()
 
 void MainWindow::showLicenseTab()
 {
-    qDebug() << "CHSound: " << __FUNCTION__;
+    qDebug() << "CsoundHtml5: " << __FUNCTION__;
     ui->tabs->setCurrentIndex(4);
 }
 
@@ -530,4 +530,5 @@ void MainWindow::createActions() {
     connect(ui->actionFindNext, SIGNAL(triggered()), find_dialog, SLOT(findNext()));
     connect(ui->actionFindPrevious, SIGNAL(triggered()), find_dialog, SLOT(findPrev()));
     connect(ui->csdEdit, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint&)));
+    /// connect(this, SIGNAL(updateMessages(QString)), this, SLOT(on_updateMessages(QString)));
 }

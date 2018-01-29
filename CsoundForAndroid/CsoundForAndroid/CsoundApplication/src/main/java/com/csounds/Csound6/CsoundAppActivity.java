@@ -435,8 +435,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 messageTextView.append(message);
                 messageScrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 // Send Csound messages to the WebView's console.log function.
-                // This should happen when and only when a newline appears
-                // in the message, but the newline itself should not be sent.
+                // This should happen when and only when a newline appears.
                 for (int i = 0, n = message.length(); i < n; i++){
                     char c = message.charAt(i);
                     if (c == '\n') {

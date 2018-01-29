@@ -76,7 +76,7 @@ signals:
 protected:
     void createActions();
     void contextMenuEvent(QContextMenuEvent *event);
-private slots:
+public slots:
     void on_backButton_clicked();
     void on_loadButton_clicked();
     void on_csoundHomeButton_clicked();
