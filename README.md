@@ -26,6 +26,9 @@ These extensions include:
     also integrates Csound with HTML5. Please note, dependencies of Csound 
     for Android are fetched from the core Csound repository, and rebuilt 
     using the Android NDK.
+    
+New extensions may be added by me in the future. If you would like to add your 
+own extension, enter an issue in this repository or submit a pull request.
 
 This repository uses the core Csound repository, and some other third-party 
 dependencies, as Git submodules, packages, or direct source downloads. There 
@@ -33,15 +36,19 @@ is one build system for it all.
 
 ## Installation
 
-Currently csound-extended may be installed in the following ways:
+The csound-extended package is currently in an early stage of development.
+You are advised to install this package locally, e.g. in your home directory
+or perhaps to `/usr/local` (the default installation prefix). Currently the 
+software may be installed in the following ways:
 
-1.  Build from sources, as described below. The build also installs the 
-    software.
+1.  Build from sources, as described below. This build also installs the 
+    software. However, be warned that this installs the software in 
+    `/usr/local`.
 
 2.  Download and install the local Debian package released from this 
-    repository. This is built according to Debian maintainer standards 
-    and, in the future, csound-extended may be submitted to the Debian 
-    archive.
+    repository. This is built more or less according to Debian maintainer 
+    standards and, in the future, csound-extended may be submitted to the 
+    Debian archive. The default installation prefix is `/usr/local`.
     
 3.  Download and install the local binary archive released from this 
     repository. You can either install this in your home directory, and 

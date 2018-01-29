@@ -14,13 +14,6 @@ project(csound-extended)
 # A certain amount of the following has been copied from the core Csound project,
 # and hoisted up here to enable paths etc. to be set for all projects here.
 
-# These are the real targets: the packages.
-
-set(CPACK_GENERATOR TGZ; DEB)
-set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "`dpkg --print-architecture`")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "csound-devel@listserv.heanet.ie")
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "csound-extended is an extended release of Csound, the sound and music processing language.")
-
 # Top-level CMake configuration.
 
 include(ExternalProject)
@@ -57,6 +50,7 @@ else()
     set(LIBRARY_INSTALL_DIR "lib")
 endif()
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 message(STATUS "CPACK_PACKAGING_INSTALL_PREFIX: ${CPACK_PACKAGING_INSTALL_PREFIX}")
 message(STATUS "LIBRARY_INSTALL_DIR: ${LIBRARY_INSTALL_DIR}")
 message(STATUS "BUILD_BIN_DIR: ${BUILD_BIN_DIR}")
@@ -138,10 +132,20 @@ install(FILES "${CMAKE_SOURCE_DIR}/CsoundHtml5/CsoundHtml5"
     DESTINATION "${EXECUTABLE_INSTALL_DIR}")
 add_subdirectory(CsoundVst)
 
-set (CPACK_PACKAGE_NAME "csound-extended")
-set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
-set (CPACK_PACKAGE_VERSION "6.11.0-alpha")
-set (CPACK_PACKAGE_VERSION_MAJOR "6")
-set (CPACK_PACKAGE_VERSION_MINOR "11")
-set (CPACK_PACKAGE_VERSION_PATCH "0")
+# These are the real targets: the packages.
+
+set(CPACK_GENERATOR TGZ; DEB)
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "csound-devel@listserv.heanet.ie")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "csound-extended is a release of Csound, the sound and music processing language, extended with CsoundAC, CsoundHtml5, CsoundVST, and others.")
+set(CPACK_PACKAGE_NAME "csound-extended")
+set(CPACK_PACKAGE_CONTACT "csound-devel@listserv.heanet.ie")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
+set(CPACK_PACKAGE_VERSION "6.11.0-beta")
+set(CPACK_PACKAGE_VERSION_MAJOR "6")
+set(CPACK_PACKAGE_VERSION_MINOR "11")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
+
 include (CPack)
