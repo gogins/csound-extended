@@ -49,7 +49,7 @@ Currently csound-extended may be installed in the following ways:
     `ld.so.conf`, or copy the entire contents of the archive to 
     `/usr/local/`. In either case, you should then run ldconfig and set 
     the Csound environment variables as described in the 
-    __**Csound Reference Manual**__.
+    _**Csound Reference Manual**_.
 
 ## Building
 
