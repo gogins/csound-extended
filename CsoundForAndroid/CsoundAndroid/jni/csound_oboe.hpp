@@ -278,6 +278,7 @@ public:
         output_channel_count = 0;
         spout_size = 0;
         audio_stream_out = 0;
+        zero_dbfs = 32767.;
     }
     virtual ~CsoundOboe()
     {
@@ -298,7 +299,7 @@ public:
                         float_buffer = static_cast<float *>(audio_data);
                         for (int i = 0; i < frame_count; i++) {
                             for (int j = 0; j < input_channel_count; j++) {
-                                float sample = float_buffer[i * input_channel_count + j] * 32767.f;
+                                float sample = float_buffer[i * input_channel_count + j] * zero_dbfs;
                                 audio_fifo.push(sample);
                             }
                         }
@@ -340,7 +341,7 @@ public:
                 float_buffer = static_cast<float *>(audio_data);
                 for (int i = 0; i < frames_per_kperiod; i++) {
                     for (int j = 0; j < output_channel_count; j++) {
-                        float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j] / 32767.f;
+                        float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j] / zero_dbfs;
                     }
                 }
             } else {
@@ -370,6 +371,7 @@ public:
             internal_reset();
             SetHostImplementedAudioIO(1, 0);
             csound_result = Csound::Start();
+            zero_dbfs = Get0dBFS();
             if (csound_result != 0) {
                 Message("Csound::Start error: %d.\n", csound_result);
                 return csound_result;
@@ -656,6 +658,7 @@ protected:
     oboe::AudioFormat oboe_audio_format;
     oboe::AudioStreamBuilder audio_stream_builder;
     concurrent_queue<float> audio_fifo;
+    float zero_dbfs;
 };
 
 #endif  // __CSOUND_OBOE_HPP__

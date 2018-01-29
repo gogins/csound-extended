@@ -15,7 +15,10 @@ These extensions include:
     Web pages running in nwjs from https://nwjs.io/.
    
 3.  CsoundHtml5, a lightweight editor and "front end" for Csound that embeds 
-    HTML5 capabilities for Csound.
+    HTML5 capabilities for Csound. This makes it possible to compose music by 
+    writing Web pages (.html files) in which Csound appears as a `csound` 
+    JavaScript object that possesses a substantial subset of the Csound C++ 
+    API and that follows exactly the same semantics.
 
 4.  CsoundVST, Csound in the form of a VST plugin.
 
@@ -30,9 +33,23 @@ is one build system for it all.
 
 ## Installation
 
-Currently this project is in an alpha stage of development. Right now building 
-from sources is the best way to install it. The build scripts _should_ install 
-all required dependencies as well as csound-extended.
+Currently csound-extended may be installed in the following ways:
+
+1.  Build from sources, as described below. The build also installs the 
+    software.
+
+2.  Download and install the local Debian package released from this 
+    repository. This is built according to Debian maintainer standards 
+    and, in the future, csound-extended may be submitted to the Debian 
+    archive.
+    
+3.  Download and install the local binary archive released from this 
+    repository. You can either install this in your home directory, and 
+    configure it for running by adding the `bin` directory to your 
+    `ld.so.conf`, or copy the entire contents of the archive to 
+    `/usr/local/`. In either case, you should then run ldconfig and set 
+    the Csound environment variables as described in the 
+    __**Csound Reference Manual**__.
 
 ## Building
 
@@ -40,6 +57,8 @@ Currently, the only supported operating systems are Linux and Android. The
 code is generally "cross-platform" in nature and this build system could in 
 the future be adapted to build for Windows or OS X.
  
+First clone the Git repository at `https://github.com/gogins/csound-extended.`
+
 ### Building on Linux
 
 The build script involves some user interaction for sudo or deletions. 
@@ -49,24 +68,21 @@ with debug information. There are few (ideally, no) configuration options.
 When the build is complete, all targets have been installed and a number of 
 package files have been produced.
 
-To build on Linux for the first time, change to the root directory and execute 
-`fresh-build-linux.sh`, which does the following:
+To build on Linux for the first time, change to the root directory of the 
+csound-extended repository and execute `fresh-build-linux.sh`, which does 
+the following:
 
-1.  Change to the root directory of this repository.
-
-2.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
+1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
     
-3.  Execute `bash build-linux.sh`. For each target, the build produces an 
-    installation, some archives, and a Debian package.
+2.  Execute `bash build-linux.sh`. For each target, the build produces an 
+    installation, some archives, and a local Debian package.
 
-4.  To make clean, execute `bash clean-linux.sh`. 
+3.  To make clean, execute `bash clean-linux.sh`. 
 
-Or, to do all of the above in one step, execute `fresh-build-linux.sh`.
+Subsequently, you can perform these steps independently.
 
 ### Building for Android
-
-Building for Android is similar. 
 
 Please note, some NDK dependencies are built in their own subdirectories, 
 and some are built in OTHER subdirectories with their own makefiles that 
@@ -85,15 +101,18 @@ Prerequisites for building include:
     
     2.1.    `ANDROID_NDK_ROOT` with the full pathname of your Android Native 
             Development kit, typically `$ANDROID_SDK_ROOT/ndk-bundle`.
+            
     2.2.    `ANDROID_SDK_ROOT` with the full pathname of your Android Software 
             Development kit, perhaps something like `~/Android/Sdk`.
+            
     2.3.    `CSOUND_SRC_ROOT` with the full pathname to this repository's 
             `dependencies/csound` subdirectory.
+            
     2.4.    `NDK_MODULE_PATH` with the full pathname to this repository's 
             `CsoundForAndroid/ndk-libraries` subdirectory.
 
 To build for Android on Linux for the first time, change to the 
-CsoundForAndroid subdirectory of this repository and execute 
+`CsoundForAndroid` subdirectory of this repository and execute 
 `fresh-build-android.sh`, which does the following:
 
 1.  Execute `bash update-dependencies`. Do this periodically or whenever 
