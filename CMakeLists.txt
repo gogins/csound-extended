@@ -19,6 +19,8 @@ project(csound-extended)
 include(ExternalProject)
 
 set(CMAKE_CXX_STANDARD 11)
+# This is used for both Csound and CsoundAC SONAMEs.
+set(APIVERSION "6.0")
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/local-linux")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dependencies/csound/cmake/Modules")
@@ -47,7 +49,6 @@ else()
     set(LIBRARY_INSTALL_DIR "lib")
 endif()
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
-set(CPACK_PACKAGING_INSTALL_PREFIX "/usr/local")
 message(STATUS "CPACK_PACKAGING_INSTALL_PREFIX: ${CPACK_PACKAGING_INSTALL_PREFIX}")
 message(STATUS "BUILD_BIN_DIR: ${BUILD_BIN_DIR}")
 message(STATUS "BUILD_LIB_DIR: ${BUILD_LIB_DIR}")
@@ -130,9 +131,13 @@ add_subdirectory(CsoundVst)
 
 # These are the real targets: the packages.
 
+install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
+        DESTINATION share/doc/csound-extended
+        RENAME copyright)
+
 set(CPACK_GENERATOR TGZ; DEB)
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Csound Developers")
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Csound, the sound and music processing language, plus CsoundVST, CsoundHtml5, and CsoundAC.")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with CsoundVST, CsoundHtml5, and CsoundAC.")
 set(CPACK_PACKAGE_NAME "csound-extended")
 set(CPACK_PACKAGE_CONTACT "csound-devel@listserv.heanet.ie")
 set(CPACK_PACKAGE_VERSION "6.11.0-beta")
@@ -140,7 +145,6 @@ set(CPACK_PACKAGE_VERSION_MAJOR "6")
 set(CPACK_PACKAGE_VERSION_MINOR "11")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_STRIP_FILES "YES")
-set(CPACK_DEBIAN_PACKAGE_COPYRIGHT "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
