@@ -54,9 +54,9 @@ message("INCLUDEPATH:    " $$INCLUDEPATH)
 message("LIBS:           " $$LIBS)
 message("QMAKE_CFLAGS:   " $$QMAKE_CFLAGS)
 message("QMAKE_CXXFLAGS: " $$QMAKE_CXXFLAGS)
-for(var, $$list($$enumerate_vars())) {
-    message($$var "=" $$eval($$var))
-}
+#for(var, $$list($$enumerate_vars())) {
+#    message($$var "=" $$eval($$var))
+#}
 
 DISTFILES += \
     04_Styles.csd \

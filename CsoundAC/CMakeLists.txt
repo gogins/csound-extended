@@ -89,7 +89,7 @@ if(BUILD_CSOUND_AC)
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
 
     set_target_properties(libCsoundAC PROPERTIES
-        SOVERSION "${APIVERSION}"
+        SOVERSION "${EXTENDED_CSOUND_APIVERSION}"
         OUTPUT_NAME CsoundAC
         RUNTIME_OUTPUT_DIRECTORY "${BUILD_BIN_DIR}"
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"

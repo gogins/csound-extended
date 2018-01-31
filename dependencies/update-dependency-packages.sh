@@ -27,6 +27,10 @@ echo "Updating PortMidi..."
 sudo apt-get install libportmidi-dev
 echo "Updating PortSMF..."
 sudo apt-get install libportsmf-dev
+echo "Updating qt5base-dev..."
+sudo apt-get install qt5base-dev
+echo "Updating qtwebengine5-dev..."
+sudo apt-get install qtwebengine5-dev
 echo "Updating gcc-aarch64-linux-gnu..."
 sudo apt-get install gcc-aarch64-linux-gnu
 echo "Updating LLVM..."

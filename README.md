@@ -17,7 +17,7 @@ These extensions include:
 3.  CsoundHtml5, a lightweight editor and "front end" for Csound that embeds 
     HTML5 capabilities for Csound. This makes it possible to compose music by 
     writing Web pages (.html files) in which Csound appears as a `csound` 
-    JavaScript object that possesses a substantial subset of the Csound C++ 
+    JavaScript object that implements a substantial subset of the Csound C++ 
     API and that follows exactly the same semantics.
 
 4.  CsoundVST, Csound in the form of a VST plugin.
@@ -67,6 +67,10 @@ the future be adapted to build for Windows or OS X.
 First clone the Git repository at `https://github.com/gogins/csound-extended.`
 
 ### Building on Linux
+
+Currently building all of csound-extended requires Linux 17.10 (Artful 
+Aardvark) or higher, as earlier releases do not support the Qt WebEngine used 
+by CsoundHtml5.
 
 The build script involves some user interaction for sudo or deletions. 
 Otherwise, the build is highly automated. Many dependencies are local. All 
