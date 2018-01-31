@@ -361,24 +361,26 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 }
                 return true;
             }
-            case R.id.itemLindenmayerCanvas: {
+            case R.id.itemModulatedDelay: {
+                outFile = copyAsset("Csound6AndroidExamples/Gogins/ModulateInput.csd");
+                if (outFile != null){
+                    OnFileChosen(outFile);
+                }
+                return true;
+            }
+            case R.id.itemBuiltinChannels: {
+                outFile = copyAsset("Csound6AndroidExamples/Gogins/BuiltinChannels.csd");
+                if (outFile != null){
+                    OnFileChosen(outFile);
+                }
+                return true;
+            }
+            case R.id.itemMessage: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/js/Silencio.js");
                 if (outFile == null){
                     return true;
                 }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/ChordSpace.js");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/tinycolor.js");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/canvas_wrapper.js");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/numeric.js");
+                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/jquery.js");
                 if (outFile == null){
                     return true;
                 }
@@ -386,11 +388,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 if (outFile == null){
                     return true;
                 }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/canvas_wrapper.js");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/LindenmayerCanvas.csd");
+                outFile = copyAsset("Csound6AndroidExamples/Gogins/Message.html");
                 if (outFile != null){
                     OnFileChosen(outFile);
                 }
