@@ -317,7 +317,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 return true;
             }
             case R.id.itemMessage: {
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/jquery.js");
+                outFile = copyAsset("Csound6AndroidExamples/Gogins/silencio/js/jquery.js");
                 if (outFile == null){
                     return true;
                 }

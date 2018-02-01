@@ -6,7 +6,7 @@ android {
             keyAlias 'CsoundApplication'
             keyPassword 'Barbe48tFrant0'
             storePassword 'macadoodles'
-            storeFile file('/home/mkg/CsoundForAndroid.jks')
+            storeFile file('CsoundForAndroid.jks')
         }
     }
     compileSdkVersion 23
@@ -15,8 +15,8 @@ android {
         applicationId "com.csounds.Csound6"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 9
-        versionName '6.10.0'
+        versionCode 10
+        versionName '6.11.0'
     }
     buildTypes {
         release {
