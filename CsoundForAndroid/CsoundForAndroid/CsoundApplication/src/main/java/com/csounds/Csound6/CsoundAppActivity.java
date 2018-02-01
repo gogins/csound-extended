@@ -288,65 +288,6 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 }
             }
             return true;
-            case R.id.itemChimePad: {
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/0.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/1.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/2.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/3.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/4.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/5.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/10.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/11.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/12.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/13.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/14.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/15.wav");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/ChimePadReadMe.txt");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Hunkins/ChimePad/ChimePad.csd");
-                if (outFile != null){
-                    OnFileChosen(outFile);
-                }
-            }
-            return true;
             case R.id.itemPartikkel: {
                 outFile = copyAsset("Csound6AndroidExamples/Khosravi/partikkel.csd");
                 if (outFile != null){
@@ -376,15 +317,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 return true;
             }
             case R.id.itemMessage: {
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/Silencio.js");
-                if (outFile == null){
-                    return true;
-                }
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/js/jquery.js");
-                if (outFile == null){
-                    return true;
-                }
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/js/sprintf.js");
                 if (outFile == null){
                     return true;
                 }

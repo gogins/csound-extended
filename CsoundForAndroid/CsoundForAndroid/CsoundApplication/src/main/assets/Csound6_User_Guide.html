@@ -30,7 +30,7 @@
 <body lang="en-US" dir="ltr">
 <h1 class="western" align="center" style="margin-top: 0.08in; margin-bottom: 0in">
 User Guide<br/>
-Csound 6.10.0 for Android
+Csound 6.11.0 for Android
 </h1>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Michael
 Gogins</b></i></p>
@@ -92,11 +92,8 @@ frequently used plugin opcodes:</p>
 </ul>
 <h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">User
 Interface</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound for Android app has a
-preset user interface consisting a row of menu buttons, a widget
-area, three context menu help buttons, and a scrolling display at the
-bottom of the screen that prints messages output by Csound as it
-runs.The menu buttons perform the following functions: 
+<p style="margin-top: 0.08in; margin-bottom: 0in">The menu buttons perform the following 
+functions: 
 </p>
 <ul>
 	<li/>
@@ -193,13 +190,6 @@ the following choices:</p>
 			Displays predefined widgets and the top and a message console
 			below.</p>
 		</ul>
-		<p><i><b>Audio driver </b></i></p>
-		<ul>
-            <li/>
-			<p><i><b>OpenSLES</b></i> &ndash; Supports both input and output.</p>
-			<li/>
-			<p><i><b>Oboe</b></i> &ndash; Supports only output, but with lower latency on Android Oreo or later. Also works better with HTML-only pieces because with Oboe the JavaScript Csound API is conformant with csound.node, WebAssebly, and CsoundQt.</p>
-		</ul>
 	</ul>
 	<li/>
 <p><i><b>About Csound </b></i>&ndash; Opens a browser to show
@@ -233,7 +223,7 @@ chnget &ldquo;slider1&rdquo;</font></p>
 User-Defined
 Widgets</h2>
 <p style="margin-top: 0.08in; margin-bottom: 0in">User-defined
-widgets are defined in a new <font face="Courier New, monospace">&lt;CsHtml5&gt;</font>
+widgets are defined in an HTML file (Web page), or in a new <font face="Courier New, monospace">&lt;html&gt;</font>
 element of the CSD file. This can in principle contain any valid
 HTML5 code, including document elements, JavaScript, and styles.
 JavaScript event handlers can be attached to any elements, including
