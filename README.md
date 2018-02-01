@@ -60,7 +60,6 @@ software may be installed in the following ways:
     software. However, be warned that this installs the software in 
     `/usr/local`. 
 
-
 ## Building
 
 Currently, the only supported operating systems are Linux and Android. The 
