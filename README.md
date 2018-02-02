@@ -41,22 +41,24 @@ You are advised to install this package locally, e.g. in your home directory
 or perhaps to `/usr/local` (the default installation prefix). Currently the 
 software may be installed in the following ways:
 
-1.  Build from sources, as described below. This build also installs the 
-    software. However, be warned that this installs the software in 
-    `/usr/local`.
-
-2.  Download and install the local Debian package released from this 
-    repository. This is built more or less according to Debian maintainer 
-    standards and, in the future, csound-extended may be submitted to the 
-    Debian archive. The default installation prefix is `/usr/local`.
+1.  WARNING! Although this repository builds a Debian package, it is NOT yet 
+    suitable for installation, thus it is NOT RELEASED. The package is a work 
+    in progress. Currently, although the package file builds, it does not pass 
+    lintian, and may conflict with Csound packages. The default installation 
+    prefix is `/usr`. In the future, csound-extended, probably in the form 
+    of component packages, may be submitted to the Debian archive. 
     
-3.  Download and install the local binary archive released from this 
+2.  Download and install the local binary archive released from this 
     repository. You can either install this in your home directory, and 
     configure it for running by adding the `bin` directory to your 
     `ld.so.conf`, or copy the entire contents of the archive to 
     `/usr/local/`. In either case, you should then run ldconfig and set 
     the Csound environment variables as described in the 
     _**Csound Reference Manual**_.
+    
+3.  Build from sources, as described below. This build also installs the 
+    software. However, be warned that this installs the software in 
+    `/usr/local`. 
 
 ## Building
 
@@ -68,9 +70,9 @@ First clone the Git repository at `https://github.com/gogins/csound-extended.`
 
 ### Building on Linux
 
-Currently building all of csound-extended requires Linux 17.10 (Artful 
-Aardvark) or higher, as earlier releases do not support the Qt WebEngine used 
-by CsoundHtml5.
+Currently, building all of csound-extended requires Linux 17.10 (Artful 
+Aardvark) or higher, as earlier releases of Linux do not have packages for 
+the Qt WebEngine used by CsoundHtml5.
 
 The build script involves some user interaction for sudo or deletions. 
 Otherwise, the build is highly automated. Many dependencies are local. All 
@@ -89,8 +91,8 @@ the following:
 1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
     
-2.  Execute `bash build-linux.sh`. For each target, the build produces an 
-    installation, some archives, and a local Debian package.
+2.  Execute `bash build-linux.sh`. The build produces an installation, some 
+    archives, and a local Debian package.
 
 3.  To make clean, execute `bash clean-linux.sh`. 
 
@@ -110,8 +112,8 @@ Prerequisites for building include:
 1.  You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21, 
     GDB, LLDB, the NDK, and build tools 26.0.1.
 
-2.  In order to enable local NDK builds, you must set the following 
-    environment variables:
+2.  In order to enable local NDK builds (i.e. in individual subdirectories), 
+    you must set the following environment variables:
     
     2.1.    `ANDROID_NDK_ROOT` with the full pathname of your Android Native 
             Development kit, typically `$ANDROID_SDK_ROOT/ndk-bundle`.
