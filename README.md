@@ -79,6 +79,9 @@ with debug information. There are few (ideally, no) configuration options.
 When the build is complete, all targets have been installed and the package 
 files have been generated.
 
+If you have more than one version of the Qt SDK installed, you will need to 
+execute, probably in your login .profile script, `export QT_SELECT=qt5`.
+
 To build on Linux for the first time, change to the root directory of the 
 csound-extended repository and execute `fresh-build-linux.sh`, which does 
 the following:
