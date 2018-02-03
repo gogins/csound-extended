@@ -105,6 +105,8 @@ MainWindow::MainWindow(QWidget *parent) :
     find_replace_dialog = new FindReplaceDialog(this);
     find_replace_dialog->setModal(false);
     find_replace_dialog->setTextEdit(ui->csdEdit);
+    cursorLabel = new QLabel();
+    ui->statusBar->addPermanentWidget(cursorLabel);
     createActions();
     readSettings();
 }
@@ -530,5 +532,11 @@ void MainWindow::createActions() {
     connect(ui->actionFindNext, SIGNAL(triggered()), find_dialog, SLOT(findNext()));
     connect(ui->actionFindPrevious, SIGNAL(triggered()), find_dialog, SLOT(findPrev()));
     connect(ui->csdEdit, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint&)));
-    /// connect(this, SIGNAL(updateMessages(QString)), this, SLOT(on_updateMessages(QString)));
+    connect(ui->csdEdit, SIGNAL(cursorPositionChanged()), this, SLOT(on_cursorPositionChanged()));
+}
+
+void MainWindow::on_cursorPositionChanged() {
+ int row = ui->csdEdit->textCursor().blockNumber();
+ int column = ui->csdEdit->textCursor().columnNumber();
+ cursorLabel->setText(QString("%1 / %2").arg(row).arg(column));
 }

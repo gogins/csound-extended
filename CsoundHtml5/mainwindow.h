@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QLabel>
 #include <QMainWindow>
 #include <QSettings>
 #include <thread>
@@ -28,6 +29,7 @@ public:
     QString csound_messages_buffer;
     FindDialog *find_dialog;
     FindReplaceDialog *find_replace_dialog;
+    QLabel *cursorLabel;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void run(const QString &csdtext);
@@ -70,13 +72,6 @@ public slots:
     void writeSettings();
     void closeEvent(QCloseEvent *event);
     void showContextMenu(const QPoint &point);
-signals:
-    void updateMessages(const QString &line);
-    void updateStatus(const QString &message);
-protected:
-    void createActions();
-    void contextMenuEvent(QContextMenuEvent *event);
-public slots:
     void on_backButton_clicked();
     void on_loadButton_clicked();
     void on_csoundHomeButton_clicked();
@@ -85,6 +80,13 @@ public slots:
     void on_googleButton_clicked();
     void on_urlEdit_returnPressed();
     void on_updateMessages(const QString &);
+    void on_cursorPositionChanged();
+signals:
+    void updateMessages(const QString &line);
+    void updateStatus(const QString &message);
+protected:
+    void createActions();
+    void contextMenuEvent(QContextMenuEvent *event);
 };
 
 #endif // MAINWINDOWCLASS_H
