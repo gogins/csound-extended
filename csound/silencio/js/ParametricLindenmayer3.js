@@ -387,7 +387,7 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * the current turtle state's P, I, T at the closest voiceleading from
          * the previous chord. The voiceleading is done between the prior and
          * current state of the turtle.chord, so may not perform as expected
-         * unless operations are not successive in time. Please note, the
+         * unless operations are successive in time. Please note, the
          * chordSpaceGroup of the LSystem must first have been initialized.
          */
         this.add_command('PitVoiceleading(P, I, T, V)', function (lsystem, turtle, P, I, T, V) {

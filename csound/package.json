@@ -7,7 +7,7 @@
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_node",
+    "title": "message.4.6",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
