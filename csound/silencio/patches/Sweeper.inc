@@ -57,6 +57,6 @@ aright = adamping * aright
 kgain = ampdb(gk_Sweeper_level) / 3
 outleta "outleft", aleft * kgain
 outleta "outright", aright * kgain
-prints "Sweeper       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "Sweeper        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
