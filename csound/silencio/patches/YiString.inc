@@ -52,5 +52,6 @@ outleta "outright", a_out_right * gk_YiString_reverb_send
 outleta "chorusleft", a_out_left * gk_YiString_chorus_send
 outleta "chorusright", a_out_right * gk_YiString_chorus_send
 #endif
-prints "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+printks "YiString         %9.4f\n", 0.5, asignal
+prints  "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin

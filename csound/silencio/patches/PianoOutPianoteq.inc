@@ -1,7 +1,7 @@
 gk_Piano_level init 0
 instr PianoOut
 k_gain = ampdb(gk_Piano_level)
-i_overall_amps = 60
+i_overall_amps = 80
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(80) * i_normalization
 giPianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
@@ -35,5 +35,5 @@ a_out_right = aoutright * k_gain * i_amplitude
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "PianoOutPt     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
+prints "PianoOutPt     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin
