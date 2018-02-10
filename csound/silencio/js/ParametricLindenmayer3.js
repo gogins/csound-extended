@@ -358,6 +358,78 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             return turtle;
         });
         /**
+         * Assign the parameter P to the current turtle state.
+         */
+        this.add_command('PAssign(P)', function (lsystem, turtle, P) {
+            turtle.P = P;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Add the parameter P to the current turtle state.
+         */
+        this.add_command('PMove(P)', function (lsystem, turtle, P) {
+            turtle.P += P;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Assign the parameter I to the current turtle state.
+         */
+        this.add_command('IAssign(I)', function (lsystem, turtle, I) {
+            turtle.I = I;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Add the parameter I to the current turtle state.
+         */
+        this.add_command('IMove(I)', function (lsystem, turtle, I) {
+            turtle.I += I;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Assign the parameter T to the current turtle state.
+         */
+        this.add_command('TAssign(T)', function (lsystem, turtle, T) {
+            turtle.T = T;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Add the parameter T to the current turtle state.
+         */
+        this.add_command('TMove(T)', function (lsystem, turtle, T) {
+            turtle.T += T;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Assign the parameter V to the current turtle state.
+         */
+        this.add_command('VAssign(V)', function (lsystem, turtle, V) {
+            turtle.V = V;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
+         * Add the parameter V to the current turtle state.
+         */
+        this.add_command('VMove(V)', function (lsystem, turtle, V) {
+            turtle.V += V;
+            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            return turtle;
+        });
+        /**
          * Create notes in the score at the current time and duration from
          * the current turtle state's chord.
          */

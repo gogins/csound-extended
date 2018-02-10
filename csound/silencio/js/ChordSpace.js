@@ -2341,6 +2341,20 @@ if (typeof console === 'undefined') {
         }
         return {'P': P, 'I': I, 'T': T, 'V': V};
     };
+    
+    //~ ChordSpaceGroup.prototype.P = function(chord, operand) {
+        //~ var PITv = this.fromChord(chord);
+        //~ PITv.P += operand;
+    //~ }
+    
+    //~ ChordSpaceGroup.prototype.I = function(chord, operand) {
+    //~ }
+    
+    //~ ChordSpaceGroup.prototype.T = function(chord, operand) {
+    //~ }
+
+    //~ ChordSpaceGroup.prototype.v = function(chord, operand) {
+    //~}
 
     ChordSpaceGroup.prototype.printChords = function() {
         for (var index = 0; index < this.optisForIndexes.length; index++) {
