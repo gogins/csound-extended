@@ -112,6 +112,7 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         } else {
             this.chord = chord_.clone();
         }
+        this.prior_chord = this.chord.clone();
         if (typeof modality_ === "undefined") {
             this.modality = new ChordSpace.Chord();
         } else {
@@ -126,6 +127,7 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         clone_.note = this.note.clone();
         clone_.chord = this.chord.clone();
         clone_.modality = this.modality.clone();
+        clone_.prior_chord = this.prior_chord.clone();
         return clone_;
     };
 
@@ -434,11 +436,13 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             turtle.chord.setDuration(D);
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
+            turtle.prior_chord = turtle.chord.clone();
             return turtle;
         });
        this.add_command('ChordNotes()', function (lsystem, turtle) {
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
+            turtle.prior_chord = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -449,11 +453,11 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * unless operations are successive in time. Please note, the
          * chordSpaceGroup of the LSystem must first have been initialized.
          */
-        this.add_command('PitVoiceleading(P, I, T, V)', function (lsystem, turtle, P, I, T, V) {
-            var prior_chord = turtle.chord.clone();
-            var new_chord = lsystem.chord_space_group.toChord(P, I, T, V, turtle_chord).op;
-            turtle.chord = ChordSpace.voiceleadingClosestRange(prior_chord, new_chord, lsystem.chord_space_group.range, true);
+        this.add_command('ChordNotesVoiceleading()', function (lsystem, turtle) {
+            turtle.chord = ChordSpace.voiceleadingClosestRange(turtle.prior_chord, turtle.chord, lsystem.chord_space_group.range, true);
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
+            turtle.prior_chord = turtle.chord.clone();
             return turtle;
         });
         this.reset();
