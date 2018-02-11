@@ -2218,7 +2218,7 @@ if (typeof console === 'undefined') {
     ChordSpace.createChordSpaceGroup = function(voices, range, g) {
         var chordSpaceGroup = new ChordSpaceGroup();
         var filename = ChordSpace.createFilename(voices, range, g);
-        var restored_ = Silencio.restoreFromLocalFile(true, filename);
+        var restored_ = null;//Silencio.restoreFromLocalFile(true, filename);
         if (restored_ !== null) {
             Object.assign(chordSpaceGroup, restored_);
             console.log(sprintf('Loaded ChordSpaceGroup from file "%s"...', filename));
@@ -2236,9 +2236,9 @@ if (typeof console === 'undefined') {
      * of the chord's OP may have zero or more octaves added to it.
      * Please note, because some set classes e.g. diminished chords are
      * invariant under some T, there may be more than one PITV to get the
-     * same chord.
+     * same chord. If model_chord is defined, copy its extra data.
      */
-    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, printme) {
+    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, model_chord, printme) {
         printme = typeof printme !== 'undefined' ? printme : false;
         P = P % this.countP;
         I = I % 2;
@@ -2273,7 +2273,17 @@ if (typeof console === 'undefined') {
         if (printme) {
             console.log('toChord:   revoicing: ' + revoicing);
         }
-        return {'revoicing': revoicing, 'opti': optti, 'op': op};
+        if (typeof model_chord !== 'undefined') {
+            var revoicing_ = model_chord.clone();
+            revoicing_.set(revoicing.voices);
+            var optti_ = model_chord.clone();
+            optti_.set(optti.voices);
+            var op_ = model_chord.clone();
+            op_.set(op.voices);
+            return {'revoicing': revoicing_, 'opti': optti_, 'op': op_}
+        } else {
+            return {'revoicing': revoicing, 'opti': optti, 'op': op};
+        }
     };
 
     /**
@@ -2331,7 +2341,7 @@ if (typeof console === 'undefined') {
         }
         var voicing = ChordSpace.voiceleading(op, chord);
         // Possible alternative implementation: V = this.indexesForVoicings[voicing.toString()];
-        var V = ChordSpace.indexForOctavewiseRevoicing(chord, range, printme);
+        var V = ChordSpace.indexForOctavewiseRevoicing(chord, this.range, printme);
         if (V === -1) {
             V = 0;
         }
@@ -2342,20 +2352,6 @@ if (typeof console === 'undefined') {
         return {'P': P, 'I': I, 'T': T, 'V': V};
     };
     
-    //~ ChordSpaceGroup.prototype.P = function(chord, operand) {
-        //~ var PITv = this.fromChord(chord);
-        //~ PITv.P += operand;
-    //~ }
-    
-    //~ ChordSpaceGroup.prototype.I = function(chord, operand) {
-    //~ }
-    
-    //~ ChordSpaceGroup.prototype.T = function(chord, operand) {
-    //~ }
-
-    //~ ChordSpaceGroup.prototype.v = function(chord, operand) {
-    //~}
-
     ChordSpaceGroup.prototype.printChords = function() {
         for (var index = 0; index < this.optisForIndexes.length; index++) {
             var opti = this.optisForIndexes[index];

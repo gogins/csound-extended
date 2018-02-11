@@ -102,10 +102,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
     ParametricLindenmayer.Turtle = function (note_, chord_, modality_) {
         this.step = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
         this.scale = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-        this.P = 0;
-        this.I = 0;
-        this.T = 0;
-        this.V = 0;
         if (typeof note_ === "undefined") {
             this.note = new Silencio.Event();
         } else {
@@ -130,10 +126,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         clone_.note = this.note.clone();
         clone_.chord = this.chord.clone();
         clone_.modality = this.modality.clone();
-        clone_.P = this.P;
-        clone_.I = this.I;
-        clone_.T = this.T;
-        clone_.V = this.V;
         return clone_;
     };
 
@@ -337,11 +329,7 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Assign the parameters P, I, T, and V to the current turtle state.
          */
         this.add_command('PitvAssign(P, I, T, V)', function (lsystem, turtle, P, I, T, V) {
-            turtle.P = P;
-            turtle.I = I;
-            turtle.T = T;
-            turtle.V = V;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            turtle.chord = lsystem.chord_space_group.toChord(P, I, T, V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -349,11 +337,12 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Add the parameters P, I, T, and V to the current turtle state.
          */
         this.add_command('PitvMove(P, I, T, V', function (lsystem, turtle, P, I, T, V) {
-            turtle.P += P;
-            turtle.I += I;
-            turtle.T += T;
-            turtle.V += V;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.P += P;
+            pitv.I += I;
+            pitv.T += T;
+            pitv.V += V;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -361,8 +350,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Assign the parameter P to the current turtle state.
          */
         this.add_command('PAssign(P)', function (lsystem, turtle, P) {
-            turtle.P = P;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.P = P;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -370,8 +360,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Add the parameter P to the current turtle state.
          */
         this.add_command('PMove(P)', function (lsystem, turtle, P) {
-            turtle.P += P;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.P += P;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -379,8 +370,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Assign the parameter I to the current turtle state.
          */
         this.add_command('IAssign(I)', function (lsystem, turtle, I) {
-            turtle.I = I;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.I = I;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -388,8 +380,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Add the parameter I to the current turtle state.
          */
         this.add_command('IMove(I)', function (lsystem, turtle, I) {
-            turtle.I += I;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.I += I;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -397,8 +390,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Assign the parameter T to the current turtle state.
          */
         this.add_command('TAssign(T)', function (lsystem, turtle, T) {
-            turtle.T = T;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.T = T;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -406,8 +400,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Add the parameter T to the current turtle state.
          */
         this.add_command('TMove(T)', function (lsystem, turtle, T) {
-            turtle.T += T;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.T += T;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -415,8 +410,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Assign the parameter V to the current turtle state.
          */
         this.add_command('VAssign(V)', function (lsystem, turtle, V) {
-            turtle.V = V;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.V = V;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -424,8 +420,9 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * Add the parameter V to the current turtle state.
          */
         this.add_command('VMove(V)', function (lsystem, turtle, V) {
-            turtle.V += V;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
+            var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
+            pitv.V += V;
+            turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -445,16 +442,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             return turtle;
         });
         /**
-         * Create notes in the score at the current time and duration from
-         * the current turtle state's P, I, T, and V.
-         */
-        this.add_command('PitvNotes()', function (lsystem, turtle) {
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
-            ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
-            return turtle;
-        });
-        /**
          * Create a chord at the current time and duration from
          * the current turtle state's P, I, T at the closest voiceleading from
          * the previous chord. The voiceleading is done between the prior and
@@ -464,12 +451,8 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          */
         this.add_command('PitVoiceleading(P, I, T, V)', function (lsystem, turtle, P, I, T, V) {
             var prior_chord = turtle.chord.clone();
-            turtle.P += P;
-            turtle.I += I;
-            turtle.T += T;
-            turtle.V += V;
-            turtle.chord = chord_space_group.toChord(turtle.P, turtle.I, turtle.T, turtle.V);
-            turtle.chord = ChordSpace.voiceleadingClosestRange(prior_chord, turtle.chord, this.chordSpaceGroup.range, true);
+            var new_chord = lsystem.chord_space_group.toChord(P, I, T, V, turtle_chord).op;
+            turtle.chord = ChordSpace.voiceleadingClosestRange(prior_chord, new_chord, lsystem.chord_space_group.range, true);
             lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
@@ -595,21 +578,25 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         if (typeof iterations !== "undefined") {
             this.iterations = iterations;
         }
-        var initial_production = this.axiom;
-        var current_production = [];
-        var wordIndex;
-        for (this.iteration = 0; this.iteration < this.iterations; this.iteration++) {
-            current_production.length = 0;
-            for (wordIndex = 0; wordIndex < initial_production.length; wordIndex++) {
-                var parent = initial_production[wordIndex].clone();
-                parent.rewrite(this, current_production);
+        try {
+            var initial_production = this.axiom;
+            var current_production = [];
+            var wordIndex;
+            for (this.iteration = 0; this.iteration < this.iterations; this.iteration++) {
+                current_production.length = 0;
+                for (wordIndex = 0; wordIndex < initial_production.length; wordIndex++) {
+                    var parent = initial_production[wordIndex].clone();
+                    parent.rewrite(this, current_production);
+                }
+                initial_production = current_production.slice();
             }
-            initial_production = current_production.slice();
-        }
-        var working_turtle = this.turtle.clone();
-        for (wordIndex = 0; wordIndex < current_production.length; wordIndex++) {
-            var word = current_production[wordIndex];
-            working_turtle = this.invoke_command(word, working_turtle);
+            var working_turtle = this.turtle.clone();
+            for (wordIndex = 0; wordIndex < current_production.length; wordIndex++) {
+                var word = current_production[wordIndex];
+                working_turtle = this.invoke_command(word, working_turtle);
+            }
+        } catch (ex) {
+            console.log(ex);
         }
     };
 
