@@ -1713,22 +1713,22 @@ if (typeof console === 'undefined') {
     };
 
     //FIXME: low is Chord in C++ and scalar here and in Lua.
-    ChordSpace.next = function(odometer, low, high, g) {
-        var voiceN = odometer.size();
-        // "Tick."
-        odometer.voices[voiceN - 1] = odometer.voices[voiceN - 1] + g;
-        // "Carry."
-        for (var voice = voiceN - 1; voice >= 1; voice--) {
-            if (odometer.voices[voice] > high) {
-                odometer.voices[voice] = low;
-                odometer.voices[voice - 1] = odometer.voices[voice - 1] + g;
-            }
-        }
-        if (odometer.voices[0] > high) {
-            return false;
-        }
-        return true;
-    };
+    //~ ChordSpace.next = function(odometer, low, high, g) {
+        //~ var voiceN = odometer.size();
+        //~ // "Tick."
+        //~ odometer.voices[voiceN - 1] = odometer.voices[voiceN - 1] + g;
+        //~ // "Carry."
+        //~ for (var voice = voiceN - 1; voice >= 1; voice--) {
+            //~ if (odometer.voices[voice] > high) {
+                //~ odometer.voices[voice] = low;
+                //~ odometer.voices[voice - 1] = odometer.voices[voice - 1] + g;
+            //~ }
+        //~ }
+        //~ if (odometer.voices[0] > high) {
+            //~ return false;
+        //~ }
+        //~ return true;
+    //~ };
 
     ChordSpace.next = function(iterator_, origin, range, g) {
         var leastSignificantVoice = iterator_.size() - 1;
@@ -1749,18 +1749,23 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns the voicing of the destination which has the closest voice-leading
+    // FIXME: Looks like untested bad logic.
+    // Returns the voicing of the destination that has the closest voice-leading
     // from the source within the range, optionally avoiding parallel fifths.
-    ChordSpace.voiceleadingClosestRange = function(source, destination, range, avoidParallels) {
-        var destinationeOP = destination.eOP();
-        var d = destinationeOP.clone();
-        var odometer = source.origin();
-        while (ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE) === true) {
+    ChordSpace.voiceleadingClosestRange = function(prior_chord, destination, range, avoidParallels) {
+      //` return d;
+        var voices = destination.size();
+        var origin = destination.eOP();
+        var odometer = origin.clone();
+        // Enumerate the permutations.
+        // iterator[0] is the most significant voice, and
+        // iterator[N-1] is the least significant voice.
+        var voicings = 0;
+        var d = origin.clone();
+        while (ChordSpace.next(odometer, origin, range, ChordSpace.OCTAVE) === true) {
             var revoicing = odometer.clone();
-            for (var voice = 0; voice < revoicing.size(); voice++) {
-                revoicing.voices[voice] = revoicing.voices[voice] + destinationeOP.voices[voice];
-            }
-            d = ChordSpace.voiceleadingCloser(source, d, revoicing, avoidParallels);
+            d = ChordSpace.voiceleadingCloser(prior_chord, d, revoicing, avoidParallels);
+            voicings = voicings + 1;
         }
         return d;
     };
@@ -2085,6 +2090,22 @@ if (typeof console === 'undefined') {
             'chord': chord
         };
     };
+    
+    /**
+     * Forces the voices to the most precise possible representation of 
+     * equal temperament, where g is the generator of transposition. 
+     * Probably works in all cases only when g is an integer.
+     */
+    
+    Chord.prototype.clamp = function(g) {
+        for (var voice = 0; voice < this.size(); voice++) {
+            var pitch = this.voices[voice];
+            pitch /= g;
+            pitch = Math.round(pitch);
+            pitch *= g;
+            this.voices[voice] = pitch;
+        }            
+    };
 
     /**
      * Orthogonal additive groups for unordered chords of given arity under range
@@ -2239,50 +2260,55 @@ if (typeof console === 'undefined') {
      * same chord. If model_chord is defined, copy its extra data.
      */
     ChordSpaceGroup.prototype.toChord = function(P, I, T, V, model_chord, printme) {
-        printme = typeof printme !== 'undefined' ? printme : false;
-        P = P % this.countP;
-        I = I % 2;
-        T = T % ChordSpace.OCTAVE;
-        V = V % this.countV;
-        if (printme) {
-            console.log(sprintf('toChord:             %s %s %s %s', P, I, T, V));
-        }
-        var optti = this.optisForIndexes[P];
-        if (printme) {
-            console.log('toChord:   optti:    ' + optti);
-        }
-        var optt;
-        if (I === 0) {
-            optt = optti;
-        } else {
-            optt = optti.I().eOPTT();
-        }
-        if (console.logme) {
-            console.log('toChord:   optt:      ' + optt);
-        }
-        var optt_t = optt.T(T);
-        if (printme) {
-            console.log('toChord:   optt_t:    ' + optt_t);
-        }
-        var op = optt_t.eOP();
-        if (printme) {
-            console.log('toChord:   op:        ' + op);
-        }
-        V = V % this.countV;
-        var revoicing = ChordSpace.octavewiseRevoicing(op, V, this.range);
-        if (printme) {
-            console.log('toChord:   revoicing: ' + revoicing);
-        }
-        if (typeof model_chord !== 'undefined') {
-            var revoicing_ = model_chord.clone();
-            revoicing_.set(revoicing.voices);
-            var optti_ = model_chord.clone();
-            optti_.set(optti.voices);
-            var op_ = model_chord.clone();
-            op_.set(op.voices);
-            return {'revoicing': revoicing_, 'opti': optti_, 'op': op_}
-        } else {
-            return {'revoicing': revoicing, 'opti': optti, 'op': op};
+        try {
+            printme = typeof printme !== 'undefined' ? printme : false;
+            P = P % this.countP;
+            I = I % 2;
+            T = T % ChordSpace.OCTAVE;
+            V = V % this.countV;
+            if (printme) {
+                console.log(sprintf('toChord:             %s %s %s %s', P, I, T, V));
+            }
+            var optti = this.optisForIndexes[P];
+            if (printme) {
+                console.log('toChord:   optti:    ' + optti);
+            }
+            var optt;
+            if (I === 0) {
+                optt = optti;
+            } else {
+                optt = optti.I().eOPTT();
+            }
+            if (console.logme) {
+                console.log('toChord:   optt:      ' + optt);
+            }
+            var optt_t = optt.T(T);
+            if (printme) {
+                console.log('toChord:   optt_t:    ' + optt_t);
+            }
+            var op = optt_t.eOP();
+            if (printme) {
+                console.log('toChord:   op:        ' + op);
+            }
+            V = V % this.countV;
+            var revoicing = ChordSpace.octavewiseRevoicing(op, V, this.range);
+            if (printme) {
+                console.log('toChord:   revoicing: ' + revoicing);
+            }
+            if (typeof model_chord !== 'undefined') {
+                var revoicing_ = model_chord.clone();
+                revoicing_.set(revoicing.voices);
+                var optti_ = model_chord.clone();
+                optti_.set(optti.voices);
+                var op_ = model_chord.clone();
+                op_.set(op.voices);
+                return {'revoicing': revoicing_, 'opti': optti_, 'op': op_}
+            } else {
+                return {'revoicing': revoicing, 'opti': optti, 'op': op};
+            }
+        } catch (ex) {
+            console.log(ex);
+            throw x;
         }
     };
 
@@ -2323,10 +2349,14 @@ if (typeof console === 'undefined') {
             }
         }
         var optti = chord.eOPTTI();
+        optti.clamp(this.g);
         if (printme) {
             console.log('fromChord: optti:    ' + optti);
         }
         var P = this.indexesForOptis[optti.toString()];
+        if (typeof P === 'undefined') {
+            throw "Undefined optti:" + optti;
+        }
         var I = 0;
         var optt_i_optt;
         if (optti.eq_epsilon(optt) === false) {
@@ -2453,6 +2483,7 @@ if (typeof console === 'undefined') {
         this.indexesForOptis = new Map();
         for (var index = 0; index < this.optisForIndexes.length; index++) {
             var opti = this.optisForIndexes[index];
+            opti.clamp(this.g);
             this.indexesForOptis[opti.toString()] = index;
             this.countP = this.countP + 1;
         }

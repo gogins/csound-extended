@@ -601,6 +601,7 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             }
         } catch (ex) {
             console.log(ex);
+            throw ex;
         }
     };
 
