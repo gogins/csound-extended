@@ -2231,23 +2231,9 @@ if (typeof console === 'undefined') {
         return filename;
     };
 
-    /**
-     * Loads the group if found, creates and saves it otherwise.
-     * NOTE: Serialization and deserialization of ChordSpaceGroup is not complete
-     * and may or may not prove necessary.
-    */
     ChordSpace.createChordSpaceGroup = function(voices, range, g) {
         var chordSpaceGroup = new ChordSpaceGroup();
-        var filename = ChordSpace.createFilename(voices, range, g);
-        var restored_ = null;//Silencio.restoreFromLocalFile(true, filename);
-        if (restored_ !== null) {
-            Object.assign(chordSpaceGroup, restored_);
-            console.log(sprintf('Loaded ChordSpaceGroup from file "%s"...', filename));
-        } else {
-            console.log(sprintf('File "%s" not found, creating...', filename));
-            chordSpaceGroup.initialize(voices, range, g);
-            Silencio.saveToLocalFile(true, chordSpaceGroup, filename);
-        }
+        chordSpaceGroup.initialize(voices, range, g);
         return chordSpaceGroup;
     };
 
@@ -2468,6 +2454,8 @@ if (typeof console === 'undefined') {
      * transposition, and range is the size of chord space.
      */
     ChordSpaceGroup.prototype.initialize = function(voices, range, g) {
+        var began = performance.now();
+        console.log("ChordSpaceGroup.prototype.initialize...");
         this.voices = typeof voices !== 'undefined' ? voices : 3;
         this.range = typeof range !== 'undefined' ? range : 60;
         this.g = typeof g !== 'undefined' ? g : 1;
@@ -2487,6 +2475,9 @@ if (typeof console === 'undefined') {
             this.indexesForOptis[opti.toString()] = index;
             this.countP = this.countP + 1;
         }
+        var ended = performance.now();
+        var elapsed = (ended - began) / 1000.;
+        console.log("ChordSpaceGroup.prototype.initialize: " + elapsed);
     };
 
     //////////////////////////////////////////////////////////////////////////////
