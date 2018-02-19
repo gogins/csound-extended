@@ -1,6 +1,8 @@
 #!/bin/bash
 echo "Updating all Debian packages required for csound-extended..."
 echo
+sudo apt-get update
+sudo apt-get upgrade
 echo "Updating build-essential..."
 sudo apt-get install build-essential
 echo "Updating automake..."
