@@ -460,6 +460,16 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             turtle.prior_chord = turtle.chord.clone();
             return turtle;
         });
+        /**
+         * Conform notes in the score at the current time and duration to
+         * the current turtle state's chord.
+         */
+        this.add_command('Chord()', function (lsystem, turtle) {
+            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
+            ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
+            turtle.prior_chord = turtle.chord.clone();
+            return turtle;
+        });
         this.reset();
     };
 

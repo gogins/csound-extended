@@ -2,7 +2,7 @@ gk_Piano_level init 0
 instr PianoOut
 k_gain = ampdb(gk_Piano_level)
 i_overall_amps = 80
-i_normalization = ampdb(-i_overall_amps) / 2
+i_normalization = ampdb(-i_overall_amps) * 2
 i_amplitude = ampdb(80) * i_normalization
 giPianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
 ; Should be "D4 Daily Practice".

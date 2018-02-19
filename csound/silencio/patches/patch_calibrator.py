@@ -56,38 +56,55 @@ nchnls = 2
 ; Uncomment only the patch that you want to test. 
 ; Keep these in alphabetical order.
 
-;#define USE_PIANOTEQ
-
 ;#include "Blower.inc"
+;#include "Bower.inc"
+;#include "Buzzer.inc"
+;#include "Compressor.inc"
 ;#include "DelayedPlucked.inc"
 ;#include "Droner.inc"
 ;#include "FilteredSines.inc"
-;#include "FM_Clang.inc"
 ;#include "FMBell.inc"
-;#include "FMModerate.inc"
+;#include "FM_Clang_Controls.inc"
+;#include "FM_Clang.inc"
+;#include "FM_Clang_Preset.inc"
 ;#include "FMModerate2.inc"
+;#include "FMModerate.inc"
 ;#include "FMModulatedChorus.inc"
 ;#include "Guitar.inc"
 ;#include "Harpsichord.inc"
 ;#include "HeavyMetal.inc"
+;#include "JackAudio.inc"
+;#include "JackNote.inc"
+;#include "LeftReverberator.inc"
 ;#include "LivingstonGuitar.inc"
+;#include "MasterOutput.inc"
 ;#include "Melody.inc"
-#ifdef USE_PIANOTEQ
-#include "PianoNotePianoteq.inc"
-#else
+;#include "MonoReverberator.inc"
+;#include "ParametricEQ.inc"
+;#include "Phaser.inc"
 ;#include "PianoNoteFluidsynth.inc"
-#endif
+#include "PianoNotePianoteq.inc"
 ;#include "Plucked.inc"
+;#include "Reverberator.inc"
+;#include "ReverbSC.inc"
 ;#include "Rhodes.inc"
+;#include "RightReverberator.inc"
+;#include "Shiner.inc"
+;#include "SolinaChorus.inc
+;#include "Soundfile.inc"
+;#include "Spatialize.inc"
 ;#include "STKBeeThree.inc"
 ;#include "STKBowed.inc"
 ;#include "STKPlucked.inc"
+;#include "Sweeper.inc"
 ;#include "ToneWheelOrgan.inc"
 ;#include "TubularBell.inc"
 ;#include "Xing.inc"
 ;#include "YiString.inc"
-#include "ZakianFlute.inc"
+;#include "ZakianFlute.inc"
 
+;#include "FluidAudio.inc"
+#include "PianoOutPianoteq.inc"
 #include "MasterOutput.inc"
 
 iampdbfs init 1
@@ -165,13 +182,8 @@ connect "YiString", "outright", "MasterOutput", "inright"
 connect "ZakianFlute", "outleft", "MasterOutput", "inleft"
 connect "ZakianFlute", "outright", "MasterOutput", "inright"
 
-#ifdef USE_PIANOTEQ
-#include "PianoOutPianoteq.inc"
-#else
-#include "PianoOutFluidsynth.inc"
-#endif
-
-
+;include "PianoOutPianoteq.inc"
+;alwayson "FluidAudio"
 alwayson "PianoOut"
 alwayson "MasterOutput"
 

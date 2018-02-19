@@ -8,7 +8,7 @@ gi_FM_Clang_stereo ftgen 0,0,256,21,1,1 ; random array used for fixing unique st
 gi_FM_Clang_detune ftgen 0,0,256,21,1,1 ; random array used for fixing unique detune values for each note
 gi_FM_Clang_scale ftgen 0,0,128,-7,-1,128,1
 
-instr FM_Clang_Controls ; Read in widgets
+instr FM_Clang_Controls 
 iporttime = 0.05
 gk_FM_Clang_mod chnget "mod"
 gk_FM_Clang_mod port gk_FM_Clang_mod,iporttime
