@@ -444,7 +444,7 @@ public:
         return 0;
     }
     /**
-     * Because Oboe is driving the performance, this is a dummy.
+     * When Oboe is driving the performance, this is a dummy.
      */
     virtual int Perform()
     {

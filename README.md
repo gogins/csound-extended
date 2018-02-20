@@ -27,6 +27,10 @@ These extensions include:
     for Android are fetched from the core Csound repository, and rebuilt 
     using the Android NDK.
     
+6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
+    module that will run Csound from a JavaScript interface in any current 
+    Web browser.
+    
 New extensions may be added by me in the future. If you would like to add your 
 own extension, enter an issue in this repository or submit a pull request.
 
@@ -62,9 +66,9 @@ software may be installed in the following ways:
 
 ## Building
 
-Currently, the only supported operating systems are Linux and Android. The 
-code is generally "cross-platform" in nature and this build system could in 
-the future be adapted to build for Windows or OS X.
+Currently, the only supported platforms are Linux, Android, and WebAssembly. 
+The code is generally "cross-platform" in nature and this build system could 
+be adapted to build for Windows or OS X.
  
 First clone the Git repository at `https://github.com/gogins/csound-extended.`
 
