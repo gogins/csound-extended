@@ -21,6 +21,8 @@ include(ExternalProject)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "csound-base")
 
 # This is used for both Csound and CsoundAC SONAMEs.
 set(APIVERSION "6.0")
@@ -121,6 +123,10 @@ find_package(SWIG)
 find_package(ZLIB)
 
 add_subdirectory(dependencies)
+install(FILES "${CMAKE_SOURCE_DIR}/build-linux/dependencies/csound/libvst4cs.so"
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+    DESTINATION "${PLUGIN_INSTALL_DIR}"
+    COMPONENT csound-vst4cs)
 add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundHtml5
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CsoundHtml5"
@@ -129,7 +135,8 @@ ExternalProject_Add(CsoundHtml5
     BUILD_COMMAND "make")
 install(FILES "${CMAKE_SOURCE_DIR}/CsoundHtml5/CsoundHtml5"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-    DESTINATION "${EXECUTABLE_INSTALL_DIR}")
+    DESTINATION "${EXECUTABLE_INSTALL_DIR}"
+    COMPONENT csound-html5)
 add_subdirectory(CsoundVst)
 ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
@@ -139,7 +146,8 @@ ExternalProject_Add(CsoundNode
     INSTALL_COMMAND "")
 install(FILES "${CMAKE_SOURCE_DIR}/csound.node/build/Release/csound.node"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-    DESTINATION "${EXECUTABLE_INSTALL_DIR}")
+    DESTINATION "${EXECUTABLE_INSTALL_DIR}"
+    COMPONENT csound-node)
 
 # These are the real targets: the packages.
 
@@ -152,13 +160,15 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with CsoundVST, CsoundHtml5, and CsoundAC.")
 set(CPACK_PACKAGE_NAME "csound-extended")
 set(CPACK_PACKAGE_CONTACT "csound-devel@listserv.heanet.ie")
-set(CPACK_PACKAGE_VERSION "6.11.0-beta")
+set(CPACK_PACKAGE_VERSION "6.11.0-beta2")
 set(CPACK_PACKAGE_VERSION_MAJOR "6")
 set(CPACK_PACKAGE_VERSION_MINOR "11")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_STRIP_FILES "YES")
+set(CPACK_DEB_COMPONENT_INSTALL "ON")   
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-vst4cs)
 
 include (CPack)

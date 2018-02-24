@@ -46,13 +46,15 @@ or perhaps to `/usr/local` (the default installation prefix). Currently the
 software may be installed in the following ways:
 
 1.  WARNING! Although this repository builds a Debian package, it is NOT yet 
-    suitable for installation, thus it is NOT RELEASED. The package is a work 
-    in progress. Currently, although the package file builds, it does not pass 
-    lintian, and may conflict with Csound packages. The default installation 
-    prefix is `/usr`. In the future, csound-extended, probably in the form 
-    of component packages, may be submitted to the Debian archive. 
+    suitable for inclusion in Debian. The package is a work 
+    in progress. YOU ARE ADVISED TO INSTALL LOCALLY, i.e. with 
+    `dpkg --instdir=/usr/local <csound-extended.deb>` or 
+    `dpkg --instdir=~/ <csound-extended.deb>`.  Currently, although the 
+    package files build, they do not pass lintian, and may conflict with 
+    external Csound packages. In the future, csound-extended packages may be 
+    submitted to the Debian archive. 
     
-2.  Download and install the local binary archive released from this 
+2.  Download and install the local binary archives released from this 
     repository. You can either install this in your home directory, and 
     configure it for running by adding the `bin` directory to your 
     `ld.so.conf`, or copy the entire contents of the archive to 
