@@ -105,7 +105,7 @@ else
 fi
 cd ..
 
-cd csound-oboe
+cd oboe-csound
 echo "Building `pwd`..."
 $NDK_BUILD_CMD $1
 if [ $? -eq 0 ]; then

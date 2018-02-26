@@ -40,7 +40,7 @@
 #ifdef SWIG
 %module csound_oboe
 %{
-#include "csound.hpp"
+#include "csound_threaded.hpp"
 %}
 %pragma(java) jniclassimports = %{
 import android.webkit.JavascriptInterface;
@@ -259,7 +259,7 @@ public
 %}
 #endif
 
-class PUBLIC CsoundOboe : public Csound, public oboe::AudioStreamCallback
+class PUBLIC CsoundOboe : public CsoundThreaded, public oboe::AudioStreamCallback
 {
 public:
     CsoundOboe()
@@ -446,12 +446,12 @@ public:
     }
     /**
      * When Oboe is driving the performance, this is a dummy;
-     * otherwise, Csound runs in a separate thread of executation.
+     * otherwise, Csound runs in a separate thread of execution.
      */
     virtual int Perform()
     {
         Message("CsoundOboe::Perform...\n");
-        if (audio_stream_out == 0 && audio_stream_int == 0) {
+        if (audio_stream_out == 0 && audio_stream_in == 0) {
             return CsoundThreaded::Perform();
         }
         return 0;

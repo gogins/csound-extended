@@ -2,15 +2,33 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE   := doppler
+LOCAL_MODULE := oboe
 
-LOCAL_C_INCLUDES := $(CSOUND_SRC_ROOT)/Engine $(CSOUND_SRC_ROOT)/H $(CSOUND_SRC_ROOT)/include $(CSOUND_SRC_ROOT) $(NDK_MODULE_PATH)/libsndfile-android/jni $(LOCAL_PATH)/../../../CsoundAndroid/jni
-LOCAL_CFLAGS := -O3 -D__BUILDING_LIBCSOUND -DENABLE_NEW_PARSER -DLINUX -DHAVE_DIRENT_H -DHAVE_FCNTL_H -DHAVE_UNISTD_H -DHAVE_STDINT_H -DHAVE_SYS_TIME_H -DHAVE_SYS_TYPES_H -DHAVE_TERMIOS_H
+LOCAL_C_INCLUDES := $(NDK_MODULE_PATH)/oboe/src $(NDK_MODULE_PATH)/oboe/include 
+LOCAL_CFLAGS := -O3 
 LOCAL_CPPFLAGS :=$(LOCAL_CFLAGS)
-LOCAL_CPPFLAGS += -std=c++11 -pthread -frtti -fexceptions
+LOCAL_CPPFLAGS += -std=c++11 -Wall -frtti -fexceptions
 LOCAL_LDFLAGS += -Wl,--export-dynamic
+LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog -lOpenSLES
 
-LOCAL_SRC_FILES := $(CSOUND_SRC_ROOT)/Opcodes/doppler.cpp
+LOCAL_SRC_FILES := \
+        $(NDK_MODULE_PATH)/oboe/src/aaudio/AAudioLoader.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/aaudio/AudioStreamAAudio.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/common/LatencyTuner.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/common/AudioStream.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/common/AudioStreamBuilder.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/common/Utilities.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/fifo/FifoBuffer.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/fifo/FifoController.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/fifo/FifoControllerBase.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/fifo/FifoControllerIndirect.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/AudioInputStreamOpenSLES.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/AudioOutputStreamOpenSLES.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/AudioStreamBuffered.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/AudioStreamOpenSLES.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/EngineOpenSLES.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/OpenSLESUtilities.cpp \
+        $(NDK_MODULE_PATH)/oboe/src/opensles/OutputMixerOpenSLES.cpp
 
 include $(BUILD_SHARED_LIBRARY)
 
