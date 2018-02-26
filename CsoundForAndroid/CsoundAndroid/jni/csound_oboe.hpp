@@ -70,7 +70,7 @@ import android.webkit.JavascriptInterface;
 // must have their generated Java method signatures annotated here with
 // "@JavascriptInterface". Please keep these in alphabetical order.
 // This should expose the "core" of the Csound API without futher ado in a
-// manner that is consistent with Csound's JavaScript interface on other HTML5
+// manner that is consistent with Csound's JavaScript interface in other HTML5
 // environments.
 
 %javamethodmodifiers CsoundOboe::cleanup()
@@ -114,6 +114,10 @@ public
 public
 %}
 %javamethodmodifiers CsoundOboe::getControlChannel(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getCsound()
 %{@JavascriptInterface
 public
 %}
@@ -201,6 +205,10 @@ public
 %{@JavascriptInterface
 public
 %}
+%javamethodmodifiers CsoundOboe::setChannel(const char *name, double value)
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::setControlChannel(const char *name, double value)
 %{@JavascriptInterface
 public
@@ -254,6 +262,199 @@ public
 public
 %}
 %javamethodmodifiers CsoundOboe::isPlaying()
+%{@JavascriptInterface
+public
+%}
+
+%javamethodmodifiers CsoundOboe::Cleanup()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::CompileCsd(const char *csd)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::CompileCsdText(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::CompileOrc(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::EvalCode(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::Get0dBFS()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetAPIVersion()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetVersion()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetAudioChannel(const char *name, MYFLT *samples)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetChannel(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetControlChannel(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetCsound()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetCurrentTimeSamples()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetEnv(const char *name)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetKr()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetKsmps()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetMessageLevel()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetNchnls()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetNchnlsInput()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetOutputName()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetScoreOffsetSeconds()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetScoreTime()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetSr()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetStringChannel(const char *name, char *string)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::GetVersion()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::InputMessage(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::IsScorePending()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::KeyPressed(char c)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::Message(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::Perform()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::ReadScore(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::Reset()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::RewindScore()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetChannel(const char *name, double value)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetControlChannel(const char *name, double value)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetGlobalEnv(const char *name, const char *value)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetInput(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetOption(const char *text)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetOutput(const char *name,const char *type,const char *format)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetScoreOffsetSeconds(double time)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetScorePending(int pending)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::SetStringChannel(const char *name, char *string)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::Start()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::Stop()
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::TableGet(int table, int index)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::TableLength(int table)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::TableSet(int table, int index, double value)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::IsPlaying()
 %{@JavascriptInterface
 public
 %}
@@ -500,6 +701,9 @@ public:
     }
     virtual void getAudioChannel(const char *name, MYFLT *samples){
         GetAudioChannel(name,samples);
+    }
+    virtual CSOUND *getCsound(){
+        return GetCsound();
     }
     virtual MYFLT getChannel(const char *name){
         return GetControlChannel(name, 0);
