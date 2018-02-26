@@ -23,6 +23,8 @@ sudo apt-get install libfltk1.3-dev
 sudo apt-get install libfltk-images1.3
 echo "Updating fluidsynth..."
 sudo apt-get install libfluidsynth-dev
+echo "Updating gcc-arm-linux-gnueabi..."
+sudo apt-get install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."
 sudo apt-get install portaudio19-dev
 echo "Updating PortMidi..."
@@ -35,6 +37,8 @@ echo "Updating qtwebengine5-dev..."
 sudo apt-get install qtwebengine5-dev
 echo "Updating gcc-aarch64-linux-gnu..."
 sudo apt-get install gcc-aarch64-linux-gnu
+echo "Updating linux-libc-dev:i386..."
+sudo apt-get install linux-libc-dev:i386
 echo "Updating LLVM..."
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main"

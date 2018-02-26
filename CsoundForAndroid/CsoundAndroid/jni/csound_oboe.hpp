@@ -33,7 +33,7 @@
 
 #if defined(__GNUC__)
 #if __cplusplus <= 199711L
-  #error To use csound_threaded.hpp you need at least a C++11 compliant compiler.
+  #error To use csound_oboe.hpp you need at least a C++11 compliant compiler.
 #endif
 #endif
 
@@ -359,6 +359,7 @@ public:
     {
         Message("CsoundOboe::Start...\n");
         int csound_result = 0;
+        internal_reset();
         // If and only if -odac, enable host-implemented audio.
         // Need a better way to identify input and output.
         const char *output_name = GetOutputName();
@@ -444,11 +445,15 @@ public:
         return 0;
     }
     /**
-     * When Oboe is driving the performance, this is a dummy.
+     * When Oboe is driving the performance, this is a dummy;
+     * otherwise, Csound runs in a separate thread of executation.
      */
     virtual int Perform()
     {
         Message("CsoundOboe::Perform...\n");
+        if (audio_stream_out == 0 && audio_stream_int == 0) {
+            return CsoundThreaded::Perform();
+        }
         return 0;
     }
     virtual void Stop()

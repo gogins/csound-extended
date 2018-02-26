@@ -276,8 +276,8 @@ LOCAL_SHARED_LIBRARIES += c++_shared sndfile oboe
 cmd-strip :=
 
 include $(BUILD_SHARED_LIBRARY)
+$(call import-module,csound-oboe/jni)
 $(call import-module,libsndfile-android/jni)
-$(call import-module,oboe-csound/jni)
 #$(call import-module,libstdutil/jni)
 #$(call import-module,libfluidsynth/jni)
 #$(call import-module,signalflowgraph/jni)
