@@ -747,7 +747,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                     csnd6.csndJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
                     String driver = sharedPreferences.getString("audioDriver", "");
                         csound_oboe = new csnd6.CsoundOboe();
-                        oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.GetCsound()) {
+                        oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
                             @Override
                             public void MessageCallback(int attr, String msg) {
                                 Log.d("CsoundOboe:", msg);
@@ -787,7 +787,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                                               boolean fromUser) {
                                     if (fromUser) {
                                         double value = progress / (double) seekBar.getMax();
-                                        csound_oboe.SetChannel(channelName, value);
+                                        csound_oboe.setChannel(channelName, value);
                                     }
                                 }
                             });
@@ -798,7 +798,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                             final String channelName = "butt" + (i + 1);
                             button.setOnClickListener(new OnClickListener() {
                                 public void onClick(View v) {
-                                    csound_oboe.SetChannel(channelName, 1.0);
+                                    csound_oboe.setChannel(channelName, 1.0);
                                 }
                             });
                         }
@@ -827,8 +827,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                 xpos = event.getX() / v.getWidth();
                                 ypos = 1. - (event.getY() / v.getHeight());
                             }
-                            csound_oboe.SetChannel("trackpad.x", xpos);
-                            csound_oboe.SetChannel("trackpad.y", ypos);
+                            csound_oboe.setChannel("trackpad.x", xpos);
+                            csound_oboe.setChannel("trackpad.y", ypos);
                             return true;
                             }
                         });
@@ -845,9 +845,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                     double accelerometerX = event.values[0];
                                     double accelerometerY = event.values[1];
                                     double accelerometerZ = event.values[2];
-                                    csound_oboe.SetChannel("accelerometerX", accelerometerX);
-                                    csound_oboe.SetChannel("accelerometerY", accelerometerY);
-                                    csound_oboe.SetChannel("accelerometerZ", accelerometerZ);
+                                    csound_oboe.setChannel("accelerometerX", accelerometerX);
+                                    csound_oboe.setChannel("accelerometerY", accelerometerY);
+                                    csound_oboe.setChannel("accelerometerZ", accelerometerZ);
                                 }
                             };
                             int microseconds = 1000000 / 20;
@@ -867,7 +867,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                     // Make sure this is still set after starting.
                     String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
                             "OPCODE6DIR");
-                        csound_oboe.Message(
+                        csound_oboe.message(
                                 "OPCODE6DIR has been set to: " + getOPCODE6DIR
                                         + "\n");
                 } else {
@@ -1008,13 +1008,13 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
 
     @JavascriptInterface
     public void setControlChannel(String channelName, double value) {
-        csound_oboe.SetChannel(channelName, value);
+        csound_oboe.setChannel(channelName, value);
     }
 
     @JavascriptInterface
     public double getControlChannel(String channelName) {
         double value = 0;
-        value = csound_oboe.GetChannel(channelName);
+        value = csound_oboe.getChannel(channelName);
         return value;
     }
 }

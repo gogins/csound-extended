@@ -40,6 +40,7 @@
 #ifdef SWIG
 %module csound_oboe
 %{
+#include "csound.hpp"
 #include "csound_threaded.hpp"
 %}
 %pragma(java) jniclassimports = %{
@@ -49,6 +50,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.JavascriptInterface;
 %}
 #else
+#include "csound.hpp"
 #include "csound_threaded.hpp"
 #include <oboe/Oboe.h>
 #endif
