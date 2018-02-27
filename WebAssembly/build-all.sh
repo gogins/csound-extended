@@ -14,9 +14,3 @@ echo "Building libsndfile for WebAssembly..."
 sh download_and_build_libsndfile_wasm.sh
 echo "Building the Csound library for WebAssembly..."
 sh build-wasm.sh
-echo "Updating the Csound examples for WebAssembly..."
-sh update_example_libs_from_dist_wasm.sh
-echo "Creating a release directory (dist-wasm) for Csound for WebAssembly..."
-sh release-wasm.sh
-echo "Finished building Csound for WebAssembly."
-ls -ll dist-wasm

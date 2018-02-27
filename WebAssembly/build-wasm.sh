@@ -32,4 +32,10 @@ mkdir dist-wasm
 cp build-wasm/libcsound.js dist-wasm/
 cp src/*.js dist-wasm/
 cp build-wasm/libcsound.wasm dist-wasm/
-cp build-wasm/libcsound.js.map dist-wasm/
+cp build-wasm/libcsound.wasm.map dist-wasm/
+echo "Updating the Csound examples for WebAssembly..."
+sh update_example_libs_from_dist_wasm.sh
+echo "Creating a release directory (dist-wasm) for Csound for WebAssembly..."
+sh release-wasm.sh
+echo "Finished building Csound for WebAssembly."
+ls -ll dist-wasm
