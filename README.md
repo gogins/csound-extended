@@ -41,13 +41,13 @@ each platform, there is one build system.
 
 ## Installation
 
-The csound-extended package is currently in an early stage of development.
-You are advised to install this package locally, e.g. in your home directory
+The csound-extended project is currently in an early stage of development.
+You are advised to install packages locally, e.g. in your home directory
 or perhaps to `/usr/local` (the default installation prefix). Currently the 
 software may be installed in the following ways:
 
-1.  WARNING! Although this repository builds a Debian package, it is NOT yet 
-    suitable for inclusion in Debian. The package is a work 
+1.  WARNING! Although this repository builds Debian packages, they is NOT yet 
+    suitable for inclusion in Debian. The packages are a work 
     in progress. YOU ARE ADVISED TO INSTALL LOCALLY, i.e. with 
     `dpkg --instdir=/usr/local <csound-extended.deb>` or 
     `dpkg --instdir=~/ <csound-extended.deb>`.  Currently, although the 
@@ -56,8 +56,8 @@ software may be installed in the following ways:
     submitted to the Debian archive. 
     
 2.  Download and install the local binary archives released from this 
-    repository. You can either install this in your home directory, and 
-    configure it for running by adding the `bin` directory to your 
+    repository. You can either install them in your home directory, and 
+    configure them for running by adding the `bin` directory to your 
     `ld.so.conf`, or copy the entire contents of the archive to 
     `/usr/local/`. In either case, you should then run ldconfig and set 
     the Csound environment variables as described in the 
@@ -69,7 +69,7 @@ software may be installed in the following ways:
 
 ## Building
 
-Currently, the only supported platforms are Linux, Android, and WebAssembly. 
+Currently, the supported platforms are Linux, Android, and WebAssembly. 
 The code is generally "cross-platform" in nature and this build system could 
 be adapted to build for Windows or OS X.
  
