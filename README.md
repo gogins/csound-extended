@@ -29,14 +29,15 @@ These extensions include:
     
 6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
     module that will run Csound from a JavaScript interface in any current 
-    Web browser.
+    Web browser. This version includes useful plugin opcodes statically 
+    linked.
     
 New extensions may be added by me in the future. If you would like to add your 
 own extension, enter an issue in this repository or submit a pull request.
 
 This repository uses the core Csound repository, and some other third-party 
-dependencies, as Git submodules, packages, or direct source downloads. There 
-is one build system for it all.
+dependencies, as Git submodules, packages, or direct source downloads. For 
+each platform, there is one build system.
 
 ## Installation
 
@@ -62,9 +63,9 @@ software may be installed in the following ways:
     the Csound environment variables as described in the 
     _**Csound Reference Manual**_.
     
-3.  Build from sources, as described below. This build also installs the 
-    software. However, be warned that this installs the software in 
-    `/usr/local`. 
+3.  Build from sources, as described below. You may then install the software 
+    by running `sudo make install` in the `build-linux` directory. However, be 
+    warned that this installs the software in `/usr/local`. 
 
 ## Building
 
@@ -84,7 +85,7 @@ The build script involves some user interaction for sudo or deletions.
 Otherwise, the build is highly automated. Many dependencies are local. All 
 dependencies are fetched automatically. Most targets are built for release 
 with debug information. There are few (ideally, no) configuration options. 
-When the build is complete, all targets have been installed and the package 
+When the build is complete, all targets have been built and the package 
 files have been generated.
 
 If you have more than one version of the Qt SDK installed, you will need to 
@@ -97,10 +98,12 @@ the following:
 1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
     
-2.  Execute `bash build-linux.sh`. The build produces an installation, some 
-    archives, and a local Debian package.
+2.  Execute `bash build-linux.sh`. The build compiles all targets and creates 
+    all packages.
 
 3.  To make clean, execute `bash clean-linux.sh`. 
+
+4.  To install, change to `build-linux` and execute `sudo make install`.
 
 Subsequently, you can perform these steps independently.
 
@@ -116,7 +119,7 @@ build and which includes files from the `link` subdirectory.
 Prerequisites for building include:
 
 1.  You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21, 
-    GDB, LLDB, the NDK, and build tools 26.0.1.
+    GDB, LLDB, the NDK, and build tools 26.0.2.
 
 2.  In order to enable local NDK builds (i.e. in individual subdirectories), 
     you must set the following environment variables:
@@ -135,7 +138,7 @@ Prerequisites for building include:
 
 To build for Android on Linux for the first time, change to the 
 `CsoundForAndroid` subdirectory of this repository and execute 
-`fresh-build-android.sh`, which does the following:
+`bash fresh-build-android.sh`, which does the following:
 
 1.  Execute `bash update-dependencies`. Do this periodically or whenever 
     you think a dependency has changed.
@@ -152,6 +155,16 @@ To build for Android on Linux for the first time, change to the
     
 5.  For a production build, apply to me for the signing key, build for 
     release, and generate a signed `.apk`.
+    
+To build for WebAssembly for the first time, change to the `WebAssembly` 
+subdirectory of this repository and execute `bash build-all.sh`,  which 
+does the following:
+
+1.  Updates the Emscripten SDK.
+
+2.  Builds Csound for WebAssembly.
+
+4.  Creates a release package.
 
 ## License
 
