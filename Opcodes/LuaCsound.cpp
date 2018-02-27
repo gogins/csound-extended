@@ -757,13 +757,15 @@ extern "C"
                     lua_close(it->L);
                 }
             }
-                        luaStatesForThreads->clear();
-            csound::DestroyGlobalPointer(csound, "luaStatesForThreads", luaStatesForThreads);
-                        csound->UnlockMutex(lua_states_mutex);
-                        csound->DestroyMutex(lua_states_mutex);
-            csound::DestroyGlobalPointer(csound, "lua_states_mutex", lua_states_mutex);
-                        lua_states_mutex = 0;
-                }
+            luaStatesForThreads->clear();
+            delete luaStatesForThreads;
+            luaStatesForThreads = nullptr;
+            csound->DestroyGlobalVariable(csound, luaStatesForThreads);
+            csound->UnlockMutex(lua_states_mutex);
+            csound->DestroyMutex(lua_states_mutex);
+            csound->DestroyGlobalVariable(csound, "lua_states_mutex");
+            lua_states_mutex = 0;
+        }
         void *reference_keys_mutex = 0;
         QueryGlobalPointer(csound, "reference_keys_mutex", reference_keys_mutex);
                 if (reference_keys_mutex != 0) {
@@ -772,13 +774,15 @@ extern "C"
             QueryGlobalPointer(csound, "luaReferenceKeys", luaReferenceKeys);
             if (luaReferenceKeys != 0) {
                 luaReferenceKeys->clear();
-                csound::DestroyGlobalPointer(csound, "luaReferenceKeys", luaReferenceKeys);
+                delete luaReferenceKeys;
+                luaReferenceKeys = nullptr;
+                csound->DestroyGlobalVariable(csound, "luaReferenceKeys");
             }
-                        csound->UnlockMutex(reference_keys_mutex);
-                        csound->DestroyMutex(reference_keys_mutex);
-            csound::DestroyGlobalPointer(csound, "reference_keys_mutex", reference_keys_mutex);
-                        reference_keys_mutex = 0;
-                }
-                return OK;
+            csound->UnlockMutex(reference_keys_mutex);
+            csound->DestroyMutex(reference_keys_mutex);
+            csound->DestroyGlobalVariable(csound, "reference_keys_mutex");
+            eference_keys_mutex = 0;
         }
+        return OK;
+    }
 }

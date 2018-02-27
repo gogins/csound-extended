@@ -442,21 +442,22 @@ extern "C"
                                 busi->second.clear();
                         }
                         busses->clear();
-                        csound::DestroyGlobalPointer(csound, "busses", busses);
-                        busses = 0;
+                        csound->DeleteGlobalVariable(csound, "busses");
+                        delete busses;
+                        busses = nullptr;
                 }
                 std::map<CSOUND *, std::map<size_t, std::map<size_t, MYFLT> > > *matrix = 0;
                 csound::QueryGlobalPointer(csound, "matrix", matrix);
                 if (matrix) {
-                        // std::map<CSOUND *, std::map<size_t, std::map<size_t, MYFLT> > >
                         for (std::map<size_t, std::map<size_t, MYFLT> >::iterator
                                 matrixi = (*matrix)[csound].begin();
                                 matrixi != (*matrix)[csound].end(); ++matrixi) {
                                 matrixi->second.clear();
                         }
                         matrix->clear();
-                        csound::DestroyGlobalPointer(csound, "matrix", matrix);
-                        matrix = 0;
+                        csound->DeleteGlobalVariable(csound, "matrix");
+                        delete matrix;
+                        matrix = nullptr;
                 }
                 return OK;
         }

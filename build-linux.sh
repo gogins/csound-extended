@@ -15,5 +15,5 @@ find . -name '*.deb' -exec dpkg -f '{}' ';'
 find . -name '*.deb' -exec dpkg -c '{}' ';' 
 cd ..
 echo "Running lintian..."
-lintian --no-tag-display-limit build-linux/csound-extended-6.11.0-beta-Linux.deb
+lintian --no-tag-display-limit build-linux/csound-extended-*.deb
 echo "Finished building all for Linux."

@@ -473,14 +473,14 @@ public:
         timeout_nanoseconds = 1000000;
         frames_per_kperiod = 0;
         is_playing = false;
-        audio_stream_in = 0;
+        audio_stream_in = nullptr;
         spin = 0;
         input_channel_count = 0;
         spin_size = 0;
         spout = 0;
         output_channel_count = 0;
         spout_size = 0;
-        audio_stream_out = 0;
+        audio_stream_out = nullptr;
         zero_dbfs = 32767.;
     }
     virtual ~CsoundOboe()
@@ -654,21 +654,24 @@ public:
     virtual int Perform()
     {
         Message("CsoundOboe::Perform...\n");
-        if (audio_stream_out == 0 && audio_stream_in == 0) {
-            return CsoundThreaded::Perform();
+        if (audio_stream_out != nullptr) {
+            return 0;
         }
-        return 0;
+        if (audio_stream_in != nullptr) {
+            return 0;
+        }
+        return CsoundThreaded::Perform();
     }
     virtual void Stop()
     {
         Message("CsoundOboe::Stop...\n");
         if (audio_stream_in) {
             audio_stream_in->requestStop();
-            audio_stream_in = 0;
+            audio_stream_in = nullptr;
         }
         if (audio_stream_out) {
             audio_stream_out->requestStop();
-            audio_stream_out = 0;
+            audio_stream_out = nullptr;
         }
         Csound::Stop();
     }
