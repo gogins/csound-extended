@@ -17,6 +17,7 @@ emmake make csound-static -j6
 
 emcc -s LINKABLE=1 -s ASSERTIONS=1 ../src/FileList.c -Iinclude -o FileList.bc
 emcc -s LINKABLE=1 -s ASSERTIONS=1 ../src/CsoundObj.c -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
+em++ -std=c++11 -s LINKABLE=1 -s ASSERTIONS=1 -I../../dependencies/csound/include ../src/csound_web_audio.cpp -Iinclude -o csound_web_audio.bc
 
 # Total memory for a WebAssembly module must be a multiple of 64 KB so...
 # 1024 * 64 = 65536 is 64 KB
@@ -24,7 +25,7 @@ emcc -s LINKABLE=1 -s ASSERTIONS=1 ../src/CsoundObj.c -I../../dependencies/csoun
 
 # Keep exports in alphabetical order please, to correlate with CsoundObj.js.
 
-emcc -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS="['_strlen', '_CsoundObj_closeAudioOut', '_CsoundObj_compileCSD', '_CsoundObj_compileOrc', '_CsoundObj_destroy', '_CsoundObj_evaluateCode', '_CsoundObj_getControlChannel', '_CsoundObj_getInputBuffer', '_CsoundObj_getInputChannelCount', '_CsoundObj_getKsmps', '_CsoundObj_getOutputBuffer', '_CsoundObj_getOutputChannelCount', '_CsoundObj_getTable', '_CsoundObj_getTableLength', '_CsoundObj_getZerodBFS', '_CsoundObj_new', '_CsoundObj_openAudioOut', '_CsoundObj_pause', '_CsoundObj_performKsmps', '_CsoundObj_play', '_CsoundObj_prepareRT', '_CsoundObj_pushMidiMessage', '_CsoundObj_readScore' , '_CsoundObj_render' , '_CsoundObj_reset', '_CsoundObj_setControlChannel', '_CsoundObj_setMidiCallbacks', '_CsoundObj_setOption', '_CsoundObj_setOutputChannelCallback', '_CsoundObj_getScoreTime', '_CsoundObj_setStringChannel', '_CsoundObj_setTable']" CsoundObj.bc FileList.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o libcsound.js
+em++ -std=c++11 --bind -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS="['_strlen', '_CsoundObj_closeAudioOut', '_CsoundObj_compileCSD', '_CsoundObj_compileOrc', '_CsoundObj_destroy', '_CsoundObj_evaluateCode', '_CsoundObj_getControlChannel', '_CsoundObj_getInputBuffer', '_CsoundObj_getInputChannelCount', '_CsoundObj_getKsmps', '_CsoundObj_getOutputBuffer', '_CsoundObj_getOutputChannelCount', '_CsoundObj_getTable', '_CsoundObj_getTableLength', '_CsoundObj_getZerodBFS', '_CsoundObj_new', '_CsoundObj_openAudioOut', '_CsoundObj_pause', '_CsoundObj_performKsmps', '_CsoundObj_play', '_CsoundObj_prepareRT', '_CsoundObj_pushMidiMessage', '_CsoundObj_readScore' , '_CsoundObj_render' , '_CsoundObj_reset', '_CsoundObj_setControlChannel', '_CsoundObj_setMidiCallbacks', '_CsoundObj_setOption', '_CsoundObj_setOutputChannelCallback', '_CsoundObj_getScoreTime', '_CsoundObj_setStringChannel', '_CsoundObj_setTable']" CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o libcsound.js
 
 cd ..
 rm -rf dist-wasm
