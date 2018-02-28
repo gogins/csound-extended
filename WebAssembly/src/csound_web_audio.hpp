@@ -92,6 +92,24 @@ public:
     virtual void InputMessage(const std::string &sco) {
         Csound::InputMessage(sco.c_str());
     }
+    virtual void Message(const std::string &message) {
+        Csound::Message(message.c_str());
+    }
+    virtual int Perform() {
+        return Csound::Perform();
+    }
+    virtual void ReadScore(const std::string &sco) {
+        Csound::ReadScore(sco.c_str());
+    }
+    virtual void SetChannel(const std::string &name, MYFLT value) {
+        return Csound::SetChannel(name.c_str(), value);
+    }
+    virtual int SetStringChannel(const std::string &name, const std::string &value) {
+        return Csound::SetStringChannel(name.c_str(), (char *)value.c_str());
+    }
+    virtual void SetInput(const std::string &input) {
+        return Csound::SetInput(input.c_str());
+    }
 };
 
 /**
@@ -125,6 +143,10 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("getVersion", &Csound::GetVersion)
         .function("IsScorePending", &Csound::IsScorePending)
         .function("isScorePending", &Csound::IsScorePending)
+        .function("Reset", &Csound::Reset)
+        .function("reset", &Csound::Reset)
+        .function("RewindScore", &Csound::RewindScore)
+        .function("rewindScore", &Csound::RewindScore)
         ;
     class_<CsoundWebAudio, base<Csound> >("CsoundWebAudio")
         .constructor<>()
@@ -154,6 +176,14 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("inputMessage", &CsoundWebAudio::InputMessage)
         .function("Message", &CsoundWebAudio::Message)
         .function("message", &CsoundWebAudio::Message)
+        .function("ReadScore", &CsoundWebAudio::ReadScore)
+        .function("readScore", &CsoundWebAudio::ReadScore)
+        .function("SetChannel", &CsoundWebAudio::SetChannel)
+        .function("setChannel", &CsoundWebAudio::SetChannel)
+        .function("SetControlChannel", &CsoundWebAudio::SetChannel)
+        .function("setControlChannel", &CsoundWebAudio::SetChannel)
+        .function("SetInput", &CsoundWebAudio::SetInput)
+        .function("setInput", &CsoundWebAudio::SetInput)
         ;
 }
 
