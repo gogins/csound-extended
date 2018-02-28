@@ -42,6 +42,17 @@
 
 using namespace emscripten;
 
+/**
+ * Provides a subset of the Csound class interface declared and defined in 
+ * csound.hpp to the JavaScript context of Web browsers that support 
+ * WebAssembly. Real-time audio is implemented using Web Audio. The 
+ * semantics and run-time sequencing of this interface is the same as that of 
+ * the corresponding subset of the Csound class.
+ *
+ * Member functions that take string parameters must, for Embind, take 
+ * std::string not const char *. Also, we need new member functions to set up 
+ * the WebAudio driver. Please keep methods in alphabetical order by name.
+ */
 class CsoundWebAudio : public Csound {
 public:
     virtual ~CsoundWebAudio() {};
@@ -49,18 +60,100 @@ public:
     virtual int CompileCsd(const std::string &filename) {
         return Csound::CompileCsd(filename.c_str());
     }
+    virtual int CompileCsdText(const std::string &csd) {
+        return Csound::CompileCsdText(csd.c_str());
+    }
+    virtual int CompileOrc(const std::string &orc) {
+        return Csound::CompileOrc(orc.c_str());
+    }
+    virtual MYFLT EvalCode(const std::string &orc) {
+        return Csound::EvalCode(orc.c_str());
+    }
     virtual int SetOption(const std::string &value) {
         return Csound::SetOption(value.c_str());
     }
+    virtual MYFLT GetChannel(const std::string &name) {
+        return GetControlChannel(name.c_str(), 0);
+    }
+    virtual std::string GetEnv(const std::string &name) {
+        return GetEnv(name.c_str());
+    }
+    virtual std::string GetInputName_() {
+        return GetInputName();
+    }
+    virtual std::string GetOutputName_() {
+        return GetOutputName();
+    }
+    virtual std::string GetStringChannel(const std::string &name) {
+        char buffer[0x200];
+        Csound::GetStringChannel(name.c_str(), buffer);
+        return buffer;
+    }
+    virtual void InputMessage(const std::string &sco) {
+        Csound::InputMessage(sco.c_str());
+    }
 };
 
-EMSCRIPTEN_BINDINGS(csound_web_audio) {         ;    
-    class_<CsoundWebAudio>("CsoundWebAudio")
+/**
+ * For the sake of backwards compatibility, all method names are declared with 
+ * both initial capitals and camel case. Please keep declarations in 
+ * alphabetical order.
+ */
+EMSCRIPTEN_BINDINGS(csound_web_audio) {         
+    class_<Csound>("Csound")
+        .function("Cleanup", &Csound::Cleanup)
+        .function("cleanup", &Csound::Cleanup)
+        .function("Get0dBFS", &Csound::Get0dBFS)
+        .function("get0dBFS", &Csound::Get0dBFS)
+        .function("GetAPIVersion", &Csound::GetAPIVersion)
+        .function("getAPIVersion", &Csound::GetAPIVersion)
+        .function("GetCurrentTimeSamples", &Csound::GetCurrentTimeSamples)
+        .function("getCurrentTimeSamples", &Csound::GetCurrentTimeSamples)
+        .function("GetKsmps", &Csound::GetKsmps)
+        .function("getKsmps", &Csound::GetKsmps)
+        .function("GetNchnls", &Csound::GetNchnls)
+        .function("getNchnls", &Csound::GetNchnls)
+        .function("GetNchnlsInput", &Csound::GetNchnlsInput)
+        .function("getNchnlsInput", &Csound::GetNchnlsInput)
+        .function("GetScoreOffsetSeconds", &Csound::GetScoreOffsetSeconds)
+        .function("getScoreOffsetSeconds", &Csound::GetScoreOffsetSeconds)
+        .function("GetScoreTime", &Csound::GetScoreTime)
+        .function("getScoreTime", &Csound::GetScoreTime)
+        .function("GetSr", &Csound::GetSr)
+        .function("getSr", &Csound::GetSr)
+        .function("GetVersion", &Csound::GetVersion)
+        .function("getVersion", &Csound::GetVersion)
+        .function("IsScorePending", &Csound::IsScorePending)
+        .function("isScorePending", &Csound::IsScorePending)
+        ;
+    class_<CsoundWebAudio, base<Csound> >("CsoundWebAudio")
         .constructor<>()
         .function("CompileCsd", &CsoundWebAudio::CompileCsd)
         .function("compileCsd", &CsoundWebAudio::CompileCsd)
+        .function("CompileCsdText", &CsoundWebAudio::CompileCsdText)
+        .function("compileCsdText", &CsoundWebAudio::CompileCsdText)
+        .function("CompileOrc", &CsoundWebAudio::CompileOrc)
+        .function("compileOrc", &CsoundWebAudio::CompileOrc)
+        .function("EvalCode", &CsoundWebAudio::EvalCode)
+        .function("evalCode", &CsoundWebAudio::EvalCode)
         .function("SetOption", &CsoundWebAudio::SetOption)
         .function("setOption", &CsoundWebAudio::SetOption)
+        .function("GetChannel", &CsoundWebAudio::GetChannel)
+        .function("getChannel", &CsoundWebAudio::GetChannel)
+        .function("GetControlChannel", &CsoundWebAudio::GetChannel)
+        .function("getControlChannel", &CsoundWebAudio::GetChannel)
+        .function("GetEnv", &CsoundWebAudio::GetEnv)
+        .function("getEnv", &CsoundWebAudio::GetEnv)
+        .function("GetInputName", &CsoundWebAudio::GetInputName_)
+        .function("getInputName", &CsoundWebAudio::GetInputName_)
+        .function("GetOutputName", &CsoundWebAudio::GetOutputName_)
+        .function("getOutputName", &CsoundWebAudio::GetOutputName_)
+        .function("GetStringChannel", &CsoundWebAudio::GetStringChannel)
+        .function("getStringChannel", &CsoundWebAudio::GetStringChannel)
+        .function("InputMessage", &CsoundWebAudio::InputMessage)
+        .function("inputMessage", &CsoundWebAudio::InputMessage)
+        .function("Message", &CsoundWebAudio::Message)
+        .function("message", &CsoundWebAudio::Message)
         ;
 }
 
