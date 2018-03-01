@@ -39,6 +39,7 @@
 
 #include <csound.hpp>
 #include <emscripten/bind.h>
+#include <emscripten/val.h>
 
 using namespace emscripten;
 
@@ -46,17 +47,18 @@ using namespace emscripten;
  * Provides a subset of the Csound class interface declared and defined in 
  * csound.hpp to the JavaScript context of Web browsers that support 
  * WebAssembly. Real-time audio is implemented using Web Audio. The 
- * semantics and run-time sequencing of this interface is the same as that of 
- * the corresponding subset of the Csound class.
+ * semantics and run-time sequencing of this interface is almost identical to 
+ * that of the corresponding subset of the Csound class.
  *
  * Member functions that take string parameters must, for Embind, take 
  * std::string not const char *. Also, we need new member functions to set up 
  * the WebAudio driver. Please keep methods in alphabetical order by name.
  */
 class CsoundWebAudio : public Csound {
+    bool is_playing;
 public:
     virtual ~CsoundWebAudio() {};
-    CsoundWebAudio() {};
+    CsoundWebAudio() : is_playing(false) {};
     virtual int CompileCsd(const std::string &filename) {
         return Csound::CompileCsd(filename.c_str());
     }
@@ -92,11 +94,20 @@ public:
     virtual void InputMessage(const std::string &sco) {
         Csound::InputMessage(sco.c_str());
     }
+    virtual bool IsPlaying() {
+        return is_playing;
+    }
     virtual void Message(const std::string &message) {
         Csound::Message(message.c_str());
     }
+    /**
+     * If output or input are real-time audio, this method is a stub; 
+     * otherwise, runs Csound::Perform in a separate thread of execution.
+     */
     virtual int Perform() {
-        return Csound::Perform();
+        int result = Csound::Perform();
+        is_playing = false;
+        return result;
     }
     virtual void ReadScore(const std::string &sco) {
         Csound::ReadScore(sco.c_str());
@@ -104,17 +115,44 @@ public:
     virtual void SetChannel(const std::string &name, MYFLT value) {
         return Csound::SetChannel(name.c_str(), value);
     }
-    virtual int SetStringChannel(const std::string &name, const std::string &value) {
-        return Csound::SetStringChannel(name.c_str(), (char *)value.c_str());
+    virtual void SetStringChannel(const std::string &name, const std::string &value) {
+        Csound::SetStringChannel(name.c_str(), (char *)value.c_str());
     }
     virtual void SetInput(const std::string &input) {
         return Csound::SetInput(input.c_str());
+    }
+    virtual void SetOutput(const std::string &output, const std::string &type_, const std::string &format) {
+        return Csound::SetOutput(output.c_str(), type_.c_str(), format.c_str());
+    }
+    /**
+     * If output or input are real-time audio, sets up the requisite Web Audio 
+     * driver and processing callback; otherwise, delegates to Csound::Start.
+     */
+    virtual int Start() {
+        int result = 0;
+        if (GetOutputName_().find("dac") == 0) {
+            val AudioContext = val::global("AudioContext");
+            if (!AudioContext.as<bool>()) {
+                Message("No global AudioContext, trying webkitAudioContext\n");
+                AudioContext = val::global("webkitAudioContext");
+            }
+            Message("Got an AudioContext\n");
+            val context = AudioContext.new_();
+        } else {
+            result = Csound::Start();
+        }
+        is_playing = true;
+        return result;
+    }
+    virtual void Stop() {
+        is_playing = false;
+        Csound::Stop();
     }
 };
 
 /**
  * For the sake of backwards compatibility, all method names are declared with 
- * both initial capitals and camel case. Please keep declarations in 
+ * both initial capitals and camel case. Please keep bindings in 
  * alphabetical order.
  */
 EMSCRIPTEN_BINDINGS(csound_web_audio) {         
@@ -147,6 +185,16 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("reset", &Csound::Reset)
         .function("RewindScore", &Csound::RewindScore)
         .function("rewindScore", &Csound::RewindScore)
+        .function("SetScoreOffsetSeconds", &Csound::SetScoreOffsetSeconds)
+        .function("setScoreOffsetSeconds", &Csound::SetScoreOffsetSeconds)
+        .function("SetScorePending", &Csound::SetScorePending)
+        .function("setScorePending", &Csound::SetScorePending)
+        .function("TableGet", &Csound::TableGet)
+        .function("tableGet", &Csound::TableGet)
+        .function("TableLength", &Csound::TableLength)
+        .function("tableLength", &Csound::TableLength)
+        .function("TableSet", &Csound::TableSet)
+        .function("tableSet", &Csound::TableSet)
         ;
     class_<CsoundWebAudio, base<Csound> >("CsoundWebAudio")
         .constructor<>()
@@ -158,8 +206,6 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("compileOrc", &CsoundWebAudio::CompileOrc)
         .function("EvalCode", &CsoundWebAudio::EvalCode)
         .function("evalCode", &CsoundWebAudio::EvalCode)
-        .function("SetOption", &CsoundWebAudio::SetOption)
-        .function("setOption", &CsoundWebAudio::SetOption)
         .function("GetChannel", &CsoundWebAudio::GetChannel)
         .function("getChannel", &CsoundWebAudio::GetChannel)
         .function("GetControlChannel", &CsoundWebAudio::GetChannel)
@@ -176,6 +222,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("inputMessage", &CsoundWebAudio::InputMessage)
         .function("Message", &CsoundWebAudio::Message)
         .function("message", &CsoundWebAudio::Message)
+        .function("Perform", &CsoundWebAudio::Perform)
+        .function("perform", &CsoundWebAudio::Perform)
         .function("ReadScore", &CsoundWebAudio::ReadScore)
         .function("readScore", &CsoundWebAudio::ReadScore)
         .function("SetChannel", &CsoundWebAudio::SetChannel)
@@ -184,6 +232,12 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("setControlChannel", &CsoundWebAudio::SetChannel)
         .function("SetInput", &CsoundWebAudio::SetInput)
         .function("setInput", &CsoundWebAudio::SetInput)
+        .function("SetOption", &CsoundWebAudio::SetOption)
+        .function("setOption", &CsoundWebAudio::SetOption)
+        .function("Start", &CsoundWebAudio::Start)
+        .function("start", &CsoundWebAudio::Start)
+        .function("Stop", &CsoundWebAudio::Stop)
+        .function("stop", &CsoundWebAudio::Stop)
         ;
 }
 
