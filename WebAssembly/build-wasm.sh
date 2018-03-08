@@ -17,7 +17,7 @@ emmake make csound-static -j6
 
 emcc -s LINKABLE=1 -s ASSERTIONS=1 ../src/FileList.c -Iinclude -o FileList.bc
 emcc -s LINKABLE=1 -s ASSERTIONS=1 ../src/CsoundObj.c -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
-em++ -std=c++11 -s LINKABLE=1 -s ASSERTIONS=1 -I../../dependencies/csound/include ../src/csound_web_audio.cpp -Iinclude -o csound_web_audio.bc
+em++ -std=c++11 -s LINKABLE=1 -s ASSERTIONS=1 -I../../dependencies/csound/include ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
 
 # Total memory for a WebAssembly module must be a multiple of 64 KB so...
 # 1024 * 64 = 65536 is 64 KB
