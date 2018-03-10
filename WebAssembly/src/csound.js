@@ -46,7 +46,97 @@ var csound = (function() {
         var path = absolute_path();
         load_dep(path + "libcsound.js", "script", function() {
             load_dep(path + "CsoundObj.js", "script", function() {
-                console.log("loaded scripts");
+                console.log("loaded scripts");                    
+                // Here we subclass CsoundEmbind with the Web Audio driver stuff.
+                var CsoundWebAudio = function() {
+                    this.is_playing = false;
+                    this.is_realtime = false;
+                    this.audioProcessNode = null;
+                    this.microphoneNode = null;
+                };         
+                Module["CsoundWebAudio"] = CsoundWebAudio;
+                CsoundWebAudio.prototype = new Module.CsoundEmbind();  
+                CsoundWebAudio.prototype.constructor = CsoundWebAudio;
+                CsoundWebAudio.prototype.Perform = function() {
+                    if (this.is_realtime) {
+                        return 0;
+                    } else {
+                        return Module.CsoundEmbind.prototype.Perform.call(this);
+                    }
+                };
+                CsoundWebAudio.prototype.Start = function() {
+                    var input_name = this.GetInputName();
+                    var output_name = this.GetOutputName();
+                    if (!(output_name.startsWith("dac") || input_name.startsWith("adc"))) {
+                        this.is_realtime = false;
+                        Module.CsoundEmbind.prototype.Start.call(this);
+                        return 0;
+                    } else {
+                        this.is_realtime = true;                        
+                        this.SetHostImplementedAudioIO(1, 0);
+                        Module.CsoundEmbind.prototype.Start.call(this);
+                        var AudioContext = window.AudioContext || window.webkitAudioContext;
+                        this.spinBuffer = this.GetSpin();
+                        this.spoutBuffer = this.GetSpout();
+                        var ksmps = this.GetKsmps();
+                        var inputChannelCount = this.GetNchnlsInput();
+                        var outputChannelCount = this.GetNchnls();
+                        this.audioProcessNode = audioContext.createScriptProcessor(0, inputChannelCount, outputChannelCount);
+                        bufferFrameCount = audioProcessNode.bufferSize;
+                        console.info("audioProcessNode.bufferSize (WebAudio frames per buffer): " +  bufferFrameCount);
+                        audioProcessNode.inputCount = inputChannelCount;
+                        audioProcessNode.outputCount = outputChannelCount;
+                        var inputChannelN = audioProcessNode.inputCount;
+                        var outputChannelN = audioProcessNode.outputCount;
+                        var zerodBFS = this.Get0dBFS();
+                        if (microphoneNode !== null) {
+                            if (inputChannelN >= microphoneNode.numberOfInputs) {
+                                microphoneNode.connect(audioProcessNode);
+                            } else {
+                                alert("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
+                                return;
+                            }
+                        }
+                        audioProcessNode.connect(audioContext.destination);
+                        this.is_playing = true;
+                        var csoundFrameI = 0;
+                        audioProcessNode.onaudioprocess = function(audioProcessEvent) {
+                            var inputBuffer = audioProcessEvent.inputBuffer;
+                            var outputBuffer = audioProcessEvent.outputBuffer;
+                            var hostFrameN = outputBuffer.length;
+                            var result = 0;
+                            for (var hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
+                                for (var inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
+                                    var inputChannelBuffer = inputBuffer.getChannelData(inputChannelI);
+                                    this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * zerodBFS;
+                                }
+                                for (var outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
+                                    var outputChannelBuffer = outputBuffer.getChannelData(outputChannelI);
+                                    outputChannelBuffer[hostFrameI] = spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / zerodBFS;
+                                    this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
+                                }
+                                csoundFrameI++
+                                if (csoundFrameI === ksmps) {
+                                    csoundFrameI = 0;
+                                    result = this.PerformKsmps();
+                                    if (result !== 0) {
+                                        this.Stop();
+                                    }
+                                }
+                            }
+                        };
+                    };
+                };
+                CsoundWebAudio.prototype.Stop = function() {
+                    if (this.microphoneNode !== null) {
+                        this.microphoneNode.disconnect();
+                    }
+                    if (this.audioProcessNode !== null) {
+                        this.audioProcessNode.disconnect();
+                    }
+                    this.is_playing = false;
+                    Module.CsoundEmbind.prototype.Stop.call(this);
+                };
                 Module["onRuntimeInitialized"] = function() {
                     console.log("loaded WASM runtime");
                     csound.Csound = new CsoundObj();
@@ -56,105 +146,18 @@ var csound = (function() {
                         console.log = console.warn = function(mess) {
                             mess += "\n";
                             window.handleMessage(mess);
-                            }
-                    }
-                    if (typeof window.moduleDidLoad !== 'undefined')
-                        window.moduleDidLoad();
-                    if (typeof window.attachListeners !== 'undefined') 
-                        window.attachListeners();
-                    // Here we subclass CsoundEmbind with the Web Audio driver stuff.
-                    var CsoundWebAudio = function() {
-                        this.is_playing = false;
-                        this.is_realtime = false;
-                        this.audioProcessNode = null;
-                        this.microphoneNode = null;
-                    };         
-                    Module["CsoundWebAudio"] = CsoundWebAudio;
-                    CsoundWebAudio.prototype = new Module.CsoundEmbind();  
-                    CsoundWebAudio.prototype.constructor = CsoundWebAudio;
-                    CsoundWebAudio.prototype.Perform = function() {
-                        if (this.is_realtime) {
-                            return 0;
-                        } else {
-                            return Module.CsoundEmbind.prototype.Perform.call(this);
-                        }
-                    };
-                    CsoundWebAudio.prototype.Start = function() {
-                        var input_name = this.GetInputName();
-                        var output_name = this.GetOutputName();
-                        if (!(output_name.startsWith("dac") || input_name.startsWith("adc"))) {
-                            this.is_realtime = false;
-                            Module.CsoundEmbind.prototype.Start.call(this);
-                            return 0;
-                        } else {
-                            this.is_realtime = true;                         }
-                            this.SetHostImplementedAudioIO(1, 0);
-                            Module.CsoundEmbind.prototype.Start.call(this);
-                            var AudioContext = window.AudioContext || window.webkitAudioContext;
-                            this.spinBuffer = this.GetSpin();
-                            this.spoutBuffer = this.GetSpout();
-                            var ksmps = this.GetKsmps();
-                            var inputChannelCount = this.GetNchnlsInput();
-                            var outputChannelCount = this.GetNchnls();
-                            this.audioProcessNode = audioContext.createScriptProcessor(0, inputChannelCount, outputChannelCount);
-                            bufferFrameCount = audioProcessNode.bufferSize;
-                            console.info("audioProcessNode.bufferSize (WebAudio frames per buffer): " +  bufferFrameCount);
-                            audioProcessNode.inputCount = inputChannelCount;
-                            audioProcessNode.outputCount = outputChannelCount;
-                            var inputChannelN = audioProcessNode.inputCount;
-                            var outputChannelN = audioProcessNode.outputCount;
-                            var zerodBFS = this.Get0dBFS();
-                            if (microphoneNode !== null) {
-                                if (inputChannelN >= microphoneNode.numberOfInputs) {
-                                    microphoneNode.connect(audioProcessNode);
-                                } else {
-                                    alert("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
-                                    return;
-                                }
-                            }
-                            audioProcessNode.connect(audioContext.destination);
-                            this.is_playing = true;
-                            var csoundFrameI = 0;
-                            audioProcessNode.onaudioprocess = function(audioProcessEvent) {
-                                var inputBuffer = audioProcessEvent.inputBuffer;
-                                var outputBuffer = audioProcessEvent.outputBuffer;
-                                var hostFrameN = outputBuffer.length;
-                                var result = 0;
-                                for (var hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
-                                    for (var inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                                        var inputChannelBuffer = inputBuffer.getChannelData(inputChannelI);
-                                        this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * zerodBFS;
-                                    }
-                                    for (var outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
-                                        var outputChannelBuffer = outputBuffer.getChannelData(outputChannelI);
-                                        outputChannelBuffer[hostFrameI] = spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / zerodBFS;
-                                        this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
-                                    }
-                                    csoundFrameI++
-                                    if (csoundFrameI === ksmps) {
-                                        csoundFrameI = 0;
-                                        result = this.PerformKsmps();
-                                        if (result !== 0) {
-                                            this.Stop();
-                                        }
-                                    }
-                                }
-                            };
                         };
-                    };
-                    CsoundWebAudio.prototype.Stop = function() {
-                        if (this.microphoneNode !== null) {
-                            this.microphoneNode.disconnect();
-                        }
-                        if (this.audioProcessNode != null) {
-                            this.audioProcessNode.disconnect();
-                        }
-                        this.is_playing = false;
-                        Module.CsoundEmbind.prototype.Stop.call(this);
-                    };
-                });
-            });
-        };
+                    }
+                    if (typeof window.moduleDidLoad !== 'undefined') {
+                        window.moduleDidLoad();
+                    }
+                    if (typeof window.attachListeners !== 'undefined') {
+                        window.attachListeners();
+                    }
+                };
+            };);
+        };);
+    }
 
     var fileData = null;
     var tableData = null;
