@@ -15,6 +15,7 @@
     var moduleDidLoad = function() {
         document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
         console.warn = handleMessage;
+        csound = new Module.CsoundWebAudio();
     }
     var onPlayClick = function() {
         var csd = document.getElementById('csd').value;

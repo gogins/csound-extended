@@ -70,9 +70,6 @@ public:
     virtual MYFLT EvalCode(const std::string &orc) {
         return Csound::EvalCode(orc.c_str());
     }
-    virtual int SetOption(const std::string &value) {
-        return Csound::SetOption(value.c_str());
-    }
     virtual MYFLT GetChannel(const std::string &name) {
         return GetControlChannel(name.c_str(), 0);
     }
@@ -109,6 +106,9 @@ public:
     }
     virtual void SetChannel(const std::string &name, MYFLT value) {
         return Csound::SetChannel(name.c_str(), value);
+    }
+    virtual int SetOption(const std::string &value) {
+        return Csound::SetOption(value.c_str());
     }
     virtual void SetStringChannel(const std::string &name, const std::string &value) {
         Csound::SetStringChannel(name.c_str(), (char *)value.c_str());
@@ -153,6 +153,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("getVersion", &Csound::GetVersion)
         .function("IsScorePending", &Csound::IsScorePending)
         .function("isScorePending", &Csound::IsScorePending)
+        .function("Perform", select_overload<int()>(&Csound::Perform))
+        .function("perform", select_overload<int()>(&Csound::Perform))
         .function("Reset", &Csound::Reset)
         .function("reset", &Csound::Reset)
         .function("RewindScore", &Csound::RewindScore)
@@ -162,6 +164,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("setScoreOffsetSeconds", &Csound::SetScoreOffsetSeconds)
         .function("SetScorePending", &Csound::SetScorePending)
         .function("setScorePending", &Csound::SetScorePending)
+        .function("Start", &Csound::Start)
+        .function("start", &Csound::Start)
         .function("TableGet", &Csound::TableGet)
         .function("tableGet", &Csound::TableGet)
         .function("TableLength", &Csound::TableLength)
