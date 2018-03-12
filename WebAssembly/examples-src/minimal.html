@@ -19,12 +19,14 @@
     }
     var onPlayClick = function() {
         var csd = document.getElementById('csd').value;
-        csound.compileCsdText(csd);
-        csound.start();
+        csound.CompileCsdText(csd);
+        csound.SetOption("-odac");
+        csound.Start();
+        csound.Perform();
     }
     var onPlayStop = function() {
-        csound.stop();
-        csound.reset();
+        csound.Stop();
+        csound.Reset();
     }
   </script>
    <h1>Minimal Example using Csound for WebAssembly</h1>

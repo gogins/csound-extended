@@ -44,15 +44,15 @@
 using namespace emscripten;
 
 /**
- * Provides a subset of the Csound class interface declared and defined in 
- * csound.hpp to the JavaScript context of Web browsers that support 
- * WebAssembly. Real-time audio is implemented using Web Audio. The 
- * semantics and run-time sequencing of this interface is almost identical to 
- * that of the corresponding subset of the Csound class.
+ * Provides a subset of the Csound C++ interface declared and defined in 
+ * csound.hpp to the JavaScript context of Web browsers and other environments 
+ * that support WebAssembly. Real-time audio is implemented using Web Audio. 
+ * The semantics and run-time sequencing of this interface is almost identical 
+ * to that of the corresponding subset of the Csound class.
  *
  * Member functions that take string parameters must, for Embind, take 
- * std::string not const char *. Also, we need new member functions to set up 
- * the WebAudio driver. Please keep methods in alphabetical order by name.
+ * std::string instead of const char *. Please keep methods in alphabetical 
+ * order by name.
  */
 class CsoundEmbind : public Csound {
 public:
@@ -155,6 +155,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("isScorePending", &Csound::IsScorePending)
         .function("Perform", select_overload<int()>(&Csound::Perform))
         .function("perform", select_overload<int()>(&Csound::Perform))
+        .function("PerformKsmps", select_overload<int()>(&Csound::PerformKsmps))
+        .function("performKsmps", select_overload<int()>(&Csound::PerformKsmps))
         .function("Reset", &Csound::Reset)
         .function("reset", &Csound::Reset)
         .function("RewindScore", &Csound::RewindScore)
@@ -166,6 +168,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("setScorePending", &Csound::SetScorePending)
         .function("Start", &Csound::Start)
         .function("start", &Csound::Start)
+        .function("Stop", &Csound::Stop)
+        .function("stop", &Csound::Stop)
         .function("TableGet", &Csound::TableGet)
         .function("tableGet", &Csound::TableGet)
         .function("TableLength", &Csound::TableLength)
