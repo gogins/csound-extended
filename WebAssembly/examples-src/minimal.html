@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Minimal Example using Csound for WebAssembly</title>
-    <script src="javascripts/csound.js"></script>
+    <script src="javascripts/libcsound.js"></script>
  </head>
 <body>
     <script>
@@ -12,15 +12,18 @@
         messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;        
     };
-    var moduleDidLoad = function() {
-        document.getElementById('console').value += 'Csound has been loaded; its functions may now be called.';
-        console.log = handleMessage;
-        csound = new Module.CsoundWebAudio();
-    };
+    console.log = handleMessage;
     var onPlayClick = function() {
+        if (typeof csound === 'undefined') {
+            console.warn("Csound is not yet loaded, try waiting a bit...");
+            return;
+        }
         var csd = document.getElementById('csd').value;
+        csound.Stop();
+        csound.Reset();
         csound.CompileCsdText(csd);
         csound.SetOption("-odac");
+        csound.SetOption("-d");
         csound.Start();
         csound.Perform();
     };
