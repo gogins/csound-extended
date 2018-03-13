@@ -39,9 +39,20 @@
 
 #include <csound.hpp>
 #include <emscripten/bind.h>
+#include <emscripten/emscripten.h>
 #include <emscripten/val.h>
 
 using namespace emscripten;
+
+void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
+{
+    char buffer[0x1000];
+    std::vsprintf(buffer, format, valist);
+    std::printf(buffer);
+    EM_ASM_({
+        console.log(Pointer_stringify($0));
+    }, buffer);    
+}
 
 /**
  * Provides a subset of the Csound C++ interface declared and defined in 
@@ -57,7 +68,9 @@ using namespace emscripten;
 class CsoundEmbind : public Csound {
 public:
     virtual ~CsoundEmbind() {};
-    CsoundEmbind() {};
+    CsoundEmbind() {
+        Csound::SetMessageCallback(csoundMessageCallback_);
+    };
     virtual int CompileCsd(const std::string &filename) {
         return Csound::CompileCsd(filename.c_str());
     }

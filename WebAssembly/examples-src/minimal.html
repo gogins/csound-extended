@@ -9,25 +9,25 @@
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
-        messages_textarea.value = existing + "\n" + message;
+        messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;        
-    }
+    };
     var moduleDidLoad = function() {
-        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
-        console.warn = handleMessage;
+        document.getElementById('console').value += 'Csound has been loaded; its functions may now be called.';
+        console.log = handleMessage;
         csound = new Module.CsoundWebAudio();
-    }
+    };
     var onPlayClick = function() {
         var csd = document.getElementById('csd').value;
         csound.CompileCsdText(csd);
         csound.SetOption("-odac");
         csound.Start();
         csound.Perform();
-    }
+    };
     var onPlayStop = function() {
         csound.Stop();
         csound.Reset();
-    }
+    };
   </script>
    <h1>Minimal Example using Csound for WebAssembly</h1>
     <p>This is a completely self-contained example, all in one file, and 
@@ -42,7 +42,7 @@
     HTML element named <b>console</b>. The Csound library prints its regular 
     messages to <b>stderr</b>, which WebAssembly maps to 
     <b>window.console.warn</b>. By defining a function <b>handleMessage</b> 
-    and assigning it to <b>console.warn</b>, all Csound messages are appended 
+    and assigning it to <b>console.log</b>, all Csound messages are appended 
     to a text area that is updated by <b>handleMessage</b>.</p>
     <textarea id='console' cols=80 rows=15>
     </textarea>
