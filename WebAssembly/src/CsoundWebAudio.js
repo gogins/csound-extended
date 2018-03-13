@@ -293,7 +293,7 @@ Module["CsoundWebAudio"] = CsoundWebAudio;
 /**
  * In order to follow the same pattern of use as in all other Csound 
  * JavaScript environments, a global Csound object is injected into the 
- * JavaScript context, and the user is notified Csound is ready.
+ * JavaScript context, and the user is notified that Csound is ready.
  */
 Module["onRuntimeInitialized"] = function() {
     csound = new Module.CsoundWebAudio();

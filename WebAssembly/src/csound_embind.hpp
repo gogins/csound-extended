@@ -38,14 +38,14 @@
 #endif
 
 #include <csound.hpp>
+#include <deque>
 #include <emscripten/bind.h>
 #include <emscripten/emscripten.h>
 #include <emscripten/val.h>
 
 using namespace emscripten;
 
-void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
-{
+void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist) {
     char buffer[0x1000];
     std::vsprintf(buffer, format, valist);
     std::printf("%s", buffer);
@@ -53,6 +53,15 @@ void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_l
         console.log(Pointer_stringify($0));
     }, buffer);    
 }
+
+struct MidiData {
+	unsigned char status;
+	unsigned char data1;
+	unsigned char data2;
+    unsigned char dummy;
+};
+
+static const int bytes_per_channel_message[8] = { 2, 2, 2, 2, 1, 1, 2, 0 };
 
 /**
  * Provides a subset of the Csound C++ interface declared and defined in 
@@ -66,9 +75,12 @@ void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_l
  * order by name.
  */
 class CsoundEmbind : public Csound {
+    std::deque<MidiData> midi_data_queue;
+    bool midi_in_is_open = false;
 public:
     virtual ~CsoundEmbind() {};
     CsoundEmbind() {
+        Csound::SetHostData(this);
         Csound::SetMessageCallback(csoundMessageCallback_);
     };
     virtual int CompileCsd(const std::string &filename) {
@@ -131,6 +143,79 @@ public:
     }
     virtual void SetOutput(const std::string &output, const std::string &type_, const std::string &format) {
         return Csound::SetOutput(output.c_str(), type_.c_str(), format.c_str());
+    }
+    int MidiInOpenCallback(CSOUND *, void **, const char *) {
+        midi_data_queue.clear();
+        midi_in_is_open = true;
+        return 0;
+    }
+    static int MidiInOpenCallback_(CSOUND *csound_, void **user_data, const char *device_name) {
+        void *host_data = csoundGetHostData(csound_);
+        return static_cast<CsoundEmbind *>(host_data)->MidiInOpenCallback(csound_, user_data, device_name);
+    }
+    int MidiInCloseCallback(CSOUND *, void *) {
+        midi_in_is_open = false;
+        midi_data_queue.clear();
+        return 0;
+    }
+    static int MidiInCloseCallback_(CSOUND *csound_, void *user_data) {
+        void *host_data = csoundGetHostData(csound_);
+        return static_cast<CsoundEmbind *>(host_data)->MidiInCloseCallback(csound_, user_data);
+    }
+    int MidiReadCallback(CSOUND *, void *, unsigned char *buffer, int bytes_to_read) {
+        int bytes_read = 0;
+        while (midi_data_queue.empty() == false) {
+            MidiData midi_data = midi_data_queue.front();
+            int st = (int) midi_data.status;
+            int d1 = (int) midi_data.data1;
+            int d2 = (int) midi_data.data2;
+            if (st < 0x80)
+                goto next;
+            if (st >= 0xF0 &&
+                    !(st == 0xF8 || st == 0xFA || st == 0xFB ||
+                      st == 0xFC || st == 0xFF))
+                goto next;
+            bytes_to_read -= (bytes_per_channel_message[(st - 0x80) >> 4] + 1);
+            if (bytes_to_read < 0) break;
+            // Write to Csound's MIDI input buffer.
+            bytes_read += (bytes_per_channel_message[(st - 0x80) >> 4] + 1);
+            switch (bytes_per_channel_message[(st - 0x80) >> 4]) {
+            case 0:
+                *buffer++ = (unsigned char) st;
+                break;
+            case 1:
+                *buffer++ = (unsigned char) st;
+                *buffer++ = (unsigned char) d1;
+                break;
+            case 2:
+                *buffer++ = (unsigned char) st;
+                *buffer++ = (unsigned char) d1;
+                *buffer++ = (unsigned char) d2;
+                break;
+            }
+    next:
+            midi_data_queue.pop_front();
+        }
+        return bytes_read;
+    }
+    static int MidiReadCallback_(CSOUND * csound_, void *user_data, unsigned char *buffer, int bytes_to_read) {
+        void *host_data = csoundGetHostData(csound_);        
+        return static_cast<CsoundEmbind *>(host_data)->MidiReadCallback(csound_, user_data, buffer, bytes_to_read);
+    }
+    virtual void InitializeHostMidi() {
+        Csound::SetHostImplementedMIDIIO(1);
+        Csound::SetExternalMidiInOpenCallback(&CsoundEmbind::MidiInOpenCallback_);
+        Csound::SetExternalMidiReadCallback(CsoundEmbind::MidiReadCallback_);
+        Csound::SetExternalMidiInCloseCallback(&CsoundEmbind::MidiInCloseCallback_);
+    }
+    virtual void MidiEventIn(unsigned char status, unsigned char data1, unsigned char data2) {
+        if (midi_in_is_open) {
+            MidiData midi_data;
+            midi_data.status = status;
+            midi_data.data1 = data1;
+            midi_data.data2 = data2;
+            midi_data_queue.push_back(midi_data);
+        }
     }
 };
 
