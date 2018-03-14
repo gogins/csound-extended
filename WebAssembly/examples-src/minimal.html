@@ -15,15 +15,13 @@
     console.log = handleMessage;
     var onPlayClick = function() {
         if (typeof csound === 'undefined') {
-            console.warn("Csound is not yet loaded, try waiting a bit...");
+            console.log("Csound is not yet loaded, wait a bit...");
             return;
         }
         var csd = document.getElementById('csd').value;
         csound.Stop();
         csound.Reset();
         csound.CompileCsdText(csd);
-        csound.SetOption("-odac");
-        csound.SetOption("-d");
         csound.Start();
         csound.Perform();
     };
@@ -55,6 +53,7 @@
     <textarea id='csd' cols=80 rows=25>
 <CsoundSynthesizer>
 <CsOptions>
+-odac -iadc -d
 </CsOptions>
 <CsInstruments>
 sr          =           48000
