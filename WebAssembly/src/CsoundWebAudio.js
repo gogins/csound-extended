@@ -12,6 +12,18 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  */
+ 
+/**
+ * So that print output works in all JavaScript contexts, not only 
+ * browsers, we set up our own print function to handle all cases.
+ */
+var print = null;
+if (typeof console === 'undefined') {
+    print = Module.print;
+} else print = function(message) {
+    console.log(message);
+    Module.print(message);
+}
 
 var CsoundWebAudio = function() {
     this.csound = new Module.CsoundEmbind();
@@ -182,8 +194,31 @@ CsoundWebAudio.prototype.Start = function() {
         this.csound.Start();
         return 0;
     } else {
+        // Create a reerence to this that will be in scope in the closures of callbacks.
+        var this_ = this;
         this.is_realtime = true;                        
         this.csound.SetHostImplementedAudioIO(1, 0);
+        this.csound.InitializeHostMidi();
+        var onMidiEvent = function(event) {
+            this_.csound.MidiEventIn(event.data[0], event.data[1], event.data[2]);
+        };
+        var midiSuccess = function(midiInterface) {
+            var inputs = midiInterface.inputs.values();
+            print("MIDI input enabled...\n");
+            for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+                input = input.value;
+                print("Input: " + input.name + "\n");
+                input.onmidimessage = onMidiEvent;
+            }
+        };
+        var midiFail = function(error) {
+            print("MIDI failed to start, error:" + error);
+        };
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess().then(midiSuccess, midiFail);
+        } else {
+            print("MIDI not supported in this context.");
+        }
         this.csound.Start();
         var AudioContext = window.AudioContext || window.webkitAudioContext;
         var audioContext = new AudioContext();
@@ -204,17 +239,14 @@ CsoundWebAudio.prototype.Start = function() {
             window.navigator = window.navigator || {};
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
             if (navigator.getUserMedia === null) {
-                Module['print']("Audio Input not supported in this browser");
-                ///audioInputCallback(false);
+                print("Audio Input not supported in this context.");
             } else {
                 function onSuccess(stream) {
                     this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                    ///audioInputCallback(true);
                 };
                 function onFailure(error) {
                     this.microphoneNode = null;
-                    ///audioInputCallback(false);
-                    Module['print']("Could not initialise audio input, error:" + error);
+                    print("Could not initialise audio input, error:" + error);
                 };
                 navigator.getUserMedia({
                     audio: true
@@ -224,7 +256,7 @@ CsoundWebAudio.prototype.Start = function() {
                 if (inputChannelN >= this.microphoneNode.numberOfInputs) {
                     this.microphoneNode.connect(this.audioProcessNode);
                 } else {
-                    alert("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
+                    print("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
                     return;
                 }
             }
@@ -232,7 +264,6 @@ CsoundWebAudio.prototype.Start = function() {
         this.audioProcessNode.connect(audioContext.destination);
         this.is_playing = true;
         var csoundFrameI = 0;
-        var this_ = this;
         this.audioProcessNode.onaudioprocess = function(audioProcessEvent) {
             var inputBuffer = audioProcessEvent.inputBuffer;
             var outputBuffer = audioProcessEvent.outputBuffer;
@@ -297,9 +328,6 @@ Module["CsoundWebAudio"] = CsoundWebAudio;
  */
 Module["onRuntimeInitialized"] = function() {
     csound = new Module.CsoundWebAudio();
-    if (typeof console !== 'undefined') {
-        console.log("\nCsound has now been loaded; its functions may now be called.\n");
-    }
-    Module.print("Csound has now been loaded; its functions may now be called.\n");
+    print("Csound has now been loaded; its functions may now be called.\n");
 }
 

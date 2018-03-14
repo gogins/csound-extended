@@ -205,7 +205,7 @@ public:
     virtual void InitializeHostMidi() {
         Csound::SetHostImplementedMIDIIO(1);
         Csound::SetExternalMidiInOpenCallback(&CsoundEmbind::MidiInOpenCallback_);
-        Csound::SetExternalMidiReadCallback(CsoundEmbind::MidiReadCallback_);
+        Csound::SetExternalMidiReadCallback(&CsoundEmbind::MidiReadCallback_);
         Csound::SetExternalMidiInCloseCallback(&CsoundEmbind::MidiInCloseCallback_);
     }
     virtual void MidiEventIn(unsigned char status, unsigned char data1, unsigned char data2) {
@@ -299,10 +299,12 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("GetSpout", &CsoundEmbind::GetSpoutView)
         .function("GetStringChannel", &CsoundEmbind::GetStringChannel)
         .function("getStringChannel", &CsoundEmbind::GetStringChannel)
+        .function("InitializeHostMidi", &CsoundEmbind::InitializeHostMidi)
         .function("InputMessage", &CsoundEmbind::InputMessage)
         .function("inputMessage", &CsoundEmbind::InputMessage)
         .function("Message", &CsoundEmbind::Message)
         .function("message", &CsoundEmbind::Message)
+        .function("MidiEventIn", &CsoundEmbind::MidiEventIn)
         .function("ReadScore", &CsoundEmbind::ReadScore)
         .function("readScore", &CsoundEmbind::ReadScore)
         .function("SetChannel", &CsoundEmbind::SetChannel)

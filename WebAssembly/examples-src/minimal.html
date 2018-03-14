@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Minimal Example using Csound for WebAssembly</title>
-    <script src="javascripts/libcsound.js"></script>
+    <script src="javascripts/csound_extended.js"></script>
  </head>
 <body>
     <script>
@@ -36,17 +36,14 @@
     <p>This is a completely self-contained example, all in one file, and 
     without any unnecessary features, showing how to play a Csound piece in a 
     Web browser using Csound for WebAssembly. When the JavaScript file 
-    <b>csound.js</b> is loaded, it asynchronously loads the WebAssembly Csound 
-    library,  then loads other scripts that create JavaScript wrappers for the 
-    library, thus producing a <b>csound</b> object with selected methods of 
-    the Csound API. A callback named <b>moduleDidLoad</b> is called once the 
-    <b>csound</b> object is ready to be used.</p>
-    <p>Csound automatically appends some messages to the text of the first 
-    HTML element named <b>console</b>. The Csound library prints its regular 
-    messages to <b>stderr</b>, which WebAssembly maps to 
-    <b>window.console.warn</b>. By defining a function <b>handleMessage</b> 
-    and assigning it to <b>console.log</b>, all Csound messages are appended 
-    to a text area that is updated by <b>handleMessage</b>.</p>
+    <b>csound_extended.js</b> is loaded, it asynchronously loads the 
+    WebAssembly Csound library, thus producing a <b>csound</b> object with 
+    selected methods of the Csound API. </p>
+    <p>The Csound library prints its regular messages to <b>stderr</b>, 
+    which WebAssembly maps to <b>window.console.warn</b>. By defining a 
+    function <b>handleMessage</b> and assigning it to <b>console.log</b>, 
+    all Csound messages are appended to a text area that is updated by 
+    <b>handleMessage</b>.</p>
     <textarea id='console' cols=80 rows=15>
     </textarea>
     <p><input id="play" type="button" value="Play" onclick="onPlayClick()">
