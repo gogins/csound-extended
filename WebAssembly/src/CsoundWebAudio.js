@@ -36,102 +36,127 @@ var CsoundWebAudio = function() {
 CsoundWebAudio.prototype.Cleanup = function() {
     this.csound.Cleanup();
 };
+CsoundWebAudio.prototype.cleanup = CsoundWebAudio.prototype.Cleanup;
 
 CsoundWebAudio.prototype.CompileCsd = function(filename) {
     this.csound.CompileCsd(filename);
 };
+CsoundWebAudio.prototype.compileCsd = CsoundWebAudio.prototype.CompileCsd;
 
 CsoundWebAudio.prototype.CompileCsdText = function(csd) {
     this.csound.CompileCsdText(csd);
 };
+CsoundWebAudio.prototype.compileCsdText = CsoundWebAudio.prototype.CompileCsdText;
 
 CsoundWebAudio.prototype.CompileOrc = function(orc) {
     this.csound.CompileOrc(orc);
 };
+CsoundWebAudio.prototype.compileOrc = CsoundWebAudio.prototype.CompileOrc;
 
 CsoundWebAudio.prototype.Destroy = function() {
     this.csound.delete();
 };
+CsoundWebAudio.prototype.destroy = CsoundWebAudio.prototype.Destroy;
 
 CsoundWebAudio.prototype.EvalCode = function(code) {
     return this.csound.EvalCode(code);
 };
+CsoundWebAudio.prototype.evalCode = CsoundWebAudio.prototype.EvalCode;
 
 CsoundWebAudio.prototype.Get0dBFS = function() {
     return this.csound.Get0dBFS();
 };
+CsoundWebAudio.prototype.get0dBFS = CsoundWebAudio.prototype.Get0dBFS;
 
 CsoundWebAudio.prototype.GetAPIVersion = function() {
     return this.csound.GetAPIVersion();
 };
+CsoundWebAudio.prototype.getAPIVersion = CsoundWebAudio.prototype.GetAPIVersion;
 
 CsoundWebAudio.prototype.GetControlChannel = function(name) {
     return this.csound.GetControlChannel();
 };
+CsoundWebAudio.prototype.getControlChannel = CsoundWebAudio.prototype.GetControlChannel;
 
 CsoundWebAudio.prototype.GetCurrentTimeSamples = function() {
     return this.csound.GetCurrentTimeSamples();
 };
+CsoundWebAudio.prototype.getCurrentTimeSamples = CsoundWebAudio.prototype.GetCurrentTimeSamples;
 
 CsoundWebAudio.prototype.GetEnv = function(name) {
     return this.csound.GetEnv();
 };
+CsoundWebAudio.prototype.getEnv = CsoundWebAudio.prototype.GetEnv;
 
 CsoundWebAudio.prototype.GetInputName = function() {
     return this.csound.GetInputName();
 };
+CsoundWebAudio.prototype.getInputName = CsoundWebAudio.prototype.GetInputName;
 
 CsoundWebAudio.prototype.GetKsmps = function() {
     return this.csound.GetKsmps();
 };
+CsoundWebAudio.prototype.getKsmps = CsoundWebAudio.prototype.GetKsmps;
 
 CsoundWebAudio.prototype.GetNchnls = function() {
     return this.csound.GetNchnls();
 };
+CsoundWebAudio.prototype.getNchnls = CsoundWebAudio.prototype.GetNchnls;
 
 CsoundWebAudio.prototype.GetNchnlsInput = function() {
     return this.csound.GetNchnlsInput();
 };
+CsoundWebAudio.prototype.getNchnlsInput = CsoundWebAudio.prototype.GetNchnlsInput;
 
 CsoundWebAudio.prototype.GetOutputName = function() {
     return this.csound.GetOutputName();
 };
+CsoundWebAudio.prototype.getOutputName = CsoundWebAudio.prototype.GetOutputName;
 
 CsoundWebAudio.prototype.GetScoreOffsetSeconds = function() {
     return this.csound.GetScoreOffsetSeconds();
 };
+CsoundWebAudio.prototype.getScoreOffsetSeconds = CsoundWebAudio.prototype.GetScoreOffsetSeconds;
 
 CsoundWebAudio.prototype.GetScoreTime = function() {
     return this.csound.GetScoreTime();
 };
+CsoundWebAudio.prototype.getScoreTime = CsoundWebAudio.prototype.GetScoreTime;
 
 CsoundWebAudio.prototype.GetSr = function() {
     return this.csound.GetSr();
 };
+CsoundWebAudio.prototype.getSr = CsoundWebAudio.prototype.GetSr;
 
 CsoundWebAudio.prototype.GetStringChannel = function(name) {
     return this.csound.GetStringChannel(name);
 };
+CsoundWebAudio.prototype.getStringChannel = CsoundWebAudio.prototype.GetStringChannel;
 
 CsoundWebAudio.prototype.GetVersion = function() {
     return this.csound.GetVersion();
 };
+CsoundWebAudio.prototype.getVersion = CsoundWebAudio.prototype.GetVersion;
 
 CsoundWebAudio.prototype.InputMessage = function(text) {
     this.csound.InputMessage(text);
 };
+CsoundWebAudio.prototype.inputMessage = CsoundWebAudio.prototype.InputMessage;
 
 CsoundWebAudio.prototype.IsPlaying = function() {
     return this.is_playing;
 };
+CsoundWebAudio.prototype.isPlaying = CsoundWebAudio.prototype.IsPlaying;
 
 CsoundWebAudio.prototype.IsScorePending = function() {
     return this.csound.IsScorePending();
 };
+CsoundWebAudio.prototype.isScorePending = CsoundWebAudio.prototype.IsScorePending;
 
 CsoundWebAudio.prototype.Message = function(text) {
     return this.csound.Message(text);
 };
+CsoundWebAudio.prototype.message = CsoundWebAudio.prototype.Message;
 
 CsoundWebAudio.prototype.Perform = function() {
     if (this.is_realtime) {
@@ -141,50 +166,62 @@ CsoundWebAudio.prototype.Perform = function() {
     }
     return this.csound.Perform();
 };
+CsoundWebAudio.prototype.perform = CsoundWebAudio.prototype.Perform;
 
 CsoundWebAudio.prototype.ReadScore = function(score) {
     return this.csound.ReadScore(score);
 };
+CsoundWebAudio.prototype.readScore = CsoundWebAudio.prototype.ReadScore;
 
 CsoundWebAudio.prototype.Reset = function() {
     return this.csound.Reset();
 };
+CsoundWebAudio.prototype.reset = CsoundWebAudio.prototype.Reset;
 
 CsoundWebAudio.prototype.RewindScore = function() {
     return this.csound.RewindScore();
 };
+CsoundWebAudio.prototype.rewindScore = CsoundWebAudio.prototype.RewindScore;
 
 CsoundWebAudio.prototype.SetControlChannel = function(name, value) {
     return this.csound.SetControlChannel(name, value);
 };
+CsoundWebAudio.prototype.setControlChannel = CsoundWebAudio.prototype.SetControlChannel;
 
 CsoundWebAudio.prototype.SetGlobalEnv = function(name, value) {
     return this.csound.SetGlobalEnv(name, value);
 };
+CsoundWebAudio.prototype.setGlobalEnv = CsoundWebAudio.prototype.SetGlobalEnv;
 
 CsoundWebAudio.prototype.SetInput = function(name) {
     return this.csound.SetInput(name);
 };
+CsoundWebAudio.prototype.setInput = CsoundWebAudio.prototype.SetInput;
 
 CsoundWebAudio.prototype.SetOption = function(option) {
     return this.csound.SetOption(option);
 };
+CsoundWebAudio.prototype.setOption = CsoundWebAudio.prototype.SetOption;
 
 CsoundWebAudio.prototype.SetOutput = function(name, type, format) {
     return this.csound.SetOutput(name, type, format);
 };
+CsoundWebAudio.prototype.setOutput = CsoundWebAudio.prototype.SetOutput;
 
 CsoundWebAudio.prototype.SetScoreOffsetSeconds = function(seconds) {
     return this.csound.SetScoreOffsetSeconds(seconds);
 };
+CsoundWebAudio.prototype.setScoreOffsetSeconds = CsoundWebAudio.prototype.SetScoreOffsetSeconds;
 
 CsoundWebAudio.prototype.SetScorePending = function(is_pending) {
     return this.csound.SetScorePending(is_pending);
 };
+CsoundWebAudio.prototype.setScorePending = CsoundWebAudio.prototype.SetScorePending;
 
 CsoundWebAudio.prototype.SetStringChannel = function(name, value) {
     return this.csound.SetStringChannel(name, value);
 };
+CsoundWebAudio.prototype.setStringChannel = CsoundWebAudio.prototype.SetStringChannel;
 
 CsoundWebAudio.prototype.Start = function() {
     var input_name = this.csound.GetInputName();
@@ -294,6 +331,7 @@ CsoundWebAudio.prototype.Start = function() {
         };
     };
 };
+CsoundWebAudio.prototype.start = CsoundWebAudio.prototype.Start;
 
 CsoundWebAudio.prototype.Stop = function() {
     this.is_playing = false;
@@ -307,18 +345,22 @@ CsoundWebAudio.prototype.Stop = function() {
     }
     this.csound.Stop();
 };
+CsoundWebAudio.prototype.stop = CsoundWebAudio.prototype.Stop;
 
 CsoundWebAudio.prototype.TableGet = function(number, index) {
     return this.csound.TableGet(number, index);
 };
+CsoundWebAudio.prototype.tableGet = CsoundWebAudio.prototype.TableGet;
 
 CsoundWebAudio.prototype.TableLength = function(number) {
     return this.csound.TableLength(number);
 };
+CsoundWebAudio.prototype.tableLength = CsoundWebAudio.prototype.TableLength;
 
 CsoundWebAudio.prototype.TableSet = function(number, index, value) {
     return this.csound.TableSet(number, index, value);
 };
+CsoundWebAudio.prototype.tableSet = CsoundWebAudio.prototype.TableSet;
 
 CsoundWebAudio.prototype.constructor = CsoundWebAudio;                  
 Module["CsoundWebAudio"] = CsoundWebAudio;

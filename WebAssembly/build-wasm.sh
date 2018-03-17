@@ -15,9 +15,9 @@ cmake -DUSE_COMPILER_OPTIMIZATIONS=0 -DWASM=1 -DINIT_STATIC_MODULES=1 -DUSE_DOUB
 
 emmake make csound-static -j6 VERBOSE=1
 
-emcc -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 ../src/FileList.c -Iinclude -o FileList.bc
-emcc -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 ../src/CsoundObj.c -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
-em++ -std=c++11 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 -I../../dependencies/csound/include ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
+emcc -s SAFE_HEAP=1 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 ../src/FileList.c -Iinclude -o FileList.bc
+emcc -s SAFE_HEAP=1 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 ../src/CsoundObj.c -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
+em++ -std=c++11 -s SAFE_HEAP=1 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 -I../../dependencies/csound/include ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
 
 # Total memory for a WebAssembly module must be a multiple of 64 KB so...
 # 1024 * 64 = 65536 is 64 KB

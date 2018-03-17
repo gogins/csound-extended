@@ -160,7 +160,6 @@ public:
     virtual int Start() {
         int result = 0;
         result |= Csound::Start();
-        result |= init_static_modules(csound);
         return result;
     }
     int MidiInOpenCallback(CSOUND *, void **, const char *) {
