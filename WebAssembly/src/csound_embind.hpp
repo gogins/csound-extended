@@ -43,6 +43,10 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/val.h>
 
+extern "C" {
+    int init_static_modules(CSOUND *csound);     
+};
+
 using namespace emscripten;
 
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist) {
@@ -84,19 +88,28 @@ public:
         Csound::SetMessageCallback(csoundMessageCallback_);
     };
     virtual int CompileCsd(const std::string &filename) {
-        return Csound::CompileCsd(filename.c_str());
+        int result = 0;
+        result |= init_static_modules(csound);
+        result |= Csound::CompileCsd(filename.c_str());
+        return result;
     }
     virtual int CompileCsdText(const std::string &csd) {
-        return Csound::CompileCsdText(csd.c_str());
+        int result = 0;
+        result |= init_static_modules(csound);
+        result |= Csound::CompileCsdText(csd.c_str());
+        return result;
     }
     virtual int CompileOrc(const std::string &orc) {
-        return Csound::CompileOrc(orc.c_str());
+        int result = 0;
+        result |= init_static_modules(csound);
+        result |= Csound::CompileOrc(orc.c_str());
+        return result;
     }
     virtual MYFLT EvalCode(const std::string &orc) {
         return Csound::EvalCode(orc.c_str());
     }
-    virtual MYFLT GetChannel(const std::string &name) {
-        return GetControlChannel(name.c_str(), 0);
+    virtual MYFLT GetControlChannel(const std::string &name) {
+        return Csound::GetControlChannel(name.c_str(), 0);
     }
     virtual std::string GetEnv(const std::string &name) {
         return GetEnv(name.c_str());
@@ -143,6 +156,12 @@ public:
     }
     virtual void SetOutput(const std::string &output, const std::string &type_, const std::string &format) {
         return Csound::SetOutput(output.c_str(), type_.c_str(), format.c_str());
+    }
+    virtual int Start() {
+        int result = 0;
+        result |= Csound::Start();
+        result |= init_static_modules(csound);
+        return result;
     }
     int MidiInOpenCallback(CSOUND *, void **, const char *) {
         midi_data_queue.clear();
@@ -285,10 +304,10 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("compileOrc", &CsoundEmbind::CompileOrc)
         .function("EvalCode", &CsoundEmbind::EvalCode)
         .function("evalCode", &CsoundEmbind::EvalCode)
-        .function("GetChannel", &CsoundEmbind::GetChannel)
-        .function("getChannel", &CsoundEmbind::GetChannel)
-        .function("GetControlChannel", &CsoundEmbind::GetChannel)
-        .function("getControlChannel", &CsoundEmbind::GetChannel)
+        .function("GetChannel", &CsoundEmbind::GetControlChannel)
+        .function("getChannel", &CsoundEmbind::GetControlChannel)
+        .function("GetControlChannel", &CsoundEmbind::GetControlChannel)
+        .function("getControlChannel", &CsoundEmbind::GetControlChannel)
         .function("GetEnv", &CsoundEmbind::GetEnv)
         .function("getEnv", &CsoundEmbind::GetEnv)
         .function("GetInputName", &CsoundEmbind::GetInputName_)
@@ -315,6 +334,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("setInput", &CsoundEmbind::SetInput)
         .function("SetOption", &CsoundEmbind::SetOption)
         .function("setOption", &CsoundEmbind::SetOption)
+        .function("Start", &CsoundEmbind::Start)
+        .function("start", &CsoundEmbind::Start)
         ;
  }
 

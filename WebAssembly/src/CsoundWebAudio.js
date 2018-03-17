@@ -118,7 +118,7 @@ CsoundWebAudio.prototype.GetVersion = function() {
 };
 
 CsoundWebAudio.prototype.InputMessage = function(text) {
-    return this.csound.InputMessage(text);
+    this.csound.InputMessage(text);
 };
 
 CsoundWebAudio.prototype.IsPlaying = function() {

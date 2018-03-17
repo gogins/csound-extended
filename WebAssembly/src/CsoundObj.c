@@ -193,13 +193,13 @@ void CsoundObj_setStringChannel(CsoundObj *self, const char *channelName, char *
 }
 
 EMSCRIPTEN_KEEPALIVE 
-float *CsoundObj_getOutputBuffer(CsoundObj *self)
+MYFLT *CsoundObj_getOutputBuffer(CsoundObj *self)
 {
   return csoundGetSpout(self->csound);
 }
 
 EMSCRIPTEN_KEEPALIVE 
-float *CsoundObj_getInputBuffer(CsoundObj *self)
+MYFLT *CsoundObj_getInputBuffer(CsoundObj *self)
 {
   return csoundGetSpin(self->csound);
 }
@@ -249,9 +249,9 @@ int CsoundObj_getTableLength(CsoundObj *self, int tableNumber)
 }
 
 EMSCRIPTEN_KEEPALIVE 
-float *CsoundObj_getTable(CsoundObj *self, int tableNumber)
+MYFLT *CsoundObj_getTable(CsoundObj *self, int tableNumber)
 {
-  float *tablePointer;
+  MYFLT *tablePointer;
   csoundGetTable(self->csound, &tablePointer, tableNumber);
   return tablePointer;
 }
