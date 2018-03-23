@@ -74,7 +74,7 @@ CsoundWebAudio.prototype.GetAPIVersion = function() {
 CsoundWebAudio.prototype.getAPIVersion = CsoundWebAudio.prototype.GetAPIVersion;
 
 CsoundWebAudio.prototype.GetControlChannel = function(name) {
-    return this.csound.GetControlChannel();
+    return this.csound.GetControlChannel(name);
 };
 CsoundWebAudio.prototype.getControlChannel = CsoundWebAudio.prototype.GetControlChannel;
 
@@ -84,7 +84,7 @@ CsoundWebAudio.prototype.GetCurrentTimeSamples = function() {
 CsoundWebAudio.prototype.getCurrentTimeSamples = CsoundWebAudio.prototype.GetCurrentTimeSamples;
 
 CsoundWebAudio.prototype.GetEnv = function(name) {
-    return this.csound.GetEnv();
+    return this.csound.GetEnv(name);
 };
 CsoundWebAudio.prototype.getEnv = CsoundWebAudio.prototype.GetEnv;
 
