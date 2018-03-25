@@ -145,14 +145,14 @@ public:
     virtual void SetChannel(const std::string &name, MYFLT value) {
         return Csound::SetChannel(name.c_str(), value);
     }
-    virtual int SetOption(const std::string &value) {
-        return Csound::SetOption(value.c_str());
-    }
     virtual void SetStringChannel(const std::string &name, const std::string &value) {
         Csound::SetStringChannel(name.c_str(), (char *)value.c_str());
     }
     virtual void SetInput(const std::string &input) {
         return Csound::SetInput(input.c_str());
+    }
+    virtual int SetOption(const std::string &value) {
+        return Csound::SetOption(value.c_str());
     }
     virtual void SetOutput(const std::string &output, const std::string &type_, const std::string &format) {
         return Csound::SetOutput(output.c_str(), type_.c_str(), format.c_str());
