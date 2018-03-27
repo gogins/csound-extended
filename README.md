@@ -8,7 +8,7 @@ This Web site contains various resources for computer and electroacoustic musici
 
 ## Talks
 
-I presented a talk, [Algorithmic Composition (with Csound and HTML5), at the Universidad Nacional de Quilmes)[https://gogins.github.io/live_talks/algorithmic_composition.html]. This is a "live talk" that can be viewed online, and in which some of the example Csound pieces will run in the browser using WebAssembly.
+On Monday 26 March 2018, I gave a talk, [Algorithmic Composition (with Csound and HTML5](https://gogins.github.io/live_talks/algorithmic_composition.html), at the Universidad Nacional de Quilmes. This is a "live talk" that can be viewed online, and in which some of the example Csound pieces will run in the browser using WebAssembly.
 
 ## Silencio Library for Algorithmic Composition
 
