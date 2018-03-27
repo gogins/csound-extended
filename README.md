@@ -6,6 +6,10 @@ michael /dot/ gogins /at/ gmail /dot/ com
 
 This Web site contains various resources for computer and electroacoustic musicians. All of these resources are tools that I have created for the purpose of composing my own music and that I have made publicly available here. These resources include tools for composing with Csound and using HTML5 with Csound; example pieces; a playable version of the Csound reference manual; Lisp code written by [Drew Krause](http://www.drew-krause.com/) that can be used for algorithmic composition with Csound; and a prototype "front end," CHSound, for composing pieces that use HTML5 with Csound.
 
+## Talks
+
+I presented a talk, [Algorithmic Composition (with Csound and HTML5), at the Universidad Nacional de Quilmes)[https://gogins.github.io/live_talks/algorithmic_composition.html]. This is a "live talk" that can be viewed online, and in which some of the example Csound pieces will run in the browser using WebAssembly.
+
 ## Silencio Library for Algorithmic Composition
 
 The Silencio library in JavaScript (formerly in Lua) has moved to the [csound/silencio](https://github.com/gogins/gogins.github.io/tree/master/csound/silencio) subdirectory of this repository from https://github.com/gogins/silencio. That repository will remain in place, but all futher development of the JavaScript code will be done in this repository.
@@ -14,7 +18,7 @@ The <a href="https://github.com/gogins/gogins.github.io/tree/master/csound/silen
 
 ## Playable Version of the Csound Reference Manual
 
-The following link will take you to an online version of the Csound Reference Manual. It contains examples that will play right in your browser. You can even edit the examples and play them again hear the results of your changes. Currently this is supported only in desktop versions of Google's Chrome browser.
+The following link will take you to an online version of the Csound Reference Manual. It contains examples that will play right in your browser. You can even edit the examples and play them again hear the results of your changes. 
 
 https://gogins.github.io/csound/html/indexframes.html
 
