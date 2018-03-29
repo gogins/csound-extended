@@ -17,6 +17,7 @@ amodulation_hz              init        35
 amodulation_depth           init        0.125
 aclip                       init        0.5
 askew                       init        0.5
+asyncin                     init        0
 kdelay                      chnget      "slider1"
                             printks2    "kdelay:            %9.4\n", kdelay
 kmodulation_hz              chnget      "slider2"
@@ -27,7 +28,10 @@ kclip                       chnget      "slider3"
                             printks2    "kclip:             %9.4\n", kclip
 kskew                       chnget      "slider4"
                             printks2    "kskew:             %9.4\n", kskew
-amodulator                  squinewave  a(kmodulation_hz), a(kclip), a(kskew)  
+akmodulation_hz             =           a(kmodulation_hz)
+akclip                      =           a(kclip)
+akskew                      =           a(kskew)
+amodulator                  squinewave  akmodulation_hz, akclip, akskew, 0
 amodulator                  =           amodulator * kmodulation_depth + .5
 adelay                      =           kdelay * amodulator
 aoutput                     vdelay3     ainput, adelay, imaximum_delay_milliseconds
