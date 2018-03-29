@@ -543,7 +543,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             e.printStackTrace();
         }
         final AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        // Bug since not turned back on: audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         OPCODE6DIR = getBaseContext().getApplicationInfo().nativeLibraryDir;
         final SharedPreferences sharedPreferences = PreferenceManager
