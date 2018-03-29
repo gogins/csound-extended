@@ -7,7 +7,7 @@ cd ..
 cd build-linux
 rm -f CMakeCache.txt
 cmake ..
-make -j6 
+make -j6 VERBOSE=1
 echo "Building packages..."
 sudo make package
 echo "Debian package contents:"

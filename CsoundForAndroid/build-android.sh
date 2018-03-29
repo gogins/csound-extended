@@ -45,7 +45,8 @@ if [ $? -eq 0 ]; then
 else
     echo "Not building `pwd` library..."
 fi
-c
+cd ..
+
 cd link-opcodes
 echo "Building `pwd`..."
 $NDK_BUILD_CMD $1
