@@ -15,7 +15,7 @@
 	url = https://git.assembla.com/portaudio.git
 [submodule "dependencies/luajit-2.0"]
 	path = dependencies/luajit-2.0
-	url = http://luajit.org/git/luajit-2.0.git
+	url = https://luajit.org/git/luajit-2.0.git
 [submodule "dependencies/libmusicxml"]
 	path = dependencies/libmusicxml
 	url = https://github.com/grame-cncm/libmusicxml.git
@@ -30,16 +30,16 @@
 	url = https://github.com/radarsat1/liblo.git
 [submodule "CsoundForAndroid/ndk-libraries/libsndfile-android"]
 	path = CsoundForAndroid/ndk-libraries/libsndfile-android
-	url = http://bitbucket.org/kunstmusik/libsndfile-android.git
+	url = https://bitbucket.org/kunstmusik/libsndfile-android.git
 [submodule "CsoundForAndroid/ndk-libraries/oboe"]
 	path = CsoundForAndroid/ndk-libraries/oboe
 	url = https://github.com/google/oboe.git
 [submodule "CsoundForAndroid/ndk-libraries/luajit-2.0"]
 	path = CsoundForAndroid/ndk-libraries/luajit-2.0
-	url = http://luajit.org/git/luajit-2.0.git
+	url = https://luajit.org/git/luajit-2.0.git
 [submodule "CsoundForAndroid/ndk-libraries/stk"]
 	path = CsoundForAndroid/ndk-libraries/stk
-	url = http://github.com/thestk/stk.git
+	url = https://github.com/thestk/stk.git
 [submodule "CsoundForAndroid/ndk-libraries/liblo-android"]
 	path = CsoundForAndroid/ndk-libraries/liblo-android
 	url = https://bitbucket.org/michael_gogins/liblo-android
@@ -48,4 +48,4 @@
 	url = https://github.com/Ableton/link.git
 [submodule "CsoundForAndroid/ndk-libraries/fluidsynth-android"]
 	path = CsoundForAndroid/ndk-libraries/fluidsynth-android
-	url = http://bitbucket.org/kunstmusik/fluidsynth-android.git
+	url = https://bitbucket.org/kunstmusik/fluidsynth-android.git
