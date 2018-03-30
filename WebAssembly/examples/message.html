@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Message from Another Planet version 3</title>
+    <script src="csound_extended.js"></script>    
     <style type="text/css">
     input[type='range'] {
         -webkit-appearance: none;
@@ -303,7 +304,7 @@ $(document).ready(function() {
     $('#restore').on('click', function() {
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
-            csound.setControlChannel(this.id, this.value);
+            csound.setControlChannel(this.id, parseFloat(this.value));
             var output_selector = '#' + this.id + '_output';
             $(output_selector).val(this.value);
         });
