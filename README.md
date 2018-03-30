@@ -30,7 +30,11 @@ These extensions include:
 6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
     module that will run Csound from a JavaScript interface in any current 
     Web browser. This version includes useful plugin opcodes statically 
-    linked.
+    linked. Some live examples run from here:
+    
+ 6.1 [Minimal.html](https://csound-extended/WebAssembly/examples/minimal.html)
+ 6.2 [Message from Another Planet](https://csound-extended/WebAssembly/examples/message.html)
+ 6.3 [Scrims](https://csound-extended/WebAssembly/examples/scrims.html)
     
 New extensions may be added by me in the future. If you would like to add your 
 own extension, enter an issue in this repository or submit a pull request.
@@ -156,6 +160,8 @@ To build for Android on Linux for the first time, change to the
 5.  For a production build, apply to me for the signing key, build for 
     release, and generate a signed `.apk`.
     
+### Building for WebAssembly
+
 To build for WebAssembly for the first time, change to the `WebAssembly` 
 subdirectory of this repository and execute `bash build-all.sh`,  which 
 does the following:
