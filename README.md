@@ -30,12 +30,9 @@ These extensions include:
 6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
     module that will run Csound from a JavaScript interface in any current 
     Web browser. This version includes useful plugin opcodes statically 
-    linked. Some live examples run from here:
+    linked. Some live examples run from [here](https://gogins.github.io/csound-extended/).
     
- 6.1 [Minimal.html](https://csound-extended.github.io/WebAssembly/examples/minimal.html)
- 6.2 [Message from Another Planet](https://csound-extended.github.io/WebAssembly/examples/message.html)
- 6.3 [Scrims](https://csound-extended.github.io/WebAssembly/examples/scrims.html)
-    
+     
 New extensions may be added by me in the future. If you would like to add your 
 own extension, enter an issue in this repository or submit a pull request.
 
