@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this software; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 var csound = (function() {
     var Csound = null;
@@ -41,28 +41,29 @@ var csound = (function() {
         }
         return "";
     }
-
+    
     function createModule() {
         var path = absolute_path();
         load_dep(path + "libcsound.js", "script", function() {
             load_dep(path + "CsoundObj.js", "script", function() {
-                console.log("loaded scripts");
+                console.log("loaded scripts");                    
                 Module["onRuntimeInitialized"] = function() {
                     console.log("loaded WASM runtime");
                     csound.Csound = new CsoundObj();
                     csound.Csound.setMidiCallbacks();
-                    csound.module = true;
-		    if(typeof window.handleMessage !== 'undefined') { 
-		      console.log = console.warn = function(mess) {
-			mess += "\n";
-			window.handleMessage(mess);
-		      }
-		    }
-                    if (typeof window.moduleDidLoad !== 'undefined')
+                    csound.module = true; 
+                    if (typeof window.handleMessage !== 'undefined') { 
+                        console.log = console.warn = function(mess) {
+                            mess += "\n";
+                            window.handleMessage(mess);
+                        };
+                    }
+                    if (typeof window.moduleDidLoad !== 'undefined') {
                         window.moduleDidLoad();
-                    if (typeof window.attachListeners !== 'undefined') 
+                    }
+                    if (typeof window.attachListeners !== 'undefined') {
                         window.attachListeners();
-	            
+                    }
                 };
             });
         });
@@ -438,6 +439,10 @@ var csound = (function() {
             else csound.updateStatus("failed to enable audio input\n");
         });
     }
+    
+    function reset() {
+        csound.Csound.reset();
+    }
 
     return {
         module: false,
@@ -474,6 +479,7 @@ var csound = (function() {
         RequestChannel: RequestChannel,
         RequestFileFromLocal: RequestFileFromLocal,
         RequestTable: RequestTable,
+        reset: reset,
         SetChannel: SetChannel,
         setControlChannel: SetChannel,
         SetStringChannel: SetStringChannel,
@@ -492,6 +498,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (csound.module == false) {
         csound.updateStatus('Loading WASM Csound module.\nThis might take a little while.');
         csound.createModule();
+        
     } else {
         csound.updateStatus('Not ready.');
     }

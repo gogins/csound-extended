@@ -7,6 +7,7 @@ find . -name "*~" -exec rm {} \;
 
 rm -rf $RELEASE_DIR
 mkdir $RELEASE_DIR
+cp -R dist-wasm/* examples/js
 cp -R examples/* ${RELEASE_DIR}/
 
 zip -r ${RELEASE_DIR}.zip ${RELEASE_DIR}
