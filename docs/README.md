@@ -9,4 +9,5 @@ linked. Some live examples run from here:
 1. [Minimal.html](https://gogins.github.io/csound-extended/minimal.html), a very basic example.
 2. [Message from Another Planet](https://gogins.github.io/csound-extended/message.html), shows how to use interactive user controls.
 3. [Scrims](https://gogins.github.io/csound-extended/scrims.html), shows interactive controls, real-time 3-dimensional fractal graphics, chord transformations.
+4. [Duplex Audio](https://gogins.github.io/csound-extended/duplex.html), shows simultaneous audio input and output.
     
