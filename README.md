@@ -32,9 +32,9 @@ These extensions include:
     Web browser. This version includes useful plugin opcodes statically 
     linked. Some live examples run from here:
     
- 6.1 [Minimal.html](https://csound-extended/WebAssembly/examples/minimal.html)
- 6.2 [Message from Another Planet](https://csound-extended/WebAssembly/examples/message.html)
- 6.3 [Scrims](https://csound-extended/WebAssembly/examples/scrims.html)
+ 6.1 [Minimal.html](https://csound-extended.github.io/WebAssembly/examples/minimal.html)
+ 6.2 [Message from Another Planet](https://csound-extended.github.io/WebAssembly/examples/message.html)
+ 6.3 [Scrims](https://csound-extended.github.io/WebAssembly/examples/scrims.html)
     
 New extensions may be added by me in the future. If you would like to add your 
 own extension, enter an issue in this repository or submit a pull request.
