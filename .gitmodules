@@ -1,3 +1,6 @@
 [submodule "csound/silencio/dependencies/three.js"]
 	path = csound/silencio/dependencies/three.js
 	url = https://github.com/mrdoob/three.js.git
+[submodule "csound/silencio/dependencies/TinyColor"]
+	path = csound/silencio/dependencies/TinyColor
+	url = https://github.com/bgrins/TinyColor.git
