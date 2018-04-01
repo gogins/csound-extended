@@ -34,38 +34,6 @@ This repository contains samples of integrating HTML5 capabilities with Csound, 
 
 <a href="https://gogins.github.io/csound/Unperformed_experiments_wasm.html">https://gogins.github.io/csound/Unperformed_experiments_wasm.html</a>
 
-## Playable Example Pieces Using Csound for PNaCl
-
-This repository contains samples of integrating HTML5 capabilities with Csound, where the PNaCl build of Csound is used, so that Csound itself does not need to be installed. These examples should play on version 31 or later of Google's Chrome browser for OS X, Windows, or Linux.
-
-### Getting Started with Csound for PNaCl
-
-If you only want to perform these examples, all you need is a recent desktop version of Google's Chrome browser. Click on any of the links below and you are good to go.
-
-If you want to modify these examples or use them as a starting point for creating your own pieces:
-
-1. Clone this repository on your computer using Git. On the command line, execute `git clone --recursive https://github.com/gogins/gogins.github.io.git` to ensure that you bring in the Git module for Silencio, which includes JavaScript files used by the examples.
-2. Install Python.
-3. Change to the root directory of this repository and run ```webserver.cmd``` on Windows or ```webserver.sh``` on Linux to run a local Web server.
-4. Open Chrome, and navigate to ```http://localhost:8080```. You can then find and run the examples.
-5. Edit the examples or create your own pieces using a regular text editor, and refresh the browser to see your changes in action.
-
-### Examples
-
-Click on the links below to play the examples. If you don't hear anything at first, make sure Csound has finished loading, and play with the sliders, particularly the output level slider.
-
-https://gogins.github.io/csound/PNaCl_Csound_01_Introduction.html
-
-https://gogins.github.io/csound/PNaCl_Csound_02_Instrument_Controls.html
-
-https://gogins.github.io/csound/PNaCl_Csound_03_Style_Sheet.html
-
-https://gogins.github.io/csound/CompileCsdText.html
-
-I performed this piece for the 2016 New York City Electroacoustic Music Festival:
-
-https://gogins.github.io/csound/Scrims_pnacl.html
-
 ## Example Pieces Using csound.node
 
 ### Getting Started with csound.node
