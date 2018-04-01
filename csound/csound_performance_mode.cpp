@@ -1,13 +1,14 @@
 /**
  * Compile with:
- * Linux:      g++ csound_performance_mode.cpp -o csound_performance_mode -std=c++11 -O2 -g -lcsound64
+ * Linux:      g++ -I/usr/local/include/csound csound_performance_mode.cpp -o csound_performance_mode -std=c++11 -O2 -g -lcsound64 -lsndfile
  * mingw64:    g++ csound_performance_mode.cpp -o csound_performance_mode -std=c++11 -O2 -g -LC:/Program_Files/Csound6_x64/bin -lcsound64 -IC:/Program_Files/Csound6_x64/include
  * MSVC amd64: Create a Visual Studio command-line project just for this file.
  */
 
 #include <csound/csound.h>
-#include <sndfile/sndfile.h>
-#include <csound/csPerfThread.cpp>
+#include <csound/csound.hpp>
+#include <sndfile.h>
+#include </home/mkg/csound/csound/interfaces/csPerfThread.cpp>
 #include <cstdio>
 #include <iostream>
 
@@ -18,7 +19,7 @@ By Michael Gogins
 This program demonstrates Csound performance modes ('real-time' vs. 'non-real-time').
 It attempts to answer questions that remain after reading documentation and source code.
 )";
-const char *options = "-d -m3 -o dac";
+const char *options = "-d -m0 -o dac";
 const char *orc = R"(
 sr          =           88200
 ksmps       =           100
@@ -158,7 +159,7 @@ csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundStart(csound);
     csoundCompileCsdText(csound, csd);
@@ -184,7 +185,7 @@ csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundStart(csound);
     csoundCompileOrc(csound, orc);
@@ -208,7 +209,7 @@ csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundCompileOrc(csound, orc);
     csoundReadScore(csound, sco);
@@ -232,7 +233,7 @@ csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundReadScore(csound, sco);
     csoundCompileOrc(csound, orc);
@@ -256,7 +257,7 @@ csoundReadScore after 1st csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundCompileOrc(csound, orc);
     csoundStart(csound);
@@ -283,7 +284,7 @@ csoundReadScore after 1 csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundStart(csound);
     csoundCompileOrc(csound, orc);
@@ -310,7 +311,7 @@ csoundReadScore after 10 csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundStart(csound);
     csoundCompileOrc(csound, orc);
@@ -338,7 +339,7 @@ csoundReadScore after 10 csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundCompileOrc(csound, orc);
     score_time = 0;
@@ -367,7 +368,7 @@ csoundReadScore after 10 csoundPerformKsmps
     )";
     csound = csoundCreate(0);
     csoundSetOption(csound, "-d");
-    csoundSetOption(csound, "-m3");
+    csoundSetOption(csound, "-m0");
     csoundSetOption(csound, "-odac");
     csoundCompileOrc(csound, orc);
     csoundStart(csound);
@@ -401,7 +402,7 @@ csoundPerformanceThread->Join()
 	csound = csoundCreate(0);
 	csoundPerformanceThread = new CsoundPerformanceThread(csound);
 	csoundSetOption(csound, "-d");
-	csoundSetOption(csound, "-m3");
+	csoundSetOption(csound, "-m0");
 	csoundSetOption(csound, "-odac");
 	result = csoundCompileOrc(csound, orc);
 	result = csoundReadScore(csound, sco);
@@ -424,7 +425,7 @@ csoundPerformanceThread->Join()
     csound = csoundCreate(0);
 	csoundPerformanceThread = new CsoundPerformanceThread(csound);
 	csoundSetOption(csound, "-d");
-	csoundSetOption(csound, "-m3");
+	csoundSetOption(csound, "-m0");
 	csoundSetOption(csound, "-odac");
 	result = csoundCompileOrc(csound, orc);
 	result = csoundReadScore(csound, sco);

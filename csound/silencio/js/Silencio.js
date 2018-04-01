@@ -8,25 +8,6 @@ GNU Lesser General Public License
 
 Part of Silencio, an HTML5 algorithmic music composition library for Csound.
 
-DEVELOPMENT LOG
-
-2015-07-15
-
-Silencio.js was relatively easy, ChordSpace.js is going to be harder. The main
-problems are that JavaScript does not permit operator overloading, and it does
-not implement deep clones or deep value comparisons out of the box.
-
-I will omit the chord space group stuff because it will not always be
-possible to save the chord space group files, which are necessarily for
-efficient use with chords of more than 3 or 4 voices.
-
-It is now clear that Lua (and especially LuaJIT) is a rather superior
-language; and yet, JavaScript provides everything that I need.
-
-2016-08-04
-
-I am going to start using some ECMAScript 6 features supported by Chrome.
-
 TO DO
 
 --  Implement various scales found in 20th and 21st century harmony
@@ -646,6 +627,15 @@ if (typeof console === 'undefined') {
         var laterEvent;
         var earlierI;
         var earlierEvent;
+        // Get rid of notes that will not sound.
+        for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
+            laterEvent = this.data[laterI];
+            if (laterEvent.status === 144) {
+                if ((laterEvent.duration <= 0) || (laterEvent.velocity <= 0)) {
+                    this.data.splice(laterI, 1);
+                }
+            }
+        }
         for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
             laterEvent = this.data[laterI];
             if (laterEvent.status === 144) {
