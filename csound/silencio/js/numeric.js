@@ -4421,3 +4421,4 @@ numeric.svd= function svd(A) {
 	
 	return {U:u,S:q,V:v}
 };
+
