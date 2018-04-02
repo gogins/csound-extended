@@ -1,6 +1,0 @@
-[submodule "csound/silencio/dependencies/MidiWriterJS"]
-	path = csound/silencio/dependencies/MidiWriterJS
-	url = https://github.com/grimmdude/MidiWriterJS.git
-[submodule "csound/silencio/dependencies/MidiPlayerJS"]
-	path = csound/silencio/dependencies/MidiPlayerJS
-	url = https://github.com/grimmdude/MidiPlayerJS.git
