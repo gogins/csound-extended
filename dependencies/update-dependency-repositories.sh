@@ -10,6 +10,11 @@ echo "Pulling from `pwd`..."
 git checkout master
 git pull
 cd ..
+cd faust
+echo "Pulling from `pwd`..."
+git checkout master-dev
+git pull
+cd ..
 cd liblo
 echo "Pulling from `pwd`..."
 git checkout master

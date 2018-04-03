@@ -49,3 +49,6 @@
 [submodule "CsoundForAndroid/ndk-libraries/fluidsynth-android"]
 	path = CsoundForAndroid/ndk-libraries/fluidsynth-android
 	url = https://bitbucket.org/kunstmusik/fluidsynth-android.git
+[submodule "dependencies/cmask"]
+	path = dependencies/cmask
+	url = https://github.com/kunstmusik/cmask.git

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Example using CMask with Csound for WebAssembly</title>
+    <script src="csound_extended.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    };
+    console.log = handleMessage;
+    var onPlayClick = function() {
+        if (typeof csound === 'undefined') {
+            console.log("Csound is not yet loaded, wait a bit...");
+            return;
+        }
+        var orc = document.getElementById('orc').value;
+        csound.Stop();
+        csound.Reset();
+        csound.CompileOrc(orc);
+        csound.SetOption("-odac");
+        csound.SetOption("-m35");
+        csound.SetOption("-d");
+        csound.Start();
+        var parameters = document.getElementById("cmask_parameters").value;
+        var score = Module.cmask(parameters);
+        var score_text = document.getElementById("cmask_score");
+        score_text.value = score;
+        csound.ReadScore(score);
+        csound.Perform();
+    };
+    var onPlayStop = function() {
+        csound.Stop();
+        csound.Reset();
+    };
+    </script>
+    <h1>Minimal Example using <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> with csound-extended for WebAssembly</h1>
+    <textarea id='console' cols=80 rows=10>
+    </textarea>
+    <p><input id="play" type="button" value="Play" onclick="onPlayClick()">
+    <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
+    <h2>Orchestra</h2>
+    <textarea id='orc' cols=80 rows=15>
+sr          =           48000
+ksmps       =           100
+nchnls      =           2
+
+instr 1
+	;p2 onset
+	;p3 duration
+	;p4 base frequency
+	;p5 fm index
+	;p6 pan (L=0, R=1)
+ 
+kenv	expon	1,p3,0.01
+kindx	expon	p5,p3,.4
+a1	foscil	kenv*10000,p4,1,1.143,kindx,1
+	outs	a1*(1-p6),a1*p6
+endin	
+    </textarea>
+    <h2>CMask parameters</h2>
+    <textarea id="cmask_parameters" cols=80 rows=10>
+{
+f1 0 8193 10 1            ;sine wave for foscil
+}
+f 0 10                    ;field 1
+p1 const 1
+p2 range .1 .3 prec 2     ;density between 100 and 300 ms
+p3 range .7 1.2 prec 2		
+p4 item heap (300 320 450 430 190)  ;5 frequencies in random permutations
+p5 const 3                ;FM index = 3
+p6 range 0 1 prec 2	
+f 2 8                     ;field 2
+p1 const 1
+p2 seg (2 .01 5 .5 8 .01 ipl 1) prec 3  ;another density structure
+p3 const .2		
+p4 item random (2000 2020 2400 2450 5300 2310 2350)	
+p5 seg (2 3 5 7 8 3 ipl 1) prec 1   ;FM index synchronous to density p2
+p6 range 0 .5 prec 2      ;panorama only in the left half 
+f 5 15                    ;field 3
+p1 const 1
+p2 item swing (.3 .05 .2 .1 1)  ;a rhythm
+p3 item swing (.3 .05 .2 .1 1)  ;no rest, no overlap			
+p4 range 100 200 prec 1
+p5 seg [1 5]              ;increasing FM index
+p6 range .3 .7 prec 2     ;only in the middle
+    </textarea>
+    <h2>Generated score</h2>
+    <textarea id="cmask_score" cols=80 rows=10>
+    </textarea>
+</body>
+</html>
+
+
