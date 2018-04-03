@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Duplex Audio</title>
+    <script src="csound_extended.js"></script>    
+    <style type="text/css">
+    input[type='range'] {
+        -webkit-appearance: none;
+        box-shadow: inset 0 0 5px #333;
+        background-color: gray;
+        height: 10px;
+        width: 100%;
+        vertical-align: middle;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 7px #234;
+        background: chartreuse;
+        margin-top: -4px;
+        border-radius: 10px;
+    }
+    table td {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:yellow;
+        background-color: teal;
+        font-family: sans-serif
+    }
+    table th {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:white;
+        background-color:teal;
+         font-family: sans-serif
+   }
+    textarea {
+        border-width: 2px;
+        padding: 8px;
+        border-style: solid;
+        border-color: transparent;
+        color:chartreuse;
+        background-color:black;
+        font-family: 'Courier', sans-serif
+    }
+    h1 {
+    margin: 1em 0 0.5em 0;
+    color: #343434;
+    font-weight: normal;
+    font-family: 'Ultra', sans-serif;   
+    font-size: 36px;
+    line-height: 42px;
+    text-transform: uppercase;
+    }
+    h2 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size: 30px;
+        line-height: 40px;
+        font-family: 'Orienta', sans-serif;
+    }    
+        h3 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size:24px;
+        line-height: 30px;
+        font-family: 'Orienta', sans-serif;
+    }    
+    </style>
+    <script>
+        function handleMessage(message) {
+            var messages_textarea = document.getElementById("csound_console");
+            var existing = messages_textarea.value;
+            messages_textarea.value = existing + message;
+            messages_textarea.scrollTop = messages_textarea.scrollHeight;   
+        };
+        // These are the ways Csound can be instantiated in the JavaScript context:
+        if (typeof csound !== 'undefined') {
+            // (1) Injected (e.g. by Csound for Android or CsoundQt).
+            csound.message("\nCsound already exists in the JavaScript context: version " + csound.getVersion());
+        } else {
+            // (2) By 'require' as in csound.node.
+            try {
+                var csound = require('csound.node');
+                csound.setMessageCallback(handleMessage);
+                csound.message('\ncsound.node has been loaded: version ' + csound.getVersion());
+            // (3) By csound.js in WebAssembly.
+            } catch (err) {
+                console.warn(err.message);
+                console.info("Trying to load Csound for WebAssembly...");
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.src = "/csound.js";
+                script.type = 'text/javascript';
+                head.appendChild(script);        
+                var moduleDidLoad = function() {
+                    csound.message("\nCsound for WebAssembly has been loaded; Csound functions may now be called.");
+                }
+            }
+        }
+    </script>
+</head>
+<body style="background-color:CadetBlue">
+    </script>
+    <h1>Duplex Audio</h1>
+    <p>Use headphones and a microphone. Listen for modulation of the input audio.
+     <form id='persist'>
+    <table>
+    <col width="2*">
+    <col width="5*">
+    <col width="100px">
+    <tr>
+    <td>
+    <label for=kdelay>Modulation delay</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=1 id=kdelay step=.001>
+    <td>
+    <output for=kdelay id=kdelay_output>1</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=kmodulation_hz>Modulation frequency</label>
+    <td>
+    <input class=persistent-element type=range min=0.0001 max=1 value=.05 id=kmodulation_hz step=.001>
+    <td>
+    <output for=kmodulation_hz id=kmodulation_hz_output>.005</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=kmodulation_depth>Modulation depth</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.25 id=kmodulation_depth step=.001>
+    <td>
+    <output for=kmodulation_depth id=kmodulation_depth_output>.89</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=kclip>Squinewave clipping)</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=0 id=kclip step=.001>
+    <td>
+    <output for=kclip id=kclip_output>12000</output>
+    </tr>
+    <tr>
+    <td>
+    <label for=kskew>Squinewave skew</label>
+    <td>
+    <input class=persistent-element type=range min=0 max=1 value=.0 id=kskew step=.001>
+    <td>
+    <output for=kskew id=kskew_output>0</output>
+    </tr>
+    </table>
+    <p>
+    <input type="button" id="play" value="Play" />
+    <input type="button" id="stop" value="Stop" />
+    <input type="button" id='save' value="Save" />
+    <input type="button" id='restore' value="Restore" />
+    </form>   
+    <p>
+    <textarea id='csound_console' cols=80 rows=25>
+    </textarea>
+    <textarea id='csd' cols=80 rows=25 style="visibility:hidden;">
+<CsoundSynthesizer>
+<CsOptions>
+-odac -iadc 
+</CsOptions>
+<CsInstruments>
+sr = 48000
+ksmps = 100
+nchnls = 2 
+nchnls_i = 1
+0dbfs  = 1
+
+                            instr 1
+                            prints "Sing or play into the microphone..."
+ainput                      in	
+imaximum_delay_milliseconds init        4000
+amodulation_hz              init        35
+amodulation_depth           init        0.125
+aclip                       init        0.5
+askew                       init        0.5
+asyncin                     init        0
+kdelay                      chnget      "slider1"
+                            printks2    "kdelay:            %9.4\n", kdelay
+kmodulation_hz              chnget      "slider2"
+                            printks2    "kmodulation_hz:    %9.4\n", kmodulation_hz
+kmodulation_depth           chnget      "slider2"
+                            printks2    "kmodulation_depth: %9.4\n", kmodulation_depth
+kclip                       chnget      "slider3"
+                            printks2    "kclip:             %9.4\n", kclip
+kskew                       chnget      "slider4"
+                            printks2    "kskew:             %9.4\n", kskew
+akmodulation_hz             =           a(kmodulation_hz)
+akclip                      =           a(kclip)
+akskew                      =           a(kskew)
+amodulator                  squinewave  akmodulation_hz, akclip, akskew, 0
+amodulator                  =           amodulator * kmodulation_depth + .5
+adelay                      =           kdelay * amodulator
+aoutput                     vdelay3     ainput, adelay, imaximum_delay_milliseconds
+                            outs        aoutput, aoutput
+                            printks     "ain: %9.4f aout: %9.4f\n", .5, ainput, aoutput
+                            outs        aoutput, aoutput
+                            endin
+</CsInstruments>
+<CsScore>
+i 1 0 200
+</CsScore>
+</CsoundSynthesizer></textarea>
+<script src="https://code.jquery.com/jquery-3.3.1.js">
+</script>
+<script>    
+$(document).ready(function() {
+    $('input').on('input', function(event) {
+        var slider_value = parseFloat(event.target.value);
+        csound.setControlChannel(event.target.id, slider_value);
+        var output_selector = '#' + event.target.id + '_output';
+        $(output_selector).val(slider_value);
+    });
+    $('#play').on('click', function() {
+        document.getElementById("csound_console").value = "";
+        var csd = document.getElementById('csd').value;
+        console.log = handleMessage;
+        csound.compileCsdText(csd);
+        $('#restore').trigger('click');
+        csound.start();
+        csound.perform();
+    });
+    $('#stop').on('click', function() {
+        csound.stop();
+        csound.reset();
+    });
+    $('#save').on('click', function() {
+        $('.persistent-element').each(function() {
+            localStorage.setItem(this.id, this.value);
+        });
+    });
+    $('#restore').on('click', function() {
+        $('.persistent-element').each(function() {
+            this.value = localStorage.getItem(this.id);
+            csound.setControlChannel(this.id, parseFloat(this.value));
+            var output_selector = '#' + this.id + '_output';
+            $(output_selector).val(this.value);
+        });
+    });
+});
+</script>
+</body>
+</html>
