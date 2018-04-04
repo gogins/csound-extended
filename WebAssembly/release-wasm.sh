@@ -1,6 +1,6 @@
 #!/bin/sh
 export CS_VERSION="6.11.1"
-export RELEASE_DIR=csound-wasm-${CS_VERSION}
+export RELEASE_DIR=csound-extended-wasm-${CS_VERSION}
 
 #remove backup files ending with ~
 find . -name "*~" -exec rm {} \;
