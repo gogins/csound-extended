@@ -237,13 +237,27 @@ public:
     }
 };
 
+/** 
+ * Mounts the current directory in the JavaScript sandbox 
+ * to a "/csound" mountpoint in the node filesystem 
+ * (i.e., the physical directory that node.js or NW.js is 
+ * running in). Does not work in browsers!
+ */
+void nodefs_mount() {
+  EM_ASM(
+    FS.mkdir('/csound');
+    FS.mount(NODEFS, { root: '.' }, '/csound');
+  );
+}
+
 /**
  * For the sake of backwards compatibility, all method names are declared with 
  * both initial capitals and camel case. Please keep bindings in 
  * alphabetical order. If the method is new, the case is the same as in the 
  * existing C/C++ API.
  */
-EMSCRIPTEN_BINDINGS(csound_web_audio) {         
+EMSCRIPTEN_BINDINGS(csound_web_audio) {  
+    function("nodefs_mount", &nodefs_mount);
     class_<Csound>("Csound")
         .function("Cleanup", &Csound::Cleanup)
         .function("cleanup", &Csound::Cleanup)

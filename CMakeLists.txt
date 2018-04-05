@@ -122,7 +122,42 @@ find_package(STK)
 find_package(SWIG)
 find_package(ZLIB)
 
+# Copied from dependencies/csound/CMakeLists.txt:
+
+# Utility function to make plugins. All plugin targets should use this as it
+# sets up output directory set in top-level CmakeLists.txt
+# and adds the appropriate install target
+#
+# libname - name of library to produce
+# srcs - list of src files (must be quoted if a list)
+# extralibs (OPTIONAL) - extra libraries to link the plugin to
+#
+# NB - this was moved here as it needs some VARS defined above
+# for setting up the framework
+function(make_plugin libname srcs)
+    if(APPLE)
+        add_library(${libname} SHARED ${srcs})
+    else()
+        add_library(${libname} MODULE ${srcs})
+    endif()
+    set(i 2)
+    while( ${i} LESS ${ARGC} )
+        if(NOT MSVC OR NOT("${ARGV${i}}" MATCHES "m"))
+            target_link_libraries(${libname} ${ARGV${i}})
+        endif()
+        math(EXPR i "${i}+1")
+    endwhile()
+    set_target_properties(${libname} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${BUILD_PLUGINS_DIR}
+        LIBRARY_OUTPUT_DIRECTORY ${BUILD_PLUGINS_DIR}
+        ARCHIVE_OUTPUT_DIRECTORY ${BUILD_PLUGINS_DIR})
+    install(TARGETS ${libname}
+	LIBRARY DESTINATION "${PLUGIN_INSTALL_DIR}" )
+endfunction(make_plugin)
+
 add_subdirectory(dependencies)
+add_subdirectory(Opcodes/cmask)
+
 install(FILES "${CMAKE_SOURCE_DIR}/build-linux/dependencies/csound/libvst4cs.so"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
     DESTINATION "${PLUGIN_INSTALL_DIR}"
