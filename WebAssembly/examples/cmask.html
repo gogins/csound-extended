@@ -1,23 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minimal Example using CMask with Csound for WebAssembly</title>
+    <title>Minimal Example using Csound for csound.node</title>
+    <script>
+        console.log("When running in NW.js, convince the WASM 'Module' code that we really are running in Node.js.");
+        var Module = {};
+        Module["ENVIRONMENT"] = "NODE";
+        csound_wasm = null;
+        csound_node = null;
+    </script>
     <script src="csound_extended.js"></script>
+    <script>
+        try {
+            csound_node = require('csound.node');
+            var nwgui = require('nw.gui');
+            var nw_window = nwgui.Window.get();
+            nw_window.on('close', function() {
+                console.log('Closing down...');
+                this.close(true);
+            });
+        } catch (e) {
+            console.warn(e);
+        }
+    </script>
  </head>
 <body>
+    <h1>Minimal Example using <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> with csound-extended for WebAssembly</h1>
     <script>
-    var handleMessage = function(message) {
+    var csoundMessageCallback = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;        
     };
-    console.log = handleMessage;
     var onPlayClick = function() {
-        if (typeof csound === 'undefined') {
-            console.log("Csound is not yet loaded, wait a bit...");
-            return;
+        if (document.getElementById("wasm").checked === true) {
+            if (csound_wasm === null) {
+                csound_wasm = new Module.CsoundWebAudio();
+            }
+            csound = csound_wasm;
+        } else {
+            csound = csound_node;
         }
+        try {
+            csound.setMessageCallback(csoundMessageCallback);
+        } catch (e) {
+            console.warn(e);
+        }
+        console.log = console.warn = csoundMessageCallback;
         var orc = document.getElementById('orc').value;
         csound.Stop();
         csound.Reset();
@@ -25,27 +55,39 @@
         csound.SetOption("-odac");
         csound.SetOption("-m35");
         csound.SetOption("-d");
-        csound.Start();
         var parameters = document.getElementById("cmask_parameters").value;
         var score = Module.cmask(parameters);
         var score_text = document.getElementById("cmask_score");
         score_text.value = score;
         csound.ReadScore(score);
+        csound.Start();
         csound.Perform();
     };
     var onPlayStop = function() {
+        if (document.getElementById("wasm").checked === true) {
+            csound = csound_wasm;
+        } else {
+            csound = csound_node;
+        }
         csound.Stop();
         csound.Reset();
     };
     </script>
-    <h1>Minimal Example using <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> with csound-extended for WebAssembly</h1>
+    <p>This page shows how to combine csound.node with WebAssembly. The page tries 
+    to load both. The user selects which build of Csound to use.</p>
+    </textarea>
+    <p>
+    <form>
+    <input id="wasm" name="csound" type="radio" checked="true"> WebAssembly 
+    <input id="node" name="csound" type="radio"> csound.node <p>
+    </form>
+    <input id="play" type="button" value="Play" onclick="onPlayClick()">
+    <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
     <textarea id='console' cols=80 rows=10>
     </textarea>
-    <p><input id="play" type="button" value="Play" onclick="onPlayClick()">
-    <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
     <h2>Orchestra</h2>
     <textarea id='orc' cols=80 rows=15>
-sr          =           48000
+sr          =           41000
 ksmps       =           100
 nchnls      =           2
 

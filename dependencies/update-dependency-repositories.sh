@@ -1,5 +1,10 @@
 #!/bin/bash
 echo "Pulling from submodule repositories..."
+cd cmask
+git checkout master
+echo "Pulling from `pwd`..."
+git pull 
+cd ..
 cd csound
 git checkout develop
 echo "Pulling from `pwd`..."

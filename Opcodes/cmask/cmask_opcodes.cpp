@@ -6,14 +6,18 @@
     This source code is for CMask opcodes in Csound.
     The CMask opcodes are licensed under the terms of 
     the Mozilla Public License, version 2.0.
+    
  */
 #include <OpcodeBase.hpp>
+#include <cerrno>
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <sstream>
-
 // Because CMask sources have symbols whose names conflict with Csound (e.g.
 // "GEN", and because I do not want to extensively change CMask sources, 
 // we simply include all CMask sources into this one compilation unit but in 
@@ -21,10 +25,17 @@
 
 namespace cmask {
 using namespace std;
-#include "fileio.h"
-#include "parser.h"
-#include "utils.h"
+#include "globals.h"
 #include "event.h"
+#include "field.h"
+#include "fileio.h"
+#include "gen.h"
+#include "items.h"
+#include "mask.h"
+#include "parser.h"
+#include "quant.h"
+#include "tables.h"
+#include "utils.h"
 #include "cmask.cpp"
 #include "event.cpp"
 #include "field.cpp"
@@ -54,16 +65,10 @@ public:
   // Csound opcode inputs.
   STRINGDAT *parameters_text;
   MYFLT *play_immediately;
-  // State.
-  cmask::scanner scanner_;
-
   int init(CSOUND *csound)
   {
-    static bool initialized = false;
-    if (!initialized) {
-        cmask::frandinit();
-        initialized = true;
-    }
+    cmask::scanner scanner_;
+    cmask::frandinit();
     //std::cout << "CMask parameters: " << std::endl << parameters_text << std::endl;
     // Rather than monkey with the existing code,
     // we just use temporary files.
@@ -74,7 +79,7 @@ public:
     std::ofstream parameters_file(parameters_filename);
     parameters_file << parameters_text->data << std::endl;
     parameters_file.close();
-	scanner_.scn(parameters_filename, const_cast<char *>(score_filename.c_str()));
+    scanner_.scn(parameters_filename, const_cast<char *>(score_filename.c_str()));
     scanner_.analyze(); 
     std::ifstream score_file(score_filename);
     std::stringstream score_buffer;
