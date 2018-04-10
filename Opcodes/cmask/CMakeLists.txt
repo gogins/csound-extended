@@ -33,3 +33,8 @@ make_plugin(cmask_opcodes ${CMASK_OPCODE_SOURCES})
 set_target_properties(cmask_opcodes PROPERTIES COMPILE_FLAGS "-fPIC -std=c++11 -Wno-multichar")
 target_include_directories(cmask_opcodes PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../dependencies/csound/include ${CMASK_SOURCE_DIRECTORY})
 target_compile_definitions(cmask_opcodes PRIVATE D_IRIX)
+install(TARGETS cmask_opcodes 
+    LIBRARY DESTINATION "${PLUGIN_INSTALL_DIR}" 
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+    COMPONENT csound-cmask)
+

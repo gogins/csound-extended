@@ -204,6 +204,6 @@ set(CPACK_DEB_COMPONENT_INSTALL "ON")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
-set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-vst4cs)
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-vst4cs csound-cmask)
 
 include (CPack)
