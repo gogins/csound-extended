@@ -18,9 +18,10 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+
 // Because CMask sources have symbols whose names conflict with Csound (e.g.
 // "GEN", and because I do not want to extensively change CMask sources, 
-// we simply include all CMask sources into this one compilation unit but in 
+// we simply include all CMask sources into this one compilation unit, but in 
 // a separate namespace.
 
 namespace cmask {
@@ -49,13 +50,43 @@ using namespace std;
 #include "utils.cpp"
 };
 
-/**
+/*! \mainpage cmask 
+ * <h2>Description</h2>
+ *
  * Encapsulates all functionality of Andre Bartetzki's CMask program 
  * for algorithmic composition into one i-rate Csound opcode.
  * THe cmask opcode receives a string containing the text of a CMask 
  * parameter file, and returns a string containing the generated Csound score.
  * If the optional play_immediately parameter is true, the generated score is 
- * immediately played.
+ * immediately played. See <a href="http://www.bartetzki.de/en/software.html">this reference and article.</a>
+ * 
+ * <h2>Syntax</h2>
+ *
+ * <code>iscore_text <b>cmask</b> iparameters_text [, iplay_immediately]</code>
+ *
+ * <h2>Initialization</h2>
+ *
+ * <i>iparameters_text</i> -- A string, usually multi-line (delimited <code>{{</code> and <code>}}</code>, that 
+ * contains any text that might be found in a CMask parameters file.
+ *
+ * <i>iplay_immediately</i> -- If 1, the score events generated from the parameters are immediately scheduled 
+ * for performance. The default is 1.
+ *
+ * <h2>Performance</h2>
+ *
+ * <i>iscore_text</i> -- The text of all score events generated from the parameters, in case the user wishes to 
+ * further process these events before performing them.
+ *
+ * <h2>Credits</h2>
+ *
+ * Andre Bartetzki<br>
+ * <a href="http://www.bartetzki.de">http://www.bartetzki.de</a><br>
+ * 1997
+ *
+ * Michael Gogins<br>
+ * <a href="http://michaelgogins.tumblr.dom">http://michaelgogins.tumblr.com</a><br>
+ * 2018
+ *
  */
 class CMask : public csound::OpcodeBase<CMask>
 {
@@ -67,8 +98,8 @@ public:
   MYFLT *play_immediately;
   int init(CSOUND *csound)
   {
-    cmask::scanner scanner_;
     cmask::frandinit();
+    cmask::scanner scanner_;
     //std::cout << "CMask parameters: " << std::endl << parameters_text << std::endl;
     // Rather than monkey with the existing code,
     // we just use temporary files.
@@ -108,7 +139,7 @@ extern "C"
         0,
         1,
         (char*)"S",
-        (char*)"So",
+        (char*)"Sp",
         (SUBR) CMask::init_,
         0,
         0,
