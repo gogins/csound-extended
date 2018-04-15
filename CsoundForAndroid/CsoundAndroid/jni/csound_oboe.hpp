@@ -540,6 +540,8 @@ public:
             // to stop.
             if (csound_result) {
                 is_playing = false;
+                csound_result = Cleanup();
+                Reset();
                 return oboe::DataCallbackResult::Stop;
             }
             // Otherwise, copy the Csound output audio to the Oboe output
