@@ -195,6 +195,10 @@ public
 %{@JavascriptInterface
 public
 %}
+%javamethodmodifiers CsoundOboe::performAndReset()
+%{@JavascriptInterface
+public
+%}
 %javamethodmodifiers CsoundOboe::readScore(const char *text)
 %{@JavascriptInterface
 public
@@ -662,6 +666,17 @@ public:
         }
         return CsoundThreaded::Perform();
     }
+    virtual int PerformAndReset()
+    {
+        Message("CsoundOboe::Perform...\n");
+        if (audio_stream_out != nullptr) {
+            return 0;
+        }
+        if (audio_stream_in != nullptr) {
+            return 0;
+        }
+        return CsoundThreaded::PerformAndReset();
+    }
     virtual void Stop()
     {
         Message("CsoundOboe::Stop...\n");
@@ -769,6 +784,9 @@ public:
     }
     virtual int perform(){
         return Perform();
+    }
+    virtual int performAndReset(){
+        return PerformAndReset();
     }
     virtual int pvsinSet(const PVSDATEXT* value, const char *name){
         return PvsinSet(value, name);

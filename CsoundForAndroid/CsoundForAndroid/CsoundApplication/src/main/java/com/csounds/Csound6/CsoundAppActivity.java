@@ -862,7 +862,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                         int result = 0;
                         result = csound_oboe.compileCsd(csound_file.getAbsolutePath());
                         result = csound_oboe.start();
-                        result = csound_oboe.perform();
+                        result = csound_oboe.performAndReset();
                     }
                     // Make sure this is still set after starting.
                     String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
