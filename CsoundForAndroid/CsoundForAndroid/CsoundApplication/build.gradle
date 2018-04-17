@@ -15,7 +15,7 @@ android {
         applicationId "com.csounds.Csound6"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 11
+        versionCode 12
         versionName '6.11.1'
     }
     buildTypes {
