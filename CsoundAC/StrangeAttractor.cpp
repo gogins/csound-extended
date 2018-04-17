@@ -22,7 +22,7 @@
 #include "Conversions.hpp"
 #include "Random.hpp"
 #include "System.hpp"
-#include <FL/Fl.H>
+///#include <FL/Fl.H>
 #include <cmath>
 
 namespace csound

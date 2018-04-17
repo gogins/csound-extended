@@ -10,7 +10,7 @@ popd
 
 cd cmask
 emmake make clean
-emmake make
+emmake make VERBOSE=1
 cd ..
 
 mkdir -p build-wasm

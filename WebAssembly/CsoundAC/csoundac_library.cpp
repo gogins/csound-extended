@@ -37,7 +37,14 @@ void csoundac() {
     std::cout << "Hello, this is CsoundAC." << std::endl;
 }
 
-
 EMSCRIPTEN_BINDINGS(csoundac) {         
    emscripten::function("csoundac", &csoundac);
+    class_<Eigen::MatrixXd>("MatrixXd")
+        .constructor<>()
+        .constructor<int, int>()
+    ;
+    class_<csound::Node>("Node")
+        .constructor<>()
+        .function("Cleanup", &Csound::Cleanup)
+    ;
 }
