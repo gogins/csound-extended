@@ -39,7 +39,6 @@
 #include "fileio.h"
 #include "parser.h"
 
-
 /** 
  * Takes the text of a CMask parameter file, and  
  * returns the text of the generated Csound score file.

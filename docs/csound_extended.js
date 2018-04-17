@@ -839,7 +839,7 @@ function ccall (ident, returnType, argTypes, args, opts) {
   }
   var ret = func.apply(null, cArgs);
   if (returnType === 'string') ret = Pointer_stringify(ret);
-  if (returnType === 'boolean') ret = Boolean(ret);
+  else if (returnType === 'boolean') ret = Boolean(ret);
   if (stack !== 0) {
     stackRestore(stack);
   }
@@ -2167,7 +2167,7 @@ function _emscripten_asm_const_ii(code, a0) {
 
 STATIC_BASE = GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 582256;
+STATICTOP = STATIC_BASE + 582448;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_csound_embind_cpp() } }, { func: function() { __GLOBAL__sub_I_cmask_library_cpp() } }, { func: function() { __GLOBAL__sub_I_bind_cpp() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
 
 
@@ -2176,7 +2176,7 @@ STATICTOP = STATIC_BASE + 582256;
 
 
 
-var STATIC_BUMP = 582256;
+var STATIC_BUMP = 582448;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
