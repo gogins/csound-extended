@@ -25,7 +25,7 @@
 #    however invalidate any other reasons why the library or executable
 #    file might be covered by the GNU Lesser General Public License.
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 11)
 set(CMASK_SOURCE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../dependencies/cmask/source")
 set(CMASK_OPCODE_SOURCES cmask_opcodes.cpp)
