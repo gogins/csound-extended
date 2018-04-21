@@ -27,11 +27,18 @@ if (typeof console === 'undefined') {
 
 class CsoundAudioNode extends AudioWorkletNode {
     constructor(context) {
-        super(context, 'csound-audio-processor');
+        super(context, 'CsoundAudioProcessor');
         this.is_playing = false;
         this.is_realtime = false;
         this.audioProcessNode = null;
         this.microphoneNode = null;
+        // TODO: There is probably some way to 
+        // make method calls that return a value cheaply 
+        // be synchronous. For now, just set up the port 
+        // event handler for bidirectional communication.
+        this.port.onmessage = (event) => {
+            console.log("CsoundAudioNode.port.onmessage: " + event);
+        }
     };
 Cleanup() {
     this.port.postMessage("Cleanup");
@@ -39,191 +46,195 @@ Cleanup() {
 cleanup = Cleanup;
 
 CompileCsd(filename) {
-    this.csound.CompileCsd(filename);
+    this.port.postMessage("CompileCsd", filename);
 };
 compileCsd = CompileCsd;
 
 CompileCsdText(csd) {
-    this.csound.CompileCsdText(csd);
+    this.port.postMessage("CompileCsdText", csd);
 };
 compileCsdText = CompileCsdText;
 
 CompileOrc(orc) {
-    this.csound.CompileOrc(orc);
+    this.port.postMessage("CompileOrc", orc);
 };
 compileOrc = CompileOrc;
 
 Destroy() {
-    this.csound.delete();
+    this.port.postMessage("Destroy");
 };
 destroy = Destroy;
 
 EvalCode(code) {
-    return this.csound.EvalCode(code);
+    this.port.postMessage("EvalCode", code);
 };
 evalCode = EvalCode;
 
+// TODO: This and similar cheap functions with needed return values 
+// should be extended with promises to wait for a message back 
+// and thus implement a synchronous function call.
+
 Get0dBFS() {
-    return this.csound.Get0dBFS();
+    this.port.postMessage("Get0dBFS");
 };
 get0dBFS = Get0dBFS;
 
 GetAPIVersion() {
-    return this.csound.GetAPIVersion();
+    this.port.postMessage("GetAPIVersion");
 };
 getAPIVersion = GetAPIVersion;
 
 GetControlChannel(name) {
-    return this.csound.GetControlChannel(name);
+    this.port.postMessage("GetControlChannel", name);
 };
 getControlChannel = GetControlChannel;
 
 GetCurrentTimeSamples() {
-    return this.csound.GetCurrentTimeSamples();
+    this.port.postMessage("GetCurrentTimeSamples");
 };
 getCurrentTimeSamples = GetCurrentTimeSamples;
 
 GetEnv(name) {
-    return this.csound.GetEnv(name);
+    this.port.postMessage("GetEnv", name);
 };
 getEnv = GetEnv;
 
 GetInputName() {
-    return this.csound.GetInputName();
+    this.port.postMessage("GetInputName");
 };
 getInputName = GetInputName;
 
 GetKsmps() {
-    return this.csound.GetKsmps();
+    this.port.postMessage("GetKsmps");
 };
 getKsmps = GetKsmps;
 
 GetNchnls() {
-    return this.csound.GetNchnls();
+    this.port.postMessage("GetNchnls");
 };
 getNchnls = GetNchnls;
 
 GetNchnlsInput() {
-    return this.csound.GetNchnlsInput();
+    this.port.postMessage("GetNchnlsInput");
 };
 getNchnlsInput = GetNchnlsInput;
 
 GetOutputName() {
-    return this.csound.GetOutputName();
+    this.port.postMessage("GetOutputName");
 };
 getOutputName = GetOutputName;
 
 GetScoreOffsetSeconds() {
-    return this.csound.GetScoreOffsetSeconds();
+    this.port.postMessage("GetScoreOffsetSeconds");
 };
 getScoreOffsetSeconds = GetScoreOffsetSeconds;
 
 GetScoreTime() {
-    return this.csound.GetScoreTime();
+    this.port.postMessage("GetScoreTime");
 };
 getScoreTime = GetScoreTime;
 
 GetSr() {
-    return this.csound.GetSr();
+    this.port.postMessage("GetSr");
 };
 getSr = GetSr;
 
 GetStringChannel(name) {
-    return this.csound.GetStringChannel(name);
+    this.port.postMessage("GetStringChannel", name);
 };
 getStringChannel = GetStringChannel;
 
 GetVersion() {
-    return this.csound.GetVersion();
+    this.port.postMessage("GetVersion");
 };
 getVersion = GetVersion;
 
 InputMessage(text) {
-    this.csound.InputMessage(text);
+    this.port.postMessage("InputMessage", text);
 };
 inputMessage = InputMessage;
 
 IsPlaying() {
-    return this.is_playing;
+    this.port.postMessage("IsPlaying");
 };
 isPlaying = IsPlaying;
 
 IsScorePending() {
-    return this.csound.IsScorePending();
+    this.port.postMessage("IsScorePending");
 };
 isScorePending = IsScorePending;
 
 Message(text) {
-    return this.csound.Message(text);
+    this.port.postMessage("Message", text);
 };
 message = Message;
 
 Perform() {
-    if (this.is_realtime) {
-        return 0;
-    } else {
-        return this.csound.Perform();
-    }
-    return this.csound.Perform();
+    this.port.postMessage("Perform");
 };
 perform = Perform;
 
 ReadScore(score) {
-    return this.csound.ReadScore(score);
+    this.port.postMessage("ReadScore", score);
 };
 readScore = ReadScore;
 
 Reset() {
-    return this.csound.Reset();
+    this.port.postMessage("Reset");
 };
 reset = Reset;
 
 RewindScore() {
-    return this.csound.RewindScore();
+    this.port.postMessage("RewindScore");
 };
 rewindScore = RewindScore;
 
 SetControlChannel(name, value) {
-    return this.csound.SetControlChannel(name, value);
+    this.port.postMessage("SetControlChannel", name, value);
 };
 setControlChannel = SetControlChannel;
 
 SetGlobalEnv(name, value) {
-    return this.csound.SetGlobalEnv(name, value);
+    this.port.postMessage("SetGlobalEnv", name, value);
 };
 setGlobalEnv = SetGlobalEnv;
 
 SetInput(name) {
-    return this.csound.SetInput(name);
+    this.port.postMessage("SetInput", name);
 };
 setInput = SetInput;
 
 SetOption(option) {
-    return this.csound.SetOption(option);
+    this.port.postMessage("SetOption", option);
 };
 setOption = SetOption;
 
 SetOutput(name, type, format) {
-    return this.csound.SetOutput(name, type, format);
+    this.port.postMessage("SetOutput", name, type, format);
 };
 setOutput = SetOutput;
 
 SetScoreOffsetSeconds(seconds) {
-    return this.csound.SetScoreOffsetSeconds(seconds);
+    this.port.postMessage("SetScoreOffsetSeconds", seconds);
 };
 setScoreOffsetSeconds = SetScoreOffsetSeconds;
 
 SetScorePending(is_pending) {
-    return this.csound.SetScorePending(is_pending);
+    this.port.postMessage("SetScorePending", is_pending);
 };
 setScorePending = SetScorePending;
 
 SetStringChannel(name, value) {
-    return this.csound.SetStringChannel(name, value);
+    this.port.postMessage("SetStringChannel", name, value);
 };
 setStringChannel = SetStringChannel;
 
+// TODO: Needs much work.
+// Wiring into Web Audio graph here in the upper half, 
+// wiring within Csound down in the lower half.
+
 Start() {
+    this.port.postMessage("Start");
     var input_name = this.csound.GetInputName();
     var output_name = this.csound.GetOutputName();
     if (!(output_name.startsWith("dac") || input_name.startsWith("adc"))) {
@@ -334,6 +345,7 @@ Start() {
 start = Start;
 
 Stop() {
+    this.port.postMessage("Stop");
     this.is_playing = false;
     if (this.microphoneNode !== null) {
         this.microphoneNode.disconnect();
@@ -343,35 +355,34 @@ Stop() {
         this.audioProcessNode.disconnect();
         this.audioProcessNode = null;
     }
-    this.csound.Stop();
 };
 stop = Stop;
 
 TableGet(number, index) {
-    return this.csound.TableGet(number, index);
+    this.port.postMessage("TableGet", number, index);
 };
 tableGet = TableGet;
 
 TableLength(number) {
-    return this.csound.TableLength(number);
+    this.port.postMessage("TableLength", number);
 };
 tableLength = TableLength;
 
 TableSet(number, index, value) {
-    return this.csound.TableSet(number, index, value);
+    this.port.postMessage("TableSet", index, value);
 };
 tableSet = TableSet;
 
-constructor = CsoundWebAudio;                  
-Module["CsoundWebAudio"] = CsoundWebAudio;
+constructor = CsoundAudioNode;                  
+Module["CsoundAudioNode"] = CsoundAudioNode;
 /**
  * In order to follow the same pattern of use as in all other Csound 
  * JavaScript environments, a global Csound object is injected into the 
  * JavaScript context, and the user is notified that Csound is ready.
  */
 Module["onRuntimeInitialized"]() {
-    csound = new Module.CsoundWebAudio();
-    print("\nCsound has now been loaded; its functions may now be called.\n");
+    csound = new Module.CsoundAudioNode();
+    print("\nCsoundAudioNode has now been loaded; its functions may now be called.\n");
 }
 
 
