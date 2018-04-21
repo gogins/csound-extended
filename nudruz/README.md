@@ -2,7 +2,7 @@
 ## Michael Gogins
 
 This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is hosted with his permission. Drew's code is 
-licensed under the terms of the GNU Lesser General Public License. The code has beenedited to make it more 
+licensed under the terms of the GNU Lesser General Public License. The code has been edited to make it more 
 usable with Steel Bank Common Lisp and the current version of Csound. 
 
 

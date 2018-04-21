@@ -283,7 +283,11 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             turtle.note.key = (k * turtle.scale[4]);
             turtle.note.velocity = (v * turtle.scale[5]);
             turtle.note.pan = (x * turtle.scale[6]);
-            lsystem.score.append(turtle.note.clone());
+            var note = turtle.note.clone();
+            if (turtle.chord !== null) {
+                note.chord = turtle.chord.clone();
+            }
+            lsystem.score.append(note);
             return turtle;
         });
         this.add_command('Note()', function (lsystem, turtle) {
@@ -297,27 +301,22 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         });
         this.add_command('Pop()', function (lsystem, turtle) {
             turtle = lsystem.turtle_stack.pop();
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         this.add_command('T(n)', function (lsystem, turtle, n) {
             turtle.chord = turtle.chord.T(n);
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         this.add_command('I(c)', function (lsystem, turtle, c) {
             turtle.chord = turtle.chord.I(c);
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         this.add_command('K()', function (lsystem, turtle) {
             turtle.chord = turtle.chord.K();
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         this.add_command('Q(n)', function (lsystem, turtle, n) {
             turtle.chord = turtle.chord.Q(n, turtle.modality);
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         this.add_command('J(n,m)', function (lsystem, turtle, n, m) {
@@ -325,7 +324,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             if (inversions.length > m) {
                 turtle.chord = inversions[m];
             }
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -333,7 +331,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          */
         this.add_command('PitvAssign(P, I, T, V)', function (lsystem, turtle, P, I, T, V) {
             turtle.chord = lsystem.chord_space_group.toChord(P, I, T, V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -346,7 +343,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             pitv.T += T;
             pitv.V += V;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -356,7 +352,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.P = P;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -366,7 +361,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.P += P;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -376,7 +370,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.I = I;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -386,7 +379,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.I += I;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -396,7 +388,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.T = T;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -406,7 +397,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.T += T;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -416,7 +406,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.V = V;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -426,7 +415,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
             var pitv = lsystem.chord_space_group.fromChord(turtle.chord);
             pitv.V += V;
             turtle.chord = lsystem.chord_space_group.toChord(pitv.P, pitv.I, pitv.T, pitv.V, turtle.chord).revoicing;
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             return turtle;
         });
         /**
@@ -435,13 +423,11 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          */
         this.add_command('ChordNotesDuration(D)', function (lsystem, turtle, D) {
             turtle.chord.setDuration(D);
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
             turtle.prior_chord = turtle.chord.clone();
             return turtle;
         });
        this.add_command('ChordNotes()', function (lsystem, turtle) {
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
             turtle.prior_chord = turtle.chord.clone();
             return turtle;
@@ -456,7 +442,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          */
         this.add_command('ChordNotesVoiceleading()', function (lsystem, turtle) {
             turtle.chord = ChordSpace.voiceleadingClosestRange(turtle.prior_chord, turtle.chord, lsystem.chord_space_group.range, true);
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
             turtle.prior_chord = turtle.chord.clone();
             return turtle;
@@ -466,7 +451,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
          * the current turtle state's chord.
          */
         this.add_command('Chord()', function (lsystem, turtle) {
-            lsystem.chords_for_times[turtle.note.time] = turtle.chord.clone();
             ChordSpace.insert(lsystem.score, turtle.chord, turtle.note.time);
             turtle.prior_chord = turtle.chord.clone();
             return turtle;
@@ -478,7 +462,6 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
         this.iteration = 0;
         this.turtle_stack = [];
         this.score = new Silencio.Score();
-        this.chords_for_times = {};
     };
 
     ParametricLindenmayer.evaluate_with_minimal_scope = function (code) {
@@ -643,24 +626,15 @@ Example: Note(i,t,d,k,v,p) is replaced by Note(i*2,t^1.1,d-1,k+3,v*.9,p=Math.ran
     
     /**
      * Conforms the pitch of each event in this,
-     * to the closest pitch-class in the chord that applies to the event's time.
+     * to the closest pitch-class in its chord.
      */
     ParametricLindenmayer.PLSystem.prototype.conformToChords = function () {
-        var times_ = [];
-        for (var tyme in this.chords_for_times) {
-            if (this.chords_for_times.hasOwnProperty(tyme)) {
-                times_.push(parseFloat(tyme));
+        this.score.sort();
+        this.score.data.forEach(function (event) {
+            if (event.status == 144 && event.chord !== null) {
+                ChordSpace.conformToChord(event, event.chord, false);
             }
-        }
-        times_.sort((a, b) => a - b);
-        var length_ = times_.length;
-        times_.push(this.score.getEnd());
-        for (var i = 0; i < length_; i++) {
-            var begin = times_[i];
-            var end = times_[i + 1];
-            var chord = this.chords_for_times[begin];
-            ChordSpace.apply(this.score, chord, begin, end, false);
-        }
+        });
     };
 
     //////////////////////////////////////////////////////////////////////////////
