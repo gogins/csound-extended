@@ -30,6 +30,7 @@ project(CMask)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_C_COMPILER "emcc")
+set(CMAKE_CXX_COMPILER "em++")
 set(CMASK_SOURCE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../dependencies/cmask/source")
 add_library(cmask cmask_library.cpp 
 ${CMASK_SOURCE_DIRECTORY}/cmask.cpp 

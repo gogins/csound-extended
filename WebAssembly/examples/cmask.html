@@ -5,16 +5,26 @@
     <script>
         console.log("When running in NW.js, convince the WASM 'Module' code that we really are running in Node.js.");
         var Module = {};
-        Module["ENVIRONMENT"] = "NODE";
+        Module['onRuntimeInitialized'] = function() {
+            console.log("onRuntimeInitialized was called...\n");
+        };
+        try {
+            var nw_window = nwgui.Window.get();
+            Module["ENVIRONMENT"] = "NODE";
+        } catch(e) {
+            console.warn(e);
+            console.log("Not running in NW.js or Node...\n");
+        }
         csound_wasm = null;
         csound_node = null;
     </script>
     <script src="csound_extended.js"></script>
     <script>
+        csound_extended(Module).then(function(Module) {
+            console.log("Module: " + Module + " has been loaded.\n");
+        });
         try {
             csound_node = require('csound.node');
-            var nwgui = require('nw.gui');
-            var nw_window = nwgui.Window.get();
             nw_window.on('close', function() {
                 console.log('Closing down...');
                 this.close(true);

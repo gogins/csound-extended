@@ -142,8 +142,43 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 this.csound.SetStringChannel(data[1], data[2]);
                 break;
             case "Start":
-                result = this.csound.Start();
-                this.port.postMessage("Start", result);
+                {
+                    var input_name = this.csound.GetInputName();
+                    var output_name = this.csound.GetOutputName();
+                    if (!(output_name.startsWith("dac") || input_name.startsWith("adc"))) {
+                        this.is_realtime = false;
+                        result = this.csound.Start();
+                        return 0;
+                    } else {
+                        // Create a reference to this that will be in scope in the closures of callbacks.
+                        var this_ = this;
+                        this.is_realtime = true;                        
+                        this.csound.SetHostImplementedAudioIO(1, 0);
+                        this.csound.InitializeHostMidi();
+                        var onMidiEvent = function(event) {
+                            this_.csound.MidiEventIn(event.data[0], event.data[1], event.data[2]);
+                        };
+                        var midiSuccess = function(midiInterface) {
+                            var inputs = midiInterface.inputs.values();
+                            print("MIDI input initialized...\n");
+                            for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+                                input = input.value;
+                                print("Input: " + input.name + "\n");
+                                input.onmidimessage = onMidiEvent;
+                            }
+                        };
+                        var midiFail = function(error) {
+                            print("MIDI failed to start, error:" + error);
+                        };
+                        if (navigator.requestMIDIAccess) {
+                            navigator.requestMIDIAccess().then(midiSuccess, midiFail);
+                        } else {
+                            print("MIDI not supported in this context.");
+                        }
+                        result = this.csound.Start();
+                    }
+                    this.port.postMessage("Start", result);
+                }
                 break;
             case "Stop":
                 this.csound.Stop();
@@ -159,11 +194,44 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             case "TableSet":
                 this.csound.TableSet(data[1], data[2]);
                 break;
+            }
+        };
+    }
+    process(inputs, outputs, parameters) {
+        // The processor may have multiple inputs and outputs. 
+        // Each input or output may have multiple channels. 
+        let inputBuffer = inputs[0];
+        let outputBuffer = outputs[0];
+        let inputChannel0 = input[0];
+        let outputChannel0 = output[0];
+        /// Get the parameter value array. Here we do not use, and ignore, them.
+        /// let myParamValues = parameters.myParam;
+        var csoundFrameI = 0;
+        var hostFrameN = outputChannel0.length;
+        var result = 0;
+        for (var hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
+            for (var inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
+                var inputChannelBuffer = inputBuffer[inputChannelI];
+                spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * zerodBFS;
+            }
+            for (var outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
+                var outputChannelBuffer = outputBuffer[outputChannelI];
+                outputChannelBuffer[hostFrameI] = spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / zerodBFS;
+                spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
+            }
+            csoundFrameI++
+            if (csoundFrameI === ksmps) {
+                csoundFrameI = 0;
+                result = this_.csound.PerformKsmps();
+                if (result !== 0) {
+                    this_.Stop();
+                    this_.Reset();
+                    return false;
+                }
+            }
         }
-    };
-  }
-  process(inputs, outputs, parameters) {
-  }
-}
+        return true;
+    }
+};
 
-registerProcessor(CsoundAudioProcessor, "CsoundAudioProcessor");
+registerProcessor("CsoundAudioProcessor", CsoundAudioProcessor);
