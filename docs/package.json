@@ -1,13 +1,13 @@
 {
-  "main": "cmask_with_samples.html",
-  "name": "cmask_with_samples",
+  "main": "scrims.html",
+  "name": "scrims",
   "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "cmask_with_samples",
+    "title": "scrims",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

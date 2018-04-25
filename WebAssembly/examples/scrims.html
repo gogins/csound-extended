@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Scrims 2</title>
+        <title>Scrims</title>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
         <script src="csound_extended.js"></script>
+        <script src="csound_loader.js"></script>
         <script src="js/Silencio.js"></script>
         <script src="js/ChordSpace.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.1/dat.gui.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.1/sprintf.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/91/three.js"></script>
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
         <style>
             ::-webkit-scrollbar
             {
@@ -30,20 +31,6 @@
             font-size:8pt;
             }
         </style>
-        <script>
-            try {
-                var csound = require('csound.node');
-                console.log('csound:', csound);
-                var nwgui = require('nw.gui');
-                var nw_window = nwgui.Window.get();
-                nw_window.on('close', function() {
-                    console.log('Closing down...');
-                    this.close(true);
-                });
-            } catch (err) {
-                console.log(err.message);
-            }
-        </script>
     </head>
     <body style="background:black;">
         <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"/>
@@ -1384,7 +1371,7 @@ endin
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toString();
                 // Protect against trying to call an undefined Csound.
-                if (typeof csound !== 'undefined') {
+                if (csound !== null) {
                     score.sendToCsound(csound);
                     var Chord_cell = document.getElementById('Chord_cell');
                     Chord_cell.innerHTML = chord.name();
@@ -1462,38 +1449,34 @@ endin
                 Notes_per_second: 8,
                 Stride: 100,
                 Play: function() {
-                    try {
-                        csound = require('csound.node');
-                        console.log('Using csound.node:', csound, "\n");
-                        csound.setMessageCallback(csoundMessage);
-                    } catch (e) {
-                        console.log = csoundMessage;
-                        console.log('Using csound for WebAssembly:', csound, "\n");
-                    }
-                    if (typeof csound === 'undefined') {
-                        console.log("Csound is not yet loaded, wait a bit...");
+                    if (get_csound() === null) {
                         return;
-                    }                
-                    csound.stop();
-                    csound.setOption('-m3');
-                    csound.setOption('--nodisplays');
-                    csound.setOption('-odac');
-                    csound.compileOrc(document.getElementById('orc').value);
-                    csound.readScore('f 0 360\n');
-                    csound.start();
-                    csound.perform();
+                    }
+                    if (csound_node !== null) {
+                        csound.setMessageCallback(csoundMessage);
+                    } else if (csound_web_audio !== null) {
+                        console.log = console.warn = csoundMessage;
+                    }
+                    csound.Stop();
+                    csound.SetOption('-odac');
+                    csound.SetOption('-m35');
+                    csound.SetOption('-d');
+                    csound.CompileOrc(document.getElementById('orc').value);
+                    csound.ReadScore('f 0 360\n');
+                    csound.Start();
+                    csound.Perform();
                     start_time_seconds = new Date().getTime() / 1000.0;
                     setTimeout(updateTimeCell, 0);
                 },
                 Stop: function() {
-                    csound.stop();
+                    csound.Stop();
                 },
                 Developer_tools: function() {
                     nwgui.Window.get().showDevTools();
                 },
                 Close: function() {
                     try {
-                        csound.stop();
+                        csound.Stop();
                         window.close();
                     } catch (e) {
                         console.log(e);
@@ -1638,7 +1621,7 @@ endin
                 gui.revert();
             }
             function gk_update(name, value) {
-                if (typeof csound !== 'undefined') {
+                if (csound !== null) {
                     var numberValue = parseFloat(value);
                     csound.setControlChannel(name, numberValue);
                     csound.message(name + ': ' + numberValue + '\n');
