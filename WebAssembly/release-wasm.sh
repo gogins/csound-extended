@@ -7,6 +7,8 @@ find . -name "*~" -exec rm {} \;
 
 rm -rf $RELEASE_DIR
 mkdir $RELEASE_DIR
+cp -R cmask/*.js dist-wasm
+cp -R cmask/*.wasm dist-wasm
 cp -R dist-wasm/* examples
 cp -R examples/* ${RELEASE_DIR}/
 cp -R examples/* ../docs/

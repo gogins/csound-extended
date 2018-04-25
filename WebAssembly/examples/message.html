@@ -99,7 +99,7 @@
                 console.info("Trying to load Csound for WebAssembly...");
                 var head = document.getElementsByTagName('head')[0];
                 var script = document.createElement('script');
-                script.src = "/csound.js";
+                script.src = "csound-extended.js";
                 script.type = 'text/javascript';
                 head.appendChild(script);        
                 var moduleDidLoad = function() {

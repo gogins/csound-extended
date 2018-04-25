@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minimal Example using Csound for csound.node</title>
+    <title>Minimal Example using Csound for WebAssembly OR csound.node</title>
     <script>
-        console.log("When running in NW.js, convince the WASM 'Module' code that we really are running in Node.js.");
-        var Module = {};
-        Module['onRuntimeInitialized'] = function() {
-            console.log("onRuntimeInitialized was called...\n");
-        };
+        console.log("When running in NW.js, convince the WASM 'Module' code that we are actually running in Node.js.");
+        var csound_extended = {};
         try {
             var nw_window = nwgui.Window.get();
-            Module["ENVIRONMENT"] = "NODE";
+            csound_extended["ENVIRONMENT"] = "NODE";
         } catch(e) {
             console.warn(e);
             console.log("Not running in NW.js or Node...\n");
         }
-        csound_wasm = null;
+        csound_extended = null;
+        csound_web_audio = null;
         csound_node = null;
+        cmask = null;
     </script>
     <script src="csound_extended.js"></script>
     <script>
-        csound_extended(Module).then(function(Module) {
-            console.log("Module: " + Module + " has been loaded.\n");
+        csound_extended_module(csound_extended).then(function(module) {
+            csound_extended = module;
+            csound_web_audio = new csound_extended.CsoundWebAudio();
+            console.log("Module: csound_extended.js has been loaded.\n");
+        });
+    </script>
+    <script src="cmask.js"></script>
+    <script>
+        cmask_module().then(function(module) {
+            cmask = module;
+            console.log("Module: cmask.js has been loaded.\n");
         });
         try {
             csound_node = require('csound.node');
@@ -45,17 +53,19 @@
     };
     var onPlayClick = function() {
         if (document.getElementById("wasm").checked === true) {
-            if (csound_wasm === null) {
-                csound_wasm = new Module.CsoundWebAudio();
+            if (csound_web_audio === null) {
+                csound_web_audio = new csound_extended.CsoundWebAudio();
             }
-            csound = csound_wasm;
+            csound = csound_web_audio;
+            csoundMessageCallback("\nUsing Csound for WebAssembly...\n");
         } else {
             csound = csound_node;
-        }
-        try {
-            csound.setMessageCallback(csoundMessageCallback);
-        } catch (e) {
-            console.warn(e);
+            try {
+                csound.setMessageCallback(csoundMessageCallback);
+            } catch (e) {
+                console.warn(e);
+            }
+            csoundMessageCallback("\nUsing csound.node...\n");
         }
         console.log = console.warn = csoundMessageCallback;
         var orc = document.getElementById('orc').value;
@@ -66,7 +76,7 @@
         csound.SetOption("-m35");
         csound.SetOption("-d");
         var parameters = document.getElementById("cmask_parameters").value;
-        var score = Module.cmask(parameters);
+        var score = cmask.cmask(parameters);
         var score_text = document.getElementById("cmask_score");
         score_text.value = score;
         csound.ReadScore(score);
@@ -75,7 +85,7 @@
     };
     var onPlayStop = function() {
         if (document.getElementById("wasm").checked === true) {
-            csound = csound_wasm;
+            csound = csound_web_audio;
         } else {
             csound = csound_node;
         }
@@ -114,7 +124,7 @@ a1	foscil	kenv*10000,p4,1,1.143,kindx,1
 	outs	a1*(1-p6),a1*p6
 endin	
     </textarea>
-    <h2>CMask parameters</h2>
+    <h2>CMask Parameters</h2>
     <textarea id="cmask_parameters" cols=80 rows=10>
 {
 f1 0 8193 10 1            ;sine wave for foscil
@@ -141,7 +151,7 @@ p4 range 100 200 prec 1
 p5 seg [1 5]              ;increasing FM index
 p6 range .3 .7 prec 2     ;only in the middle
     </textarea>
-    <h2>Generated score</h2>
+    <h2>Generated Score</h2>
     <textarea id="cmask_score" cols=80 rows=10>
     </textarea>
 </body>
