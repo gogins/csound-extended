@@ -43,6 +43,7 @@
         } catch (e) {
             console.warn(e);
         }
+        ///console.log = csoundMessageCallback;
         csoundMessageCallback("\nUsing csound.node...\n");
         var orc = document.getElementById('orc').value;
         cmask.FS.mkdir('/working');
