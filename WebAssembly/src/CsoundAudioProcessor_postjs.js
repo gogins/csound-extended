@@ -124,12 +124,15 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 break;
             case "Perform":
             {
+                // TODO: These are async so will be called out of sequence.
+                // Invoke this appropriately from Start. More work to handle 
+                // offline rendering.
                 let result = 0;
-                if (this.is_realtime) {
-                    result = 0;
-                } else {
-                    result = this.csound.Perform();
-                }
+                //if (this.is_realtime) {
+                //    result = 0;
+                //} else {
+                //    result = this.csound.Perform();
+                //}
                 this.port.postMessage(["Perform", result]);
             }
                 break;
@@ -206,11 +209,6 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.input_name = this.csound.GetInputName();
         this.output_name = this.csound.GetOutputName();
         if (this.output_name.startsWith("dac") || this.input_name.startsWith("adc")) {
-            this.is_realtime = false;
-            result = this.csound.Start();
-        } else {
-            // Create a reference to this that will be in scope in the closures of callbacks.
-            var this_ = this;
             this.is_realtime = true;                        
             this.csound.SetHostImplementedAudioIO(1, 0);
             this.csound.InitializeHostMidi();
@@ -221,8 +219,12 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             this.ksmps = this.csound.GetKsmps();
             this.inputChannelN = this.csound.GetNchnlsInput();
             this.outputChannelN = this.csound.GetNchnls();
+        } else {
+            this.is_realtime = false;
+            result = this.csound.Start();
         }
         this.is_playing = true;
+        this.format_validated = false;
         return result;
     }
     process(inputs, outputs, parameters) {
@@ -237,38 +239,44 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         let outputBuffer = outputs[0];
         let inputChannel0 = inputBuffer[0];
         let outputChannel0 = outputBuffer[0];
-        let inputChannelN = inputs.length;
-        let outputChannelN = outputs.length;
+        let inputChannelN = inputBuffer.length;
+        let outputChannelN = outputBuffer.length;
         let hostFrameN = outputChannel0.length;
-        // The audio buffer layouts must match between Csound and the host.
-        if (this.ksmps !== hostFrameN) {
-            throw "Csound ksmps doesn't match host frame count!";
-        } 
-        if (this.inputChannelN != inputChannelN) {
-            throw "Csound nchnls_i doesn't match host input channel count!";
-        }
-        if (this.outputChannelN != outputChannelN) {
-            throw "Csound nchnls doesn't match host output channel count!";
+        // The audio stream format must match between Csound and the host.
+        if (this.format_validated == false) {
+            if (this.ksmps !== hostFrameN) {
+                throw "Csound ksmps doesn't match host ksmps!";
+            } 
+            if (this.inputChannelN != inputChannelN) {
+                throw "Csound nchnls_i doesn't match host input channel count of " + inputChannelN;
+            }
+            if (this.outputChannelN != outputChannelN) {
+                throw "Csound nchnls doesn't match host output channel count of " + outputChannelN;
+            }
+            if (this.csound.GetSr() != sampleRate) {
+                throw "Csound sampling rate doesn't match host sampling rate of " + sampleRate;
+            }
+            this.format_validated = true;
         }
         let csoundFrameI = 0;
         let result = 0;
         for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
             for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                let inputChannelBuffer = inputs[inputChannelI];
+                let inputChannelBuffer = inputBuffer[inputChannelI];
                 this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
             }
             for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
-                let outputChannelBuffer = outputs[outputChannelI];
+                let outputChannelBuffer = outputBuffer[outputChannelI];
                 outputChannelBuffer[hostFrameI] = this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / this.zerodBFS;
                 this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
             }
             csoundFrameI++
             if (csoundFrameI === hostFrameN) {
                 csoundFrameI = 0;
-                result = this_.csound.PerformKsmps();
+                result = this.csound.PerformKsmps();
                 if (result !== 0) {
-                    this_.Stop();
-                    this_.Reset();
+                    this.Stop();
+                    this.Reset();
                     console.log("CsoundAudioProcessor returns 'false'.");
                     return false;
                 }
