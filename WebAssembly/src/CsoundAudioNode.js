@@ -25,128 +25,124 @@ if (typeof console === 'undefined') {
     Module.print(message);
 }
 
+// import csound_audio_processor_module from 'CsoundAudioProcessor.js';
+
 class CsoundAudioNode extends AudioWorkletNode {
     constructor(context) {
-        if (typeof context === 'undefined') {
-            var AudioContext = window.AudioContext || window.webkitAudioContext;
-            var audioContext = new AudioContext();
+        super(context, 'csound-audio-processor');
+        this.is_playing = false;
+        this.is_realtime = false;
+        this.audioProcessNode = null;
+        this.microphoneNode = null;
+        this.input = null;
+        this.output = null;
+        // TODO: There is probably some way to 
+        // make method calls that return a value cheaply 
+        // be synchronous. For now, just set up the port 
+        // event handler for bidirectional communication.
+        this.port.onmessage = (event) => {
+            console.log("CsoundAudioNode.port.onmessage: " + event);
         }
-        context.loadModule("csound-extended.js").then(() => {
-            super(context, 'CsoundAudioProcessor');
-            this.is_playing = false;
-            this.is_realtime = false;
-            this.audioProcessNode = null;
-            this.microphoneNode = null;
-            this.input = null;
-            this.output = null;
-            // TODO: There is probably some way to 
-            // make method calls that return a value cheaply 
-            // be synchronous. For now, just set up the port 
-            // event handler for bidirectional communication.
-            this.port.onmessage = (event) => {
-                console.log("CsoundAudioNode.port.onmessage: " + event);
-            };
-        });
     }
     Cleanup() {
-        this.port.postMessage("Cleanup");
+        this.port.postMessage(["Cleanup"]);
     }
     CompileCsd(filename) {
-        this.port.postMessage("CompileCsd", filename);
+        this.port.postMessage(["CompileCsd", filename]);
     };
     CompileCsdText(csd) {
-        this.port.postMessage("CompileCsdText", csd);
+        this.port.postMessage(["CompileCsdText", csd]);
     };
     CompileOrc(orc) {
-        this.port.postMessage("CompileOrc", orc);
+        this.port.postMessage(["CompileOrc", orc]);
     };
     Destroy() {
-        this.port.postMessage("Destroy");
+        this.port.postMessage(["Destroy"]);
     };
     EvalCode(code) {
-        this.port.postMessage("EvalCode", code);
+        this.port.postMessage(["EvalCode", code]);
     };
     // TODO: This and similar cheap functions with needed return values 
     // should be extended with promises to wait for a message back 
     // and thus implement a synchronous function call.
     Get0dBFS() {
-        this.port.postMessage("Get0dBFS");
+        this.port.postMessage(["Get0dBFS"]);
     };
     GetAPIVersion() {
-        this.port.postMessage("GetAPIVersion");
+        this.port.postMessage(["GetAPIVersion"]);
     };
     GetControlChannel(name) {
-        this.port.postMessage("GetControlChannel", name);
+        this.port.postMessage(["GetControlChannel", name]);
     };
     GetCurrentTimeSamples() {
-        this.port.postMessage("GetCurrentTimeSamples");
+        this.port.postMessage(["GetCurrentTimeSamples"]);
     };
     GetEnv(name) {
-        this.port.postMessage("GetEnv", name);
+        this.port.postMessage(["GetEnv", name]);
     };
     GetInputName() {
-        this.port.postMessage("GetInputName");
+        this.port.postMessage(["GetInputName"]);
     };
     GetKsmps() {
-        this.port.postMessage("GetKsmps");
+        this.port.postMessage(["GetKsmps"]);
     };
     GetNchnls() {
-        this.port.postMessage("GetNchnls");
+        this.port.postMessage(["GetNchnls"]);
     };
     GetNchnlsInput() {
-        this.port.postMessage("GetNchnlsInput");
+        this.port.postMessage(["GetNchnlsInput"]);
     };
     GetOutputName() {
-        this.port.postMessage("GetOutputName");
+        this.port.postMessage(["GetOutputName"]);
     };
     GetScoreOffsetSeconds() {
-        this.port.postMessage("GetScoreOffsetSeconds");
+        this.port.postMessage(["GetScoreOffsetSeconds"]);
     };
     GetScoreTime() {
-        this.port.postMessage("GetScoreTime");
+        this.port.postMessage(["GetScoreTime"]);
     };
     GetSr() {
-        this.port.postMessage("GetSr");
+        this.port.postMessage(["GetSr"]);
     };
     GetStringChannel(name) {
-        this.port.postMessage("GetStringChannel", name);
+        this.port.postMessage(["GetStringChannel", name]);
     };
     GetVersion() {
-        this.port.postMessage("GetVersion");
+        this.port.postMessage(["GetVersion"]);
     };
     InputMessage(text) {
-        this.port.postMessage("InputMessage", text);
+        this.port.postMessage(["InputMessage", text]);
     };
     IsPlaying() {
-        this.port.postMessage("IsPlaying");
+        this.port.postMessage(["IsPlaying"]);
     };
     IsScorePending() {
-        this.port.postMessage("IsScorePending");
+        this.port.postMessage(["IsScorePending"]);
     };
     Message(text) {
-        this.port.postMessage("Message", text);
+        this.port.postMessage(["Message", text]);
     };
     Perform() {
-        this.port.postMessage("Perform");
+        this.port.postMessage(["Perform"]);
     };
     ReadScore(score) {
-        this.port.postMessage("ReadScore", score);
+        this.port.postMessage(["ReadScore", score]);
     };
     Reset() {
-        this.port.postMessage("Reset");
+        this.port.postMessage(["Reset"]);
     };
     RewindScore() {
-        this.port.postMessage("RewindScore");
+        this.port.postMessage(["RewindScore"]);
     };
     SetControlChannel(name, value) {
-        this.port.postMessage("SetControlChannel", name, value);
+        this.port.postMessage(["SetControlChannel", name, value]);
     };
     SetGlobalEnv(name, value) {
-        this.port.postMessage("SetGlobalEnv", name, value);
+        this.port.postMessage(["SetGlobalEnv", name, value]);
     };
     SetInput(name) {
         this.input = name;
-        this.port.postMessage("SetInput", name);
+        this.port.postMessage(["SetInput", name]);
     };
     SetOption(option) {
         if (option.startsWith("-odac")) {
@@ -154,20 +150,20 @@ class CsoundAudioNode extends AudioWorkletNode {
         } else if (option.startsWith("-iadc")) {
             this.input = option.substr(2);
         }
-        this.port.postMessage("SetOption", option);
+        this.port.postMessage(["SetOption", option]);
     };
     SetOutput(name, type, format) {
         this.output = name;
-        this.port.postMessage("SetOutput", name, type, format);
+        this.port.postMessage(["SetOutput", name, type, format]);
     };
     SetScoreOffsetSeconds(seconds) {
-        this.port.postMessage("SetScoreOffsetSeconds", seconds);
+        this.port.postMessage(["SetScoreOffsetSeconds", seconds]);
     };
     SetScorePending(is_pending) {
-        this.port.postMessage("SetScorePending", is_pending);
+        this.port.postMessage(["SetScorePending", is_pending]);
     };
     SetStringChannel(name, value) {
-        this.port.postMessage("SetStringChannel", name, value);
+        this.port.postMessage(["SetStringChannel", name, value]);
     };
     // TODO: Needs much work.
     // Wiring into Web Audio graph here in the upper half, 
@@ -207,14 +203,14 @@ class CsoundAudioNode extends AudioWorkletNode {
                     return;
                 }
             }
-            this.port.postMessage("Start");
+            this.port.postMessage(["Start"]);
         }
         this.connect(audioContext.destination);
         this.start();
         this.is_playing = true;
     }
     Stop() {
-        this.port.postMessage("Stop");
+        this.port.postMessage(["Stop"]);
         this.is_playing = false;
         if (this.microphoneNode !== null) {
             this.microphoneNode.disconnect();
@@ -226,26 +222,16 @@ class CsoundAudioNode extends AudioWorkletNode {
         }
     };
     TableGet(number, index) {
-        this.port.postMessage("TableGet", number, index);
+        this.port.postMessage(["TableGet", number, index]);
     }
     TableLength(number) {
-        this.port.postMessage("TableLength", number);
+        this.port.postMessage(["TableLength", number]);
     }
     TableSet(number, index, value) {
-        this.port.postMessage("TableSet", index, value);
+        this.port.postMessage(["TableSet", index, value]);
     }
 }
 
-Module["CsoundAudioNode"] = CsoundAudioNode;
-/**
- * In order to follow the same pattern of use as in all other Csound 
- * JavaScript environments, a global Csound object is injected into the 
- * JavaScript context, and the user is notified that Csound is ready.
- */
-Module["onRuntimeInitialized"] = function() {
-    csound = new Module.CsoundAudioNode();
-    print("\nCsoundAudioNode has now been loaded; its functions may now be called.\n");
-}
 
 
 

@@ -2153,7 +2153,8 @@ function copyTempDouble(ptr) {
   
   var EXCEPTIONS={last:0,caught:[],infos:{},deAdjust:function (adjusted) {
         if (!adjusted || EXCEPTIONS.infos[adjusted]) return adjusted;
-        for (var ptr in EXCEPTIONS.infos) {
+        for (var key in EXCEPTIONS.infos) {
+          var ptr = +key; // the iteration key is a string, and if we throw this, it must be an integer as that is what we look for
           var info = EXCEPTIONS.infos[ptr];
           if (info.adjusted === adjusted) {
             return ptr;
@@ -2233,6 +2234,7 @@ function copyTempDouble(ptr) {
       }
     }function ___cxa_rethrow() {
       var ptr = EXCEPTIONS.caught.pop();
+      ptr = EXCEPTIONS.deAdjust(ptr);
       if (!EXCEPTIONS.infos[ptr].rethrown) {
         // Only pop if the corresponding push was through rethrow_primary_exception
         EXCEPTIONS.caught.push(ptr)
@@ -4499,6 +4501,9 @@ function copyTempDouble(ptr) {
         }
         return stream;
       },close:function (stream) {
+        if (FS.isClosed(stream)) {
+          throw new FS.ErrnoError(ERRNO_CODES.EBADF);
+        }
         if (stream.getdents) stream.getdents = null; // free readdir state
         try {
           if (stream.stream_ops.close) {
@@ -4509,7 +4514,13 @@ function copyTempDouble(ptr) {
         } finally {
           FS.closeStream(stream.fd);
         }
+        stream.fd = null;
+      },isClosed:function (stream) {
+        return stream.fd === null;
       },llseek:function (stream, offset, whence) {
+        if (FS.isClosed(stream)) {
+          throw new FS.ErrnoError(ERRNO_CODES.EBADF);
+        }
         if (!stream.seekable || !stream.stream_ops.llseek) {
           throw new FS.ErrnoError(ERRNO_CODES.ESPIPE);
         }
@@ -4519,6 +4530,9 @@ function copyTempDouble(ptr) {
       },read:function (stream, buffer, offset, length, position) {
         if (length < 0 || position < 0) {
           throw new FS.ErrnoError(ERRNO_CODES.EINVAL);
+        }
+        if (FS.isClosed(stream)) {
+          throw new FS.ErrnoError(ERRNO_CODES.EBADF);
         }
         if ((stream.flags & 2097155) === 1) {
           throw new FS.ErrnoError(ERRNO_CODES.EBADF);
@@ -4541,6 +4555,9 @@ function copyTempDouble(ptr) {
       },write:function (stream, buffer, offset, length, position, canOwn) {
         if (length < 0 || position < 0) {
           throw new FS.ErrnoError(ERRNO_CODES.EINVAL);
+        }
+        if (FS.isClosed(stream)) {
+          throw new FS.ErrnoError(ERRNO_CODES.EBADF);
         }
         if ((stream.flags & 2097155) === 0) {
           throw new FS.ErrnoError(ERRNO_CODES.EBADF);
@@ -4570,6 +4587,9 @@ function copyTempDouble(ptr) {
         }
         return bytesWritten;
       },allocate:function (stream, offset, length) {
+        if (FS.isClosed(stream)) {
+          throw new FS.ErrnoError(ERRNO_CODES.EBADF);
+        }
         if (offset < 0 || length <= 0) {
           throw new FS.ErrnoError(ERRNO_CODES.EINVAL);
         }
@@ -6514,7 +6534,7 @@ function copyTempDouble(ptr) {
    // uname
       var buf = SYSCALLS.get();
       if (!buf) return -ERRNO_CODES.EFAULT
-      var layout = {"sysname":0,"nodename":65,"domainname":325,"machine":260,"version":195,"release":130,"__size__":390};
+      var layout = {"__size__":390,"sysname":0,"nodename":65,"release":130,"version":195,"machine":260,"domainname":325};
       function copyString(element, value) {
         var offset = layout[element];
         writeAsciiToMemory(value, buf + offset);
@@ -7313,9 +7333,14 @@ function copyTempDouble(ptr) {
   try {
    // unlinkat
       var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), flags = SYSCALLS.get();
-      assert(flags === 0);
       path = SYSCALLS.calculateAt(dirfd, path);
-      FS.unlink(path);
+      if (flags === 0) {
+        FS.unlink(path);
+      } else if (flags === 512) {
+        FS.rmdir(path);
+      } else {
+        abort('Invalid flags passed to unlinkat');
+      }
       return 0;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);

@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Message from Another Planet version 3</title>
-    <script src="csound_extended.js"></script>    
+    <script src="csound_extended.js"></script>
+    <script src="csound_loader.js"></script>
     <style type="text/css">
     input[type='range'] {
         -webkit-appearance: none;
@@ -83,30 +84,6 @@
             messages_textarea.value = existing + message;
             messages_textarea.scrollTop = messages_textarea.scrollHeight;   
         };
-        // These are the ways Csound can be instantiated in the JavaScript context:
-        if (typeof csound !== 'undefined') {
-            // (1) Injected (e.g. by Csound for Android or CsoundQt).
-            csound.message("\nCsound already exists in the JavaScript context: version " + csound.getVersion());
-        } else {
-            // (2) By 'require' as in csound.node.
-            try {
-                var csound = require('csound.node');
-                csound.setMessageCallback(handleMessage);
-                csound.message('\ncsound.node has been loaded: version ' + csound.getVersion());
-            // (3) By csound.js in WebAssembly.
-            } catch (err) {
-                console.warn(err.message);
-                console.info("Trying to load Csound for WebAssembly...");
-                var head = document.getElementsByTagName('head')[0];
-                var script = document.createElement('script');
-                script.src = "csound-extended.js";
-                script.type = 'text/javascript';
-                head.appendChild(script);        
-                var moduleDidLoad = function() {
-                    csound.message("\nCsound for WebAssembly has been loaded; Csound functions may now be called.");
-                }
-            }
-        }
     </script>
 </head>
 <body style="background-color:CadetBlue">
@@ -278,12 +255,14 @@ i 2    0    .      500     .       16         1.00
 <script>    
 $(document).ready(function() {
     $('input').on('input', function(event) {
+        get_csound(handleMessage);
         var slider_value = parseFloat(event.target.value);
         csound.setControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
     $('#play').on('click', function() {
+        get_csound(handleMessage);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
         console.log = handleMessage;
@@ -293,6 +272,7 @@ $(document).ready(function() {
         csound.perform();
     });
     $('#stop').on('click', function() {
+        get_csound(handleMessage);
         csound.stop();
         csound.reset();
     });
@@ -302,6 +282,7 @@ $(document).ready(function() {
         });
     });
     $('#restore').on('click', function() {
+        get_csound(handleMessage);
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
             csound.setControlChannel(this.id, parseFloat(this.value));

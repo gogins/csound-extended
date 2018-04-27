@@ -1,13 +1,13 @@
 {
-  "main": "scrims.html",
-  "name": "scrims",
+  "main": "message.html",
+  "name": "message",
   "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "scrims",
+    "title": "message",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

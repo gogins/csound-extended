@@ -5,7 +5,8 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
-        <script src="csound_extended.js"></script>
+        <!-- <script src="csound_extended.js"></script> -->
+        <script src="CsoundAudioNode.js"></script>
         <script src="csound_loader.js"></script>
         <script src="js/Silencio.js"></script>
         <script src="js/ChordSpace.js"></script>
@@ -1269,7 +1270,7 @@ endin
                 orbit.yMax = yMax;
                 orbit.scaleX = scaleX;
                 orbit.scaleY = scaleY;
-                console.log('Normalizing and updating vertices.')
+                // console.log('Normalizing and updating vertices.')
                 for (var s = 0; s < NUM_SUBSETS; s++){
                   var curSubset = subsets[s];
                   for (var i = 0; i < num_points_subset_l; i++){
@@ -1279,7 +1280,7 @@ endin
                }
             }
             function prepareOrbit(){
-                console.log('prepareOrbit()...')
+                // console.log('prepareOrbit()...')
                 if (shuffled == false) {
                     shuffleParams();
                     shuffled = true;
@@ -1454,7 +1455,7 @@ endin
                     }
                     if (csound_node !== null) {
                         csound.setMessageCallback(csoundMessage);
-                    } else if (csound_web_audio !== null) {
+                    } else if (csound_web_audio !== null || csound_audio_node != null) {
                         console.log = console.warn = csoundMessage;
                     }
                     csound.Stop();

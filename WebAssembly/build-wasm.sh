@@ -30,20 +30,14 @@ em++ -std=c++11 -s SAFE_HEAP=1 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODUL
 # 1024 * 64 = 65536 is 64 KB
 # 65536 * 1024 * 4 is 268435456
 
-# TODO: For AudioWorklet...
-# emcc -v -O2 -g4 -DINIT_STATIC_MODULES=0 -s WASM=1 -s ASSERTIONS=0 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=0 -s BINARYEN_ASYNC_COMPILATION=0 -s MODULARIZE=1 -s EXPORT_NAME=\"'libcsound'\" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' CsoundObj.bc FileList.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o libcsound.js
-
-#em++ -std=c++11 --bind --pre-js ../src/CsoundWebAudio.js --pre-js ../src/CsoundAudioNode.js --pre-js ../src/CsoundAudioProcessor.js -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0 -s FORCE_FILESYSTEM=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s EXPORT_NAME=\"'csound_extended'\" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a ../cmask/libcmask.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o csound_extended.js
-
 em++ -std=c++11 --bind --pre-js ../src/CsoundWebAudio.js -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0 -s FORCE_FILESYSTEM=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s "EXPORT_NAME='csound_extended_module'" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o csound_extended.js
 
+# -s MODULARIZE=1 -s EXPORT_NAME=\"'csound_audio_processor_module'\"
+
+em++ -v -O1 -std=c++11 --bind --pre-js ../src/CsoundAudioProcessor_prejs.js --post-js ../src/CsoundAudioProcessor_postjs.js -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=0 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o CsoundAudioProcessor.js
+
 cd ..
-rm -rf dist-wasm
-mkdir dist-wasm
-cp build-wasm/libcsound.js dist-wasm/
-cp src/*.js dist-wasm/
-cp build-wasm/csound_extended.* dist-wasm/
-echo "Creating a release for Csound for WebAssembly..."
 bash release-wasm.sh
 echo "Finished building Csound for WebAssembly."
-ls -ll dist-wasm
+echo "Actually built:"
+ls -ll build-wasm

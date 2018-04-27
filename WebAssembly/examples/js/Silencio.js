@@ -573,7 +573,7 @@ if (typeof console === 'undefined') {
         for (var i = 0; i < this.data.length; i++) {
             jscore += this.data[i].toIStatement();
         }
-        console.log(jscore);
+        //console.log(jscore);
         csound.readScore(jscore);
     };
 

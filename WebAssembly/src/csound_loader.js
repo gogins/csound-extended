@@ -13,6 +13,7 @@
 csound_injected = null;
 csound_node = null;
 csound_web_audio = null;
+csound_audio_node = null;
 csound = null;
 csound_extended = {};
 if (typeof csound !== 'undefined') {
@@ -31,7 +32,20 @@ try {
     // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
     csound_extended["ENVIRONMENT"] = "NODE";
 } catch (e) {
-    console.warn(e);
+    console.log(e);
+}
+try {
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    var audioContext = new AudioContext();
+    audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
+        console.log("Creating CsoundAudioNode...\n");
+        csound_audio_node = new CsoundAudioNode(audioContext);
+        console.log("Csound audio worklet is available in this JavaScript context.\n");
+    }).catch(error => {
+       console.log(error);
+    });
+} catch (e) {
+    console.log(e);
 }
 try {
     csound_extended_module(csound_extended).then(function(module) {
@@ -40,7 +54,7 @@ try {
         console.log("csound_extended is available in this JavaSript contex.\n");
     });
 } catch (e) {
-    console.warn(e);
+    console.log(e);
 }
 var get_csound = function(csound_message_callback) {
     if (csound_injected !== null) {
@@ -50,6 +64,10 @@ var get_csound = function(csound_message_callback) {
         csound = csound_node;
         csound.setMessageCallback(csound_message_callback);
         return csound_node;
+    } else if (csound_audio_node !== null) {
+        csound = csound_audio_node;
+        console.log = console.warn = csound_message_callback;
+        return csound_audio_node;
     } else if (csound_web_audio !== null) {
         csound = csound_web_audio;
         console.log = console.warn = csound_message_callback;
