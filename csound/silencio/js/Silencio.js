@@ -486,7 +486,7 @@ if (typeof console === 'undefined') {
         }
         for (var i = 0; i < this.data.length; i++) {
             var event = this.data[i];
-            csound.message(what + event.toString());
+            csound.Message(what + event.toString());
         }
     };
 
@@ -555,7 +555,7 @@ if (typeof console === 'undefined') {
             jscore += this.data[i].toIStatement();
         }
         console.log(jscore);
-        csound.readScore(jscore);
+        csound.ReadScore(jscore);
     };
 
     Score.prototype.findScales = function() {
@@ -618,7 +618,7 @@ if (typeof console === 'undefined') {
     };
 
     Score.prototype.tieOverlaps = function(tieExact) {
-        csound.message("Before tieing: " + this.data.length + "\n");
+        csound.Message("Before tieing: " + this.data.length + "\n");
         if (typeof tieExact === 'undefined') {
             tieExact = false;
         }
@@ -673,7 +673,7 @@ if (typeof console === 'undefined') {
                 }
             }
         }
-        csound.message("After tieing: " + this.data.length + "\n");
+        csound.Message("After tieing: " + this.data.length + "\n");
     };
 
     Score.prototype.progress = function(score_time) {
@@ -686,8 +686,8 @@ if (typeof console === 'undefined') {
     Score.prototype.draw = function(canvas, W, H) {
         this.findScales();
         // Draw the score in the central 90% of the canvas.
-        csound.message("minima:  " + this.minima + "\n");
-        csound.message("ranges:  " + this.ranges + "\n");
+        csound.Message("minima:  " + this.minima + "\n");
+        csound.Message("ranges:  " + this.ranges + "\n");
         var xsize = this.getDuration();
         var ysize = this.ranges.key;
         var inner_scale = 0.9;
@@ -700,10 +700,10 @@ if (typeof console === 'undefined') {
         context.scale(xscale, -yscale);
         //context.translate(-xmove, -ymove - ysize);
         context.translate(-xmove + (xsize * (1 - inner_scale) / 2), (-ymove - ysize) - (ysize * (1 - inner_scale) / 2));
-        csound.message("score:  " + xsize + ", " + ysize + "\n");
-        csound.message("canvas: " + W + ", " + H + "\n");
-        csound.message("scale:  " + xscale + ", " + yscale + "\n");
-        csound.message("move:   " + xmove + ", " + ymove + "\n");
+        csound.Message("score:  " + xsize + ", " + ysize + "\n");
+        csound.Message("canvas: " + W + ", " + H + "\n");
+        csound.Message("scale:  " + xscale + ", " + yscale + "\n");
+        csound.Message("move:   " + xmove + ", " + ymove + "\n");
         var channelRange = this.ranges.channel;
         if (channelRange === 0) {
             channelRange = 1;
@@ -723,7 +723,7 @@ if (typeof console === 'undefined') {
             value = 0.5 + value / 2;
             var hsv = "hsv(" + hue + "," + 1 + "," + value + ")";
             context.strokeStyle = tinycolor(hsv).toHexString();
-            //csound.message("color: " + context.strokeStyle + "\n");
+            //csound.Message("color: " + context.strokeStyle + "\n");
             //context.strokeStyle = 'red';
             context.beginPath();
             context.moveTo(x1, y);
@@ -1233,7 +1233,7 @@ if (typeof console === 'undefined') {
         }
     };
     LSys.prototype.interpret = function(c, t, context, size) {
-        //csound.message('c:' + c + '\n');
+        //csound.Message('c:' + c + '\n');
         if (c === 'F') {
             if (typeof size === 'undefined') {
                 t.startNote();
