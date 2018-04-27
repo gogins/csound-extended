@@ -115,10 +115,18 @@ public:
         return GetEnv(name.c_str());
     }
     virtual std::string GetInputName_() {
-        return GetInputName();
+        auto value = GetInputName();
+        if (value == nullptr) {
+            return "";
+        }
+        return value;;
     }
     virtual std::string GetOutputName_() {
-        return GetOutputName();
+        auto value = GetOutputName();
+        if (value == nullptr) {
+            return "";
+        }
+        return value;;
     }
     virtual val GetSpinView() {
         int count = GetKsmps() * GetNchnlsInput();

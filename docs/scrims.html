@@ -81,8 +81,8 @@
         </table>
         <textarea class="code" id="orc" hidden rows=24 cols=80>
 
-sr = 88200
-ksmps = 200
+sr = 48000
+ksmps = 128
 nchnls = 2
 0dbfs = 1500000
 
@@ -1454,7 +1454,7 @@ endin
                         return;
                     }
                     if (csound_node !== null) {
-                        csound.setMessageCallback(csoundMessage);
+                        csound.SetMessageCallback(csoundMessage);
                     } else if (csound_web_audio !== null || csound_audio_node != null) {
                         console.log = console.warn = csoundMessage;
                     }
@@ -1485,52 +1485,52 @@ endin
                 },
                 FM9: function() {
                     chord = FM9.clone();
-                    csound.message('FM9:\n' + chord.information());
+                    csound.Message('FM9:\n' + chord.information());
                 },
                 Bb7: function() {
                     chord = Bb7.clone();
-                    csound.message('Bb7:\n' + chord.information());
+                    csound.Message('Bb7:\n' + chord.information());
                 },
                 K: function() {
                     chord = chord.K();
-                    csound.message('K():\n' + chord.information());
+                    csound.Message('K():\n' + chord.information());
                 },
                 Q2: function() {
                     chord = chord.Q(2, modality);
-                    csound.message('Q(2, modality):\n' + chord.information());
+                    csound.Message('Q(2, modality):\n' + chord.information());
                 },
                 Q3: function() {
                     chord = chord.Q(3, modality);
-                    csound.message('Q(3, modality):\n' + chord.information());
+                    csound.Message('Q(3, modality):\n' + chord.information());
                 },
                 Q5: function() {
                     chord = chord.Q(5, modality);
-                    csound.message('Q(5, modality):\n' + chord.information());
+                    csound.Message('Q(5, modality):\n' + chord.information());
                 },
                 J2_2: function() {
                     var chords = chord.J(2);
                     if (chords.length > 1) {
                         chord = chords[1];
-                        csound.message('J(2,2):\n' + chord.information());
+                        csound.Message('J(2,2):\n' + chord.information());
                     }
                 },
                 J2_3: function() {
                     var chords = chord.J(2);
                     if (chords.length > 2) {
                         chord = chords[2];
-                        csound.message('J(2,3):\n' + chord.information());
+                        csound.Message('J(2,3):\n' + chord.information());
                     }
                 },
                 J3_1: function() {
                    var chords = chord.J(3);
                     if (chords.length > 0) {
                         chord = chords[0];
-                        csound.message('J(3,1):\n' + chord.information());
+                        csound.Message('J(3,1):\n' + chord.information());
                     }
                 },
                 T5: function() {
                     chord = chord.T(5);
-                    csound.message('D():\n' + chord.information());
+                    csound.Message('D():\n' + chord.information());
                 },
             };
             var gui = null;
@@ -1544,7 +1544,6 @@ endin
                 gui.remember(parameters);
                 gui.add(parameters, 'Play').name('Play [Ctrl-P]');
                 gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
-                gui.add(parameters, 'Developer_tools').name('Debugger');
                 gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
                 var Master = gui.addFolder('Master effects');
                 add_slider(Master, 'gk_overlap', 0, 20);
@@ -1624,8 +1623,8 @@ endin
             function gk_update(name, value) {
                 if (csound !== null) {
                     var numberValue = parseFloat(value);
-                    csound.setControlChannel(name, numberValue);
-                    csound.message(name + ': ' + numberValue + '\n');
+                    csound.SetControlChannel(name, numberValue);
+                    csound.Message(name + ': ' + numberValue + '\n');
                 }
             }
             function add_slider(gui_folder, token, minimum, maximum) {
@@ -1714,7 +1713,6 @@ endin
                     } else if (e_char === 'X') {
                         parameters.Close();
                     }
-
                 } else if (e.altKey === true) {
                     var sign = -1;
                     if (e.shiftKey === true) {
@@ -1735,9 +1733,8 @@ endin
                     } else if (e_char === 'E') {
                         parameters.E += e_slider.__impliedStep * sign;
                         e_slider.updateDisplay();
-                  }
+                    }
                 }
-                return false;
              });
        </script>
      </body>

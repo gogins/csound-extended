@@ -16,13 +16,14 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         } catch (e) {
             console.log(e);
         }
-        this.is_playing = false;
-        this.is_realtime = false;
+        this.Reset();
         this.port.onmessage = this.onMessage.bind(this);
     }
     onMessage(event) {
-        var result = null;
-        var data = event.data;
+        let result = null;
+        let data = event.data;
+        let input_name = "";
+        let output_name = "";
         switch (data[0])
         {
             case "Cleanup":
@@ -118,9 +119,19 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             case "Message":
                 this.csound.Message(data[1]);
                 break;
+            case "MidiEvent":
+                this.csound.MidiEventIn(data[0], data[1], data[2]);
+                break;
             case "Perform":
-                result = this.csound.Perform();
+            {
+                let result = 0;
+                if (this.is_realtime) {
+                    result = 0;
+                } else {
+                    result = this.csound.Perform();
+                }
                 this.port.postMessage(["Perform", result]);
+            }
                 break;
             case "ReadScore":
                 result = this.csound.ReadScore(data[1]);
@@ -159,45 +170,10 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 this.csound.SetStringChannel(data[1], data[2]);
                 break;
             case "Start":
-                {
-                    var input_name = this.csound.GetInputName();
-                    var output_name = this.csound.GetOutputName();
-                    if (!(output_name.startsWith("dac") || input_name.startsWith("adc"))) {
-                        this.is_realtime = false;
-                        result = this.csound.Start();
-                        return 0;
-                    } else {
-                        // Create a reference to this that will be in scope in the closures of callbacks.
-                        var this_ = this;
-                        this.is_realtime = true;                        
-                        this.csound.SetHostImplementedAudioIO(1, 0);
-                        this.csound.InitializeHostMidi();
-                        var onMidiEvent = function(event) {
-                            this_.csound.MidiEventIn(event.data[0], event.data[1], event.data[2]);
-                        };
-                        var midiSuccess = function(midiInterface) {
-                            var inputs = midiInterface.inputs.values();
-                            print("MIDI input initialized...\n");
-                            for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
-                                input = input.value;
-                                print("Input: " + input.name + "\n");
-                                input.onmidimessage = onMidiEvent;
-                            }
-                        };
-                        var midiFail = function(error) {
-                            print("MIDI failed to start, error:" + error);
-                        };
-                        if (navigator.requestMIDIAccess) {
-                            navigator.requestMIDIAccess().then(midiSuccess, midiFail);
-                        } else {
-                            print("MIDI not supported in this context.");
-                        }
-                        result = this.csound.Start();
-                    }
-                    this.port.postMessage(["Start", result]);
-                }
+                result = this.Start();
                 break;
             case "Stop":
+                this.Reset();
                 this.csound.Stop();
                 break;
             case "TableGet":
@@ -213,35 +189,87 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 break;
         };
     }
+    Reset() {
+        this.input_name = "";
+        this.output_name = "";
+        this.is_realtime = false;                        
+        this.spinBuffer = null;
+        this.spoutBuffer = null;;
+        this.zerodBFS = 1.;                                    
+        this.ksmps = 128;
+        this.inputChannelN = 1;
+        this.outputChannelN = 2;
+        this.is_playing = false;
+    }
+    Start() {
+        let result = 0;
+        this.input_name = this.csound.GetInputName();
+        this.output_name = this.csound.GetOutputName();
+        if (this.output_name.startsWith("dac") || this.input_name.startsWith("adc")) {
+            this.is_realtime = false;
+            result = this.csound.Start();
+        } else {
+            // Create a reference to this that will be in scope in the closures of callbacks.
+            var this_ = this;
+            this.is_realtime = true;                        
+            this.csound.SetHostImplementedAudioIO(1, 0);
+            this.csound.InitializeHostMidi();
+            result = this.csound.Start();
+            this.spinBuffer = this.csound.GetSpin();
+            this.spoutBuffer = this.csound.GetSpout();
+            this.zerodBFS = this.csound.Get0dBFS();                                    
+            this.ksmps = this.csound.GetKsmps();
+            this.inputChannelN = this.csound.GetNchnlsInput();
+            this.outputChannelN = this.csound.GetNchnls();
+        }
+        this.is_playing = true;
+        return result;
+    }
     process(inputs, outputs, parameters) {
+        if (this.is_playing !== true) {
+            return true;
+        }
+        /// Get the parameter values array. Here we do not use, and ignore, them.
+        /// let myParamValues = parameters.myParam;
         // The processor may have multiple inputs and outputs. 
         // Each input or output may have multiple channels. 
         let inputBuffer = inputs[0];
         let outputBuffer = outputs[0];
-        let inputChannel0 = input[0];
-        let outputChannel0 = output[0];
-        /// Get the parameter values array. Here we do not use, and ignore, them.
-        /// let myParamValues = parameters.myParam;
-        var csoundFrameI = 0;
-        var hostFrameN = outputChannel0.length;
-        var result = 0;
-        for (var hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
-            for (var inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                var inputChannelBuffer = inputBuffer[inputChannelI];
-                spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * zerodBFS;
+        let inputChannel0 = inputBuffer[0];
+        let outputChannel0 = outputBuffer[0];
+        let inputChannelN = inputs.length;
+        let outputChannelN = outputs.length;
+        let hostFrameN = outputChannel0.length;
+        // The audio buffer layouts must match between Csound and the host.
+        if (this.ksmps !== hostFrameN) {
+            throw "Csound ksmps doesn't match host frame count!";
+        } 
+        if (this.inputChannelN != inputChannelN) {
+            throw "Csound nchnls_i doesn't match host input channel count!";
+        }
+        if (this.outputChannelN != outputChannelN) {
+            throw "Csound nchnls doesn't match host output channel count!";
+        }
+        let csoundFrameI = 0;
+        let result = 0;
+        for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
+            for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
+                let inputChannelBuffer = inputs[inputChannelI];
+                this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
             }
-            for (var outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
-                var outputChannelBuffer = outputBuffer[outputChannelI];
-                outputChannelBuffer[hostFrameI] = spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / zerodBFS;
-                spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
+            for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
+                let outputChannelBuffer = outputs[outputChannelI];
+                outputChannelBuffer[hostFrameI] = this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / this.zerodBFS;
+                this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
             }
             csoundFrameI++
-            if (csoundFrameI === ksmps) {
+            if (csoundFrameI === hostFrameN) {
                 csoundFrameI = 0;
                 result = this_.csound.PerformKsmps();
                 if (result !== 0) {
                     this_.Stop();
                     this_.Reset();
+                    console.log("CsoundAudioProcessor returns 'false'.");
                     return false;
                 }
             }
@@ -250,43 +278,5 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
     }
 };
 
-class CsoundAudioProcessorTest extends AudioWorkletProcessor {
-    static get parameterDescriptors() {
-        return [{
-            name: 'myParam',
-            defaultValue: 0.5,
-            minValue: 0,
-            maxValue: 1,
-          automationRate: "k-rate"
-        }];
-    }
-    constructor() {
-        super();
-        console.log("CsoundAudioProcessor constructor...\n");
-        try {
-            this.csound = new Module.CsoundEmbind();
-        } catch (e) {
-            console.log(e);
-        }
-        this.is_playing = false;
-    }
-
-
-  process(inputs, outputs, parameters) {
-    // Get the first input and output.
-    let input = inputs[0];
-    let output = outputs[0];
-    let myParam = parameters.myParam;
-
-    // A simple amplifier for single input and output.
-    for (let channel = 0; channel < output.length; ++channel) {
-      for (let i = 0; i < output[channel].length; ++i) {
-        output[channel][i] = input[channel][i] * myParam[0];
-      }
-    }
-  }
-}
-
-//export default csound_audio_processor_module;
-
 registerProcessor("csound-audio-processor", CsoundAudioProcessor);
+console.log("Registered 'csound-audio-processor'.");

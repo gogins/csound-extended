@@ -13,36 +13,40 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  */
  
-/**
- * So that print output works in all JavaScript contexts, not only 
- * browsers, we set up our own print function to handle all cases.
- */
-var print = null;
-if (typeof console === 'undefined') {
-    print = Module.print;
-} else print = function(message) {
-    console.log(message);
-    Module.print(message);
-}
-
 // import csound_audio_processor_module from 'CsoundAudioProcessor.js';
 
 class CsoundAudioNode extends AudioWorkletNode {
-    constructor(context) {
-        super(context, 'csound-audio-processor');
+    constructor(context, options) {
+        // TODO: Timing is wrong, need to set from Csound orc or options. 
+        // See: https://webaudio.github.io/web-audio-api/#AudioDestinationNode.
+        options = options || {};
+        options.numberOfInputs  = 1;
+        options.numberOfOutputs = 1;
+        options.outputChannelCount = [context.destination.channelCount];
+        super(context, 'csound-audio-processor', options);
+        this.reset_();
+        // TODO: There is probably some way to 
+        // make method calls that return a value cheaply 
+        // be synchronous. For now, just set up the port 
+        // event handler for bidirectional communication.
+        this.port.onmessage = (event) => {
+            let data = event.data;
+            //console.log("CsoundAudioNode.port.onmessage: " + data[0] + "\n");
+            switch(data[0]) {
+                case "Start":
+                    //this.start();
+                    break;
+            }
+        }
+        this.port.start();
+    }
+    reset_() {
         this.is_playing = false;
         this.is_realtime = false;
         this.audioProcessNode = null;
         this.microphoneNode = null;
         this.input = null;
         this.output = null;
-        // TODO: There is probably some way to 
-        // make method calls that return a value cheaply 
-        // be synchronous. For now, just set up the port 
-        // event handler for bidirectional communication.
-        this.port.onmessage = (event) => {
-            console.log("CsoundAudioNode.port.onmessage: " + event);
-        }
     }
     Cleanup() {
         this.port.postMessage(["Cleanup"]);
@@ -165,61 +169,71 @@ class CsoundAudioNode extends AudioWorkletNode {
     SetStringChannel(name, value) {
         this.port.postMessage(["SetStringChannel", name, value]);
     };
-    // TODO: Needs much work.
     // Wiring into Web Audio graph here in the upper half, 
     // wiring within Csound down in the lower half.
     Start() {
-        var ksmps = 128;///this.csound.GetKsmps();
-        bufferFrameCount = this.bufferSize;
-        print("Web Audio initialized with frames per buffer: " +  bufferFrameCount + "\n");
-        ///this.inputCount = inputChannelCount;
-        ///this.outputCount = outputChannelCount;
-        var inputChannelN = this.inputCount;
-        var outputChannelN = this.outputCount;
-        var zerodBFS = 1;///this.csound.Get0dBFS();
-        if (input_name.startsWith("adc")) {
-            window.navigator = window.navigator || {};
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
-            if (navigator.getUserMedia === null) {
-                print("Audio input not supported in this context.");
+        try {
+            let onMidiEvent = function(event) {
+                this.port.postMessage(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
+            };
+            let midiSuccess = function(midiInterface) {
+                let inputs = midiInterface.inputs.values();
+                console.log("MIDI input initialized...\n");
+                for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+                    input = input.value;
+                    console.log("Input: " + input.name + "\n");
+                    input.onmidimessage = onMidiEvent;
+                }
+            };
+            let midiFail = function(error) {
+                console.log("MIDI failed to start, error:" + error);
+            };
+            if (navigator.requestMIDIAccess) {
+                navigator.requestMIDIAccess().then(midiSuccess, midiFail);
             } else {
-                function onSuccess(stream) {
-                    this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                    print("Audio input initialized.\n");
-                };
-                function onFailure(error) {
-                    this.microphoneNode = null;
-                    print("Could not initialise audio input, error:" + error);
-                };
-                navigator.getUserMedia({
-                    audio: true
-                }, onSuccess, onFailure);
+                console.log("MIDI not supported in this context.");
             }
-            if (this.microphoneNode !== null) {
-                if (inputChannelN >= this.microphoneNode.numberOfInputs) {
-                    this.microphoneNode.connect(this);
-                } else {
-                    print("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
-                    return;
+            if (this.input !== null) {
+                if (this.input.startsWith("adc")) {
+                    window.navigator = window.navigator || {};
+                    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
+                    if (navigator.getUserMedia === null) {
+                        console.log("Audio input not supported in this context.");
+                    } else {
+                        function onSuccess(stream) {
+                            this.microphoneNode = audioContext.createMediaStreamSource(stream);
+                            console.log("Audio input initialized.\n");
+                        };
+                        function onFailure(error) {
+                            this.microphoneNode = null;
+                            console.log("Could not initialise audio input, error:" + error + "\n");
+                        };
+                        navigator.getUserMedia({
+                            audio: true
+                        }, onSuccess, onFailure);
+                    }
+                    if (this.microphoneNode !== null) {
+                            this.microphoneNode.connect(this);
+                    }
                 }
             }
             this.port.postMessage(["Start"]);
+            let destination_ = this.connect(audioContext.destination);
+            console.log("destination: " + destination_ + "\n");
+            this.is_playing = true;
+        } catch (e) {
+            console.log(e);
         }
-        this.connect(audioContext.destination);
-        this.start();
-        this.is_playing = true;
     }
     Stop() {
         this.port.postMessage(["Stop"]);
-        this.is_playing = false;
         if (this.microphoneNode !== null) {
             this.microphoneNode.disconnect();
-            this.microphoneNode = null;
         }
         if (this.audioProcessNode !== null) {
             this.audioProcessNode.disconnect();
-            this.audioProcessNode = null;
         }
+        this.reset_();
     };
     TableGet(number, index) {
         this.port.postMessage(["TableGet", number, index]);

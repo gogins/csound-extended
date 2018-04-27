@@ -164,7 +164,6 @@ CsoundWebAudio.prototype.Perform = function() {
     } else {
         return this.csound.Perform();
     }
-    return this.csound.Perform();
 };
 CsoundWebAudio.prototype.perform = CsoundWebAudio.prototype.Perform;
 
