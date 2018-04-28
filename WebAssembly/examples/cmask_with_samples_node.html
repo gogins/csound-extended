@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Example using Csound for csound.node</title>
+    <script>
+        console.log("When running in NW.js, convince the WASM 'Module' code that we are actually running in Node.js.");
+        var module = {};
+        module["ENVIRONMENT"] = "NODE";
+        csound = null;
+        cmask = null;
+    </script>
+    <script src="cmask.js"></script>
+    <script>
+        cmask_module(module).then(function(module) {
+            cmask = module;
+            console.log("Module: cmask.js has been loaded.\n");
+        });
+        try {
+            csound = require('csound.node');
+            var nwgui = require('nw.gui');
+            var nw_window = nwgui.Window.get();
+            nw_window.on('close', function() {
+                console.log('Closing down...');
+                this.close(true);
+            });
+        } catch (e) {
+            console.warn(e);
+        }
+    </script>
+ </head>
+<body>
+    <h1>Minimal Example using <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> with Sample for csound.node</h1>
+    <script>
+    var csoundMessageCallback = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    };
+    var onPlayClick = function() {
+        try {
+            csound.setMessageCallback(csoundMessageCallback);
+        } catch (e) {
+            console.warn(e);
+        }
+        ///console.log = csoundMessageCallback;
+        csoundMessageCallback("\nUsing csound.node...\n");
+        var orc = document.getElementById('orc').value;
+        cmask.FS.mkdir('/working');
+        cmask.FS.mount(cmask.FS.filesystems.NODEFS, { root: '.' }, '/working');
+        cmask.FS.chdir('/working');
+        csoundMessageCallback(cmask.FS.readdir("."));
+        csound.Stop();
+        csound.Reset();
+        csound.CompileOrc(orc);
+        csound.SetOption("-odac");
+        // Other message options can overwhelm the display and freeze the page.
+        csound.SetOption("-m130");
+        csound.SetOption("-d");
+        var parameters = document.getElementById("cmask_parameters").value;
+        var score = cmask.cmask(parameters);
+        var score_text = document.getElementById("cmask_score");
+        score_text.value = score;
+        csound.ReadScore(score);
+        csound.Start();
+        csound.Perform();
+    };
+    var onPlayStop = function() {
+        csound.Stop();
+        csound.Reset();
+    };
+    </script>
+    <p>
+    <input id="play" type="button" value="Play" onclick="onPlayClick()">
+    <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
+    <textarea id='console' cols=80 rows=10>
+    </textarea>
+    <h2>Orchestra</h2>
+    <textarea id='orc' cols=80 rows=15>
+sr = 44800
+ksmps = 100
+nchnls = 2
+
+instr 1
+
+ipanl	table	1-p5 ,4,1
+ipanr	table	p5 ,4,1
+
+andx	line	p4,p3,p4+p3*p6
+asig	tablei	andx*sr,1
+kamp	oscil	8000,1/p3,2
+		outs	asig*kamp*ipanl, asig*kamp*ipanr  
+	
+endin	
+    </textarea>
+    <h2>CMask Parameters</h2>
+    <textarea id="cmask_parameters" cols=80 rows=10>
+{
+f1 0 262144 1 "whisp.aif" 0 0 1
+;= 5.94 sec
+f2 0 8192 19 1 1 270 1
+f4 0 8192 9 .25 1 0			; pan function
+}
+
+f 0 60
+
+p1 const 1
+
+p2 
+mask (0 .0005 37 .007 60 .003) (0 .003 37 .15 60 .005) 
+
+p3
+mask [.3 .02] [.7 .04]
+
+p4
+seg [0 5.9]
+
+p5 range 0 1
+
+p6
+mask (0 .3 25 1 40 .7) (0 2 4 1 25 1.2)
+quant .3 (0 0 25 .9 30 0 45 .9 55 0) (40 0 45 1.5 55 0)</textarea>
+    <h2>Generated Score</h2>
+    <textarea id="cmask_score" cols=80 rows=10>
+
+    </textarea>
+</body>
+</html>
+
+

@@ -189,7 +189,7 @@ ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
     BUILD_IN_SOURCE "1"
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND nw-gyp rebuild --target=0.28.0
+    BUILD_COMMAND nw-gyp rebuild --target=0.30.2
     INSTALL_COMMAND "")
 install(FILES "${CMAKE_SOURCE_DIR}/csound.node/build/Release/csound.node"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
@@ -216,6 +216,6 @@ set(CPACK_DEB_COMPONENT_INSTALL "ON")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
-set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-vst4cs)
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-vst4cs csound-cmask)
 
 include (CPack)

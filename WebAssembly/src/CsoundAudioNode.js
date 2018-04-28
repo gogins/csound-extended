@@ -13,366 +13,230 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  */
  
-/**
- * So that print output works in all JavaScript contexts, not only 
- * browsers, we set up our own print function to handle all cases.
- */
-var print = null;
-if (typeof console === 'undefined') {
-    print = Module.print;
-} else print(message) {
-    console.log(message);
-    Module.print(message);
-}
+// import csound_audio_processor_module from 'CsoundAudioProcessor.js';
 
 class CsoundAudioNode extends AudioWorkletNode {
-    constructor(context) {
-        super(context, 'csound-audio-processor');
+    constructor(context, options) {
+        options = options || {};
+        options.numberOfInputs  = 1;
+        options.numberOfOutputs = 1;
+        options.outputChannelCount = [context.destination.channelCount];
+        super(context, 'csound-audio-processor', options);
+        this.reset_();
+        this.port.onmessage = (event) => {
+            let data = event.data;
+            switch(data[0]) {
+                case "Start":
+                    //this.start();
+                    break;
+                case "Message":
+                    console.log(data[1]);
+                    break;
+            }
+        }
+        this.port.start();
+    }
+    reset_() {
         this.is_playing = false;
         this.is_realtime = false;
-        this.audioProcessNode = null;
         this.microphoneNode = null;
-    };
-Cleanup() {
-    this.port.postMessage("Cleanup");
-};
-cleanup = Cleanup;
-
-CompileCsd(filename) {
-    this.csound.CompileCsd(filename);
-};
-compileCsd = CompileCsd;
-
-CompileCsdText(csd) {
-    this.csound.CompileCsdText(csd);
-};
-compileCsdText = CompileCsdText;
-
-CompileOrc(orc) {
-    this.csound.CompileOrc(orc);
-};
-compileOrc = CompileOrc;
-
-Destroy() {
-    this.csound.delete();
-};
-destroy = Destroy;
-
-EvalCode(code) {
-    return this.csound.EvalCode(code);
-};
-evalCode = EvalCode;
-
-Get0dBFS() {
-    return this.csound.Get0dBFS();
-};
-get0dBFS = Get0dBFS;
-
-GetAPIVersion() {
-    return this.csound.GetAPIVersion();
-};
-getAPIVersion = GetAPIVersion;
-
-GetControlChannel(name) {
-    return this.csound.GetControlChannel(name);
-};
-getControlChannel = GetControlChannel;
-
-GetCurrentTimeSamples() {
-    return this.csound.GetCurrentTimeSamples();
-};
-getCurrentTimeSamples = GetCurrentTimeSamples;
-
-GetEnv(name) {
-    return this.csound.GetEnv(name);
-};
-getEnv = GetEnv;
-
-GetInputName() {
-    return this.csound.GetInputName();
-};
-getInputName = GetInputName;
-
-GetKsmps() {
-    return this.csound.GetKsmps();
-};
-getKsmps = GetKsmps;
-
-GetNchnls() {
-    return this.csound.GetNchnls();
-};
-getNchnls = GetNchnls;
-
-GetNchnlsInput() {
-    return this.csound.GetNchnlsInput();
-};
-getNchnlsInput = GetNchnlsInput;
-
-GetOutputName() {
-    return this.csound.GetOutputName();
-};
-getOutputName = GetOutputName;
-
-GetScoreOffsetSeconds() {
-    return this.csound.GetScoreOffsetSeconds();
-};
-getScoreOffsetSeconds = GetScoreOffsetSeconds;
-
-GetScoreTime() {
-    return this.csound.GetScoreTime();
-};
-getScoreTime = GetScoreTime;
-
-GetSr() {
-    return this.csound.GetSr();
-};
-getSr = GetSr;
-
-GetStringChannel(name) {
-    return this.csound.GetStringChannel(name);
-};
-getStringChannel = GetStringChannel;
-
-GetVersion() {
-    return this.csound.GetVersion();
-};
-getVersion = GetVersion;
-
-InputMessage(text) {
-    this.csound.InputMessage(text);
-};
-inputMessage = InputMessage;
-
-IsPlaying() {
-    return this.is_playing;
-};
-isPlaying = IsPlaying;
-
-IsScorePending() {
-    return this.csound.IsScorePending();
-};
-isScorePending = IsScorePending;
-
-Message(text) {
-    return this.csound.Message(text);
-};
-message = Message;
-
-Perform() {
-    if (this.is_realtime) {
-        return 0;
-    } else {
-        return this.csound.Perform();
+        this.input = null;
+        this.output = null;
     }
-    return this.csound.Perform();
-};
-perform = Perform;
-
-ReadScore(score) {
-    return this.csound.ReadScore(score);
-};
-readScore = ReadScore;
-
-Reset() {
-    return this.csound.Reset();
-};
-reset = Reset;
-
-RewindScore() {
-    return this.csound.RewindScore();
-};
-rewindScore = RewindScore;
-
-SetControlChannel(name, value) {
-    return this.csound.SetControlChannel(name, value);
-};
-setControlChannel = SetControlChannel;
-
-SetGlobalEnv(name, value) {
-    return this.csound.SetGlobalEnv(name, value);
-};
-setGlobalEnv = SetGlobalEnv;
-
-SetInput(name) {
-    return this.csound.SetInput(name);
-};
-setInput = SetInput;
-
-SetOption(option) {
-    return this.csound.SetOption(option);
-};
-setOption = SetOption;
-
-SetOutput(name, type, format) {
-    return this.csound.SetOutput(name, type, format);
-};
-setOutput = SetOutput;
-
-SetScoreOffsetSeconds(seconds) {
-    return this.csound.SetScoreOffsetSeconds(seconds);
-};
-setScoreOffsetSeconds = SetScoreOffsetSeconds;
-
-SetScorePending(is_pending) {
-    return this.csound.SetScorePending(is_pending);
-};
-setScorePending = SetScorePending;
-
-SetStringChannel(name, value) {
-    return this.csound.SetStringChannel(name, value);
-};
-setStringChannel = SetStringChannel;
-
-Start() {
-    var input_name = this.csound.GetInputName();
-    var output_name = this.csound.GetOutputName();
-    if (!(output_name.startsWith("dac") || input_name.startsWith("adc"))) {
-        this.is_realtime = false;
-        this.csound.Start();
-        return 0;
-    } else {
-        // Create a reference to this that will be in scope in the closures of callbacks.
-        var this_ = this;
-        this.is_realtime = true;                        
-        this.csound.SetHostImplementedAudioIO(1, 0);
-        this.csound.InitializeHostMidi();
-        var onMidiEvent(event) {
-            this_.csound.MidiEventIn(event.data[0], event.data[1], event.data[2]);
-        };
-        var midiSuccess(midiInterface) {
-            var inputs = midiInterface.inputs.values();
-            print("MIDI input initialized...\n");
-            for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
-                input = input.value;
-                print("Input: " + input.name + "\n");
-                input.onmidimessage = onMidiEvent;
-            }
-        };
-        var midiFail(error) {
-            print("MIDI failed to start, error:" + error);
-        };
-        if (navigator.requestMIDIAccess) {
-            navigator.requestMIDIAccess().then(midiSuccess, midiFail);
-        } else {
-            print("MIDI not supported in this context.");
+    Cleanup() {
+        this.port.postMessage(["Cleanup"]);
+    }
+    CompileCsd(filename) {
+        this.port.postMessage(["CompileCsd", filename]);
+    };
+    CompileCsdText(csd) {
+        this.port.postMessage(["CompileCsdText", csd]);
+    };
+    CompileOrc(orc) {
+        this.port.postMessage(["CompileOrc", orc]);
+    };
+    Destroy() {
+        this.port.postMessage(["Destroy"]);
+    };
+    EvalCode(code) {
+        this.port.postMessage(["EvalCode", code]);
+    };
+    Get0dBFS() {
+        this.port.postMessage(["Get0dBFS"]);
+    };
+    GetAPIVersion() {
+        this.port.postMessage(["GetAPIVersion"]);
+    };
+    GetControlChannel(name) {
+        this.port.postMessage(["GetControlChannel", name]);
+    };
+    GetCurrentTimeSamples() {
+        this.port.postMessage(["GetCurrentTimeSamples"]);
+    };
+    GetEnv(name) {
+        this.port.postMessage(["GetEnv", name]);
+    };
+    GetInputName() {
+        this.port.postMessage(["GetInputName"]);
+    };
+    GetKsmps() {
+        this.port.postMessage(["GetKsmps"]);
+    };
+    GetNchnls() {
+        this.port.postMessage(["GetNchnls"]);
+    };
+    GetNchnlsInput() {
+        this.port.postMessage(["GetNchnlsInput"]);
+    };
+    GetOutputName() {
+        this.port.postMessage(["GetOutputName"]);
+    };
+    GetScoreOffsetSeconds() {
+        this.port.postMessage(["GetScoreOffsetSeconds"]);
+    };
+    GetScoreTime() {
+        this.port.postMessage(["GetScoreTime"]);
+    };
+    GetSr() {
+        this.port.postMessage(["GetSr"]);
+    };
+    GetStringChannel(name) {
+        this.port.postMessage(["GetStringChannel", name]);
+    };
+    GetVersion() {
+        this.port.postMessage(["GetVersion"]);
+    };
+    InputMessage(text) {
+        this.port.postMessage(["InputMessage", text]);
+    };
+    IsPlaying() {
+        this.port.postMessage(["IsPlaying"]);
+    };
+    IsScorePending() {
+        this.port.postMessage(["IsScorePending"]);
+    };
+    Message(text) {
+        this.port.postMessage(["Message", text]);
+    };
+    Perform() {
+        this.port.postMessage(["Perform"]);
+    };
+    ReadScore(score) {
+        this.port.postMessage(["ReadScore", score]);
+    };
+    Reset() {
+        this.port.postMessage(["Reset"]);
+    };
+    RewindScore() {
+        this.port.postMessage(["RewindScore"]);
+    };
+    SetControlChannel(name, value) {
+        this.port.postMessage(["SetControlChannel", name, value]);
+    };
+    SetGlobalEnv(name, value) {
+        this.port.postMessage(["SetGlobalEnv", name, value]);
+    };
+    SetInput(name) {
+        this.input = name;
+        this.port.postMessage(["SetInput", name]);
+    };
+    SetOption(option) {
+        if (option.startsWith("-odac")) {
+            this.output = option.substr(2);
+        } else if (option.startsWith("-iadc")) {
+            this.input = option.substr(2);
         }
-        this.csound.Start();
-        var AudioContext = window.AudioContext || window.webkitAudioContext;
-        var audioContext = new AudioContext();
-        var spinBuffer = this.csound.GetSpin();
-        var spoutBuffer = this.csound.GetSpout();
-        var ksmps = this.csound.GetKsmps();
-        var inputChannelCount = this.csound.GetNchnlsInput();
-        var outputChannelCount = this.csound.GetNchnls();
-        this.audioProcessNode = audioContext.createScriptProcessor(0, inputChannelCount, outputChannelCount);
-        bufferFrameCount = this.audioProcessNode.bufferSize;
-        print("Web Audio initialized with frames per buffer: " +  bufferFrameCount + "\n");
-        this.audioProcessNode.inputCount = inputChannelCount;
-        this.audioProcessNode.outputCount = outputChannelCount;
-        var inputChannelN = this.audioProcessNode.inputCount;
-        var outputChannelN = this.audioProcessNode.outputCount;
-        var zerodBFS = this.csound.Get0dBFS();
-        if (input_name.startsWith("adc")) {
-            window.navigator = window.navigator || {};
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
-            if (navigator.getUserMedia === null) {
-                print("Audio input not supported in this context.");
+        this.port.postMessage(["SetOption", option]);
+    };
+    SetOutput(name, type, format) {
+        this.output = name;
+        this.port.postMessage(["SetOutput", name, type, format]);
+    };
+    SetScoreOffsetSeconds(seconds) {
+        this.port.postMessage(["SetScoreOffsetSeconds", seconds]);
+    };
+    SetScorePending(is_pending) {
+        this.port.postMessage(["SetScorePending", is_pending]);
+    };
+    SetStringChannel(name, value) {
+        this.port.postMessage(["SetStringChannel", name, value]);
+    };
+    // Wiring into Web Audio graph here in the upper half, 
+    // wiring within Csound down in the lower half.
+    Start() {
+        try {
+            let onMidiEvent = function(event) {
+                this.port.postMessage(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
+            };
+            let midiSuccess = function(midiInterface) {
+                let inputs = midiInterface.inputs.values();
+                console.log("MIDI input initialized...\n");
+                for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+                    input = input.value;
+                    console.log("Input: " + input.name + "\n");
+                    input.onmidimessage = onMidiEvent;
+                }
+            };
+            let midiFail = function(error) {
+                console.log("MIDI failed to start, error:" + error);
+            };
+            if (navigator.requestMIDIAccess) {
+                navigator.requestMIDIAccess().then(midiSuccess, midiFail);
             } else {
-                function onSuccess(stream) {
-                    this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                    print("Audio input initialized.\n");
-                };
-                function onFailure(error) {
-                    this.microphoneNode = null;
-                    print("Could not initialise audio input, error:" + error);
-                };
-                navigator.getUserMedia({
-                    audio: true
-                }, onSuccess, onFailure);
+                console.log("MIDI not supported in this context.");
             }
-            if (this.microphoneNode !== null) {
-                if (inputChannelN >= this.microphoneNode.numberOfInputs) {
-                    this.microphoneNode.connect(this.audioProcessNode);
-                } else {
-                    print("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
-                    return;
-                }
-            }
-        }
-        this.audioProcessNode.connect(audioContext.destination);
-        this.is_playing = true;
-        var csoundFrameI = 0;
-        this.audioProcessNode.onaudioprocess(audioProcessEvent) {
-            var inputBuffer = audioProcessEvent.inputBuffer;
-            var outputBuffer = audioProcessEvent.outputBuffer;
-            var hostFrameN = outputBuffer.length;
-            var result = 0;
-            for (var hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
-                for (var inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                    var inputChannelBuffer = inputBuffer.getChannelData(inputChannelI);
-                    spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * zerodBFS;
-                }
-                for (var outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
-                    var outputChannelBuffer = outputBuffer.getChannelData(outputChannelI);
-                    outputChannelBuffer[hostFrameI] = spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / zerodBFS;
-                    spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
-                }
-                csoundFrameI++
-                if (csoundFrameI === ksmps) {
-                    csoundFrameI = 0;
-                    result = this_.csound.PerformKsmps();
-                    if (result !== 0) {
-                        this_.Stop();
-                        this_.Reset();
-                        return;
+            if (this.input !== null) {
+                if (this.input.startsWith("adc")) {
+                    window.navigator = window.navigator || {};
+                    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
+                    if (navigator.getUserMedia === null) {
+                        console.log("Audio input not supported in this context.");
+                    } else {
+                        function onSuccess(stream) {
+                            this.microphoneNode = audioContext.createMediaStreamSource(stream);
+                            console.log("Audio input initialized.\n");
+                        };
+                        function onFailure(error) {
+                            this.microphoneNode = null;
+                            console.log("Could not initialise audio input, error:" + error + "\n");
+                        };
+                        navigator.getUserMedia({
+                            audio: true
+                        }, onSuccess, onFailure);
+                    }
+                    if (this.microphoneNode !== null) {
+                        this.microphoneNode.connect(this);
                     }
                 }
             }
-        };
+            this.disconnect();
+            this.port.postMessage(["Start"]);
+            this.connect(audioContext.destination);
+            this.is_playing = true;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    Stop() {
+        this.port.postMessage(["Stop"]);
+        if (this.microphoneNode !== null) {
+            this.microphoneNode.stop();
+            this.microphoneNode.disconnect(this);
+        }
+        this.disconnect();
+        this.reset_();
     };
-};
-start = Start;
-
-Stop() {
-    this.is_playing = false;
-    if (this.microphoneNode !== null) {
-        this.microphoneNode.disconnect();
-        this.microphoneNode = null;
+    TableGet(number, index) {
+        this.port.postMessage(["TableGet", number, index]);
     }
-    if (this.audioProcessNode !== null) {
-        this.audioProcessNode.disconnect();
-        this.audioProcessNode = null;
+    TableLength(number) {
+        this.port.postMessage(["TableLength", number]);
     }
-    this.csound.Stop();
-};
-stop = Stop;
-
-TableGet(number, index) {
-    return this.csound.TableGet(number, index);
-};
-tableGet = TableGet;
-
-TableLength(number) {
-    return this.csound.TableLength(number);
-};
-tableLength = TableLength;
-
-TableSet(number, index, value) {
-    return this.csound.TableSet(number, index, value);
-};
-tableSet = TableSet;
-
-constructor = CsoundWebAudio;                  
-Module["CsoundWebAudio"] = CsoundWebAudio;
-/**
- * In order to follow the same pattern of use as in all other Csound 
- * JavaScript environments, a global Csound object is injected into the 
- * JavaScript context, and the user is notified that Csound is ready.
- */
-Module["onRuntimeInitialized"]() {
-    csound = new Module.CsoundWebAudio();
-    print("\nCsound has now been loaded; its functions may now be called.\n");
+    TableSet(number, index, value) {
+        this.port.postMessage(["TableSet", index, value]);
+    }
 }
+
 
 
 

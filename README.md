@@ -47,16 +47,7 @@ You are advised to install packages locally, e.g. in your home directory
 or perhaps to `/usr/local` (the default installation prefix). Currently the 
 software may be installed in the following ways:
 
-1.  WARNING! Although this repository builds Debian packages, they is NOT yet 
-    suitable for inclusion in Debian. The packages are a work 
-    in progress. YOU ARE ADVISED TO INSTALL LOCALLY, i.e. with 
-    `dpkg --instdir=/usr/local <csound-extended.deb>` or 
-    `dpkg --instdir=~/ <csound-extended.deb>`.  Currently, although the 
-    package files build, they do not pass lintian, and may conflict with 
-    external Csound packages. In the future, csound-extended packages may be 
-    submitted to the Debian archive. 
-    
-2.  Download and install the local binary archives released from this 
+1.  Download and install the local binary archives released from this 
     repository. You can either install them in your home directory, and 
     configure them for running by adding the `bin` directory to your 
     `ld.so.conf`, or copy the entire contents of the archive to 
@@ -64,7 +55,7 @@ software may be installed in the following ways:
     the Csound environment variables as described in the 
     _**Csound Reference Manual**_.
     
-3.  Build from sources, as described below. You may then install the software 
+2.  Build from sources, as described below. You may then install the software 
     by running `sudo make install` in the `build-linux` directory. However, be 
     warned that this installs the software in `/usr/local`. 
 

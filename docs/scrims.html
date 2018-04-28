@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Scrims 2</title>
-        <script src="csound_extended.js"></script>
+        <title>Scrims</title>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <!-- <script src="csound_extended.js"></script> -->
+        <script src="CsoundAudioNode.js"></script>
+        <script src="csound_loader.js"></script>
         <script src="js/Silencio.js"></script>
         <script src="js/ChordSpace.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.1/dat.gui.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.1/sprintf.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/91/three.js"></script>
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
         <style>
             ::-webkit-scrollbar
             {
@@ -30,20 +32,6 @@
             font-size:8pt;
             }
         </style>
-        <script>
-            try {
-                var csound = require('csound.node');
-                console.log('csound:', csound);
-                var nwgui = require('nw.gui');
-                var nw_window = nwgui.Window.get();
-                nw_window.on('close', function() {
-                    console.log('Closing down...');
-                    this.close(true);
-                });
-            } catch (err) {
-                console.log(err.message);
-            }
-        </script>
     </head>
     <body style="background:black;">
         <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"/>
@@ -93,9 +81,10 @@
         </table>
         <textarea class="code" id="orc" hidden rows=24 cols=80>
 
-sr = 88200
-ksmps = 200
+sr = 48000
+ksmps = 128
 nchnls = 2
+nchnls_i = 1
 0dbfs = 1500000
 
 connect "FM_Clang", "outleft", "ReverbLeft", "inleft"
@@ -1098,14 +1087,12 @@ endin
             var E_MIN = 0;
             var E_MAX = 12;
             var note_count = 0;
-            var Notes_per_second = 8;
             var current_time_seconds = new Date().getTime() / 1000.0;
             var start_time_seconds = current_time_seconds;
             var prior_time_seconds = current_time_seconds;
             var shuffled = false;
             var Starting_point = 0;
             var Stride = 10;//math.floor((NUM_POINTS_SUBSET / NOTE_COUNT) * NUM_SUBSETS);
-            var Note_length = 1.0;
              // Orbit parameters
             var a, b, c, d, e;
             // Orbit data
@@ -1179,9 +1166,10 @@ endin
                 renderer.setSize( container.clientWidth, container.clientHeight );
                 container.appendChild( renderer.domElement );
                 window.addEventListener( 'resize', onWindowResize, false );
-                // Schedule orbit regeneration
+                // Schedule orbit regeneration.
                 setTimeout(updateOrbit, 10000 / Scene_speed);
-                setTimeout(createNote, 1000 / Notes_per_second);
+                let milliseconds = 1000.;
+                setTimeout(createNote, milliseconds);
             }
             function animate() {
                 requestAnimationFrame( animate );
@@ -1282,7 +1270,7 @@ endin
                 orbit.yMax = yMax;
                 orbit.scaleX = scaleX;
                 orbit.scaleY = scaleY;
-                console.log('Normalizing and updating vertices.')
+                // console.log('Normalizing and updating vertices.')
                 for (var s = 0; s < NUM_SUBSETS; s++){
                   var curSubset = subsets[s];
                   for (var i = 0; i < num_points_subset_l; i++){
@@ -1292,7 +1280,7 @@ endin
                }
             }
             function prepareOrbit(){
-                console.log('prepareOrbit()...')
+                // console.log('prepareOrbit()...')
                 if (shuffled == false) {
                     shuffleParams();
                     shuffled = true;
@@ -1378,13 +1366,13 @@ endin
                 var point = subset[subset_point_index];
                 var instrument = rescaleX(point.x);
                 var key = rescaleY(point.y);
-                var pan = Math.random() * 2 - 1;
-                score.add(0, Note_length, 144, instrument, key, 60, pan, pan, 0, 0, 0);
+                var pan = Math.random();
+                score.add(0, parameters.Note_length, 144, instrument, key, 60, pan, pan, 0, 0, 0);
                 score.temper();
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toString();
                 // Protect against trying to call an undefined Csound.
-                if (typeof csound !== 'undefined') {
+                if (csound !== null) {
                     score.sendToCsound(csound);
                     var Chord_cell = document.getElementById('Chord_cell');
                     Chord_cell.innerHTML = chord.name();
@@ -1401,7 +1389,7 @@ endin
                 }
                 score.clear();
                 note_count = note_count + 1;
-                setTimeout(createNote, 1000 / Notes_per_second);
+                setTimeout(createNote, 1000. / parameters.Notes_per_second);
             }
             var parameters = {
                 gk_Bower_pressure: 0.25,
@@ -1458,42 +1446,36 @@ endin
                 Camera_X: 0,
                 Camera_Y: 0,
                 Starting_point: 0,
-                Note_length: 1,
-                Notes_per_second: 8,
+                Note_length: 1.,
+                Notes_per_second: 8.,
                 Stride: 100,
                 Play: function() {
-                    try {
-                        csound = require('csound.node');
-                        console.log('Using csound.node:', csound, "\n");
-                        csound.setMessageCallback(csoundMessage);
-                    } catch (e) {
-                        console.log = csoundMessage;
-                        console.log('Using csound for WebAssembly:', csound, "\n");
-                    }
-                    if (typeof csound === 'undefined') {
-                        console.log("Csound is not yet loaded, wait a bit...");
+                    if (get_csound(csoundMessage) === null) {
                         return;
-                    }                
-                    csound.stop();
-                    csound.setOption('-m3');
-                    csound.setOption('--nodisplays');
-                    csound.setOption('-odac');
-                    csound.compileOrc(document.getElementById('orc').value);
-                    csound.readScore('f 0 360\n');
-                    csound.start();
-                    csound.perform();
+                    }
+                    csound.Stop();
+                    csound.SetOption('-odac');
+                    csound.SetOption('--nchnls=2');
+                    csound.SetOption('--nchnls_i=2');
+                    csound.SetOption('-m35');
+                    csound.SetOption('-d');
+                    csound.CompileOrc(document.getElementById('orc').value);
+                    csound.ReadScore('f 0 360\n');
+                    gui.revert();
+                    csound.Start();
+                    csound.Perform();
                     start_time_seconds = new Date().getTime() / 1000.0;
                     setTimeout(updateTimeCell, 0);
                 },
                 Stop: function() {
-                    csound.stop();
+                    csound.Stop();
                 },
                 Developer_tools: function() {
                     nwgui.Window.get().showDevTools();
                 },
                 Close: function() {
                     try {
-                        csound.stop();
+                        csound.Stop();
                         window.close();
                     } catch (e) {
                         console.log(e);
@@ -1501,52 +1483,52 @@ endin
                 },
                 FM9: function() {
                     chord = FM9.clone();
-                    csound.message('FM9:\n' + chord.information());
+                    csound.Message('FM9:\n' + chord.information());
                 },
                 Bb7: function() {
                     chord = Bb7.clone();
-                    csound.message('Bb7:\n' + chord.information());
+                    csound.Message('Bb7:\n' + chord.information());
                 },
                 K: function() {
                     chord = chord.K();
-                    csound.message('K():\n' + chord.information());
+                    csound.Message('K():\n' + chord.information());
                 },
                 Q2: function() {
                     chord = chord.Q(2, modality);
-                    csound.message('Q(2, modality):\n' + chord.information());
+                    csound.Message('Q(2, modality):\n' + chord.information());
                 },
                 Q3: function() {
                     chord = chord.Q(3, modality);
-                    csound.message('Q(3, modality):\n' + chord.information());
+                    csound.Message('Q(3, modality):\n' + chord.information());
                 },
                 Q5: function() {
                     chord = chord.Q(5, modality);
-                    csound.message('Q(5, modality):\n' + chord.information());
+                    csound.Message('Q(5, modality):\n' + chord.information());
                 },
                 J2_2: function() {
                     var chords = chord.J(2);
                     if (chords.length > 1) {
                         chord = chords[1];
-                        csound.message('J(2,2):\n' + chord.information());
+                        csound.Message('J(2,2):\n' + chord.information());
                     }
                 },
                 J2_3: function() {
                     var chords = chord.J(2);
                     if (chords.length > 2) {
                         chord = chords[2];
-                        csound.message('J(2,3):\n' + chord.information());
+                        csound.Message('J(2,3):\n' + chord.information());
                     }
                 },
                 J3_1: function() {
                    var chords = chord.J(3);
                     if (chords.length > 0) {
                         chord = chords[0];
-                        csound.message('J(3,1):\n' + chord.information());
+                        csound.Message('J(3,1):\n' + chord.information());
                     }
                 },
                 T5: function() {
                     chord = chord.T(5);
-                    csound.message('D():\n' + chord.information());
+                    csound.Message('D():\n' + chord.information());
                 },
             };
             var gui = null;
@@ -1560,55 +1542,53 @@ endin
                 gui.remember(parameters);
                 gui.add(parameters, 'Play').name('Play [Ctrl-P]');
                 gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
-                gui.add(parameters, 'Developer_tools').name('Debugger');
                 gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
                 var Master = gui.addFolder('Master effects');
                 add_slider(Master, 'gk_overlap', 0, 20);
                 add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
                 add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
-                add_slider(Master, 'gk_MasterOutput_level', -40, 40);
+                add_slider(Master, 'gk_MasterOutput_level', -80, 80);
                 var intruments = gui.addFolder('Instruments');
                 var fmclang = intruments.addFolder('FM Clang');
                 add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
-                add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
+                add_slider(fmclang, 'gk_FM_Clang_level', -80, 80);
                 var Blower = intruments.addFolder('Blower');
                 add_slider(Blower, 'gk_Blower_grainDensity', 0, 400);
                 add_slider(Blower, 'gk_Blower_grainDuration', 0, .5);
                 add_slider(Blower, 'gk_Blower_grainAmplitudeRange', 0, 400);
                 add_slider(Blower, 'gk_Blower_grainFrequencyRange', 0, 100);
-                add_slider(Blower, 'gk_Blower_level', -40, 40);
+                add_slider(Blower, 'gk_Blower_level', -80, 80);
                 var Bower = intruments.addFolder('Bower');
                 add_slider(Bower, 'gk_Bower_pressure', 0, 1);
-                add_slider(Bower, 'gk_Bower_level', -40, 40);
+                add_slider(Bower, 'gk_Bower_level', -80, 80);
                 var Buzzer = intruments.addFolder('Buzzer');
                 add_slider(Buzzer, 'gk_Buzzer_Harmonics', 0, 20);
-                add_slider(Buzzer, 'gk_Buzzer_level', -40, 40);
+                add_slider(Buzzer, 'gk_Buzzer_level', -80, 80);
                 var Droner = intruments.addFolder('Droner');
                 add_slider(Droner, 'gk_Droner_partial1', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial2', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial3', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial4', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial5', 0, 1);
-                add_slider(Droner, 'gk_Droner_level', -40, 40);
+                add_slider(Droner, 'gk_Droner_level', -80, 80);
                 var Harpsichord = intruments.addFolder('Harpsichord');
-                add_slider(Harpsichord, 'gk_Harpsichord_level', -40, 40);
+                add_slider(Harpsichord, 'gk_Harpsichord_level', -80, 80);
                 var Phaser = intruments.addFolder('Phaser');
                 add_slider(Phaser, 'gk_Phaser_ratio1', 0, 2);
                 add_slider(Phaser, 'gk_Phaser_ratio2', 0, 2);
                 add_slider(Phaser, 'gk_Phaser_index1', 0, 1);
                 add_slider(Phaser, 'gk_Phaser_index2', 0, 1);
-                add_slider(Phaser, 'gk_Phaser_level', -40, 40);
+                add_slider(Phaser, 'gk_Phaser_level', -80, 80);
                 var Xing = intruments.addFolder('Xing');
-                add_slider(Xing, 'gk_Xing_level', -40, 40);
+                add_slider(Xing, 'gk_Xing_level', -80, 80);
                 var Shiner = intruments.addFolder('Shiner');
-                add_slider(Shiner, 'gk_Shiner_level', -40, 40);
+                add_slider(Shiner, 'gk_Shiner_level', -80, 80);
                 var Sweeper = intruments.addFolder('Sweeper');
                 add_slider(Sweeper, 'gk_Sweeper_britel', 0, 4);
                 add_slider(Sweeper, 'gk_Sweeper_briteh', 0, 4);
                 add_slider(Sweeper, 'gk_Sweeper_britels', 0, 4);
                 add_slider(Sweeper, 'gk_Sweeper_britehs', 0, 4);
-                add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
-                add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
+                add_slider(Sweeper, 'gk_Sweeper_level', -80, 80);
                 var Hopalong = gui.addFolder('Hopalong fractal');
                 a_slider = add_slider(Hopalong, 'A', -30, 30).name('E [Alt-A]');
                 b_slider = add_slider(Hopalong, 'B', .2, 1.8).name('B [Alt-B]');
@@ -1631,17 +1611,17 @@ endin
                 add_slider(Generate, 'Scene_randomization', 0, 1).name('Scene randomization');
                 add_slider(Generate, 'Starting_point', 0, 39999).name('Starting index');
                 add_slider(Generate, 'Stride', 1, 40000);
-                add_slider(Generate, 'Note_length', 0.104167, 8).name('Note duration');
-                add_slider(Generate, 'Notes_per_second', 0.25, 32).name('Notes per second');
+                add_slider(Generate, 'Note_length', 0.104167, 100).name('Note duration');
+                add_slider(Generate, 'Notes_per_second', 0.25, 100).name('Notes per second');
                 add_slider(Generate, 'Camera_X', -500, 500).name('Camera X');
                 add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
                 gui.revert();
             }
             function gk_update(name, value) {
-                if (typeof csound !== 'undefined') {
+                if (csound !== null) {
                     var numberValue = parseFloat(value);
-                    csound.setControlChannel(name, numberValue);
-                    csound.message(name + ': ' + numberValue + '\n');
+                    csound.SetControlChannel(name, numberValue);
+                    csound.Message(name + ': ' + numberValue + '\n');
                 }
             }
             function add_slider(gui_folder, token, minimum, maximum) {
@@ -1670,8 +1650,6 @@ endin
                         Starting_point = Math.floor(value);
                     } else if (token === 'Stride') {
                         Stride = Math.floor(value);
-                    } else if (token === 'Notes_per_second') {
-                        Notes_per_second = value;
                     }
                 };
                 var slider = gui_folder.add(parameters, token, minimum, maximum);
@@ -1730,7 +1708,6 @@ endin
                     } else if (e_char === 'X') {
                         parameters.Close();
                     }
-
                 } else if (e.altKey === true) {
                     var sign = -1;
                     if (e.shiftKey === true) {
@@ -1751,10 +1728,10 @@ endin
                     } else if (e_char === 'E') {
                         parameters.E += e_slider.__impliedStep * sign;
                         e_slider.updateDisplay();
-                  }
+                    }
                 }
-                return false;
              });
        </script>
      </body>
 </html>
+*
