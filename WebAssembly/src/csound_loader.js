@@ -60,15 +60,18 @@ var get_csound = function(csound_message_callback) {
     if (csound_injected !== null) {
         csound = csound_injected;
         return csound_injected;
-    } else if (csound_node !== null) {
+    } 
+    if (csound_node !== null) {
         csound = csound_node;
         csound.setMessageCallback(csound_message_callback);
         return csound_node;
-    } else if (csound_audio_node !== null) {
+    } 
+    if (csound_audio_node !== null) {
         csound = csound_audio_node;
         console.log = console.warn = csound_message_callback;
         return csound_audio_node;
-    } else if (csound_web_audio !== null) {
+    } 
+    if (csound_web_audio !== null) {
         csound = csound_web_audio;
         console.log = console.warn = csound_message_callback;
         return csound_web_audio;

@@ -31,10 +31,12 @@ class CsoundAudioNode extends AudioWorkletNode {
         // event handler for bidirectional communication.
         this.port.onmessage = (event) => {
             let data = event.data;
-            //console.log("CsoundAudioNode.port.onmessage: " + data[0] + "\n");
             switch(data[0]) {
                 case "Start":
                     //this.start();
+                    break;
+                case "Message":
+                    console.log(data[1]);
                     break;
             }
         }

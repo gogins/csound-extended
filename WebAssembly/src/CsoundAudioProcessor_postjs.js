@@ -18,6 +18,13 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         }
         this.Reset();
         this.port.onmessage = this.onMessage.bind(this);
+        var this_ = this;
+        console.log = function(text) {
+            this_.Message(text);
+        };
+    }
+    Message(text) {
+        this.port.postMessage(["Message", text]);
     }
     onMessage(event) {
         let result = null;
@@ -118,6 +125,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 break;
             case "Message":
                 this.csound.Message(data[1]);
+                this.port.postMessage(["Message", result]);
                 break;
             case "MidiEvent":
                 this.csound.MidiEventIn(data[0], data[1], data[2]);
@@ -275,8 +283,8 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 csoundFrameI = 0;
                 result = this.csound.PerformKsmps();
                 if (result !== 0) {
-                    this.Stop();
-                    this.Reset();
+                    this.csound.Stop();
+                    this.csound.Reset();
                     console.log("CsoundAudioProcessor returns 'false'.");
                     return false;
                 }
