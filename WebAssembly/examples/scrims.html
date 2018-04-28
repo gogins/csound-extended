@@ -1462,7 +1462,7 @@ endin
                         console.log = console.warn = csoundMessage;
                     }
                     csound.Stop();
-                    csound.SetOption('-odac');
+                    csound.SetOption('-otest.wav');
                     csound.SetOption('-m35');
                     csound.SetOption('-d');
                     csound.CompileOrc(document.getElementById('orc').value);

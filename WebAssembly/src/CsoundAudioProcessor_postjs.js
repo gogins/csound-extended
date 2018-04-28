@@ -1,7 +1,7 @@
 class CsoundAudioProcessor extends AudioWorkletProcessor {
     static get parameterDescriptors() {
         return [{
-            name: 'myParam',
+            name: 'Dummy',
             defaultValue: 0.5,
             minValue: 0,
             maxValue: 1,
@@ -238,6 +238,18 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
     process(inputs, outputs, parameters) {
         if (this.is_playing !== true) {
             return true;
+        } else if (this.is_realtime === false) {
+            console.log("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
+            let result = 0;
+            while (result === 0) {
+                result = this.csound.PerformKsmps();
+                if (result !== 0) {
+                    this.csound.Stop();
+                    this.csound.Reset();
+                    console.log("CsoundAudioProcessor returns 'false'.");
+                    return false;
+                }
+            }
         }
         /// Get the parameter values array. Here we do not use, and ignore, them.
         /// let myParamValues = parameters.myParam;

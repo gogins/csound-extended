@@ -1170,7 +1170,9 @@ endin
                 window.addEventListener( 'resize', onWindowResize, false );
                 // Schedule orbit regeneration
                 setTimeout(updateOrbit, 10000 / Scene_speed);
-                setTimeout(createNote, 1000 / Notes_per_second);
+                let milliseconds = 1000. / Notes_per_second;
+                console.log("milliseconds: " + milliseconds + "\n");
+                setTimeout(createNote, milliseconds);
             }
             function animate() {
                 requestAnimationFrame( animate );
@@ -1616,7 +1618,7 @@ endin
                 add_slider(Generate, 'Starting_point', 0, 39999).name('Starting index');
                 add_slider(Generate, 'Stride', 1, 40000);
                 add_slider(Generate, 'Note_length', 0.104167, 8).name('Note duration');
-                add_slider(Generate, 'Notes_per_second', 0.25, 32).name('Notes per second');
+                add_slider(Generate, 'Notes_per_second', 0.25, 100).name('Notes per second');
                 add_slider(Generate, 'Camera_X', -500, 500).name('Camera X');
                 add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
                 gui.revert();
