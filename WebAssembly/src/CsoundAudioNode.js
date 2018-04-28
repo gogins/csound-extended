@@ -17,18 +17,12 @@
 
 class CsoundAudioNode extends AudioWorkletNode {
     constructor(context, options) {
-        // TODO: Timing is wrong, need to set from Csound orc or options. 
-        // See: https://webaudio.github.io/web-audio-api/#AudioDestinationNode.
         options = options || {};
         options.numberOfInputs  = 1;
         options.numberOfOutputs = 1;
         options.outputChannelCount = [context.destination.channelCount];
         super(context, 'csound-audio-processor', options);
         this.reset_();
-        // TODO: There is probably some way to 
-        // make method calls that return a value cheaply 
-        // be synchronous. For now, just set up the port 
-        // event handler for bidirectional communication.
         this.port.onmessage = (event) => {
             let data = event.data;
             switch(data[0]) {
@@ -68,9 +62,6 @@ class CsoundAudioNode extends AudioWorkletNode {
     EvalCode(code) {
         this.port.postMessage(["EvalCode", code]);
     };
-    // TODO: This and similar cheap functions with needed return values 
-    // should be extended with promises to wait for a message back 
-    // and thus implement a synchronous function call.
     Get0dBFS() {
         this.port.postMessage(["Get0dBFS"]);
     };
@@ -215,13 +206,12 @@ class CsoundAudioNode extends AudioWorkletNode {
                         }, onSuccess, onFailure);
                     }
                     if (this.microphoneNode !== null) {
-                            this.microphoneNode.connect(this);
+                        this.microphoneNode.connect(this);
                     }
                 }
             }
             this.port.postMessage(["Start"]);
             let destination_ = this.connect(audioContext.destination);
-            console.log("destination: " + destination_ + "\n");
             this.is_playing = true;
         } catch (e) {
             console.log(e);
@@ -230,11 +220,14 @@ class CsoundAudioNode extends AudioWorkletNode {
     Stop() {
         this.port.postMessage(["Stop"]);
         if (this.microphoneNode !== null) {
-            this.microphoneNode.disconnect();
+            this.microphoneNode.stop();
+            this.microphoneNode.disconnect(this);
         }
         if (this.audioProcessNode !== null) {
-            this.audioProcessNode.disconnect();
+            this.audioProcessNode.stop();
+            this.audioProcessNode.disconnect(this);
         }
+        this.disconnect();
         this.reset_();
     };
     TableGet(number, index) {

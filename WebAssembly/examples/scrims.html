@@ -1087,14 +1087,12 @@ endin
             var E_MIN = 0;
             var E_MAX = 12;
             var note_count = 0;
-            var Notes_per_second = 8;
             var current_time_seconds = new Date().getTime() / 1000.0;
             var start_time_seconds = current_time_seconds;
             var prior_time_seconds = current_time_seconds;
             var shuffled = false;
             var Starting_point = 0;
             var Stride = 10;//math.floor((NUM_POINTS_SUBSET / NOTE_COUNT) * NUM_SUBSETS);
-            var Note_length = 1.0;
              // Orbit parameters
             var a, b, c, d, e;
             // Orbit data
@@ -1168,10 +1166,9 @@ endin
                 renderer.setSize( container.clientWidth, container.clientHeight );
                 container.appendChild( renderer.domElement );
                 window.addEventListener( 'resize', onWindowResize, false );
-                // Schedule orbit regeneration
+                // Schedule orbit regeneration.
                 setTimeout(updateOrbit, 10000 / Scene_speed);
-                let milliseconds = 1000. / Notes_per_second;
-                console.log("milliseconds: " + milliseconds + "\n");
+                let milliseconds = 1000.;
                 setTimeout(createNote, milliseconds);
             }
             function animate() {
@@ -1369,8 +1366,8 @@ endin
                 var point = subset[subset_point_index];
                 var instrument = rescaleX(point.x);
                 var key = rescaleY(point.y);
-                var pan = Math.random() * 2 - 1;
-                score.add(0, Note_length, 144, instrument, key, 60, pan, pan, 0, 0, 0);
+                var pan = Math.random();
+                score.add(0, parameters.Note_length, 144, instrument, key, 60, pan, pan, 0, 0, 0);
                 score.temper();
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toString();
@@ -1392,7 +1389,7 @@ endin
                 }
                 score.clear();
                 note_count = note_count + 1;
-                setTimeout(createNote, 1000 / Notes_per_second);
+                setTimeout(createNote, 1000. / parameters.Notes_per_second);
             }
             var parameters = {
                 gk_Bower_pressure: 0.25,
@@ -1449,24 +1446,22 @@ endin
                 Camera_X: 0,
                 Camera_Y: 0,
                 Starting_point: 0,
-                Note_length: 1,
-                Notes_per_second: 8,
+                Note_length: 1.,
+                Notes_per_second: 8.,
                 Stride: 100,
                 Play: function() {
-                    if (get_csound() === null) {
+                    if (get_csound(csoundMessage) === null) {
                         return;
                     }
-                    if (csound_node !== null) {
-                        csound.SetMessageCallback(csoundMessage);
-                    } else if (csound_web_audio !== null || csound_audio_node != null) {
-                        console.log = console.warn = csoundMessage;
-                    }
                     csound.Stop();
-                    csound.SetOption('-otest.wav');
+                    csound.SetOption('-odac');
+                    csound.SetOption('--nchnls=2');
+                    csound.SetOption('--nchnls_i=2');
                     csound.SetOption('-m35');
                     csound.SetOption('-d');
                     csound.CompileOrc(document.getElementById('orc').value);
                     csound.ReadScore('f 0 360\n');
+                    gui.revert();
                     csound.Start();
                     csound.Perform();
                     start_time_seconds = new Date().getTime() / 1000.0;
@@ -1552,49 +1547,48 @@ endin
                 add_slider(Master, 'gk_overlap', 0, 20);
                 add_slider(Master, 'gk_Reverb_Feedback', 0, 1);
                 add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
-                add_slider(Master, 'gk_MasterOutput_level', -40, 40);
+                add_slider(Master, 'gk_MasterOutput_level', -80, 80);
                 var intruments = gui.addFolder('Instruments');
                 var fmclang = intruments.addFolder('FM Clang');
                 add_slider(fmclang, 'gk_FM_Clang_preset', 1, 13);
-                add_slider(fmclang, 'gk_FM_Clang_level', -40, 40);
+                add_slider(fmclang, 'gk_FM_Clang_level', -80, 80);
                 var Blower = intruments.addFolder('Blower');
                 add_slider(Blower, 'gk_Blower_grainDensity', 0, 400);
                 add_slider(Blower, 'gk_Blower_grainDuration', 0, .5);
                 add_slider(Blower, 'gk_Blower_grainAmplitudeRange', 0, 400);
                 add_slider(Blower, 'gk_Blower_grainFrequencyRange', 0, 100);
-                add_slider(Blower, 'gk_Blower_level', -40, 40);
+                add_slider(Blower, 'gk_Blower_level', -80, 80);
                 var Bower = intruments.addFolder('Bower');
                 add_slider(Bower, 'gk_Bower_pressure', 0, 1);
-                add_slider(Bower, 'gk_Bower_level', -40, 40);
+                add_slider(Bower, 'gk_Bower_level', -80, 80);
                 var Buzzer = intruments.addFolder('Buzzer');
                 add_slider(Buzzer, 'gk_Buzzer_Harmonics', 0, 20);
-                add_slider(Buzzer, 'gk_Buzzer_level', -40, 40);
+                add_slider(Buzzer, 'gk_Buzzer_level', -80, 80);
                 var Droner = intruments.addFolder('Droner');
                 add_slider(Droner, 'gk_Droner_partial1', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial2', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial3', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial4', 0, 1);
                 add_slider(Droner, 'gk_Droner_partial5', 0, 1);
-                add_slider(Droner, 'gk_Droner_level', -40, 40);
+                add_slider(Droner, 'gk_Droner_level', -80, 80);
                 var Harpsichord = intruments.addFolder('Harpsichord');
-                add_slider(Harpsichord, 'gk_Harpsichord_level', -40, 40);
+                add_slider(Harpsichord, 'gk_Harpsichord_level', -80, 80);
                 var Phaser = intruments.addFolder('Phaser');
                 add_slider(Phaser, 'gk_Phaser_ratio1', 0, 2);
                 add_slider(Phaser, 'gk_Phaser_ratio2', 0, 2);
                 add_slider(Phaser, 'gk_Phaser_index1', 0, 1);
                 add_slider(Phaser, 'gk_Phaser_index2', 0, 1);
-                add_slider(Phaser, 'gk_Phaser_level', -40, 40);
+                add_slider(Phaser, 'gk_Phaser_level', -80, 80);
                 var Xing = intruments.addFolder('Xing');
-                add_slider(Xing, 'gk_Xing_level', -40, 40);
+                add_slider(Xing, 'gk_Xing_level', -80, 80);
                 var Shiner = intruments.addFolder('Shiner');
-                add_slider(Shiner, 'gk_Shiner_level', -40, 40);
+                add_slider(Shiner, 'gk_Shiner_level', -80, 80);
                 var Sweeper = intruments.addFolder('Sweeper');
                 add_slider(Sweeper, 'gk_Sweeper_britel', 0, 4);
                 add_slider(Sweeper, 'gk_Sweeper_briteh', 0, 4);
                 add_slider(Sweeper, 'gk_Sweeper_britels', 0, 4);
                 add_slider(Sweeper, 'gk_Sweeper_britehs', 0, 4);
-                add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
-                add_slider(Sweeper, 'gk_Sweeper_level', -40, 40);
+                add_slider(Sweeper, 'gk_Sweeper_level', -80, 80);
                 var Hopalong = gui.addFolder('Hopalong fractal');
                 a_slider = add_slider(Hopalong, 'A', -30, 30).name('E [Alt-A]');
                 b_slider = add_slider(Hopalong, 'B', .2, 1.8).name('B [Alt-B]');
@@ -1617,7 +1611,7 @@ endin
                 add_slider(Generate, 'Scene_randomization', 0, 1).name('Scene randomization');
                 add_slider(Generate, 'Starting_point', 0, 39999).name('Starting index');
                 add_slider(Generate, 'Stride', 1, 40000);
-                add_slider(Generate, 'Note_length', 0.104167, 8).name('Note duration');
+                add_slider(Generate, 'Note_length', 0.104167, 100).name('Note duration');
                 add_slider(Generate, 'Notes_per_second', 0.25, 100).name('Notes per second');
                 add_slider(Generate, 'Camera_X', -500, 500).name('Camera X');
                 add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
@@ -1656,8 +1650,6 @@ endin
                         Starting_point = Math.floor(value);
                     } else if (token === 'Stride') {
                         Stride = Math.floor(value);
-                    } else if (token === 'Notes_per_second') {
-                        Notes_per_second = value;
                     }
                 };
                 var slider = gui_folder.add(parameters, token, minimum, maximum);
@@ -1742,3 +1734,4 @@ endin
        </script>
      </body>
 </html>
+*

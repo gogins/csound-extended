@@ -132,15 +132,9 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 break;
             case "Perform":
             {
-                // TODO: These are async so will be called out of sequence.
-                // Invoke this appropriately from Start. More work to handle 
-                // offline rendering.
+                // This method is a dummy to preserve API compatibility 
+                // across platforms.
                 let result = 0;
-                //if (this.is_realtime) {
-                //    result = 0;
-                //} else {
-                //    result = this.csound.Perform();
-                //}
                 this.port.postMessage(["Perform", result]);
             }
                 break;
@@ -237,7 +231,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
     }
     process(inputs, outputs, parameters) {
         if (this.is_playing !== true) {
-            return true;
+            return false;
         } else if (this.is_realtime === false) {
             console.log("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
             let result = 0;
@@ -265,16 +259,16 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         // The audio stream format must match between Csound and the host.
         if (this.format_validated == false) {
             if (this.ksmps !== hostFrameN) {
-                throw "Csound ksmps doesn't match host ksmps!";
+                throw new RangeError("Csound ksmps doesn't match host ksmps!");
             } 
             if (this.inputChannelN != inputChannelN) {
-                throw "Csound nchnls_i doesn't match host input channel count of " + inputChannelN;
+                throw new RangeError("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
             }
             if (this.outputChannelN != outputChannelN) {
-                throw "Csound nchnls doesn't match host output channel count of " + outputChannelN;
+                throw new RangeError("Csound nchnls doesn't match host output channel count of " + outputChannelN);
             }
             if (this.csound.GetSr() != sampleRate) {
-                throw "Csound sampling rate doesn't match host sampling rate of " + sampleRate;
+                throw new RangeError("Csound sampling rate doesn't match host sampling rate of " + sampleRate);
             }
             this.format_validated = true;
         }
