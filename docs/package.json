@@ -1,13 +1,13 @@
 {
-  "main": "performance_test.html",
-  "name": "performance_test",
+  "main": "cmask.html",
+  "name": "cmask",
   "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "performance_test",
+    "title": "cmask",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

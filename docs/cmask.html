@@ -2,29 +2,9 @@
 <html>
 <head>
     <title>Minimal Example using Csound for WebAssembly OR csound.node</title>
-    <script>
-        console.log("When running in NW.js, convince the WASM 'Module' code that we are actually running in Node.js.");
-        var csound_extended = {};
-        try {
-            var nw_window = nwgui.Window.get();
-            csound_extended["ENVIRONMENT"] = "NODE";
-        } catch(e) {
-            console.warn(e);
-            console.log("Not running in NW.js or Node...\n");
-        }
-        csound_extended = null;
-        csound_web_audio = null;
-        csound_node = null;
-        cmask = null;
-    </script>
-    <script src="csound_extended.js"></script>
-    <script>
-        csound_extended_module(csound_extended).then(function(module) {
-            csound_extended = module;
-            csound_web_audio = new csound_extended.CsoundWebAudio();
-            console.log("Module: csound_extended.js has been loaded.\n");
-        });
-    </script>
+    <script src="csound_extended.js"></script> 
+    <script src="CsoundAudioNode.js"></script>
+    <script src="csound_loader.js"></script>
     <script src="cmask.js"></script>
     <script>
         cmask_module().then(function(module) {
@@ -52,27 +32,29 @@
         messages_textarea.scrollTop = messages_textarea.scrollHeight;        
     };
     var onPlayClick = function() {
-        if (document.getElementById("wasm").checked === true) {
-            if (csound_web_audio === null) {
-                csound_web_audio = new csound_extended.CsoundWebAudio();
-            }
-            csound = csound_web_audio;
-            csoundMessageCallback("\nUsing Csound for WebAssembly...\n");
-        } else {
+        get_csound(csoundMessageCallback);
+        if (document.getElementById("csound_node").checked === true) {
             csound = csound_node;
-            try {
-                csound.setMessageCallback(csoundMessageCallback);
-            } catch (e) {
-                console.warn(e);
-            }
-            csoundMessageCallback("\nUsing csound.node...\n");
-        }
-        console.log = console.warn = csoundMessageCallback;
+            csound.setMessageCallback(csoundMessageCallback);
+            csound.Message("\nUsing csound.node...\n");
+        } 
+        if (document.getElementById("csound_web_audio").checked === true) {
+            csound = csound_web_audio;
+            console.log = console.warn = csoundMessageCallback;
+            csound.Message("\nUsing Csound ScriptProcessor...\n");
+        } 
+        if (document.getElementById("csound_audio_node").checked === true) {
+            csound = csound_audio_node;
+            console.log = console.warn = csoundMessageCallback;
+            csound.Message("\nUsing Csound AudioWorklet...\n");
+        } 
         var orc = document.getElementById('orc').value;
         csound.Stop();
         csound.Reset();
         csound.CompileOrc(orc);
         csound.SetOption("-odac");
+        csound.SetOption("--nchnls=2");
+        csound.SetOption("--nchnls_i=1");
         csound.SetOption("-m35");
         csound.SetOption("-d");
         var parameters = document.getElementById("cmask_parameters").value;
@@ -84,33 +66,30 @@
         csound.Perform();
     };
     var onPlayStop = function() {
-        if (document.getElementById("wasm").checked === true) {
-            csound = csound_web_audio;
-        } else {
-            csound = csound_node;
-        }
+         
         csound.Stop();
         csound.Reset();
     };
     </script>
-    <p>This page shows how to combine csound.node with WebAssembly. The page tries 
-    to load both. The user selects which build of Csound to use.</p>
-    </textarea>
+    <p>This page shows how to combine csound.node with WebAssembly. The user selects which build of Csound to use.</p>
     <p>
     <form>
-    <input id="wasm" name="csound" type="radio" checked="true"> WebAssembly 
-    <input id="node" name="csound" type="radio"> csound.node <p>
+    <input id="csound_node" name="csound" type="radio" checked> csound.node 
+    <input id="csound_web_audio" name="csound" type="radio" > ScriptProcessor 
+    <input id="csound_audio_node" name="csound" type="radio"> AudioWorklet
     </form>
+    </p>
     <input id="play" type="button" value="Play" onclick="onPlayClick()">
     <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
     <textarea id='console' cols=80 rows=10>
     </textarea>
     <h2>Orchestra</h2>
     <textarea id='orc' cols=80 rows=15>
-sr          =           41000
-ksmps       =           100
-nhcnls_i    =           1
+sr          =           48000
+ksmps       =           128
+nchnls_i    =           1
 nchnls      =           2
+0dbfs       =           1000000
 
 instr 1
 	;p2 onset
@@ -123,12 +102,13 @@ kenv	expon	1,p3,0.01
 kindx	expon	p5,p3,.4
 a1	foscil	kenv*10000,p4,1,1.143,kindx,1
 	outs	a1*(1-p6),a1*p6
+    prints "i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p6, active(p1)
 endin	
     </textarea>
     <h2>CMask Parameters</h2>
     <textarea id="cmask_parameters" cols=80 rows=10>
 {
-f1 0 8193 10 1            ;sine wave for foscil
+f1 0 65536 10 1            ;sine wave for foscil
 }
 f 0 10                    ;field 1
 p1 const 1
@@ -151,7 +131,7 @@ p3 item swing (.3 .05 .2 .1 1)  ;no rest, no overlap
 p4 range 100 200 prec 1
 p5 seg [1 5]              ;increasing FM index
 p6 range .3 .7 prec 2     ;only in the middle
-    </textarea>
+        </textarea>
     <h2>Generated Score</h2>
     <textarea id="cmask_score" cols=80 rows=10>
     </textarea>

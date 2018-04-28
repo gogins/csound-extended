@@ -39,7 +39,6 @@ class CsoundAudioNode extends AudioWorkletNode {
     reset_() {
         this.is_playing = false;
         this.is_realtime = false;
-        this.audioProcessNode = null;
         this.microphoneNode = null;
         this.input = null;
         this.output = null;
@@ -210,8 +209,9 @@ class CsoundAudioNode extends AudioWorkletNode {
                     }
                 }
             }
+            this.disconnect();
             this.port.postMessage(["Start"]);
-            let destination_ = this.connect(audioContext.destination);
+            this.connect(audioContext.destination);
             this.is_playing = true;
         } catch (e) {
             console.log(e);
@@ -222,10 +222,6 @@ class CsoundAudioNode extends AudioWorkletNode {
         if (this.microphoneNode !== null) {
             this.microphoneNode.stop();
             this.microphoneNode.disconnect(this);
-        }
-        if (this.audioProcessNode !== null) {
-            this.audioProcessNode.stop();
-            this.audioProcessNode.disconnect(this);
         }
         this.disconnect();
         this.reset_();

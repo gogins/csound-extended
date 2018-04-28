@@ -4,9 +4,11 @@ Authors: Edward Costello, Steven Yi, Henri Manson, Michael Gogins
 
 ## Introduction
 
-THis directory builds, packages, and tests csound-extended for WebAssembly. This 
-build replaces `CsoundObj.js` from the core Csound repository with a new WebAssembly 
-build of Csound, `csound_extended.js`, which features:
+THis directory builds, packages, and tests csound-extended for WebAssembly. 
+This build replaces `CsoundObj.js` from the core Csound repository with new 
+WebAssembly builds of Csound, `csound_extended.js` (using ScriptProcessorNode) 
+and `CsoundAudioNode.js` (using the new standard AudioWorklet), which 
+features:
 
 * A number of C++ plugin opcodes (here, statically linked).
 
@@ -23,5 +25,15 @@ The examples herein will run from the GitHub pages of the csound-extended
 repository. To run the examples locally, either clone and build this 
 repository, or download the `csound-wasm*.zip` release and unzip it. 
 
-Then, run the self-contained Web server, `httpd.py`, in the WebAssembly directory,
-and navigate in your Web browser to localhost at the port reported at server startup.
+Then, run the self-contained Web server, `httpd.py`, in the WebAssembly 
+directory, and navigate in your Web browser to localhost at the port reported 
+at server startup.
+
+The `cmask.html` example will run with `csound.node` in NW.js 30.2 or later, 
+and will run with `CsoundAudioNode.js` in Chrome 66 or later. It should run 
+with 
+`csound_extended.js` in any browser or environment that supports WebAssembly.
+
+The `csound_loader.js` script can be included as a convenient method of 
+detecting and using available implementations of Csound that run in HTML5 
+environments.

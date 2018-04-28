@@ -133,7 +133,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             case "Perform":
             {
                 // This method is a dummy to preserve API compatibility 
-                // across platforms.
+                // across all platforms.
                 let result = 0;
                 this.port.postMessage(["Perform", result]);
             }
@@ -221,6 +221,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             this.ksmps = this.csound.GetKsmps();
             this.inputChannelN = this.csound.GetNchnlsInput();
             this.outputChannelN = this.csound.GetNchnls();
+            if (this.input_name.startsWith("adc")) {
+                this.has_input = true;
+            } else {
+                this.has_input = false;
+            }
         } else {
             this.is_realtime = false;
             result = this.csound.Start();
@@ -275,9 +280,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         let csoundFrameI = 0;
         let result = 0;
         for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
-            for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                let inputChannelBuffer = inputBuffer[inputChannelI];
-                this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
+            if (this.has_input === true) {
+                for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
+                    let inputChannelBuffer = inputBuffer[inputChannelI];
+                    this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
+                }
             }
             for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
                 let outputChannelBuffer = outputBuffer[outputChannelI];
