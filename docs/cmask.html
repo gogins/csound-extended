@@ -11,15 +11,16 @@
         cmask_module().then(function(module) {
             cmask = module;
             console.log("Module: cmask.js has been loaded.\n");
+        }).catch(error => {
+           console.log(error);
         });
         try {
-            csound_node = require('csound.node');
             nw_window.on('close', function() {
                 console.log('Closing down...');
                 this.close(true);
             });
-        } catch (e) {
-            console.warn(e);
+        } catch(e) {
+            console.log(e);
         }
     </script>
  </head>
@@ -75,8 +76,8 @@
     <p>This page shows how to combine csound.node with WebAssembly. The user selects which build of Csound to use.</p>
     <p>
     <form>
-    <input id="csound_node" name="csound" type="radio" checked> csound.node 
-    <input id="csound_web_audio" name="csound" type="radio" > ScriptProcessor 
+    <input id="csound_node" name="csound" type="radio"> csound.node 
+    <input id="csound_web_audio" name="csound" type="radio"csound_ > ScriptProcessor 
     <input id="csound_audio_node" name="csound" type="radio"> AudioWorklet
     </form>
     </p>
@@ -90,7 +91,7 @@ sr          =           48000
 ksmps       =           128
 nchnls_i    =           1
 nchnls      =           2
-0dbfs       =           1000000
+0dbfs       =           32768
 
 instr 1
 	;p2 onset

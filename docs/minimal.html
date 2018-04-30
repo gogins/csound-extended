@@ -6,6 +6,7 @@
  </head>
 <body>
     <script>
+    csound_extended_module();
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
@@ -29,8 +30,8 @@
         csound.Stop();
         csound.Reset();
     };
-  </script>
-   <h1>Minimal Example using csound-extended for WebAssembly</h1>
+    </script>
+    <h1>Minimal Example using csound-extended for WebAssembly</h1>
     <p>This is a completely self-contained example, all in one file, and 
     without any unnecessary features, showing how to play a Csound piece in a 
     Web browser using csound-extended for WebAssembly. When the JavaScript file 
@@ -53,7 +54,7 @@
     <textarea id='csd' cols=80 rows=25>
 <CsoundSynthesizer>
 <CsOptions>
--odac -iadc -d
+-odac -m35 -d
 </CsOptions>
 <CsInstruments>
 sr          =           48000

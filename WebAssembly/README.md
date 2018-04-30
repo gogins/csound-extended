@@ -5,10 +5,10 @@ Authors: Edward Costello, Steven Yi, Henri Manson, Michael Gogins
 ## Introduction
 
 THis directory builds, packages, and tests csound-extended for WebAssembly. 
-This build replaces `CsoundObj.js` from the core Csound repository with new 
+This build replaces `CsoundObj.js` from the core Csound repository with two  
 WebAssembly builds of Csound, `csound_extended.js` (using ScriptProcessorNode) 
 and `CsoundAudioNode.js` (using the new standard AudioWorklet), which 
-features:
+feature:
 
 * A number of C++ plugin opcodes (here, statically linked).
 
@@ -21,8 +21,8 @@ features:
   
 See the README.md in the csound-extended directory for build instructions.
 
-The examples herein will run from the GitHub pages of the csound-extended 
-repository. To run the examples locally, either clone and build this 
+The examples herein will run from the [GitHub pages of the csound-extended 
+repository](https://gogins.github.io/csound-extended/). To run the examples locally, either clone and build this 
 repository, or download the `csound-wasm*.zip` release and unzip it. 
 
 Then, run the self-contained Web server, `httpd.py`, in the WebAssembly 

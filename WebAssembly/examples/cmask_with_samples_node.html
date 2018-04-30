@@ -55,7 +55,7 @@
         csound.CompileOrc(orc);
         csound.SetOption("-odac");
         // Other message options can overwhelm the display and freeze the page.
-        csound.SetOption("-m130");
+        csound.SetOption("-m35");
         csound.SetOption("-d");
         var parameters = document.getElementById("cmask_parameters").value;
         var score = cmask.cmask(parameters);
@@ -77,8 +77,8 @@
     </textarea>
     <h2>Orchestra</h2>
     <textarea id='orc' cols=80 rows=15>
-sr = 44800
-ksmps = 100
+sr = 48000
+ksmps = 128
 nchnls = 2
 
 instr 1

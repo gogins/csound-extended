@@ -349,6 +349,7 @@ if (typeof console === 'undefined') {
     Event.X = 6;
     Event.Y = 7;
     Event.Z = 8;
+    // Ambisonic convention!
     Event.DEPTH = 6;
     Event.PAN = 7;
     Event.HEIGHT = 8;
@@ -372,22 +373,22 @@ if (typeof console === 'undefined') {
      * p3 Duration (seconds)
      * p4 MIDI key
      * p5 MIDI velocity (roughly dBSPL)
-     * p6 Pan (spatial left to right)
-     * p7 Depth (spatial front to back)
+     * p6 Depth (spatial front to back)
+     * p7 Pan (spatial left to right)
      * p8 Height (spatial bottom to top)
      * p9 Phase (radians)
      */
     Event.prototype.toIStatement = function() {
         var text = 'i';
-        text = text.concat(' ', this.data[3].toFixed(6));
-        text = text.concat(' ', this.data[0].toFixed(6));
-        text = text.concat(' ', this.data[1].toFixed(6));
-        text = text.concat(' ', this.data[4].toFixed(6));
-        text = text.concat(' ', this.data[5].toFixed(6));
-        text = text.concat(' ', this.data[6].toFixed(6));
-        text = text.concat(' ', this.data[7].toFixed(6));
-        text = text.concat(' ', this.data[8].toFixed(6));
-        text = text.concat(' ', this.data[9].toFixed(6));
+        text = text.concat(' ', this.data[3].toFixed(6)); // p1
+        text = text.concat(' ', this.data[0].toFixed(6)); // p2
+        text = text.concat(' ', this.data[1].toFixed(6)); // p3
+        text = text.concat(' ', this.data[4].toFixed(6)); // p4
+        text = text.concat(' ', this.data[5].toFixed(6)); // p5
+        text = text.concat(' ', this.data[6].toFixed(6)); // p6
+        text = text.concat(' ', this.data[7].toFixed(6)); // p7
+        text = text.concat(' ', this.data[8].toFixed(6)); // p8
+        text = text.concat(' ', this.data[9].toFixed(6)); // p9
         text = text.concat('\n');
         return text;
     };

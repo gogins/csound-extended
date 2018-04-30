@@ -266,7 +266,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             if (this.ksmps !== hostFrameN) {
                 throw new RangeError("Csound ksmps doesn't match host ksmps!");
             } 
-            if (this.inputChannelN != inputChannelN) {
+            if (this.inputChannelN > inputChannelN) {
                 throw new RangeError("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
             }
             if (this.outputChannelN != outputChannelN) {
