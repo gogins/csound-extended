@@ -1,10 +1,15 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "main": "scrims.html",
   "name": "scrims",
 =======
   "main": "message.html",
   "name": "message",
+>>>>>>> develop
+=======
+  "main": "scrims.html",
+  "name": "scrims",
 >>>>>>> develop
   "description": "HTML5 with Csound",
   "version": "0.1.0",
@@ -13,9 +18,13 @@
   "node-remote": "http://<all-urls>/*",
   "window": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "title": "scrims",
 =======
     "title": "message",
+>>>>>>> develop
+=======
+    "title": "scrims",
 >>>>>>> develop
     "icon": "link.png",
     "toolbar": false,
