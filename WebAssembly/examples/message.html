@@ -258,7 +258,7 @@ $(document).ready(function() {
     $('input').on('input', function(event) {
         get_csound(handleMessage);
         var slider_value = parseFloat(event.target.value);
-        csound.setControlChannel(event.target.id, slider_value);
+        csound.SetControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
@@ -267,15 +267,15 @@ $(document).ready(function() {
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
         console.log = handleMessage;
-        csound.compileCsdText(csd);
+        csound.CompileCsdText(csd);
         $('#restore').trigger('click');
-        csound.start();
-        csound.perform();
+        csound.Start();
+        csound.Perform();
     });
     $('#stop').on('click', function() {
         get_csound(handleMessage);
-        csound.stop();
-        csound.reset();
+        csound.Stop();
+        csound.Reset();
     });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
@@ -286,7 +286,7 @@ $(document).ready(function() {
         get_csound(handleMessage);
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
-            csound.setControlChannel(this.id, parseFloat(this.value));
+            csound.SetControlChannel(this.id, parseFloat(this.value));
             var output_selector = '#' + this.id + '_output';
             $(output_selector).val(this.value);
         });
