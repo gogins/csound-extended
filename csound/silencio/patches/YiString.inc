@@ -1,3 +1,4 @@
+gk_GLOBAL_midi_dynamic_range init 127
 gk_YiString_level init 1
 gk_YiString_reverb_send init .5
 gk_YiString_chorus_send init .5
@@ -14,15 +15,16 @@ i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_velocity = p5
+i_midi_dynamic_range = i(gk_GLOBAL_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_overall_amps = 74
-i_normalization = ampdb(-i_overall_amps) / 2
+i_level_correction = 72.5
+i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_YiString_level)
 iattack = gi_YiString_overlap

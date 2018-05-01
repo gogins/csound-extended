@@ -1,11 +1,9 @@
 import ctcsound
 import random
-#output = "test.wav"
-output = "dac"
+output = "test.wav"
+#output = "dac"
 
 prologue = '''
-gk_INSTR_level init 0
-instr INSTR
 if p3 == -1 then
   p3 = 1000000
 endif
@@ -13,15 +11,16 @@ i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_velocity = p5
+i_midi_dynamic_range = i(gk_GLOBAL_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_overall_amps = 70
-i_normalization = ampdb(-i_overall_amps) / 2
+i_level_correction = 58
+i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_INSTR_level)
 '''
@@ -49,7 +48,7 @@ prints "INSTR          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p
 
 orc = '''
 sr = 48000
-ksmps = 15
+ksmps = 128
 nchnls = 2
 0dbfs = 1
 
@@ -83,7 +82,7 @@ nchnls = 2
 ;#include "ParametricEQ.inc"
 ;#include "Phaser.inc"
 ;#include "PianoNoteFluidsynth.inc"
-#include "PianoNotePianoteq.inc"
+;#include "PianoNotePianoteq.inc"
 ;#include "Plucked.inc"
 ;#include "Reverberator.inc"
 ;#include "ReverbSC.inc"
@@ -100,7 +99,7 @@ nchnls = 2
 ;#include "ToneWheelOrgan.inc"
 ;#include "TubularBell.inc"
 ;#include "Xing.inc"
-;#include "YiString.inc"
+#include "YiString.inc"
 ;#include "ZakianFlute.inc"
 
 ;#include "FluidAudio.inc"
@@ -118,6 +117,7 @@ prints "dbA at headroom:             %9.4f\\n", idbaheadroom
 iampheadroom init ampdb(idbaheadroom)
 prints "Amplitude at headroom:       %9.4f\\n", iampheadroom
 prints "Balance so the 'overall amps' at the end of performance is -6 dBFS.\\n"
+prints "nchnls:                      %9.4f\\n", nchnls
 
 connect "Blower", "outleft", "MasterOutput", "inleft"
 connect "Blower", "outright", "MasterOutput", "inright"
@@ -202,6 +202,7 @@ def generate_score():
 message_level = 1 + 2 + 32 + 128
 csound = ctcsound.Csound()
 csound.setOption("-d")
+csound.setOption("--nchnls=2")
 csound.setOption("-o%s" % output)
 csound.setOption("-m%d" % message_level)
 csound.compileOrc(orc)

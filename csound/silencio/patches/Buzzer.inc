@@ -1,3 +1,5 @@
+gk_Buzzer_attack init .0125
+gk_Buzzer_release init .0125
 gk_Buzzer_Harmonics init 15
 gk_Buzzer_level init .5
 instr Buzzer
@@ -9,9 +11,9 @@ ivelocity = p5
 iphase = p6
 ipan = p7
 iamp = ampdb(ivelocity) * 4
-iattack = i(gk_overlap)
-idecay = i(gk_overlap)
-isustain = p3 - i(gk_overlap)
+iattack = i(gk_Buzzer_attack)
+idecay = i(gk_Buzzer_release)
+isustain = p3 - i(gk_Buzzer_attack)
 p3 = iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
