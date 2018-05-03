@@ -1,4 +1,4 @@
-gk_GLOBAL_midi_dynamic_range init 127
+gk_ZakianFlute_midi_dynamic_range init 20
 gk_ZakianFlute_level init 0
 gk_ZakianFlute_pan init .5
 gi_ZakianFLute_seed init .5
@@ -19,7 +19,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_overall_amps = 77.7
 i_normalization = ampdb(-i_overall_amps) / 2
-i_midi_dynamic_range = i(gk_GLOBAL_midi_dynamic_range)
+i_midi_dynamic_range = i(gk_ZakianFlute_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_ZakianFlute_level)

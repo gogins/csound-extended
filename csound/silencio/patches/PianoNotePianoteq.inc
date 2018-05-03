@@ -1,14 +1,23 @@
-giPianoteq init 0
-
+gk_PianoNote_midi_dynamic_range init 127
 instr PianoNote
+if p3 == -1 then
+  p3 = 1000000
+endif
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_PianoNote_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
 i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-k_space_front_to_back = p6
-k_space_left_to_right = p7
-k_space_bottom_to_top = p8
 i_homogeneity = p11
 instances active p1
 prints "PianoNotePt    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p7, instances

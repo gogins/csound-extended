@@ -1,3 +1,4 @@
+gk_Blower_midi_dynamic_range init 127
 gk_Blower_grainDensity init 150
 gk_Blower_grainDuration init 0.2
 gk_Blower_grainAmplitudeRange init 100
@@ -8,22 +9,23 @@ instr Blower
  // Original by Hans Mikelson.
  // Adapted by Michael Gogins.
  //////////////////////////////////////////////
-  if p3 == -1 then
+if p3 == -1 then
   p3 = 1000000
 endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_velocity = p5
+i_midi_dynamic_range = i(gk_Blower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_overall_amps = 135
-i_normalization = ampdb(-i_overall_amps) / 2
+i_level_correction = 134
+i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Blower_level)
 ; f1 0 65536 1 "hahaha.aif" 0 4 0

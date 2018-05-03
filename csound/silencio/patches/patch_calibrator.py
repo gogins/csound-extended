@@ -1,7 +1,7 @@
 import ctcsound
 import random
 output = "test.wav"
-#output = "dac"
+output = "dac"
 
 prologue = '''
 if p3 == -1 then
@@ -11,7 +11,7 @@ i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_dynamic_range = i(gk_GLOBAL_midi_dynamic_range)
+i_midi_dynamic_range = i(gk_INSTR_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7
@@ -54,6 +54,8 @@ nchnls = 2
 
 ; Uncomment only the patch that you want to test. 
 ; Keep these in alphabetical order.
+
+giPianoteq init 0
 
 ;#include "Blower.inc"
 ;#include "Bower.inc"
@@ -100,7 +102,7 @@ nchnls = 2
 ;#include "TubularBell.inc"
 ;#include "Xing.inc"
 #include "YiString.inc"
-;#include "ZakianFlute.inc"
+#include "ZakianFlute.inc"
 
 ;#include "FluidAudio.inc"
 #include "PianoOutPianoteq.inc"

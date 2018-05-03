@@ -1,4 +1,4 @@
-gk_GLOBAL_midi_dynamic_range init 127
+gk_Harpsichord_midi_dynamic_range init 127
 gk_Harpsichord_level init 0
 gk_Harpsichord_pick init .075
 gk_Harpsichord_reflection init .5
@@ -11,7 +11,7 @@ i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_dynamic_range = i(gk_GLOBAL_midi_dynamic_range)
+i_midi_dynamic_range = i(gk_Harpsichord_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7
