@@ -48,7 +48,7 @@ prints "INSTR          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p
 
 orc = '''
 sr = 48000
-ksmps = 128
+ksmps = 1
 nchnls = 2
 0dbfs = 1
 
@@ -77,7 +77,7 @@ giPianoteq init 0
 ;#include "JackAudio.inc"
 ;#include "JackNote.inc"
 ;#include "LeftReverberator.inc"
-;#include "LivingstonGuitar.inc"
+#include "LivingstonGuitar.inc"
 ;#include "MasterOutput.inc"
 ;#include "Melody.inc"
 ;#include "MonoReverberator.inc"
@@ -101,8 +101,8 @@ giPianoteq init 0
 ;#include "ToneWheelOrgan.inc"
 ;#include "TubularBell.inc"
 ;#include "Xing.inc"
-#include "YiString.inc"
-#include "ZakianFlute.inc"
+;#include "YiString.inc"
+;#include "ZakianFlute.inc"
 
 ;#include "FluidAudio.inc"
 #include "PianoOutPianoteq.inc"

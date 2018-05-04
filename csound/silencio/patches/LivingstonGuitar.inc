@@ -1,3 +1,4 @@
+gk_LivingstonGuitar_midi_dynamic_range init 127
 gk_LivingstonGuitar_level init 0
 instr LivingstonGuitar
 ; Author: Jeff Livingston
@@ -46,14 +47,16 @@ i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_velocity = p5
+i_midi_dynamic_range = i(gk_LivingstonGuitar_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-i_overall_amps = 130 ; To start - change to observed value.
-i_normalization = ampdb(-i_overall_amps) / 2
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 120
+i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_LivingstonGuitar_level)
 isine ftgenonce 0, 0, 65536, 10, 1

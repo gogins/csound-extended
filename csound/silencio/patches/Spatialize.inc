@@ -1461,46 +1461,46 @@ achnl_10 = achnl_co_10 * krelcoef + achnl_sh_10 * (1 - krelcoef) ; ratio between
 achnl_11 = achnl_co_11 * krelcoef + achnl_sh_11 * (1 - krelcoef) ; ratio between controlled opposites and spherical harmonic coefficients
 achnl_12 = achnl_co_12 * krelcoef + achnl_sh_12 * (1 - krelcoef) ; ratio between controlled opposites and spherical harmonic coefficients
 if isr == 44100 then
-aleft_1, aright1 hrtfstat achnl_1, 1, 89.99, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_2, aright2 hrtfstat achnl_2, -1, -89.99, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_4, aright_4 hrtfstat achnl_4, 144, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_5, aright_5 hrtfstat achnl_5, 36, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_6, aright_6 hrtfstat achnl_6, -144, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_7, aright_7 hrtfstat achnl_7, -108, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_8, aright_8 hrtfstat achnl_8, 72, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
-aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat"
+aleft_1, aright1 hrtfstat achnl_1, 1, 89.99, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_2, aright2 hrtfstat achnl_2, -1, -89.99, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_4, aright_4 hrtfstat achnl_4, 144, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_5, aright_5 hrtfstat achnl_5, 36, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_6, aright_6 hrtfstat achnl_6, -144, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_7, aright_7 hrtfstat achnl_7, -108, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_8, aright_8 hrtfstat achnl_8, 72, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
+aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
 else
 if isr == 48000 then
-aleft_1, aright_1 hrtfstat achnl_1, 1, 89.99, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_2, aright_2 hrtfstat achnl_2, -1, -89.99, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_4, aright_4 hrtfstat achnl_4, 144, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_5, aright_5 hrtfstat achnl_5, 36, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_6, aright_6 hrtfstat achnl_6, -144, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_7, aright_7 hrtfstat achnl_7, -108, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_8, aright_8 hrtfstat achnl_8, 72, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
-aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat"
+aleft_1, aright_1 hrtfstat achnl_1, 1, 89.99, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_2, aright_2 hrtfstat achnl_2, -1, -89.99, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_4, aright_4 hrtfstat achnl_4, 144, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_5, aright_5 hrtfstat achnl_5, 36, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_6, aright_6 hrtfstat achnl_6, -144, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_7, aright_7 hrtfstat achnl_7, -108, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_8, aright_8 hrtfstat achnl_8, 72, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
+aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
 else
 if isr == 96000 then
-aleft_1, aright_1 hrtfstat achnl_1, 1, 89.99, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_2, aright_2 hrtfstat achnl_2, -1, -89.99, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_4, aright_4 hrtfstat achnl_4, 144, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_5, aright_5 hrtfstat achnl_5, 36, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_6, aright_6 hrtfstat achnl_6, -144, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_7, aright_7 hrtfstat achnl_7, -108, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_8, aright_8 hrtfstat achnl_8, 72, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
-aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat"
+aleft_1, aright_1 hrtfstat achnl_1, 1, 89.99, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_2, aright_2 hrtfstat achnl_2, -1, -89.99, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_4, aright_4 hrtfstat achnl_4, 144, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_5, aright_5 hrtfstat achnl_5, 36, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_6, aright_6 hrtfstat achnl_6, -144, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_7, aright_7 hrtfstat achnl_7, -108, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_8, aright_8 hrtfstat achnl_8, 72, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
+aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
 else
 printks "Sampling rate = %f is not handled by Bformat2DecodeBinaural.", 1, sr
 exitnow
