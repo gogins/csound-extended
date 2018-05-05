@@ -32,8 +32,8 @@ k_gain = ampdb(gk_Blower_level)
 ; f2 0 1024 7 0 224 1 800 0
 ; f3 0 8192 7 1 8192 -1
 ; f4 0 1024 7 0 512 1 512 0
-; f5 0 1024 10 1 .3 .1 0 .2 .02 0 .1 .04
-; f6 0 1024 10 1 0 .5 0 .33 0 .25 0 .2 0 .167
+; f5 0 65536 10 1 .3 .1 0 .2 .02 0 .1 .04
+; f6 0 65536 10 1 0 .5 0 .33 0 .25 0 .2 0 .167
 ; a0 14 50
 ; p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
 ; Start Dur Amp Freq GrTab WinTab FqcRng Dens Fade
@@ -75,7 +75,7 @@ kenvelope transeg 0.0, iattack / 2.0, 1.5, .5, iattack / 2.0, -1.5, 1, isustain,
 ; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
 kamp = kenvelope
 ; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
-aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange,  gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
+aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
 aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
 a_signal = aoutl + aoutr
 i_attack = .002

@@ -1507,7 +1507,7 @@ exitnow
 endif
 endif
 endif
-prints "Loaded HRTF data."
+prints "Loaded HRTF data.\n"
 ; Inter-aural time delay (seconds)
 aleft_1 delay aleft_1, 0.00028986
 aleft_2 delay aleft_2, 0.00028986
