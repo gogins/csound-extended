@@ -1,7 +1,7 @@
 import ctcsound
 import random
 output = "test.wav"
-output = "dac"
+#output = "dac"
 
 prologue = '''
 if p3 == -1 then

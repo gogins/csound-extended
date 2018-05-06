@@ -12,8 +12,10 @@ gk_FMDroner_index init 3
 gk_FMDroner_carrier init 1
 gk_FMDroner_modulator init 3
 gk_FMDroner_transeg_exponent init -20
+gk_FMDroner_x init 6
+gk_FMDroner_y init 0
+gk_FMDroner_z init 0
 gk_FMDroner_level init 0
-gi_FMDroner_waveform init 0
 gi_FMDroner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
 instr Droner
 if p3 == -1 then
@@ -30,7 +32,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_overall_amps = -20 + 98 + 4
+i_overall_amps = -20 + 98 
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FMDroner_level)
