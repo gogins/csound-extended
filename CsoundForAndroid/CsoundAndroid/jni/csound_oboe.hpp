@@ -636,9 +636,9 @@ public:
                 return -1;
             }
             bool aaudio_is_supported = audio_stream_builder.isAAudioSupported();
-            Message("CsoundOboe::Start: AAudio is supported: %s\n", aaudio_is_supported ? "true" : "false");
+            Message("CsoundOboe::Start: AAudio is supported: %s.\n", aaudio_is_supported ? "true" : "false");
             bool aaudio_is_recommended = audio_stream_builder.isAAudioRecommended();
-            Message("CsoundOboe::Start: AAudio is recommended: %s\n", aaudio_is_recommended ? "true" : "false");
+            Message("CsoundOboe::Start: AAudio is recommended: %s.\n", aaudio_is_recommended ? "true" : "false");
             // Start oboe.
             oboe_audio_format = audio_stream_out->getFormat();
             Message("CsoundOboe::Start: Audio output stream format is: %s.\n", oboe::convertToText(oboe_audio_format));
@@ -649,7 +649,7 @@ public:
             }
             audio_stream_out->start();
             oboe::AudioApi audioApi = audio_stream_out->getAudioApi();
-            Message("CsoundOboe::Start: Oboe audio API is: %d.\n", audioApi);
+            Message("CsoundOboe::Start: Oboe audio API is: %s.\n", audioApi == oboe::AudioApi::AAudio ? "AAudio" : "OpenSLES");
             Message("CsoundOboe::Start: Started Oboe audio output stream...\n");
             oboe::ErrorOrValue<double> latency = audio_stream_out->calculateLatencyMillis();
             if (latency) {
