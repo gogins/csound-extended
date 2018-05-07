@@ -523,13 +523,12 @@ public:
             }
          } else {
             // Dequeue input samples from the audio fifo.
-            // This blocks until enough samples have been enqueued
-            // by the input stream callback.
+            // We don't block, but if no sample is pending, we use a zero.
             if (input_channel_count > 0 && audio_stream_in) {
                 for (int i = 0; i < frames_per_kperiod; i++) {
                     for (int j = 0; j < input_channel_count; j++) {
                         float sample = 0;
-                        audio_fifo.wait_and_pop(sample);
+                        audio_fifo.try_pop(sample);
                         spin[i * input_channel_count + j] = sample;
                     }
                 }
@@ -601,6 +600,7 @@ public:
                     spin = GetSpin();
                     input_channel_count = GetNchnlsInput();
                     spin_size = sizeof(MYFLT) * frames_per_kperiod * input_channel_count;
+                    audio_stream_builder.setAudioApi(oboe::AudioApi::AAudio);
                     audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
                     audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
                     audio_stream_builder.setCallback(this);
@@ -622,6 +622,7 @@ public:
             }
             spout = GetSpout();
             spout_size = sizeof(MYFLT) * frames_per_kperiod * output_channel_count;
+            audio_stream_builder.setAudioApi(oboe::AudioApi::AAudio);
             audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
             audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
             audio_stream_builder.setCallback(this);
@@ -634,19 +635,30 @@ public:
                 Message("CsoundOboe::Start: Failed to create Oboe output stream. Error: %s.\n", oboe::convertToText(result));
                 return -1;
             }
+            bool aaudio_is_supported = audio_stream_builder.isAAudioSupported();
+            Message("CsoundOboe::Start: AAudio is supported: %s\n", aaudio_is_supported ? "true" : "false");
+            bool aaudio_is_recommended = audio_stream_builder.isAAudioRecommended();
+            Message("CsoundOboe::Start: AAudio is recommended: %s\n", aaudio_is_recommended ? "true" : "false");
             // Start oboe.
             oboe_audio_format = audio_stream_out->getFormat();
             Message("CsoundOboe::Start: Audio output stream format is: %s.\n", oboe::convertToText(oboe_audio_format));
-            Message("CsoundOboe::Start: Starting Oboe audio streams...\n");
             is_playing = true;
             if(audio_stream_in != nullptr) {
                 audio_stream_in->start();
+                Message("CsoundOboe::Start: Started Oboe audio input stream...\n");
             }
             audio_stream_out->start();
+            oboe::AudioApi audioApi = audio_stream_out->getAudioApi();
+            Message("CsoundOboe::Start: Oboe audio API is: %d.\n", audioApi);
+            Message("CsoundOboe::Start: Started Oboe audio output stream...\n");
+            oboe::ErrorOrValue<double> latency = audio_stream_out->calculateLatencyMillis();
+            if (latency) {
+                Message("CsoundOboe::Start: Output stream latency is: %9.4f milliseconds.\n", latency.value());
+            }
         } else {
             csound_result = Csound::Start();
             if (csound_result != 0) {
-                Message("Csound::Start returned: %d.\n", csound_result);
+                Message("CsoundOboe::Start returned: %d.\n", csound_result);
                 return csound_result;
             }
             is_playing = true;
