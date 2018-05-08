@@ -82,7 +82,7 @@ iamp = ampdb(ivelocity)
 iattack = i(gk_Droner_Attack)
 idecay = iattack
 isustain = p3 - iattack
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 isine ftgenonce 0, 0, 65536, 10, 1, 0, .02
@@ -116,7 +116,7 @@ iamp = ampdb(ivelocity) * 200
 iattack = i(gk_Bower_Attack)
 idecay = iattack
 isustain = p3 - iattack
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 kamp = kenvelope
@@ -157,7 +157,7 @@ iamp = ampdb(ivelocity) * 8
 iattack = i(gk_Phaser_Attack)
 idecay = iattack
 isustain = p3 - iattack
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 isine ftgenonce 0,0,65536,10,1
@@ -197,7 +197,7 @@ gioctfn ftgenonce 0, 0, 65536, -19, 1, 0.5, 270, 0.5
 iattack = i(gk_Sweeper_Attack)
 idecay = iattack
 isustain = p3 - iattack
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 icps = ihertz
@@ -253,7 +253,7 @@ iamp = ampdb(ivelocity) * 4
 iattack = i(gk_Buzzer_Attack)
 idecay = iattack
 isustain = p3 - iattack
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 ;asignal gbuzz kenvelope, ihertz, 3, gkFirstHarmonic, gkDistortFactor, gisine
@@ -293,7 +293,7 @@ iamp = ampdb(ivelocity) * 4
 iattack = i(gk_Shiner_Attack)
 idecay = iattack
 isustain = p3 - iattack
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 print insno, istart, iduration, ikey, ihertz, ivelocity, iamp, iphase, ipan

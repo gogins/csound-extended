@@ -14,7 +14,7 @@ iamp = ampdb(ivelocity) * 4
 iattack = i(gk_Buzzer_attack)
 idecay = i(gk_Buzzer_release)
 isustain = p3 - i(gk_Buzzer_attack)
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 ;asignal gbuzz kenvelope, ihertz, 3, gk_FirstHarmonic, gk_DistortFactor, gisine

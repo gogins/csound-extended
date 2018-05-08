@@ -27,7 +27,7 @@ kHz = k(i_frequency)
 iattack = 0.004
 isustain = p3
 irelease = 0.05
-p3 = iattack + isustain + irelease
+xtratim iattack + isustain + irelease
 asigcomp pluck 1.0, 440, 440, 0, 1
 asig pluck 1.0, i_frequency, i_frequency, 0, 1
 af1 reson asig, 110, 80

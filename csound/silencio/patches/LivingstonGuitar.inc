@@ -79,7 +79,7 @@ ip14 init 0
 isustain_ = p3
 iattack_ = .001
 irelease_ = .01
-p3 = isustain_ + iattack_ + irelease_
+xtratim isustain_ + iattack_ + irelease_
 adeclick linsegr 0, iattack_, 1, isustain_, 1, irelease_, 0
 iEstr = 1/cpspch(6.04)
 ifqc = cpspch(ip5)
@@ -188,7 +188,7 @@ a_signal = 1500*(afwav+abkwav+aresbod*.000000000000000000003)
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-p3 = i_attack + i_sustain + i_release
+xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION

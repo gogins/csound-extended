@@ -36,7 +36,7 @@ gioctfn ftgenonce 0, 0, 65536, -19, 1, 0.5, 270, 0.5
 iattack = i(gk_Sweeper_attack)
 idecay = i(gk_Sweeper_release)
 isustain = p3 - i(gk_Sweeper_attack)
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
 ihertz = i_frequency
 icps = ihertz
