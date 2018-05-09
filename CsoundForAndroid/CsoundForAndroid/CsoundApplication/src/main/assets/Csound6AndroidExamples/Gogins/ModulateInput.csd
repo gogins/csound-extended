@@ -19,15 +19,15 @@ aclip                       init        0.5
 askew                       init        0.5
 asyncin                     init        0
 kdelay                      chnget      "slider1"
-                            printks2    "kdelay:            %9.4\n", kdelay
+                            printks2    "kdelay:            %9.4f\n", kdelay
 kmodulation_hz              chnget      "slider2"
-                            printks2    "kmodulation_hz:    %9.4\n", kmodulation_hz
+                            printks2    "kmodulation_hz:    %9.4f\n", kmodulation_hz
 kmodulation_depth           chnget      "slider2"
-                            printks2    "kmodulation_depth: %9.4\n", kmodulation_depth
+                            printks2    "kmodulation_depth: %9.4f\n", kmodulation_depth
 kclip                       chnget      "slider3"
-                            printks2    "kclip:             %9.4\n", kclip
+                            printks2    "kclip:             %9.4f\n", kclip
 kskew                       chnget      "slider4"
-                            printks2    "kskew:             %9.4\n", kskew
+                            printks2    "kskew:             %9.4f\n", kskew
 akmodulation_hz             =           a(kmodulation_hz)
 akclip                      =           a(kclip)
 akskew                      =           a(kskew)

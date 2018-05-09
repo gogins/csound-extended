@@ -19,7 +19,7 @@ cd ..
 ##echo "Pulling from `pwd`..."
 ##git checkout master-dev
 ##git pull
-##cd ..
+##  cd ..
 cd liblo
 echo "Pulling from `pwd`..."
 git checkout master
