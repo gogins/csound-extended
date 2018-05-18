@@ -14,12 +14,12 @@ csound_injected = null;
 csound_node = null;
 csound_web_audio = null;
 csound_audio_node = null;
-csound = null;
 csound_extended = {};
 if (typeof csound !== 'undefined') {
     csound_injected = csound;
     console.log("Csound has already been injected into this JavaScript context.\n");
 }
+csound = null;
 try {
     csound_node = require('csound.node');
     var nwgui = require('nw.gui');
@@ -41,7 +41,7 @@ try {
         console.log("Creating CsoundAudioNode...\n");
         csound_audio_node = new CsoundAudioNode(audioContext);
         console.log("Csound audio worklet is available in this JavaScript context.\n");
-    }).catch(error => {
+    }, function(error) {
        console.log(error);
     });
 } catch (e) {

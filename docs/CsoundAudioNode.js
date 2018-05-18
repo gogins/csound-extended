@@ -121,6 +121,22 @@ class CsoundAudioNode extends AudioWorkletNode {
     Perform() {
         this.port.postMessage(["Perform"]);
     };
+    /**
+     * Because AudioWorklet messages are asynchronous, a sequence 
+     * of method calls cannot be guaranteed to execute in proper order. 
+     * Hence, this helper.
+     */
+    PerformCsd(options, csd) {
+        this.port.postMessage(["PerformCsd", options, csd]);
+    }
+    /**
+     * Because AudioWorklet messages are asynchronous, a sequence 
+     * of method calls cannot be guaranteed to execute in proper order. 
+     * Hence, this helper.
+     */
+    PerformOrc(options, orc, sco) {
+        this.port.postMessage(["PerformOrc", options, orc, sco]);
+    }
     ReadScore(score) {
         this.port.postMessage(["ReadScore", score]);
     };
@@ -234,7 +250,7 @@ class CsoundAudioNode extends AudioWorkletNode {
     }
     TableSet(number, index, value) {
         this.port.postMessage(["TableSet", index, value]);
-    }
+    }    
 }
 
 

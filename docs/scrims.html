@@ -5,7 +5,7 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
-        <!-- <script src="csound_extended.js"></script> -->
+        <script src="csound_extended.js"></script>
         <script src="CsoundAudioNode.js"></script>
         <script src="csound_loader.js"></script>
         <script src="js/Silencio.js"></script>
@@ -79,12 +79,17 @@
                 <td colspan="2"><textarea id="console" style="width:100%;color:SkyBlue;background-color:transparent;border:none;text-align:left;height:200px;overflow:auto;padding:0;margin:0;border-collapse:collapse;font-family:Courier, sans-serif;font-size:9pt;"></textarea></td>
             </tr>
         </table>
-        <textarea class="code" id="orc" hidden rows=24 cols=80>
+        <textarea class="code" id="csd" hidden rows=24 cols=80>
+<CsoundSynthesizer>
+<CsOptions>
+-odac -m35 -d
+</CsOptions>
+<CsInstruments>
 
 sr = 48000
 ksmps = 128
 nchnls = 2
-nchnls_i = 1
+nchnls_i = 2
 0dbfs = 1500000
 
 connect "FM_Clang", "outleft", "ReverbSC", "inleft"
@@ -132,6 +137,8 @@ alwayson "Reverb2Right"
 alwayson "FM_Clang_preset"
 alwayson "ParametricEQ"
 alwayson "MasterOutput"
+
+scoreline_i "f 0 360\n"
 
 gk_overlap init .25
 
@@ -1038,11 +1045,11 @@ instr Controls
 prints "Controls       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
 endin
 
-instr 999
-
-prints "StopPerform    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
-//exitnow
-endin
+</CsInstruments>
+<CsScore>
+f 0 360
+</CsScore>
+<CsoundSynthesizer>
     </textarea>
         <script type="text/javascript">
             /**
@@ -1371,19 +1378,21 @@ endin
                 var score_text = score.toString();
                 // Protect against trying to call an undefined Csound.
                 if (csound !== null) {
-                    score.sendToCsound(csound);
-                    var Chord_cell = document.getElementById('Chord_cell');
-                    Chord_cell.innerHTML = chord.name();
-                    var Notes_cell = document.getElementById('Notes_cell');
-                    Notes_cell.innerHTML = note_count;
-                    var Subset_cell  = document.getElementById('Subset_cell');
-                    Subset_cell.innerHTML = subset_index;
-                    var Point_cell  = document.getElementById('Point_cell');
-                    Point_cell.innerHTML = subset_point_index;
-                    var X_cell  = document.getElementById('X_cell');
-                    X_cell.innerHTML = sprintf("%011.4f", point.x);
-                    var Y_cell  = document.getElementById('Y_cell');
-                    Y_cell.innerHTML = sprintf("%011.4f", point.y);
+                    if (csound.IsPlaying()) {
+                        score.sendToCsound(csound);
+                        var Chord_cell = document.getElementById('Chord_cell');
+                        Chord_cell.innerHTML = chord.name();
+                        var Notes_cell = document.getElementById('Notes_cell');
+                        Notes_cell.innerHTML = note_count;
+                        var Subset_cell  = document.getElementById('Subset_cell');
+                        Subset_cell.innerHTML = subset_index;
+                        var Point_cell  = document.getElementById('Point_cell');
+                        Point_cell.innerHTML = subset_point_index;
+                        var X_cell  = document.getElementById('X_cell');
+                        X_cell.innerHTML = sprintf("%011.4f", point.x);
+                        var Y_cell  = document.getElementById('Y_cell');
+                        Y_cell.innerHTML = sprintf("%011.4f", point.y);
+                    }
                 }
                 score.clear();
                 note_count = note_count + 1;
@@ -1452,18 +1461,14 @@ endin
                     if (csound === null) {
                         return;
                     }
+                    //csound = csound_extended;
+                    //console.log = csoundMessage;
                     csound.Stop();
-                    csound.SetOption('-odac');
-                    csound.SetOption('--nchnls=2');
-                    csound.SetOption('--nchnls_i=1');
-                    csound.SetOption('-m35');
-                    csound.SetOption('-d');
-                    csound.CompileOrc(document.getElementById('orc').value);
-                    csound.ReadScore('f 0 360\n');
                     gui.revert();
+                    csound.CompileCsdText(document.getElementById('csd').value);
                     csound.Start();
-                    csound.Perform();
                     start_time_seconds = new Date().getTime() / 1000.0;
+                    csound.Perform();
                     setTimeout(updateTimeCell, 0);
                 },
                 Stop: function() {

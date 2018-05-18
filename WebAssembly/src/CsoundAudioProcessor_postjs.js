@@ -138,6 +138,40 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 this.port.postMessage(["Perform", result]);
             }
                 break;
+            case "PerformCsd":
+            {
+                let result = 0;
+                let options = data[1];
+                let csd = data[2];
+                this.csound.CompileCsdText(csd);
+                for(let i = 0; i < options.length; i++) {
+                    this.csound.SetOption(options[i]);
+                }
+                result = this.csound.Start();
+                this.port.postMessage(["PerformCsd", result]);
+            }
+                break;
+            case "PerformOrc":
+            {
+                let result = 0;
+                let options = data[1];
+                let orc = data[2];
+                this.csound.CompileOrc(orc);
+                for(let i = 0; i < options.length; i++) {
+                    this.csound.SetOption(options[i]);
+                }
+                if (data.length > 3) {
+                    let sco = data[3];
+                    if (typeof sco !== 'undefined') {
+                        if (sco !== null) {                    
+                            this.csound.ReadScore(sco);
+                        }
+                    }
+                }
+                result = this.csound.Start();
+                this.port.postMessage(["PerformCsd", result]);
+           }
+                break;
             case "ReadScore":
                 result = this.csound.ReadScore(data[1]);
                 this.port.postMessage(["ReadScore", result]);

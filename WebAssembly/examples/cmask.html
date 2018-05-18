@@ -3,17 +3,29 @@
 <html>
 <head>
     <title>Minimal Example using Csound for WebAssembly OR csound.node</title>
+    
+    <script src="cmask.js"></script>
+    <script>
+        var csoundMessageCallback = function(message) {
+            var messages_textarea = document.getElementById("console");
+            var existing = messages_textarea.value;
+            messages_textarea.value = existing + message;
+            messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+        };
+        console.log("Convince the WASM 'Module' code that we are actually running in Node.js.");
+        var module = {};
+        module["ENVIRONMENT"] = "NODE";
+        cmask_module(module).then(function(module) {
+            cmask = module;
+            csoundMessageCallback("\nModule: cmask.js has been loaded.\n");
+        }, function(error) {
+           alert(error);
+        });
+    </script>
     <script src="csound_extended.js"></script> 
     <script src="CsoundAudioNode.js"></script>
     <script src="csound_loader.js"></script>
-    <script src="cmask.js"></script>
     <script>
-        cmask_module().then(function(module) {
-            cmask = module;
-            console.log("Module: cmask.js has been loaded.\n");
-        }).catch(error => {
-           console.log(error);
-        });
         try {
             nw_window.on('close', function() {
                 console.log('Closing down...');
@@ -27,12 +39,6 @@
 <body>
     <h1>Minimal Example using <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> with csound-extended for WebAssembly</h1>
     <script>
-    var csoundMessageCallback = function(message) {
-        var messages_textarea = document.getElementById("console");
-        var existing = messages_textarea.value;
-        messages_textarea.value = existing + message;
-        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
-    };
     var onPlayClick = function() {
         get_csound(csoundMessageCallback);
         if (document.getElementById("csound_node").checked === true) {
@@ -77,7 +83,7 @@
     <p>
     <form>
     <input id="csound_node" name="csound" type="radio"> csound.node 
-    <input id="csound_web_audio" name="csound" type="radio"csound_ > ScriptProcessor 
+    <input id="csound_web_audio" name="csound" type="radio" > ScriptProcessor 
     <input id="csound_audio_node" name="csound" type="radio"> AudioWorklet
     </form>
     </p>
@@ -89,7 +95,7 @@
     <textarea id='orc' cols=80 rows=15>
 sr          =           48000
 ksmps       =           128
-nchnls_i    =           1
+; nchnls_i    =           1
 nchnls      =           2
 0dbfs       =           32768
 
