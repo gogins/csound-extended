@@ -1,7 +1,7 @@
 import ctcsound
 import random
 output = "test.wav"
-#output = "dac"
+output = "dac"
 
 prologue = '''
 if p3 == -1 then
@@ -68,7 +68,7 @@ giPianoteq init 0
 ;#include "FM_Clang_Controls.inc"
 ;#include "FM_Clang.inc"
 ;#include "FM_Clang_Preset.inc"
-#include "FMDroner.inc"
+;#include "FMDroner.inc"
 ;#include "FMModerate2.inc"
 ;#include "FMModerate.inc"
 ;#include "FMModulatedChorus.inc"
@@ -95,7 +95,7 @@ giPianoteq init 0
 ;#include "SolinaChorus.inc
 ;#include "Soundfile.inc"
 ;#include "Spatialize.inc"
-;#include "STKBeeThree.inc"
+#include "STKBeeThree.inc"
 ;#include "STKBowed.inc"
 ;#include "STKPlucked.inc"
 ;#include "Sweeper.inc"

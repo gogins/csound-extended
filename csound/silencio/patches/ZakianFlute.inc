@@ -26,7 +26,7 @@ k_gain = ampdb(gk_ZakianFlute_level)
 iattack = .002
 isustain = p3
 irelease = .3
-xtratim = iattack + isustain + irelease
+xtratim iattack + isustain + irelease
 iHz = cpsmidinn(i_midi_key)
 kHz = k(iHz)
 aenvelope transeg 1.0, 20.0, -10.0, 0.05
