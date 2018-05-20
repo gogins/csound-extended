@@ -1,9 +1,7 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Minimal Example using Csound for WebAssembly OR csound.node</title>
-    
     <script src="cmask.js"></script>
     <script>
         var csoundMessageCallback = function(message) {
@@ -15,6 +13,7 @@
         console.log("Convince the WASM 'Module' code that we are actually running in Node.js.");
         var module = {};
         module["ENVIRONMENT"] = "NODE";
+        module["print"] = csoundMessageCallback;
         cmask_module(module).then(function(module) {
             cmask = module;
             csoundMessageCallback("\nModule: cmask.js has been loaded.\n");
