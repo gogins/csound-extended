@@ -77,7 +77,7 @@ var get_csound = function(csound_message_callback) {
         return csound_web_audio;
     } else {
         csound = null;
-        console.log("Csound has not yet been loaded, wait a bit...\n");
+        alert("Csound has not yet been loaded, wait a bit...\n");
         return csound;
     }
 }       
