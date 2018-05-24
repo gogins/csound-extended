@@ -12,7 +12,7 @@ else
 LOCAL_CFLAGS := -std=c99 -O3 -DENABLE_OPCODEDIR_WARNINGS -D__BUILDING_LIBCSOUND -DENABLE_NEW_PARSER -DLINUX -DHAVE_DIRENT_H -DHAVE_FCNTL_H -DHAVE_UNISTD_H -DHAVE_STDINT_H -DHAVE_SYS_TIME_H -DHAVE_SYS_TYPES_H -DHAVE_TERMIOS_H -DHAVE_STRTOK_R -DHAVE_BUILTIN_ATOMIC -DHAVE_PTHREAD -DHAVE_BUILTIN_ATOMIC -DHAVE_ATOMIC_BUILTIN -unroll-allow-partial -unroll-runtime -funsafe-math-optimizations -ffast-math -DPFFFT_SIMD_DISABLE
 endif 
 
-LOCAL_CPPFLAGS += -std=c++11 -pthread -frtti -fexceptions
+LOCAL_CPPFLAGS += -std=gnu++11 -pthread -frtti -fexceptions
 LOCAL_LDFLAGS += -Wl,--export-dynamic -L$(NDK_MODULE_PATH)/luajit-2.0/src -L$(LIBSNDFILE_SRC_DIR) -L$(NDK_MODULE_PATH)/csound-oboe/libs
 
 ifeq ($(TARGET_ARCH_ABI),$(filter $(TARGET_ARCH_ABI), armeabi-v7a x86))
