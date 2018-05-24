@@ -655,26 +655,34 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                 if (index >= 0) {
                                     chosenDir = chosenDir.substring(index + 1);
                                 }
-                                File newFile = new File(chosenDir);
-                                if (csound_file.equals(newFile)) {
+                                if (csound_file == null) {
                                     Context context = getApplicationContext();
-                                    CharSequence text = "'Save as' aborted; the new file is the same as the old file!";
+                                    CharSequence text = "'Save as' aborted; there is no existing file to save.";
                                     int duration = Toast.LENGTH_SHORT;
                                     Toast toast = Toast.makeText(context, text, duration);
                                     toast.show();
                                 } else {
-                                    try {
-                                        FileInputStream in = new FileInputStream(csound_file);
-                                        FileOutputStream out = new FileOutputStream(newFile);
-                                        copyFile(in, out);
-                                        in.close();
-                                        in = null;
-                                        out.flush();
-                                        out.close();
-                                        out = null;
-                                        CsoundAppActivity.this.OnFileChosen(newFile);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                    File newFile = new File(chosenDir);
+                                    if (csound_file.equals(newFile)) {
+                                        Context context = getApplicationContext();
+                                        CharSequence text = "'Save as' aborted; the new file is the same as the old file!";
+                                        int duration = Toast.LENGTH_SHORT;
+                                        Toast toast = Toast.makeText(context, text, duration);
+                                        toast.show();
+                                    } else {
+                                        try {
+                                            FileInputStream in = new FileInputStream(csound_file);
+                                            FileOutputStream out = new FileOutputStream(newFile);
+                                            copyFile(in, out);
+                                            in.close();
+                                            in = null;
+                                            out.flush();
+                                            out.close();
+                                            out = null;
+                                            CsoundAppActivity.this.OnFileChosen(newFile);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             }
