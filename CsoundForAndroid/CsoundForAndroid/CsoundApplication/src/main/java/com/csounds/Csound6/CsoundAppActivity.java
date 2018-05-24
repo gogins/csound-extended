@@ -71,6 +71,8 @@ import csnd6.Csound;
 import csnd6.CsoundCallbackWrapper;
 import csnd6.CsoundOboe;
 
+
+
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
@@ -115,6 +117,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     WebView webview = null;
     private String screenLayout = "2";
     protected CsoundCallbackWrapper oboe_callback_wrapper = null;
+    Intent csound_service_intent = null;
 
     static {
         int result = 0;
@@ -509,10 +512,11 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        final boolean b = this.stopService(csound_service_intent);
         try {
             csound_oboe.stop();
         } catch (Exception e) {
-            Log.e("error", "could not stop csound");
+            Log.e("Csond6", "Could not stop csound_oboe.");
         }
     }
 
@@ -534,6 +538,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Start a service that will keep this activity's process running in the background.
+        csound_service_intent = new Intent(this, com.csounds.Csound6.CsoundService.class);
+        this.startService(csound_service_intent);
         // We ask for the data directory in case Android changes on
         // us without warning.
         try {
