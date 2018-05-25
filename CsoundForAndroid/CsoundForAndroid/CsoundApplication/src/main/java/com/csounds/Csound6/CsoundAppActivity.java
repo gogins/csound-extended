@@ -249,13 +249,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         File outFile = null;
         switch (item.getItemId()) {
             case R.id.itemGuide:
-                if (webview == null) {
-                    webview = new WebView(this);
-                    setContentView(webview);
-                    webview.loadUrl("file:///android_asset/Csound6_User_Guide.html");
-                } else {
-                    setContentView(webview);
-                }
+                File user_guide = copyAsset("Csound6_User_Guide.pdf");
+                Intent i = new Intent(Intent.ACTION_VIEW,  Uri.fromFile(user_guide));
+                startActivity(i);
                 return true;
             case R.id.itemHelp:
                 goToUrl("http://csound.github.io/docs/manual/indexframes.html");
@@ -503,6 +499,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     private void OnFileChosen(File file) {
+        ///setContentView(R.layout.main);
         Log.d("FILE CHOSEN", file.getAbsolutePath());
         csound_file = file;
         setTitle(csound_file.getName());
