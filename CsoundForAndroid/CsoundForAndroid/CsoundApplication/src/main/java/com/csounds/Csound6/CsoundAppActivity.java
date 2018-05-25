@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
@@ -471,22 +472,27 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             channelsLayout.setVisibility(channelsLayout.GONE);
             webView.setVisibility(webView.GONE);
             messageScrollView.setVisibility(messageScrollView.VISIBLE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (screenLayout.equals("2")) {
             channelsLayout.setVisibility(channelsLayout.GONE);
             webView.setVisibility(webView.VISIBLE);
             messageScrollView.setVisibility(messageScrollView.GONE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (screenLayout.equals("3")) {
             channelsLayout.setVisibility(channelsLayout.GONE);
             webView.setVisibility(webView.VISIBLE);
             messageScrollView.setVisibility(messageScrollView.VISIBLE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (screenLayout.equals("4")) {
             channelsLayout.setVisibility(channelsLayout.VISIBLE);
             webView.setVisibility(webView.GONE);
             messageScrollView.setVisibility(messageScrollView.GONE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else if (screenLayout.equals("5")) {
             channelsLayout.setVisibility(channelsLayout.VISIBLE);
             webView.setVisibility(webView.GONE);
             messageScrollView.setVisibility(messageScrollView.VISIBLE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         View mainLayout = findViewById(R.id.mainLayout);
         mainLayout.invalidate();
