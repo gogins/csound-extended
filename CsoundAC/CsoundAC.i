@@ -93,7 +93,7 @@
 import sys
 import csnd6
 sys.modules["__main__"].csound = csnd6.CppSound()
-sys.modules["__main__"].csound.thisown = 0
+# sys.modules["__main__"].csound.thisown = 0
 sys.modules["__main__"].csound.setPythonMessageCallback()
 %}
 
