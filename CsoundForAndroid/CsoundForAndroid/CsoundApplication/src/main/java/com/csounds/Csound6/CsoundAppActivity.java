@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -125,26 +126,23 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         try {
             java.lang.System.loadLibrary("sndfile");
         } catch (Throwable e) {
-            java.lang.System.err
-                    .println("Csound6: sndfile native code library failed to load.\n");
-            java.lang.System.err.println(e.toString());
+            Log.e("Csound: ","sndfile native code library failed to load.\n");
+            Log.e("Csound: ", e.toString());
         }
         try {
             java.lang.System.loadLibrary("csoundandroid");
         } catch (Throwable e) {
-            java.lang.System.err
-                    .println("Csound6: csoundandroid native code library failed to load.\n"
+            Log.e("Csound: ","Csound: csoundandroid native code library failed to load.\n"
                             + e);
-            java.lang.System.err.println(e.toString());
-            // java.lang.System.exit(1);
+            Log.e("Csound: ", e.toString());
         }
         try {
             result = csnd6.csnd
                     .csoundInitialize(csnd6.csnd.CSOUNDINIT_NO_ATEXIT);
         } catch (Throwable e) {
-            java.lang.System.err.println("Csound6: csoundInitialize failed.\n"
+            Log.e("Csound: ", "csoundInitialize failed.\n"
                     + e);
-            java.lang.System.err.println(e.toString());
+            Log.e("Csound: ", e.toString());
             // java.lang.System.exit(1);
         }
     }
@@ -164,7 +162,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 out.close();
             }
         } catch (IOException e) {
-            Log.e("Csound6", "Could not write file " + e.getMessage());
+            Log.e("Csound:", "Could not write file " + e.getMessage());
         }
     }
 
@@ -210,7 +208,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         try {
             Class<?> libcore = Class.forName("libcore.io.Libcore");
             if (libcore == null) {
-                Log.w("Csound6", "Cannot find libcore.os.Libcore;");
+                Log.w("Csound:", "Cannot find libcore.os.Libcore;");
                 //                return;
             } else {
                 final Object os = Class.forName("libcore.io.Libcore").getField("os").get(null);
@@ -218,8 +216,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 method.invoke(os, variable, value, true);
             }
         } catch ( Exception e) {
-            Log.w("Csound6", Log.getStackTraceString(e));
-            Log.w("Csound6", e.getMessage());
+            Log.w("Csound:", Log.getStackTraceString(e));
+            Log.w("Csound:", e.getMessage());
         }
     }
 
@@ -378,7 +376,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                         csoundMessageStringBuilder.append(c);
                     }
                 }
-                Log.i("Csound6", message);
+                Log.i("Csound:", message);
             }
         });
     }
@@ -405,7 +403,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     public void setTitle(String title) {
-        String fullTitle = "Csound6";
+        String fullTitle = "Csound:";
         if (title != null) {
             fullTitle = fullTitle + ": " + title;
         }
@@ -506,34 +504,32 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
 
     private void OnFileChosen(File file) {
         ///setContentView(R.layout.main);
-        Log.d("FILE CHOSEN", file.getAbsolutePath());
+        Log.d("Csound:", file.getAbsolutePath());
         csound_file = file;
         setTitle(csound_file.getName());
         parseWebLayout();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        final boolean b = this.stopService(csound_service_intent);
-        try {
-            csound_oboe.stop();
-        } catch (Exception e) {
-            Log.e("Csond6", "Could not stop csound_oboe.");
-        }
+    protected void onStop() {
+        super.onStop();
+        Log.d("Csound:", "onStop...");
     }
 
-    /**
-     * Quit performing on leaving the user interface of the app.
-     */
-    public synchronized void onBackPressed() {
-        if (webview != null) {
-            setContentView(R.layout.main);
-            webview = null;
-        } else {
-            finish();
+    @Override
+    protected void onDestroy() {
+        Log.d("Csound:", "onDestroy...");
+        super.onDestroy();
+        final boolean b = stopService(csound_service_intent);
+        try {
+            if (csound_oboe != null) {
+                csound_oboe.stop();
+            }
+        } catch (Exception e) {
+            Log.e("Csound:", "Could not stop csound_oboe: \n" + e.toString());
         }
-    }
+        finishAndRemoveTask();
+     }
 
     /**
      * Called when the activity is first created.
@@ -541,9 +537,10 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Csound:", "onCreate...");
         // Start a service that will keep this activity's process running in the background.
         csound_service_intent = new Intent(this, com.csounds.Csound6.CsoundService.class);
-        this.startService(csound_service_intent);
+        ComponentName componentName = startService(csound_service_intent);
         // We ask for the data directory in case Android changes on
         // us without warning.
         try {
@@ -906,7 +903,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 setTitle(csound_file.getName());
             }
         } catch (Exception e) {
-            Log.e("error", e.toString());
+            Log.e("Csound:", e.toString());
         }
     }
 
@@ -914,7 +911,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         try {
             path.mkdirs();
         } catch (SecurityException e) {
-            Log.e("error", "unable to write on the sd card ");
+            Log.e("Csound:", "unable to write on the sd card ");
         }
 
         if (path.exists()) {

@@ -27,7 +27,7 @@
 #include <iomanip>
 #include <sstream>
 #if defined(HAVE_IO_H)
-#ifdef LINUX
+#ifdef __linux__
 #include <sys/io.h>
 #else
 #include <io.h>

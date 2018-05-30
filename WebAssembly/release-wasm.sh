@@ -1,7 +1,6 @@
 #!/bin/sh
 echo "Creating a release for Csound for WebAssembly..."
-export CS_VERSION="0.1.2-beta"
-export RELEASE_DIR=csound-extended-wasm-${CS_VERSION}
+export RELEASE_DIR=csound-extended-wasm-${CSOUND_EXTENDED_VERSION}
 
 #remove backup files ending with ~
 find . -name "*~" -exec rm {} \;

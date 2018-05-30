@@ -21,6 +21,7 @@ if (typeof csound !== 'undefined') {
 }
 csound = null;
 try {
+    console.log("Trying to load csound.node...");
     csound_node = require('csound.node');
     var nwgui = require('nw.gui');
     nw_window = nwgui.Window.get();
@@ -35,6 +36,7 @@ try {
     console.log(e);
 }
 try {
+    console.log("Trying to load CsoundAudioNode...");
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audioContext = new AudioContext();
     audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
@@ -48,6 +50,7 @@ try {
     console.log(e);
 }
 try {
+    console.log("Trying to load csound_extended...");
     csound_extended_module(csound_extended).then(function(module) {
         csound_extended = module;
         csound_web_audio = new csound_extended.CsoundWebAudio();

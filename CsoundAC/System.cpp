@@ -485,7 +485,7 @@ namespace csound
     Beep(880, 1000);
   }
 
-#elif defined(LINUX) || defined(MACOSX)
+#elif defined(__linux__) || defined(MACOSX)
 
 #include <dlfcn.h>
 #include <dirent.h>
