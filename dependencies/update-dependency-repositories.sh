@@ -12,6 +12,12 @@ echo "Pulling from `pwd`..."
 git pull 
 git branch
 cd ..
+cd examples
+git checkout master
+echo "Pulling from `pwd`..."
+git pull 
+git branch
+cd ..
 #cd eigen
 #echo "Pulling from `pwd`..."
 #git checkout master

@@ -1,6 +1,6 @@
 # CSOUND-EXTENDED
 
-Version 0.1.0
+Version 0.1.2
 Michael Gogins
 
 This repository contains various extensions to Csound that have been moved 
@@ -22,12 +22,18 @@ These extensions include:
 
 4.  CsoundVST, Csound in the form of a VST plugin.
 
-5.  Csound for Android, almost all features of Csound in an Android app that 
+5.  vst4cs, opcodes enabling Csound to load and use VST plugin instruments 
+    and effects.
+    
+6.  A port of the algorithmic composition program CMask by Andre Bartetzki 
+    to WebAssembly and to a Linux Csound plugin opcode.
+
+7.  Csound for Android, almost all features of Csound in an Android app that 
     also integrates Csound with HTML5. Please note, dependencies of Csound 
     for Android are fetched from the core Csound repository, and rebuilt 
     using the Android NDK.
     
-6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
+8.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
     module that will run Csound from a JavaScript interface in any current 
     Web browser. This version includes useful plugin opcodes statically 
     linked. Some live examples run from [here](https://gogins.github.io/csound-extended/).
@@ -80,12 +86,20 @@ with debug information. There are few (ideally, no) configuration options.
 When the build is complete, all targets have been built and the package 
 files have been generated.
 
-If you have more than one version of the Qt SDK installed, you will need to 
-execute, probably in your login .profile script, `export QT_SELECT=qt5`.
+The following environment variables MUST be set before building, perhaps in 
+your `.profile` script. Obviously, modify the paths as required to suit your 
+home directory and installation details.
 
-To build on Linux for the first time, change to the root directory of the 
-csound-extended repository and execute `fresh-build-linux.sh`, which does 
-the following:
+```
+CSOUND_SRC_ROOT=/home/mkg/csound-extended/dependencies/csound
+CSOUND_EXTENDED_VERSION=0.1.2
+NODE_PATH=/home/mkg/csound/csound/frontends/nwjs/build/Release
+OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
+RAWWAVE_PATH=/home/mkg/stk/rawwaves
+```
+
+Change to your csound-extended repository and execute `fresh-build-linux.sh`, 
+which does the following:
 
 1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever 
     you think a dependency has changed.
@@ -93,11 +107,13 @@ the following:
 2.  Execute `bash build-linux.sh`. The build compiles all targets and creates 
     all packages.
 
-3.  To make clean, execute `bash clean-linux.sh`. 
-
-4.  To install, change to `build-linux` and execute `sudo make install`.
-
 Subsequently, you can perform these steps independently.
+
+To make clean, execute `bash clean-linux.sh`. 
+
+To install, change to `build-linux` and execute `sudo make install`.
+
+Add `/usr/local/csound` to your `/etc/ld.so.conf` file and run `sudo ldconfig`.
 
 ### Building for Android
 
@@ -114,7 +130,8 @@ Prerequisites for building include:
     GDB, LLDB, the NDK, and build tools 26.0.2.
 
 2.  In order to enable local NDK builds (i.e. in individual subdirectories), 
-    you must set the following environment variables:
+    you must set the following environment variables, probably in your 
+    `.profile` script:
     
     2.1.    `ANDROID_NDK_ROOT` with the full pathname of your Android Native 
             Development kit, typically `$ANDROID_SDK_ROOT/ndk-bundle`.
@@ -140,13 +157,13 @@ To build for Android on Linux for the first time, change to the
     by the Csound for Android app, and copies them to the 
     appropriate subdirectories for further building and packaging.
     
-3.  Run Android Studio and load the `CsoundForAndroid/build.gradle` project.
+Run Android Studio and load the `CsoundForAndroid/build.gradle` project.
 
-4.  Attach an Android device, enable USB debugging on it, and debug the 
-    CsoundApplication project.
+Attach an Android device, enable USB debugging on it, and debug the 
+CsoundApplication project.
     
-5.  For a production build, apply to me for the signing key, build for 
-    release, and generate a signed `.apk`.
+For a production build, apply to me for the signing key, build for 
+release, and generate a signed `.apk`.
     
 ### Building for WebAssembly
 
