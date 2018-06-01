@@ -26,7 +26,7 @@ k_gain = ampdb(gk_Shiner_level)
 iattack = i(gk_Shiner_attack)
 idecay = i(gk_Shiner_release)
 isustain = p3 - i(gk_Shiner_attack)
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 gk_Harmonics = 1 * 20

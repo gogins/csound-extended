@@ -30,7 +30,7 @@ k_gain = ampdb(gk_YiString_level)
 iattack = gi_YiString_overlap
 isustain = p3
 idecay = gi_YiString_overlap
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
 ;ampenv = madsr:a(1, 0.1, 0.95, 0.5)
 asignal = vco2(1, i_frequency)

@@ -22,7 +22,7 @@ iattack = 0.002
 isustain = p3
 idecay = 1.5
 irelease = 0.05
-p3 = iattack + isustain + irelease
+xtratim iattack + isustain + irelease
 icarrier = 1
 imodulator = 4
 ifmamplitude = 9
@@ -38,7 +38,7 @@ a_signal = (aouta + aoutb) * aindenv
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-p3 = i_attack + i_sustain + i_release
+xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION

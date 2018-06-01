@@ -49,7 +49,7 @@ k10 = gk_FMDroner_partial10
 iattack = .5
 idecay = .5
 isustain = p3
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 ;asignal poscil3 1, ihertz, gi_FMDroner_sine
@@ -60,7 +60,7 @@ a_signal = asignal
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-p3 = i_attack + i_sustain + i_release
+xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION

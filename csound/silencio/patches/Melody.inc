@@ -26,7 +26,7 @@ ip3 init 3.0
 iattack = 0.05
 isustain = p3
 irelease = 0.1
-p3 = iattack + isustain + irelease
+xtratim iattack + isustain + irelease
 ichebychev ftgenonce 0, 0, 65536, -7, -1, 150, 0.1, 110, 0, 252, 0
 isine ftgenonce 0, 0, 65536, 10, 1
 icook3 ftgenonce 0, 0, 65536, 10, 1, .4, 0.2, 0.1, 0.1, .05

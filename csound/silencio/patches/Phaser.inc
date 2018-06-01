@@ -17,7 +17,7 @@ iamp = ampdb(ivelocity) * 8
 iattack = i(gk_Phaser_attack)
 idecay = i(gk_Phaser_release)
 isustain = p3 - i(gk_Phaser_attack)
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(ikey)
 isine ftgenonce 0,0,65536,10,1

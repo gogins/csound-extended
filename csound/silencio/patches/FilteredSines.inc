@@ -26,7 +26,7 @@ koctave = octcps(kHz)
 iattack init gi_FilteredSines_attack
 isustain init p3
 irelease init gi_FilteredSines_release
-p3 = iattack + isustain + irelease
+xtratim iattack + isustain + irelease
 idb = 1.5
 ibergeman ftgenonce 0, 0, 65536, 10, .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
 ip5 = ibergeman
@@ -65,7 +65,7 @@ a_signal = (a17 + a18)
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-p3 = i_attack + i_sustain + i_release
+xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION

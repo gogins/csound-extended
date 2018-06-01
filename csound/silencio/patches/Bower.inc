@@ -26,7 +26,7 @@ k_gain = ampdb(gk_Bower_level)
 iattack = i(gk_Bower_attack)
 idecay = i(gk_Bower_release)
 isustain = p3 - i(gk_Bower_release)
-p3 = iattack + isustain + idecay
+xtratim iattack + isustain + idecay
 iamp = i_amplitude
 kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)

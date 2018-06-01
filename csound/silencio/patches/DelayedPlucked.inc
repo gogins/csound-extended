@@ -25,7 +25,7 @@ iattack = 0.006
 idecay = 1.5
 isustain = p3
 irelease = 0.05
-p3 = iattack + isustain + irelease
+xtratim iattack + isustain + irelease
 ihertz = i_frequency
 ioctave = octcps(i_frequency)
  ; Detuning of strings by 4 cents each way.
@@ -53,7 +53,7 @@ a_signal = asignal
 i_attack = .01
 i_sustain = p3
 i_release = 0.1
-p3 = i_attack + i_sustain + i_release
+xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
