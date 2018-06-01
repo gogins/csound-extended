@@ -29,7 +29,7 @@ ifmamplitude = 9
 index = 2
 ifrequencyb = i_frequency * 1.003
 icarrierb = icarrier * 1.004
-aindenv transegr 0.0, iattack, 9.0, 1.0, idecay, 10.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
+aindenv transegr 0.0, iattack, -8.0, 1.0, idecay, -8.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
 aindex = aindenv * index * ifmamplitude
 icosine ftgenonce 0, 0, 65536, 11, 1
 aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine

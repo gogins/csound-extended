@@ -71,7 +71,7 @@ i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
 i_overall_amps = 80 - 15 - 12 
-i_normalization = ampdb(-i_overall_amps) / 2
+i_normalization = ampdb(-i_overall_amps) / 8
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FM_Clang_level)
 gk_FM_Clang_Dry table gk_FM_Clang_DryWet,gi_FM_Clang_DryMap,1 ; map dry/wet control

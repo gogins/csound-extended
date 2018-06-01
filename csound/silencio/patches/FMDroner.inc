@@ -17,7 +17,7 @@ gk_FMDroner_y init 0
 gk_FMDroner_z init 0
 gk_FMDroner_level init 0
 gi_FMDroner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
-instr Droner
+instr FMDroner
 if p3 == -1 then
   p3 = 1000000
 endif
