@@ -704,7 +704,6 @@ function getMemory(size) {
 /** @type {function(number, number=)} */
 function Pointer_stringify(ptr, length) {
   if (length === 0 || !ptr) return '';
-  // TODO: use TextDecoder
   // Find the length, and check for UTF while doing so
   var hasUtf = 0;
   var t;
@@ -1227,7 +1226,11 @@ function enlargeMemory() {
     if (TOTAL_MEMORY <= 536870912) {
       TOTAL_MEMORY = alignUp(2 * TOTAL_MEMORY, PAGE_MULTIPLE); // Simple heuristic: double until 1GB...
     } else {
-      TOTAL_MEMORY = Math.min(alignUp((3 * TOTAL_MEMORY + 2147483648) / 4, PAGE_MULTIPLE), LIMIT); // ..., but after that, add smaller increments towards 2GB, which we cannot reach
+      // ..., but after that, add smaller increments towards 2GB, which we cannot reach
+      TOTAL_MEMORY = Math.min(alignUp((3 * TOTAL_MEMORY + 2147483648) / 4, PAGE_MULTIPLE), LIMIT);
+      if (TOTAL_MEMORY === OLD_TOTAL_MEMORY) {
+        warnOnce('Cannot ask for more memory since we reached the practical limit in browsers (which is just below 2GB), so the request would have failed. Requesting only ' + TOTAL_MEMORY);
+      }
     }
   }
 
@@ -1329,7 +1332,7 @@ var __ATPRERUN__  = []; // functions called before the runtime is initialized
 var __ATINIT__    = []; // functions called during startup
 var __ATMAIN__    = []; // functions called when main() is to be run
 var __ATEXIT__    = []; // functions called during shutdown
-var __ATPOSTRUN__ = []; // functions called after the runtime has exited
+var __ATPOSTRUN__ = []; // functions called after the main() is called
 
 var runtimeInitialized = false;
 var runtimeExited = false;
@@ -10860,8 +10863,9 @@ run();
   return cmask_module;
 };
 if (typeof exports === 'object' && typeof module === 'object')
-  module.exports = cmask_module;
-else if (typeof define === 'function' && define['amd'])
-  define([], function() { return cmask_module; });
-else if (typeof exports === 'object')
-  exports["cmask_module"] = cmask_module;
+    module.exports = cmask_module;
+  else if (typeof define === 'function' && define['amd'])
+    define([], function() { return cmask_module; });
+  else if (typeof exports === 'object')
+    exports["cmask_module"] = cmask_module;
+  

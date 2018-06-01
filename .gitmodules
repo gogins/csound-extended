@@ -49,3 +49,6 @@
 [submodule "dependencies/cmask"]
 	path = dependencies/cmask
 	url = https://github.com/gogins/cmask.git
+[submodule "dependencies/examples"]
+	path = dependencies/examples
+	url = https://github.com/gogins/examples.git
