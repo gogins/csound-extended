@@ -36,13 +36,13 @@ em++ -std=c++11 -s SAFE_HEAP=1 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODUL
 # 1024 * 64 = 65536 is 64 KB
 # 65536 * 1024 * 4 is 268435456
 
-em++ -std=c++11 --bind --pre-js ../src/CsoundWebAudio.js --embed-file ../../dependencies/csound/samples@/ -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0 -s FORCE_FILESYSTEM=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s "EXPORT_NAME='csound_extended_module'" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o csound_extended.js
+em++ -std=c++11 --bind --pre-js ../src/CsoundWebAudio.js --embed-file ../../dependencies/csound/samples@/ -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0  -s "BINARYEN_TRAP_MODE='clamp'" -s FORCE_FILESYSTEM=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s "EXPORT_NAME='csound_extended_module'" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o csound_extended.js
 
 # -s MODULARIZE=1 -s EXPORT_NAME=\"'csound_audio_processor_module'\"
 
 echo "Compiling CsoundAudioProcessor..."
 
-em++ -v -O1 -std=c++11 --bind --embed-file ../../dependencies/csound/samples@/ --pre-js ../src/CsoundAudioProcessor_prejs.js --post-js ../src/CsoundAudioProcessor_postjs.js -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -s WASM=1 -s ASSERTIONS=0 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=0 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o CsoundAudioProcessor.js
+em++ -v -O1 -std=c++11 --bind --embed-file ../../dependencies/csound/samples@/ --pre-js ../src/CsoundAudioProcessor_prejs.js --post-js ../src/CsoundAudioProcessor_postjs.js -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -s WASM=1 -s ASSERTIONS=0 -s "BINARYEN_TRAP_MODE='clamp'" -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=0 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' csound_web_audio.bc libcsound.a ../deps/libsndfile-1.0.25/libsndfile-wasm.a -o CsoundAudioProcessor.js
 
 cd ..
 bash release-wasm.sh
