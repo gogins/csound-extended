@@ -1,4 +1,8 @@
 gk_HeavyMetal_level init 0
+gi_HeavyMetal_sine ftgen 0, 0, 65536, 10, 1
+gi_HeavyMetal_cosine ftgen 0, 0, 65536, 11, 1
+gi_HeavyMetal_exponentialrise ftgen 0, 0, 65536, 5, .001, 513, 1 ; Exponential rise.
+gi_HeavyMetal_thirteen ftgenonce 0, 0, 65536, 9, 1, .3, 0
 instr HeavyMetal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Author: Perry Cook and John ffitch
@@ -24,15 +28,11 @@ iindex = 1.1
 icrossfade = 2
 ivibedepth = 0.02
 iviberate = 4.8
-isine ftgenonce 0, 0, 65536, 10, 1
-icosine ftgenonce 0, 0, 65536, 11, 1
-iexponentialrise ftgenonce 0, 0, 65536, 5, .001, 513, 1 ; Exponential rise.
-ithirteen ftgenonce 0, 0, 65536, 9, 1, .3, 0
-ifn1 = isine
-ifn2 = iexponentialrise
-ifn3 = ithirteen
-ifn4 = isine
-ivibefn = icosine
+ifn1 = gi_HeavyMetal_sine
+ifn2 = gi_HeavyMetal_exponentialrise
+ifn3 = gi_HeavyMetal_thirteen
+ifn4 = gi_HeavyMetal_sine
+ivibefn = gi_HeavyMetal_cosine
 iattack = 0.003
 idecay = 3.0
 isustain = p3

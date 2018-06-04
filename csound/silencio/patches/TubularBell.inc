@@ -1,6 +1,6 @@
 gk_TubularBell_level init 0
 gi_TubularBell_crossfade init 2
-gi_TubularBell_vibrato_depth init .33333
+gi_TubularBell_vibrato_depth init .1
 gi_TubularBell_vibrato_rate init 5
 instr TubularBell
 ; Authors: Perry Cook, John ffitch, Michael Gogins

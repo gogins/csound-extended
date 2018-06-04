@@ -367,12 +367,15 @@ if (typeof console === 'undefined') {
     // A chord is one point in a space with one dimension per voice.
     // Pitches are represented as semitones with 0 at the origin
     // and middle C as 60.
-    var Chord = function() {
+    var Chord = function(array_) {
         this.voices = [];
         this.duration = [];
         this.channel = [];
         this.velocity = [];
         this.pan = [];
+        if (typeof array_ != 'undefined') {
+            this.set(array_);
+        }
     };
     ChordSpace.Chord = Chord;
 
@@ -436,6 +439,12 @@ if (typeof console === 'undefined') {
     Chord.prototype.setChannel = function(value) {
         for (var voice = 0; voice < this.voices.length; voice++) {
             this.channel[voice] = value;
+        }
+    };
+
+    Chord.prototype.setChannelsToVoices = function() {
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            this.channel[voice] = voice + 1;
         }
     };
 

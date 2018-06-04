@@ -392,6 +392,30 @@ if (typeof console === 'undefined') {
         return text;
     };
 
+    /**
+     * For turning an event off; the default is with immediate effect, 
+     * otherwise at the scheduled time.
+     */
+    Event.prototype.toDStatement = function(scheduled) {
+        var text = 'd';
+        text = text.concat(' ', this.data[3].toFixed(6)); // p1
+        if (typeof scheduled === 'undefined') {
+            text = text.concat(' ', 0); // p2
+        } else {
+            text = text.concat(' ', scheduled.toFixed(6)); // p2
+        }
+        text = text.concat(' ', this.data[0].toFixed(6)); // p2
+        text = text.concat(' ', this.data[1].toFixed(6)); // p3
+        text = text.concat(' ', this.data[4].toFixed(6)); // p4
+        text = text.concat(' ', this.data[5].toFixed(6)); // p5
+        text = text.concat(' ', this.data[6].toFixed(6)); // p6
+        text = text.concat(' ', this.data[7].toFixed(6)); // p7
+        text = text.concat(' ', this.data[8].toFixed(6)); // p8
+        text = text.concat(' ', this.data[9].toFixed(6)); // p9
+        text = text.concat('\n');
+        return text;
+    }
+
     Event.prototype.toFomus = function() {
         return 'note part ' + Math.floor(this.channel) + ' time ' + this.time * 2 + ' duration ' + this.duration * 2 + ' pitch ' + this.key + ' dynamic ' + this.velocity + ';';
     };
@@ -553,6 +577,22 @@ if (typeof console === 'undefined') {
         }
         for (var i = 0; i < this.data.length; i++) {
             jscore += this.data[i].toIStatement();
+        }
+        //console.log(jscore);
+        csound.ReadScore(jscore);
+    };
+
+    Score.prototype.turnoffInCsound = function(csound, extra) {
+        this.sort();
+        if (typeof extra === 'undefined') {
+            jscore = '';
+        } else {
+            extra = 5.0;
+            var duration = this.getDuration() + extra;
+            jscore = 'f 0 ' + duration + ' 0\n';
+        }
+        for (var i = 0; i < this.data.length; i++) {
+            jscore += this.data[i].toDStatement();
         }
         //console.log(jscore);
         csound.ReadScore(jscore);

@@ -1,5 +1,5 @@
 gk_Blower_midi_dynamic_range init 127
-gk_Blower_grainDensity init 150
+gk_Blower_grainDensity init 120
 gk_Blower_grainDuration init 0.2
 gk_Blower_grainAmplitudeRange init 100
 gk_Blower_grainFrequencyRange init .033
@@ -24,7 +24,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 134
+i_level_correction = 132
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Blower_level)
