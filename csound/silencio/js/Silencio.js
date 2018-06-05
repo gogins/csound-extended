@@ -400,11 +400,10 @@ if (typeof console === 'undefined') {
         var text = 'd';
         text = text.concat(' ', this.data[3].toFixed(6)); // p1
         if (typeof scheduled === 'undefined') {
-            text = text.concat(' ', 0); // p2
+            text = text.concat(' ', '0'); // p2
         } else {
             text = text.concat(' ', scheduled.toFixed(6)); // p2
         }
-        text = text.concat(' ', this.data[0].toFixed(6)); // p2
         text = text.concat(' ', this.data[1].toFixed(6)); // p3
         text = text.concat(' ', this.data[4].toFixed(6)); // p4
         text = text.concat(' ', this.data[5].toFixed(6)); // p5

@@ -442,9 +442,18 @@ if (typeof console === 'undefined') {
         }
     };
 
-    Chord.prototype.setChannelsToVoices = function() {
+    Chord.prototype.setChannelsToVoices = function(base_voice) {
+        if (typeof base_voice === 'undefined') {
+            base_voice = 1;
+        }
         for (var voice = 0; voice < this.voices.length; voice++) {
-            this.channel[voice] = voice + 1;
+            this.channel[voice] = base_voice + voice;
+        }
+    };
+    
+    Chord.prototype.setPansToVoices = function() {
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            this.pan[voice] = (voice + 1) / (this.voices.length + 1);
         }
     };
 
@@ -495,7 +504,16 @@ if (typeof console === 'undefined') {
         buffer = buffer + ']';
         return buffer;
     };
-
+    
+    // Returns a musician-friendly string representation of the chord.
+    Chord.prototype.toName= function() {
+        let buffer = ''
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            buffer = buffer + ChordSpace.noteName(this.voices[voice]);
+        }
+        return buffer;
+    };
+    
     // Implements value semantics for ==, for the pitches in this only.
     Chord.prototype.eq_epsilon = function(other) {
         if (this.voices.length !== other.voices.length) {
@@ -761,7 +779,7 @@ if (typeof console === 'undefined') {
         var pc = ChordSpace.modulo(pitch, ChordSpace.OCTAVE);
         return pc;
     };
-
+    
     // Returns whether the chord is within the fundamental domain of
     // pitch-class equivalence, i.e. is a pitch-class set.
     Chord.prototype.isepcs = function() {
@@ -1310,9 +1328,23 @@ if (typeof console === 'undefined') {
     pitchClassesForNames["Bb"] = 10;
     pitchClassesForNames["B"] = 11;
     ChordSpace.pitchClassesForNames = pitchClassesForNames;
+    
+    var namesForPitchClasses = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
     var chordsForNames = {};
     var namesForChords = {};
+    
+    // Returns the standard name for the pitch (middle C is MIDI key 60 is 
+    // C4). There are of course no enharmonic names here, so all are sharps. 
+    // Works only for 12-tone equal temperament.
+    ChordSpace.noteName = function (midi_key) {
+        midi_key = Math.round(midi_key);
+        let pc = Math.round(ChordSpace.epc(midi_key))
+        let note_name = namesForPitchClasses[pc]
+        let octave = Math.floor(midi_key / 12) - 1;
+        note_name = note_name + octave;
+        return note_name;        
+    }
 
     var fill = function(rootName, rootPitch, typeName, typePitches) {
         typePitches = typePitches.trim();
