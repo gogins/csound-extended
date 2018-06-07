@@ -1,17 +1,16 @@
 gk_Blower_midi_dynamic_range init 127
-gk_Blower_grainDensity init 120
+gk_Blower_grainDensity init 40
 gk_Blower_grainDuration init 0.2
 gk_Blower_grainAmplitudeRange init 100
-gk_Blower_grainFrequencyRange init .033
+gk_Blower_grainFrequencyRange init 3
 gk_Blower_level init 0
+gi_Blower_grtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
 instr Blower
  //////////////////////////////////////////////
  // Original by Hans Mikelson.
  // Adapted by Michael Gogins.
  //////////////////////////////////////////////
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -45,14 +44,12 @@ k_gain = ampdb(gk_Blower_level)
 ; i1 26.5 13.5 1100 6.09 . 4 .121 150 1.5
 ; i1 30.7 9.3 900 8.05 . 4 .014 150 2.5
 ; i1 34.2 8.8 700 10.02 . 4 .14 150 1.6
-igrtab ftgenonce 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
-iwintab ftgenonce 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
 iHz = i_frequency
 ihertz = iHz
 ip4 = i_amplitude
 ip5 = iHz
-ip6 = igrtab
-ip7 = iwintab
+ip6 = gi_Blower_grtab
+ip7 = gi_Blower_wintab
 ip8 = 0.033
 ip8 = .002
 ip9 = 150
@@ -81,10 +78,9 @@ a_signal = aoutl + aoutr
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
-printks "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", 1, p1, p2, p3, p4, p5, p7, active(p1)
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -96,4 +92,6 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
+prints "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+;printks "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 endin

@@ -8,12 +8,17 @@ patch_name = sys.argv[1]
 print("patch_name: ", patch_name)
 
 prologue = '''
-if p3 == -1 then
-  p3 = 1000000
-endif
+gi_INSTR_level init 0
+gi_INSTR_attack init 0.002
+gi_INSTR_release init 0.01
+gk_INSTR_midi_dynamic_range init 127
+instr INSTR
 i_instrument = p1
 i_time = p2
 i_duration = p3
+; One of the envelopes in this instrument should be releasing, and use this:
+i_sustain = 1000
+xtratim gi_INSTR_attack + gi_INSTR_release
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_INSTR_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
@@ -30,11 +35,7 @@ k_gain = ampdb(gk_INSTR_level)
 '''
 
 epilog = '''
-i_attack = .002
-i_sustain = p3
-i_release = 0.01
-p3 = i_attack + i_sustain + i_release
-a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_declicking linsegr 0, gi_INSTR_attack, 1, i_sustain, 1, gi_INSTR_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
@@ -47,7 +48,8 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "INSTR          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+prints "INSTR          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+;printks "INSTR          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 '''
 
 orc = '''
@@ -83,7 +85,7 @@ alwayson "MasterOutput"
 '''.replace("QQQ", patch_name)
 
 def generate_score():
-    score = ''
+    score = 'f 0 60\n'
     time_= 1.0
     for duration in [1]:
         for key in xrange(24,108,12):
@@ -97,12 +99,22 @@ def generate_score():
     score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 59, 70)
     score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 64, 70)
     time_ += 7
-    for note_i in xrange(100):
+    for note_i in xrange(50):
         duration = random.choice([0.125, 0.33334, 0.25, 0.66667, 1])
         time_ += duration / 2;
         key = random.choice(range(24, 108, 1))
         velocity = random.choice([80, 80-6, 80-12, 80-18]) / 3
         score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, duration, key, 60)
+    time_ += 2
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 36, 70)
+    #time_ += 1
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 48, 70)
+    #time_ += 1
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 55, 70)
+    #time_ += 1
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 59, 70)
+    #time_ += 1
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 64, 70)
     return score
 
 message_level = 1 + 2 + 32 + 128

@@ -1,37 +1,46 @@
-gk_Buzzer_attack init .0125
-gk_Buzzer_release init .0125
-gk_Buzzer_Harmonics init 15
-gk_Buzzer_level init .5
+gk_Buzzer_attack init .125
+gk_Buzzer_release init .25
+gk_Buzzer_harmonics init 8
+gk_Buzzer_level init 0
+gk_Buzzer_midi_dynamic_range init 127
+gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
 instr Buzzer
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = p7
-iamp = ampdb(ivelocity) * 4
-iattack = i(gk_Buzzer_attack)
-idecay = i(gk_Buzzer_release)
-isustain = p3 - i(gk_Buzzer_attack)
-xtratim iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-;asignal gbuzz kenvelope, ihertz, 3, gk_FirstHarmonic, gk_DistortFactor, gisine
-isine ftgenonce 0, 0, 65536, 10, 1
-gk_Harmonics = gk_Buzzer_Harmonics
-asignal buzz kenvelope, ihertz, gk_Harmonics, isine
-asignal = asignal * 3
-;asignal vco2 kenvelope, ihertz, 12
-;asignal poscil3 kenvelope, ihertz, giharmonics
-;asignal distort asignal, gk_DistortFactor * .4, giwaveshaping
-aleft, aright pan2 asignal, ipan
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-kgain = ampdb(gk_Buzzer_level)
-outleta "outleft", aleft * kgain
-outleta "outright", aright * kgain
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Buzzer_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 77
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Buzzer_level)
+i_attack = i(gk_Buzzer_attack)
+i_release = i(gk_Buzzer_release)
+i_sustain = 1000
+xtratim i_attack + i_release
+
+a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
+a_signal buzz a_envelope, i_frequency, gk_Buzzer_harmonics, gi_Buzzer_sine
+
+a_signal = a_signal * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+printks "Buzzer         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 prints "Buzzer         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin
-

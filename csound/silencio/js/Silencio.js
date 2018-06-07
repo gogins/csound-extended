@@ -234,6 +234,10 @@ if (typeof console === 'undefined') {
     }
 
     function Event() {
+        // ID collisions should be rare. IDs will be used e.g. 
+        // in tieing notes or in working around Csound quirks 
+        // with indefinite notes.
+        this.id = Math.random() / 2.0;
         this.data = [0, 0, 144, 0, 0, 0, 0, 0, 0, 0, 1];
         this.chord = null;
         Object.defineProperty(this, "time", {
@@ -379,7 +383,8 @@ if (typeof console === 'undefined') {
      */
     Event.prototype.toIStatement = function() {
         var text = 'i';
-        text = text.concat(' ', this.data[3].toFixed(6)); // p1
+        let insno = this.data[3];// + this.id;
+        text = text.concat(' ', insno.toFixed(6)); // p1
         text = text.concat(' ', this.data[0].toFixed(6)); // p2
         text = text.concat(' ', this.data[1].toFixed(6)); // p3
         text = text.concat(' ', this.data[4].toFixed(6)); // p4
@@ -404,7 +409,8 @@ if (typeof console === 'undefined') {
         } else {
             text = text.concat(' ', scheduled.toFixed(6)); // p2
         }
-        text = text.concat(' ', this.data[1].toFixed(6)); // p3
+        let insno = this.data[3];// + this.id;
+        text = text.concat(' ', Math.floor(insno.toFixed(6))); // p3
         text = text.concat(' ', this.data[4].toFixed(6)); // p4
         text = text.concat(' ', this.data[5].toFixed(6)); // p5
         text = text.concat(' ', this.data[6].toFixed(6)); // p6
@@ -435,6 +441,7 @@ if (typeof console === 'undefined') {
         }
         other = new Event();
         other.data = this.data.slice(0);
+        other.id = this.id;
         if (clone_chord === true) {
             other.chord = this.chord;
         }
