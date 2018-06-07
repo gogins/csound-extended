@@ -8,8 +8,8 @@ gi_FMWaterBell_release init 0.01
 gi_FMWaterBell_sustain init 20
 gk_FMWaterBell_index init .3
 gk_FMWaterBell_crossfade init .5
-gk_FMWaterBell_vibrato_depth = 0.05
-gk_FMWaterBell_vibrato_rate = 6
+gk_FMWaterBell_vibrato_depth init 0.05
+gk_FMWaterBell_vibrato_rate init 6
 gk_FMWaterBell_midi_dynamic_range init 127
 gi_FMWaterBell_cosine ftgen 0, 0, 65536, 11, 1
 instr FMWaterBell
@@ -48,5 +48,4 @@ outleta "outright", a_out_right
 #endif
 prints "FMWaterBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 ;printks "FMWaterBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
-
 endin
