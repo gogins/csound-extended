@@ -15,68 +15,77 @@ csound_node = null;
 csound_web_audio = null;
 csound_audio_node = null;
 csound_extended = {};
+
+let print_;
+if (typeof csound_message_callback === 'undefined') {
+    print_ = console.log;
+} else {
+    print_ = csound_message_callback;
+}
+
 if (typeof csound !== 'undefined') {
     csound_injected = csound;
-    console.log("Csound has already been injected into this JavaScript context.\n");
+    print_("Csound has already been injected into this JavaScript context.\n");
 }
 csound = null;
 try {
-    console.log("Trying to load csound.node...");
+    print_("Trying to load csound.node...\n");
     csound_node = require('csound.node');
     var nwgui = require('nw.gui');
     nw_window = nwgui.Window.get();
     nw_window.on('close', function() {
-        console.log('Closing down...');
+        print_('Closing down...\n');
         this.close(true);
     });
-    console.log("csound.node is available in this JavaScript context.\n");
+    print_("csound.node is available in this JavaScript context.\n");
     // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
     csound_extended["ENVIRONMENT"] = "NODE";
 } catch (e) {
-    console.log(e);
+    print_(e + '\n');
 }
 try {
-    console.log("Trying to load CsoundAudioNode...");
+    print_("Trying to load CsoundAudioNode...\n");
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audioContext = new AudioContext();
     audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
-        console.log("Creating CsoundAudioNode...\n");
+        print_("Creating CsoundAudioNode...\n");
         csound_audio_node = new CsoundAudioNode(audioContext);
-        console.log("Csound audio worklet is available in this JavaScript context.\n");
+        print_("Csound audio worklet is available in this JavaScript context.\n");
     }, function(error) {
-       console.log(error);
+       print_(error + '\n');
     });
 } catch (e) {
-    console.log(e);
+    print_(e + '\n');
 }
 try {
-    console.log("Trying to load csound_extended...");
+    print_("Trying to load csound_extended...");
     csound_extended_module(csound_extended).then(function(module) {
         csound_extended = module;
         csound_web_audio = new csound_extended.CsoundWebAudio();
-        console.log("csound_extended is available in this JavaSript contex.\n");
+        print_("csound_extended is available in this JavaSript contex.\n");
     });
 } catch (e) {
-    console.log(e);
+    print_(e + '\n');
 }
-var get_csound = function(csound_message_callback) {
+
+var get_csound = function(csound_message_callback_) {
     if (csound_injected !== null) {
         csound = csound_injected;
         return csound_injected;
     } 
     if (csound_node !== null) {
         csound = csound_node;
-        csound.setMessageCallback(csound_message_callback);
+        csound.setMessageCallback(csound_message_callback_);
         return csound_node;
     } 
     if (csound_audio_node !== null) {
         csound = csound_audio_node;
-        console.log = console.warn = csound_message_callback;
+        console.log = console.warn = csound_message_callback_;
         return csound_audio_node;
     } 
     if (csound_web_audio !== null) {
         csound = csound_web_audio;
-        console.log = console.warn = csound_message_callback;
+        console.log = console.warn = csound_message_callback_;
         return csound_web_audio;
     } else {
         csound = null;
