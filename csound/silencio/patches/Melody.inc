@@ -1,11 +1,11 @@
 gk_Melody_midi_dynamic_range init 127
 gk_Melody_level init 0
+gi_Melody_chebyshev ftgen 0, 0, 65536, -7, -1, 150, 0.1, 110, 0, 252, 0
+gi_Melody_sine ftgen 0, 0, 65536, 10, 1
+gi_Melody_cook3 ftgen 0, 0, 65536, 10, 1, .4, 0.2, 0.1, 0.1, .05
 instr Melody
 ; Author: Jon Nelson
 ; Adapted by: Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -26,16 +26,13 @@ ip3 init 3.0
 iattack = 0.05
 isustain = p3
 irelease = 0.1
-xtratim iattack + isustain + irelease
-ichebychev ftgenonce 0, 0, 65536, -7, -1, 150, 0.1, 110, 0, 252, 0
-isine ftgenonce 0, 0, 65536, 10, 1
-icook3 ftgenonce 0, 0, 65536, 10, 1, .4, 0.2, 0.1, 0.1, .05
-ip6 = ichebychev
+xtratim iattack + irelease
+ip6 = gi_Melody_chebyshev
 i1 = i_frequency
 k100 randi 1,10
-k101 poscil 1, 5 + k100, isine
-k102 linseg 0, .5, 1, p3, 1
-k100 = i1 + (k101 * k102)
+k101 poscil 1, 5 + k100, gi_Melody_sine
+ak102 linseg 0, .5, 1, p3, 1
+k100 = i1 + (k101 * ak102)
 ; Envelope for driving oscillator.
 ; k1 linenr 0.5, ip3 * .3, ip3 * 2, 0.01
 k1 linseg 0, ip3 * .3, .5, ip3 * 2, 0.01, isustain, 0.01, irelease, 0
@@ -48,13 +45,13 @@ k10 = (k10 - .0001)
 ; Power to partials.
 k20 linseg 1.485, iattack, 1.5, (isustain + irelease), 1.485
 ; a1-3 are for cheby with p6=1-4
-a1 poscil k1, k100 - .025, icook3
+a1 poscil k1, k100 - .025, gi_Melody_cook3
 ; Tables a1 to fn13, others normalize,
 a2 tablei a1, ip6, 1, .5
 a3 balance a2, a1
 ; Try other waveforms as well.
-a4 foscili 1, k100 + .04, 1, 2.005, k20, isine
-a5 poscil 1, k100, isine
+a4 foscili 1, k100 + .04, 1, 2.005, k20, gi_Melody_sine
+a5 poscil 1, k100, gi_Melody_sine
 a6 = ((a3 * .1) + (a4 * .1) + (a5 * .8)) * k10
 a7 comb a6, .5, 1 / i1
 a8 = (a6 * .9) + (a7 * .1)

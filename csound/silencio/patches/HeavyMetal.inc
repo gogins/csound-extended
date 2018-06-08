@@ -7,9 +7,6 @@ instr HeavyMetal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Author: Perry Cook and John ffitch
 ; Adapted by: Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -35,7 +32,7 @@ ifn4 = gi_HeavyMetal_sine
 ivibefn = gi_HeavyMetal_cosine
 iattack = 0.003
 idecay = 3.0
-isustain = p3
+isustain = 1000
 irelease = 0.05
 adecay transeg 0.0, iattack, -4, 1.0, idecay, -4, 0.1, isustain, -4, 0.1, irelease, -4, 0.0
 asignal fmmetal 1.0, i_frequency, iindex, icrossfade, ivibedepth, iviberate, ifn1, ifn2, ifn3, ifn4, ivibefn

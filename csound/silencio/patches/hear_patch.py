@@ -2,7 +2,7 @@ import ctcsound
 import random
 import sys
 
-output = "dac"
+output ="dac"
 
 patch_name = sys.argv[1]
 print("patch_name: ", patch_name)
@@ -120,6 +120,10 @@ def generate_score():
 message_level = 1 + 2 + 32 + 128
 csound = ctcsound.Csound()
 csound.setOption("-d")
+csound.setOption("-+rtaudio=PortAudio")
+csound.setOption("--sample-rate=48000")
+csound.setOption("--ksmps=128")
+csound.setOption("--format=long")
 csound.setOption("--nchnls=2")
 csound.setOption("-o%s" % output)
 csound.setOption("-m%d" % message_level)
