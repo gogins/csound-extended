@@ -29,22 +29,22 @@ if (typeof csound !== 'undefined') {
 }
 csound = null;
 try {
-    print_("Trying to load csound.node...");
+    print_("Trying to load csound.node...\n");
     csound_node = require('csound.node');
     var nwgui = require('nw.gui');
     nw_window = nwgui.Window.get();
     nw_window.on('close', function() {
-        print_('Closing down...');
+        print_('Closing down...\n');
         this.close(true);
     });
     print_("csound.node is available in this JavaScript context.\n");
     // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
     csound_extended["ENVIRONMENT"] = "NODE";
 } catch (e) {
-    print_(e);
+    print_(e + '\n');
 }
 try {
-    print_("Trying to load CsoundAudioNode...");
+    print_("Trying to load CsoundAudioNode...\n");
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audioContext = new AudioContext();
     audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
@@ -52,10 +52,10 @@ try {
         csound_audio_node = new CsoundAudioNode(audioContext);
         print_("Csound audio worklet is available in this JavaScript context.\n");
     }, function(error) {
-       print_(error);
+       print_(error + '\n');
     });
 } catch (e) {
-    print_(e);
+    print_(e + '\n');
 }
 try {
     print_("Trying to load csound_extended...");
@@ -65,8 +65,9 @@ try {
         print_("csound_extended is available in this JavaSript contex.\n");
     });
 } catch (e) {
-    print_(e);
+    print_(e + '\n');
 }
+
 var get_csound = function(csound_message_callback_) {
     if (csound_injected !== null) {
         csound = csound_injected;
