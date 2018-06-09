@@ -509,6 +509,9 @@ if (typeof console === 'undefined') {
     Chord.prototype.toName= function() {
         let buffer = ''
         for (var voice = 0; voice < this.voices.length; voice++) {
+            if (voice > 0) {
+                buffer = buffer + " ";
+            }
             buffer = buffer + ChordSpace.noteName(this.voices[voice]);
         }
         return buffer;
