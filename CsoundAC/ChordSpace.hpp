@@ -2658,6 +2658,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
  */
 class SILENCE_PUBLIC ChordSpaceGroup {
 public:
+    virtual ~ChordSpaceGroup() {};
 	/**
 	 * Number of voices in the chord space.
 	 */

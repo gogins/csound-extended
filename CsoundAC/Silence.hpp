@@ -62,6 +62,7 @@
 #endif
 
 #include "Conversions.hpp"
+#include "CsoundComposition.hpp"
 #include "System.hpp"
 #include "Event.hpp"
 #include "Midifile.hpp"
