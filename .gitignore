@@ -8,6 +8,9 @@
 /tclcsound.*
 /csladspa.*
 
+# DCMA removal.
+/Opcodes/vst4cs/src
+
 # Final library
 /libcsound*
 
