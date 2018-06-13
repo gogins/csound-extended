@@ -183,6 +183,11 @@ namespace csound
   {
     CsoundFile::removeArrangement();
   }
+  
+  void CsoundComposition::setCsoundCommand(std::string command) 
+  {
+    CsoundFile::setCommand(command);
+  }
 
   std::string CsoundComposition::getCsoundCommand() const
   {

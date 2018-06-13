@@ -34,7 +34,7 @@ namespace csound
 {
   /**
    * Simplifies constructing complex hocketted scores.
-   * Where N is the moulus, this node produces every Nth note
+   * Where N is the modulus, this node produces every Nth note
    * of the notes produced by the child nodes of this, starting
    * with note at the starting index.
    */

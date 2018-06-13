@@ -27,6 +27,7 @@
 #include "Score.hpp"
 #include <vector>
 #include <eigen3/Eigen/Dense>
+#include <functional>
 %}
 %include "std_string.i"
 %include "std_vector.i"
@@ -35,6 +36,7 @@
 #include "Score.hpp"
 #include <vector>
 #include <eigen3/Eigen/Dense>
+#include <functional>
 #endif
 
 namespace csound
@@ -106,6 +108,21 @@ namespace csound
                                     size_t endAt,
                                     const Eigen::MatrixXd &compositeCordinates);
 
+  };
+  
+  /**
+   * Node that uses any callable to implement produceOrTransform.
+   * This is particularly useful as the callable may be a closure that 
+   * refers to objects outside of the music graph.
+   */
+  class SILENCE_PUBLIC Functional : public Node
+  {
+      public:
+        std::function<void(csound::Score &, size_t, size_t, const Eigen::MatrixXd &)> callable;
+        virtual void produceOrTransform(Score &score, size_t beginAt, size_t endAt, const Eigen::MatrixXd &compositeCoordinates) {
+            callable(score, beginAt, endAt, compositeCoordinates);
+        }
+          
   };
 }
 #endif

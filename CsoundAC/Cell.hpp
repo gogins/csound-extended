@@ -37,7 +37,7 @@
 namespace csound
 {
 /**
- * Score node that simplifies building up repetitive
+ * Score nodes that simplifies building up repetitive
  * and overlapping motivic cells, such as used in Minimalism.
  */
 class SILENCE_PUBLIC Cell :
