@@ -8,7 +8,7 @@ patch_name = sys.argv[1]
 print("patch_name: ", patch_name)
 
 prologue = '''
-gi_INSTR_level init 0
+gk_INSTR_level init 0
 gi_INSTR_attack init 0.002
 gi_INSTR_release init 0.01
 gk_INSTR_midi_dynamic_range init 127
