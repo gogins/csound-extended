@@ -37,7 +37,6 @@ i_level_correction = 80
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_ChebyshevPoly_level)
-
 if p3 > 0 then
 iattack init p3 / 4.0
 idecay init p3 / 4.0
