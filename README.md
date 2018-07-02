@@ -19,30 +19,27 @@ These extensions include:
     writing Web pages (.html files) in which Csound appears as a `csound` 
     JavaScript object that implements a substantial subset of the Csound C++ 
     API and that follows exactly the same semantics.
-
-4.  vst4cs, opcodes enabling Csound to load and use VST plugin instruments 
-    and effects.
     
-5.  A port of the algorithmic composition program CMask by Andre Bartetzki 
+4.  A port of the algorithmic composition program CMask by Andre Bartetzki 
     to WebAssembly and to a Linux Csound plugin opcode.
 
-6.  Csound for Android, almost all features of Csound in an Android app that 
+5.  Csound for Android, almost all features of Csound in an Android app that 
     also integrates Csound with HTML5. Please note, dependencies of Csound 
     for Android are fetched from the core Csound repository, and rebuilt 
     using the Android NDK.
     
-7.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
+6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
     module that will run Csound from a JavaScript interface in any current 
     Web browser. This version includes useful plugin opcodes statically 
     linked. Some live examples run from [here](https://gogins.github.io/csound-extended/).
     
-8.  Silencio, a JavaScript algorithmic composition library designed to work 
+7.  Silencio, a JavaScript algorithmic composition library designed to work 
     with all Csound/HTML5 environments.
     
 9.  An online `playable` version of the Csound Reference Manual.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no 
-longer maintained here. This is due to efforts by Steinberg for force 
+longer maintained here. This is due to efforts by Steinberg to force 
 developers to move to the VST3 SDK, which has a more restrictive license that 
 I do not wish to work with.
      
