@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>lowpass2</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac           -iadc     -d     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o lowpass2.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+/* Written by Sean Costello */
+; Orchestra file for resonant filter sweep of a sawtooth-like waveform.
+  sr = 44100
+  kr = 2205
+  ksmps = 20
+  nchnls = 2 ; Changed for WebAssembly output from: = 1
+
+          instr 1
+
+  idur    =          p3
+  ifreq   =          p4
+  iamp    =          p5 * .5
+  iharms  =          (sr*.4) / ifreq
+
+; Sawtooth-like waveform
+  asig    gbuzz 1, ifreq, iharms, 1, .9, 1
+
+; Envelope to control filter cutoff 
+  kfreq   linseg 1, idur * 0.5, 5000, idur * 0.5, 1
+
+  afilt   lowpass2 asig,kfreq, 30
+
+; Simple amplitude envelope
+  kenv    linseg 0, .1, iamp, idur -.2, iamp, .1, 0 
+          out afilt * kenv
+
+          endin
+
+
+</CsInstruments>
+<CsScore>
+
+/* Written by Sean Costello */
+f1 0 8192 9 1 1 .25
+
+i1 0 5 100 1000
+i1 5 5 200 1000
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

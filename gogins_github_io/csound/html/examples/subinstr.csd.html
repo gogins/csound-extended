@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>subinstr</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc    ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o subinstr.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+; Initialize the global variables.
+sr = 44100
+kr = 4410
+ksmps = 10
+nchnls = 2 ; Changed for WebAssembly output from: = 1
+
+; Instrument #1 - Creates a basic tone.
+instr 1
+  ; Print the value of p4, should be equal to
+  ; Instrument #2's iamp field.
+  print p4
+
+  ; Print the value of p5, should be equal to
+  ; Instrument #2's ipitch field.
+  print p5
+
+  ; Create a tone.
+  asig oscils p4, p5, 0
+
+  out asig
+endin
+
+
+; Instrument #2 - Demonstrates the subinstr opcode.
+instr 2
+  iamp = 20000
+  ipitch = 440
+
+  ; Use Instrument #1 to create a basic sine-wave tone.
+  ; Its p4 parameter will be set using the iamp variable.
+  ; Its p5 parameter will be set using the ipitch variable.
+  abasic subinstr 1, iamp, ipitch
+
+  ; Output the basic tone that we have created.
+  out abasic
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; Table #1, a sine wave.
+f 1 0 16384 10 1
+
+; Play Instrument #2 for one second.
+i 2 0 1
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

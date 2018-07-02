@@ -1,0 +1,125 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>maparray</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-n
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+0dbfs  = 1
+
+instr 1
+
+;create an array and fill with numbers
+kArrSrc[] fillarray 1.01, 2.02, 3.03, 4.05, 5.08, 6.13, 7.21
+
+;print source array
+        printf  "%s", 1, "\nSource array:\n"
+kndx    =       0
+  until kndx == lenarray(kArrSrc) do
+        printf  "kArrSrc[%d] = %f\n", kndx+1, kndx, kArrSrc[kndx]
+kndx    +=      1
+  od
+
+;create an empty array for the results
+kArrRes[] init  7
+
+;apply the sqrt() function to each element
+kArrRes maparray kArrSrc, "sqrt"
+
+;print the result
+        printf  "%s", 1, "\nResult after applying sqrt() to source array\n"
+kndx    =       0
+  until kndx == lenarray(kArrRes) do
+        printf  "kArrRes[%d] = %f\n", kndx+1, kndx, kArrRes[kndx]
+kndx    +=      1
+  od
+
+;apply the log() function to each element
+kArrRes maparray kArrSrc, "log"
+
+;print the result
+        printf  "%s", 1, "\nResult after applying log() to source array\n"
+kndx    =       0
+  until kndx == lenarray(kArrRes) do
+        printf  "kArrRes[%d] = %f\n", kndx+1, kndx, kArrRes[kndx]
+kndx    +=      1
+  od
+
+;apply the int() function to each element
+kArrRes maparray kArrSrc, "int"
+
+;print the result
+        printf  "%s", 1, "\nResult after applying int() to source array\n"
+kndx    =       0
+  until kndx == lenarray(kArrRes) do
+        printf  "kArrRes[%d] = %f\n", kndx+1, kndx, kArrRes[kndx]
+kndx     +=     1
+  od
+
+;apply the frac() function to each element
+kArrRes maparray kArrSrc, "frac"
+
+;print the result
+        printf  "%s", 1, "\nResult after applying frac() to source array\n"
+kndx    =       0
+  until kndx == lenarray(kArrRes) do
+        printf  "kArrRes[%d] = %f\n", kndx+1, kndx, kArrRes[kndx]
+kndx += 1
+  od
+
+;turn instrument instance off
+        turnoff
+        
+endin
+
+
+</CsInstruments>
+<CsScore>
+i 1 0 0.1
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>loopseg</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+-odac      ;;;realtime audio out
+;-iadc    ;;;uncomment -iadc if realtime audio input is needed too
+; For Non-realtime ouput leave only the line below:
+; -o loopseg.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 32
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+0dbfs  = 1
+
+instr 1
+kfreq  init     p4  ; frequency of loop repetition
+ifrac  =        p5  ; frequency ratio of restart triggers
+ktrig  metro    kfreq * ifrac  ; triggers to restart loop
+iphase =        0   ; initial phase
+; loop of note values (some glissandi)
+;                                    val dur val dur etc...
+knote loopseg  kfreq, ktrig, iphase, 40, 1,  40, 0,  43,1,43,0, 49,2,48,0, \
+ 47,1,47,0, 46,1,46,0, 46,1,47,0, 49,1,49,0, 43,1,43,0, 46,1,46,0, 40,1,39,0    
+; loop of filter cutoff values (oct format). This loop, half speed of note loop.
+kcfoct loopseg  kfreq*0.5, ktrig, iphase, 11,2,4,0, 12,1,4,0, 13,1,4,0, \
+ 11.5,3,4,0, 12.5,1,4,0, 13,2,4,0, 12.5,1,4,0
+kenv  linseg   0,0.01,1,p3-5.01,1,5,0
+ioct  =        int((rnd(0.999)*4)-2) ; random value either -1, 0 or 1
+asig  vco2     0.2*kenv,cpsmidinn(knote)*octave(ioct),0 ; sawtooth
+asig  moogladder  asig,cpsoct(kcfoct),rnd(0.6)          ; filter sawtooth
+aL,aR pan2     asig,rnd(1)  ; random static pan location
+      outs     aL, aR
+endin
+
+</CsInstruments>
+<CsScore>
+
+; 4 layers, each with a different frequency of loop repetition (p4),
+;  frequency ratio of restart triggers (p5) and pan position (p6).
+i 1  0 30 0.5   [11/19]
+i 1  6 30 0.25  [11/13]
+i 1 12 30 0.125 [11/16]
+i 1 18 30 1     [11/12]
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

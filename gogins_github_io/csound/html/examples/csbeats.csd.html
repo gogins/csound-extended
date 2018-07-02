@@ -1,0 +1,152 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>csbeats</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+</CsOptions>
+
+<CsInstruments>
+sr      =           44100
+nchnls = 2 ; Changed for WebAssembly output from: 	= 		2
+
+gi1 ftgen 1, 0, 4096, 10, 1
+gi2 ftgen 2, 0, 4096, 7, -1, 4096, 1    ; sawtooth
+gi3 ftgen 3, 0, 4096, 7,  0, 1024, 1, 2048, -1, 1024, 0  ;triangle
+
+instr 101,102,103
+  iamp =      ampdbfs(p5)
+  a1   oscil  iamp, p4, p1-100
+  kenv expseg 1, p3, .01
+  a1   =      a1 * kenv
+       outs   a1, a1
+endin
+ 
+</CsInstruments>
+<CsScore bin="csbeats">
+; by Brian Baughn 3-14-05
+; bbaughn@berklee.net
+
+beats = 100
+permeasure = 4
+
+i101    m1 b1   q    mp   D3
+i101                      F3
+i101                      D3
+
+i101    m2 b1             D3
+i101       b3             D3
+
+i101    m3 b1             D3
+i101                      F3
+i101                      D3
+
+i101    m4 b1             D3
+i101       b3             D3
+
+i101    m5 b1              D3
+i101       b4              G5
+
+i101    m6 b1              E5
+i101       b2              F5
+i101       b3     e      Eb5
+i101       b3.5   e          
+i101       b4     q          
+
+i101    m7 b1     e       D5
+i101                            
+i101                q          
+i101                e      Db5
+i101                            
+i101                q          
+
+i101    m8 b1     q       D5
+i101                         E5
+i101                         D5
+
+i102    m1 b2      q      D4
+i102       b4              E4
+i102       b4             Bb3
+
+i102    m2 b2              F4
+i102       b2              B3
+i102       b4             C#4
+i102       b4             Bb3
+
+i102    m3 b2      q      D4
+i102       b4              E4
+i102       b4             Bb3
+
+i102    m4 b2              F4
+i102       b2              B3
+i102       b4             C#4
+i102       b4             Bb3
+
+i103    m5 b2      e     F6
+i103       b2      e     A5
+i103       b2.5    e     D6
+i103       b3      e     F6
+i103       b3      e     A5
+i103       b4      e     E6
+
+i103    m6 b1      q     C#6
+i103               q     D6
+i103               e     C6
+i103                           
+i103               q        
+
+i103    m7 b1      e     B5
+i103                            
+i103                 q         
+i103                 e    Bb5
+i103                            
+i103                 q         
+
+i103     m8 b1     e     F5
+i103        b1     e     A5
+i103        b1.5   e     D6
+i103        b2     e    Bb5
+i103        b2.5   e     D6
+i103        b3     q     F5
+i103        b3           A5
+end
+</CsScore>
+
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

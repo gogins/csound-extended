@@ -1,0 +1,82 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>pareq</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac           -iadc     -d     ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o pareq.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+kr  = 4410
+ksmps = 10
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+
+instr 15
+  ifc     =       p4                       ; Center / Shelf
+  kq      =       p5                       ; Quality factor sqrt(.5) is no resonance
+  kv      =       ampdb(p6)                ; Volume Boost/Cut
+  imode   =       p7                       ; Mode 0=Peaking EQ, 1=Low Shelf, 2=High Shelf
+  kfc     linseg  ifc*2, p3, ifc/2
+  asig    rand    5000                     ; Random number source for testing
+  aout    pareq   asig, kfc, kv, kq, imode ; Parmetric equalization
+          outs    aout, aout               ; Output the results
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; SCORE:
+  ;   Sta  Dur  Fcenter  Q        Boost/Cut(dB)  Mode
+  i15 0    1    10000   .2          12             1
+  i15 +    .    5000    .2          12             1
+  i15 .    .    1000    .707       -12             2
+  i15 .    .    5000    .1         -12             0
+  e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

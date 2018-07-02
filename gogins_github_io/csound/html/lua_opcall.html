@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>lua_opcall</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="lua_opdef.html" title="lua_opdef" />
+    <link rel="next" href="mac.html" title="mac" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">
+            lua_opcall
+        </th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="lua_opdef.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="mac.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="lua_opcall"></a>
+      <div class="titlepage"></div>
+      <a id="Indexlua_opcall" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">
+            lua_opcall
+        </span>
+        </h2>
+        <p>
+            lua_opcall
+         — 
+            Calls a Lua opcode at i-rate only. Any number of output and/or 
+            input arguments may be passed. All arguments must be passed on 
+            the right-hand side. Outputs are returned in the argument.        
+        </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45948036387216"></a>
+        <h2>
+            Syntax
+        </h2>
+        <pre class="synopsis"><span class="command"><strong>lua_iopcall</strong></span> Sname, ...</pre>
+        <pre class="synopsis"><span class="command"><strong>lua_ikopcall</strong></span> Sname, ...</pre>
+        <pre class="synopsis"><span class="command"><strong>lua_iaopcall</strong></span> Sname, ...</pre>
+        <pre class="synopsis"><span class="command"><strong>lua_iopcall_off</strong></span> Sname, ...</pre>
+        <pre class="synopsis"><span class="command"><strong>lua_ikopcall_off</strong></span> Sname, ...</pre>
+        <pre class="synopsis"><span class="command"><strong>lua_iaopcall_off</strong></span> Sname, ...</pre>
+      </div>
+      <div class="refsect1"><a id="idm45948036312800"></a><h2>
+            Initialization and Performance
+        </h2><p>
+            <span class="emphasis"><em>Sname</em></span> -- The name of the opcode.
+        </p><p>
+            <span class="emphasis"><em>...</em></span> -- An arbitrary list of any number of 
+            output and input arguments, of any type. The number, sequence, 
+            and types of these arguments must agree with the cdef of the 
+            arguments structure that is declared in the corresponding 
+            <code class="literal">lua_opdef</code> opcode.
+        </p><p>
+            <code class="literal">lua_iopcall</code> calls a Lua opcode at i-rate only. 
+            Requires <code class="literal">opname_init</code> to be defined in Lua.
+        </p><code class="literal">lua_ikopcall</code> calls a Lua opcode at i-rate and 
+            k-rate. Requires <code class="literal">opname_init</code> and 
+            <code class="literal">opname_kontrol</code> to be defined in Lua.
+        <p>
+            <code class="literal">lua_iaopcall</code> calls a Lua opcode at i-rate and a-rate. 
+            Requires <code class="literal">opname_init</code> and 
+            <code class="literal">opname_audio</code> to be defined in Lua.
+        </p><p>
+            <code class="literal">lua_iopcall_off</code> calls a Lua opcode at i-rate only. 
+            Requires <code class="literal">opname_init</code> and 
+            <code class="literal">opname_noteoff</code> to be defined in Lua. 
+        </p><code class="literal">lua_ikopcall_off</code> calls a Lua opcode at i-rate and 
+            k-rate. Requires <code class="literal">opname_init</code>, 
+            <code class="literal">opname_kontrol</code>, and <code class="literal">opname_noteoff</code> 
+            to be defined in Lua.
+        <p>
+            <code class="literal">lua_iaopcall_off</code> calls a Lua opcode at i-rate 
+            and a-rate. Requires <code class="literal">opname_init</code>, 
+            <code class="literal">opname_audio</code>, and <code class="literal">opname_noteoff</code> 
+            to be defined in Lua.
+        </p><p>
+            Lua code accesses elements of arguments as follows (pointers 
+            to both scalars and arrays are dereferenced by the Lua array access 
+            operator):
+        </p><pre class="programlisting">
+            ffi.cdef(' struct arguments_t { double *a_out, double *i_in, double *i_txt, double *f_sig };');
+            local arguments = ffi.cast("struct arguments_t *", carguments_lightuserdata)
+            for i = 0, ksmps -1 do begin carguments.a_out[i] = carguments.i_in[0] * 3 end end
+        </pre><p>
+            The "off" variants of the opcode always schedule a "note off" event 
+            that is called when the intrument instance is removed from the 
+            active list, and which can be used to release unneeded resources, 
+            reschedule the instrument to render a reverb tail, and so on.
+        </p></div>
+      <div class="refsect1">
+        <a id="idm45948036291424"></a>
+        <h2>
+            Example
+        </h2>
+        <p>
+            Here is an example of a Lua opcode, showing how to pass strings 
+            back and forth between Lua opcodes and Csound orchestra code. 
+            The example uses the file <a class="ulink" href="examples/luaopcode.csd.html" target="_top"> (click here to play) 
+            <em class="citetitle">luaopcode.csd</em></a>.
+            </p>
+        <div class="example">
+          <a id="idm45948036288032"></a>
+          <p class="title">
+            <strong>Example 510. 
+                    Example of a Lua opcode.
+                </strong>
+          </p>
+          <div class="example-contents">
+            <div class="refsect1">
+              <a id="idm45947861592048"></a>
+              <pre class="programlisting">
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="nb">lua_opdef</span> <span class="s">"luatest"</span><span class="p">,</span> <span class="s">{{</span>
+<span class="kd">local</span> <span class="n">ffi</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">ffi"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">string</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">string"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">csoundLibrary</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'</span><span class="s">csound64.dll.5.2'</span><span class="p">)</span>
+<span class="n">ffi</span><span class="p">.</span><span class="n">cdef</span><span class="p">[[</span>
+    <span class="n">int</span> <span class="n">csoundGetKsmps</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span><span class="p">);</span>
+    <span class="n">double</span> <span class="n">csoundGetSr</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span><span class="p">);</span>
+    <span class="n">struct</span> <span class="n">luatest_arguments</span> <span class="p">{</span><span class="n">double</span> <span class="o">*</span><span class="n">out</span><span class="p">;</span> <span class="n">double</span> <span class="o">*</span><span class="n">stringout</span><span class="p">;</span> <span class="n">char</span> <span class="o">*</span><span class="n">stringin</span><span class="p">;</span> <span class="n">double</span> <span class="o">*</span><span class="n">in1</span><span class="p">;</span> <span class="n">double</span> <span class="o">*</span><span class="n">in2</span><span class="p">;</span> <span class="n">double</span> <span class="n">sr</span><span class="p">;</span> <span class="n">int</span> <span class="n">ksmps</span><span class="p">;</span> <span class="p">};</span>
+<span class="p">]]</span>
+<span class="k">function</span> <span class="nf">luatest_init</span><span class="p">(</span><span class="n">csound</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">arguments</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">"</span><span class="s">struct luatest_arguments *"</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="n">arguments</span><span class="p">.</span><span class="n">sr</span> <span class="o">=</span> <span class="n">csoundLibrary</span><span class="p">.</span><span class="n">csoundGetSr</span><span class="p">(</span><span class="n">csound</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s1">'</span><span class="s">stringin: %s'</span><span class="p">,</span> <span class="n">ffi</span><span class="p">.</span><span class="n">string</span><span class="p">(</span><span class="n">arguments</span><span class="p">.</span><span class="n">stringin</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s1">'</span><span class="s">sr: %f'</span><span class="p">,</span> <span class="n">arguments</span><span class="p">.</span><span class="n">sr</span><span class="p">))</span>
+    <span class="n">arguments</span><span class="p">.</span><span class="n">ksmps</span> <span class="o">=</span> <span class="n">csoundLibrary</span><span class="p">.</span><span class="n">csoundGetKsmps</span><span class="p">(</span><span class="n">csound</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s1">'</span><span class="s">ksmps: %d'</span><span class="p">,</span> <span class="n">arguments</span><span class="p">.</span><span class="n">ksmps</span><span class="p">))</span>
+    <span class="n">arguments</span><span class="p">.</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">.</span><span class="n">in1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">arguments</span><span class="p">.</span><span class="n">in2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ffi</span><span class="p">.</span><span class="n">copy</span><span class="p">(</span><span class="n">arguments</span><span class="p">.</span><span class="n">stringout</span><span class="p">,</span> <span class="s1">'</span><span class="s">Hello, world!'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nf">luatest_kontrol</span><span class="p">(</span><span class="n">csound</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">arguments</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">"</span><span class="s">struct luatest_arguments *"</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="n">arguments</span><span class="p">.</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">.</span><span class="n">in1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">arguments</span><span class="p">.</span><span class="n">in2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nf">luatest_noteoff</span><span class="p">(</span><span class="n">csound</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">arguments</span> <span class="o">=</span> <span class="n">ffi</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">"</span><span class="s">struct luatest_arguments *"</span><span class="p">,</span> <span class="n">carguments</span><span class="p">)</span>
+    <span class="n">arguments</span><span class="p">.</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">.</span><span class="n">in1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">arguments</span><span class="p">.</span><span class="n">in2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="s">off'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="k">end</span>
+<span class="s">}}</span>
+
+<span class="kd">instr</span> <span class="nf">1</span>
+    i<span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    S<span class="n">tringin</span> <span class="o">=</span> <span class="s">"stringin"</span>
+    S<span class="n">tringout</span> <span class="o">=</span> <span class="s">"stringout"</span>
+    <span class="nb">lua_iopcall</span> <span class="s">"luatest"</span><span class="p">,</span> i<span class="n">result</span><span class="p">,</span> S<span class="n">tringout</span><span class="p">,</span> S<span class="n">tringin</span><span class="p">,</span> <span class="nb">p2</span><span class="p">,</span> <span class="nb">p3</span>
+    <span class="nb">prints</span> S<span class="n">tringout</span>
+<span class="kd">endin</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+    i<span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    S<span class="n">tringin</span> <span class="o">=</span> <span class="s">"stringin"</span>
+    S<span class="n">tringout</span> <span class="o">=</span> <span class="s">"initial value"</span>
+    <span class="nb">lua_iopcall_off</span> <span class="s">"luatest"</span><span class="p">,</span> i<span class="n">result</span><span class="p">,</span> S<span class="n">tringout</span><span class="p">,</span> S<span class="n">tringin</span><span class="p">,</span> <span class="nb">p2</span><span class="p">,</span> <span class="nb">p3</span>
+    <span class="nb">print</span> i<span class="n">result</span>
+    <span class="nb">prints</span> S<span class="n">tringout</span>
+<span class="kd">endin</span>
+<span class="nt">&lt;/CsInstruments&gt;</span>
+
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span>
+<span class="nb">e</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+        </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45948036286240"></a>
+        <h2>
+            See Also
+        </h2>
+        <p>
+            <a class="link" href="lua_exec.html" title="lua_exec"><em class="citetitle">lua_exec</em></a>, 
+            <a class="link" href="lua_opdef.html" title="lua_opdef"><em class="citetitle">lua_opdef</em></a>. 
+        </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45948036283184"></a>
+        <h2>
+            Credits
+        </h2>
+        <p>
+            By: Michael Gogins 2011
+        </p>
+        <p>
+            New in Csound version 5.13.2
+        </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="lua_opdef.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="mac.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">
+            lua_opdef
+         </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> mac</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

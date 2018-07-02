@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>ftgen-2</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc    ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o ftgen-2.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+  sr	    =  48000
+  ksmps	    =  16
+  nchnls = 2 ; Changed for WebAssembly output from:    =  2
+
+;Example by Jonathan Murphy 2007
+
+  0dbfs	    =  1
+
+    instr 1
+
+  Sfile	    =    "beats.wav"
+
+  ilen	    filelen   Sfile  ; Find length
+  isr	    filesr    Sfile  ; Find sample rate
+
+  isamps    =  ilen * isr  ; Total number of samples
+  isize	    init      1
+
+loop:
+  isize	    =  isize * 2
+; Loop until isize is greater than number of samples
+if (isize < isamps) igoto loop
+
+  itab	    ftgen     0, 0, isize, 1, Sfile, 0, 0, 0
+	    print     isize
+	    print     isamps
+
+  turnoff
+    endin
+
+</CsInstruments>
+<CsScore>
+i1 0 10
+e
+</CsScore>
+</CsoundSynthesizer>
+
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

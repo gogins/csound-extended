@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>vstparamset,vstparamget</title>
+    <link rel="stylesheet" type="text/css" href="csound.css" />
+    <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
+    <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
+    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
+    <link rel="prev" href="vstnote.html" title="vstnote" />
+    <link rel="next" href="vstprogset.html" title="vstprogset" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">vstparamset,vstparamget</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="vstnote.html">Prev</a> </td>
+          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="vstprogset.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="refentry">
+      <a id="vstparamset"></a>
+      <div class="titlepage"></div>
+      <a id="IndexVstParamSet" class="indexterm"></a>
+      <div class="refnamediv">
+        <h2>
+          <span class="refentrytitle">vstparamset,vstparamget</span>
+        </h2>
+        <p>vstparamset — Used for parameter comunication to and from a VST plugin.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45947989957392"></a>
+        <h2>Syntax</h2>
+        <pre class="synopsis"><span class="command"><strong>vstparamset </strong></span>instance, kparam, kvalue</pre>
+        <pre class="synopsis">kvalue <span class="command"><strong>vstparamget </strong></span>instance, kparam</pre>
+      </div>
+      <div class="refsect1">
+        <a id="idm45947989882016"></a>
+        <h2>Description</h2>
+        <p><span class="emphasis"><em>vstparamset</em></span> and <span class="emphasis"><em>vstparamget</em></span> are used for parameter comunication to and from a VST plugin.</p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45947989880128"></a>
+        <h2>Initialization</h2>
+        <p><span class="emphasis"><em>instance</em></span> - the number which identifies the
+      plugin, to be passed to other vst4cs opcodes.</p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45947989878464"></a>
+        <h2>Performance</h2>
+        <p><span class="emphasis"><em>kparam</em></span> - The number of the parameter to set or get.</p>
+        <p><span class="emphasis"><em>kvalue</em></span> - the value to set, or the the value returned by the plugin.</p>
+        <p>Parameters vary according to the plugin. To find out what
+      parameters are available, use the verbose option when loading the
+      plugin with vstinit. Note that the VST protocol specifies that all parameter values must lie between 0.0 and 1.0, inclusive.</p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45947989874992"></a>
+        <h2>Examples</h2>
+        <p>
+      Here is an example of the use of the <span class="emphasis"><em>vstparamset</em></span> opcode. It uses the file <a class="ulink" href="examples/vst4cs.csd.html" target="_top"> (click here to play) <em class="citetitle">vst4cs.csd</em></a>.
+      </p>
+        <div class="example">
+          <a id="idm45947989872688"></a>
+          <p class="title">
+            <strong>Example 1110. Example of the <span class="emphasis"><em>vstparamset</em></span> opcode.</strong>
+          </p>
+          <div class="example-contents">
+            <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
+            <div class="refsect1">
+              <a id="idm45947809582016"></a>
+              <pre class="programlisting">
+<span class="nt">&lt;CsoundSynthesizer&gt;</span>
+<span class="nt">&lt;CsOptions&gt;</span>
+<span class="c1">; Credits: Adapted by Michael Gogins </span>
+<span class="c1">; from code by David Horowitz and Lian Cheung. </span>
+<span class="c1">; The "--displays" option is required in order for </span>
+<span class="c1">; the Pianoteq GUI to dispatch events and display properly.</span>
+-m3 --displays -odac
+<span class="nt">&lt;/CsOptions&gt;</span>
+<span class="nt">&lt;CsInstruments&gt;</span>
+<span class="vg">sr</span>     <span class="o">=</span> <span class="mi">44100</span>
+<span class="vg">ksmps</span>  <span class="o">=</span> <span class="mi">20</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="c1">; Load the Pianoteq into memory.</span>
+gi<span class="n">pianoteq</span>      <span class="n">vstinit</span>         <span class="s">"C:</span><span class="se">\\</span><span class="s">Program Files</span><span class="se">\\</span><span class="s">Steinberg</span><span class="se">\\</span><span class="s">VstPlugins</span><span class="se">\\</span><span class="s">Pianoteq 3.0 Trial</span><span class="se">\\</span><span class="s">Pianoteq30 Trial.dll"</span><span class="p">,</span> <span class="mi">1</span>
+                
+                <span class="c1">; Print information about the Pianoteq, such as parameter names and numbers.</span>
+                <span class="n">vstinfo</span>         gi<span class="n">pianoteq</span>
+                
+                <span class="c1">; Open the Pianoteq's GUI.</span>
+                <span class="n">vstedit</span>         gi<span class="n">pianoteq</span>
+
+                <span class="c1">; Send notes from the score to the Pianoteq.</span>
+                <span class="kd">instr</span> <span class="nf">1</span> 
+                <span class="c1">; MIDI channels are numbered starting at 0.</span>
+                <span class="c1">; p3 always contains the duration of the note.</span>
+                <span class="c1">; p4 contains the MIDI key number (pitch),</span>
+                <span class="c1">; p5 contains the MIDI velocity number (loudness),</span>
+i<span class="n">midichannel</span>    <span class="nb">init</span>            <span class="mi">0</span>
+                <span class="n">vstnote</span>         gi<span class="n">pianoteq</span><span class="p">,</span> i<span class="n">midichannel</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span>
+                <span class="kd">endin</span>
+
+                <span class="c1">; Send parameter changes to the Pianoteq.</span>
+                <span class="kd">instr</span> <span class="nf">2</span> 
+                <span class="c1">; p4 is the parameter number.</span>
+                <span class="c1">; p5 is the parameter value.</span>
+                <span class="n">vstparamset</span>     gi<span class="n">pianoteq</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span> 
+                <span class="kd">endin</span>
+
+                <span class="c1">; Send audio from the Pianoteq to the output.</span>
+                <span class="kd">instr</span> <span class="nf">3</span> 
+a<span class="n">blankinput</span>     <span class="nb">init</span>            <span class="mi">0</span>
+a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>   <span class="n">vstaudio</span>        gi<span class="n">pianoteq</span><span class="p">,</span> a<span class="n">blankinput</span><span class="p">,</span> a<span class="n">blankinput</span>
+                <span class="nb">outs</span>            a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span>
+                <span class="kd">endin</span>
+
+<span class="nt">&lt;/CsInstruments&gt;</span>
+<span class="nt">&lt;CsScore&gt;</span>
+<span class="c1">; Turn on the instrument that receives audio from the Pianoteq indefinitely.</span>
+<span class="nb">i</span> <span class="mi">3</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>
+<span class="c1">; Send parameter changes to Pianoteq before sending any notes.</span>
+<span class="c1">; NOTE: All parameters must be between 0.0 and 1.0.</span>
+<span class="c1">; Length of piano strings:</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">33</span> <span class="mf">0.5</span>
+<span class="c1">; Hammer noise:</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">25</span> <span class="mf">0.1</span>
+<span class="c1">; Send a C major 7th arpeggio to the Pianoteq.</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">10</span> <span class="mi">60</span> <span class="mi">76</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">10</span> <span class="mi">64</span> <span class="mi">73</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">10</span> <span class="mi">67</span> <span class="mi">70</span> 
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">10</span> <span class="mi">71</span> <span class="mi">67</span>
+<span class="c1">; End the performance, leaving some time </span>
+<span class="c1">; for the Pianoteq to finish sending out its audio,</span>
+<span class="c1">; or for the user to play with the Pianoteq virtual keyboard.</span>
+<span class="nb">e</span> <span class="mi">20</span>
+<span class="nt">&lt;/CsScore&gt;</span>
+<span class="nt">&lt;/CsoundSynthesizer&gt;</span>
+</pre>
+            </div>
+          </div>
+        </div>
+        <p><br class="example-break" />
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm45947989867968"></a>
+        <h2>Credits</h2>
+        <p>By: Andrés Cabrera and Michael Gogins</p>
+        <p>Uses code from Hermann Seib's VSTHost and Thomas Grill's vst~
+      object.</p>
+        <p>VST is a trademark of Steinberg Media Technologies GmbH. 
+      VST Plug-In Technology by Steinberg.</p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="vstnote.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="OpcodesTop.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="vstprogset.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">vstnote </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> vstprogset</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

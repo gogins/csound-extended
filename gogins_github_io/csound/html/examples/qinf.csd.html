@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>qinf</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-+rtaudio=alsa -o dac:hw:0
+</CsOptions>
+<CsInstruments>
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+ksmps = 400
+
+#define WII_B           #3#
+#define WII_A           #4#
+#define WII_R_A         #304#
+#define WII_PITCH       #20#
+#define WII_ROLL        #21#
+
+gkcnt init 1
+
+instr 1  
+  i1  wiiconnect 3,1
+
+      wiirange   $WII_PITCH., -20, 0
+  kt  wiidata    $WII_B.
+  ka  wiidata    $WII_A.
+  kra wiidata    $WII_R_A.
+  gka wiidata    $WII_PITCH.
+  gkp wiidata    $WII_ROLL.
+; If the B (trigger) button is pressed then activate a note
+  if  (kt==0)    goto ee
+  if (qinf(gka)) goto ee
+  if (qinf(gkp)) goto ee
+  event "i", 2, 0, 5
+  gkcnt = gkcnt + 1
+  printk2  kb
+endin
+
+instr 2
+  a1 oscil  ampdbfs(gka), 440+gkp, 1
+     outs   a1, a1
+endin
+
+</CsInstruments>
+
+<CsScore>
+f1 0 4096 10 1
+i1 0 300
+
+</CsScore>
+
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

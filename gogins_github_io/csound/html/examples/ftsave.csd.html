@@ -1,0 +1,104 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>ftsave</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in
+-odac           -iadc    ;;;RT audio I/O
+; For Non-realtime ouput leave only the line below:
+; -o ftsave.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+; Initialize the global variables.
+sr = 44100
+kr = 4410
+ksmps = 10
+nchnls = 2 ; Changed for WebAssembly output from: = 1
+
+; Table #1, make a sine wave using the GEN10 routine.
+gitmp1 ftgen 1, 0, 32768, 10, 1
+; Table #2, create an empty table.
+gitmp2 ftgen 2, 0, 32768, 7, 0, 32768, 0
+
+; Instrument #1 - a basic oscillator.
+instr 1
+  kamp = 20000
+  kcps = 440
+  ; Use Table #1.
+  ifn = 1
+
+  a1 oscil kamp, kcps, ifn
+  out a1
+endin
+
+
+; Instrument #2 - Load Table #1 into Table #2.
+instr 2
+  ; Save Table #1 to a file called "table1.ftsave".
+  ftsave "table1.ftsave", 0, 1
+
+  ; Load the "table1.ftsave" file into Table #2.
+  ftload "table1.ftsave", 0, 2
+
+  kamp = 20000
+  kcps = 440
+  ; Use Table #2, it should contain Table #1's sine wave now.
+  ifn = 2
+
+  a1 oscil kamp, kcps, ifn
+  out a1
+endin
+
+
+</CsInstruments>
+<CsScore>
+
+; Play Instrument #1 for 1 second.
+i 1 0 1
+; Play Instrument #2 for 1 second.
+i 2 2 1
+e
+
+
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>

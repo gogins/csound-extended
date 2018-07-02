@@ -1,0 +1,116 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \definecolor{links}{HTML}{2A1B81}
+  \hypersetup{colorlinks,linkcolor=,urlcolor=links}
+  %\usetheme{Frankfurt}
+  \usecolortheme{seagull}
+  % or ...
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{attachfile}
+
+\title[How to Program] % (optional, use only with long paper titles)
+{How to Program}
+
+\author[Gogins] % (optional, use only with lots of authors)
+{Michael Gogins\\
+\url{http://michaelgogins.tumblr.com} 
+}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[Irreducible Productions] % (optional, but mostly needed)
+{
+  Irreducible Productions\\
+  New York
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[6 March 2017] % (optional, should be abbreviation of conference name)
+{6 March 2017}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Programming}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+\begin{document}
+\lstset{basicstyle=\ttfamily\tiny,commentstyle=\ttfamily\tiny,tabsize=2,breaklines,fontadjust=true,keepspaces=false,fancyvrb=true,showstringspaces=false,moredelim=[is][\textbf]{\\emph\{}{\}}}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{What is Programming?}
+    \begin{itemize}
+        \item     
+            Programming is the art of programming a universal Turing machine, more commonly known as a ``programmable computer,'' to implement a specific Turing machine, more commonly known as the ``program.''
+        \item
+            This term is confusing , because ``program'' can mean either the \textit{algorithm} that the program is supposed to implement, or the \textit{code} that is used to implement the algorithm.
+        \item
+            Algorithms are a branch of theoretical computer science, i.e. of mathematics.
+        \item
+            Code is a branch of software engineering, which isn't much of a kind of engineering, it is more of a craft like carpentry.
+            
+    \end{itemize}    
+\end{frame}
+
+\begin{frame}{How to Program}
+    \begin{enumerate}
+        \item     
+            Define the algorithm. Nobody knows how to do this, but this is the most important part of the job, usually because people haven't really decided what the program is for. Just try to write down what the program is supposed to do. Sometimes a little flow chart is helpful. You will have to come back and do this over several times.
+        \item
+            Write the code to implement the algorithm. This is too easy, because there are way too many ways to implement the same algorithm.
+        \item
+            Prove that the code implements the algorithm. Nobody knows how to do this, and in fact it has been proved to be impossible (this is called the ''halting theorem''). But if you don't try, your program will never work properly.
+    \end{enumerate}    
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \frametitle<presentation>{The Steps}
+    \begin{enumerate}
+        \item     
+            You \textit{must} write code that is simple and easy to read and understand. It should read like an example in a programming text.
+        \item
+            Don't use little-known languages. Use standard languages, as that will make the code easier to read. For music today, these are C++, C, maybe Java, and JavaScript. These are also the most in-demand languages for general purpose programming, for some reason.
+        \item
+            Don't use comments. Write the code so it explains itself.
+        \item
+            Don't abbreviate, spell everything out.
+        \item
+            Don't get fancy with pointers, anonymous functions, and so on.
+        \item
+            Don't use special libraries if the language itself already provides facilities that you need. In other words, don't use Boost, use the standard C++ library. Don't use operating system calls, use the runtime library.
+        \item
+            If you must use special libraries, use the best ones, these are usually the ones other people are already using. For music programming, use libsndfile and PortAudio.
+        \item
+            Write code to test your code. If you don't do this, your code will never work properly.
+        \item
+            If either the code is still not easy to read, or it still does not work properly, then there is something wrong either with your algorithm, or with your understanding of your algorithm. Clarify the algorithm, and then go back to the first step. 
+        \item
+            Do not debug until you have done all of the above. Debugging usually takes longer than just re-reading the code to make sure you really understand it.
+        \item
+            Do not try optimizing your code until you have done all the above. Then, run a profiler on your code, and see if there are any slow places where the computer is spending too much time. Probably, the only way of speeding up these places is to find a better algorithm and go back to step 1.
+        \item
+            The basic principle is that if code is hard to read, you can't even \textit{know} if it implements the algorithm; while on the other hand, if the algorithm itself is inconsistent or unclear, you will \textit{never} be able to write clear code for it. 
+    \end{enumerate}    
+\end{frame}
+
+\end{document}
+
+

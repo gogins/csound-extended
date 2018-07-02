@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>strchar</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+-ndm0
+</CsOptions>
+<CsInstruments>
+;example by joachim heintz 2013
+
+  opcode ToAscii, S, S				;returns the ASCII numbers of the input string as string
+
+Sin        xin 					;input string
+ilen       strlen     Sin 			;its length
+ipos       =          0 			;set counter to zero
+Sres       =          "" 			;initialize output string
+loop:                 				;for all characters in input string:
+ichr       strchar    Sin, ipos 		;get its ascii code number
+Snew       sprintf    "%d ", ichr 		;put this number into a new string
+Sres       strcat     Sres, Snew 		;append this to the output string
+           loop_lt    ipos, 1, ilen, loop 	;see comment for 'loop:'
+           xout       Sres 			;return output string
+  endop
+
+  instr Characters
+
+printf_i "\nCharacters:\n  given as single strings: %s%s%s%s%s%s\n", 1, "c", "s", "o", "u", "n", "d"
+printf_i "  but can also be given as numbers: %c%c%c%c%c%c\n", 1, 99, 115, 111, 117, 110, 100 
+Scsound ToAscii "csound"
+printf_i "  in csound, the ASCII code of a character can be accessed with the opcode strchar.%s", 1, "\n"
+printf_i "  the name 'csound' returns the numbers %s\n\n", 1, Scsound
+  endin
+
+</CsInstruments>
+<CsScore>
+
+i "Characters" 0 0
+e
+</CsScore>
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>
