@@ -1,4 +1,4 @@
-# CSOUND-EXTENDED WEBASSEMBY LIVE EXAMPLES
+# csound-extended WebAssembly Live Examples
 
 
 Csound for WebAssembly implements almost all features of Csound as a WebAssembly 
@@ -12,3 +12,6 @@ linked. Some live examples run from here:
 4. [Duplex Audio](https://gogins.github.io/csound-extended/duplex.html), shows simultaneous audio input and output.
 5. [CMask](https://gogins.github.io/csound-extended/cmask.html), demonstrates Andre Bartetzki's <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> ported to WebAssembly.
     
+# Csound Reference Manual 
+
+[indexframes.html](https://gogins.github.io/csound-extended/html/index_frames.html), an online version of the __**Csound Reference Manual**__ that is playable if your browser supports WebAssembly.
