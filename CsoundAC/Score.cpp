@@ -1083,6 +1083,9 @@ void Score::setQ(size_t priorBegin, size_t begin, size_t end, double Q, const st
     std::vector<double> pitches = getPitches(priorBegin, begin);
     std::vector<double> pcs = Voicelead::uniquePcs(pitches);
     printChord("  prior pcs:     ", pcs);
+    if (pcs.size() == 0) {
+        return;
+    }
     printChord("  context:       ", context);
     std::vector<double> localPcs = matchContextSize(context, pcs);
     printChord("  localPcs:  ", localPcs);
@@ -1100,6 +1103,9 @@ void Score::setQV(size_t priorBegin, size_t begin, size_t end, double Q, const s
     std::vector<double> pitches = getPitches(priorBegin, begin);
     std::vector<double> pcs = Voicelead::uniquePcs(pitches);
     printChord("  prior pcs:     ", pcs);
+    if (pcs.size() == 0) {
+        return;
+    }
     printChord("  context:       ", context);
     std::vector<double> localPcs = matchContextSize(context, pcs);
     printChord("  localPcs:  ", localPcs);
@@ -1114,6 +1120,9 @@ void Score::setQL(size_t priorBegin, size_t begin, size_t end, double Q, const s
     std::vector<double> pitches = getPitches(priorBegin, begin);
     std::vector<double> pcs = Voicelead::uniquePcs(pitches);
     printChord("  prior pcs:     ", pcs);
+    if (pcs.size() == 0) {
+        return;
+    }
     printChord("  context:       ", context);
     std::vector<double> localPcs = matchContextSize(context, pcs);
     printChord("  localPcs:  ", localPcs);

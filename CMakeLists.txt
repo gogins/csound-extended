@@ -81,7 +81,6 @@ option(USE_CURL "Use CURL library" ON)
 option(BUILD_BUCHLA_OPCODES "Build the Buchla filter opcode" ON)
 option(BUILD_CHUA_OPCODES "Build the Chua opcodes" ON)
 option(BUILD_DSSI_OPCODES "Build the DSSI opcodes" ON)
-option(BUILD_CSOUND_VST "Build Csound as a VST plugin" ON)
 option(BUILD_EMUGENS_OPCODES "Build emugens opcodes" ON)
 option(BUILD_EXCITER_OPCODES "Build the exciter opcode" ON)
 option(BUILD_FAUST_OPCODES "Build the Faust opcodes" OFF)
@@ -103,7 +102,6 @@ option(BUILD_STACK_OPCODES "Build the stack opcodes" ON)
 option(BUILD_STATIC_LIBRARY "Build the static Csound library" ON)
 option(BUILD_WEBSOCKET_OPCODE "Build the websocket opcode" ON)
 option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
-option(BUILD_VST4CS_OPCODES "Build the vst4cs opcodes" ON)
 
 # All dependencies are to be located from here. 
 # Local TARGETS are not PACKAGES!
@@ -170,11 +168,6 @@ endfunction(make_plugin)
 
 add_subdirectory(dependencies)
 add_subdirectory(Opcodes/cmask)
-
-install(FILES "${CMAKE_SOURCE_DIR}/build-linux/dependencies/csound/libvst4cs.so"
-    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-    DESTINATION "${PLUGIN_INSTALL_DIR}"
-    COMPONENT csound-vst4cs)
 add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundHtml5
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CsoundHtml5"
@@ -185,7 +178,6 @@ install(FILES "${CMAKE_SOURCE_DIR}/CsoundHtml5/CsoundHtml5"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
     DESTINATION "${EXECUTABLE_INSTALL_DIR}"
     COMPONENT csound-html5)
-add_subdirectory(CsoundVst)
 ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
     BUILD_IN_SOURCE "1"
@@ -205,18 +197,15 @@ install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
 
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with CsoundVST, CsoundHtml5, and CsoundAC.")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with CsoundHtml5, CsoundAC, and others.")
 set(CPACK_PACKAGE_NAME "csound-extended")
 set(CPACK_PACKAGE_CONTACT "csound-devel@listserv.heanet.ie")
-## set(CPACK_PACKAGE_VERSION_MAJOR "0")
-## set(CPACK_PACKAGE_VERSION_MINOR "1")
-## set(CPACK_PACKAGE_VERSION_PATCH "2")
 set(CPACK_PACKAGE_VERSION "$ENV{CSOUND_EXTENDED_VERSION}")
 set(CPACK_STRIP_FILES "YES")
 set(CPACK_DEB_COMPONENT_INSTALL "ON")   
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
-set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-vst4cs csound-cmask)
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask)
 
 include (CPack)

@@ -199,9 +199,9 @@ namespace csound
     if (command_.size() == 0) {
       char buffer[0x200];
       std::sprintf(buffer,
-                   "csound --midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo %s",
-           threadCount,
-                   getOutputSoundfileName().c_str());
+            "csound --midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
+            threadCount,
+            getOutputSoundfileName().c_str());
       command_ = buffer;
     }
     return command_;
@@ -257,7 +257,7 @@ namespace csound
       const char *audiosystem = argsmap["--audio"].c_str();
       const char *devicename = argsmap["--device"].c_str();
       std::sprintf(command,
-                   "csound --midi-key=4 --midi-velocity=5 -m195 -+rtaudio=%s -o%s",
+                   "csound --midi-key=4 --midi-velocity=5 -m162 -+rtaudio=%s -o%s",
                    audiosystem, devicename);
       System::inform("Csound command: %s\n", command);
       setCsoundCommand(command);

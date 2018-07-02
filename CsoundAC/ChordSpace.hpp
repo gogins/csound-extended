@@ -30,11 +30,11 @@
 #include <cmath>
 #include <cstdarg>
 #include <eigen3/Eigen/Dense>
-#include "Event.hpp"
+#include <Event.hpp>
 #include <iostream>
 #include <iterator>
 #include <map>
-#include "Score.hpp"
+#include <Score.hpp>
 #include <set>
 #include <sstream>
 #include <vector>
@@ -48,7 +48,7 @@
 #include <cmath>
 #include <cstdarg>
 #include <eigen3/Eigen/Dense>
-#include "Event.hpp"
+#include <Event.hpp>
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -522,7 +522,7 @@ public:
 		COUNT = 5
 	};
 	Chord() {
-		resize(3);
+		resize(0);
 	}
 	Chord(const Chord &other) {
 		*this = other;

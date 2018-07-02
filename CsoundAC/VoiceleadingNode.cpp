@@ -98,6 +98,9 @@ std::ostream &operator << (std::ostream &stream, const VoiceleadingOperation &op
     if (operation.L_) {
         stream << "  L:                 " << int(operation.L_) << std::endl;
     }
+    if (operation.chord.size() > 0) {
+        stream << "Chd:                 " << operation.chord.information() << std::endl;
+    }
     return stream;
 }
 
@@ -481,4 +484,19 @@ std::vector<double> VoiceleadingNode::getModality() const
 {
     return modality;
 }
+
+void VoiceleadingNode::chord(const csound::Chord &chord, double time)
+{
+    operations[time].beginTime = time;
+    operations[time].chord = chord;
+}
+
+void VoiceleadingNode::chordVoiceleading(const csound::Chord &chord, double time, bool avoid_parallels = true)
+{
+    operations[time].beginTime = time;
+    operations[time].chord = chord;
+    operations[time].L_ = true;
+    operations[time].avoidParallels = avoid_parallels;
+}
+
 }

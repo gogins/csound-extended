@@ -7,8 +7,8 @@ git pull
 git branch
 cd ..
 cd csound
-git checkout develop
 echo "Pulling from `pwd`..."
+git checkout develop
 git pull 
 git branch
 cd ..

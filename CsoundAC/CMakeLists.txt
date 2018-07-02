@@ -117,11 +117,15 @@ if(BUILD_CSOUND_AC)
     if(MUSICXML_LIBRARY)
         target_link_libraries(libCsoundAC PRIVATE libcsnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY})
     endif()
-
+    
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}" 
+        DESTINATION "include/csound" 
+        FILES_MATCHING PATTERN "*.hpp")
+        
     install(TARGETS libCsoundAC
         LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
         ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
-
+            
     if(SWIG_FOUND)
         message(STATUS "SWIG_USE_FILE: " ${SWIG_USE_FILE})
         include(${SWIG_USE_FILE})

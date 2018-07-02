@@ -67,6 +67,7 @@
 #include "Event.hpp"
 #include "Midifile.hpp"
 #include "Score.hpp"
+#include "ChordSpace.hpp"
 #include "Composition.hpp"
 #include "Node.hpp"
 #include "Counterpoint.hpp"
@@ -87,6 +88,5 @@
 #include "Voicelead.hpp"
 #include "VoiceleadingNode.hpp"
 #include "ChordLindenmayer.hpp"
-#include "ChordSpace.hpp"
 
 #endif

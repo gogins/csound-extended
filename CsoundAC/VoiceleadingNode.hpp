@@ -27,11 +27,13 @@
 %{
 #include "Node.hpp"
 #include "Score.hpp"
+#include "ChordSpace.hpp"
 %}
 #else
 #include "Node.hpp"
 #include "Score.hpp"
 #include "Voicelead.hpp"
+#include "ChordSpace.hpp"
 #endif
 
 namespace csound
@@ -90,6 +92,10 @@ namespace csound
      * Voicing, or DBL_MAX if no operation.
      */
     double V_;
+    /**
+     * Actual instance of csound::Chord.
+     */
+    Chord chord;
     /**
      * If true, perform the closest voice-leading from the prior operation.
      */
@@ -329,6 +335,15 @@ namespace csound
      * voice-leading.
      */
     void L(double time, bool avoidParallels = true);
+    /**
+     * Apply the chord to the current segement.
+     */
+    void chord(const csound::Chord &chord, double time);
+    /**
+     * Apply the chord to the current segement, using the 
+     * closest voice-leading from the pitches of the previous segment.
+     */
+    void chordVoiceleading(const csound::Chord &chord, double time, bool avoid_parallels);
     /**
      * Apply all of the voice-leading operations stored within this
      * node to the score. Enables voice-leading operations to be used
