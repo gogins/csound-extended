@@ -14,4 +14,4 @@ linked. Some live examples run from here:
     
 # Csound Reference Manual 
 
-[indexframes.html](https://gogins.github.io/csound-extended/html/indexframes.html), an online version of the __**Csound Reference Manual**__ that is playable if your browser supports WebAssembly.
+[indexframes.html](https://gogins.github.io/csound-extended/html/indexframes.html), an online version of the _**Csound Reference Manual**_ that is playable if your browser supports WebAssembly.
