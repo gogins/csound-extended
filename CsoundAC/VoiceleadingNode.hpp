@@ -168,12 +168,6 @@ namespace csound
      */
     std::vector<double> modality;
     /**
-     * If true (the default), rescale times of voice-leading operations
-     * in proportion to the duration of the notes produced
-     * by this and its child nodes.
-     */
-    bool rescaleTimes;
-    /**
      * If true (the default), voice-leadings will avoid
      * parallel fifths.
      */

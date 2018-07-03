@@ -60,7 +60,6 @@ VoiceleadingOperation::~VoiceleadingOperation()
 VoiceleadingNode::VoiceleadingNode() :
     base(36.0),
     range(60.0),
-    rescaleTimes(true),
     avoidParallels(true),
     divisionsPerOctave(12)
 {
@@ -403,7 +402,7 @@ void VoiceleadingNode::produceOrTransform(Score &score,
         size_t endAt,
         const Eigen::MatrixXd &compositeCoordinates)
 {
-    transform(score, rescaleTimes);
+    transform(score, false);
     // Apply the global transformation of coordinate system
     // to all child events produced by this node.
     size_t finalEndAt = score.size();
@@ -425,6 +424,11 @@ void VoiceleadingNode::transform(Score &score, bool rescaleTimes_)
     double scoreMaxTime = scoreMinTime + scoreDuration;
     double operationMaxTime = 0.0;
     double timeScale = 1.0;
+    System::inform("BEGAN VoiceleadingNode::transform...\n");
+    System::inform("  operations:    %d\n", operations.size());
+    System::inform("  scoreMinTime:  %f\n", scoreMinTime);  
+    System::inform("  scoreDuration: %f\n", scoreDuration);  
+    System::inform("  scoreMaxTime:  %f\n", scoreMaxTime);
     std::vector<VoiceleadingOperation *> ops;
     for (std::map<double, VoiceleadingOperation>::iterator it = operations.begin(); it != operations.end(); ++it) {
         if (it->second.beginTime > operationMaxTime) {
@@ -432,18 +436,11 @@ void VoiceleadingNode::transform(Score &score, bool rescaleTimes_)
         }
         ops.push_back(&it->second);
     }
-
     if (rescaleTimes_) {
         if (operationMaxTime > 0.0) {
             timeScale = scoreMaxTime / operationMaxTime;
         }
     }
-    System::inform("BEGAN VoiceleadingNode::transform  operationMaxTime: %f  origin: %f  duration: %f  scoreMaxTime: %f  timeScale: %f...\n",
-            operationMaxTime,
-            scoreMinTime,
-            scoreDuration,
-            scoreMaxTime,
-            timeScale);
     VoiceleadingOperation *priorOperation = 0;
     VoiceleadingOperation *currentOperation = 0;
     VoiceleadingOperation *nextOperation = 0;
