@@ -36,7 +36,7 @@ These extensions include:
 7.  Silencio, a JavaScript algorithmic composition library designed to work 
     with all Csound/HTML5 environments.
     
-9.  An online `playable` version of the [Csound Reference Manual](https://gogins.github.io/csound-extended/html/indexframes.html).
+9.  An online `playable` version of the [__**Csound Reference Manual**__](https://gogins.github.io/csound-extended/html/indexframes.html).
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no 
 longer maintained here. This is due to efforts by Steinberg to force 
