@@ -171,6 +171,12 @@ namespace csound
      * uses sox and LAME to translate the output soundfile to normalized MP3 format.
      */
     virtual int translateToMp3(double bitrate = 256.01, double levelDb = -3.0);
+    /** 
+     * Assuming the score has been rendered,
+     * uses sox and ffmpeg to translate the output soundfile to a normalized mp4 
+     * video suitable for uploading to YouTube.
+     */
+    virtual int translateToMp4();
     /**
      * Clear all contents of this. Probably should be overridden
      * in derived classes.

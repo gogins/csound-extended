@@ -282,6 +282,10 @@ namespace csound
       return errorStatus;
     }
     errorStatus = translateToMp3();
+    if (errorStatus) {
+        return errorStatus;
+    }
+    errorStatus = translateToMp4();
     System::inform("ENDED Composition::translateMaster().\n");
     return errorStatus;
   }
@@ -334,6 +338,17 @@ namespace csound
                   getMp3SoundfileName().c_str());
     System::inform("Composition::translateToMp3(): %s", buffer);
     int errorStatus = std::system(buffer);
+    return errorStatus;
+  }
+
+  int Composition::translateToMp4()
+  {
+    char sox_spectrogram_command[0x100];
+    std::string spectrogram_filename = getFilename();
+    spectrogram_filename.append(".png");
+    std::snprintf(sox_spectrogram_command, 0x100, "sox -S \"%s\" -n spectrogram -o \"%s\" -t%s -c%s", getNormalizedSoundfileName().c_str(), spectrogram_filename.c_str(), getTitle().c_str(), getCopyright().c_str(), " (Irreducible Productions, ASCAP)");
+    System::inform("sox_spectrogram_command: %s", sox_spectrogram_command);
+    int errorStatus = std::system(sox_spectrogram_command);
     return errorStatus;
   }
 
