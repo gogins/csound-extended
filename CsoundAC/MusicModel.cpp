@@ -201,7 +201,7 @@ namespace csound
       std::sprintf(buffer,
             "csound --midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
             threadCount,
-            getOutputSoundfileName().c_str());
+            getOutputSoundfileFilepath().c_str());
       command_ = buffer;
     }
     return command_;
@@ -220,7 +220,8 @@ namespace csound
 
   int MusicModel::processArgs(const std::vector<std::string> &args)
   {
-    System::inform("BEGAN MusicModel::processArgv()...\n");
+    System::inform("BEGAN MusicModel::processArgs()...\n");
+    generateAllNames();
     std::map<std::string, std::string> argsmap;
     std::string key;
     for (size_t i = 0, n = args.size(); i < n; ++i) {
@@ -238,7 +239,7 @@ namespace csound
     char command[0x200];
     int errorStatus = 0;
     bool postPossible = false;
-    std::string playSoundfileName = getOutputSoundfileName();
+    std::string playSoundfileName = getOutputSoundfileFilepath();
     if ((argsmap.find("--dir") != argsmap.end()) && !errorStatus) {
       setOutputDirectory(argsmap["--dir"]);
     }
@@ -247,7 +248,7 @@ namespace csound
       if (errorStatus) {
         return errorStatus;
       }
-      getScore().save(getMidiFilename().c_str());
+      getScore().save(getMidifileFilepath().c_str());
     }
     if ((argsmap.find("--notation") != argsmap.end()) && !errorStatus) {
         translateToNotation();
@@ -268,24 +269,24 @@ namespace csound
       errorStatus = render();
     }
     if ((argsmap.find("--pianoteq") != argsmap.end()) && !errorStatus) {
-      std::sprintf(command, "Pianoteq --midi=%s\n", getMidiFilename().c_str());
+      std::sprintf(command, "Pianoteq --midi=%s\n", getMidifileFilepath().c_str());
       System::inform("Executing command: %s\n", command);
       errorStatus = std::system(command);
     }
     if ((argsmap.find("--pianoteq-wav") != argsmap.end()) && !errorStatus) {
       postPossible = true;
-      std::sprintf(command, "Pianoteq --headless --midi %s --rate 48000 --wav %s\n", getMidiFilename().c_str(), getOutputSoundfileName().c_str());
+      std::sprintf(command, "Pianoteq --headless --midi %s --rate 48000 --wav %s\n", getMidifileFilepath().c_str(), getOutputSoundfileFilepath().c_str());
       System::inform("Executing command: %s\n", command);
       errorStatus = std::system(command);
     }
     if ((argsmap.find("--playmidi") != argsmap.end()) && !errorStatus) {
-      std::sprintf(command, "%s %s\n", argsmap["--playmidi"].c_str(), getMidiFilename().c_str());
+      std::sprintf(command, "%s %s\n", argsmap["--playmidi"].c_str(), getMidifileFilepath().c_str());
       System::inform("Executing command: %s\n", command);
       errorStatus = std::system(command);
     }
     if ((argsmap.find("--post") != argsmap.end()) && !errorStatus && postPossible) {
       errorStatus = translateMaster();
-      playSoundfileName = getNormalizedSoundfileName();
+      playSoundfileName = getNormalizedSoundfileFilepath();
     }
     if ((argsmap.find("--playwav") != argsmap.end()) && !errorStatus) {
       std::sprintf(command, "%s %s\n", argsmap["--playwav"].c_str(), playSoundfileName.c_str());

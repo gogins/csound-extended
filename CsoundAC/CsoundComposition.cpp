@@ -275,7 +275,7 @@ namespace csound
     }
     if ((argsmap.find("--post") != argsmap.end()) && !errorStatus && postPossible) {
       errorStatus = translateMaster();
-      playSoundfileName = getNormalizedSoundfileName();
+      playSoundfileName = getNormalizedSoundfileFilepath();
     }
     if ((argsmap.find("--playwav") != argsmap.end()) && !errorStatus) {
       std::sprintf(command, "%s %s\n", argsmap["--playwav"].c_str(), playSoundfileName.c_str());

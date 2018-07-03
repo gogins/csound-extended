@@ -22,7 +22,9 @@
 #endif
 #include "Composition.hpp"
 #include "System.hpp"
+#include <algorithm>
 #include <cstdlib>
+#include <unistd.h>
 #include <map>
 
 namespace csound
@@ -41,7 +43,7 @@ namespace csound
   {
     clear();
     int errorStatus = generate();
-    timestamp = makeTimestamp();
+    ///timestamp = makeTimestamp();
     if (errorStatus) {
       return errorStatus;
     }
@@ -107,95 +109,95 @@ namespace csound
 
   std::string Composition::getOutputDirectory() const
   {
-    return outputDirectory;
+      if (output_directory.empty() == true) {
+        char buffer[PATH_MAX];
+        getcwd(buffer, PATH_MAX);
+        return buffer;
+      } 
+      return output_directory;
   }
 
-  void Composition::setOutputDirectory(std::string directory)
+  void Composition::setOutputDirectory(std::string output_directory)
   {
-    outputDirectory = directory;
+    output_directory = output_directory;
   }
 
   std::string Composition::getFilename() const
   {
-    return filename;
+    return stem;
   }
 
   void Composition::setFilename(std::string filename)
   {
-    this->filename = filename;
+    this->stem = filename;
   }
 
-  std::string Composition::getFilePathname() const
+  std::string Composition::getFileFilepath() const
   {
-    return outputDirectory + filename;
+    return base_filepath;
+  }
+
+  std::string Composition::getBasename() const
+  {
+    return base_filepath;
   }
 
   std::string Composition::generateFilename()
   {
-    char buffer[0x100];
-    snprintf(buffer, 0x100, "silence.%s.py", makeTimestamp().c_str());
+    char buffer[0x200];
+    snprintf(buffer, 0x200, "silence.%s.py", makeTimestamp().c_str());
     return buffer;
   }
 
-  std::string Composition::getMidiFilename() const
+  std::string Composition::getMidifileFilepath() const
   {
-    std::string name = getFilePathname();
-    name.append(".mid");
-    return name;
+        return midi_filepath;
   }
 
-  std::string Composition::getOutputSoundfileName() const
+  std::string Composition::getOutputSoundfileFilepath() const
   {
-    if (outputFilename.empty())
+    if (output_filename.empty())
       {
-        std::string name_ = getFilePathname();
-        name_.append(".wav");
-        return name_;
+        return master_filepath;
       }
     else
       {
-        return outputFilename;
+        return output_filename;
       }
   }
 
-  std::string Composition::getNormalizedSoundfileName() const
+  std::string Composition::getNormalizedSoundfileFilepath() const
   {
-    std::string name = getFilePathname();
-    name.append(".norm.wav");
-    return name;
+    return normalized_master_filepath;
   }
 
-  std::string Composition::getCdSoundfileName() const
+  std::string Composition::getCdSoundfileFilepath() const
   {
-    std::string name = getFilePathname();
-    name.append(".cd.wav");
-    return name;
+    return cd_quality_filepath;
   }
 
-  std::string Composition::getMp3SoundfileName() const
+  std::string Composition::getMp3SoundfileFilepath() const
   {
-    std::string name = getFilePathname();
-    name.append(".mp3");
-    return name;
+    return mp3_filepath;
   }
 
-  std::string Composition::getMusicXmlFilename() const
+  std::string Composition::getMusicXmlfileFilepath() const
   {
-    std::string name = getFilePathname();
+    std::string name = base_filepath;
     name.append(".xml");
-    return name;
+      return name;
   }
 
-  std::string Composition::getFomusFilename() const
+  std::string Composition::getFomusfileFilepath() const
   {
-    std::string name = getFilePathname();
+    std::string name = getBasename();
     name.append(".fms");
     return name;
   }
 
-  std::string Composition::getLilypondFilename() const
+  std::string Composition::getLilypondfileFilepath() const
   {
-    std::string name = getFilePathname();
+    std::string name = getBasename();
     name.append(".ly");
     return name;
   }
@@ -205,8 +207,8 @@ namespace csound
     time_t time_ = 0;
     time(&time_);
     struct tm* tm_ = gmtime(&time_);
-    char buffer[0x100];
-    strftime(buffer, 0x100, "%Y-%m-%d.%H-%M-%S", tm_);
+    char buffer[0x200];
+    strftime(buffer, 0x200, "%Y-%m-%d.%H-%M-%S", tm_);
     return buffer;
   }
 
@@ -221,21 +223,21 @@ namespace csound
     command = command + " --OriginationDate=" + getTimestamp().substr(0, 10);
     command = command + " --ICRD=" + getTimestamp().substr(0, 10);
     if (getTitle().length() > 1) {
-      command = command + " --Description=" + getTitle();
-      command = command + " --INAM=" + getTitle();
+      command = command + " --Description=\"" + getTitle() + "\"";
+      command = command + " --INAM=\"" + getTitle() + "\"";
     }
     if (getCopyright().length() > 1) {
-      command = command + " --ICOP=" + getCopyright();
+      command = command + " --ICOP=\"" + getCopyright() + "\"";
     }
     if (getArtist().length() > 1) {
-      command = command + " --Originator=" + getArtist();
-      command = command + " --IART=" + getArtist();
+      command = command + " --Originator=\"" + getAuthor() + "\"";
+      command = command + " --IART=\"" + getArtist() + "\"";
     }
     if (getAlbum().length() > 1) {
-      command = command + " --IPRD=" + getAlbum();
+      command = command + " --IPRD=\"" + getAlbum() + "\"";
     }
     if (getLicense().length() > 1) {
-      command = command + " --ICMT=" + getLicense();
+      command = command + " --ICMT\"=" + getLicense() + "\"";
     }
     command = command + " " + filename.c_str();
     System::inform("tagFile(): %s\n", command.c_str());
@@ -245,10 +247,9 @@ namespace csound
   int Composition::performMaster()
   {
     System::inform("BEGAN Composition::performMaster()...\n");
-    timestamp = makeTimestamp();
-    score.save(getMidiFilename());
+    score.save(getMidifileFilepath());
     // Not implemented fully yet.
-    //score.save(getMusicXmlFilename());
+    //score.save(getMusicXmlfileFilepath());
     int errorStatus = perform();
     System::inform("ENDED Composition::performMaster().\n");
     return errorStatus;
@@ -269,7 +270,7 @@ namespace csound
   int Composition::translateMaster()
   {
     System::inform("ENDED Composition::translateMaster().\n");
-    int errorStatus = tagFile(getOutputSoundfileName());
+    int errorStatus = tagFile(getOutputSoundfileFilepath());
     if (errorStatus) {
       return errorStatus;
     }
@@ -292,50 +293,50 @@ namespace csound
 
   int Composition::normalizeOutputSoundfile(double levelDb)
   {
-    char buffer[0x100];
+    char buffer[0x200];
     std::snprintf(buffer,
-                  0x100,
+                  0x200,
                   "sox %s -V3 -b 32 -e floating-point %s gain -n %f\n",
-                  getOutputSoundfileName().c_str(),
-                  getNormalizedSoundfileName().c_str(),
+                  getOutputSoundfileFilepath().c_str(),
+                  getNormalizedSoundfileFilepath().c_str(),
                   levelDb);
     int errorStatus = std::system(buffer);
     if (errorStatus) {
       return errorStatus;
     }
     System::inform("Composition::normalizeOutputSoundfile(): %s", buffer);
-    errorStatus = tagFile(getNormalizedSoundfileName());
+    errorStatus = tagFile(getNormalizedSoundfileFilepath());
     return errorStatus;
   }
 
   int Composition::translateToCdAudio(double levelDb)
   {
-    char buffer[0x100];
-    std::snprintf(buffer, 0x100, "sox %s -V3 -b 16 %s gain -n %f rate 44100\n",
-                  getOutputSoundfileName().c_str(),
-                  getCdSoundfileName().c_str(),
+    char buffer[0x200];
+    std::snprintf(buffer, 0x200, "sox %s -V3 -b 16 %s gain -n %f rate 44100\n",
+                  getOutputSoundfileFilepath().c_str(),
+                  getCdSoundfileFilepath().c_str(),
                   levelDb);
     System::inform("Composition::translateToCdAudio(): %s", buffer);
     int errorStatus = std::system(buffer);
     if (errorStatus) {
       return errorStatus;
     }
-    errorStatus = tagFile(getCdSoundfileName());
+    errorStatus = tagFile(getCdSoundfileFilepath());
     return errorStatus;
   }
 
   int Composition::translateToMp3(double bitrate, double levelDb)
   {
-    char buffer[0x100];
+    char buffer[0x200];
     std::snprintf(buffer,
-                  0x100,
-                  "lame --verbose --disptime 2 --nohist --preset cd --tt %s --ta %s --tl %s --tc %s %s %s\n",
+                  0x200,
+                  "lame --verbose --disptime 2 --nohist --preset cd --tt \"%s\" --ta \"%s\" --tl \"%s\" --tc \"%s\" %s %s\n",
                   getTitle().c_str(),
                   getArtist().c_str(),
                   getAlbum().c_str(),
                   getCopyright().c_str(),
-                  getCdSoundfileName().c_str(),
-                  getMp3SoundfileName().c_str());
+                  getCdSoundfileFilepath().c_str(),
+                  getMp3SoundfileFilepath().c_str());
     System::inform("Composition::translateToMp3(): %s", buffer);
     int errorStatus = std::system(buffer);
     return errorStatus;
@@ -343,13 +344,100 @@ namespace csound
 
   int Composition::translateToMp4()
   {
-    char sox_spectrogram_command[0x100];
-    std::string spectrogram_filename = getFilename();
-    spectrogram_filename.append(".png");
-    std::snprintf(sox_spectrogram_command, 0x100, "sox -S \"%s\" -n spectrogram -o \"%s\" -t%s -c%s", getNormalizedSoundfileName().c_str(), spectrogram_filename.c_str(), getTitle().c_str(), getCopyright().c_str(), " (Irreducible Productions, ASCAP)");
-    System::inform("sox_spectrogram_command: %s", sox_spectrogram_command);
+    char sox_spectrogram_command[0x200];
+    std::snprintf(sox_spectrogram_command, 0x200, "sox -S %s -n spectrogram -o \"%s\" -t\"%s\" -c\"%s\"", cd_quality_filepath.c_str(), spectrogram_filepath.c_str(), getTitle().c_str(), getCopyright().c_str());
+    System::inform("sox_spectrogram_command: %s\n", sox_spectrogram_command);
     int errorStatus = std::system(sox_spectrogram_command);
+    char mp4_encode_command[0x500];
+    std::sprintf(mp4_encode_command, "ffmpeg -r 1 -i \"%s\" -i \"%s\" -codec:a aac -strict -2 -b:a 384k -r:a 48000 -c:v libx264 -b:v 500k \"%s\"", spectrogram_filepath.c_str(), master_filepath.c_str(), mp4_filepath.c_str());
+    System::inform("mp4_encode_command: %s\n", mp4_encode_command);
+    errorStatus = std::system(mp4_encode_command);
+    std::string mp4_metadata;
+    mp4_metadata.append("-metadata title=\"" + stem + "\" ");
+    mp4_metadata.append("-metadata album=\"" + album + "\" ");
+    mp4_metadata.append("-metadata date=\"" + year + "\" ");
+    mp4_metadata.append("-metadata track=\"" + track + "\" ");
+    mp4_metadata.append("-metadata genre=\"" + notes + "\" ");
+    mp4_metadata.append("-metadata publisher=\"" + performance_rights_organization + "\" ");
+    mp4_metadata.append("-metadata copyright=\"" + str_copyright + "\" ");
+    mp4_metadata.append("-metadata composer=\"" + author + "\" ");
+    mp4_metadata.append("-metadata artist=\"" + artist + "\" ");
+    char mp4_metadata_command[0x500];
+    std::sprintf(mp4_metadata_command, "ffmpeg -y -loop 1 -framerate 2 -i \"%s\" -i \"%s\" -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" %s \"%s\"", spectrogram_filepath.c_str(), master_filepath.c_str(), mp4_metadata.c_str(), mp4_filepath.c_str());
+    System::inform("mp4_metadata_command: %s\n", mp4_metadata_command);
+    errorStatus = std::system(mp4_metadata_command);
     return errorStatus;
+  }
+  
+  /**
+   * Generates all filenames and other text based on required stem, 
+   * output_directory, filename extension, and metadata.
+   */
+  void Composition::generateAllNames() 
+  {
+        timestamp = makeTimestamp();
+        output_directory = getOutputDirectory();
+        char buffer[0x200];
+        if (album.empty() == true || track.empty() == true) {
+            std::snprintf(buffer, 0x200, "%s -- %s", author.c_str(), stem.c_str());
+        } else {
+            std::snprintf(buffer, 0x200, "%s -- %s -- Track %s -- %s", author.c_str(), album.c_str(), track.c_str(), stem.c_str());
+        }
+        label = buffer;
+        // Avoid all spaces in all actual filenames.
+        base_filepath = label;
+        std::replace(base_filepath.begin(), base_filepath.end(), ' ', '_');
+        base_filepath = output_directory + "/" + base_filepath;
+        master_filepath = base_filepath + ".master.wav";
+        normalized_master_filepath = base_filepath + ".norm.wav";
+        spectrogram_filepath = base_filepath + ".png";
+        cd_quality_filepath = base_filepath + ".cd.wav";
+        mp3_filepath = base_filepath + ".mp3";
+        mp4_filepath = base_filepath + ".mp4";
+        flac_filepath = base_filepath + ".flac";
+        midi_filepath = base_filepath+ + ".mid";
+        if (notes.empty() == true) {
+            notes = "Electroacoustic Music";
+        }
+        bext_description = notes;
+        bext_originator = author;
+        bext_orig_ref = master_filepath;
+        //bext_umid              = xxx
+        //bext_orig_date         = xxx
+        //bext_orig_time         = xxx
+        //bext_coding_hist       = xxx
+        //bext_time_ref          = xxx
+        str_comment = notes;
+        str_title = stem;
+        if (performance_rights_organization.empty() == true) {
+            std::snprintf(buffer, 0x200, "Copyright (C) %s by %s", year.c_str(), author.c_str());            
+        } else {
+            std::snprintf(buffer, 0x200, "Copyright (C) %s by %s (%s)", year.c_str(), author.c_str(), performance_rights_organization.c_str());
+        }
+        copyright = buffer;
+        if (artist.empty() == true) {
+            artist = author;
+        }
+        str_date = year;
+        str_album  = album;
+        System::inform("timestamp:                       %s\n", timestamp.c_str());
+        System::inform("author:                          %s\n", author.c_str());
+        System::inform("title:                           %s\n", getTitle().c_str());
+        System::inform("label:                           %s\n", label.c_str());
+        System::inform("copyright:                       %s\n", copyright.c_str());
+        System::inform("license:                         %s\n", getLicense().c_str());
+        System::inform("output_directory:                %s\n", output_directory.c_str());
+        System::inform("base_filepath:                   %s\n", base_filepath.c_str());
+        System::inform("master_filepath:                 %s\n", master_filepath.c_str());
+        System::inform("normalized_master_filepath:      %s\n", normalized_master_filepath.c_str());
+        System::inform("cd_quality_filepath:             %s\n", cd_quality_filepath.c_str());
+        System::inform("mp3_filepath:                    %s\n", mp3_filepath.c_str());
+        System::inform("spectrogram_filepath:            %s\n", spectrogram_filepath.c_str());
+        System::inform("mp4_filepath:                    %s\n", mp4_filepath.c_str());
+        System::inform("bext_description:                %s\n", bext_description.c_str());
+        System::inform("bext_originator:                 %s\n", bext_originator.c_str());
+        System::inform("bext_orig_ref:                   %s\n", bext_orig_ref.c_str());
+        System::inform("performance_rights_organization: %s\n", performance_rights_organization.c_str());
   }
 
   std::string Composition::getArtist() const
@@ -364,12 +452,32 @@ namespace csound
 
   std::string Composition::getTitle() const
   {
-    return title;
+    return stem;
   }
 
   void Composition::setTitle(std::string value)
   {
-    title = value;
+    stem = value;
+  }
+
+  std::string Composition::getAuthor() const
+  {
+    return author;
+  }
+
+  void Composition::setAuthor(std::string value)
+  {
+    author = value;
+  }
+
+  std::string Composition::getYear() const
+  {
+    return year;
+  }
+
+  void Composition::setYear(std::string value)
+  {
+    year = value;
   }
 
   std::string Composition::getCopyright() const
@@ -380,6 +488,16 @@ namespace csound
   void Composition::setCopyright(std::string value)
   {
     copyright = value;
+  }
+
+  std::string Composition::getPerformanceRightsOrganization() const
+  {
+    return performance_rights_organization;
+  }
+
+  void Composition::setPerformanceRightsOrganization(std::string value)
+  {
+    performance_rights_organization = value;
   }
 
   std::string Composition::getAlbum() const
@@ -394,6 +512,9 @@ namespace csound
 
   std::string Composition::getLicense() const
   {
+      if (license.empty() == true) {
+          return "CC BY-NC-ND 4.0";
+      }
     return license;
   }
 
@@ -404,7 +525,7 @@ namespace csound
 
   int Composition::translateToNotation(const std::vector<std::string> partNames, std::string header)
   {
-    std::string filename = getFomusFilename();
+    std::string filename = getFomusfileFilepath();
     std::ofstream stream;
     stream.open(filename.c_str(), std::ifstream::binary);
     char buffer[0x200];
@@ -459,7 +580,7 @@ namespace csound
         }
     }
     stream.close();
-    std::sprintf(buffer, "fomus --verbose -i %s -o %s.xml", getFomusFilename().c_str(), getTitle().c_str());
+    std::sprintf(buffer, "fomus --verbose -i %s -o %s.xml", getFomusfileFilepath().c_str(), getTitle().c_str());
     int errorStatus = std::system(buffer);
     return errorStatus;
   }
@@ -476,16 +597,18 @@ namespace csound
 
   int Composition::processArgs(const std::vector<std::string> &args)
   {
+    generateAllNames();
     return renderAll();
   }
 
   void Composition::setOutputSoundfileName(std::string name)
   {
-    outputFilename = name;
+    output_filename = name;
   }
 
   void Composition::clearOutputSoundfileName()
   {
-    outputFilename.clear();
+    output_filename.clear();
   }
+  
 }

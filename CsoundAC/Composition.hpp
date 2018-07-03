@@ -52,7 +52,7 @@ namespace csound
      */
     virtual void setOutputDirectory(std::string directory);
     /**
-     * Returns the filename of this, which is used as a base
+     * Returns the stem of this, which is used as a base
      * for derived filenames (soundfile, MIDI file, etc.).
      */
     virtual std::string getFilename() const;
@@ -62,10 +62,15 @@ namespace csound
      */
     virtual void setFilename(std::string filename);
     /**
-     * Returns the complete pathname of the file, i.e.,
+     * Returns the complete basename of the file, i.e.,
+     * the output directory plus the stem.
+     */
+    virtual std::string getBasename() const;
+    /**
+     * Returns the complete basename of the file, i.e.,
      * the output directory plus the filename.
      */
-    virtual std::string getFilePathname() const;
+    virtual std::string getFileFilepath() const;
     /**
      * Generates a versioned filename.
      */
@@ -85,42 +90,42 @@ namespace csound
      * which need not be a file but must be set using
      * setOutputSoundfileName().
      */
-    virtual std::string getOutputSoundfileName() const;
+    virtual std::string getOutputSoundfileFilepath() const;
     /**
      * Returns a soundfile name based on the filename
      * of this, by appending ".norm.wav" to the filename.
      */
-    virtual std::string getNormalizedSoundfileName() const;
+    virtual std::string getNormalizedSoundfileFilepath() const;
     /**
      * Returns a soundfile name for a CD audio track based on the filename
      * of this, by appending ".cd.wav" to the filename.
      */
-    virtual std::string getCdSoundfileName() const;
+    virtual std::string getCdSoundfileFilepath() const;
     /**
      * Returns a soundfile name for an MP3 file based on the filename
      * of this, by appending ".mp3" to the filename.
      */
-    virtual std::string getMp3SoundfileName() const;
+    virtual std::string getMp3SoundfileFilepath() const;
     /**
      * Returns a MIDI filename based on the filename
      * of this, by appending ".mid" to the filename.
      */
-    virtual std::string getMidiFilename() const;
+    virtual std::string getMidifileFilepath() const;
     /**
      * Returns a MusicXML filename based on the filename
      * of this, by appending ".xml" to the filename.
      */
-    virtual std::string getMusicXmlFilename() const;
+    virtual std::string getMusicXmlfileFilepath() const;
     /**
      * Returns a MusicXML filename based on the filename
      * of this, by appending ".fms" to the filename.
      */
-    virtual std::string getFomusFilename() const;
+    virtual std::string getFomusfileFilepath() const;
     /**
      * Returns a MusicXML filename based on the filename
      * of this, by appending ".ly" to the filename.
      */
-    virtual std::string getLilypondFilename() const;
+    virtual std::string getLilypondfileFilepath() const;
     /**
      * Generate performance events and store them in the score.
      * Must be overidden in derived classes.
@@ -224,14 +229,20 @@ namespace csound
     virtual int translateToNotation(const std::vector<std::string> partNames = std::vector<std::string>(), std::string header = "");
     virtual std::string getArtist() const;
     virtual void setArtist(std::string value);
+    virtual std::string getAuthor() const;
+    virtual void setAuthor(std::string value);
     virtual std::string getTitle() const;
     virtual void setTitle(std::string value);
+    virtual std::string getYear() const;
+    virtual void setYear(std::string value);
     virtual std::string getCopyright() const;
     virtual void setCopyright(std::string value);
     virtual std::string getAlbum() const;
     virtual void setAlbum(std::string value);
     virtual std::string getLicense() const;
     virtual void setLicense(std::string value);
+    virtual std::string getPerformanceRightsOrganization() const;
+    virtual void setPerformanceRightsOrganization(std::string value);
     virtual int tagFile(std::string filename) const;
     /**
      * Pass the invoking program's command-line arguments to processArgs()
@@ -251,19 +262,138 @@ namespace csound
      */
     virtual void setOutputSoundfileName(std::string name);
     virtual void clearOutputSoundfileName();
-  protected:
+    virtual void generateAllNames();
+   protected:
+    /**
+     * Required metadata.
+     */
+    std::string author;
+    /**
+     * Required metadata. Allows for 
+     * performer, etc. to differ from author.
+     * Defaults to author.
+     */
+    std::string artist;
+    /**
+     * Required metadata.
+     */
+    std::string copyright;
+    /**
+     * Required metadata. Defaults to Creative Commons 
+     * Attribution-NonCommercial-NoDerivatives 4.0 International.
+     */
+    std::string license;
+     /**
+     * Optional metadata.
+     */
+    std::string performance_rights_organization; 
+    /**
+     * Required. The stem must be a valid filename and also represents the 
+     * title. All other names, text, and commands are generated from 
+     * directory, stem, filename extensions, and required metadata.
+     */
+    std::string stem;
+    /**
+     * Required. The target directory of the output files.
+     * Defaults to the current working directory.
+     */
+    std::string output_directory;  
+    /**
+     * Required metadata.
+     */
+    std::string year;
+    /**
+     * Optional metadata.
+     */
+    std::string album;
+    /**
+     * Optional metadata.
+     */
+    std::string track;
+    /**
+     * Optional metadata, defaults to "Electroacoustic Music."
+     */
+    std::string notes;
+    /**
+     * Generated. The dirname and stem of the output files.
+     */
+    std::string base_filepath;
+    /**
+     * Generated.
+     */
+    std::string timestamp;
+    /**
+     * Generated.
+     */
+    std::string label;
+    /**
+     * Generated.
+     */
+    std::string master_filepath;
+    /**
+     * Generated.
+     */
+    std::string normalized_master_filepath;
+    /**
+     * Generated.
+     */
+    std::string spectrogram_filepath;
+    /**
+     * Generated.
+     */
+    std::string cd_quality_filepath;
+    /**
+     * Generated.
+     */
+    std::string mp3_filepath;
+    /**
+     * Generated.
+     */
+    std::string mp4_filepath;
+    /**
+     * Generated.
+     */
+    std::string flac_filepath;
+    /**
+     * Generated.
+     */
+    std::string bext_description;
+    /**
+     * Generated.
+     */
+    std::string bext_originator;
+    /**
+     * Generated.
+     */
+    std::string bext_orig_ref;
+    /**
+     * Generated.
+     */
+    std::string str_comment;
+    /**
+     * Generated.
+     */
+    std::string str_title;
+    /**
+     * Generated.
+     */
+    std::string str_copyright;
+    /**
+     * Generated.
+     */
+    std::string str_date;
+    /**
+     * Generated.
+     */
+    std::string str_album;
+    /**
+     * Generated.
+     */
+    std::string midi_filepath;
     Score score;
     double tonesPerOctave;
     bool conformPitches;
-    std::string outputDirectory;
-    std::string filename;
-    std::string artist;
-    std::string title;
-    std::string timestamp;
-    std::string copyright;
-    std::string album;
-    std::string license;
-    std::string outputFilename;
+    std::string output_filename;
   };
 }
 #endif
