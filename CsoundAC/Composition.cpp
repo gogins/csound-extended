@@ -359,7 +359,7 @@ namespace csound
     mp4_metadata.append("-metadata track=\"" + track + "\" ");
     mp4_metadata.append("-metadata genre=\"" + notes + "\" ");
     mp4_metadata.append("-metadata publisher=\"" + performance_rights_organization + "\" ");
-    mp4_metadata.append("-metadata copyright=\"" + str_copyright + "\" ");
+    mp4_metadata.append("-metadata copyright=\"" + copyright + "\" ");
     mp4_metadata.append("-metadata composer=\"" + author + "\" ");
     mp4_metadata.append("-metadata artist=\"" + artist + "\" ");
     char mp4_metadata_command[0x500];
@@ -407,8 +407,6 @@ namespace csound
         //bext_orig_time         = xxx
         //bext_coding_hist       = xxx
         //bext_time_ref          = xxx
-        str_comment = notes;
-        str_title = stem;
         if (performance_rights_organization.empty() == true) {
             std::snprintf(buffer, 0x200, "Copyright (C) %s by %s", year.c_str(), author.c_str());            
         } else {
@@ -418,8 +416,7 @@ namespace csound
         if (artist.empty() == true) {
             artist = author;
         }
-        str_date = year;
-        str_album  = album;
+        album  = album;
         System::inform("timestamp:                       %s\n", timestamp.c_str());
         System::inform("author:                          %s\n", author.c_str());
         System::inform("title:                           %s\n", getTitle().c_str());

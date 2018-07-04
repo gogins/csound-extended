@@ -357,6 +357,10 @@ namespace csound
     /**
      * Generated.
      */
+    std::string midi_filepath;
+    /**
+     * Generated.
+     */
     std::string bext_description;
     /**
      * Generated.
@@ -366,30 +370,6 @@ namespace csound
      * Generated.
      */
     std::string bext_orig_ref;
-    /**
-     * Generated.
-     */
-    std::string str_comment;
-    /**
-     * Generated.
-     */
-    std::string str_title;
-    /**
-     * Generated.
-     */
-    std::string str_copyright;
-    /**
-     * Generated.
-     */
-    std::string str_date;
-    /**
-     * Generated.
-     */
-    std::string str_album;
-    /**
-     * Generated.
-     */
-    std::string midi_filepath;
     Score score;
     double tonesPerOctave;
     bool conformPitches;
