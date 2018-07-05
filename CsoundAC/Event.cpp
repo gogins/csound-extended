@@ -558,4 +558,12 @@ namespace csound
     event.setTime(event.getTime() + event.getDuration());
     event.setDuration(0.0);
   }
+
+  /**
+   * Base class implementation does nothing.
+   */
+  void Event::process(Score *)
+  {
+   
+  }
 }

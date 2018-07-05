@@ -78,6 +78,8 @@ namespace csound
 //template class __declspec(dllexport) Eigen::Matrix< double, 13, 1 >;
 //template class __declspec(dllexport) Eigen::Matrix< double, 13, 13 >;
 
+class Score;
+
 class SILENCE_PUBLIC Event :
         public Eigen::VectorXd
   {
@@ -168,6 +170,11 @@ class SILENCE_PUBLIC Event :
     virtual void removeProperty(std::string nameO);
     virtual void clearProperties();
     virtual void createNoteOffEvent(Event &event) const;
+    /**
+     * In derived classes, used to process the data in this, 
+     * or in all or part of the containing Score.
+     */
+    virtual void process(Score *score);
     virtual Event &operator = (const Event &a);
 #if __cpplusplus >= 201103L
     virtual Event &operator = (Event &&a) = default;

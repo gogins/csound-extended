@@ -633,7 +633,9 @@ std::string Score::getCsoundScore(double tonesPerOctave, bool conformPitches)
         if( conformPitches ) {
             it->conformToPitchClassSet();
         }
-        csoundScore.append( it->toCsoundIStatement( tonesPerOctave ) );
+        if (it->isNote() == true) {
+            csoundScore.append( it->toCsoundIStatement( tonesPerOctave ) );
+        }
     }
     return csoundScore;
 }
@@ -1252,4 +1254,13 @@ void Score::temper(double tonesPerOctave)
         (*this)[i].temper(tonesPerOctave);
     }
 }
+
+void Score::process() 
+{
+    sort();
+    for (size_t i = 0, n = size(); i < n; ++i) {
+        at(i).process(this);
+    }
+}
+
 }

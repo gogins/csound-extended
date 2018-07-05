@@ -3050,5 +3050,35 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
     }
 }
 
+/**
+ * Represents a Chord in a Score. When the Score is processed, the Chord is 
+ * applied to other Events in the score, from its time until the next ChordEvent.
+ */
+class ChordEvent : public Event
+{
+    public:
+        Chord chord;
+        bool octave_equivalence = true;
+        ChordEvent() {
+            properties["ChordEvent"] = "true";
+        }
+        ~ChordEvent() {}
+        virtual void process(Score *score)
+        {
+            auto do_processing = false;
+            for (auto it = score->begin(); it != score->end(); ++it) {
+                if (&*it == this) {
+                    do_processing = true;
+                }
+                if (do_processing) {
+                    if (&*it != this && it->properties.find("ChordEvent") != it->properties.end()) {
+                        break;
+                    }
+                    conformToChord(*it, chord, octave_equivalence);
+                }
+            }
+        }
+};
+
 } // End of namespace csound.
 #endif

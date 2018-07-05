@@ -11,10 +11,13 @@
                         '-L$(CSOUND_HOME)/../cs6make -lcsound64',
                     ],
                     'include_dirs': [
-                        '$(CSOUND_HOME)/include',
+                        '$(CSOUND_HOME)/include/',
+                        '../build-linux',
+                        '../dependencies/csound/include',
                     ],
                     'cflags_cc!': [
                         '-fno-exceptions',
+                        '-Wno-deprecated-declarations',
                         '-std=c++11',
                     ],
                 }

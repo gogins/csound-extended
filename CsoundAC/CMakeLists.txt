@@ -43,7 +43,6 @@ if(BUILD_CSOUND_AC)
 	    Counterpoint.cpp
 	    CounterpointMain.cpp
 	    CounterpointNode.cpp
-        CsoundComposition.cpp
 	    Event.cpp
 	    Hocket.cpp
 	    ImageToScore.cpp

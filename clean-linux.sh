@@ -3,7 +3,7 @@ if [ -d "$build-linux" ]; then
     cd build-linux
     echo "Cleaning all Linux artifacts from `pwd`..."
     make clean
-    rm -R --interactive=once *.*
+    rm -rf --interactive=once *
     cd ..
     cd CsoundHtml5
     make clean

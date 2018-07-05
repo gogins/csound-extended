@@ -24,14 +24,8 @@
 
 // Must do this on Windows: https://connect.microsoft.com/VisualStudio/feedback/details/811347/compiling-vc-12-0-with-has-exceptions-0-and-including-concrt-h-causes-a-compiler-error
 
-//#include <Csound.hxx>
-#if defined(WIN32)
 #include <csound.h>
 #include <csound_threaded.hpp>
-#else
-#include <csound/csound.h>
-#include <csound/csound_threaded.hpp>
-#endif
 #include <cstdlib>
 #include <fstream>
 #include <ios>
@@ -44,6 +38,9 @@
 #include <v8.h>
 
 using namespace v8;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static CsoundThreaded csound;
 static uv_async_t uv_csound_message_async;
@@ -481,3 +478,5 @@ void init(Handle<Object> target)
 }
 
 NODE_MODULE(binding, init);
+
+#pragma GCC diagnostic pop

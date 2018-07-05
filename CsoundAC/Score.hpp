@@ -351,6 +351,10 @@ namespace csound
      * system of equal temperament.
      */
     virtual void temper(double tonesPerOctave = 12.0);
+    /** 
+     * Calls Event::process on all Events in this.
+     */
+    virtual void process();
   };
 }
 #endif
