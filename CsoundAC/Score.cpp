@@ -17,18 +17,19 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#include "Conversions.hpp"
 #include "CppSound.hpp"
+#include "Midifile.hpp"
 #include "Score.hpp"
 #include "System.hpp"
-#include "Conversions.hpp"
 #include "Voicelead.hpp"
 
 #include <algorithm>
 #include <cfloat>
-#include <set>
 #include <cstdarg>
 #include <iostream>
 #include <fstream>
+#include <set>
 #include <sstream>
 
 #include "allegro.h"
@@ -1259,7 +1260,10 @@ void Score::process()
 {
     sort();
     for (size_t i = 0, n = size(); i < n; ++i) {
-        at(i).process(this);
+        csound::Event &event = at(i);
+        if (event.process) {
+           event.process(event);
+        }
     }
 }
 

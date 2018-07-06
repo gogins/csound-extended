@@ -43,6 +43,7 @@ namespace csound
       score.clear();
     }
     traverse(getLocalCoordinates(), score);
+    score.process();
     System::message("Generated %d events.\n", score.size());
     return 0;
   }

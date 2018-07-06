@@ -17,8 +17,8 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef MIDIFILE_H
-#define MIDIFILE_H
+#ifndef CSOUND_MIDIFILE_H
+#define CSOUND_MIDIFILE_H
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC

@@ -559,11 +559,4 @@ namespace csound
     event.setDuration(0.0);
   }
 
-  /**
-   * Base class implementation does nothing.
-   */
-  void Event::process(Score *)
-  {
-   
-  }
 }

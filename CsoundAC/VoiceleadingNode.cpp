@@ -108,12 +108,12 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL) {
         std::stringstream stream;
         stream << "BEGAN VoiceleadingNode::apply:..." << std::endl;
-        stream << "Events in score:     " << score.size() << std::endl;
-        stream << "Score duration:      " << score.getDuration() << std::endl;
-        stream << "Events in operation: " << (operation.end - operation.begin) << std::endl;
-        stream << "priorOperation:      " << std::endl << priorOperation;
-        stream << "currrentOperation:   " << std::endl << operation;
-        stream << "modality:            ";
+        stream << "  Events in score:     " << score.size() << std::endl;
+        stream << "  Score duration:      " << score.getDuration() << std::endl;
+        stream << "  Events in operation: " << (operation.end - operation.begin) << std::endl;
+        stream << "  priorOperation:      " << std::endl << priorOperation;
+        stream << "  currrentOperation:   " << std::endl << operation;
+        stream << "  modality:            ";
         printChord(stream, "", modality);
         stream << std::endl;
         System::inform(stream.str().c_str());
@@ -123,14 +123,14 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
     }
     if (!(operation.K_ == DBL_MAX)) {
         if ((operation.V_ == DBL_MAX) && (!operation.L_)) {
-            System::inform("Operation: K\n");
+            System::inform("  Operation: K\n");
             score.setK(priorOperation.begin,
                     operation.begin,
                     operation.end,
                     base,
                     range);
         } else if ((operation.V_ != DBL_MAX) && (!operation.L_)) {
-            System::inform("Operation: KV\n");
+            System::inform("  Operation: KV\n");
             score.setKV(priorOperation.begin,
                     operation.begin,
                     operation.end,
@@ -138,7 +138,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     base,
                     range);
         } else if ((operation.V_ == DBL_MAX) && (operation.L_)) {
-            System::inform("Operation: KL\n");
+            System::inform("  Operation: KL\n");
             score.setKL(priorOperation.begin,
                     operation.begin,
                     operation.end,
@@ -148,7 +148,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
         }
     } else if (!(operation.Q_ == DBL_MAX)) {
         if ((operation.V_ == DBL_MAX) && (!operation.L_)) {
-            System::inform("Operation: Q\n");
+            System::inform("  Operation: Q\n");
             score.setQ(priorOperation.begin,
                     operation.begin,
                     operation.end,
@@ -157,7 +157,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     base,
                     range);
         } else if ((operation.V_ != DBL_MAX) && (!operation.L_)) {
-            System::inform("Operation: QV\n");
+            System::inform("  Operation: QV\n");
             score.setQV(priorOperation.begin,
                     operation.begin,
                     operation.end,
@@ -167,7 +167,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     base,
                     range);
         } else if ((operation.V_ == DBL_MAX) && (operation.L_)) {
-            System::inform("Operation: QL\n");
+            System::inform("  Operation: QL\n");
             score.setQL(priorOperation.begin,
                     operation.begin,
                     operation.end,
@@ -179,7 +179,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
         }
     } else if (!(operation.P_ == DBL_MAX) && !(operation.T_ == DBL_MAX)) {
         if (!(operation.V_ == DBL_MAX)) {
-            System::inform("Operation: PTV\n");
+            System::inform("  Operation: PTV\n");
             score.setPTV(operation.begin,
                     operation.end,
                     operation.P_,
@@ -188,7 +188,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     base,
                     range);
         } else if (operation.L_) {
-            System::inform("Operation: PTL\n");
+            System::inform("  Operation: PTL\n");
             score.setPT(operation.begin,
                     operation.end,
                     operation.P_,
@@ -205,7 +205,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     avoidParallels,
                     divisionsPerOctave);
         } else {
-            System::inform("Operation: PT\n");
+            System::inform("  Operation: PT\n");
             score.setPT(operation.begin,
                     operation.end,
                     operation.P_,
@@ -216,13 +216,13 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
         }
     } else if (!(operation.C_ == DBL_MAX)) {
         if (!(operation.V_ == DBL_MAX)) {
-            System::inform("Operation: CV\n");
+            System::inform("  Operation: CV\n");
             std::vector<double> pcs = Voicelead::mToPitchClassSet(Voicelead::cToM(operation.C_, divisionsPerOctave), divisionsPerOctave);
-            printChord("CV", pcs);
+            printChord("  CV", pcs);
             std::vector<double> pt = Voicelead::pitchClassSetToPandT(pcs, divisionsPerOctave);
             double prime = pt[0];
             double transposition = pt[1];
-            System::inform("prime: %f transposition %f: divisionsPerOctave %d\n", prime, transposition, divisionsPerOctave);
+            System::inform("  prime: %f transposition %f: divisionsPerOctave %d\n", prime, transposition, divisionsPerOctave);
             score.setPTV(operation.begin,
                     operation.end,
                     prime,
@@ -231,9 +231,9 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     base,
                     range);
         } else if (operation.L_) {
-            System::inform("Operation: CL\n");
+            System::inform("  Operation: CL\n");
             std::vector<double> pcs = Voicelead::mToPitchClassSet(Voicelead::cToM(operation.C_, divisionsPerOctave), divisionsPerOctave);
-            printChord("CL", pcs);
+            printChord("  CL", pcs);
             score.voicelead(priorOperation.begin,
                     priorOperation.end,
                     operation.begin,
@@ -244,7 +244,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     avoidParallels,
                     divisionsPerOctave);
         } else {
-            System::inform("Operation: C\n");
+            System::inform("  Operation: C\n");
             std::vector<double> pcs = Voicelead::mToPitchClassSet(Voicelead::cToM(operation.C_, divisionsPerOctave), divisionsPerOctave);
             score.setPitchClassSet(operation.begin,
                     operation.end,
@@ -252,7 +252,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     divisionsPerOctave);
         }
     } else {
-        System::inform("Operation: V\n");
+        System::inform("  Operation: V\n");
         if (!(operation.V_ == DBL_MAX)) {
             std::vector<double> ptv = score.getPTV(operation.begin,
                     operation.end,
@@ -268,7 +268,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                     range,
                     divisionsPerOctave);
         } else if (operation.L_) {
-            System::inform("Operation: L\n");
+            System::inform("  Operation: L\n");
             score.voicelead(priorOperation.begin,
                     priorOperation.end,
                     operation.begin,

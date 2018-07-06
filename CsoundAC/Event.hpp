@@ -24,28 +24,30 @@
 %module CsoundAC
 %{
 #include "Conversions.hpp"
-#include <map>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <sstream>
 #include <algorithm>
-#include <utility>
 #include <eigen3/Eigen/Dense>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 %}
 %include "std_string.i"
 %include "std_vector.i"
 %template(EventVector) std::vector<csound::Event>;
 #else
 #include "Conversions.hpp"
-#include "Midifile.hpp"
-#include <map>
-#include <string>
-#include <iostream>
-#include <sstream>
 #include <algorithm>
-#include <utility>
 #include <eigen3/Eigen/Dense>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 #endif
 
 namespace csound
@@ -171,10 +173,13 @@ class SILENCE_PUBLIC Event :
     virtual void clearProperties();
     virtual void createNoteOffEvent(Event &event) const;
     /**
-     * In derived classes, used to process the data in this, 
-     * or in all or part of the containing Score.
+     * Process the data in this; called on all Events in a Score as the final 
+     * state of processing in ScoreModel. Typically, "process" is a closure 
+     * that contains references to any other data required to process this.
+     * Example: put a Chord in the process closure, and when it is called, 
+     * conform the pitch of this Event to the Chord.
      */
-    virtual void process(Score *score);
+    std::function<void(csound::Event &)> process;
     virtual Event &operator = (const Event &a);
 #if __cpplusplus >= 201103L
     virtual Event &operator = (Event &&a) = default;

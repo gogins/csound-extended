@@ -262,10 +262,12 @@ namespace csound
                    audiosystem, devicename);
       System::inform("Csound command: %s\n", command);
       setCsoundCommand(command);
+      getScore().save(getMidifileFilepath().c_str());
       errorStatus = render();
     }
     if ((argsmap.find("--csound") != argsmap.end()) && !errorStatus) {
       postPossible = true;
+      getScore().save(getMidifileFilepath().c_str());
       errorStatus = render();
     }
     if ((argsmap.find("--pianoteq") != argsmap.end()) && !errorStatus) {

@@ -328,11 +328,13 @@ namespace csound
   int Composition::translateToMp3(double bitrate, double levelDb)
   {
     char buffer[0x200];
+    char copyright_[0x100];
+    std::snprintf(copyright_, 0x100, "(C) %s by %s", year.c_str(), author.c_str());
     std::snprintf(buffer,
                   0x200,
                   "lame --verbose --disptime 2 --nohist --preset cd --tt \"%s\" --ta \"%s\" --tl \"%s\" --tc \"%s\" %s %s\n",
                   getTitle().c_str(),
-                  getArtist().c_str(),
+                  getAuthor().c_str(),
                   getAlbum().c_str(),
                   getCopyright().c_str(),
                   getCdSoundfileFilepath().c_str(),

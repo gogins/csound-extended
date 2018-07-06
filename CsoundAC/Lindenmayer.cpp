@@ -109,7 +109,7 @@ namespace csound
     for(std::vector<Event>::iterator i = score.begin(); i != score.end(); ++i)
       {
         Event &event = *i;
-        event.setStatus(MidiFile::CHANNEL_NOTE_ON);
+        event.setStatus(csound::MidiFile::CHANNEL_NOTE_ON);
       }
   }
 
