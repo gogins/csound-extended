@@ -1262,7 +1262,7 @@ void Score::process()
     for (size_t i = 0, n = size(); i < n; ++i) {
         csound::Event &event = at(i);
         if (event.process) {
-           event.process(event);
+           event.process(*this, event);
         }
     }
 }

@@ -297,8 +297,9 @@ namespace csound
 
   Event &Event::operator = (const Event &a)
   {
-      Eigen::VectorXd::operator=(a);
+    Eigen::VectorXd::operator=(a);
     properties = a.properties;
+    process = a.process;
     return *this;
   }
 

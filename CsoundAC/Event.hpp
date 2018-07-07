@@ -177,9 +177,10 @@ class SILENCE_PUBLIC Event :
      * state of processing in ScoreModel. Typically, "process" is a closure 
      * that contains references to any other data required to process this.
      * Example: put a Chord in the process closure, and when it is called, 
-     * conform the pitch of this Event to the Chord.
+     * conform the pitch of this Event to the Chord. The Score is sorted 
+     * before this is called.
      */
-    std::function<void(csound::Event &)> process;
+    std::function<void(csound::Score &, csound::Event &)> process;
     virtual Event &operator = (const Event &a);
 #if __cpplusplus >= 201103L
     virtual Event &operator = (Event &&a) = default;
