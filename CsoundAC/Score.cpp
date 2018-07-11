@@ -1258,13 +1258,18 @@ void Score::temper(double tonesPerOctave)
 
 void Score::process() 
 {
+    System::inform("BEGAN Score::process()...\n");
     sort();
     for (size_t i = 0, n = size(); i < n; ++i) {
-        csound::Event &event = at(i);
+        Event &event = at(i);
         if (event.process) {
-           event.process(*this, event);
+            System::inform("Event %6d processing...\n", i);
+            event.process(*this, event);
+        } else {
+            System::inform("Event %6d not callable...\n", i);
         }
     }
+    System::inform("ENDED Score::process()\n");
 }
 
 }

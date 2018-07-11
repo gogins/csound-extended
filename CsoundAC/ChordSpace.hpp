@@ -370,14 +370,14 @@ inline SILENCE_PUBLIC double I(double pitch, double center = 0.0) {
  * according to the Euclidean definition.
  */
 inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
-	double quotient = dividend / divisor;
-	if (divisor < 0.0) {
-		quotient = std::ceil(quotient);
-	}
-	if (divisor > 0.0) {
-		quotient = std::floor(quotient);
-	}
-	double remainder = dividend - (quotient * divisor);
+    double quotient = 0.0;
+    if (divisor < 0.0) {
+        quotient = std::ceil(dividend / divisor);
+    }
+    if (divisor > 0.0) {
+        quotient = std::floor(dividend / divisor);
+    }
+    double remainder = dividend - (quotient * divisor);
 	return remainder;
 }
 
@@ -1225,8 +1225,9 @@ public:
 		if (chord.voices() < 2) {
 			return chord;
 		}
-		Chord ep = chord.eP();
-		double center = ep.getPitch(0) + ep.getPitch(1);
+        // Unordered and in [0, 12).
+		Chord epc = epcs();
+		double center = epc.getPitch(0) + epc.getPitch(1);
 		return I(center);
 	}
 	/**
@@ -1661,7 +1662,7 @@ inline SILENCE_PUBLIC const Chord &chordForName(std::string name) {
 		chordForNameInitialized = true;
 		initializeNames();
 	}
-	const std::map<std::string, Chord> chordsForNames_ = chordsForNames();
+	const std::map<std::string, Chord> &chordsForNames_ = chordsForNames();
 	std::map<std::string, Chord>::const_iterator it = chordsForNames_.find(name);
 	if (it == chordsForNames_.end()) {
 		static Chord chord;

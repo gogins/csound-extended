@@ -1560,8 +1560,9 @@ if (typeof console === 'undefined') {
         if (chord.size() < 2) {
             return chord;
         }
-        var ep = chord.eP();
-        var x = ep.voices[0] + ep.voices[1];
+        // Unordered! In [0, 12)!
+        var epc = chord.epcs();
+        var x = epc.voices[0] + epc.voices[1];
         return this.I(x);
     };
 

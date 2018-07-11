@@ -529,9 +529,11 @@ int main(int argc, char **argv) {
     std::cout << "csound::gt_epsilon(14.0, 12.0): " << csound::gt_epsilon(14.0, 12.0) << std::endl;
     std::cout << "csound::ge_epsilon(14.0, 12.0): " << csound::ge_epsilon(14.0, 12.0) << std::endl;
     csound::Chord chord;
+    chord.resize(3);
     std::cout << "Default chord: " << chord.toString() << std::endl;
     std::cout << "chord.count(0.0): " << chord.count(0.0) << std::endl;
     csound::Chord other;
+    other.resize(3);
     other.setPitch(1, 2);
     std::cout << "Other chord: " << other.toString() << std::endl;
     std::cout << "other.count(0.0): " << other.count(0.0) << std::endl;

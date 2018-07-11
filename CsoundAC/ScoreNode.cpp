@@ -45,6 +45,8 @@ void ScoreNode::produceOrTransform(Score &collectingScore,
     for (int i = 0, n = score.size(); i < n; ++i) {
         Eigen::VectorXd product = compositeCoordinates * score[i];
         collectingScore.push_back(product);
+        // TODO fix this hack... much work!
+        collectingScore.back().process = score[i].process;
     }
 
 }
