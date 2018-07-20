@@ -20,7 +20,7 @@
 (defvar *def-table-size* 65536)
 (defvar *def-table-str* "f 1 0 4097 7  0 2048 1 2048 0")
 (defvar *cs-max-points* 999)
-(defvar *cs-dac* "dac")
+(defvar *csound-dac* "dac")
 
 (defmethod get-external-name ((module (eql 'csound))) "Csound")
 (defmethod get-external-icon ((module (eql 'csound))) (and (find-library "OM2Csound") (list 606 (find-library "OM2Csound"))))
@@ -38,14 +38,13 @@
   (list :csound-path (pathname "/usr/local/bin/csound")
         :csound-options (def-csound-options)))
 
-
 (defmethod save-external-prefs ((module (eql 'csound))) 
   `(:csound-path ,(om-save-pathname *CSOUND-PATH*) 
     :csound-options (list ,*csound-defflags*
                                ,*def-table-str*
                                ,*cs-max-points*
                                ,*def-table-size*
-                               ,*cs-dac*
+                               ,*csound-dac*
                                )))
 
 (defmethod put-external-preferences ((module (eql 'csound)) moduleprefs)
@@ -55,7 +54,7 @@
             *def-table-str* (nth 1 list-prefs)
             *cs-max-points* (nth 2 list-prefs)
             *def-table-size* (nth 3 list-prefs)
-            *cs-dac* (nth 4 list-prefs)))
+            *csound-dac* (nth 4 list-prefs)))
     (when (get-pref moduleprefs :csound-path)
       (setf *CSOUND-PATH* (find-true-external (get-pref moduleprefs :csound-path))))
     t))
@@ -94,7 +93,6 @@
          (pos (+ pos 40))
          (startlabel (om-make-dialog-item 'om-static-text  
                                           (om-make-point 20 pos) (om-make-point 174 18) "Max GEN arguments"
-                                   
                                           :font *om-default-font2*))
 
          (tablestart (om-make-dialog-item 'om-editable-text  
@@ -112,7 +110,6 @@
                                          (format nil "~D" (nth 3 prefvals))  
                                          :font *om-default-font2*))
           (pos (+ pos 40))
-       
         (csound-dac-label (om-make-dialog-item 'om-static-text  
                                           (om-make-point 20 pos) (om-make-point 147 17) "Actual name of \"dac\""
                                           :font *om-default-font2*))

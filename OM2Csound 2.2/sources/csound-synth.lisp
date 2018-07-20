@@ -365,7 +365,7 @@
   "Determine whether `str1` ends with `str2`"
   (let ((p (mismatch str2 str1 :from-end T)))
     (or (not p) (= 0 p))))
-
+    
 (defun csound-render (sco orc out-name &optional normalize resolution)
     (let* 
         ((outpath (handle-new-file-exists
@@ -374,32 +374,64 @@
         (tmppath (handle-new-file-exists 
                    (om-make-pathname :directory outpath :name (pathname-name outpath) :type "tmp")))
         (csout (if (or normalize *normalize*) tmppath outpath)))
-        (when (equal (file-namestring out-name) "dac")
-            (setf csout "dac"))
-
+        (if (equal (file-namestring out-name) "dac")
+            (progn
+                (setf is_dac t)
+                (if *csound-dac*
+                    (setf csout *csound-dac*)
+                    (setf csout "dac")))
+            (setf is_dac nil))
+            
         (print "======================================")
         (print "CSOUND SYNTHESIS...")
         (print "======================================")
-        (print (format nil "~%Orchestra: ~s" orc sco csout))
+        (print (format nil "orc:        ~s" orc))
+        (print (format nil "sco:        ~s" sco))
+        (print (format nil "is_dac:     ~D" is_dac))
+        (print (format nil "csout:      ~s" csout))
+        (print (format nil "normalize:  ~D" normalize))
+        (print (format nil "resolution: ~D" resolution))
         
         (when (probe-file outpath)
           (print (string+ "Removing existing file: " (namestring outpath)))
           (om-delete-file outpath))
            
-        (om-cmd-line 
-        (print (format nil "~s ~A ~s ~s -o ~s" 
-                       (om-path2cmdpath *CSOUND-PATH*)
-                       *flags*
-                       (om-path2cmdpath orc)
-                       (om-path2cmdpath sco)
-                       (om-path2cmdpath csout)
-                       ))
-        *sys-console*)
+        (setf csd_template "<CsoundSynthesizer>
+<CsOptions>
+~A -o ~A
+</CsOptions>
+<CsInstruments>
+~A
+</CsInstruments>
+<CsScore>
+~A
+</CsScore>
+</CsoundSynthesizer>
+")
+        (format t "Csound version: ~A~%" (csound::csoundGetVersion))
+        (setf orc_text (csound::file-get-contents (om-path2cmdpath orc)))
+        (setf sco_text (csound::file-get-contents (om-path2cmdpath sco)))
+        (setf output_soundfile_path (om-path2cmdpath csout))
+        (setf csd_text (format nil csd_template *flags* output_soundfile_path orc_text sco_text))
+        (format t "csd_text: ~A" csd_text)
+        (defparameter cs 0)
+        (defparameter result 0)
+        (setf cs (csound::csoundCreate (cffi:null-pointer)))
+        (format t "csoundCreate returned: ~S~%" cs)
+        (setf result (csound::csoundCompileCsdText cs csd_text))
+        (format t "csoundCompileCsdText returned: ~D~%" result)
+        (setf result (csound::csoundStart cs))
+        (format t "csoundStart returned: ~D~%" result)
+        (loop 
+            (setf result (csound::csoundPerformKsmps cs))
+            (when (not (equal result 0))(return))
+        )        
+        (csound::csoundCleanup cs)
+        (csound::csoundReset cs)
         (unless (equal csout "dac")
             (if (null (probe-file csout))
                 (om-message-dialog "!!! Error in CSound synthesis !!!"))
                 (progn
-                    (om-print "END CSOUND SYNTHESIS")
                     (when (or normalize *normalize*)
                       (let ((real-out (om-normalize tmppath outpath (or normalize *normalize-level*) resolution)))
                         (if real-out 
@@ -407,6 +439,7 @@
                           (rename-file tmppath outpath)))))
         (when *delete-inter-file* 
             (clean-tmp-files))
+        (om-print "END CSOUND SYNTHESIS")
         (return-from csound-render (probe-file outpath)))
     )
 )
