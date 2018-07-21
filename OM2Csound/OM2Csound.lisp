@@ -2,18 +2,18 @@
 ;;; OM2Csound
 ;;; Control of Csound sound synthesis from OpenMusic
 ;;;
-;;; See https://github.com/csound/csound.
+;;; see www.csounds.com
 ;;;
 ;;; LIBRARY MAIN FILE
 ;;; Authors/Contributors: Laurent Pottier, Karim Haddad, Mikhail Malt, 
 ;;; Carlos Agon, Jean Bresson 
 ;;; (c) IRCAM 1993-2010
-;;; Modified by Michael Gogins to use in-process CFFI
-;;; bindings the Csound library, to run in a separate 
-;;; thread of execution, and to render real-time audio.
 ;;;===================================================
 
+
 (in-package :om)
+
+
 
 (defparameter *Csound-files* '("cs-score" 
                                "cs-score-processing" 
@@ -55,8 +55,8 @@ Csound can also be selected as a sound normalizer in OM sound processing (see Pr
 
 (unless (fboundp 'om::set-lib-release) (defmethod om::set-lib-release (version &optional lib) nil))
 
-
-(set-lib-release 2.2) 
+;;; 2.3: minor fix compat w/ OM-Tristan (om-scale/max)
+(set-lib-release 2.3) 
 
 (print "
 ;;;===================================================

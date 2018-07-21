@@ -1,7 +1,7 @@
 ;;;===================================================
 ;;; OM2Csound
 ;;; Control of Csound sound synthesis from OpenMusic
-;;; www.csounds.com
+;;; https://github.com/csound/csound
 ;;;
 ;;; CSOUND SYNTHESIS CALL
 ;;; J. Bresson, IRCAM 2005
@@ -382,9 +382,9 @@
                     (setf csout "dac")))
             (setf is_dac nil))
             
-        (print "======================================")
-        (print "CSOUND SYNTHESIS...")
-        (print "======================================")
+        (om-print "======================================" "OM2Csound ::")
+        (om-print "CSOUND SYNTHESIS..." "OM2Csound ::")
+        (om-print "======================================" "OM2Csound ::")
         (print (format nil "orc:        ~s" orc))
         (print (format nil "sco:        ~s" sco))
         (print (format nil "is_dac:     ~D" is_dac))

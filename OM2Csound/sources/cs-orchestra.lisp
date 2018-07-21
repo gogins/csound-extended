@@ -814,7 +814,7 @@ See also http://www.csounds.com/manual/html/index.html for more info about Csoun
         <more> allows to connect other Csound instrumets.
 "
 
-  (let ((ins-data (flat-max-1-orc (append (list instr) more-instr)))
+  (let ((ins-data (flat-max-1-orc (cons instr more-instr)))
         (filename (handle-new-file-exists 
                    (cond ((equal out 'no-file) nil)
                          ((pathnamep out) out)
@@ -853,10 +853,10 @@ See also http://www.csounds.com/manual/html/index.html for more info about Csoun
 (om::defmethod! editorc  (header instr &rest lst?)
   :icon 135
   :doc "DEPRECATED: use WRITE-SCOUND-ORC"
-  (write-csound-orc nil header instr lst?))
+  (apply 'write-csound-orc (append (list nil header instr) lst?)))
 
 (om::defmethod! auto-editorc  (header instr-list &optional (name "my-orc"))
   :icon 135
   :doc "DEPRECATED: use WRITE-SCOUND-ORC"
-  (write-csound-orc name header (car instr-list) (cdr instr-list)))
+  (apply 'write-csound-orc (append (list name header) instr-list)))
 
