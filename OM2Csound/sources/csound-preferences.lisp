@@ -71,7 +71,7 @@
                                          :font *om-default-font2*))
          (pos (+ pos 40))
          (daclabel (om-make-dialog-item 'om-static-text  
-                                         (om-make-point 20 pos)  (om-make-point 147 17) "Audio device for \"dac\""
+                                         (om-make-point 20 pos)  (om-make-point 147 17) "Audio output device for \"dac\""
                                          :font *om-default-font2*))
          (pos (+ pos 30))
          (dacline (om-make-dialog-item 'om-editable-text
