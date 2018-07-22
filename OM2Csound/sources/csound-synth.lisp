@@ -1,13 +1,14 @@
 ;;;===================================================
 ;;; OM2Csound
 ;;; Control of Csound sound synthesis from OpenMusic
-;;; https://github.com/csound/csound
+;;; See https://github.com/csound/csound.
 ;;;
 ;;; CSOUND SYNTHESIS CALL
 ;;; J. Bresson, IRCAM 2005
 ;;;
-;;; Modified by Michael Gogins to use CFFI and 
-;;; real-time audio in a separate thread.
+;;; Modified by Michael Gogins in July 2018 to enable
+;;; real-time audio, and to use CFFI to enable easy
+;;; abort of Csound rendering.
 ;;;===================================================
 
 ; L I S P   C F F I   I N T E R F A C E   F O R   C S O U N D . H

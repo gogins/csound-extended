@@ -4,6 +4,9 @@
 ;;;
 ;;; Preferences
 ;;; J. Bresson, IRCAM 2010
+;;;
+;;; Modified by Michael Gogins in July 2018 to enable
+;;; Csound rendering to real-time audio.
 ;;;===================================================
 
 (in-package :om)
@@ -13,9 +16,8 @@
 (pushr 'csound *external-prefs*)
 
 (defvar *csound-defflags* "-f -m7 -N -g -b8192 -B8192")  ;; "-m7 -A -e -b8192 -B8192 -V50 -P128"
-(print (format nil "*csound-defflags* ~s" *csound-defflags*))
+;; Can be set to any standard operating system output audio device name.
 (defvar *csound-dac* "dac")
-(print (format nil "*csound-dac* ~s" *csound-dac*))
 
 (defmethod get-external-name ((module (eql 'csound))) "Csound")
 (defmethod get-external-icon ((module (eql 'csound))) (and (find-library "OM2Csound") (list 606 (find-library "OM2Csound"))))
@@ -53,8 +55,7 @@
 
 (defmethod show-external-prefs-dialog ((module (eql 'csound)) prefvals)
   (let* ((rep-list (copy-list prefvals))
-  (print prefvals)
-          (dialog (om-make-window 'om-dialog
+         (dialog (om-make-window 'om-dialog
                                  :window-title "Csound Options"
                                  :size (om-make-point 300 200)
                                  :position :centered

@@ -2,7 +2,7 @@
 ;;; OM2Csound
 ;;; Control of Csound sound synthesis from OpenMusic
 ;;;
-;;; see www.csounds.com
+;;; See https://github.com/csound/csound.
 ;;;
 ;;; LIBRARY MAIN FILE
 ;;; Authors/Contributors: Laurent Pottier, Karim Haddad, Mikhail Malt, 
@@ -17,7 +17,7 @@
 
 (defparameter *Csound-files* '("cs-score" 
                                "cs-score-processing" 
-                               "cs-orchestra" 
+			       "cs-orchestra" 
                                "orc-editor" 
                                "utils" 
                                "csound-synth"
