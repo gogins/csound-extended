@@ -61,7 +61,8 @@ VoiceleadingNode::VoiceleadingNode() :
     base(36.0),
     range(60.0),
     avoidParallels(true),
-    divisionsPerOctave(12)
+    divisionsPerOctave(12),
+    rescaleTimes(false)
 {
 }
 
@@ -402,7 +403,7 @@ void VoiceleadingNode::produceOrTransform(Score &score,
         size_t endAt,
         const Eigen::MatrixXd &compositeCoordinates)
 {
-    transform(score, false);
+    transform(score);
     // Apply the global transformation of coordinate system
     // to all child events produced by this node.
     size_t finalEndAt = score.size();
@@ -411,7 +412,7 @@ void VoiceleadingNode::produceOrTransform(Score &score,
     }
 }
 
-void VoiceleadingNode::transform(Score &score, bool rescaleTimes_)
+void VoiceleadingNode::transform(Score &score)
 {
     if (operations.empty()) {
         return;
@@ -429,6 +430,7 @@ void VoiceleadingNode::transform(Score &score, bool rescaleTimes_)
     System::inform("  scoreMinTime:  %f\n", scoreMinTime);  
     System::inform("  scoreDuration: %f\n", scoreDuration);  
     System::inform("  scoreMaxTime:  %f\n", scoreMaxTime);
+    System::inform("  rescaleTimes:  %b\n", rescaleTimes);
     std::vector<VoiceleadingOperation *> ops;
     for (std::map<double, VoiceleadingOperation>::iterator it = operations.begin(); it != operations.end(); ++it) {
         if (it->second.beginTime > operationMaxTime) {
@@ -436,7 +438,7 @@ void VoiceleadingNode::transform(Score &score, bool rescaleTimes_)
         }
         ops.push_back(&it->second);
     }
-    if (rescaleTimes_) {
+    if (rescaleTimes) {
         if (operationMaxTime > 0.0) {
             timeScale = scoreMaxTime / operationMaxTime;
         }

@@ -179,6 +179,7 @@ namespace csound
      * equal temperament, 1.33333 in 9-tone equal temperament, and so on.
      */
     size_t divisionsPerOctave;
+    bool rescaleTimes;
     VoiceleadingNode();
     virtual ~VoiceleadingNode();
     /**
@@ -343,7 +344,7 @@ namespace csound
      * node to the score. Enables voice-leading operations to be used
      * outside the context of a music graph.
      */
-    virtual void transform(Score &score, bool rescaleTime = false);
+    virtual void transform(Score &score);
     virtual void setModality(const std::vector<double> &pcs);
     virtual std::vector<double> getModality() const;
   };

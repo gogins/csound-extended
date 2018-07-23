@@ -151,7 +151,7 @@ namespace csound
 
   void ChordLindenmayer::applyVoiceleadingOperations()
   {
-    transform(score, false);
+    transform(score);
   }
 
   double ChordLindenmayer::equivalence(double &value, char equivalenceClass) const
