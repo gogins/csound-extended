@@ -17,9 +17,11 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#include <functional>
+#include <random>
 #include "CppSound.hpp"
-#include "MCRM.hpp"
 #include "dkm.hpp"
+#include "MCRM.hpp"
 
 namespace csound
 {
@@ -137,6 +139,44 @@ void KMeansMCRM::generate()
 
 void KMeansMCRM::random_algorithm()
 {
+    System::inform("KMeansMCRM::random_algorithm...\n");
+    std::mt19937_64 generator;
+    std::uniform_real_distribution<double> distribution(0.,1.);
+    auto wheel = std::bind(distribution, generator);
+    size_t prior_index = 0;
+    size_t current_index = 0;
+    double slot_ceiling = 0;
+    Event point;
+    point.setStatus(144);
+    point.setVelocity(64);
+    point.setKey(60);
+    point.setDuration(1);
+    size_t pre_iteration_count = 10000;
+    size_t iteration_count = sample_count + pre_iteration_count;
+    for (size_t iteration = 0; iteration < iteration_count; ++iteration) {
+        auto ball = wheel();
+        for (current_index = 0, slot_ceiling = 0; current_index < weights.rows(); ++current_index) {
+            slot_ceiling += weights(prior_index, current_index);
+            if (ball < slot_ceiling) {
+                break;
+            }
+        }
+        const Eigen::MatrixXd &transformation = transformations[current_index];
+        prior_index = current_index;
+        Eigen::VectorXd temp = transformation * point;
+        point = temp;
+        if (iteration >= pre_iteration_count) {
+            double velocity = point.getVelocity();
+            if(velocity > 0.0)
+            {
+                samples.push_back({point[0], point[1], point[3], point[4], point[5], point[6]});
+                if ((samples.size() % 1000000) == 0) {
+                    System::inform("Samples: %9d.\n", samples.size());
+                }
+            }
+        }
+    }
+    System::inform("KMeansMCRM::random_algorithm.\n");
 }
 
 void KMeansMCRM::iterate(int d, size_t p, const Event &event, double weight)
@@ -151,6 +191,9 @@ void KMeansMCRM::iterate(int d, size_t p, const Event &event, double weight)
         if(velocity > 0.0)
         {
             samples.push_back({event[0], event[1], event[3], event[4], event[5], event[6]});
+            if ((samples.size() % 1000000) == 0) {
+                System::inform("Samples: %9d.\n", samples.size());
+            }
         }
     }
     else
