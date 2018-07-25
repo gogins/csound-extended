@@ -43,6 +43,13 @@ namespace csound
       score.clear();
     }
     traverse(getLocalCoordinates(), score);
+    score.sort();
+    if (getConformPitches() == true) {
+        score.temper(getTonesPerOctave());
+    } 
+    if (getTieOverlappingNotes() == true) {
+        score.tieOverlappingNotes(true);
+    }
     score.process();
     System::message("Generated %d events.\n", score.size());
     return 0;

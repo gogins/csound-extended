@@ -97,7 +97,7 @@
         /**
          * The accumulated samples that approximate the measure of the IFS.
          */
-        std::vector< std::array<float, MEASURE_DIMENSIONS> > samples;
+        std::vector< std::array<double, MEASURE_DIMENSIONS> > samples;
         KMeansMCRM();
         virtual ~KMeansMCRM();
         virtual void iterate(int depth, size_t p, const Event &event, double weight);

@@ -196,6 +196,16 @@ namespace csound
      */
     virtual void write(const char *text);
     /**
+     * At the end of processing, if the defined duration is not zero, the 
+     * times and durations of all events are rescaled to the defined duration.
+     */
+    virtual void setDuration(double seconds);
+    /**
+     * Returns the duration to which all times and durations of all events 
+     * will be rescaled. If the duration is 0, no rescaling is performed.
+     */
+    virtual double getDuration() const;
+    /**
      * Sets the number of equally tempered intervals
      * per octave (the default is 12, 0 means
      * non-equally tempered).
@@ -219,6 +229,16 @@ namespace csound
      * tempered pitch.
      */
     virtual bool getConformPitches() const;
+    /**
+     * Sets whether or not overlapping notes in generated scores are replaced
+     * by one note.
+     */
+    virtual void setTieOverlappingNotes(bool tieOverlappingNotes);
+    /**
+     * Returns whether or not overlapping notes in generated scores are replaced
+     * by one note.
+     */
+    virtual bool getTieOverlappingNotes() const;
     /**
      * Saves the generated score in Fomus format
      * and uses Fomus and Lilypond to translate that
@@ -373,6 +393,8 @@ namespace csound
     Score score;
     double tonesPerOctave;
     bool conformPitches;
+    bool tieOverlappingNotes;
+    double duration;
     std::string output_filename;
   };
 }

@@ -31,7 +31,9 @@ namespace csound
 {
   Composition::Composition() :
     tonesPerOctave(12.0),
-    conformPitches(false)
+    conformPitches(false),
+    tieOverlappingNotes(false),
+    duration(0)
   {
   }
 
@@ -609,5 +611,22 @@ namespace csound
   {
     output_filename.clear();
   }
+  
+    void Composition::setTieOverlappingNotes(bool tieOverlappingNotes_) {
+        tieOverlappingNotes = tieOverlappingNotes_;
+    }
+ 
+    bool Composition::getTieOverlappingNotes() const {
+        return tieOverlappingNotes;
+    }
+    
+    void Composition::setDuration(double seconds) {
+        duration = seconds;
+    }
+    
+    double Composition::getDuration() const {
+        return duration;
+    }
+
   
 }

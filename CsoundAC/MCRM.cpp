@@ -129,17 +129,22 @@ KMeansMCRM::~KMeansMCRM()
 
 void KMeansMCRM::generate()
 {
+    System::inform("KMeansMCRM::generate...\n");
+    auto start_time = System::startTiming();
     if (algorithm_type == RANDOM) {
         random_algorithm();
     } else if (algorithm_type == DETERMINISTIC) {
         deterministic_algorithm();
     }
     means_to_notes();
+    auto elapsed = System::stopTiming(start_time);
+    System::inform("KMeansMCRM::generate: %9.3f seconds.\n", elapsed);
 }
 
 void KMeansMCRM::random_algorithm()
 {
     System::inform("KMeansMCRM::random_algorithm...\n");
+    auto start_time = System::startTiming();
     std::mt19937_64 generator;
     std::uniform_real_distribution<double> distribution(0.,1.);
     auto wheel = std::bind(distribution, generator);
@@ -153,10 +158,17 @@ void KMeansMCRM::random_algorithm()
     point.setDuration(1);
     size_t pre_iteration_count = 10000;
     size_t iteration_count = sample_count + pre_iteration_count;
+    auto normalized_weights = weights;
+    for (size_t column = 0, columns = weights.cols(); column < columns; ++column) {
+        auto sum = normalized_weights.col(column).sum();
+        normalized_weights.col(column) = normalized_weights.col(column) / sum;
+    }
+    std::cout << "weights:            " << std::endl << weights << std::endl;
+    std::cout << "normalized_weights: " << std::endl << normalized_weights << std::endl;
     for (size_t iteration = 0; iteration < iteration_count; ++iteration) {
         auto ball = wheel();
         for (current_index = 0, slot_ceiling = 0; current_index < weights.rows(); ++current_index) {
-            slot_ceiling += weights(prior_index, current_index);
+            slot_ceiling += normalized_weights(prior_index, current_index);
             if (ball < slot_ceiling) {
                 break;
             }
@@ -176,7 +188,8 @@ void KMeansMCRM::random_algorithm()
             }
         }
     }
-    System::inform("KMeansMCRM::random_algorithm.\n");
+    auto elapsed = System::stopTiming(start_time);
+    System::inform("KMeansMCRM::random_algorithm: %9.3f seconds.\n", elapsed);
 }
 
 void KMeansMCRM::iterate(int d, size_t p, const Event &event, double weight)
@@ -221,6 +234,7 @@ void KMeansMCRM::iterate(int d, size_t p, const Event &event, double weight)
 void KMeansMCRM::deterministic_algorithm()
 {
     System::inform("KMeansMCRM::deterministic_algorithm...\n");
+    auto start_time = System::startTiming();
     Event event;
     event.setStatus(144);
     event.setVelocity(64);
@@ -228,10 +242,11 @@ void KMeansMCRM::deterministic_algorithm()
     event.setDuration(1);
     double weight = -1;
     iterate(depth, 0, event, weight);
-    System::inform("KMeansMCRM::deterministic_algorithm.\n");
+    auto elapsed = System::stopTiming(start_time);
+    System::inform("KMeansMCRM::deterministic_algorithm: %9.3f seconds.\n", elapsed);
 }
 
-static Event mean_to_note(const std::array<float, KMeansMCRM::MEASURE_DIMENSIONS> &mean)
+static Event mean_to_note(const std::array<double, KMeansMCRM::MEASURE_DIMENSIONS> &mean)
 {
     Event event;
     event.setTime(mean[0]);
@@ -247,15 +262,20 @@ static Event mean_to_note(const std::array<float, KMeansMCRM::MEASURE_DIMENSIONS
 void KMeansMCRM::means_to_notes()
 {
     System::inform("KMeansMCRM::means_to_notes...\n");
+    auto start_time = System::startTiming();
     System::inform("dkm::kmeans_lloyd...\n");
-    auto clusters = dkm::kmeans_lloyd(samples, MEASURE_DIMENSIONS);
+    auto start_time_kmeans = System::startTiming();
+    auto clusters = dkm::kmeans_lloyd(samples, means_count);
     auto &means = std::get<0>(clusters);
+    auto elapsed = System::stopTiming(start_time_kmeans);
+    System::inform("dkm::kmeans_lloyd: %9.3f seconds.\n", elapsed);
     score.clear();
     for (size_t i = 0, n = means.size(); i < n; ++i) {
         score.append(mean_to_note(means[i]));
+        // System::inform(score.back().toCsoundIStatement().c_str());
     }
-    System::inform("dkm::kmeans_lloyd.\n");
-    System::inform("KMeansMCRM::means_to_notes.\n");
+    elapsed = System::stopTiming(start_time);
+    System::inform("KMeansMCRM::means_to_notes: %9.3f seconds.\n", elapsed);
 }
 
 }
