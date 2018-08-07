@@ -37,8 +37,8 @@
 namespace csound
 {
 /**
- * Score nodes that simplifies building up repetitive
- * and overlapping motivic cells, such as used in Minimalism.
+ * Score node that simplifies building up structures of motivic cells, 
+ * and incrementally transforming them, as in Minimalism.
  */
 class SILENCE_PUBLIC Cell :
     public ScoreNode
@@ -54,7 +54,7 @@ public:
      * to the duration of the notes produced by the child nodes of this
      * (true) at each repetition, or is simply the duration of the
      * cell (false), in which case the notes of the Nth repetition may
-     * (or may not) overlap the notes of the N + 1th repetition.   .
+     * (or may not) overlap the notes of the N + 1th repetition.
      */
     bool relativeDuration;
     /**
@@ -131,6 +131,18 @@ public:
             Score &collectingScore);
     virtual void setPitchOffsetForLayer(int layer, double pitch);
 };
+
+/*
+void repeat(size_t iterations, double duration, size_t start, size_t end, size_t stride);
+void add(Event::Dimension, double value, size_t start, size_t end);
+void muliply(Event::Dimension, double value, size_t start, size_t end);
+void insert(const ScoreNode &source, size_t start, size_t source_start, size_t stride, size_t length);
+void remove(size_t start, size_t end);
+void chord(const Chord &chord, size_t start, size_t end);
+void random(const std::string &distribution, Event::Dimension dimension, double minimum, double range, size_t start, size_t end);
+void reflect(Event::Dimension dimension, double center, size_t start, size_t end, size_t stride);
+void shuffle(size_t start, size_t end, size_t stride);
+void select(size_t start, size_t end, size_t stride);
 }
 #endif
 
