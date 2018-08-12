@@ -23,6 +23,7 @@
 
 namespace csound
 {
+
 Sequence::Sequence()
 {
 }
@@ -31,8 +32,8 @@ Sequence::~Sequence()
 {
 }
 
-Eigen::MatrixXd Sequence::traverse(const Eigen::MatrixXd &globalCoordinates,
-        Score &collectingScore)
+void Sequence::traverse(const Eigen::MatrixXd &globalCoordinates,
+                        Score &collectingScore)
 {
     size_t beginAt = collectingScore.size();
     // Obtain the composite transformation of coordinate system
@@ -57,9 +58,6 @@ Eigen::MatrixXd Sequence::traverse(const Eigen::MatrixXd &globalCoordinates,
         }
         deltaTime = deltaTime + childScore.getDuration();
     }
-    size_t endAt = collectingScore.size();
-    produceOrTransform(collectingScore, beginAt, endAt, compositeCoordinates);
-    // Return the composite transformation of coordinate system.
-    return compositeCoordinates;
 }
+
 }

@@ -23,9 +23,10 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Node.hpp"
-%}
+%
+}
 #else
 #include "Node.hpp"
 #include <random>
@@ -36,20 +37,20 @@
 namespace csound
 {
 
-  /**
-   * A random value will be sampled from the specified distribution,
-   * translated and scaled as specified,
-   * and set in the specified row and column of the local coordinates.
-   * The resulting matrix will be used in place of the local coordinates
-   * when traversing the music graph.
-   * If eventCount is greater than zero, a new event will be created
-   * for each of eventCount samples,
-   * which will be transformed by the newly sampled local coordinates.
-   */
-  class SILENCE_PUBLIC Random :
+/**
+ * A random value will be sampled from the specified distribution,
+ * translated and scaled as specified,
+ * and set in the specified row and column of the local coordinates.
+ * The resulting matrix will be used in place of the local coordinates
+ * when traversing the music graph.
+ * If eventCount is greater than zero, a new event will be created
+ * for each of eventCount samples,
+ * which will be transformed by the newly sampled local coordinates.
+ */
+class SILENCE_PUBLIC Random :
     public Node
-  {
-  protected:
+{
+protected:
 #if !defined(SWIG)
     void *generator_;
     std::uniform_int_distribution<std::int32_t> uniform_smallint_generator;
@@ -60,10 +61,10 @@ namespace csound
     std::exponential_distribution<> exponential_distribution_generator;
     std::normal_distribution<> normal_distribution_generator;
     std::lognormal_distribution<> lognormal_distribution_generator;
-  public:
+public:
     static std::mt19937 mersenneTwister;
 #endif
-  public:
+public:
     std::string distribution;
     int row;
     int column;
@@ -83,9 +84,9 @@ namespace csound
     virtual double sample();
     virtual Eigen::MatrixXd getRandomCoordinates();
     virtual void createDistribution(std::string distribution);
-    virtual void produceOrTransform(Score &score, size_t beginAt, size_t endAt,
-                                    const Eigen::MatrixXd &compositeCoordinates);
+    virtual void generate(Score &score);
+    virtual void transform(Score &score);
     static void seed(int s);
-  };
+};
 }
 #endif

@@ -21,69 +21,66 @@
 
 namespace csound
 {
-  bool Rescale::initialized = false;
-  std::map<std::string, size_t> Rescale::dimensions;
+bool Rescale::initialized = false;
+std::map<std::string, size_t> Rescale::dimensions;
 
-  Rescale::Rescale()
-  {
+Rescale::Rescale()
+{
     initialize();
     for(size_t i = 0; i < Event::ELEMENT_COUNT; i++)
-      {
+    {
         score.rescaleMinima[i] = false;
         score.rescaleRanges[i] = false;
-      }
-  }
+    }
+}
 
-  Rescale::~Rescale()
-  {
-  }
+Rescale::~Rescale()
+{
+}
 
-  void Rescale::initialize()
-  {
+void Rescale::initialize()
+{
     if(!initialized)
-      {
+    {
         for(int i = 0; i < Event::ELEMENT_COUNT; i++)
-          {
+        {
             dimensions[std::string("rescaleMinimum") + Event::labels[i]] = i;
             dimensions[std::string("rescaleRange") + Event::labels[i]] = i;
             dimensions[std::string("targetMinimum") + Event::labels[i]] = i;
             dimensions[std::string("targetRange") + Event::labels[i]] = i;
-          }
+        }
         initialized = true;
-      }
-  }
+    }
+}
 
-  void Rescale::produceOrTransform(Score &score_,
-                                   size_t beginAt,
-                                   size_t endAt,
-                                   const Eigen::MatrixXd &compositeCoordinates)
-  {
+void Rescale::transform(Score &score_)
+{
     for(int i = 0; i < Event::ELEMENT_COUNT; i++)
-      {
+    {
         score_.setScale(score_,
                         i,
                         score.rescaleMinima[i],
                         score.rescaleRanges[i],
-                        beginAt,
-                        endAt,
+                        0,
+                        score_.size(),
                         score.scaleTargetMinima[i],
                         score.scaleTargetRanges[i]);
-      }
-  }
+    }
+}
 
-  void Rescale::setRescale(int dimension, bool rescaleMinimum, bool rescaleRange, double targetMinimum, double targetRange)
-  {
+void Rescale::setRescale(int dimension, bool rescaleMinimum, bool rescaleRange, double targetMinimum, double targetRange)
+{
     score.rescaleMinima[dimension] = rescaleMinimum;
     score.rescaleRanges[dimension] = rescaleRange;
     score.scaleTargetMinima[dimension] = targetMinimum;
     score.scaleTargetRanges[dimension] = targetRange;
-  }
+}
 
-  void Rescale::getRescale(int dimension, bool &rescaleMinimum, bool &rescaleRange, double &targetMinimum, double &targetRange)
-  {
+void Rescale::getRescale(int dimension, bool &rescaleMinimum, bool &rescaleRange, double &targetMinimum, double &targetRange)
+{
     rescaleMinimum = score.rescaleMinima[dimension];
     rescaleRange = score.rescaleRanges[dimension];
     targetMinimum = score.scaleTargetMinima[dimension];
     targetRange = score.scaleTargetRanges[dimension];
-  }
+}
 }

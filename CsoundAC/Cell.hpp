@@ -23,21 +23,28 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
+#include <limits>
 #include <map>
+#include "Random.hpp"
 #include "ScoreNode.hpp"
+#include "ChordSpace.hpp"
 #include <eigen3/Eigen/Dense>
-%}
+%
+}
 #else
+#include <limits>
 #include <map>
+#include "Random.hpp"
 #include "ScoreNode.hpp"
+#include "ChordSpace.hpp"
 #include <eigen3/Eigen/Dense>
 #endif
 
 namespace csound
 {
 /**
- * Score node that simplifies building up structures of motivic cells, 
+ * Score node that simplifies building up structures of motivic cells,
  * and incrementally transforming them, as in Minimalism.
  */
 class SILENCE_PUBLIC Cell :
@@ -68,10 +75,7 @@ public:
     double durationSeconds;
     Cell();
     virtual ~Cell();
-    virtual void produceOrTransform(Score &collectingScore,
-            size_t beginAt,
-            size_t endAt,
-            const Eigen::MatrixXd &coordinates);
+    virtual void transform(Score &score);
 };
 
 /**
@@ -89,8 +93,8 @@ class SILENCE_PUBLIC Intercut :
 public:
     Intercut();
     virtual ~Intercut();
-    virtual Eigen::MatrixXd traverse(const Eigen::MatrixXd &globalCoordinates,
-            Score &collectingScore);
+    virtual void traverse(const Eigen::MatrixXd &globalCoordinates,
+                          Score &collectingScore);
 };
 
 /**
@@ -112,8 +116,8 @@ public:
     double duration;
     Stack();
     virtual ~Stack();
-    virtual Eigen::MatrixXd traverse(const Eigen::MatrixXd &globalCoordinates,
-            Score &collectingScore);
+    virtual void traverse(const Eigen::MatrixXd &globalCoordinates,
+                          Score &collectingScore);
 };
 
 /**
@@ -124,25 +128,181 @@ class SILENCE_PUBLIC Koch :
     public ScoreNode
 {
 public:
-  std::map<int, double> pitchOffsetsForLayers;
+    std::map<int, double> pitchOffsetsForLayers;
     Koch();
     virtual ~Koch();
-    virtual Eigen::MatrixXd traverse(const Eigen::MatrixXd &globalCoordinates,
-            Score &collectingScore);
+    virtual void traverse(const Eigen::MatrixXd &globalCoordinates,
+                          Score &score);
     virtual void setPitchOffsetForLayer(int layer, double pitch);
 };
 
-/*
-void repeat(size_t iterations, double duration, size_t start, size_t end, size_t stride);
-void add(Event::Dimension, double value, size_t start, size_t end);
-void muliply(Event::Dimension, double value, size_t start, size_t end);
-void insert(const ScoreNode &source, size_t start, size_t source_start, size_t stride, size_t length);
-void remove(size_t start, size_t end);
-void chord(const Chord &chord, size_t start, size_t end);
-void random(const std::string &distribution, Event::Dimension dimension, double minimum, double range, size_t start, size_t end);
-void reflect(Event::Dimension dimension, double center, size_t start, size_t end, size_t stride);
-void shuffle(size_t start, size_t end, size_t stride);
-void select(size_t start, size_t end, size_t stride);
+/**
+ * All notes produced by child nodes are repeated for the specified number of
+ * iterations, beginning at the start index and proceeding up to but not
+ * including the end index, at the specified stride. If absolute_duration is
+ * true, then the next repetition occurs after that duration; if false, then
+ * the indicated duration is added to the total duration of the repeated
+ * notes.
+ */
+class SILENCE_PUBLIC CellRepeat :
+    public Node
+{
+    size_t iterations = 1;
+    double duration = 0;
+    bool absolute_duration = false;
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    CellRepeat();
+    virtual ~CellRepeat();
+    virtual void transform(Score &score);
+    virtual void repeat(size_t iterations, double duration, bool absolute_duration, size_t start, size_t end, size_t stride);
+};
+
+/**
+ * The indicated factor is added to the indicated dimension of each note
+ * produced by the child nodes of this, beginning at the start index and
+ * proceeding up to but not including the end index, at the specified
+ * stride. Each dimension may have its own factor.
+ */
+class SILENCE_PUBLIC CellAdd :
+    public Node
+{
+    Event::Dimensions dimension = Event::Dimensions::TIME;
+    double value = 0;
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void add(Event::Dimensions dimension, double value, size_t start, size_t end, size_t stride);
+};
+
+/**
+ * The indicated dimension of each note produced by the child nodes of this,
+ * beginning at the start index and proceeding up to but not including the end
+ * index, at the specified stride, is multiplied by the indicated factor.
+ * Each dimension may have its own factor.
+ */
+class SILENCE_PUBLIC CellMultiply :
+    public Node
+{
+    Event::Dimensions dimension = Event::Dimensions::TIME;
+    double value = 0;
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void multiply(Event::Dimensions dimension, double value, size_t start, size_t end, size_t stride);
+};
+
+/**
+ * The indicated dimension of each note produced by the child nodes of this,
+ * beginning at the start index and proceeding up to but not including the end
+ * index, at the specified stride, is reflected (i.e. inverted) around the
+ * indicated center.
+ */
+class SILENCE_PUBLIC CellReflect :
+    public Node
+{
+    Event::Dimensions dimension = Event::Dimensions::TIME;
+    double value = 0;
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void reflect(Event::Dimensions dimension, double value, size_t start, size_t end, size_t stride);
+};
+
+/**
+ * The notes produced by the child nodes of this are returned as sampled from
+ * the indicated start index, up to but not including the indicated end index,
+ * at the indicated stride.
+ */
+class SILENCE_PUBLIC CellSelect :
+    public Node
+{
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void select(size_t start, size_t end, size_t stride);
+};
+
+/**
+ * Notes are removed from the notes produced by the child nodes of this,
+ * beginning at the indicated start index, up to but not including the
+ * end index, at the indicated stride. The times of the child notes
+ * are adjusted to close the gap, i.e. the times of the child notes are
+ * rescaled to close gaps resulting from the deleted notes.
+ */
+class SILENCE_PUBLIC CellRemove :
+    public Node
+{
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void remove(size_t start, size_t end, size_t stride);
+};
+
+/**
+ * Notes produced by the child nodes of this are conformed to the chord,
+ * starting at the indicated start index, up to but not including the end
+ * index, at the indicated stride.
+ */
+class SILENCE_PUBLIC CellChord :
+    public Node
+{
+    Chord chord_;
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void chord(const Chord &chord, size_t start, size_t end, size_t stride);
+};
+
+/**
+ * Notes produced by the child nodes of this, starting at the indicated start
+ * index, up to but not including the indicated end index, at the indicated stride,
+ * have added to them a random variable from the indicated distribution, rescaled
+ * to the indicated minimum and range. Parameters for the random variable are set
+ * as for the base Random node.
+ */
+class SILENCE_PUBLIC CellRandom :
+    public Random
+{
+    std::string distribution;
+    Event::Dimensions dimension = Event::Dimensions::KEY;
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void random(const std::string &distribution, Event::Dimensions dimension, size_t start, size_t end, size_t stride);
+};
+
+/**
+ * Notes produced by the child nodes of this, starting at the indicated start
+ * index, up to but not including the indicated end index, at the indicated stride,
+ * are randomly shuffled as to time.
+ */
+class SILENCE_PUBLIC CellShuffle :
+    public Random
+{
+    size_t start = 0;
+    size_t end = std::numeric_limits<size_t>::max();
+    size_t stride = 1;
+public:
+    virtual void transform(Score &score);
+    virtual void shuffle(size_t start, size_t end, size_t stride);
+};
 }
 #endif
 

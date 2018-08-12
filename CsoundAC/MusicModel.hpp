@@ -23,12 +23,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "ScoreModel.hpp"
 #include "CppSound.hpp"
 #include "Node.hpp"
 #include "Score.hpp"
-%}
+%
+}
 #else
 #include "ScoreModel.hpp"
 #include "CppSound.hpp"
@@ -39,14 +40,14 @@
 
 namespace csound
 {
-  /**
-   * A ScoreModel that uses Csound to render generated scores,
-   * via the CppSound class.
-   */
-  class SILENCE_PUBLIC MusicModel :
+/**
+ * A ScoreModel that uses Csound to render generated scores,
+ * via the CppSound class.
+ */
+class SILENCE_PUBLIC MusicModel :
     public ScoreModel
-  {
-  public:
+{
+public:
     int threadCount;
     MusicModel();
     virtual ~MusicModel();
@@ -144,10 +145,10 @@ namespace csound
                          std::string csoundInstrumentName,
                          double gain,
                          double pan);
-   /**
-     * Remove instrument number, gain, and pan assignments
-     * (convenience wrapper for Score::removeArrangement()).
-     */
+    /**
+      * Remove instrument number, gain, and pan assignments
+      * (convenience wrapper for Score::removeArrangement()).
+      */
     virtual void removeArrangement();
     /**
      * Set Csound command line
@@ -175,7 +176,7 @@ namespace csound
      *                 normalize, CD, MP3, tag, and play it.
      */
     virtual int processArgs(const std::vector<std::string> &args);
-  protected:
+protected:
     /**
      * Self-contained Csound object.
      */
@@ -191,7 +192,7 @@ namespace csound
      * Prepended to generated score.
      */
     std::string csoundScoreHeader;
-  };
+};
 }
 
 #endif

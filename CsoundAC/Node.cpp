@@ -43,34 +43,37 @@ Eigen::MatrixXd Node::getLocalCoordinates() const
     return localCoordinates;
 }
 
-Eigen::MatrixXd Node::traverse(const Eigen::MatrixXd &globalCoordinates,
-        Score &collectingScore)
+void Node::traverse(const Eigen::MatrixXd &global_coordinates,
+                    Score &global_score)
 {
-    // Make a bookmark for the current end of the collecting score.
-    size_t beginAt = collectingScore.size();
     // Obtain the composite transformation of coordinate system
     // by post-concatenating the local transformation of coordinate system
     // with the global, or enclosing, transformation of coordinate system.
-    Eigen::MatrixXd compositeCoordinates = getLocalCoordinates() * globalCoordinates;
+    Eigen::MatrixXd composite_coordinates = getLocalCoordinates() * global_coordinates;
     // Descend into each of the child nodes.
-    for(std::vector<Node*>::iterator i = children.begin(); i != children.end(); ++i) {
-        (*i)->traverse(compositeCoordinates, collectingScore);
+    Score score_from_children;
+    for(size_t i = 0, n = children.size(); i < n; ++i) {
+        children[i]->traverse(composite_coordinates, score_from_children);
     }
-    // Make a bookmark for the new end of the collecting score,
-    // thus enclosing all Events that may have been produced
-    // by all the child Nodes.
-    size_t endAt = collectingScore.size();
-    // Take the score and optionally transform Events between the bookmarks,
-    // or append new Events.
-    produceOrTransform(collectingScore, beginAt, endAt, compositeCoordinates);
-    // Return the composite transformation of coordinate system.
-    return compositeCoordinates;
+    // Optionally transform any or all notes produced by the child nodes,
+    // which are in the composite coordinate system.
+    transform(score_from_children);
+    // Add the child notes to the global score.
+    global_score.insert(global_score.end(), score_from_children.begin(), score_from_children.end());
+    // Optionally generate new notes in the coordinate system with origin zero.
+    Score score_from_this;
+    generate(score_from_this);
+    // Then transform these new notes to the composite coordinate system.
+    score_from_this.transform(composite_coordinates);
+    // Add the generated notes to the global score.
+    global_score.insert(global_score.end(), score_from_this.begin(), score_from_this.end());
 }
 
-void Node::produceOrTransform(Score &collectingScore,
-        size_t beginAt,
-        size_t endAt,
-        const Eigen::MatrixXd &globalCoordinates)
+void Node::generate(Score &score)
+{
+}
+
+void Node::transform(Score &score)
 {
 }
 
@@ -99,10 +102,7 @@ void Node::addChild(Node *node)
     children.push_back(node);
 }
 
-void RemoveDuplicates::produceOrTransform(Score &collectingScore,
-    size_t beginAt,
-    size_t endAt,
-    const Eigen::MatrixXd &globalCoordinates)
+void RemoveDuplicates::transform(Score &collectingScore)
 {
     std::set<std::string> uniqueEvents;
     Score newScore;

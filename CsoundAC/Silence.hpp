@@ -41,19 +41,21 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%begin %{
+%begin % {
 #include <cmath>
-%}
+%
+}
 %feature("autodoc", "1");
 %include "typemaps.i"
 %include "std_vector.i"
-%{
+% {
 #include <csound.h>
 #include <string>
 #include <vector>
 #include <map>
 #include <eigen3/Eigen/Dense>
-%}
+    %
+}
 #else
 #include <string>
 #include <vector>
@@ -73,7 +75,6 @@
 #include "CounterpointNode.hpp"
 #include "ScoreNode.hpp"
 #include "Cell.hpp"
-#include "Hocket.hpp"
 #include "Rescale.hpp"
 #include "ScoreModel.hpp"
 #include "MusicModel.hpp"

@@ -52,14 +52,15 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include <string>
 #include <cstdarg>
 #include <stdio.h>
 #include <stdlib.h>
 #include <eigen3/Eigen/Dense>
 #include <random>
-%}
+%
+}
 #else
 #include <string>
 #include <cstdarg>
@@ -73,265 +74,265 @@
 class SILENCE_PUBLIC Counterpoint
 {
 public:
-  void (*messageCallback)(CSOUND *csound, int attribute, const char *format, va_list valist);
-  void message(const char *format,...);
-  void message(const char *format, va_list valist);
-  int MostNotes;
-  int MostVoices;
-  enum
+    void (*messageCallback)(CSOUND *csound, int attribute, const char *format, va_list valist);
+    void message(const char *format,...);
+    void message(const char *format, va_list valist);
+    int MostNotes;
+    int MostVoices;
+    enum
     {
-      MostNotes_ = 128,
-      MostVoices_ = 12
+        MostNotes_ = 128,
+        MostVoices_ = 12
     };
-  long randx;
-  Eigen::MatrixXi Ctrpt;
-  Eigen::MatrixXi Onset;
-  Eigen::MatrixXi Dur;
-  Eigen::VectorXi TotalNotes;
-  Eigen::MatrixXi BestFit;
-  Eigen::MatrixXi BestFit1;
-  Eigen::MatrixXi BestFit2;
-  Eigen::VectorXi vbs;
-  Eigen::MatrixXi RhyPat;
-  Eigen::VectorXi RhyNotes;
-  int Fits[3];
-  virtual void initialize(int mostnotes, int mostvoices);
-  virtual void clear();
-  Counterpoint();
-  virtual ~Counterpoint();
-  int ABS(int i);
-  int MIN(int a, int b);
-  int MAX(int a, int b);
-  void ARRBLT(int *dest, int *source, int num);
-  enum
+    long randx;
+    Eigen::MatrixXi Ctrpt;
+    Eigen::MatrixXi Onset;
+    Eigen::MatrixXi Dur;
+    Eigen::VectorXi TotalNotes;
+    Eigen::MatrixXi BestFit;
+    Eigen::MatrixXi BestFit1;
+    Eigen::MatrixXi BestFit2;
+    Eigen::VectorXi vbs;
+    Eigen::MatrixXi RhyPat;
+    Eigen::VectorXi RhyNotes;
+    int Fits[3];
+    virtual void initialize(int mostnotes, int mostvoices);
+    virtual void clear();
+    Counterpoint();
+    virtual ~Counterpoint();
+    int ABS(int i);
+    int MIN(int a, int b);
+    int MAX(int a, int b);
+    void ARRBLT(int *dest, int *source, int num);
+    enum
     {
-      Unison = 0,
-      MinorSecond = 1,
-      MajorSecond = 2,
-      MinorThird = 3,
-      MajorThird = 4,
-      Fourth = 5,
-      Tritone = 6,
-      Fifth = 7,
-      MinorSixth = 8,
-      MajorSixth = 9,
-      MinorSeventh = 10,
-      MajorSeventh = 11,
-      Octave = 12
-    };
-#if !defined(SWIG)
-  static int PerfectConsonance[13];
-  static int ImperfectConsonance[13];
-  static int Dissonance[13];
-#endif
-  enum
-    {
-      Aeolian = 1,
-      Dorian = 2,
-      Phrygian = 3,
-      Lydian = 4,
-      Mixolydian = 5,
-      Ionian = 6,
-      Locrian = 7
+        Unison = 0,
+        MinorSecond = 1,
+        MajorSecond = 2,
+        MinorThird = 3,
+        MajorThird = 4,
+        Fourth = 5,
+        Tritone = 6,
+        Fifth = 7,
+        MinorSixth = 8,
+        MajorSixth = 9,
+        MinorSeventh = 10,
+        MajorSeventh = 11,
+        Octave = 12
     };
 #if !defined(SWIG)
-  static int _Ionian[12];
-  static int _Dorian[12];
-  static int _Phrygian[12];
-  static int _Lydian[12];
-  static int _Mixolydian[12];
-  static int _Aeolian[12];
-  static int _Locrian[12];
+    static int PerfectConsonance[13];
+    static int ImperfectConsonance[13];
+    static int Dissonance[13];
 #endif
-  int InMode(int Pitch, int Mode);
-#if !defined(SWIG)
-  static int BadMelodyInterval[13];
-#endif
-  int BadMelody(int Intv);
-  int ASkip(int Interval);
-  int AStep(int Interval);
-  int AThird(int Interval);
-  int ASeventh(int Interval);
-  int AnOctave(int Interval);
-  int ATenth(int Interval);
-  enum
+    enum
     {
-      DirectMotion = 1,
-      ContraryMotion = 2,
-      ObliqueMotion = 3,
-      NoMotion = 4
+        Aeolian = 1,
+        Dorian = 2,
+        Phrygian = 3,
+        Lydian = 4,
+        Mixolydian = 5,
+        Ionian = 6,
+        Locrian = 7
     };
-  int MotionType(int Pitch1, int Pitch2, int Pitch3, int Pitch4);
-  int DirectMotionToPerfectConsonance(int Pitch1, int Pitch2, int Pitch3, int Pitch4);
-  int ConsecutiveSkipsInSameDirection(int Pitch1, int Pitch2, int Pitch3);
-  int LowestSemitone;
-  int HighestSemitone;
-  int OutOfRange(int Pitch);
-  int ExtremeRange(int Pitch);
-  int BasePitch,Mode,TotalTime;
-  int Us(int n, int v);
-  int LastNote(int n, int v);
-  int FirstNote(int n, int v);
-  int NextToLastNote(int n, int v);
-  void SetUs(int n, int p, int v);
-  int TotalRange(int Cn, int Cp, int v);
-  int Cantus(int n, int v);
-  int VIndex(int Time, int VNum);
-  int Other(int Cn, int v, int v1);
-  int Bass(int Cn, int v);
-  enum {
+#if !defined(SWIG)
+    static int _Ionian[12];
+    static int _Dorian[12];
+    static int _Phrygian[12];
+    static int _Lydian[12];
+    static int _Mixolydian[12];
+    static int _Aeolian[12];
+    static int _Locrian[12];
+#endif
+    int InMode(int Pitch, int Mode);
+#if !defined(SWIG)
+    static int BadMelodyInterval[13];
+#endif
+    int BadMelody(int Intv);
+    int ASkip(int Interval);
+    int AStep(int Interval);
+    int AThird(int Interval);
+    int ASeventh(int Interval);
+    int AnOctave(int Interval);
+    int ATenth(int Interval);
+    enum
+    {
+        DirectMotion = 1,
+        ContraryMotion = 2,
+        ObliqueMotion = 3,
+        NoMotion = 4
+    };
+    int MotionType(int Pitch1, int Pitch2, int Pitch3, int Pitch4);
+    int DirectMotionToPerfectConsonance(int Pitch1, int Pitch2, int Pitch3, int Pitch4);
+    int ConsecutiveSkipsInSameDirection(int Pitch1, int Pitch2, int Pitch3);
+    int LowestSemitone;
+    int HighestSemitone;
+    int OutOfRange(int Pitch);
+    int ExtremeRange(int Pitch);
+    int BasePitch,Mode,TotalTime;
+    int Us(int n, int v);
+    int LastNote(int n, int v);
+    int FirstNote(int n, int v);
+    int NextToLastNote(int n, int v);
+    void SetUs(int n, int p, int v);
+    int TotalRange(int Cn, int Cp, int v);
+    int Cantus(int n, int v);
+    int VIndex(int Time, int VNum);
+    int Other(int Cn, int v, int v1);
+    int Bass(int Cn, int v);
+    enum {
 
-    WholeNote = 8,
-    HalfNote = 4,
-    DottedHalfNote = 6,
-    QuarterNote = 2,
-    DottedQuarterNote = 3,
-    EighthNote = 1
-  };
-  int Beat8(int n);
-  int DownBeat(int n, int v);
-  int UpBeat(int n, int v);
-  int PitchRepeats(int Cn, int Cp, int v);
-  enum {
-    One = 0,
-    Two = 2,
-    Three = 3,
-    Four = 4,
-    Five = 5,
-    Six = 6,
-    Eight = 8
-  };
-  int Size(int MelInt);
-  int TooMuchOfInterval(int Cn, int Cp, int v);
-  int ADissonance(int Interval, int Cn, int Cp, int v, int Species);
-  int Doubled(int Pitch, int Cn, int v);
-  enum
-    {
-      infinity = 1000000,
-      Bad = 100,
-      RealBad = 200
+        WholeNote = 8,
+        HalfNote = 4,
+        DottedHalfNote = 6,
+        QuarterNote = 2,
+        DottedQuarterNote = 3,
+        EighthNote = 1
     };
-  int UnisonPenalty;
-  int DirectToFifthPenalty;
-  int DirectToOctavePenalty;
-  int ParallelFifthPenalty;
-  int ParallelUnisonPenalty;
-  int EndOnPerfectPenalty;
-  int NoLeadingTonePenalty;
-  int DissonancePenalty;
-  int OutOfRangePenalty;
-  int OutOfModePenalty;
-  int TwoSkipsPenalty;
-  int DirectMotionPenalty;
-  int PerfectConsonancePenalty;
-  int CompoundPenalty;
-  int TenthToOctavePenalty;
-  int SkipTo8vePenalty;
-  int SkipFromUnisonPenalty;
-  int SkipPrecededBySameDirectionPenalty;
-  int FifthPrecededBySameDirectionPenalty;
-  int SixthPrecededBySameDirectionPenalty;
-  int SkipFollowedBySameDirectionPenalty;
-  int FifthFollowedBySameDirectionPenalty;
-  int SixthFollowedBySameDirectionPenalty;
-  int TwoSkipsNotInTriadPenalty;
-  int BadMelodyPenalty;
-  int ExtremeRangePenalty;
-  int LydianCadentialTritonePenalty;
-  int LowerNeighborPenalty;
-  int UpperNeighborPenalty;
-  int OverTwelfthPenalty;
-  int OverOctavePenalty;
-  int SixthLeapPenalty;
-  int OctaveLeapPenalty;
-  int BadCadencePenalty;
-  int DirectPerfectOnDownbeatPenalty;
-  int RepetitionOnUpbeatPenalty;
-  int DissonanceNotFillingThirdPenalty;
-  int UnisonDownbeatPenalty;
-  int TwoRepeatedNotesPenalty;
-  int ThreeRepeatedNotesPenalty;
-  int FourRepeatedNotesPenalty;
-  int LeapAtCadencePenalty;
-  int NotaCambiataPenalty;
-  int NotBestCadencePenalty;
-  int UnisonOnBeat4Penalty;
-  int NotaLigaturePenalty;
-  int LesserLigaturePenalty;
-  int UnresolvedLigaturePenalty;
-  int NoTimeForaLigaturePenalty;
-  int EighthJumpPenalty;
-  int HalfUntiedPenalty;
-  int UnisonUpbeatPenalty;
-  int MelodicBoredomPenalty;
-  int SkipToDownBeatPenalty;
-  int ThreeSkipsPenalty;
-  int DownBeatUnisonPenalty;
-  int VerticalTritonePenalty;
-  int MelodicTritonePenalty;
-  int AscendingSixthPenalty;
-  int RepeatedPitchPenalty;
-  int NotContraryToOthersPenalty;
-  int NotTriadPenalty;
-  int InnerVoicesInDirectToPerfectPenalty;
-  int InnerVoicesInDirectToTritonePenalty;
-  int SixFiveChordPenalty;
-  int UnpreparedSixFivePenalty;
-  int UnresolvedSixFivePenalty;
-  int AugmentedIntervalPenalty;
-  int ThirdDoubledPenalty;
-  int DoubledLeadingTonePenalty;
-  int DoubledSixthPenalty;
-  int DoubledFifthPenalty;
-  int TripledBassPenalty;
-  int UpperVoicesTooFarApartPenalty;
-  int UnresolvedLeadingTonePenalty;
-  int AllVoicesSkipPenalty;
-  int DirectToTritonePenalty;
-  int CrossBelowBassPenalty;
-  /* I added the following during the translation to C */
-  int CrossAboveCantusPenalty;
-  int NoMotionAgainstOctavePenalty;
-  int SpecialSpeciesCheck(int Cn, int Cp, int v, int Other0, int Other1, int Other2, int NumParts,
-                          int Species, int MelInt, int Interval, int ActInt, int LastIntClass, int Pitch, int LastMelInt, int CurLim);
-  enum
-    {
-      INTERVALS_WITH_BASS_SIZE = 8
+    int Beat8(int n);
+    int DownBeat(int n, int v);
+    int UpBeat(int n, int v);
+    int PitchRepeats(int Cn, int Cp, int v);
+    enum {
+        One = 0,
+        Two = 2,
+        Three = 3,
+        Four = 4,
+        Five = 5,
+        Six = 6,
+        Eight = 8
     };
-  int IntervalsWithBass[INTERVALS_WITH_BASS_SIZE];
-  /* 0 = octave, 2 = step, 3 = third, 4 = fourth, 5 = fifth, 6 = sixth, 7 = seventh */
-  void AddInterval(int n);
-  int OtherVoiceCheck(int Cn, int Cp, int v, int NumParts, int Species, int CurLim);
-  int Check(int Cn, int Cp, int v, int NumParts, int Species, int CurLim);
-  int BestFitPenalty,MaxPenalty,Branches,AllDone;
-  float PenaltyRatio;
-  enum
+    int Size(int MelInt);
+    int TooMuchOfInterval(int Cn, int Cp, int v);
+    int ADissonance(int Interval, int Cn, int Cp, int v, int Species);
+    int Doubled(int Pitch, int Cn, int v);
+    enum
     {
-      NumFields = 16,
-      Field = (MostVoices_+1),
-      EndF = (Field*NumFields)
+        infinity = 1000000,
+        Bad = 100,
+        RealBad = 200
     };
-  int SaveIndx(int indx, int *Sp);
-  void SaveResults(int CurrentPenalty, int Penalty, int v1, int Species);
+    int UnisonPenalty;
+    int DirectToFifthPenalty;
+    int DirectToOctavePenalty;
+    int ParallelFifthPenalty;
+    int ParallelUnisonPenalty;
+    int EndOnPerfectPenalty;
+    int NoLeadingTonePenalty;
+    int DissonancePenalty;
+    int OutOfRangePenalty;
+    int OutOfModePenalty;
+    int TwoSkipsPenalty;
+    int DirectMotionPenalty;
+    int PerfectConsonancePenalty;
+    int CompoundPenalty;
+    int TenthToOctavePenalty;
+    int SkipTo8vePenalty;
+    int SkipFromUnisonPenalty;
+    int SkipPrecededBySameDirectionPenalty;
+    int FifthPrecededBySameDirectionPenalty;
+    int SixthPrecededBySameDirectionPenalty;
+    int SkipFollowedBySameDirectionPenalty;
+    int FifthFollowedBySameDirectionPenalty;
+    int SixthFollowedBySameDirectionPenalty;
+    int TwoSkipsNotInTriadPenalty;
+    int BadMelodyPenalty;
+    int ExtremeRangePenalty;
+    int LydianCadentialTritonePenalty;
+    int LowerNeighborPenalty;
+    int UpperNeighborPenalty;
+    int OverTwelfthPenalty;
+    int OverOctavePenalty;
+    int SixthLeapPenalty;
+    int OctaveLeapPenalty;
+    int BadCadencePenalty;
+    int DirectPerfectOnDownbeatPenalty;
+    int RepetitionOnUpbeatPenalty;
+    int DissonanceNotFillingThirdPenalty;
+    int UnisonDownbeatPenalty;
+    int TwoRepeatedNotesPenalty;
+    int ThreeRepeatedNotesPenalty;
+    int FourRepeatedNotesPenalty;
+    int LeapAtCadencePenalty;
+    int NotaCambiataPenalty;
+    int NotBestCadencePenalty;
+    int UnisonOnBeat4Penalty;
+    int NotaLigaturePenalty;
+    int LesserLigaturePenalty;
+    int UnresolvedLigaturePenalty;
+    int NoTimeForaLigaturePenalty;
+    int EighthJumpPenalty;
+    int HalfUntiedPenalty;
+    int UnisonUpbeatPenalty;
+    int MelodicBoredomPenalty;
+    int SkipToDownBeatPenalty;
+    int ThreeSkipsPenalty;
+    int DownBeatUnisonPenalty;
+    int VerticalTritonePenalty;
+    int MelodicTritonePenalty;
+    int AscendingSixthPenalty;
+    int RepeatedPitchPenalty;
+    int NotContraryToOthersPenalty;
+    int NotTriadPenalty;
+    int InnerVoicesInDirectToPerfectPenalty;
+    int InnerVoicesInDirectToTritonePenalty;
+    int SixFiveChordPenalty;
+    int UnpreparedSixFivePenalty;
+    int UnresolvedSixFivePenalty;
+    int AugmentedIntervalPenalty;
+    int ThirdDoubledPenalty;
+    int DoubledLeadingTonePenalty;
+    int DoubledSixthPenalty;
+    int DoubledFifthPenalty;
+    int TripledBassPenalty;
+    int UpperVoicesTooFarApartPenalty;
+    int UnresolvedLeadingTonePenalty;
+    int AllVoicesSkipPenalty;
+    int DirectToTritonePenalty;
+    int CrossBelowBassPenalty;
+    /* I added the following during the translation to C */
+    int CrossAboveCantusPenalty;
+    int NoMotionAgainstOctavePenalty;
+    int SpecialSpeciesCheck(int Cn, int Cp, int v, int Other0, int Other1, int Other2, int NumParts,
+                            int Species, int MelInt, int Interval, int ActInt, int LastIntClass, int Pitch, int LastMelInt, int CurLim);
+    enum
+    {
+        INTERVALS_WITH_BASS_SIZE = 8
+    };
+    int IntervalsWithBass[INTERVALS_WITH_BASS_SIZE];
+    /* 0 = octave, 2 = step, 3 = third, 4 = fourth, 5 = fifth, 6 = sixth, 7 = seventh */
+    void AddInterval(int n);
+    int OtherVoiceCheck(int Cn, int Cp, int v, int NumParts, int Species, int CurLim);
+    int Check(int Cn, int Cp, int v, int NumParts, int Species, int CurLim);
+    int BestFitPenalty,MaxPenalty,Branches,AllDone;
+    float PenaltyRatio;
+    enum
+    {
+        NumFields = 16,
+        Field = (MostVoices_+1),
+        EndF = (Field*NumFields)
+    };
+    int SaveIndx(int indx, int *Sp);
+    void SaveResults(int CurrentPenalty, int Penalty, int v1, int Species);
 #if !defined(SWIG)
-  static int Indx[17];
+    static int Indx[17];
 #endif
-  int Look(int CurPen, int CurVoice, int NumParts, int Species, int Lim, int *Pens, int *Is, int *CurNotes);
-  void BestFitFirst(int CurTime, int CurrentPenalty, int NumParts, int Species, int BrLim);
-  void FillRhyPat();
-  float RANDOM(float amp);
-  void UsedRhy(int n);
-  int CurRhy(int n);
-  void CleanRhy();
-  int GoodRhy();
-  void counterpoint(int OurMode, int *StartPitches, int CurV, int CantusFirmusLength, int Species, int *cantus);
-  void AnySpecies(int OurMode, int *StartPitches, int CurV, int CantusFirmusLength, int Species);
-  void fillCantus(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int c8, int c9, int c10, int c11, int c12, int c13, int c14);
-  void toCsoundScore(std::string filename, double secondsPerPulse);
-  void winners(int v1, int *data, int *best, int *best1, int *best2, int *durs);
+    int Look(int CurPen, int CurVoice, int NumParts, int Species, int Lim, int *Pens, int *Is, int *CurNotes);
+    void BestFitFirst(int CurTime, int CurrentPenalty, int NumParts, int Species, int BrLim);
+    void FillRhyPat();
+    float RANDOM(float amp);
+    void UsedRhy(int n);
+    int CurRhy(int n);
+    void CleanRhy();
+    int GoodRhy();
+    void counterpoint(int OurMode, int *StartPitches, int CurV, int CantusFirmusLength, int Species, int *cantus);
+    void AnySpecies(int OurMode, int *StartPitches, int CurV, int CantusFirmusLength, int Species);
+    void fillCantus(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int c8, int c9, int c10, int c11, int c12, int c13, int c14);
+    void toCsoundScore(std::string filename, double secondsPerPulse);
+    void winners(int v1, int *data, int *best, int *best1, int *best2, int *durs);
 #if !defined(SWIG)
-  static std::mt19937 mersenneTwister;
-  std::normal_distribution<> uniform_real_generator;
+    static std::mt19937 mersenneTwister;
+    std::normal_distribution<> uniform_real_generator;
 #endif
 };
 

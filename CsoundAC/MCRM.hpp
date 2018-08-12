@@ -24,10 +24,11 @@
 %module CsoundAC
     %include "std_string.i"
     %include "std_vector.i"
-    %{
+    % {
 #include "Silence.hpp"
 #include <vector>
-    %}
+        %
+    }
 #else
 #include "Silence.hpp"
 #include <vector>
@@ -56,16 +57,13 @@
         void setWeight(size_t precursor, size_t successor, double weight);
         virtual void generate();
         // Node overrides.
-        virtual void produceOrTransform(Score &score,
-                                        size_t beginAt,
-                                        size_t endAt,
-                                        const Eigen::MatrixXd &coordinates);
+        virtual void generate(Score &score);
     };
 
     /**
-     * Uses k-means clustering to translate the accumulated samples that 
-     * approximate the measure on the iterated function system implemented 
-     * by the multiple copy reducing machine algorithm into a specified 
+     * Uses k-means clustering to translate the accumulated samples that
+     * approximate the measure on the iterated function system implemented
+     * by the multiple copy reducing machine algorithm into a specified
      * number of notes.
      */
     class SILENCE_PUBLIC KMeansMCRM :

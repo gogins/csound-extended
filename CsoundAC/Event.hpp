@@ -22,7 +22,7 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Conversions.hpp"
 #include <algorithm>
 #include <eigen3/Eigen/Dense>
@@ -33,7 +33,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-%}
+%
+}
 %include "std_string.i"
 %include "std_vector.i"
 %template(EventVector) std::vector<csound::Event>;
@@ -52,24 +53,24 @@
 
 namespace csound
 {
-  /**
-   * Represents an event in music space, such as a note of definite duration,
-   * a MIDI-like "note on" or "note off" event, or a MIDI-like control event.
-   * Fields have the same semantics as MIDI with some differences.
-   * All fields are floats; status is stored separately from channel;
-   * channel can have any positive value; spatial location in X, Y, and Z are stored;
-   * phase in radians is stored; and pitch-class set is stored.
-   * <p>
-   * Events can be multiplied (matrix dot product) with the local coordinate system
-   * of a Node or transform to translate, scale, or rotate them in any or all dimensions
-   * of music space.
-   * <p>
-   * Events usually are value objects, not references.
-   * <p>
-   * Silence Events translate to Csound score statements ("i" statements),
-   * but they are always real-time score statements at time 0, suitable
-   * for use with Csound's -L or line event option.
-   */
+/**
+ * Represents an event in music space, such as a note of definite duration,
+ * a MIDI-like "note on" or "note off" event, or a MIDI-like control event.
+ * Fields have the same semantics as MIDI with some differences.
+ * All fields are floats; status is stored separately from channel;
+ * channel can have any positive value; spatial location in X, Y, and Z are stored;
+ * phase in radians is stored; and pitch-class set is stored.
+ * <p>
+ * Events can be multiplied (matrix dot product) with the local coordinate system
+ * of a Node or transform to translate, scale, or rotate them in any or all dimensions
+ * of music space.
+ * <p>
+ * Events usually are value objects, not references.
+ * <p>
+ * Silence Events translate to Csound score statements ("i" statements),
+ * but they are always real-time score statements at time 0, suitable
+ * for use with Csound's -L or line event option.
+ */
 
 //template class __declspec(dllexport) std::allocator<double>;
 //template class __declspec(dllexport) std::vector<double>;
@@ -83,11 +84,11 @@ namespace csound
 class Score;
 
 class SILENCE_PUBLIC Event :
-        public Eigen::VectorXd
-  {
-  public:
+    public Eigen::VectorXd
+{
+public:
     typedef enum
-      {
+    {
         TIME = 0,
         DURATION,
         STATUS,
@@ -101,11 +102,11 @@ class SILENCE_PUBLIC Event :
         PITCHES,
         HOMOGENEITY,
         ELEMENT_COUNT
-      } Dimensions;
+    } Dimensions;
     enum
-      {
+    {
         INDEFINITE = 16384
-      };
+    };
     std::map<std::string,std::string> properties;
     Event();
     Event(const Event &a);
@@ -173,11 +174,11 @@ class SILENCE_PUBLIC Event :
     virtual void clearProperties();
     virtual void createNoteOffEvent(Event &event) const;
     /**
-     * Process the data in this; called on all Events in a Score as the final 
-     * state of processing in ScoreModel. Typically, "process" is a closure 
+     * Process the data in this; called on all Events in a Score as the final
+     * state of processing in ScoreModel. Typically, "process" is a closure
      * that contains references to any other data required to process this.
-     * Example: put a Chord in the process closure, and when it is called, 
-     * conform the pitch of this Event to the Chord. The Score is sorted 
+     * Example: put a Chord in the process closure, and when it is called,
+     * conform the pitch of this Event to the Chord. The Score is sorted
      * before this is called.
      */
     std::function<void(csound::Score &, csound::Event &)> process;
@@ -190,8 +191,8 @@ class SILENCE_PUBLIC Event :
     static int SORT_ORDER[];
     static const char *labels[];
 #endif
-  };
+};
 
-  bool SILENCE_PUBLIC operator < (const Event& a, const Event &b);
+bool SILENCE_PUBLIC operator < (const Event& a, const Event &b);
 }
 #endif

@@ -29,10 +29,7 @@ ScoreNode::~ScoreNode()
 {
 }
 
-void ScoreNode::produceOrTransform(Score &collectingScore,
-        size_t beginAt,
-        size_t endAt,
-        const Eigen::MatrixXd &compositeCoordinates)
+void ScoreNode::generate(Score &collectingScore)
 {
     if(importFilename.length() > 0) {
         score.std::vector<Event>::clear();
@@ -43,8 +40,7 @@ void ScoreNode::produceOrTransform(Score &collectingScore,
         score.setDuration(duration);
     }
     for (int i = 0, n = score.size(); i < n; ++i) {
-        Eigen::VectorXd product = compositeCoordinates * score[i];
-        collectingScore.push_back(product);
+        collectingScore.push_back(score[i]);
         // TODO fix this hack... much work!
         collectingScore.back().process = score[i].process;
     }

@@ -14,15 +14,19 @@ using namespace std;
 // things to write to a track, including note-ons, note-offs,
 // updates, tempo changes, and time signatures
 //
-class event_queue{
+class event_queue {
 public:
-  char type;//'n' for note, 'o' for off, 's' for time signature,
-            // 'c' for tempo changes
-  double time;
-  long index; //of the event in mSeq->notes
-  class event_queue *next;
-  event_queue(char t, double when, long x, class event_queue *n) {
-        type = t; time = when; index = x; next = n; }
+    char type;//'n' for note, 'o' for off, 's' for time signature,
+    // 'c' for tempo changes
+    double time;
+    long index; //of the event in mSeq->notes
+    class event_queue *next;
+    event_queue(char t, double when, long x, class event_queue *n) {
+        type = t;
+        time = when;
+        index = x;
+        next = n;
+    }
 };
 
 
@@ -112,9 +116,9 @@ Alg_smf_write::~Alg_smf_write()
 // decimal round to TW0.4167 Q0.3333. Since the time in whole notes
 // rounded up, this note will start late. Even though the duration
 // rounded down, the amount is 1/4 as much because units are quarter
-// notes. Therefore, the total roundup is 0.0001 beats. This is 
+// notes. Therefore, the total roundup is 0.0001 beats. This is
 // enough to cause the note to sort later in the queue, perhaps
-// coming after a new note-on on the same pitch, and resulting in 
+// coming after a new note-on on the same pitch, and resulting in
 // a turning on-off, on-off into on, on, off, off if data is moved
 // to Allegro (ascii) format with rounding and then back to SMF.
 //
@@ -132,7 +136,7 @@ event_queue* push(event_queue *queue, event_queue *event)
         event->next = NULL;
         return event;
     }
-   
+
     event_queue *marker1 = NULL;
     event_queue *marker2 = queue;
     while (marker2 != NULL && marker2->time <= event->time) {
@@ -169,7 +173,7 @@ void Alg_smf_write::write_note(Alg_note_ptr note, bool on)
     char chan = char(note->chan & 15);
     int pitch = int(note->pitch + 0.5);
     if (pitch < 0) {
-          pitch = pitch % 12;
+        pitch = pitch % 12;
     } else if (pitch > 127) {
         pitch = (pitch % 12) + 120; // put pitch in 10th octave
         if (pitch > 127) pitch -= 12; // or 9th octave
@@ -186,7 +190,7 @@ void Alg_smf_write::write_note(Alg_note_ptr note, bool on)
 
 void Alg_smf_write::write_midi_channel_prefix(Alg_update_ptr update)
 {
-   if (update->chan >= 0) { // write MIDI Channel Prefix
+    if (update->chan >= 0) { // write MIDI Channel Prefix
         write_delta(update->time);
         out_file->put('\xFF'); // Meta Event
         out_file->put('\x20'); // Type code for MIDI Channel Prefix
@@ -306,14 +310,14 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
         out_file->put(0xE0 + to_midi_channel(update->chan));
         write_data(c1);
         write_data(c2);
-    } else if (!strncmp(name, "control", 7) && 
+    } else if (!strncmp(name, "control", 7) &&
                update->parameter.attr_type() == 'r') {
-      int ctrlnum = atoi(name + 7);
-      int val = ROUND(update->parameter.r * 127);
-      write_delta(update->time);
-      out_file->put(0xB0 + to_midi_channel(update->chan));
-      write_data(ctrlnum);
-      write_data(val);
+        int ctrlnum = atoi(name + 7);
+        int val = ROUND(update->parameter.r * 127);
+        write_delta(update->time);
+        out_file->put(0xB0 + to_midi_channel(update->chan));
+        write_data(ctrlnum);
+        write_data(val);
     } else if (!strcmp(name, "sysexs") &&
                update->parameter.attr_type() == 's') {
         const char *s = update->parameter.s;
@@ -329,7 +333,7 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
         out_file->put('\xFF');
         write_binary(0x7F, s);
 
-    /****Text Events****/
+        /****Text Events****/
     } else if (!strcmp(name, "texts")) {
         write_text(update, 0x01);
     } else if (!strcmp(name, "copyrights")) {
@@ -347,7 +351,7 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
     } else if (!strcmp(name, "miscs")) {
         write_text(update, 0x08);
 
-    /****Other Events****/
+        /****Other Events****/
     } else if (!strcmp(name, "smpteoffsets")) {
 #define decimal(p) (((p)[0] - '0') * 10 + ((p)[1] - '0'))
         // smpteoffset is specified as "24fps:00h:10m:00s:11.00f"
@@ -368,11 +372,16 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
             }
             else fps = 3;       // Coverity noted missing case
         } else fps = 3;
-        s += 6;   int hours = decimal(s);
-        s += 4;   int mins = decimal(s);
-        s += 4;   int secs = decimal(s);
-        s += 4;   int frames = decimal(s);
-        s += 3;   int subframes = decimal(s);
+        s += 6;
+        int hours = decimal(s);
+        s += 4;
+        int mins = decimal(s);
+        s += 4;
+        int secs = decimal(s);
+        s += 4;
+        int frames = decimal(s);
+        s += 3;
+        int subframes = decimal(s);
         smpteoffset[0] = (fps << 6) + hours;
         smpteoffset[1] = mins;
         smpteoffset[2] = secs;
@@ -380,10 +389,10 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
         smpteoffset[4] = subframes;
         write_smpteoffset(update, smpteoffset);
 
-    // key signature is special because it takes two events in the Alg_seq
-    // structure to make one midi file event. When we encounter one or 
-    // the other event, we'll just record it in the Alg_smf_write object.
-    // After both events are seen, we write the data. (See below.)
+        // key signature is special because it takes two events in the Alg_seq
+        // structure to make one midi file event. When we encounter one or
+        // the other event, we'll just record it in the Alg_smf_write object.
+        // After both events are seen, we write the data. (See below.)
     } else if (!strcmp(name, "keysigi")) {
         keysig = update->parameter.i;
         keysig_when = update->time;
@@ -429,8 +438,8 @@ void Alg_smf_write::write_track(int i)
             pending = push(pending, new event_queue('c', 0.0, 0, NULL));
         }
         if (seq->time_sig.length() > 0) {
-            pending = push(pending, new event_queue('s', 
-                           TICK_TIME(seq->time_sig[0].beat, 0), 0, NULL));
+            pending = push(pending, new event_queue('s',
+                                                    TICK_TIME(seq->time_sig[0].beat, 0), 0, NULL));
         }
     }
     while (pending) {
@@ -441,7 +450,7 @@ void Alg_smf_write::write_track(int i)
             if (n->is_note()) {
                 write_note(n, true);
                 pending = push(pending, new event_queue('o',
-                      TICK_TIME(n->time + n->dur, -1), current->index, NULL));
+                                                        TICK_TIME(n->time + n->dur, -1), current->index, NULL));
             } else if (n->is_update()) {
                 Alg_update_ptr u = (Alg_update_ptr) n;
                 write_update(u);
@@ -460,7 +469,7 @@ void Alg_smf_write::write_track(int i)
             write_tempo_change(current->index);
             current->index++; // -R
             if (current->index < seq->get_time_map()->beats.len) {
-                current->time = 
+                current->time =
                     TICK_TIME(seq->get_time_map()->
                               beats[current->index].beat, 0);
                 pending = push(pending, current);
@@ -471,7 +480,7 @@ void Alg_smf_write::write_track(int i)
             write_time_signature(current->index);
             current->index++;
             if (current->index < seq->time_sig.length()) {
-                current->time = 
+                current->time =
                     TICK_TIME(seq->time_sig[current->index].beat, 0);
                 pending = push(pending, current);
             } else {
@@ -495,14 +504,14 @@ void Alg_smf_write::write_tempo(int divs, int tempo)
 
 
 void Alg_smf_write::write_tempo_change(int i)
-    //  i is index of tempo map
+//  i is index of tempo map
 {
     // extract tempo map
     Alg_beats &b = seq->get_time_map()->beats;
     double tempo;
     long divs;
     if (i < seq->get_time_map()->beats.len - 1) {
-        tempo = 1000000 * ((b[i+1].time - b[i].time) / 
+        tempo = 1000000 * ((b[i+1].time - b[i].time) /
                            (b[i+1].beat - b[i].beat));
         divs = ROUND(b[i].beat * division);
         write_tempo(divs, ROUND(tempo));
@@ -510,7 +519,7 @@ void Alg_smf_write::write_tempo_change(int i)
         divs = ROUND(division * b[i].beat);
         tempo = (1000000.0 / seq->get_time_map()->last_tempo);
         write_tempo(divs, ROUND(tempo));
-    }    
+    }
 }
 
 
@@ -563,7 +572,7 @@ void Alg_smf_write::write(ostream &file)
         *out_file << "MTrk";
         track_len_offset = out_file->tellp();
         write_32bit(0); // track len placeholder
-        
+
         write_track(i);
 
         // End of track event
@@ -610,29 +619,29 @@ void Alg_smf_write::write_delta(double event_time)
     long divisions = ROUND(division * event_time);
     long delta_divs = divisions - previous_divs;
     write_varinum(delta_divs);
-    previous_divs = divisions;    
+    previous_divs = divisions;
 }
 
 
 void Alg_smf_write::write_varinum(int value)
 {
-  if(value<0) value=0;//this line should not have to be here!
-  int buffer;
+    if(value<0) value=0;//this line should not have to be here!
+    int buffer;
 
-  buffer = value & 0x7f;
-  while ((value >>= 7) > 0) {
-    buffer <<= 8;
-    buffer |= 0x80;
-    buffer += (value & 0x7f);
-  }
+    buffer = value & 0x7f;
+    while ((value >>= 7) > 0) {
+        buffer <<= 8;
+        buffer |= 0x80;
+        buffer += (value & 0x7f);
+    }
 
-  for(;;) {
-    out_file->put(buffer);
-    if (buffer & 0x80)
-      buffer >>= 8;
-    else
-      break;
-  }
+    for(;;) {
+        out_file->put(buffer);
+        if (buffer & 0x80)
+            buffer >>= 8;
+        else
+            break;
+    }
 }
 
 

@@ -23,13 +23,14 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Silence.hpp"
 #include <string>
 #include <vector>
 #include <random>
 #include <eigen3/Eigen/Dense>
-  %}
+%
+}
 %include "std_string.i"
 %include "std_vector.i"
 #else
@@ -42,19 +43,19 @@
 
 namespace csound
 {
-  /**
-   * Generates notes by searching for a chaotic dynamical system defined by a
-   * polynomial equation or partial differential equation using
-   * Julien C. Sprott's Lyupanov exponent search, or by translating a known
-   * chaotic dynamical system into music, by interpreting each iteration
-   * of the system as a note. The time of the note can be represented either
-   * as the order of iteration, or as a dimension of the attractor.
-   * See Julien C. Sprott's book "Strange Attractors".
-   */
-  class SILENCE_PUBLIC StrangeAttractor :
+/**
+ * Generates notes by searching for a chaotic dynamical system defined by a
+ * polynomial equation or partial differential equation using
+ * Julien C. Sprott's Lyupanov exponent search, or by translating a known
+ * chaotic dynamical system into music, by interpreting each iteration
+ * of the system as a note. The time of the note can be represented either
+ * as the order of iteration, or as a dimension of the attractor.
+ * See Julien C. Sprott's book "Strange Attractors".
+ */
+class SILENCE_PUBLIC StrangeAttractor :
     public ScoreNode
-  {
-  protected:
+{
+protected:
     std::string code;
     std::string filename;
     int scoreType;
@@ -164,7 +165,7 @@ namespace csound
     double ZP;
     std::vector<double> ZS;
     double ZSAVE;
-  public:
+public:
     Random randomNode;
     StrangeAttractor(void);
     virtual ~StrangeAttractor(void);
@@ -215,7 +216,7 @@ namespace csound
     virtual void render (int N, double X, double Y, double Z, double W);
     virtual void setDimensionCount(int D);
     virtual int getDimensionCount() const;
-  };
+};
 }
 
 #endif

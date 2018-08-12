@@ -23,22 +23,23 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Node.hpp"
-%}
+%
+}
 #else
 #include "ScoreNode.hpp"
 #endif
 
 namespace csound
 {
-  /**
-   * Node that creates a temporal sequence of child nodes.
-   */
-  class SILENCE_PUBLIC Sequence :
+/**
+ * Node that creates a temporal sequence of child nodes.
+ */
+class SILENCE_PUBLIC Sequence :
     public Node
-  {
-  public:
+{
+public:
     Sequence();
     virtual ~Sequence();
     /**
@@ -46,8 +47,8 @@ namespace csound
      * The notes produced by the second child node are shifted forward in time by that duration,
      * and so on, to create a strict temporal sequence of child nodes.
      */
-    virtual Eigen::MatrixXd traverse(const Eigen::MatrixXd &globalCoordinates, Score &score);
-  };
+    virtual void traverse(const Eigen::MatrixXd &globalCoordinates, Score &score);
+};
 }
 #endif
 

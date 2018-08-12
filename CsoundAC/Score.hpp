@@ -22,12 +22,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Event.hpp"
 #include "Midifile.hpp"
 #include <iostream>
 #include <vector>
-%}
+%
+}
 %include "std_string.i"
 %include "std_vector.i"
 #else
@@ -39,19 +40,19 @@
 
 namespace csound
 {
-  /**
-   * Base class for collections of events in music space.
-   * Can order events by time.
-   * <p>
-   * The implementation is a std::vector of Events.
-   * The elements of the vector are value objects, not references.
-   */
-  class SILENCE_PUBLIC Score :
+/**
+ * Base class for collections of events in music space.
+ * Can order events by time.
+ * <p>
+ * The implementation is a std::vector of Events.
+ * The elements of the vector are value objects, not references.
+ */
+class SILENCE_PUBLIC Score :
     public std::vector<csound::Event>
-  {
-  protected:
+{
+protected:
     void createMusicModel();
-  public:
+public:
     Event scaleTargetMinima;
     std::vector<bool> rescaleMinima;
     Event scaleTargetRanges;
@@ -353,10 +354,14 @@ namespace csound
      * system of equal temperament.
      */
     virtual void temper(double tonesPerOctave = 12.0);
-    /** 
+    /**
      * Calls Event::process on all Events in this.
      */
     virtual void process();
-  };
+    /**
+     * Multiply each event in this by the transformation.
+     */
+    virtual void transform(const Eigen::MatrixXd &transformation);
+};
 }
 #endif

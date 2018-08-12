@@ -23,33 +23,34 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "ScoreNode.hpp"
-%}
+%
+}
 #else
 #include "ScoreNode.hpp"
 #endif
 
 namespace csound
 {
-  /**
-   * Rescales all child events to fit a bounding hypercube in music space.
-   * No, some, or all dimensions may be rescaled to fit the minimum alone,
-   * the range alone, or both the minimum and the range.
-   */
-  class SILENCE_PUBLIC Rescale :
+/**
+ * Rescales all child events to fit a bounding hypercube in music space.
+ * No, some, or all dimensions may be rescaled to fit the minimum alone,
+ * the range alone, or both the minimum and the range.
+ */
+class SILENCE_PUBLIC Rescale :
     public ScoreNode
-  {
+{
     static bool initialized;
     static std::map<std::string, size_t> dimensions;
-  public:
+public:
     Rescale();
     virtual ~Rescale();
     virtual void initialize();
-    virtual void produceOrTransform(Score &score, size_t beginAt, size_t endAt, const Eigen::MatrixXd &coordinates);
+    virtual void transform(Score &score);
     virtual void setRescale(int dimension, bool rescaleMinimum, bool rescaleRange, double targetMinimum, double targetRange);
     virtual void getRescale(int dimension, bool &rescaleMinimum, bool &rescaleRange, double &targetMinimum, double &targetRange);
-  };
+};
 }
 #endif
 

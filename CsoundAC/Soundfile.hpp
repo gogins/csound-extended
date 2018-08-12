@@ -26,41 +26,42 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include <sndfile.h>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstring>
-  %}
+%
+}
 %include "std_string.i"
 #ifdef SWIGPYTHON
 %typemap(in) double *outputFrame {
-  static double buffer[16];
-  $1 = &buffer[0];
-  for (int i = 0, n = PySequence_Size($input); i < n; i++) {
-    PyObject *o = PyFloat_FromDouble($1[i]);
-    PySequence_SetItem($input, i, o);
-  }
+    static double buffer[16];
+    $1 = &buffer[0];
+    for (int i = 0, n = PySequence_Size($input); i < n; i++) {
+        PyObject *o = PyFloat_FromDouble($1[i]);
+        PySequence_SetItem($input, i, o);
+    }
 }
 %typemap(in) double *inputFrame {
-  static double buffer[16];
-  $1 = &buffer[0];
-  for (int i = 0, n = PySequence_Size($input); i < n; i++) {
-    PyObject *o = PySequence_ITEM($input, i);
-    $1[i] = PyFloat_AS_DOUBLE(o);
-  }
+    static double buffer[16];
+    $1 = &buffer[0];
+    for (int i = 0, n = PySequence_Size($input); i < n; i++) {
+        PyObject *o = PySequence_ITEM($input, i);
+        $1[i] = PyFloat_AS_DOUBLE(o);
+    }
 }
 %typemap(in) (double *outputFrames, int samples) {
-  $1 = (double *) PyString_AsString($input);
-  $2 = PyString_Size($input) / sizeof(double);
+    $1 = (double *) PyString_AsString($input);
+    $2 = PyString_Size($input) / sizeof(double);
 }
 %typemap(in) (double *inputFrames, int samples) {
-  $1 = (double *) PyString_AsString($input);
-  $2 = PyString_Size($input) / sizeof(double);
+    $1 = (double *) PyString_AsString($input);
+    $2 = PyString_Size($input) / sizeof(double);
 }
 %typemap(in) double *mixedFrames {
-  $1 = (double *) PyString_AsString($input);
+    $1 = (double *) PyString_AsString($input);
 }
 
 #endif
@@ -76,24 +77,24 @@
 
 namespace csound
 {
-  /**
-   * Simple, basic read/write access, in sample frames, to PCM soundfiles.
-   * Reads and writes any format, but write defaults to WAV float format.
-   * This class is designed for Python wrapping with SWIG.
-   * See http://www.mega-nerd.com/libsndfile for more information
-   * on the underlying libsndfile library.
-   */
-  class SILENCE_PUBLIC Soundfile
-  {
+/**
+ * Simple, basic read/write access, in sample frames, to PCM soundfiles.
+ * Reads and writes any format, but write defaults to WAV float format.
+ * This class is designed for Python wrapping with SWIG.
+ * See http://www.mega-nerd.com/libsndfile for more information
+ * on the underlying libsndfile library.
+ */
+class SILENCE_PUBLIC Soundfile
+{
     SNDFILE *sndfile;
     SF_INFO sf_info;
     Eigen::MatrixXd grainOutput;
     Eigen::MatrixXd grainBuffer;
     size_t sampleCount;
     double startTimeSeconds;
-  protected:
+protected:
     virtual void initialize() ;
-  public:
+public:
     Soundfile();
     virtual ~Soundfile() ;
     virtual int getFramesPerSecond() const;
@@ -233,6 +234,6 @@ namespace csound
      * Mix a grain that has already been computed into the soundfile.
      */
     virtual void mixGrain();
-  };
+};
 }
 #endif

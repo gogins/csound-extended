@@ -143,7 +143,7 @@ void Score::load(std::string filename)
     }
 #if defined(HAVE_MUSICXML2)
     else if (filename.find(".xml") != std::string::npos ||
-            filename.find(".XML") != std::string::npos) {
+             filename.find(".XML") != std::string::npos) {
         xmlreader xmlReader;
         Sxmlelement sxmlElement;
         // Try to read an SXMLFile out of the MusicXML file.
@@ -324,7 +324,7 @@ void Score::save(std::string filename)
     }
 #if defined(HAVE_MUSICXML2)
     else if (filename.find(".xml") != std::string::npos ||
-            filename.find(".XML") != std::string::npos) {
+             filename.find(".XML") != std::string::npos) {
         // This Score has to be sorted first.
         sort();
         // Create an XMLFile to write to.
@@ -360,11 +360,11 @@ void Score::save(std::ostream &stream)
             float pitch = event.getKey();
             float loudness = event.getVelocity();
             Alg_note *note = seq.create_note(time,
-                    channel,
-                    pitch,
-                    pitch,
-                    loudness,
-                    duration);
+                                             channel,
+                                             pitch,
+                                             pitch,
+                                             loudness,
+                                             duration);
             // Does nothing if the track already exists.
             seq.add_track(channel);
             seq.add_event(note, channel);
@@ -433,12 +433,12 @@ void Score::getScale(std::vector<Event> &score, int dimension, size_t beginAt, s
 }
 
 void Score::setScale(std::vector<Event> &score,
-        int dimension, bool rescaleMinimum,
-        bool rescaleRange,
-        size_t beginAt,
-        size_t endAt,
-        double targetMinimum,
-        double targetRange)
+                     int dimension, bool rescaleMinimum,
+                     bool rescaleRange,
+                     size_t beginAt,
+                     size_t endAt,
+                     double targetMinimum,
+                     double targetRange)
 {
     if(!(rescaleMinimum || rescaleRange)) {
         return;
@@ -480,13 +480,13 @@ void Score::rescale(void)
 {
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
         setScale(*this,
-                dimension,
-                rescaleMinima[dimension],
-                rescaleRanges[dimension],
-                0,
-                size(),
-                scaleTargetMinima[dimension],
-                scaleTargetRanges[dimension]);
+                 dimension,
+                 rescaleMinima[dimension],
+                 rescaleRanges[dimension],
+                 0,
+                 size(),
+                 scaleTargetMinima[dimension],
+                 scaleTargetRanges[dimension]);
     }
 }
 
@@ -716,10 +716,10 @@ void Score::setPitchClassSet(size_t begin_, size_t end_, const std::vector<doubl
 }
 
 std::vector<double> Score::getPTV(size_t begin_,
-        size_t end_,
-        double lowest,
-        double range,
-        size_t divisionsPerOctave_) const
+                                  size_t end_,
+                                  double lowest,
+                                  double range,
+                                  size_t divisionsPerOctave_) const
 {
     if (end_ > size()) {
         end_ = size();
@@ -734,13 +734,13 @@ std::vector<double> Score::getPTV(size_t begin_,
 }
 
 void Score::setPTV(size_t begin_,
-        size_t end_,
-        double P,
-        double T,
-        double V,
-        double lowest,
-        double range,
-        size_t divisionsPerOctave_)
+                   size_t end_,
+                   double P,
+                   double T,
+                   double V,
+                   double lowest,
+                   double range,
+                   size_t divisionsPerOctave_)
 {
     if (end_ > size()) {
         end_ = size();
@@ -757,10 +757,10 @@ void Score::setPTV(size_t begin_,
 }
 
 std::vector<double> Score::getPT(size_t begin_,
-        size_t end_,
-        double lowest,
-        double range,
-        size_t divisionsPerOctave_) const
+                                 size_t end_,
+                                 double lowest,
+                                 double range,
+                                 size_t divisionsPerOctave_) const
 {
     if (end_ > size()) {
         end_ = size();
@@ -776,12 +776,12 @@ std::vector<double> Score::getPT(size_t begin_,
 }
 
 void Score::setPT(size_t begin_,
-        size_t end_,
-        double P,
-        double T,
-        double lowest,
-        double range,
-        size_t divisionsPerOctave_)
+                  size_t end_,
+                  double P,
+                  double T,
+                  double lowest,
+                  double range,
+                  size_t divisionsPerOctave_)
 {
     if (end_ > size()) {
         end_ = size();
@@ -801,8 +801,8 @@ void Score::setPT(size_t begin_,
 }
 
 std::vector<double> Score::getVoicing(size_t begin_,
-        size_t end_,
-        size_t divisionsPerOctave_) const
+                                      size_t end_,
+                                      size_t divisionsPerOctave_) const
 {
     System::inform("BEGAN Score::getVoicing(%d, %d, %d)...\n", begin_, end_, divisionsPerOctave_);
     std::vector<double> pitches = getPitches(begin_, end_, divisionsPerOctave_);
@@ -825,10 +825,10 @@ std::vector<double> Score::getVoicing(size_t begin_,
 }
 
 void Score::setVoicing(size_t begin_,
-        size_t end_,
-        const std::vector<double> &voicing,
-        double range,
-        size_t divisionsPerOctave_)
+                       size_t end_,
+                       const std::vector<double> &voicing,
+                       double range,
+                       size_t divisionsPerOctave_)
 {
     if (end_ > size()) {
         end_ = size();
@@ -856,13 +856,13 @@ void Score::setVoicing(size_t begin_,
 }
 
 void Score::voicelead(size_t beginSource,
-        size_t endSource,
-        size_t beginTarget,
-        size_t endTarget,
-        double lowest,
-        double range,
-        bool avoidParallelFifths,
-        size_t divisionsPerOctave_)
+                      size_t endSource,
+                      size_t beginTarget,
+                      size_t endTarget,
+                      double lowest,
+                      double range,
+                      bool avoidParallelFifths,
+                      size_t divisionsPerOctave_)
 {
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL) {
         std::stringstream stream;
@@ -945,14 +945,14 @@ void Score::voicelead(size_t beginSource,
 }
 
 void Score::voicelead(size_t beginSource,
-        size_t endSource,
-        size_t beginTarget,
-        size_t endTarget,
-        const std::vector<double> &target,
-        double lowest,
-        double range,
-        bool avoidParallelFifths,
-        size_t divisionsPerOctave_)
+                      size_t endSource,
+                      size_t beginTarget,
+                      size_t endTarget,
+                      const std::vector<double> &target,
+                      double lowest,
+                      double range,
+                      bool avoidParallelFifths,
+                      size_t divisionsPerOctave_)
 {
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL ) {
         std::stringstream stream;
@@ -1063,13 +1063,13 @@ void Score::setKL(size_t priorBegin, size_t begin, size_t end, double base, doub
     std::vector<double> pcs = Voicelead::uniquePcs(pitches);
     std::vector<double> kpcs = Voicelead::K(pcs);
     voicelead(priorBegin,
-            begin,
-            begin,
-            end,
-            kpcs,
-            base,
-            range,
-            avoidParallels);
+              begin,
+              begin,
+              end,
+              kpcs,
+              base,
+              range,
+              avoidParallels);
 }
 static std::vector<double> matchContextSize(const std::vector<double> context, const std::vector<double> pcs)
 {
@@ -1132,13 +1132,13 @@ void Score::setQL(size_t priorBegin, size_t begin, size_t end, double Q, const s
     std::vector<double> qpcs = Voicelead::Q(localPcs, Q, context);
     printChord("  effect of Q:   ", qpcs);
     voicelead(priorBegin,
-            begin,
-            begin,
-            end,
-            qpcs,
-            base,
-            range,
-            avoidParallels);
+              begin,
+              begin,
+              end,
+              qpcs,
+              base,
+              range,
+              avoidParallels);
 }
 
 struct TimeAtComparator {
@@ -1256,7 +1256,7 @@ void Score::temper(double tonesPerOctave)
     }
 }
 
-void Score::process() 
+void Score::process()
 {
     System::inform("BEGAN Score::process()...\n");
     sort();
@@ -1270,6 +1270,12 @@ void Score::process()
         }
     }
     System::inform("ENDED Score::process()\n");
+}
+
+void Score::transform(const Eigen::MatrixXd &transformation) {
+    for(int i = 0, n = size(); i < n; ++i) {
+        at(i) = transformation * at(i);
+    }
 }
 
 }

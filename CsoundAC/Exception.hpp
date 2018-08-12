@@ -22,34 +22,35 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include <string>
-%}
+%
+}
 #else
 #include <string>
 #endif
 
 namespace csound
 {
-  /**
-   * Base class for C++ exceptions in the Silence system.
-   */
-  class SILENCE_PUBLIC Exception
-  {
+/**
+ * Base class for C++ exceptions in the Silence system.
+ */
+class SILENCE_PUBLIC Exception
+{
     std::string message;
-  public:
+public:
     Exception(std::string message_) :
-      message(message_)
-      {
-      }
+        message(message_)
+    {
+    }
     virtual ~Exception()
     {
     }
     std::string getMessage() const
     {
-      return message;
+        return message;
     }
-  };
+};
 }
 
 #endif

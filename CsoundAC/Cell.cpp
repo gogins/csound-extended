@@ -17,6 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#include <array>
 #include "CppSound.hpp"
 #include "Cell.hpp"
 #include "System.hpp"
@@ -32,26 +33,25 @@ Cell::~Cell()
 {
 }
 
-void Cell::produceOrTransform(Score &score,
-        size_t beginAt,
-        size_t endAt,
-        const Eigen::MatrixXd &compositeCoordinates)
+void Cell::transform(Score &score)
 {
     //  Find the total duration of notes produced by the child nodes of this.
     if(score.empty()) {
         return;
     }
-    const Event &event = score[beginAt];
+    const Event &event = score.front();
     double beginSeconds = event.getTime();
     double endSeconds = beginSeconds;
     double totalDurationSeconds = 0;
+    size_t beginAt = 0;
+    size_t endAt = score.size();
     for(size_t i = beginAt; i < endAt; i++) {
         const Event &event = score[i];
         if (beginSeconds > event.getTime()) {
             beginSeconds = event.getTime();
         }
-        if (endSeconds < (event.getTime() + event.getDuration())) {
-            endSeconds = (event.getTime() + event.getDuration());
+        if (endSeconds < event.getOffTime()) {
+            endSeconds = event.getOffTime();
         }
     }
     if (relativeDuration) {
@@ -85,6 +85,7 @@ Intercut::Intercut()
 Intercut::~Intercut()
 {
 }
+
 /**
  * The notes produced by each child node are intercut to produce
  * the notes produced by this; e.g. if there are 3 child nodes, then
@@ -96,13 +97,12 @@ Intercut::~Intercut()
  * notes.
  */
 
-Eigen::MatrixXd Intercut::traverse(const Eigen::MatrixXd &globalCoordinates,
-        Score &collectingScore)
+void Intercut::traverse(const Eigen::MatrixXd &globalCoordinates,
+                        Score &collectingScore)
 {
     Eigen::MatrixXd compositeCoordinates = getLocalCoordinates() * globalCoordinates;
     if (children.size() < 2) {
         System::message("Intercut must have at least 2 child nodes.\n");
-        return compositeCoordinates;
     }
     size_t beginAt = collectingScore.size();
     std::vector<Score> scores;
@@ -142,9 +142,6 @@ Eigen::MatrixXd Intercut::traverse(const Eigen::MatrixXd &globalCoordinates,
             }
         }
     }
-    size_t endAt = collectingScore.size();
-    produceOrTransform(collectingScore, beginAt, endAt, compositeCoordinates);
-    return compositeCoordinates;
 }
 
 Stack::Stack() : duration(0.0)
@@ -155,13 +152,12 @@ Stack::~Stack()
 {
 }
 
-Eigen::MatrixXd Stack::traverse(const Eigen::MatrixXd &globalCoordinates,
-        Score &collectingScore)
+void Stack::traverse(const Eigen::MatrixXd &globalCoordinates,
+                     Score &collectingScore)
 {
     Eigen::MatrixXd compositeCoordinates = getLocalCoordinates() * globalCoordinates;
     if (children.size() < 2) {
         System::message("Stack must have at least 2 child nodes.\n");
-        return compositeCoordinates;
     }
     size_t beginAt = collectingScore.size();
     std::vector<Score> scores;
@@ -180,9 +176,6 @@ Eigen::MatrixXd Stack::traverse(const Eigen::MatrixXd &globalCoordinates,
             score.append(subScore[j]);
         }
     }
-    size_t endAt = collectingScore.size();
-    produceOrTransform(collectingScore, beginAt, endAt, compositeCoordinates);
-    return compositeCoordinates;
 }
 
 Koch::Koch()
@@ -193,18 +186,17 @@ Koch::~Koch()
 {
 }
 
-  void Koch::setPitchOffsetForLayer(int layer, double offset)
-  {
+void Koch::setPitchOffsetForLayer(int layer, double offset)
+{
     pitchOffsetsForLayers[layer] = offset;
-  }
+}
 
-Eigen::MatrixXd Koch::traverse(const Eigen::MatrixXd &globalCoordinates,
-        Score &collectingScore)
+void Koch::traverse(const Eigen::MatrixXd &globalCoordinates,
+                    Score &collectingScore)
 {
     Eigen::MatrixXd compositeCoordinates = getLocalCoordinates() * globalCoordinates;
     if (children.size() < 2) {
         System::message("Koch must have at least 2 child nodes.\n");
-        return compositeCoordinates;
     }
     size_t beginAt = collectingScore.size();
     Eigen::MatrixXd rescaler = Eigen::MatrixXd::Identity(Event::ELEMENT_COUNT, Event::ELEMENT_COUNT);
@@ -226,7 +218,7 @@ Eigen::MatrixXd Koch::traverse(const Eigen::MatrixXd &globalCoordinates,
         double pitchOffset = 0.0;
         int layer = lowerI + 1;
         if (pitchOffsetsForLayers.find(layer) != pitchOffsetsForLayers.end()) {
-          pitchOffset = pitchOffsetsForLayers[layer];
+            pitchOffset = pitchOffsetsForLayers[layer];
         }
         for (size_t lowerNoteI = 0, lowerNoteN = lowerScore.size();
                 lowerNoteI < lowerNoteN;
@@ -253,9 +245,237 @@ Eigen::MatrixXd Koch::traverse(const Eigen::MatrixXd &globalCoordinates,
         }
         System::message("level: %4d  generated:  %8d events.\n", lowerI, score.size());
     }
-    size_t endAt = collectingScore.size();
-    produceOrTransform(collectingScore, beginAt, endAt, compositeCoordinates);
-    return compositeCoordinates;
+}
+
+/**
+ * All notes produced by child nodes are repeated for the specified number of
+ * iterations, beginning at the start index and proceeding up to but not
+ * including the end index, at the specified stride. If absolute_duration is
+ * true, then the next repetition occurs after that duration; if false, then
+ * the indicated duration is added to the total duration of the repeated
+ * notes.
+ */
+CellRepeat::CellRepeat()
+{
+}
+
+CellRepeat::~CellRepeat()
+{
+}
+
+void CellRepeat::transform(Score &score)
+{
+    //  Find the total duration of notes produced by the child nodes of this.
+    if(score.empty()) {
+        return;
+    }
+    const Event &event = score.front();
+    double beginSeconds = event.getTime();
+    double endSeconds = beginSeconds;
+    double totalDurationSeconds = 0;
+    size_t beginAt = 0;
+    size_t endAt = score.size();
+    for(size_t i = beginAt; i < endAt; i++) {
+        const Event &event = score[i];
+        if (beginSeconds > event.getTime()) {
+            beginSeconds = event.getTime();
+        }
+        if (endSeconds < event.getOffTime()) {
+            endSeconds = event.getOffTime();
+        }
+    }
+    if (absolute_duration) {
+        totalDurationSeconds = duration;
+    } else {
+        totalDurationSeconds = duration + (endSeconds - beginSeconds);
+    }
+    System::message("Repeat section.\n");
+    System::message(" Began    %9.4f\n", beginSeconds);
+    System::message(" Ended    %9.4f\n", endSeconds);
+    System::message(" Duration %9.4f\n", totalDurationSeconds);
+    //  Repeatedly clone the notes produced by the child nodes of this,
+    //  incrementing the time as required.
+    double currentTime = beginSeconds;
+    //  First "repeat" is already there!
+    for(size_t i = size_t(1); i < (size_t) iterations; i++) {
+        currentTime += totalDurationSeconds;
+        System::message("  Repetition %d time %9.4f\n", i, currentTime);
+        for(size_t j = beginAt; j < endAt; j++) {
+            Event clonedEvent = score[j];
+            clonedEvent.setTime(clonedEvent.getTime() + currentTime);
+            score.push_back(clonedEvent);
+        }
+    }
+}
+
+void CellRepeat::repeat(size_t iterations_, double duration_, bool absolute_duration_,
+                        size_t start_,
+                        size_t end_,
+                        size_t stride_)
+{
+    iterations = iterations_;
+    duration = duration_;
+    absolute_duration = absolute_duration_;
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellAdd::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    for (size_t i = start; i < end_; i += stride) {
+        Event &event = score[i];
+        event[dimension] = event[dimension] + value;
+    }
+}
+
+void CellAdd::add(Event::Dimensions dimension_, double value_, size_t start_, size_t end_, size_t stride_)
+{
+    dimension = dimension_;
+    value = value_;
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellMultiply::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    for (size_t i = start; i < end_; i += stride) {
+        Event &event = score[i];
+        event[dimension] = value * event[dimension];
+    }
+}
+
+void CellMultiply::multiply(Event::Dimensions dimension_, double value_, size_t start_, size_t end_, size_t stride_)
+{
+    dimension = dimension_;
+    value = value_;
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellReflect::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    for (size_t i = start; i < end_; i += stride) {
+        Event &event = score[i];
+        event[dimension] = value - event[dimension];
+    }
+}
+
+void CellReflect::reflect(Event::Dimensions dimension_, double value_, size_t start_, size_t end_, size_t stride_)
+{
+    dimension = dimension_;
+    value = value_;
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellSelect::transform(Score &score_)
+{
+    size_t end_ = std::min(end, score_.size());
+    Score score;
+    for (size_t i = start; i < end_; i += stride) {
+        score.push_back(score_[i]);
+    }
+    score_ = score;
+}
+
+void CellSelect::select(size_t start_, size_t end_, size_t stride_)
+{
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellRemove::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    for(int i = end_ - 1; i >= start; i = i - stride, --end_) {
+        double start_time = score[i].getTime();
+        score.erase(score.begin() + i);
+        double end_time = score[i].getTime();
+        double delta_time = end_time - start_time;
+        for (int j = i; j > end_; ++j) {
+            score[j][Event::TIME] -= delta_time;
+        }
+    }
+}
+
+void CellRemove::remove(size_t start_, size_t end_, size_t stride_)
+{
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellChord::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    for(size_t i = start; i < end_; i += stride) {
+        Event &event = score[i];
+        conformToChord(event, chord_);
+    }
+}
+
+void CellChord::chord(const Chord &chord__, size_t start_, size_t end_, size_t stride_)
+{
+    chord_ = chord__;
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellRandom::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    createDistribution(distribution);
+    for(size_t i = start; i < end_; i += stride) {
+        Event &event = score[i];
+        double value = sample();
+        event[dimension] += value;
+    }
+}
+
+void CellRandom::random(const std::string &distribution_,
+                        Event::Dimensions dimension_,
+                        size_t start_,
+                        size_t end_,
+                        size_t stride_)
+{
+    distribution = distribution_;
+    dimension = dimension_;
+    start = start_;
+    end = end_;
+    stride = stride_;
+}
+
+void CellShuffle::transform(Score &score)
+{
+    size_t end_ = std::min(end, score.size());
+    std::vector<std::array<double, 2>> times;
+    for (size_t i = start; i < end_; i+= stride) {
+        const Event &event = score[i];
+        times.push_back({event.getTime(), event.getDuration()});
+    }
+    std::random_shuffle(times.begin(), times.end());
+    size_t time_iterator = 0;
+    for (size_t i = start; i < end_; i+= stride) {
+        Event &event = score[i];
+        event.setTime(times[time_iterator][0]);
+        event.setDuration(times[time_iterator][1]);
+    }
+}
+
+void CellShuffle::shuffle(size_t start_, size_t end_, size_t stride_)
+{
+    start = start_;
+    end = end_;
+    stride = stride_;
 }
 
 }

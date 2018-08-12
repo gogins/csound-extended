@@ -107,13 +107,11 @@ void MCRM::generate()
     iterate(depth, 0, event, weight);
 }
 
-void MCRM::produceOrTransform(Score &score,
-                              size_t beginAt,
-                              size_t endAt,
-                              const Eigen::MatrixXd &coordinates)
+void MCRM::generate(Score &score)
 {
     generate();
-    ScoreNode::produceOrTransform(score, beginAt, endAt, coordinates);
+    ScoreNode::generate(score);
+
 }
 
 KMeansMCRM::KMeansMCRM() :

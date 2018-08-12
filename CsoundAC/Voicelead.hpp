@@ -23,13 +23,14 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Event.hpp"
 #include "CppSound.hpp"
 #include <vector>
 #include <algorithm>
 #include <cmath>
-  %}
+%
+}
 %include "std_vector.i"
 %template(ChordVector) std::vector< std::vector<double> >;
 #else
@@ -39,16 +40,16 @@
 
 namespace csound
 {
-  /**
-   * This class contains facilities for
-   * voiceleading, harmonic progression,
-   * and identifying chord types.
-   *
-   * See: http://ruccas.org/pub/Gogins/music_atoms.pdf
-   */
-  class SILENCE_PUBLIC Voicelead
-  {
-  public:
+/**
+ * This class contains facilities for
+ * voiceleading, harmonic progression,
+ * and identifying chord types.
+ *
+ * See: http://ruccas.org/pub/Gogins/music_atoms.pdf
+ */
+class SILENCE_PUBLIC Voicelead
+{
+public:
     /**
      * Return the pitch-class of the pitch.
      * Pitch is measured in semitones, and
@@ -77,9 +78,9 @@ namespace csound
      * optionally avoiding parallel fifths.
      */
     static const std::vector<double> &simpler(const std::vector<double> &source,
-                                              const std::vector<double> &destination1,
-                                              const std::vector<double> &destination2,
-                                              bool avoidParallels);
+            const std::vector<double> &destination1,
+            const std::vector<double> &destination2,
+            bool avoidParallels);
 
     /**
      * Return the smoothness (distance by taxicab or L1 norm)
@@ -109,9 +110,9 @@ namespace csound
      * parallel fifths.
      */
     static const std::vector<double> &closer(const std::vector<double> &source,
-                                             const std::vector<double> &destination1,
-                                             const std::vector<double> &destination2,
-                                             bool avoidParallels);
+            const std::vector<double> &destination1,
+            const std::vector<double> &destination2,
+            bool avoidParallels);
 
     /**
      * Return the chord with the first note rotated to the last note.
@@ -159,14 +160,14 @@ namespace csound
      * Note that the prime chord numbers, and transpositions, each form an additive cyclic group.
      */
     static std::vector<double> pitchClassSetToPandT(const std::vector<double> &pcs,
-                                                    size_t divisionsPerOctave = 12);
+            size_t divisionsPerOctave = 12);
 
     /**
      * Convert a prime chord number and transposition to a pitch-class set.
      */
     static std::vector<double> pAndTtoPitchClassSet(double prime,
-                                                    double transposition,
-                                                    size_t divisionsPerOctave = 12);
+            double transposition,
+            size_t divisionsPerOctave = 12);
 
     /**
      * Return the closest voiceleading within the specified range,
@@ -175,8 +176,8 @@ namespace csound
      * optionally avoiding parallel fifths.
      */
     static const std::vector<double> closest(const std::vector<double> &source,
-                                             const std::vector< std::vector<double> > &destinations,
-                                             bool avoidParallels);
+            const std::vector< std::vector<double> > &destinations,
+            bool avoidParallels);
 
     /**
      * Return the closest voiceleading within the specified range,
@@ -210,11 +211,11 @@ namespace csound
      * for non-real-time operations in most cases of musical interest.
      */
     static std::vector<double> recursiveVoicelead(const std::vector<double> &source,
-                                                  const std::vector<double> &targetPitchClassSet,
-                                                  double lowest,
-                                                  double range,
-                                                  bool avoidParallels,
-                                                  size_t divisionsPerOctave = 12);
+            const std::vector<double> &targetPitchClassSet,
+            double lowest,
+            double range,
+            bool avoidParallels,
+            size_t divisionsPerOctave = 12);
 
     /**
      * Return the pitch in pitches that is closest to the specified pitch.
@@ -323,8 +324,8 @@ namespace csound
      * and the resulting chord, in that order.
      */
     static std::vector< std::vector<double> > nonBijectiveVoicelead(const std::vector<double> &sourceChord,
-                                                                    const std::vector<double> &targetPitchClassSet,
-                                                                    size_t divisionsPerOctave = 12);
+            const std::vector<double> &targetPitchClassSet,
+            size_t divisionsPerOctave = 12);
 
     /**
      * Return the prime chord for the index P.
@@ -383,9 +384,9 @@ namespace csound
      * on the voices of the chord such as revoicing, arpeggiation, and so on.
      */
     static std::vector< std::vector<double> > voicings(const std::vector<double> &chord,
-                                                       double lowest,
-                                                       double highest,
-                                                       size_t divisionsPerOctave);
+            double lowest,
+            double highest,
+            size_t divisionsPerOctave);
     /**
      * Add an octave to a voicing; can be
      * iterated to enumerate the voicings of a chord.
@@ -455,6 +456,6 @@ namespace csound
      * Size of the octave in semitones.
      */
     static const double semitonesPerOctave;
-  };
+};
 }
 #endif

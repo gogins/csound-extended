@@ -21,11 +21,11 @@ namespace dkm {
  */
 template <typename T, size_t N>
 std::vector<T> dist_to_center(const std::vector<std::array<T, N>>& points, const std::array<T, N>& center) {
-	std::vector<T> result(points.size());
-	std::transform(points.begin(), points.end(), result.begin(), [&center](const std::array<T, N>& p) {
-		return details::distance(p, center);
-	});
-	return result;
+    std::vector<T> result(points.size());
+    std::transform(points.begin(), points.end(), result.begin(), [&center](const std::array<T, N>& p) {
+        return details::distance(p, center);
+    });
+    return result;
 }
 
 
@@ -39,8 +39,8 @@ std::vector<T> dist_to_center(const std::vector<std::array<T, N>>& points, const
  */
 template <typename T, size_t N>
 T sum_dist(const std::vector<std::array<T, N>>& points, const std::array<T, N>& center) {
-	std::vector<T> distances = dist_to_center(points, center);
-	return std::accumulate(distances.begin(), distances.end(), T());
+    std::vector<T> distances = dist_to_center(points, center);
+    return std::accumulate(distances.begin(), distances.end(), T());
 }
 
 
@@ -56,16 +56,16 @@ T sum_dist(const std::vector<std::array<T, N>>& points, const std::array<T, N>& 
  */
 template <typename T, size_t N>
 std::vector<std::array<T, N>> get_cluster(
-	const std::vector<std::array<T, N>>& points, const std::vector<uint32_t>& labels, const uint32_t label) {
-	assert(points.size() == labels.size() && "Points and labels have different sizes");
-	// construct the cluster
-	std::vector<std::array<T, N>> cluster;
-	for (size_t point_index = 0; point_index < points.size(); ++point_index) {
-		if (labels[point_index] == label) {
-			cluster.push_back(points[point_index]);
-		}
-	}
-	return cluster;
+const std::vector<std::array<T, N>>& points, const std::vector<uint32_t>& labels, const uint32_t label) {
+    assert(points.size() == labels.size() && "Points and labels have different sizes");
+    // construct the cluster
+    std::vector<std::array<T, N>> cluster;
+    for (size_t point_index = 0; point_index < points.size(); ++point_index) {
+        if (labels[point_index] == label) {
+            cluster.push_back(points[point_index]);
+        }
+    }
+    return cluster;
 }
 
 
@@ -81,18 +81,18 @@ std::vector<std::array<T, N>> get_cluster(
  */
 template <typename T, size_t N>
 T means_inertia(const std::vector<std::array<T, N>>& points,
-	const std::tuple<std::vector<std::array<T, N>>, std::vector<uint32_t>>& means,
-	uint32_t k) {
-	std::vector<std::array<T, N>> centroids;
-	std::vector<uint32_t> labels;
-	std::tie(centroids, labels) = means;
+                const std::tuple<std::vector<std::array<T, N>>, std::vector<uint32_t>>& means,
+                uint32_t k) {
+    std::vector<std::array<T, N>> centroids;
+    std::vector<uint32_t> labels;
+    std::tie(centroids, labels) = means;
 
-	T inertia{T()};
-	for (uint32_t i = 0; i < k; ++i) {
-		auto cluster = get_cluster(points, labels, i);
-		inertia += sum_dist(cluster, centroids[i]);
-	}
-	return inertia;
+    T inertia{T()};
+    for (uint32_t i = 0; i < k; ++i) {
+        auto cluster = get_cluster(points, labels, i);
+        inertia += sum_dist(cluster, centroids[i]);
+    }
+    return inertia;
 }
 
 
@@ -108,20 +108,20 @@ T means_inertia(const std::vector<std::array<T, N>>& points,
  */
 template <typename T, size_t N>
 std::tuple<std::vector<std::array<T, N>>, std::vector<uint32_t>> get_best_means(
-	const std::vector<std::array<T, N>>& points, uint32_t k, uint32_t n_init = 10) {
-	auto best_means = kmeans_lloyd(points, k);
-	auto best_inertia = means_inertia(points, best_means, k);
+const std::vector<std::array<T, N>>& points, uint32_t k, uint32_t n_init = 10) {
+    auto best_means = kmeans_lloyd(points, k);
+    auto best_inertia = means_inertia(points, best_means, k);
 
-	for (uint32_t i = 0; i < n_init - 1; ++i) {
-		auto curr_means = kmeans_lloyd(points, k);
-		auto curr_inertia = means_inertia(points, curr_means, k);
-		if (curr_inertia < best_inertia) {
-			best_inertia = curr_inertia;
-			best_means = curr_means;
-		}
-	}
-	// copy and return
-	return best_means;
+    for (uint32_t i = 0; i < n_init - 1; ++i) {
+        auto curr_means = kmeans_lloyd(points, k);
+        auto curr_inertia = means_inertia(points, curr_means, k);
+        if (curr_inertia < best_inertia) {
+            best_inertia = curr_inertia;
+            best_means = curr_means;
+        }
+    }
+    // copy and return
+    return best_means;
 }
 
 } // namespace dkm

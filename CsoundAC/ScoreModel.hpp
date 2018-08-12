@@ -23,11 +23,12 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Composition.hpp"
 #include "Node.hpp"
 #include "Score.hpp"
-%}
+%
+}
 #else
 #include "Composition.hpp"
 #include "Node.hpp"
@@ -50,29 +51,29 @@ namespace csound {
  * which is applied to all child events.
  */
 class SILENCE_PUBLIC ScoreModel :
-                        public Composition,
-                        public Node {
+    public Composition,
+    public Node {
 public:
-        ScoreModel();
-        virtual ~ScoreModel();
-        virtual void initialize();
-        /**
-         * Generates a score based on a music graph defined
-         * by the child nodes of this.
-         */
-        virtual int generate();
-        /**
-         * Clears the score.
-         */
-        virtual void clear();
-        /**
-         * Returns the address of this as a long integer.
-         */
-        virtual intptr_t getThis();
-        /**
-         * Returns the address of this as a Node pointer.
-         */
-        virtual Node *getThisNode();
+    ScoreModel();
+    virtual ~ScoreModel();
+    virtual void initialize();
+    /**
+     * Generates a score based on a music graph defined
+     * by the child nodes of this.
+     */
+    virtual int generate();
+    /**
+     * Clears the score.
+     */
+    virtual void clear();
+    /**
+     * Returns the address of this as a long integer.
+     */
+    virtual intptr_t getThis();
+    /**
+     * Returns the address of this as a Node pointer.
+     */
+    virtual Node *getThisNode();
 };
 }
 #endif

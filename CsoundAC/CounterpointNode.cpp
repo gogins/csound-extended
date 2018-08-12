@@ -19,18 +19,13 @@ CounterpointNode::~CounterpointNode()
 {
 }
 
-void CounterpointNode::produceOrTransform(Score
-        &score,
-        size_t beginAt,
-        size_t endAt,
-        const Eigen::MatrixXd &globalCoordinates)
+void CounterpointNode::transform(Score &score)
 {
     // Make a local copy of the child notes.
-    Score source;
-    source.insert(source.begin(), score.begin() + beginAt, score.begin() + endAt);
+    Score source = score;
     System::message("Original source notes: %d\n", source.size());
     // Remove the child notes from the target.
-    score.erase(score.begin() + beginAt, score.begin() + endAt);
+    score.clear();
     // Select the cantus firmus.
     source.sort();
     std::vector<int> cantus;
@@ -90,7 +85,6 @@ void CounterpointNode::produceOrTransform(Score
     double y = 0.;
     double z = 0.;
     double pcs = 4095.0;
-    Score generated;
     for(size_t voice = 0; voice <= voices; voice++) {
         double time = 0;
         for(int note = 1; note <= TotalNotes[voice]; note++) {
@@ -102,19 +96,9 @@ void CounterpointNode::produceOrTransform(Score
             // Set the exact pitch class so that something of the counterpoint will be preserved if the tessitura is rescaled.
             pcs = Conversions::midiToPitchClass(key);
             System::message("%f %f %f %f %f %f %f %f %f %f %f\n", time, duration, double(144), double(voice), key, velocity, phase, x, y, z, pcs);
-            generated.append(time, duration, double(144), double(voice), key, velocity, phase, x, y, z, pcs);
+            score.append(time, duration, double(144), double(voice), key, velocity, phase, x, y, z, pcs);
         }
     }
-    // Get the right coordinate system going.
-    System::message("Total notes in generated counterpoint: %d\n", generated.size());
-    Eigen::MatrixXd localCoordinates = getLocalCoordinates();
-    Eigen::MatrixXd compositeCoordinates = globalCoordinates * getLocalCoordinates();
-    Event e;
-    for (int i = 0, n = generated.size(); i < n; i++) {
-        generated[i] = compositeCoordinates * generated[i];
-    }
-    // Put the generated counterpoint (back?) into the target score.
-    score.insert(score.end(), generated.begin(), generated.end());
     // Free up memory that was used.
     Counterpoint::clear();
 }

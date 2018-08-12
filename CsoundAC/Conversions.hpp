@@ -23,13 +23,14 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include <cmath>
 #include <string>
 #include <cstdio>
 #include <map>
 #include <vector>
-%}
+%
+}
 %include "std_string.i"
 %include "std_vector.i"
 %template(DoubleVector) std::vector<double>;

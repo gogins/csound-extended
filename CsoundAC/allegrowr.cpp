@@ -59,7 +59,7 @@ Alg_event_ptr Alg_seq::write_track_name(ostream &file, int n,
     Alg_event_ptr e = NULL; // e is the result, default is NULL
     file << "#track " << n;
     const char *attr = symbol_table.insert_string(
-                               n == 0 ? "seqnames" : "tracknames");
+                           n == 0 ? "seqnames" : "tracknames");
     // search for name in events with timestamp of 0
     for (int i = 0; i < events.length(); i++) {
         Alg_event_ptr ue = events[i];
@@ -113,15 +113,15 @@ void Alg_seq::write(ostream &file, bool in_secs, double offset)
         double time = ts.beat;
         if (in_secs) {
             file << "T" << TIMFMT << time << " V- -timesig_numr:" <<
-                    GFMT << ts.num << "\n";
+                 GFMT << ts.num << "\n";
             file << "T" << TIMFMT << time << " V- -timesig_denr:" <<
-                    GFMT << ts.den << "\n";
+                 GFMT << ts.den << "\n";
         } else {
             double wholes = ts.beat / 4;
             file << "TW" << TIMFMT << wholes << " V- -timesig_numr:" <<
-                    GFMT << ts.num << "\n";
+                 GFMT << ts.num << "\n";
             file << "TW" << TIMFMT << wholes << " V- -timesig_denr:" <<
-                    GFMT << ts.den << "\n";
+                 GFMT << ts.den << "\n";
         }
     }
 
@@ -148,7 +148,7 @@ void Alg_seq::write(ostream &file, bool in_secs, double offset)
                 Alg_note_ptr n = (Alg_note_ptr) e;
                 double dur = n->dur;
                 file << " K" << n->get_identifier() <<
-                        " P" << GFMT << n->pitch;
+                     " P" << GFMT << n->pitch;
                 if (in_secs) {
                     file << " U" << TIMFMT << dur;
                 } else {

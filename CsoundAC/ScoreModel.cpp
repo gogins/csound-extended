@@ -24,52 +24,52 @@
 
 namespace csound
 {
-  ScoreModel::ScoreModel()
-  {
-  }
+ScoreModel::ScoreModel()
+{
+}
 
-  ScoreModel::~ScoreModel()
-  {
+ScoreModel::~ScoreModel()
+{
     //clear();
-  }
+}
 
-  void ScoreModel::initialize()
-  {
-  }
+void ScoreModel::initialize()
+{
+}
 
-  int ScoreModel::generate()
-  {
+int ScoreModel::generate()
+{
     if (children.size()) {
-      score.clear();
+        score.clear();
     }
     traverse(getLocalCoordinates(), score);
     score.sort();
     if (getConformPitches() == true) {
         score.temper(getTonesPerOctave());
-    } 
+    }
     if (getTieOverlappingNotes() == true) {
         score.tieOverlappingNotes(true);
     }
     score.process();
     System::message("Generated %d events.\n", score.size());
     return 0;
-  }
+}
 
-  void ScoreModel::clear()
-  {
+void ScoreModel::clear()
+{
     Node::clear();
     Composition::clear();
-  }
+}
 
-  intptr_t ScoreModel::getThis()
-  {
+intptr_t ScoreModel::getThis()
+{
     return (intptr_t) this;
-  }
+}
 
-  Node *ScoreModel::getThisNode()
-  {
+Node *ScoreModel::getThisNode()
+{
     return (Node *)this;
-  }
+}
 
 }
 

@@ -84,7 +84,7 @@ Alg_reader::Alg_reader(istream *a_file, Alg_seq_ptr new_seq)
 
 
 Alg_error alg_read(istream &file, Alg_seq_ptr new_seq, double *offset_ptr)
-    // read a sequence from allegro file
+// read a sequence from allegro file
 {
     assert(new_seq);
     Alg_reader alg_reader(&file, new_seq);
@@ -112,7 +112,7 @@ void Alg_reader::readline()
 
 
 Alg_parameters_ptr Alg_reader::process_attributes(
-        Alg_parameters_ptr attributes, double time)
+    Alg_parameters_ptr attributes, double time)
 {
     // print "process_attributes:", attributes
     bool ts_flag = false;
@@ -137,7 +137,7 @@ Alg_parameters_ptr Alg_reader::process_attributes(
         }
         if (ts_flag) {
             seq->set_time_sig(seq->get_time_map()->time_to_beat(time),
-            tsnum, tsden);
+                              tsnum, tsden);
         }
         if (in_seconds) seq->convert_to_seconds();
     }
@@ -196,9 +196,9 @@ bool Alg_reader::parse()
                     // sequence name is whatever is on track 0
                     // other tracks have track names
                     const char *attr =
-                            (track_num == 0 ? "seqnames" : "tracknames");
+                        (track_num == 0 ? "seqnames" : "tracknames");
                     update->parameter.set_attr(
-                            symbol_table.insert_string(attr));
+                        symbol_table.insert_string(attr));
                     update->parameter.s = heapify(field.c_str());
                     seq->add_event(update, track_num);
                 }
@@ -312,8 +312,8 @@ bool Alg_reader::parse()
                 } else {
                     line_parser.get_nonspace_quoted(field);
                     pk = line_parser.peek();
-                    // attributes are parsed as two adjacent nonspace_quoted 
-                    // tokens so we have to conditionally call 
+                    // attributes are parsed as two adjacent nonspace_quoted
+                    // tokens so we have to conditionally call
                     // get_nonspace_quoted() again
                     if (pk && !isspace(pk)) {
                         string field2;
@@ -338,7 +338,7 @@ bool Alg_reader::parse()
             //   C4 -- OK, key is 60, pitch is 60
             //   <nothing> -- OK, key and pitch from before
             //   K200 P60 -- ok, pitch is 60
-            //   K200 with neither P60 nor C4 uses 
+            //   K200 with neither P60 nor C4 uses
             //       pitch from before
 
             // figure out what the key/instance is:
@@ -498,8 +498,8 @@ double Alg_reader::parse_real(string &field)
     int last = find_real_in(field, 1);
     string real_string = field.substr(1, last - 1);
     if (last <= 1 || last < (int) field.length()) {
-       parse_error(field, 1, msg);
-       return 0;
+        parse_error(field, 1, msg);
+        return 0;
     }
     return atof(real_string.c_str());
 }
@@ -536,7 +536,7 @@ double Alg_reader::parse_dur(string &field, double base)
         string real_string = field.substr(1, last - 1);
         dur = atof(real_string.c_str());
         // convert dur from seconds to beats
-        dur = seq->get_time_map()->time_to_beat(base + dur) - 
+        dur = seq->get_time_map()->time_to_beat(base + dur) -
               seq->get_time_map()->time_to_beat(base);
     } else if (p = strchr(durs, toupper(field[1]))) {
         dur = duration_lookup[p - durs];
@@ -552,7 +552,7 @@ double Alg_reader::parse_dur(string &field, double base)
 }
 
 
-double Alg_reader::parse_after_dur(double dur, string &field, 
+double Alg_reader::parse_after_dur(double dur, string &field,
                                    int n, double base)
 {
     if ((int) field.length() == n) {
@@ -573,8 +573,8 @@ double Alg_reader::parse_after_dur(double dur, string &field,
     if (field[n] == '+') {
         string a_string = field.substr(n + 1);
         return dur + parse_dur(
-                a_string, seq->get_time_map()->beat_to_time(
-                        seq->get_time_map()->time_to_beat(base) + dur));
+                   a_string, seq->get_time_map()->beat_to_time(
+                       seq->get_time_map()->time_to_beat(base) + dur));
     }
     parse_error(field, n, "Unexpected character in duration");
     return dur;
@@ -583,9 +583,10 @@ double Alg_reader::parse_after_dur(double dur, string &field,
 struct loud_lookup_struct {
     const char *str;
     int val;
-} loud_lookup[] = { {"FFF", 127}, {"FF", 120}, {"F", 110}, {"MF", 100}, 
-                    {"MP", 90}, {"P", 80}, {"PP", 70}, {"PPP", 60}, 
-                    {NULL, 0} };
+} loud_lookup[] = { {"FFF", 127}, {"FF", 120}, {"F", 110}, {"MF", 100},
+    {"MP", 90}, {"P", 80}, {"PP", 70}, {"PPP", 60},
+    {NULL, 0}
+};
 
 
 double Alg_reader::parse_loud(string &field)
@@ -709,10 +710,10 @@ bool Alg_reader::parse_val(Alg_parameter_ptr param, string &s, int i)
         string r = s.substr(i + 1, len - i - 2);
         param->a = symbol_table.insert_string(r.c_str());
     } else if (param->attr_type() == 'l') {
-        if (streql(s.c_str() + i, "true") || 
-            streql(s.c_str() + i, "t")) {
+        if (streql(s.c_str() + i, "true") ||
+                streql(s.c_str() + i, "t")) {
             param->l = true;
-        } else if (streql(s.c_str() + i, "false") || 
+        } else if (streql(s.c_str() + i, "false") ||
                    streql(s.c_str() + i, "nil")) {
             param->l = false;
         } else return false;

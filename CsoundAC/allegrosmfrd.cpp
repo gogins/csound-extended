@@ -17,8 +17,10 @@ typedef class Alg_note_list {
 public:
     Alg_note_ptr note;
     class Alg_note_list *next;
-    Alg_note_list(Alg_note_ptr n, class Alg_note_list *list) { 
-        note = n; next = list; }
+    Alg_note_list(Alg_note_ptr n, class Alg_note_list *list) {
+        note = n;
+        next = list;
+    }
 } *Alg_note_list_ptr;
 
 
@@ -31,11 +33,11 @@ public:
     Alg_track_ptr track;
     int track_number; // the number of the (current) track
     // chan is actual_channel + channel_offset_per_track * track_num +
-    //                          channel_offset_per_track * port 
+    //                          channel_offset_per_track * port
     long channel_offset_per_track; // used to encode track number into channel
-        // default is 0, set this to 0 to merge all tracks to 16 channels
+    // default is 0, set this to 0 to merge all tracks to 16 channels
     long channel_offset_per_port; // used to encode port number into channel
-        // default is 16, set to 0 to ignore port prefix meta events
+    // default is 16, set to 0 to ignore port prefix meta events
     // while reading, this is channel_offset_per_track * track_num
     int channel_offset;
 
@@ -57,9 +59,15 @@ public:
     // the following is used to load the Alg_seq from the file:
     bool parse();
 
-    void set_nomerge(bool flag) { Mf_nomerge = flag; }
-    void set_skipinit(bool flag) { Mf_skipinit = flag; }
-    long get_currtime() { return Mf_currtime; }
+    void set_nomerge(bool flag) {
+        Mf_nomerge = flag;
+    }
+    void set_skipinit(bool flag) {
+        Mf_skipinit = flag;
+    }
+    long get_currtime() {
+        return Mf_currtime;
+    }
 
 protected:
     int meta_channel; // the channel for meta events, set by MIDI chan prefix
@@ -67,8 +75,12 @@ protected:
 
     double get_time();
     void update(int chan, int key, Alg_parameter_ptr param);
-    void *Mf_malloc(size_t size) { return malloc(size); }
-    void Mf_free(void *obj, size_t size) { free(obj); }
+    void *Mf_malloc(size_t size) {
+        return malloc(size);
+    }
+    void Mf_free(void *obj, size_t size) {
+        free(obj);
+    }
     /* Methods to be called while processing the MIDI file. */
     void Mf_starttrack();
     void Mf_endtrack();
@@ -224,8 +236,8 @@ void Alg_midifile_reader::Mf_off(int chan, int key, int vel)
     Alg_note_list_ptr *p = &note_list;
     while (*p) {
         if ((*p)->note->get_identifier() == key &&
-            (*p)->note->chan == 
-                    chan + channel_offset + port * channel_offset_per_port) {
+                (*p)->note->chan ==
+                chan + channel_offset + port * channel_offset_per_port) {
             (*p)->note->dur = time - (*p)->note->time;
             // trace("updated %d dur %g\n", (*p)->note->key, (*p)->note->dur);
             Alg_note_list_ptr to_be_freed = *p;
@@ -310,7 +322,7 @@ void Alg_midifile_reader::Mf_chanpressure(int chan, int val)
 }
 
 
-void Alg_midifile_reader::binary_msg(int len, unsigned char *msg, 
+void Alg_midifile_reader::binary_msg(int len, unsigned char *msg,
                                      const char *attr_string)
 {
     Alg_parameter parameter;
@@ -366,7 +378,7 @@ void Alg_midifile_reader::Mf_smpte(int hours, int mins, int secs,
     int fps = (hours >> 6) & 3;
     hours &= 0x1F;
 #pragma warning(disable: 4996) // text is long enough
-    sprintf(text, "%sfps:%02dh:%02dm:%02ds:%02d.%02df", 
+    sprintf(text, "%sfps:%02dh:%02dm:%02ds:%02d.%02df",
             fpsstr[fps], hours, mins, secs, frames, subframes);
 #pragma warning(default: 4996)
     Alg_parameter smpteoffset;
@@ -405,7 +417,7 @@ void Alg_midifile_reader::Mf_keysig(int key, int mode)
     Alg_parameter mode_parm;
     mode_parm.set_attr(symbol_table.insert_string("modea"));
     mode_parm.a = (mode == 0 ? symbol_table.insert_string("major") :
-                               symbol_table.insert_string("minor"));
+                   symbol_table.insert_string("minor"));
     update(meta_channel, -1, &mode_parm);
 }
 
@@ -434,7 +446,7 @@ void Alg_midifile_reader::Mf_text(int type, int len, unsigned char *msg)
     const char *attr = "miscs";
     if (type == 1) attr = "texts";
     else if (type == 2) attr = "copyrights";
-    else if (type == 3) 
+    else if (type == 3)
         attr = (track_number == 0 ? "seqnames" : "tracknames");
     else if (type == 4) attr = "instruments";
     else if (type == 5) attr = "lyrics";
@@ -445,7 +457,7 @@ void Alg_midifile_reader::Mf_text(int type, int len, unsigned char *msg)
 }
 
 
-// parse file into a seq. 
+// parse file into a seq.
 Alg_error alg_smf_read(istream &file, Alg_seq_ptr new_seq)
 {
     assert(new_seq);

@@ -23,12 +23,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Score.hpp"
 #include <vector>
 #include <eigen3/Eigen/Dense>
 #include <functional>
-%}
+%
+}
 %include "std_string.i"
 %include "std_vector.i"
 %template(NodeVector) std::vector<csound::Node*>;
@@ -41,16 +42,17 @@
 
 namespace csound
 {
-  /**
-   * Base class for all music graph nodes in the Silence system.
-   * Nodes can transform silence::Events produced by child nodes.
-   * Nodes can produce silence::Events.
-   */
-  class SILENCE_PUBLIC Node
-  {
-  protected:
+
+/**
+ * Base class for all music graph nodes in the Silence system.
+ * Nodes can transform silence::Events produced by child nodes.
+ * Nodes can generate silence::Events.
+ */
+class SILENCE_PUBLIC Node
+{
+protected:
     Eigen::MatrixXd localCoordinates;
-  public:
+public:
     /**
      * Child Nodes, if any.
      */
@@ -60,29 +62,32 @@ namespace csound
     /**
      * Returns the local transformation of coordinate system.
      */
-    virtual Eigen::MatrixXd  getLocalCoordinates() const;
+    virtual Eigen::MatrixXd getLocalCoordinates() const;
     /**
-     * The default implementation postconcatenates its own local coordinate system
-     * with the global coordinates, then passes the score and the product of coordinate systems
-     * to each child, thus performing a depth-first traversal of the music graph.
+     * The default implementation postconcatenates its own local coordinate
+     * system with the global coordinates, then passes the score and the
+     * product of coordinate systems to each child, thus performing a
+     * depth-first traversal of the music graph. In case a derived class needs
+     * to apply a different local transformation to each child node's notes,
+     * this method must be overridden.
      */
-    virtual Eigen::MatrixXd traverse(const Eigen::MatrixXd &globalCoordinates,
-                                           Score &score);
+    virtual void traverse(const Eigen::MatrixXd &globalCoordinates,
+                          Score &score);
     /**
-     * This function is called by the traverse() function.
-     * The default implementation does nothing.
-     * If a derived node produces new Events, then it must transform them by
-     * the composite coordinates, then append them to the collecting score.
-     * If a derived node transforms Events produced by child Nodes, then it
-     * must transform only Events in the collecting score starting at the
-     * startAt index and continuing up to, but not including, the endAt index.
-     * These bookmarks, in turn, must be set in the Traverse function by
-     * all Nodes that produce events.
+     * Optionally generate notes into the score. The notes must be produced at
+     * the coordinate system with origin zero, and will automatically be
+     * transformed to the global coordinate system.
      */
-    virtual void produceOrTransform(Score &collectingScore,
-                                    size_t beginAt,
-                                    size_t endAt,
-                                    const Eigen::MatrixXd &compositeCordinates);
+    virtual void generate(Score &score);
+    /**
+     * Optionally transform any or all notes produced by child nodes of this,
+     * which are in the score, in the global coordinate system. The default
+     * implementation does nothing. Additional notes may also be generated.
+     */
+    virtual void transform(Score &score);
+    /**
+     * Returns identity.
+     */
     virtual Eigen::MatrixXd createTransform();
     virtual void clear();
     /**
@@ -94,35 +99,46 @@ namespace csound
      */
     virtual void setElement(size_t row, size_t column, double value);
     virtual void addChild(Node *node);
-  };
-  typedef Node* NodePtr;
+};
+typedef Node* NodePtr;
 
-  /**
-   * Removes all duplicate events produced by the child nodes of this.
-   */
-  class SILENCE_PUBLIC RemoveDuplicates : public Node
-  {
-    public:
-    virtual void produceOrTransform(Score &score,
-                                    size_t beginAt,
-                                    size_t endAt,
-                                    const Eigen::MatrixXd &compositeCordinates);
+/**
+ * Removes all duplicate events produced by the child nodes of this.
+ */
+class SILENCE_PUBLIC RemoveDuplicates : public Node
+{
+public:
+    virtual void transform(Score &score);
+};
 
-  };
-  
-  /**
-   * Node that uses any callable to implement produceOrTransform.
-   * This is particularly useful as the callable may be a closure that 
-   * refers to objects outside of the music graph.
-   */
-  class SILENCE_PUBLIC Functional : public Node
-  {
-      public:
-        std::function<void(csound::Score &, size_t, size_t, const Eigen::MatrixXd &)> callable;
-        virtual void produceOrTransform(Score &score, size_t beginAt, size_t endAt, const Eigen::MatrixXd &compositeCoordinates) {
-            callable(score, beginAt, endAt, compositeCoordinates);
-        }
-          
-  };
+/**
+ * Node that uses any callable to implement Node::transform.
+ * This is particularly useful as the callable may be a closure that
+ * refers to objects outside of the music graph.
+ */
+class SILENCE_PUBLIC Transformer : public Node
+{
+public:
+    std::function<void(csound::Score &)> callable;
+    virtual void transform(Score &score) {
+        callable(score);
+    }
+
+};
+
+/**
+ * Node that uses any callable to implement Node::generate.
+ * This is particularly useful as the callable may be a closure that
+ * refers to objects outside of the music graph.
+ */
+class SILENCE_PUBLIC Generator : public Node
+{
+public:
+    std::function<void(csound::Score &)> callable;
+    virtual void generate(Score &score) {
+        callable(score);
+    }
+
+};
 }
 #endif

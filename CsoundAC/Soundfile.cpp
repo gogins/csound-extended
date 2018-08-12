@@ -22,163 +22,163 @@
 
 namespace csound
 {
-  Soundfile::Soundfile() : sampleCount(0), startTimeSeconds(0.0)
-  {
+Soundfile::Soundfile() : sampleCount(0), startTimeSeconds(0.0)
+{
     initialize();
-  }
-  Soundfile::~Soundfile()
-  {
+}
+Soundfile::~Soundfile()
+{
     close();
-  }
-  void Soundfile::initialize()
-  {
+}
+void Soundfile::initialize()
+{
     sndfile = 0;
     std::memset(&sf_info, 0, sizeof(sf_info));
-  }
-  int Soundfile::getFramesPerSecond() const
-  {
+}
+int Soundfile::getFramesPerSecond() const
+{
     return sf_info.samplerate;
-  }
-  void Soundfile::setFramesPerSecond(int framesPerSecond)
-  {
+}
+void Soundfile::setFramesPerSecond(int framesPerSecond)
+{
     sf_info.samplerate = framesPerSecond;
-  }
-  int Soundfile::getChannelsPerFrame() const
-  {
+}
+int Soundfile::getChannelsPerFrame() const
+{
     return sf_info.channels;
-  }
-  void Soundfile::setChannelsPerFrame(int channelsPerFrame)
-  {
+}
+void Soundfile::setChannelsPerFrame(int channelsPerFrame)
+{
     sf_info.channels = channelsPerFrame;
-  }
-  int Soundfile::getFormat() const
-  {
+}
+int Soundfile::getFormat() const
+{
     return sf_info.format;
-  }
-  void Soundfile::setFormat(int format)
-  {
+}
+void Soundfile::setFormat(int format)
+{
     sf_info.format = format;
-  }
-  int Soundfile::getFrames() const
-  {
+}
+int Soundfile::getFrames() const
+{
     return (int) sf_info.frames;
-  }
-  int Soundfile::open(std::string filename)
-  {
+}
+int Soundfile::open(std::string filename)
+{
     close();
     sndfile = sf_open(filename.c_str(), SFM_RDWR, &sf_info);
     if (!sndfile) {
-      error();
-      return -1;
+        error();
+        return -1;
     }
     return 0;
-  }
-  int Soundfile::create(std::string filename, int framesPerSecond, int channelsPerFrame, int format)
-  {
+}
+int Soundfile::create(std::string filename, int framesPerSecond, int channelsPerFrame, int format)
+{
     close();
     sf_info.samplerate = framesPerSecond;
     sf_info.channels = channelsPerFrame;
     sf_info.format = format;
     sndfile = sf_open(filename.c_str(), SFM_RDWR, &sf_info);
     if (!sndfile) {
-      error();
-      return -1;
+        error();
+        return -1;
     }
     return 0;
-  }
-  int Soundfile::seek(int frames, int whence)
-  {
+}
+int Soundfile::seek(int frames, int whence)
+{
     int frame = sf_seek(sndfile, frames, whence);
     if (frame == -1) {
-      error();
+        error();
     }
     return frame;
-  }
-  double Soundfile::seekSeconds(double seconds, int whence)
-  {
+}
+double Soundfile::seekSeconds(double seconds, int whence)
+{
     int frame = int(seconds * double(sf_info.samplerate));
     frame = sf_seek(sndfile, frame, whence);
     if (frame == -1) {
-      error();
+        error();
     }
     return frame;
-  }
-  int Soundfile::readFrame(double *outputFrame)
-  {
+}
+int Soundfile::readFrame(double *outputFrame)
+{
     return sf_readf_double(sndfile, outputFrame, 1);
-  }
-  int Soundfile::writeFrame(double *inputFrame)
-  {
+}
+int Soundfile::writeFrame(double *inputFrame)
+{
     return sf_writef_double(sndfile, inputFrame, 1);
-  }
-  int Soundfile::readFrames(double *outputFrames, int samples)
-  {
+}
+int Soundfile::readFrames(double *outputFrames, int samples)
+{
     return sf_read_double(sndfile, outputFrames, samples);
-  }
-  int Soundfile::writeFrames(double *inputFrames, int samples)
-  {
+}
+int Soundfile::writeFrames(double *inputFrames, int samples)
+{
     return sf_write_double(sndfile, inputFrames, samples);
-  }
-  int Soundfile::mixFrames(double *inputFrames, int samples, double *mixedFrames)
-  {
+}
+int Soundfile::mixFrames(double *inputFrames, int samples, double *mixedFrames)
+{
     size_t position = sf_seek(sndfile, 0, SEEK_CUR);
     sf_readf_double(sndfile, mixedFrames, samples);
     for (int i = 0; i < samples; i++) {
-      mixedFrames[i] += inputFrames[i];
+        mixedFrames[i] += inputFrames[i];
     }
     sf_seek(sndfile, position, SEEK_SET);
     return sf_writef_double(sndfile, mixedFrames, samples);
-  }
-  void Soundfile::updateHeader()
-  {
+}
+void Soundfile::updateHeader()
+{
     /* int status = */ sf_command(sndfile, SFC_UPDATE_HEADER_NOW, 0, 0);
-  }
-  int Soundfile::close()
-  {
+}
+int Soundfile::close()
+{
     int status = 0;
     if (sndfile) {
-      status = sf_close(sndfile);
-      if (status) {
-        std::cerr << sf_error_number(status) << std::endl;
-      }
+        status = sf_close(sndfile);
+        if (status) {
+            std::cerr << sf_error_number(status) << std::endl;
+        }
     }
     initialize();
     return status;
-  }
-  void Soundfile::error() const
-  {
+}
+void Soundfile::error() const
+{
     std::cerr << sf_strerror(sndfile) << std::endl;
-  }
+}
 
-  void Soundfile::blank(double duration)
-  {
+void Soundfile::blank(double duration)
+{
     seekSeconds(0.0);
     std::vector<double> frame;
     frame.resize(getChannelsPerFrame());
     int framesToWrite = int(duration * getFramesPerSecond());
     for (int i = 0; i < framesToWrite; i++) {
-      sf_writef_double(sndfile, &frame.front(), 1);
+        sf_writef_double(sndfile, &frame.front(), 1);
     }
     updateHeader();
     seekSeconds(0.0);
-  }
+}
 
-  void Soundfile::jonesParksGrain(double centerTimeSeconds,
-                                  double durationSeconds,
-                                  double beginningFrequencyHz,
-                                  double centerFrequencyHz,
-                                  double centerAmplitude,
-                                  double centerPhaseOffsetRadians,
-                                  double pan,
-                                  bool synchronousPhase,
-                                  bool buffer)
-  {
+void Soundfile::jonesParksGrain(double centerTimeSeconds,
+                                double durationSeconds,
+                                double beginningFrequencyHz,
+                                double centerFrequencyHz,
+                                double centerAmplitude,
+                                double centerPhaseOffsetRadians,
+                                double pan,
+                                bool synchronousPhase,
+                                bool buffer)
+{
     if (synchronousPhase) {
-      double wavelengthSeconds = 1.0 / centerFrequencyHz;
-      double wavelengths = centerTimeSeconds / wavelengthSeconds;
-      double wholecycles = 0;
-      double fractionalCycle = std::modf(wavelengths, &wholecycles);
-      centerPhaseOffsetRadians = Conversions::get2PI() * fractionalCycle;
+        double wavelengthSeconds = 1.0 / centerFrequencyHz;
+        double wavelengths = centerTimeSeconds / wavelengthSeconds;
+        double wholecycles = 0;
+        double fractionalCycle = std::modf(wavelengths, &wholecycles);
+        centerPhaseOffsetRadians = Conversions::get2PI() * fractionalCycle;
     }
     double leftGain = Conversions::leftPan(pan);
     double rightGain = Conversions::rightPan(pan);
@@ -204,45 +204,45 @@ namespace csound
     grainOutput.resize(frameCount, channelCount);
     grainBuffer.resize(frameCount, channelCount);
     for(size_t frameI = 0; frameI < frameCount; frameI++) {
-      double sample = f0.real();
-      //std::cout << sample << std::endl;
-      if (channelCount == 2) {
-        grainOutput(frameI, 0) += (leftGain * sample);
-        grainOutput(frameI, 1) += (rightGain * sample);
-      } else if (channelCount == 1) {
-        grainOutput(frameI, 0) += sample;
-      } else {
-        for(size_t channelI = 0; channelI < channelCount; channelI++) {
-          grainOutput(frameI, channelI) += sample;
+        double sample = f0.real();
+        //std::cout << sample << std::endl;
+        if (channelCount == 2) {
+            grainOutput(frameI, 0) += (leftGain * sample);
+            grainOutput(frameI, 1) += (rightGain * sample);
+        } else if (channelCount == 1) {
+            grainOutput(frameI, 0) += sample;
+        } else {
+            for(size_t channelI = 0; channelI < channelCount; channelI++) {
+                grainOutput(frameI, channelI) += sample;
+            }
         }
-      }
-      h1 = h0 * exp_2_c2;
-      h0 = h1;
-      f1 = h1 * f0;
-      f0 = f1;
+        h1 = h0 * exp_2_c2;
+        h0 = h1;
+        f1 = h1 * f0;
+        f0 = f1;
     }
     sampleCount = frameCount * channelCount;
     startTimeSeconds = centerTimeSeconds - (durationSeconds / 2.0);
     if (!buffer) {
-      mixGrain();
+        mixGrain();
     }
-  }
+}
 
-  void Soundfile::cosineGrain(double centerTimeSeconds,
-                              double durationSeconds,
-                              double frequencyHz,
-                              double amplitude,
-                              double phaseOffsetRadians,
-                              double pan,
-                              bool synchronousPhase,
-                              bool buffer)
-  {
+void Soundfile::cosineGrain(double centerTimeSeconds,
+                            double durationSeconds,
+                            double frequencyHz,
+                            double amplitude,
+                            double phaseOffsetRadians,
+                            double pan,
+                            bool synchronousPhase,
+                            bool buffer)
+{
     if (synchronousPhase) {
-      double wavelengthSeconds = 1.0 / frequencyHz;
-      double wavelengths = centerTimeSeconds / wavelengthSeconds;
-      double wholecycles = 0;
-      double fractionalCycle = std::modf(wavelengths, &wholecycles);
-      phaseOffsetRadians = Conversions::get2PI() * fractionalCycle;
+        double wavelengthSeconds = 1.0 / frequencyHz;
+        double wavelengths = centerTimeSeconds / wavelengthSeconds;
+        double wholecycles = 0;
+        double fractionalCycle = std::modf(wavelengths, &wholecycles);
+        phaseOffsetRadians = Conversions::get2PI() * fractionalCycle;
     }
     size_t frameN = size_t(Conversions::round(durationSeconds * getFramesPerSecond()));
     size_t channelN = getChannelsPerFrame();
@@ -266,21 +266,21 @@ namespace csound
     double envelope1 = std::cos(0.0);
     // What would have been the previous frame.
     double envelope2 = std::cos(-envelopeRadiansPerFrame);
-     // Precompute grain into buffer.
+    // Precompute grain into buffer.
     double signal = 0.0;
     double temporary = 0.0;
     for(size_t frameI = 0; frameI < frameN; frameI++)
-      {
+    {
         signal = (sinusoid1 * (envelope1 - 1.0)) * amplitude;
         if (channelN == 2) {
-          grainOutput(frameI, 0) += (leftGain * signal);
-          grainOutput(frameI, 1) += (rightGain * signal);
+            grainOutput(frameI, 0) += (leftGain * signal);
+            grainOutput(frameI, 1) += (rightGain * signal);
         } else if (channelN == 1) {
-          grainOutput(frameI, 0) += signal;
+            grainOutput(frameI, 0) += signal;
         } else {
-          for(size_t channelI = 0; channelI < channelN; channelI++) {
-            grainOutput(frameI, channelI) += signal;
-          }
+            for(size_t channelI = 0; channelI < channelN; channelI++) {
+                grainOutput(frameI, channelI) += signal;
+            }
         }
         temporary = sinusoid1;
         sinusoid1 = sinusoidCoefficient * sinusoid1 - sinusoid2;
@@ -288,19 +288,19 @@ namespace csound
         temporary = envelope1;
         envelope1 = envelopeCoefficient * envelope1 - envelope2;
         envelope2 = temporary;
-      }
+    }
     sampleCount = frameN * channelN;
     startTimeSeconds = centerTimeSeconds - (durationSeconds / 2.0);
     if (!buffer) {
-      mixGrain();
+        mixGrain();
     }
-  }
+}
 
-  void Soundfile::mixGrain()
-  {
+void Soundfile::mixGrain()
+{
     seekSeconds(startTimeSeconds);
     mixFrames(&grainOutput(0, 0), sampleCount, &grainBuffer(0, 0));
     grainOutput *= 0.0;
-  }
+}
 }
 

@@ -24,11 +24,12 @@
 #include "Voicelead.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Node.hpp"
 #include "Score.hpp"
 #include "ChordSpace.hpp"
-%}
+%
+}
 #else
 #include "Node.hpp"
 #include "Score.hpp"
@@ -38,13 +39,13 @@
 
 namespace csound
 {
-  /**
-   * Utility class for storing voice-leading operations
-   * within a VoiceleadNode for future application.
-   */
-  class SILENCE_PUBLIC VoiceleadingOperation
-  {
-  public:
+/**
+ * Utility class for storing voice-leading operations
+ * within a VoiceleadNode for future application.
+ */
+class SILENCE_PUBLIC VoiceleadingOperation
+{
+public:
     VoiceleadingOperation();
     virtual ~VoiceleadingOperation();
     /**
@@ -109,44 +110,44 @@ namespace csound
      */
     size_t end;
     bool avoidParallels;
-  };
+};
 
-  std::ostream SILENCE_PUBLIC &operator << (std::ostream &stream, const VoiceleadingOperation &operation);
+std::ostream SILENCE_PUBLIC &operator << (std::ostream &stream, const VoiceleadingOperation &operation);
 
-  /**
-   * This node class imposes
-   * a sequence of one or more
-   * "voice-leading" operations upon
-   * the pitches of notes produced by children of this node,
-   * within a segment of the notes.
-   * These operations comprise:
-   * prime chord (P),
-   * transpose (T),
-   * unordered pitch-class set (C, equivalent to PT),
-   * contextual inversion (K),
-   * contextual transposition (Q),
-   * voicing (V) within a specified range of pitches,
-   * and voice-lead (L).
-   * The values of P, T, C, and V
-   * each form an additive cyclic group
-   * whose elements are defined
-   * by counting through all possible values in order.
-   * Note that C is not the same as "pitch-class set number"
-   * in the sense of M = sum over pitch-classes of (2 ^ pitch-class);
-   * it is rather one less than M.
-   * Not all combinations of operations are consistent.
-   * P requires T.
-   * PT cannot be used with C.
-   * V cannot be used with L.
-   * If neither PT nor C is specified, the existing C of the notes is used.
-   * K and Q require a previous section, and cannot be used with P, T, or C.
-   * The consistent combinations of operations are thus:
-   * PT, PTV, PTL, C, CV, CL, K, KV, KL, Q, QV, QL, V, and L.
-   */
-  class SILENCE_PUBLIC VoiceleadingNode :
+/**
+ * This node class imposes
+ * a sequence of one or more
+ * "voice-leading" operations upon
+ * the pitches of notes produced by children of this node,
+ * within a segment of the notes.
+ * These operations comprise:
+ * prime chord (P),
+ * transpose (T),
+ * unordered pitch-class set (C, equivalent to PT),
+ * contextual inversion (K),
+ * contextual transposition (Q),
+ * voicing (V) within a specified range of pitches,
+ * and voice-lead (L).
+ * The values of P, T, C, and V
+ * each form an additive cyclic group
+ * whose elements are defined
+ * by counting through all possible values in order.
+ * Note that C is not the same as "pitch-class set number"
+ * in the sense of M = sum over pitch-classes of (2 ^ pitch-class);
+ * it is rather one less than M.
+ * Not all combinations of operations are consistent.
+ * P requires T.
+ * PT cannot be used with C.
+ * V cannot be used with L.
+ * If neither PT nor C is specified, the existing C of the notes is used.
+ * K and Q require a previous section, and cannot be used with P, T, or C.
+ * The consistent combinations of operations are thus:
+ * PT, PTV, PTL, C, CV, CL, K, KV, KL, Q, QV, QL, V, and L.
+ */
+class SILENCE_PUBLIC VoiceleadingNode :
     public Node
-  {
-  public:
+{
+public:
     /**
      * Voice-leading operations stored in order
      * of starting time.
@@ -195,9 +196,9 @@ namespace csound
      * will be rescaled to fit the times in the range of notes.
      */
     virtual void produceOrTransform(Score &collectingNode,
-        size_t beginAt,
-        size_t endAt,
-        const Eigen::MatrixXd &coordinates);
+                                    size_t beginAt,
+                                    size_t endAt,
+                                    const Eigen::MatrixXd &coordinates);
     /**
      * Beginning at the specified time and continuing
      * to the beginning of the next operation
@@ -335,7 +336,7 @@ namespace csound
      */
     void chord(const csound::Chord &chord, double time);
     /**
-     * Apply the chord to the current segement, using the 
+     * Apply the chord to the current segement, using the
      * closest voice-leading from the pitches of the previous segment.
      */
     void chordVoiceleading(const csound::Chord &chord, double time, bool avoid_parallels);
@@ -347,6 +348,6 @@ namespace csound
     virtual void transform(Score &score);
     virtual void setModality(const std::vector<double> &pcs);
     virtual std::vector<double> getModality() const;
-  };
+};
 }
 #endif

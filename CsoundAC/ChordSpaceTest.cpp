@@ -166,10 +166,10 @@ std::map<std::string, fundamentalDomainByIsNormal_t> fundamentalDomainByIsNormal
  * ChordSpaceGroup.
  */
 static bool testNormalsAndEquivalents(std::string equivalence,
-        std::set<csound::Chord> &normalize_,
-        std::set<csound::Chord> &isNormal_,
-        double range,
-        double g) {
+                                      std::set<csound::Chord> &normalize_,
+                                      std::set<csound::Chord> &isNormal_,
+                                      double range,
+                                      double g) {
     char buffer[0x200];
     auto normalize = normalizesForEquivalenceRelations[equivalence];
     auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
@@ -178,16 +178,16 @@ static bool testNormalsAndEquivalents(std::string equivalence,
         if (isNormal_.find(*it) == isNormal_.end()) {
             passes = false;
             csound::print("testNormalsAndEquivalents: %s range %f g %f: normalize %s not in isNormal.\n",
-                equivalence.c_str(),
-                range,
-                g,
-                it->toString().c_str());
+                          equivalence.c_str(),
+                          range,
+                          g,
+                          it->toString().c_str());
         }
     }
     std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: all normalize must be in isNormal.\n",
-        equivalence.c_str(),
-        range,
-        g);
+                 equivalence.c_str(),
+                 range,
+                 g);
     test(passes, buffer);
     bool passes2 = true;
     std::set<csound::Chord> elementsInIsNormalButNotInNormalize;
@@ -208,17 +208,17 @@ static bool testNormalsAndEquivalents(std::string equivalence,
         if (equivalenceFound == false) {
             passes2 = false;
             std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: no normalize found for isNormal: %s\n",
-                equivalence.c_str(),
-                range,
-                g,
-                it->toString().c_str());
+                         equivalence.c_str(),
+                         range,
+                         g,
+                         it->toString().c_str());
             fail(buffer);
         }
     }
     std::sprintf(buffer, "normals and equivalents: %s range %f g %f: all isNormal must have equivalent in normalize.\n",
-        equivalence.c_str(),
-        range,
-        g);
+                 equivalence.c_str(),
+                 range,
+                 g);
     pass(buffer);
     return passes && passes2;
 }
@@ -246,21 +246,21 @@ static bool testConsistency(std::string compoundEquivalenceRelation, const std::
             if (isNormal(*chordI, range, g) == false) {
                 passes = false;
                 std::sprintf(buffer, "testConsistency: chord %s in the domain of %s is not in the domain of %s voices %d range %f g %f.\n",
-                        chordI->toString().c_str(),
-                        compoundEquivalenceRelation.c_str(),
-                        equivalenceRelationsI->c_str(),
-                        chordI->voices(),
-                        range,
-                        g);
+                             chordI->toString().c_str(),
+                             compoundEquivalenceRelation.c_str(),
+                             equivalenceRelationsI->c_str(),
+                             chordI->voices(),
+                             range,
+                             g);
                 fail(buffer);
             }
         }
         if (passes) {
             std::sprintf(buffer, "testConsistency: range %f g %f: %s is consistent with %s.\n",
-                    range,
-                    g,
-                    compoundEquivalenceRelation.c_str(),
-                    equivalenceRelationsI->c_str());
+                         range,
+                         g,
+                         compoundEquivalenceRelation.c_str(),
+                         equivalenceRelationsI->c_str());
             pass(buffer);
         }
     }
@@ -279,10 +279,10 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
     auto equivalentsForEquivalenceRelation = fundamentalDomainByIsNormalsForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
     printSet(buffer, equivalentsForEquivalenceRelation);
     if (!testNormalsAndEquivalents(equivalenceRelation,
-            normalsForEquivalenceRelation,
-            equivalentsForEquivalenceRelation,
-            range,
-            g)) {
+                                   normalsForEquivalenceRelation,
+                                   equivalentsForEquivalenceRelation,
+                                   range,
+                                   g)) {
         passes = false;
     }
     if (!testConsistency(equivalenceRelation, equivalentsForEquivalenceRelation, range, g)) {

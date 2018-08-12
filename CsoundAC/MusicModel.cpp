@@ -27,50 +27,50 @@
 
 namespace csound
 {
-  MusicModel::MusicModel() :
+MusicModel::MusicModel() :
     cppSound(&cppSound_),
     threadCount(1)
-  {
-  }
+{
+}
 
-  MusicModel::~MusicModel()
-  {
+MusicModel::~MusicModel()
+{
     //clear();
-  }
+}
 
-  void MusicModel::initialize()
-  {
-  }
+void MusicModel::initialize()
+{
+}
 
-  int MusicModel::generate()
-  {
+int MusicModel::generate()
+{
     int errorStatus = 0;
     cppSound->removeScore();
     if (children.size()) {
-      score.clear();
+        score.clear();
     }
     traverse(getLocalCoordinates(), score);
     score.process();
     System::message("Generated %d events.\n", score.size());
     return errorStatus;
-  }
+}
 
-  int MusicModel::render()
-  {
+int MusicModel::render()
+{
     int errorStatus = generate();
     if (errorStatus) {
-      return errorStatus;
+        return errorStatus;
     }
     errorStatus = perform();
     return errorStatus;
-  }
+}
 
-  void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
-  {
+void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
+{
     System::inform("addToScore.length(): %d\n", addToScore.length());
     if (addToScore.length() > 2) {
-      cppSound->removeScore();
-      cppSound->addScoreLine(addToScore);
+        cppSound->removeScore();
+        cppSound->addScoreLine(addToScore);
     }
     cppSound->addScoreLine(score.getCsoundScore(tonesPerOctave, conformPitches));
     char buffer[0x100];
@@ -79,230 +79,230 @@ namespace csound
     std::sprintf(buffer, "\ne %9.3f\n", extendSeconds);
     cppSound->addScoreLine(buffer);
     //cppSound->exportForPerformance();
-  }
+}
 
-  int MusicModel::perform()
-  {
+int MusicModel::perform()
+{
     int errorStatus = 0;
     cppSound->setCommand(getCsoundCommand());
     createCsoundScore(csoundScoreHeader);
     errorStatus = cppSound->perform();
     if (errorStatus == 1) {
-      errorStatus = 0;
+        errorStatus = 0;
     }
     // The Csound command is managed from MusicModel,
     // not from CppSound. So we clear out what we set.
     cppSound->setCommand("");
     return errorStatus;
-  }
+}
 
-  void MusicModel::clear()
-  {
+void MusicModel::clear()
+{
     Node::clear();
     Composition::clear();
     cppSound->removeScore();
-  }
+}
 
-  void MusicModel::setCppSound(CppSound *cppSound)
-  {
+void MusicModel::setCppSound(CppSound *cppSound)
+{
     if(!cppSound)
-      {
+    {
         this->cppSound = &cppSound_;
-      }
+    }
     else
-      {
+    {
         this->cppSound = cppSound;
-      }
-  }
+    }
+}
 
-  CppSound *MusicModel::getCppSound()
-  {
+CppSound *MusicModel::getCppSound()
+{
     return cppSound;
-  }
+}
 
-  void MusicModel::setCsoundOrchestra(std::string orchestra)
-  {
+void MusicModel::setCsoundOrchestra(std::string orchestra)
+{
     cppSound->setOrchestra(orchestra);
-  }
+}
 
-  std::string MusicModel::getCsoundOrchestra() const
-  {
+std::string MusicModel::getCsoundOrchestra() const
+{
     return cppSound->getOrchestra();
-  }
+}
 
-  void MusicModel::setCsoundScoreHeader(std::string header)
-  {
+void MusicModel::setCsoundScoreHeader(std::string header)
+{
     csoundScoreHeader = header;
-  }
+}
 
-  std::string MusicModel::getCsoundScoreHeader() const
-  {
+std::string MusicModel::getCsoundScoreHeader() const
+{
     return csoundScoreHeader;
-  }
+}
 
-  void MusicModel::arrange(int oldInstrumentNumber, int newInstrumentNumber)
-  {
+void MusicModel::arrange(int oldInstrumentNumber, int newInstrumentNumber)
+{
     score.arrange(oldInstrumentNumber, newInstrumentNumber);
-  }
+}
 
-  void MusicModel::arrange(int oldInstrumentNumber,
-                           int newInstrumentNumber,
-                           double gain)
-  {
+void MusicModel::arrange(int oldInstrumentNumber,
+                         int newInstrumentNumber,
+                         double gain)
+{
     score.arrange(oldInstrumentNumber, newInstrumentNumber, gain);
-  }
+}
 
-  void MusicModel::arrange(int oldInstrumentNumber,
-                           int newInstrumentNumber,
-                           double gain,
-                           double pan)
-  {
+void MusicModel::arrange(int oldInstrumentNumber,
+                         int newInstrumentNumber,
+                         double gain,
+                         double pan)
+{
     score.arrange(oldInstrumentNumber, newInstrumentNumber, gain, pan);
-  }
+}
 
-  void MusicModel::arrange(int silenceInstrumentNumber,
-                           std::string csoundInstrumentName)
-  {
+void MusicModel::arrange(int silenceInstrumentNumber,
+                         std::string csoundInstrumentName)
+{
     int csoundInstrumentNumber =
-      cppSound->getInstrumentNumber(csoundInstrumentName);
+        cppSound->getInstrumentNumber(csoundInstrumentName);
     arrange(silenceInstrumentNumber, csoundInstrumentNumber);
-  }
+}
 
-  void MusicModel::arrange(int silenceInstrumentNumber,
-                           std::string csoundInstrumentName, double gain)
-  {
+void MusicModel::arrange(int silenceInstrumentNumber,
+                         std::string csoundInstrumentName, double gain)
+{
     int csoundInstrumentNumber =
-      cppSound->getInstrumentNumber(csoundInstrumentName);
+        cppSound->getInstrumentNumber(csoundInstrumentName);
     arrange(silenceInstrumentNumber, csoundInstrumentNumber, gain);
-  }
+}
 
-  void MusicModel::arrange(int silenceInstrumentNumber,
-                           std::string csoundInstrumentName, double gain, double pan)
-  {
+void MusicModel::arrange(int silenceInstrumentNumber,
+                         std::string csoundInstrumentName, double gain, double pan)
+{
     int csoundInstrumentNumber =
-      cppSound->getInstrumentNumber(csoundInstrumentName);
+        cppSound->getInstrumentNumber(csoundInstrumentName);
     arrange(silenceInstrumentNumber, csoundInstrumentNumber, gain, pan);
-  }
+}
 
-  void MusicModel::removeArrangement()
-  {
+void MusicModel::removeArrangement()
+{
     score.removeArrangement();
-  }
+}
 
-  void MusicModel::setCsoundCommand(std::string command)
-  {
+void MusicModel::setCsoundCommand(std::string command)
+{
     cppSound->setCommand(command);
-  }
+}
 
-  std::string MusicModel::getCsoundCommand() const
-  {
+std::string MusicModel::getCsoundCommand() const
+{
     std::string command_ = cppSound->getCommand();
     if (command_.size() == 0) {
-      char buffer[0x200];
-      std::sprintf(buffer,
-            "csound --midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
-            threadCount,
-            getOutputSoundfileFilepath().c_str());
-      command_ = buffer;
+        char buffer[0x200];
+        std::sprintf(buffer,
+                     "csound --midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
+                     threadCount,
+                     getOutputSoundfileFilepath().c_str());
+        command_ = buffer;
     }
     return command_;
-  }
+}
 
-  intptr_t MusicModel::getThis()
-  {
+intptr_t MusicModel::getThis()
+{
     return (intptr_t) this;
-  }
+}
 
 
-  Node *MusicModel::getThisNode()
-  {
+Node *MusicModel::getThisNode()
+{
     return (Node *)this;
-  }
+}
 
-  int MusicModel::processArgs(const std::vector<std::string> &args)
-  {
+int MusicModel::processArgs(const std::vector<std::string> &args)
+{
     System::inform("BEGAN MusicModel::processArgs()...\n");
     generateAllNames();
     std::map<std::string, std::string> argsmap;
     std::string key;
     for (size_t i = 0, n = args.size(); i < n; ++i) {
-      const std::string token = args[i];
-      std::string value = "";
-      if (token.find("--") == 0) {
-        key = token;
-        System::inform("argument[%2d]: %s\n", i, key.c_str());
-      } else {
-        value = token;
-        System::inform("argument[%2d]: %s =  %s\n", i, key.c_str(), value.c_str());
-      }
-      argsmap[key] = value;
+        const std::string token = args[i];
+        std::string value = "";
+        if (token.find("--") == 0) {
+            key = token;
+            System::inform("argument[%2d]: %s\n", i, key.c_str());
+        } else {
+            value = token;
+            System::inform("argument[%2d]: %s =  %s\n", i, key.c_str(), value.c_str());
+        }
+        argsmap[key] = value;
     }
     char command[0x200];
     int errorStatus = 0;
     bool postPossible = false;
     std::string playSoundfileName = getOutputSoundfileFilepath();
     if ((argsmap.find("--dir") != argsmap.end()) && !errorStatus) {
-      setOutputDirectory(argsmap["--dir"]);
+        setOutputDirectory(argsmap["--dir"]);
     }
     if ((argsmap.find("--midi") != argsmap.end()) && !errorStatus) {
-      errorStatus = generate();
-      if (errorStatus) {
-        return errorStatus;
-      }
-      getScore().save(getMidifileFilepath().c_str());
+        errorStatus = generate();
+        if (errorStatus) {
+            return errorStatus;
+        }
+        getScore().save(getMidifileFilepath().c_str());
     }
     if ((argsmap.find("--notation") != argsmap.end()) && !errorStatus) {
         translateToNotation();
     }
     if ((argsmap.find("--audio") != argsmap.end()) && !errorStatus) {
-      postPossible = false;
-      const char *audiosystem = argsmap["--audio"].c_str();
-      const char *devicename = argsmap["--device"].c_str();
-      std::sprintf(command,
-                   "csound --midi-key=4 --midi-velocity=5 -m162 -+rtaudio=%s -o%s",
-                   audiosystem, devicename);
-      System::inform("Csound command: %s\n", command);
-      setCsoundCommand(command);
-      getScore().save(getMidifileFilepath().c_str());
-      errorStatus = render();
+        postPossible = false;
+        const char *audiosystem = argsmap["--audio"].c_str();
+        const char *devicename = argsmap["--device"].c_str();
+        std::sprintf(command,
+                     "csound --midi-key=4 --midi-velocity=5 -m162 -+rtaudio=%s -o%s",
+                     audiosystem, devicename);
+        System::inform("Csound command: %s\n", command);
+        setCsoundCommand(command);
+        getScore().save(getMidifileFilepath().c_str());
+        errorStatus = render();
     }
     if ((argsmap.find("--csound") != argsmap.end()) && !errorStatus) {
-      postPossible = true;
-      getScore().save(getMidifileFilepath().c_str());
-      errorStatus = render();
+        postPossible = true;
+        getScore().save(getMidifileFilepath().c_str());
+        errorStatus = render();
     }
     if ((argsmap.find("--pianoteq") != argsmap.end()) && !errorStatus) {
-      std::sprintf(command, "Pianoteq --midi=%s\n", getMidifileFilepath().c_str());
-      System::inform("Executing command: %s\n", command);
-      errorStatus = std::system(command);
+        std::sprintf(command, "Pianoteq --midi=%s\n", getMidifileFilepath().c_str());
+        System::inform("Executing command: %s\n", command);
+        errorStatus = std::system(command);
     }
     if ((argsmap.find("--pianoteq-wav") != argsmap.end()) && !errorStatus) {
-      postPossible = true;
-      std::sprintf(command, "Pianoteq --headless --midi %s --rate 48000 --wav %s\n", getMidifileFilepath().c_str(), getOutputSoundfileFilepath().c_str());
-      System::inform("Executing command: %s\n", command);
-      errorStatus = std::system(command);
+        postPossible = true;
+        std::sprintf(command, "Pianoteq --headless --midi %s --rate 48000 --wav %s\n", getMidifileFilepath().c_str(), getOutputSoundfileFilepath().c_str());
+        System::inform("Executing command: %s\n", command);
+        errorStatus = std::system(command);
     }
     if ((argsmap.find("--playmidi") != argsmap.end()) && !errorStatus) {
-      std::sprintf(command, "%s %s\n", argsmap["--playmidi"].c_str(), getMidifileFilepath().c_str());
-      System::inform("Executing command: %s\n", command);
-      errorStatus = std::system(command);
+        std::sprintf(command, "%s %s\n", argsmap["--playmidi"].c_str(), getMidifileFilepath().c_str());
+        System::inform("Executing command: %s\n", command);
+        errorStatus = std::system(command);
     }
     if ((argsmap.find("--post") != argsmap.end()) && !errorStatus && postPossible) {
-      errorStatus = translateMaster();
-      playSoundfileName = getNormalizedSoundfileFilepath();
+        errorStatus = translateMaster();
+        playSoundfileName = getNormalizedSoundfileFilepath();
     }
     if ((argsmap.find("--playwav") != argsmap.end()) && !errorStatus) {
-      std::sprintf(command, "%s %s\n", argsmap["--playwav"].c_str(), playSoundfileName.c_str());
-      System::inform("Csound command: %s\n", command);
-      errorStatus = std::system(command);
+        std::sprintf(command, "%s %s\n", argsmap["--playwav"].c_str(), playSoundfileName.c_str());
+        System::inform("Csound command: %s\n", command);
+        errorStatus = std::system(command);
     }
     System::inform("ENDED MusicModel::processArgv().\n");
     return errorStatus;
-  }
+}
 
-  void MusicModel::stop()
-  {
+void MusicModel::stop()
+{
     std::cout << "MusicModel::stop()..." << std::endl;
     cppSound->stop();
-  }
+}
 }

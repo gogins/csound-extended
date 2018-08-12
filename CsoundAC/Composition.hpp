@@ -23,23 +23,24 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Score.hpp"
-  %}
+%
+}
 #else
 #include "Score.hpp"
 #endif
 
 namespace csound
 {
-  /**
-   * Base class for user-defined musical compositions.
-   * Contains a Score object for collecting generated Events
-   * such as notes and control messages.
-   */
-  class SILENCE_PUBLIC Composition
-  {
-  public:
+/**
+ * Base class for user-defined musical compositions.
+ * Contains a Score object for collecting generated Events
+ * such as notes and control messages.
+ */
+class SILENCE_PUBLIC Composition
+{
+public:
     Composition();
     virtual ~Composition();
     /**
@@ -176,9 +177,9 @@ namespace csound
      * uses sox and LAME to translate the output soundfile to normalized MP3 format.
      */
     virtual int translateToMp3(double bitrate = 256.01, double levelDb = -3.0);
-    /** 
+    /**
      * Assuming the score has been rendered,
-     * uses sox and ffmpeg to translate the output soundfile to a normalized mp4 
+     * uses sox and ffmpeg to translate the output soundfile to a normalized mp4
      * video suitable for uploading to YouTube.
      */
     virtual int translateToMp4();
@@ -196,12 +197,12 @@ namespace csound
      */
     virtual void write(const char *text);
     /**
-     * At the end of processing, if the defined duration is not zero, the 
+     * At the end of processing, if the defined duration is not zero, the
      * times and durations of all events are rescaled to the defined duration.
      */
     virtual void setDuration(double seconds);
     /**
-     * Returns the duration to which all times and durations of all events 
+     * Returns the duration to which all times and durations of all events
      * will be rescaled. If the duration is 0, no rescaling is performed.
      */
     virtual double getDuration() const;
@@ -283,13 +284,13 @@ namespace csound
     virtual void setOutputSoundfileName(std::string name);
     virtual void clearOutputSoundfileName();
     virtual void generateAllNames();
-   protected:
+protected:
     /**
      * Required metadata.
      */
     std::string author;
     /**
-     * Required metadata. Allows for 
+     * Required metadata. Allows for
      * performer, etc. to differ from author.
      * Defaults to author.
      */
@@ -299,17 +300,17 @@ namespace csound
      */
     std::string copyright;
     /**
-     * Required metadata. Defaults to Creative Commons 
+     * Required metadata. Defaults to Creative Commons
      * Attribution-NonCommercial-NoDerivatives 4.0 International.
      */
     std::string license;
-     /**
-     * Optional metadata.
-     */
-    std::string performance_rights_organization; 
     /**
-     * Required. The stem must be a valid filename and also represents the 
-     * title. All other names, text, and commands are generated from 
+    * Optional metadata.
+    */
+    std::string performance_rights_organization;
+    /**
+     * Required. The stem must be a valid filename and also represents the
+     * title. All other names, text, and commands are generated from
      * directory, stem, filename extensions, and required metadata.
      */
     std::string stem;
@@ -317,7 +318,7 @@ namespace csound
      * Required. The target directory of the output files.
      * Defaults to the current working directory.
      */
-    std::string output_directory;  
+    std::string output_directory;
     /**
      * Required metadata.
      */
@@ -396,6 +397,6 @@ namespace csound
     bool tieOverlappingNotes;
     double duration;
     std::string output_filename;
-  };
+};
 }
 #endif

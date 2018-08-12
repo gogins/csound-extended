@@ -23,11 +23,12 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%{
+    % {
 #include "Node.hpp"
 #include "Score.hpp"
 #include <eigen3/Eigen/Dense>
-%}
+%
+}
 #else
 #include "Node.hpp"
 #include "Score.hpp"
@@ -53,10 +54,7 @@ public:
     std::string importFilename;
     ScoreNode();
     virtual ~ScoreNode();
-    virtual void produceOrTransform(Score &collectingScore,
-            size_t beginAt,
-            size_t endAt,
-            const Eigen::MatrixXd &coordinates);
+    virtual void generate(Score &collectingScore);
     virtual Score &getScore();
 };
 }

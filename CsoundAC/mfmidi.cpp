@@ -36,8 +36,8 @@ void Midifile_reader::midifile()
 }
 
 int Midifile_reader::readmt(const char *s, int skip)
-    /* read through the "MThd" or "MTrk" header string */
-    /* if skip == 1, we attempt to skip initial garbage. */
+/* read through the "MThd" or "MTrk" header string */
+/* if skip == 1, we attempt to skip initial garbage. */
 {
     assert(strlen(s) == 4); // must be "MThd" or "MTrk"
     int nread = 0;
@@ -46,7 +46,7 @@ int Midifile_reader::readmt(const char *s, int skip)
     int c;
     const char *errmsg = "expecting ";
 
-    retry:
+retry:
     while ( nread<4 ) {
         c = Mf_getc();
         if ( c == EOF ) {
@@ -67,7 +67,7 @@ int Midifile_reader::readmt(const char *s, int skip)
         nread = 3;
         goto retry;
     }
-    err:
+err:
 #pragma warning(disable: 4996) // strcpy is safe since strings have known lengths
     (void) strcpy(buff,errmsg);
     (void) strcat(buff,s);
@@ -77,7 +77,7 @@ int Midifile_reader::readmt(const char *s, int skip)
 }
 
 int Midifile_reader::egetc()
-    /* read a single character and abort on EOF */
+/* read a single character and abort on EOF */
 {
     int c = Mf_getc();
 
@@ -90,7 +90,7 @@ int Midifile_reader::egetc()
 }
 
 int Midifile_reader::readheader()
-    /* read a header chunk */
+/* read a header chunk */
 {
     int format, ntrks, division;
 
@@ -115,7 +115,7 @@ int Midifile_reader::readheader()
 }
 
 void Midifile_reader::readtrack()
-    /* read a track chunk */
+/* read a track chunk */
 {
     /* This array is indexed by the high half of a status byte.  It's */
     /* value is either the number of bytes needed (1 or 2) for a channel */
@@ -148,7 +148,7 @@ void Midifile_reader::readtrack()
         if (midifile_error) return;
 
         c = egetc();
-       if (midifile_error) return;
+        if (midifile_error) return;
 
         if ( sysexcontinue && c != 0xf7 ) {
             mferror("didn't find expected continuation of a sysex");
@@ -160,7 +160,7 @@ void Midifile_reader::readtrack()
                 return;
             }
             running = 1;
-       } else {
+        } else {
             status = c;
             running = 0;
         }
@@ -236,7 +236,7 @@ void Midifile_reader::readtrack()
                 msgadd(c);
             }
             if ( ! sysexcontinue ) {
-                    Mf_arbitrary(msgleng(), msg());
+                Mf_arbitrary(msgleng(), msg());
             }
             else if ( c == 0xf7 ) {
                 sysex();
@@ -250,7 +250,7 @@ void Midifile_reader::readtrack()
             break;
         }
     }
-        Mf_endtrack();
+    Mf_endtrack();
     return;
 }
 
@@ -399,18 +399,24 @@ long Midifile_reader::read32bit()
 {
     int c1, c2, c3, c4;
 
-    c1 = egetc(); if (midifile_error) return 0;
-    c2 = egetc(); if (midifile_error) return 0;
-    c3 = egetc(); if (midifile_error) return 0;
-    c4 = egetc(); if (midifile_error) return 0;
+    c1 = egetc();
+    if (midifile_error) return 0;
+    c2 = egetc();
+    if (midifile_error) return 0;
+    c3 = egetc();
+    if (midifile_error) return 0;
+    c4 = egetc();
+    if (midifile_error) return 0;
     return to32bit(c1,c2,c3,c4);
 }
 
 int Midifile_reader::read16bit()
 {
     int c1, c2;
-    c1 = egetc(); if (midifile_error) return 0;
-    c2 = egetc(); if (midifile_error) return 0;
+    c1 = egetc();
+    if (midifile_error) return 0;
+    c2 = egetc();
+    if (midifile_error) return 0;
     return to16bit(c1,c2);
 }
 
