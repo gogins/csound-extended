@@ -777,12 +777,8 @@ INPUT                  = ../CsoundAC \
                          ../dependencies/csound/interfaces \
                          ../dependencies\cmask \
                          ../CsoundHtml5 \
-                         ../dependencies\stk\include \
                          ,./silencio/js \
-                         ../Opcodes/AbletonLinkOpcodes \
-                         ../Opcodes/chua \
                          ../Opcodes/cmask \
-                         ../Opcodes/stk \
                          ../csound.node \
                          ../CsoundForAndroid/CsoundAndroid/jni \
                          ../CsoundForAndroid/CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6

@@ -199,6 +199,8 @@ install(FILES "${CMAKE_SOURCE_DIR}/csound.node/build/Release/csound.node"
 install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
         DESTINATION share/doc/csound-extended
         RENAME copyright)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
+        DESTINATION share/doc/csound-extended)
 
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
