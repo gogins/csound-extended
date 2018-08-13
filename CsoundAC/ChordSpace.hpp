@@ -23,7 +23,7 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include <algorithm>
 #include <cfloat>
 #include <climits>
@@ -38,8 +38,7 @@
 #include <set>
 #include <sstream>
 #include <vector>
-%
-}
+%}
 %include "std_string.i"
 %include "std_vector.i"
 #else

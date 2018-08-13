@@ -34,7 +34,14 @@ Web browser's JavaScript context. To use Silencio in blue:
 --  Load sprintf.js and tinycolor.js first.
 --  The following polyfill is enough to run some things.
 
-*/
+/**
+ * /page Silencio
+ * 
+ * Silencio is a port to JavaScript of parts of CsoundAC, and has taken on a 
+ * life of its own, particularly for the production of interfactive pieces 
+ * with user interfaces, and visual music.
+ *
+ */
 if (typeof console === 'undefined') {
     var global = this;
     var window = this;

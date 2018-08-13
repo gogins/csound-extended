@@ -22,7 +22,7 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Conversions.hpp"
 #include <algorithm>
 #include <eigen3/Eigen/Dense>
@@ -33,8 +33,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-%
-}
+%}
 %include "std_string.i"
 %include "std_vector.i"
 %template(EventVector) std::vector<csound::Event>;

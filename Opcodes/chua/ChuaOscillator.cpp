@@ -1,4 +1,5 @@
 /*
+  
   This file is part of Csound.
 
   The Csound Library is free software; you can redistribute it
@@ -16,50 +17,50 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   02110-1301 USA
 */
-// function TimeSeries = chuacc(L,R0,C2,G,Ga,Gb,C1,E,x0,y0,z0,dataset_size,step_size)
-// %0.00945,7.5,2e-007,0.00105,0,-0.00121,1.5e-008,1.76e-005,0,-0.1,0.1,2500,5e-6
-// % Syntax: TimeSeries=chua(L,R0,C2,G,Ga,Gb,C1,E,x0,y0,z0,dataset_size,step_size)
-// % ______________________________________
-// %
-// % Chua's oscillator is described by a  set  of  three
-// % ordinary differential equations called Chua's equations:
-// %
-// %      dI3      R0      1
-// %      --- =  - -- I3 - - V2
-// %      dt       L       L
-// %
-// %      dV2    1       G
-// %      --- = -- I3 - -- (V2 - V1)
-// %      dt    C2      C2
-// %
-// %      dV1    G              1
-// %      --- = -- (V2 - V1) - -- f(V1)
-// %      dt    C1             C1
-// %
-// % where
-// %
-// %   f(V1) = Gb V1 + - (Ga - Gb)(|V1 + E| - |V1 - E|)
-// %
-// % A solution of these equations (I3,V2,V1)(t) starting from an
-// % initial state (I3,V2,V1)(0) is called a trajectory of Chua's
-// % oscillator.
-// %
-// % This function uses a RungeKutta integration method optimised for the chua
-// % paradigm
-// %
-// % Reference:
-// % ABC - Adventures in Bifurication & Chaos ... Prof M.P Kennedy 1993
-// %
-// % James McEvoy, Tom Murray
-// %
-// % University e-mail: 99375940@student.ucc.ie
-// % Lifetime e-mail: sacevoy@eircom.net
-// % Homepage: http://www.sacevoy.com
-// %
-// % 2 Nov 2002
-// % Models Initial Variables
-// %-------------------------
-// %Initial Conditions set by x0,y0,z0
+
+/**
+ * \page Chua Chua's Oscillator Opcodes
+ *
+ *  Chua's oscillator is described by a  set  of  three
+ *  ordinary differential equations called Chua's equations:
+ * 
+ *       dI3      R0      1
+ *       --- =  - -- I3 - - V2
+ *       dt       L       L
+ * 
+ *       dV2    1       G
+ *       --- = -- I3 - -- (V2 - V1)
+ *       dt    C2      C2
+ * 
+ *       dV1    G              1
+ *       --- = -- (V2 - V1) - -- f(V1)
+ *       dt    C1             C1
+ * 
+ *  where
+ * 
+ *    f(V1) = Gb V1 + - (Ga - Gb)(|V1 + E| - |V1 - E|)
+ * 
+ *  A solution of these equations (I3,V2,V1)(t) starting from an
+ *  initial state (I3,V2,V1)(0) is called a trajectory of Chua's
+ *  oscillator.
+ * 
+ *  This function uses a RungeKutta integration method optimised for the chua
+ *  paradigm
+ * 
+ *  Reference:
+ *  ABC - Adventures in Bifurication & Chaos ... Prof M.P Kennedy 1993
+ * 
+ *  James McEvoy, Tom Murray
+ * 
+ *  University e-mail: 99375940@student.ucc.ie
+ *  Lifetime e-mail: sacevoy@eircom.net
+ *  Homepage: http://www.sacevoy.com
+ * 
+ *  2 Nov 2002
+ *  Models Initial Variables
+ * -------------------------
+ * Initial Conditions set by x0,y0,z0
+ */
 // TimeSeries = [x0, y0, z0]'; % models initial conditions
 //                             %x0 = I3, y0 = V2, z0 = V1 from datafiles
 // % Optimized Runge-Kutta Variables
@@ -116,6 +117,7 @@
 //     c = sys_variables(11);
 //     d = sys_variables(12);
 //     gnor = a*(x.^3) + b*(x.^2) + c*x + d;
+*/
 
 #include <eigen3/Eigen/Dense>
 #include <OpcodeBase.hpp>

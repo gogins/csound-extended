@@ -24,12 +24,11 @@
 #include "Voicelead.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Node.hpp"
 #include "Score.hpp"
 #include "ChordSpace.hpp"
-%
-}
+%}
 #else
 #include "Node.hpp"
 #include "Score.hpp"
@@ -189,16 +188,6 @@ public:
      * how to lead the voices.
      */
     virtual void apply(Score &score, const VoiceleadingOperation &priorOperation, const VoiceleadingOperation &currentOperation);
-    /**
-     * Applies all of the stored voice-leading operations
-     * to the specified range of notes in the score.
-     * if rescaleTimes is true, the times of the operations
-     * will be rescaled to fit the times in the range of notes.
-     */
-    virtual void produceOrTransform(Score &collectingNode,
-                                    size_t beginAt,
-                                    size_t endAt,
-                                    const Eigen::MatrixXd &coordinates);
     /**
      * Beginning at the specified time and continuing
      * to the beginning of the next operation

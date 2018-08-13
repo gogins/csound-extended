@@ -23,12 +23,11 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Node.hpp"
 #include "Score.hpp"
 #include <eigen3/Eigen/Dense>
-%
-}
+%}
 #else
 #include "Node.hpp"
 #include "Score.hpp"

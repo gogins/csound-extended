@@ -23,14 +23,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Event.hpp"
 #include "CppSound.hpp"
 #include <vector>
 #include <algorithm>
 #include <cmath>
-%
-}
+%}
 %include "std_vector.i"
 %template(ChordVector) std::vector< std::vector<double> >;
 #else

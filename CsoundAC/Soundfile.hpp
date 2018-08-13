@@ -26,14 +26,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include <sndfile.h>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstring>
-%
-}
+%}
 %include "std_string.i"
 #ifdef SWIGPYTHON
 %typemap(in) double *outputFrame {

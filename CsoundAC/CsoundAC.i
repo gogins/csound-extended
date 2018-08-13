@@ -44,15 +44,12 @@
 %ignore Counterpoint::message(const char*, va_list);
 %ignore csound::print(const char*, va_list);
 
-
 %module(directors="1") CsoundAC
 %{
-        #include <algorithm>
-        #include "Silence.hpp"
+    #include <algorithm>
+    #include "Silence.hpp"
 %}
 %apply int { size_t };
-
-
 
 %typemap(in) char ** {
   /* Check if is a list */

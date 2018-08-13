@@ -60,7 +60,7 @@ void Node::traverse(const Eigen::MatrixXd &global_coordinates,
     transform(score_from_children);
     // Add the child notes to the global score.
     global_score.insert(global_score.end(), score_from_children.begin(), score_from_children.end());
-    // Optionally generate new notes in the coordinate system with origin zero.
+    // Optionally generate new notes in the coordinate system with origin at zero.
     Score score_from_this;
     generate(score_from_this);
     // Then transform these new notes to the composite coordinate system.

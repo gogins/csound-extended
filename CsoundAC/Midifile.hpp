@@ -22,7 +22,7 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include <algorithm>
 #include <utility>
 #include <fstream>
@@ -30,8 +30,7 @@
 #include <map>
 #include <string>
 #include <vector>
-%
-}
+%}
 %include "std_string.i"
 %template(MidiEventVector) std::vector<csound::MidiEvent>;
 %template(MidiByteVector) std::vector<unsigned char>;

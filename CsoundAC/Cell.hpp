@@ -23,15 +23,14 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include <limits>
 #include <map>
 #include "Random.hpp"
 #include "ScoreNode.hpp"
 #include "ChordSpace.hpp"
 #include <eigen3/Eigen/Dense>
-%
-}
+%}
 #else
 #include <limits>
 #include <map>

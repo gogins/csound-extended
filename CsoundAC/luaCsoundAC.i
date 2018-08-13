@@ -28,12 +28,11 @@
 
 %module(directors="1") luaCsoundAC
 %{
-        #include <algorithm>
-        #include <vector>
-        #include "Silence.hpp"
+    #include <algorithm>
+    #include <vector>
+    #include "Silence.hpp"
 %}
 %apply int { size_t };
-
 
 %typemap(freearg) char ** {
   free((char *) $1);

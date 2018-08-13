@@ -23,11 +23,10 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    %include "std_string.i"
-    % {
+%include "std_string.i"
+%{
 #include <string>
-        %
-    }
+%}
 #else
 #include <string>
 #endif

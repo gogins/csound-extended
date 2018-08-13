@@ -26,12 +26,11 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Node.hpp"
 #include "Counterpoint.hpp"
 #include <cmath>
-%
-}
+%}
 %include "std_vector.i"
 %template(IntVector) std::vector<int>;
 #else

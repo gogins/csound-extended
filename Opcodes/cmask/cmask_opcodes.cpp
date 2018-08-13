@@ -6,8 +6,7 @@
     This source code is for CMask opcodes in Csound.
     The CMask opcodes are licensed under the terms of 
     the Mozilla Public License, version 2.0.
-    
- */
+*/
 #include <OpcodeBase.hpp>
 #include <cerrno>
 #include <cmath>
@@ -50,7 +49,7 @@ using namespace std;
 #include "utils.cpp"
 };
 
-/*! \mainpage cmask 
+/*! \page cmask 
  * <h2>Description</h2>
  *
  * Encapsulates all functionality of Andre Bartetzki's CMask program 

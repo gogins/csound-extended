@@ -23,14 +23,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "CppSound.hpp"
 #include <string>
 #include <vector>
 #include <cstdarg>
 #include <ctime>
-%
-}
+%}
 #else
 #include "CppSound.hpp"
 #include <string>

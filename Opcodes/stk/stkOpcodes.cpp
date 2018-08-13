@@ -16,8 +16,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   02110-1301 USA
 */
-/*
- * CSOUND 5/6 OPCODES FOR PERRY COOK'S SYNTHESIS TOOLKIT IN C++ (STK) INSTRUMENT
+/**
+ * \page stk STK Opcodes
+ *
+ * Csound 6 opcodes that encapsulate pretty much all of Perry Cook's 
+ * Synthesis Toolkit in C++.
  *
  * This code is copyright (C) 2005 by Michael Gogins. It is licensed under the
  * same terms as the Synthesis Tookit in C++ by Perry R. Cook and Gary P. Scavone.

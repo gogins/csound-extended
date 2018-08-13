@@ -23,10 +23,9 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Score.hpp"
-%
-}
+%}
 #else
 #include "Score.hpp"
 #endif

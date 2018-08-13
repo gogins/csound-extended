@@ -1,4 +1,11 @@
-package com.csounds.Csound6;
+package com.csounds.Csound6
+
+/**
+ * \page csoundforandroid Csound for Android App
+ *
+ * This Android app provides pretty much all of Csound, including an HTML/JavaScript interface
+ * that will run code in the <html> element of a csd file.
+ */
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

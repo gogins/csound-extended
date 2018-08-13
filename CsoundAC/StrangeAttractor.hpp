@@ -23,14 +23,13 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    % {
+%{
 #include "Silence.hpp"
 #include <string>
 #include <vector>
 #include <random>
 #include <eigen3/Eigen/Dense>
-%
-}
+%}
 %include "std_string.i"
 %include "std_vector.i"
 #else

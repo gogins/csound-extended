@@ -814,6 +814,7 @@ void ChordLindenmayer::clear()
 
 void ChordLindenmayer::generate(Score &collectingScore)
 {
+    generate();
     collectingScore.insert(collectingScore.end(), score.begin(), score.end());
 }
 

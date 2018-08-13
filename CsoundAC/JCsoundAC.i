@@ -23,8 +23,8 @@
 
 %module CsoundAC
 %{
-        #include "Silence.hpp"
-        #include "CsoundAC.hpp"
+    #include "Silence.hpp"
+    #include "CsoundAC.hpp"
 %}
 %apply int { size_t };
 %include "Silence.hpp"

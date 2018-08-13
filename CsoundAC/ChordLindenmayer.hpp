@@ -23,10 +23,10 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-    %include "std_string.i"
-    %include "std_vector.i"
-    %include "std_map.i"
-    % {
+%include "std_string.i"
+%include "std_vector.i"
+%include "std_map.i"
+%{
 #include "Conversions.hpp"
 #include "Event.hpp"
 #include "Score.hpp"
@@ -40,9 +40,8 @@
 #include <map>
 #include <vector>
 #include <eigen3/Eigen/Dense>
-        %
-    }
-    %template(StringMap) std::map<std::string, std::string>;
+%}
+%template(StringMap) std::map<std::string, std::string>;
 #else
 #include "Conversions.hpp"
 #include "Event.hpp"
@@ -61,6 +60,7 @@
 
 namespace csound
 {
+    
 extern void SILENCE_PUBLIC printChord(std::ostream &stream, std::string label, const std::vector<double> &chord);
 
 struct SILENCE_PUBLIC Turtle
@@ -371,7 +371,6 @@ public:
      * both in the argument and as the return value; there may be no effect.
      */
     virtual double equivalence(double &value, char equivalenceClass) const;
-    virtual void transform(Score &score);
 
 };
 }
