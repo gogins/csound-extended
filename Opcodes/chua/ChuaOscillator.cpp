@@ -19,7 +19,10 @@
 */
 
 /**
- * \page Chua Chua's Oscillator Opcodes
+ * \page chua Chua's Oscillator Opcodes
+ *
+ *  Csound opcodes encapsulating Chua's oscillator, a chaotic 
+ *  dynamical system.
  *
  *  Chua's oscillator is described by a  set  of  three
  *  ordinary differential equations called Chua's equations:

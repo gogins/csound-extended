@@ -44,7 +44,6 @@ void ScoreNode::generate(Score &collectingScore)
         // TODO fix this hack... much work!
         collectingScore.back().process = score[i].process;
     }
-
 }
 
 Score &ScoreNode::getScore()

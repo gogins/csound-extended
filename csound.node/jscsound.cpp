@@ -2,10 +2,13 @@
  * \page csoundnode csound.node
  *
  * A Node.js (and io.js and NW.js) binding for Csound. This interface should
- * mirror the Csound JavaScript interface for the Chromium Embedded Framework
- * and Android. In JavaScript environments, Csound has already been
- * instantiated and initialized, and is named "csound" in the user's
- * JavaScript context.
+ * mirror the Csound JavaScript interface in other environments. In csound.node, 
+ * Csound has already been instantiated and initialized, and is named "csound" 
+ * in the user'snJavaScript context.
+ *
+ * See jscsound.cpp for more information.
+ */
+ /*
  *
  * Copyright (C) 2015 by Michael Gogins.
  *

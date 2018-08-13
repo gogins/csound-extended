@@ -2,9 +2,11 @@
 #include <QApplication>
 
 /**
- * \page CsoundHtml5
+ * \page csoundhtml5 CsoundHtml5
  *
- * This is a basic editor for Csound that supports HTML interfaces and JavaScript programming.
+ * CsoundHtml5 is a basic editor for Csound that supports HTML interfaces and JavaScript programming.
+ *
+ * For more informtion, see MainWindow and QCsound.
  */
 
 int main(int argc, char *argv[]) {

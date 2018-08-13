@@ -1265,8 +1265,6 @@ void Score::process()
         if (event.process) {
             System::inform("Event %6d processing...\n", i);
             event.process(*this, event);
-        } else {
-            System::inform("Event %6d not callable...\n", i);
         }
     }
     System::inform("ENDED Score::process()\n");

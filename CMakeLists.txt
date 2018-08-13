@@ -166,6 +166,11 @@ function(make_plugin libname srcs)
 	LIBRARY DESTINATION "${PLUGIN_INSTALL_DIR}" )
 endfunction(make_plugin)
 
+add_custom_target(doxygen_reference
+    ALL 
+    COMMAND doxygen
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc")
+
 add_subdirectory(dependencies)
 add_subdirectory(Opcodes/cmask)
 add_subdirectory(CsoundAC)

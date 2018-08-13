@@ -15,15 +15,17 @@
   License along with Csound; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   02110-1301 USA
+ 
+  This code is copyright (C) 2005 by Michael Gogins. It is licensed under the
+  same terms as the Synthesis Tookit in C++ by Perry R. Cook and Gary P. Scavone.
 */
 /**
  * \page stk STK Opcodes
  *
- * Csound 6 opcodes that encapsulate pretty much all of Perry Cook's 
- * Synthesis Toolkit in C++.
- *
- * This code is copyright (C) 2005 by Michael Gogins. It is licensed under the
- * same terms as the Synthesis Tookit in C++ by Perry R. Cook and Gary P. Scavone.
+ * Csound opcodes that encapsulate almost all of Perry Cook's 
+ * Synthesis Toolkit in C++. 
+ * 
+ * For more information, see \ref STKInstrumentAdapter.
  *
  * To compile these opcodes, copy the STK include, src, and rawwaves directories
  * to the csound6/Opcodes/stk directory as follows:

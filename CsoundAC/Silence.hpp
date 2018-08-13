@@ -20,19 +20,29 @@
 #ifndef SILENCE_H
 #define SILENCE_H
 
-/*! \mainpage csound-extended
+/** \mainpage csoundextended csound-extended
  *
  * csound-extended is a repository and set of source and binary packages 
- * to support the production of electroacoustic music with Csound. This 
- * automatically generated reference documents the C and C++ interfaces 
- * for Csound, CsoundAC, and CMask, and the Java interface to Csound for 
- * Android. 
+ * to support the composition and production of electroacoustic music, using 
+ * Csound for audio synthesis and processing. 
+ * 
+ * This automatically generated reference documents the C, C++, and Java 
+ * interfaces within csound-extended. There are corresponding Lua and Python 
+ * interfaces for parts of the C++ interface.
  *
- * \page CsoundAC
+ * See the <a href="pages.html">Related Pages</a> for more information on the 
+ * components of csound-extended.
  *
- * CsoundAC is a C++ class library designed to support algorithmic music 
- * composition with Csound. CsoundAC has C++, Java, Python, and Lua 
- * interfaces.
+ * Currently, csound-extended is maintained on 64-bit Linux but should be 
+ * to build and run on other platforms.
+ */
+ /** 
+ * \page csoundac CsoundAC
+ *
+ * CsoundAC is a C++ class library for algorithmic music 
+ * composition with Csound. 
+ * 
+ * CsoundAC has C++, Java, Python, and Lua interfaces.
  *
  * CsoundAC implements the idea of a "music graph," similar to a scene 
  * graph in 3-dimensional computer graphics. A composition is constructed 
@@ -42,16 +52,19 @@
  * represents a model of a musical score. The Composition class provides 
  * an abstract base class for managing a music graph. The MusicModel class 
  * subclasses the Composition class to include the ability to store and 
- * run a Csound orchestra. See the \ref csound namespace for information 
- * about the classes in CsoundAC.
- *
+ * run a Csound orchestra. 
+ * 
+ * See the <a href="namespacecsound.html">csound</a> 
+ * namespace for information about the classes in CsoundAC.
+ */
+ /**
  * \namespace csound
+ *
  * The csound namespace contains classes for doing algorithmic composition,
  * and for rendering audio from algorithmically generated scores,
  * especially using Csound.
  *
- * There should be one header file for each class declared in CsoundAC,
- * and that header file should be #included in Silence.hpp.
+ * All classes declared for CsoundAC should be #included in Silence.hpp.
  *
  * SWIG is run on Silence.hpp to generate wrappers for all CsoundAC classes
  * in other languages, especially scripting languages such as Python,
@@ -62,9 +75,8 @@
  *
  * It is also expected that doxygen will be used to generate documentation
  * from comments in the framework header files.
- *
- * \page Csound
- *
+ */
+ /** \page csound Csound
  *
  * Csound is a sound and music computing system. It was originally written
  * by Barry Vercoe at the Massachusetts Institute of Technology in

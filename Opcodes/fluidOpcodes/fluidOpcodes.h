@@ -1,6 +1,4 @@
-/*
- * FLUID SYNTH OPCODES
- *
+/**
  * Adapts Fluidsynth to use global engines, soundFonts, and outputs
  *
  * Based on work by Michael Gogins.  License is identical to

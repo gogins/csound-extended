@@ -784,6 +784,7 @@ INPUT                  = ../CsoundAC \
                          ../Opcodes/cmask \
                          ../Opcodes/stk \
                          ../csound.node \
+                         ../CsoundForAndroid/CsoundAndroid/jni \
                          ../CsoundForAndroid/CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6
 
 # This tag can be used to specify the character encoding of the source files

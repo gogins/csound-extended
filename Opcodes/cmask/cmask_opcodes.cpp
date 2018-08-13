@@ -49,7 +49,13 @@ using namespace std;
 #include "utils.cpp"
 };
 
-/*! \page cmask 
+/** 
+ * \page cmaskpage cmask Opcodes
+ *
+ * Csound opcodes that encapsulate all functionality of Andre Bartetzki's CMask program. 
+ * 
+ * For more information, see \ref CMask.
+ *
  * <h2>Description</h2>
  *
  * Encapsulates all functionality of Andre Bartetzki's CMask program 
