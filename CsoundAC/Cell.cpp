@@ -265,47 +265,51 @@ CellRepeat::~CellRepeat()
 
 void CellRepeat::transform(Score &score)
 {
-    //  Find the total duration of notes produced by the child nodes of this.
+    System::inform("CellRepeat...\n");
+    System::inform("    source:      %8d\n", score.size());
     if(score.empty()) {
         return;
     }
-    const Event &event = score.front();
-    double beginSeconds = event.getTime();
-    double endSeconds = beginSeconds;
-    double totalDurationSeconds = 0;
-    size_t beginAt = 0;
-    size_t endAt = score.size();
-    for(size_t i = beginAt; i < endAt; i++) {
-        const Event &event = score[i];
-        if (beginSeconds > event.getTime()) {
-            beginSeconds = event.getTime();
-        }
-        if (endSeconds < event.getOffTime()) {
-            endSeconds = event.getOffTime();
-        }
+    // Find the end.
+    size_t end_ = std::min(end, score.size());
+    System::inform("    start:       %8d\n", start);
+    System::inform("    end:         %8d\n", end_);
+    System::inform("    stride:      %8d\n", stride);
+    Score cell;
+    for (size_t i = start; i < end_; i = i + stride) {
+        cell.push_back(score[i]);
     }
+    // Find the duration of the cell to be repeated.
+    cell.sort();
+    double cell_start = cell.front().getTime();
+    double cell_end = cell.back().getOffTime();
+    // This duration might not begin at 0.
+    double cell_duration = cell_end - cell_start;
+    double repetition_duration;
     if (absolute_duration) {
-        totalDurationSeconds = duration;
+        repetition_duration = duration;
     } else {
-        totalDurationSeconds = duration + (endSeconds - beginSeconds);
+        repetition_duration = cell_duration + duration;
     }
-    System::message("Repeat section.\n");
-    System::message(" Began    %9.4f\n", beginSeconds);
-    System::message(" Ended    %9.4f\n", endSeconds);
-    System::message(" Duration %9.4f\n", totalDurationSeconds);
-    //  Repeatedly clone the notes produced by the child nodes of this,
-    //  incrementing the time as required.
-    double currentTime = beginSeconds;
-    //  First "repeat" is already there!
-    for(size_t i = size_t(1); i < (size_t) iterations; i++) {
-        currentTime += totalDurationSeconds;
-        System::message("  Repetition %d time %9.4f\n", i, currentTime);
-        for(size_t j = beginAt; j < endAt; j++) {
-            Event clonedEvent = score[j];
-            clonedEvent.setTime(clonedEvent.getTime() + currentTime);
-            score.push_back(clonedEvent);
+    // Then simply repeat the cell.
+    Score repeated_cells;
+    double begin_repetition_at = 0;
+    for (int iteration = 0; iteration < iterations; ++iteration) {
+        System::inform("CellRepeat:\n");
+        System::inform("    iteration:   %8d\n", iteration);
+        System::inform("    repeat duration: %9.4f\n", repetition_duration);
+        System::inform("    cell duration:   %9.4f\n", cell_duration);
+        System::inform("    cell:        %8d\n", cell.size());
+        begin_repetition_at = iteration * repetition_duration;
+        System::inform("    start at:        %9.4f\n", begin_repetition_at);
+        for (int i = 0; i < cell.size(); ++i) {
+            Event event = cell[i];
+            event.setTime(event.getTime() + begin_repetition_at);
+            repeated_cells.push_back(event);
         }
+        System::inform("    produced:    %8d\n", repeated_cells.size());
     }
+    score = repeated_cells;
 }
 
 void CellRepeat::repeat(size_t iterations_, double duration_, bool absolute_duration_,
