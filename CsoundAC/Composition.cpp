@@ -249,9 +249,6 @@ int Composition::tagFile(std::string filename) const
 int Composition::performMaster()
 {
     System::inform("BEGAN Composition::performMaster()...\n");
-    score.save(getMidifileFilepath());
-    // Not implemented fully yet.
-    //score.save(getMusicXmlfileFilepath());
     int errorStatus = perform();
     System::inform("ENDED Composition::performMaster().\n");
     return errorStatus;

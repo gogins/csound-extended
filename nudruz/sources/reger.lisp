@@ -7,7 +7,7 @@
 
 ; (load "nudruz.lisp")
 
-(load "a-star.lisp")
+;(load "a-star.lisp")
 
 ;; RELPOS -- member in a relative position to another member
 (defun relpos (chd mbr-idx relplace)

@@ -134,6 +134,7 @@ void KMeansMCRM::generate()
     } else if (algorithm_type == DETERMINISTIC) {
         deterministic_algorithm();
     }
+    System::inform("Generated %9d samples.\n", samples.size());
     means_to_notes();
     auto elapsed = System::stopTiming(start_time);
     System::inform("KMeansMCRM::generate: %9.3f seconds.\n", elapsed);
@@ -193,9 +194,6 @@ void KMeansMCRM::random_algorithm()
 void KMeansMCRM::iterate(int d, size_t p, const Event &event, double weight)
 {
     d--;
-    if (samples.size() >= sample_count) {
-        return;
-    }
     if(d < 0)
     {
         double velocity = event.getVelocity() * weight;

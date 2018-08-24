@@ -1,6 +1,6 @@
 (in-package :cm)
 
-(load "rewrite.lisp")
+;(load "sources/rewrite.lisp")
 ;;;
 ;;; Temperly-inspired phrasing (hierarchies)
 ;;; 

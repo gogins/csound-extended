@@ -58,7 +58,7 @@
 ;(asdf:load-system :series)
 
 (asdf:load-system :trivial-features)
-(asdf:load-system :alexandria)
+;(asdf:load-system :alexandria)
 (asdf:load-system :babel)
 ;(asdf:load-system :cffi)
 ;(asdf:load-system :cmn)

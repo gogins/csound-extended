@@ -7,7 +7,7 @@
 ;; drkrause@mindspring.com
 ;; www.wordecho.org
 
-(load "cyclops.lisp")
+;(load "cyclops.lisp")
 
 ;; S-SIM -- defines a (motoric) midi selfsim stream
 ;; January 2006: ties used by default

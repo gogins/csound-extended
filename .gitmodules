@@ -52,3 +52,9 @@
 [submodule "dependencies/examples"]
 	path = dependencies/examples
 	url = https://github.com/gogins/examples.git
+[submodule "dependencies/clocc"]
+	path = dependencies/clocc
+	url = https://github.com/blindglobe/clocc.git
+[submodule "dependencies/cm2"]
+	path = dependencies/cm2
+	url = https://github.com/andersvi/cm2.git

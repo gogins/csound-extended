@@ -83,7 +83,7 @@
         };
         /**
          * The number of times a sample is to be generated,
-         * whether randomly or deterministically.
+         * for the random algorithm.
          */
         size_t sample_count;
         /**

@@ -7,7 +7,7 @@
 ;; drkrause@mindspring.com
 ;; www.wordecho.org
 
-(load "tiles.lisp")
+;(load "tiles.lisp")
 
 ;; PLACE-TILES -- to fill in a tiling
 ;; can use 'r in pattern-list
