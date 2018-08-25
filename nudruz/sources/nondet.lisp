@@ -1,8 +1,8 @@
-(in-package :cm)
+;;(in-package :cm)
 ;;(use-package :screamer)
 
 ;; load nondeterminism stuff ;;;;  not (use-package 'screamer)
-; MKG (in-package :screamer-user)
+(in-package :screamer-user)
 
 (defun list-eql (list1 list2)
   (and (subsetp list1 list2)

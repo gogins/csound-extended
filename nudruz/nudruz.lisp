@@ -1719,7 +1719,7 @@
 (defun wiggle-to (startnum endnum steps allowed-ints)
   (if (or (eql startnum 'r) (eql endnum 'r))
       startnum
-      (let ((wt (screamer::wigto startnum endnum steps allowed-ints)))
+      (let ((wt (screamer-user::wigto startnum endnum steps allowed-ints)))
 	(if wt (no-nils wt) startnum))))
 
 ;; WIGLINE -- builds a line of wiggle-to's by durlist 
@@ -1755,7 +1755,7 @@
 ;; EQL-SUMMER -- all ways to sum componentnums to targetnum
 ;; if fails, returns targetnum
 (defun eql-summer (targetnum componentnums)
-  (let ((es (screamer::eqlsum targetnum componentnums)))
+  (let ((es (screamer-user::eqlsum targetnum componentnums)))
     (if es es (list targetnum))))
 
 ;; ONES&TWOS -- all seqs of 1&2 summing to a number
@@ -1769,7 +1769,7 @@
 ;; with largest leap of 'span' and same sum
 ;; example: (embelltriad '(3 5 6) 1) = ((2 5 7) (3 4 7))
 (defun embell-triad (triad &optional (steps 3) (sumspan 5))
-  (screamer::near-ebt triad sumspan steps))
+  (screamer-user::near-ebt triad sumspan steps))
 
 ;;
 
@@ -1778,7 +1778,7 @@
 ;; ntn (note-to-note) contour
 ;; (ntn->clists '(-1 1) 3) = ((1 0 1) (2 0 1) (1 0 2) (2 0 2) (2 1 2))
 (defun ntn->clists (antn binsize)
-  (screamer::ntn-to-clists antn binsize))
+  (screamer-user::ntn-to-clists antn binsize))
 
 ;; BESTMATCH-NONDET -- most compact 'consn-p' structuring
 ;; calls screamer
@@ -1792,7 +1792,7 @@
 	   (list line1 line2) 
 	   (car
 	    (sort
-	     (screamer::bestmatch (length line1) 
+	     (screamer-user::bestmatch (length line1) 
 				       (length line2) 
 				       (non-matches line1 line2))
 	     (lambda (a b) (< (apply #'max (flatten a))
@@ -3277,7 +3277,7 @@
 ;; TRAVERSE-PTS -- utility for "fromto"
 (defun traverse-pts (list1 list2)
   (loop for x to (- (length list1) 1) collect
-        (screamer::all-btwn (nth x list1) (nth x list2))))
+        (screamer-user::all-btwn (nth x list1) (nth x list2))))
 
 ;; MATCH2LISTS -- returns all bipartite matches btwn 2 lists
 ; (match2lists '(1 (2 3)) '(5 6)) = ((1 5) (1 6) ((2 3) 5) ((2 3) 6))

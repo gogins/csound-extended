@@ -40,7 +40,8 @@
   (:file "designs")
   (:file "diffs")
   ;; MKG: A test, not using. (:file "dk-screamtest")
-  ;; MKG: Redefines things already defined in nudruz.lisp. (:file "nondet")
+  ;; MKG: Redefines things already defined in nudruz.lisp.
+  (:file "nondet")
   (:file "graphs")
   (:file "inflect")
   (:file "lewin")
