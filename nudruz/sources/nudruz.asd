@@ -5,6 +5,7 @@
 ;;; 11 July 2016
 ;;;
 (require :asdf)
+(room t)
 (asdf::defsystem "nudruz"
   :description "Algorithmic composition code/library/examples from Drew Kruase."
   :long-description "Algorithmic composition code/library/examples from Drew Kruase. This code is fairly old, has not been recently maintained, and has recently been ported to Steel Bank Common Lisp, so don't count on everything working."
@@ -40,7 +41,6 @@
   (:file "designs")
   (:file "diffs")
   ;; MKG: A test, not using. (:file "dk-screamtest")
-  ;; MKG: Redefines things already defined in nudruz.lisp.
   (:file "nondet")
   (:file "graphs")
   (:file "inflect")
