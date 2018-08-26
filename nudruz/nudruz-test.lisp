@@ -9,7 +9,7 @@ and rendered with Csound via the sb-csound FFI wrapper.
 Contrary to CM documentation, the events function does not return a usable seq object.
 The generated score is placed into the seq that is passed to events.
 |#
-(load "load-nudruz.lisp")
+(load "nudruz-load.lisp")
 (in-package :cm)
 
 (let ((csound-seq (new seq :name "csound-test")))

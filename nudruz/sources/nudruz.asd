@@ -79,5 +79,6 @@
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
   ;; MKG: Not using. (:file "withclocc")
+  (:file "nudruz-csound")
    ))
 
