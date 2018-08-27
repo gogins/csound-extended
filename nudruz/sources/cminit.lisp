@@ -2,15 +2,15 @@
 ;;;; Forms to be evaluated when Common Music starts.
 ;;;; Assumes that Common Music has already been loaded using asdf.
 
-(load (merge-pathnames "clocc.lisp" *clocc-home*))
+;(load (merge-pathnames "clocc.lisp" *clocc-home*))
 
-(load (translate-logical-pathname "clocc:src;cllib;base"))
-(load (translate-logical-pathname "clocc:src;cllib;matrix"))
-(load (translate-logical-pathname "clocc:src;cllib;gnuplot"))
+;(load (translate-logical-pathname "clocc:src;cllib;base"))
+;(load (translate-logical-pathname "clocc:src;cllib;matrix"))
+;(load (translate-logical-pathname "clocc:src;cllib;gnuplot"))
 ; (load (translate-logical-pathname "clocc:src;cllib;octave"))
-(load (translate-logical-pathname "clocc:src;cllib;iter"))
-(load (translate-logical-pathname "clocc:src;cllib;stat"))
-(load (translate-logical-pathname "clocc:src;cllib;rng"))
+;(load (translate-logical-pathname "clocc:src;cllib;iter"))
+;(load (translate-logical-pathname "clocc:src;cllib;stat"))
+;(load (translate-logical-pathname "clocc:src;cllib;rng"))
 ;; MKG:  Replaced with quicklisp. (load (translate-logical-pathname "clocc:src;screamer;screamer"))
 ;(load "/usr/local/src/clocc/src/defsystem-3.x/defsystem.lisp")
 
@@ -49,7 +49,7 @@
 ;(asdf:load-system :rsm-genetic-alg)
 ;(asdf:load-system :rsm-gen-prog)
 ;(asdf:load-system :rsm-modal)
-(asdf:load-system :rsm-mod)
+;(asdf:load-system :rsm-mod)
 ;(asdf:load-system :rsm-mpoly)
 
 ;(asdf:load-system :bpm)
@@ -57,9 +57,9 @@
 
 ;(asdf:load-system :series)
 
-(asdf:load-system :trivial-features)
+;(asdf:load-system :trivial-features)
 ;(asdf:load-system :alexandria)
-(asdf:load-system :babel)
+;(asdf:load-system :babel)
 ;(asdf:load-system :cffi)
 ;(asdf:load-system :cmn)
 

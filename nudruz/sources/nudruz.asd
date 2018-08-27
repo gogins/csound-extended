@@ -2,28 +2,64 @@
 ;;; ASDF 3.1 compliant system definition file for Drew Krause's nudruz codebase.
 ;;;
 ;;; Michael Gogins
-;;; 11 July 2016
 ;;;
-(require :asdf)
-(room t)
+
+;; We need to do some non-ASDF stuff in here first because nudruz uses clocc.
+
+(require 'asdf)    
+(print (format t "ASDF version: ~D~%" (asdf:asdf-version)))
+#+sbcl
+(require 'sb-introspect)
+;;; Turn off all those zillions of SBCL warnings.
+(declaim #+sbcl (sb-ext:muffle-conditions style-warning))
+(declaim #+sbcl (sb-ext:muffle-conditions sb-ext:compiler-note))
+#+lispworks
+(push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
+(print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
+
+(load "~/.local/share/common-lisp/source/clocc/clocc.fasl")
+(load (translate-logical-pathname "clocc:src;cllib;base"))
+(load (translate-logical-pathname "clocc:src;cllib;matrix"))
+(load (translate-logical-pathname "clocc:src;cllib;gnuplot"))
+; (load (translate-logical-pathname "clocc:src;cllib;octave"))
+(load (translate-logical-pathname "clocc:src;cllib;iter"))
+(load (translate-logical-pathname "clocc:src;cllib;stat"))
+(load (translate-logical-pathname "clocc:src;cllib;rng"))
+#+sbcl
+(require :sb-posix)
+
 (asdf::defsystem "nudruz"
   :description "Algorithmic composition code/library/examples from Drew Kruase."
   :long-description "Algorithmic composition code/library/examples from Drew Kruase. This code is fairly old, has not been recently maintained, and has recently been ported to Steel Bank Common Lisp, so don't count on everything working."
   :version "1.0"
-  :author "Drew Krause <drkrause@mindspringcom>, ported to SBCL by Michael Gogins <michael.gogins@gmail.com>"
-  :licence "LLGPL"
-  :serial t ;; the dependencies are linear.
+  :author "Drew Krause <drkrause@mindspringcom>, ported to SBCL and OpenMusic by Michael Gogins <michael.gogins@gmail.com>"
+  :licence "LGPL"
+  :depends-on ("alexandria" 
+    "babel" 
+    "bordeaux-threads"
+    "cffi"
+    "cl-heredoc"
+    "cm2"
+    "csound"
+    "rsm-mod"
+    "sb-csound"
+    "sb-introspect"
+    "sb-posix"
+    "rsm-mod"
+    "screamer"
+    "trivial-features")
+  ;:serial t ;; the dependencies are linear.
   :components  
   (;; MKG: The strategy here is to comment out demos etc. or anything else that makes a noise,
    ;; also maybe other things that won't load, and reorder by dependency if necessary.
-  (:file "cminit")
+  ;; MKG Moved all this stuff in nudruz.asd. (:file "cminit")
   (:file "example-csd") 
   (:file "data/besthex")
   ;; MKG: Corrupts things somehow. (:file "data/chords")
   (:file "data/codes")
   (:file "data/drumpatts")
   (:file "data/ordparts")
-  ; MKG: Too big, SBCL runs out of dynamic space. (:file "data/partition-table")
+  ; MKG: Too big, sbcl runs out of dynamic space. (:file "data/partition-table")
   (:file "nudruz")
   ;; MKG: A bunch of tests and examples. (:file "scratch")
   (:file "tonnetz")
@@ -78,7 +114,7 @@
   ;; MKG: Not finished, incorrect syntax? (:file "tps")
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
-  ;; MKG: Not using. (:file "withclocc")
+  (:file "withclocc")
   (:file "nudruz-csound")
    ))
 

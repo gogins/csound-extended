@@ -1,69 +1,58 @@
 # NUDRUZ
 ## Michael Gogins
 
-This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is hosted with his permission. Drew's code is 
-licensed under the terms of the GNU Lesser General Public License. The code has been edited to make it more 
-usable with Steel Bank Common Lisp and the current version of Csound. 
-
+This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is 
+hosted with his permission. Drew's code is licensed under the terms of the GNU 
+Lesser General Public License. The code has been edited to make it more 
+usable with Steel Bank Common Lisp, OpenMusic, and the current version of 
+Csound. 
 
 ## Changes
 
-1. All code has been brought into the Common Music package (that is, of course, the Lisp version of Common Music available 
-from svn://svn.code.sf.net/p/commonmusic/code/branches/cm2). The reason for doing this is that some functions already 
-were dependent upon Common Music code, and changing this would have required making many more changes. As a result, 
-when you load this code, the effect is to vastly extend the power of Common Music.
-1. Residual uses of Scheme syntax and of CLisp-compatible but Steel Bank Common Lisp-incompatible syntax have been ported 
-to SBCL. In particular, `(define` has been replaced wth `(defparameter` if no parameters are used, or with `(defun` if parameters 
-are used.
-1. Csound classes in nudruz have been replaced with the Csound FFI facility, because the use of Csound is no longer supported in the Lisp branch of Common Music (cm2).
+1.  All code has been brought into the Common Music package (that is, of 
+course, the Lisp version of Common Music available from 
+svn://svn.code.sf.net/p/commonmusic/code/branches/cm2). The reason for doing 
+this is that some functions already were dependent upon Common Music code, and 
+changing this would have required making many more changes. As a result, 
+when you load this code, the effect is to vastly extend the power of Common 
+Music.
+
+1. Residual uses of Scheme syntax and of CLisp-compatible but Steel Bank 
+Common Lisp-incompatible syntax have been made conditional, and `(define` 
+has been replaced wth `(defparameter` if no parameters are used, or with 
+`(defun` if parameters are used.
+
+1. Csound classes in nudruz have been replaced with the Csound FFI facility, 
+because the use of Csound is no longer supported in the Lisp branch of Common 
+Music (cm2).
+
 2. In a few cases, redefined symbols have been disambiguated.
-1. I have created a `nudruz.asd` system definition. It tries to include everything except for examples and files containing unfinished or unworkable code. To use `nudruz.asd` you must first load `:cl-heredoc`, `:rsm-mod`, `:cllib`, and `:screamer`. Do that, for example, by having in your `.sbclrc` file something like:
 
-<pre>
-;;; The following lines added by ql:add-to-init-file:
-#-quicklisp
-(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
-                                       (user-homedir-pathname))))
-  (when (probe-file quicklisp-init)
-    (load quicklisp-init)))
-    
+1. I have created a `nudruz.asd` system definition. It tries to include 
+everything except for examples and files containing unfinished or unworkable 
+code. 
 
-(require 'asdf)    
-(require 'sb-introspect)
+In order to load `nudruz.asd` you must first install a number of its 
+dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
+packages, some must be installed by cloning Git repositories, some must be 
+installed using Quicklisp, and some must be installed by downloading acrhives. 
+In all cases you must create a symbolic link from the package code to your 
+` ~/.local/share/common-lisp/source/` directory. For example:
 
-;;; Load the Common Foreign Function Interface.
-(ql:quickload "cffi")
-
-;;; Load the cl-heredoc library, which is used for embedding arbitrary 
-;;; Csound code, including quotes and escapes, into Lisp code.
-(ql:quickload "cl-heredoc")
-
-;;; Load Bordeaux threads.
-(ql:quickload "bordeaux-threads")
-
-;;; Load screamer for constraint programming.
-(ql:quickload "screamer")
-
-;;; Turn off all those zillions of SBCL warnings.
-(declaim #+sbcl (sb-ext:muffle-conditions style-warning))
-(declaim #+sbcl (sb-ext:muffle-conditions sb-ext:compiler-note))
-
-;;; Load Common Music.
-;;; NOTA BENE: SYSTEM "cm2" defines PACKAGE "cm" (or :cm).
-(push "/home/mkg/csound/cm2/" asdf:*central-registry*)
-(asdf:load-system :cm2)
-
-;;; Load Csound's ffi wrappers.
-(push "/home/mkg/csound/csound/interfaces/" asdf:*central-registry*)
-(asdf:load-system :csound)
-(asdf:load-system :sb-csound)
-
-;;; Load Drew Krause's code.
-;;; I have moved loading or defining these pre-requisites out of nudruz.lisp 
-;;; and cminit.lisp.
-(asdf:load-system :rsm-mod)
-(defparameter *nudruz-home* #P"/home/mkg/csound/gogins.github.io/nudruz/")
-(defparameter *clocc-home* #P"/home/mkg/clocc-hg/")
-(push *nudruz-home* asdf:*central-registry*)
-(asdf:load-system :nudruz)
-</pre>
+```
+mkg@bodhimandala:~/csound-extended/nudruz$ ls -ll ~/.local/share/common-lisp/source/
+total 24
+lrwxrwxrwx 1 mkg mkg 69 Aug 24 12:39 alexandria -> /home/mkg/quicklisp/dists/quicklisp/software/alexandria-20170830-git/
+lrwxrwxrwx 1 mkg mkg 64 Aug 24 12:41 babel -> /home/mkg/quicklisp/dists/quicklisp/software/babel-20171227-git/
+lrwxrwxrwx 1 mkg mkg 69 Aug 24 12:40 bordeaux-threads -> /home/mkg/quicklisp/dists/quicklisp/software/bordeaux-threads-v0.8.6/
+lrwxrwxrwx 1 mkg mkg 69 Aug 24 12:35 cl-heredoc -> /home/mkg/quicklisp/dists/quicklisp/software/cl-heredoc-20101006-git/
+lrwxrwxrwx 1 mkg mkg 16 Aug 25 11:18 clm -> /home/mkg/clm-5/
+lrwxrwxrwx 1 mkg mkg 45 Aug 25 11:27 clocc -> /home/mkg/csound-extended/dependencies/clocc/
+lrwxrwxrwx 1 mkg mkg 43 Aug 24 12:01 cm2 -> /home/mkg/csound-extended/dependencies/cm2/
+lrwxrwxrwx 1 mkg mkg 56 Aug 25 11:33 csound -> /home/mkg/csound-extended/dependencies/csound/interfaces
+lrwxrwxrwx 1 mkg mkg 41 Aug 25 12:01 nudruz -> /home/mkg/csound-extended/nudruz/sources/
+lrwxrwxrwx 1 mkg mkg 67 Aug 24 12:40 screamer -> /home/mkg/quicklisp/dists/quicklisp/software/screamer-20150709-git/
+lrwxrwxrwx 1 mkg mkg 75 Aug 24 12:40 trivial-features -> /home/mkg/quicklisp/dists/quicklisp/software/trivial-features-20161204-git/
+```
+Please note, the `clocc` package has no ASDF definition and must be loaded from 
+its `clocc.fasl` file, but you still need a symbolic link to it as noted above.

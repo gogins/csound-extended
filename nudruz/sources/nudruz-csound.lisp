@@ -1,5 +1,5 @@
 (in-package :cm)
-(use-package :csound)
+;(use-package :csound)
 
 (defun event-to-istatement (event channel-offset velocity-scale)
 "
