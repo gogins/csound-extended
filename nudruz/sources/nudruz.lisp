@@ -5,12 +5,8 @@
 ;; www.wordecho.org
 ;; Michael Gogins, 2016
 
-; MKG: Now in asd. (load (merge-pathnames "cminit.lisp" *nudruz-home*))
 (in-package :cm)
-;;(use-package :screamer)
 
-; MKG: Moved files...
-; (load "data/partition-table.lisp")
 (load "sources/data/partition-table.lisp")
 
 ;; first, some needed basic stuff

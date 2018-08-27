@@ -87,7 +87,8 @@
   (:file "mathieugrp")
   ;; MKG: Not using, no more Csound support in CM2. (:file "midi2cs")
   ;; MKG: Not using, no more Csound support in CM2. (:file "midi2csound")
-  ;; MKG: Symbols redefined. (:file "midi-import")
+  ;; MKG: Symbols redefined. 
+  (:file "midi-import")
   (:file "modes")
   ;; MKG: Not using. (:file "modes-todo")
   (:file "motive")
@@ -111,7 +112,7 @@
   (:file "spears")
   (:file "tiles")
   (:file "tiling")
-  ;; MKG: Not finished, incorrect syntax? (:file "tps")
+  ;; MKG: Not finished, incorrect syntax. (:file "tps")
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
   (:file "withclocc")

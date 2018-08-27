@@ -1,29 +1,5 @@
 (in-package :cm)
 
-;(load "cminit.lisp")
-
-;(load "nudruz.lisp")
-
-;(load "inflect.lisp")
-;(load "designs.lisp")
-;(load "modes.lisp")
-;(load "rewrite.lisp")
-;(load "diffs.lisp")
-;(load "nondet.lisp")
-;(load "graphs.lisp")
-;(load "phrasing.lisp")
-;(load "tonnetz.lisp")
-;(load "selfsim.lisp")
-;(load "spears.lisp")
-;(load "spacegrp.lisp")
-;(load "transforms.lisp")
-;(load "serialism.lisp")
-;(load "motive.lisp")
-;(load "reger.lisp")
-;(load "combinatorics.lisp")
-
-;(load "data/besthex.lisp")
-
 ;; KEEPERS
 
 (events
