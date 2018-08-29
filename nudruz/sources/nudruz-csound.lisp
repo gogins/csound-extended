@@ -387,9 +387,8 @@ performance, e.g.
 
 (setq csound (csoundCreate 0))
 (setq my-thread (bt:make-thread (lambda () (render-with-csound cs csd 1 127 csound))))
-(sb-csound:csoundSetControlChannel csound 'mychannel' myvalue)
+(csoundSetControlChannel csound 'mychannel' myvalue)
 (bt:join-thread my-thread)
-
 "
 
     (let
@@ -416,7 +415,7 @@ performance, e.g.
                     (format t "csoundCreate returned: ~S.~%" cs)
                 )
             )
-            (setq result (csoundCompileCsdText cs new-csd-text))
+            (setq result (cffi:foreign-funcall "csoundCompileCsdText" :pointer cs :string new-csd-text :int))
             (format t "csoundCompileCsdText returned: ~D.~%" result)
             (setq result (csoundStart cs))
             (format t "csoundStart returned: ~D.~%" result)
