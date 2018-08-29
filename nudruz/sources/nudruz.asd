@@ -40,19 +40,17 @@
     "cffi"
     "cl-heredoc"
     "cm2"
-    "csound"
     "rsm-mod"
-    "sb-csound"
     "sb-introspect"
     "sb-posix"
     "rsm-mod"
     "screamer"
     "trivial-features")
-  ;:serial t ;; the dependencies are linear.
+  :serial t
   :components  
   (;; MKG: The strategy here is to comment out demos etc. or anything else that makes a noise,
    ;; also maybe other things that won't load, and reorder by dependency if necessary.
-  ;; MKG Moved all this stuff in nudruz.asd. (:file "cminit")
+  (:file "nudruz-csound")
   (:file "example-csd") 
   (:file "data/besthex")
   ;; MKG: Corrupts things somehow. (:file "data/chords")
@@ -65,8 +63,7 @@
   (:file "tonnetz")
   (:file "a-star")
   (:file "beats")
-  ;; MKG: Now standard? (:file "clos")
-  ;; MKG: Not using. (:file "cminit-laptop")
+  ;; MKG: Looks suspiciously funky. (:file "clos")
   ;; MKG: An example. (:file "cmn")
   (:file "combinatorics")
   (:file "crawford")
@@ -87,7 +84,6 @@
   (:file "mathieugrp")
   ;; MKG: Not using, no more Csound support in CM2. (:file "midi2cs")
   ;; MKG: Not using, no more Csound support in CM2. (:file "midi2csound")
-  ;; MKG: Symbols redefined. 
   (:file "midi-import")
   (:file "modes")
   ;; MKG: Not using. (:file "modes-todo")
@@ -116,6 +112,5 @@
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
   (:file "withclocc")
-  (:file "nudruz-csound")
-   ))
+))
 

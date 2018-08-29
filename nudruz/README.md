@@ -7,6 +7,12 @@ Lesser General Public License. The code has been edited to make it more
 usable with Steel Bank Common Lisp, OpenMusic, and the current version of 
 Csound. 
 
+## Documentation
+
+[Drew's talk](http://files.meetup.com/1748515/Drew%20Krause%20slides.pdf) 
+provides an overview and demonstration of the capabilities of nudruz. For more 
+information, read the code.
+
 ## Changes
 
 1.  All code has been brought into the Common Music package (that is, of 
