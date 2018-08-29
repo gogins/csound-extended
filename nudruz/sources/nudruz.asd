@@ -6,7 +6,7 @@
 
 ;; We need to do some non-ASDF stuff in here first because nudruz uses clocc.
 
-(require 'asdf)    
+(require "asdf")    
 (print (format t "ASDF version: ~D~%" (asdf:asdf-version)))
 #+sbcl
 (require 'sb-introspect)
@@ -40,6 +40,7 @@
     "cffi"
     "cl-heredoc"
     "cm2"
+    "csound"
     "rsm-mod"
     "sb-introspect"
     "sb-posix"
