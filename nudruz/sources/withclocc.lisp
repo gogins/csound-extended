@@ -7,7 +7,7 @@
 ;; power set of a list, minus trivial (empty & complete) sets
 (defun proper-subsets (a-list)
     (butlast 
-     (set-difference (subsets a-list) (list a-list 'nil))))
+     (set-difference (cllib:subsets a-list) (list a-list 'nil))))
 
 ;; SUBSETS-LEN
 ;; all subsets of specified size
@@ -15,13 +15,13 @@
 (defun subsets-len (a-list len)
   (set-difference
    (mapcar (lambda (x) (if (= (length x) len) x)) 
-           (subsets (remove-duplicates a-list)))
+           (cllib:subsets (remove-duplicates a-list)))
    (list 'nil)))
 
 ;; PERMUTATIONS --  returns all permutations of a list
 (defun permutations (a-list)
   (loop for x in 
-        (permutations-list (make-array (length a-list) 
+        (cllib:permutations-list (make-array (length a-list) 
                                              :initial-contents a-list))
         collect (coerce x 'list)))
 
