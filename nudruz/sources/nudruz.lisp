@@ -7,7 +7,7 @@
 
 (in-package :cm)
 
-(load (asdf:system-relative-pathname :nudruz "data/partition-table.lisp"))
+(load "sources/data/partition-table.lisp")
 
 ;; first, some needed basic stuff
 
@@ -217,7 +217,7 @@
 
 ;; PRIME-FACTORS -- nonrepeating list of all prime factors
 (defun prime-factors (n)
-  (factors n))
+  (rsm.mod:factors n))
 
 ;; PRIMEP -- prime test
 (defun primep (n)
@@ -484,7 +484,7 @@
 ;; power set of a list, minus trivial (empty & complete) sets
 (defun proper-subsets (a-list)
     (butlast 
-     (set-difference (subsets a-list) (list a-list 'nil))))
+     (set-difference (cllib:subsets a-list) (list a-list 'nil))))
 
 ;; SUBSETS-LEN
 ;; all subsets of specified size
@@ -494,7 +494,7 @@
   (if (numberp len)
       (set-difference
        (mapcar (lambda (x) (if (= (length x) len) x)) 
-               (subsets (remove-duplicates a-list)))
+               (cllib:subsets (remove-duplicates a-list)))
        (list 'nil))
       (loop while len append (subsets-len a-list (pop len)))))
 
@@ -546,7 +546,7 @@
 ;; PERMUTATIONS --  returns all permutations of a list
 (defun permutations (a-list)
   (loop for x in 
-        (permutations-list (make-array (length a-list) 
+        (cllib:permutations-list (make-array (length a-list) 
                                              :initial-contents a-list))
         collect (coerce x 'list)))
 
@@ -4485,7 +4485,7 @@
   (let ((nomax
 	 (transp
 	  (loop repeat n collect
-		(gen-poisson-variate (coerce p 'double-float)))
+		(cllib:gen-poisson-variate (coerce p 'double-float)))
 	  tlevel)))
     (if maxval (clip-hi maxval nomax) nomax)))
 
