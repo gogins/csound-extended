@@ -112,6 +112,16 @@
   ;; MKG: Not finished, incorrect syntax. (:file "tps")
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
-  (:file "withclocc")
-))
+  (:file "withclocc")))
+
+
+(asdf::defsystem "nudruz/spacegrp"
+  :description "Algorithmic composition code/library/examples from Drew Kruase."
+  :long-description "Algorithmic composition code/library/examples from Drew Kruase. This code is fairly old, has not been recently maintained, and has recently been ported to Steel Bank Common Lisp, so don't count on everything working."
+  :version "1.0"
+  :author "Drew Krause <drkrause@mindspringcom>, ported to SBCL and OpenMusic by Michael Gogins <michael.gogins@gmail.com>"
+  :licence "LGPL"
+  :depends-on (#:nudruz)
+  :serial t
+  :components ((:file "spacegrp")))
 
