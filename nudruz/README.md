@@ -4,8 +4,12 @@
 This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is 
 hosted with his permission. Drew's code is licensed under the terms of the GNU 
 Lesser General Public License. The code has been edited to make it more 
-usable with Steel Bank Common Lisp, OpenMusic, and the current version of 
-Csound. 
+usable with Steel Bank Common Lisp and the current version of Csound. 
+
+It is a goal of this project for this code to run in OpenMusic, but at this 
+time, the free version of OpenMusic uses a release of LispWorks that does not 
+compile Lisp code, but only loads it. I have not yet been able to work around 
+this limitation, and it may not be possible to do so.
 
 ## Documentation
 
@@ -23,18 +27,18 @@ changing this would have required making many more changes. As a result,
 when you load this code, the effect is to vastly extend the power of Common 
 Music.
 
-1. Residual uses of Scheme syntax and of CLisp-compatible but Steel Bank 
+2. Residual uses of Scheme syntax and of CLisp-compatible but Steel Bank 
 Common Lisp-incompatible syntax have been made conditional, and `(define` 
 has been replaced wth `(defparameter` if no parameters are used, or with 
 `(defun` if parameters are used.
 
-1. Csound classes in nudruz have been replaced with the Csound FFI facility, 
+3. Csound classes in nudruz have been replaced with the Csound FFI facility, 
 because the use of Csound is no longer supported in the Lisp branch of Common 
 Music (cm2).
 
-2. In a few cases, redefined symbols have been disambiguated.
+4. In a few cases, redefined symbols have been disambiguated.
 
-1. I have created a `nudruz.asd` system definition. It tries to include 
+5. I have created a `nudruz.asd` system definition. It tries to include 
 everything except for examples and files containing unfinished or unworkable 
 code. 
 

@@ -11,22 +11,17 @@ The generated score is placed into the seq that is passed to events.
 |#
 
 (require "asdf")
-(print (format t "ASDF version: ~S~%" (asdf:asdf-version)))
+(print (asdf:asdf-version))
 #+lispworks
-(push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
-(print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
-
-(asdf:make :nudruz)
+(progn 
+    (push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
+    (print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
+    (asdf:initialize-source-registry)
+    (asdf:load-system :cl-heredoc)
+)
+(asdf:load-system :nudruz)
 
 (in-package :cm)
-
-;; (defun name-all-packages ()
-;;     "Return a list of all package names."
-;;     (let ((reslist (mapcar #'package-name
-;;     (list-all-packages))))
-;;     (sort reslist #'string-lessp)))
-;; 
-;; (mapcar #'print (name-all-packages))
 
 (let ((csound-seq (new seq :name "csound-test")))
 (events (tzplay) csound-seq)
