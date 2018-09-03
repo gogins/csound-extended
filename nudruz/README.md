@@ -8,8 +8,8 @@ usable with Steel Bank Common Lisp and the current version of Csound.
 
 It is a goal of this project for this code to run in OpenMusic, but at this 
 time, the free version of OpenMusic uses a release of LispWorks that does not 
-compile Lisp code, but only loads it. I have not yet been able to work around 
-this limitation, and it may not be possible to do so.
+compile Lisp code, but only loads it. I have not been able to work around this 
+limitation.
 
 ## Documentation
 

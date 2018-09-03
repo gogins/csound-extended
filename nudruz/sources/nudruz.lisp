@@ -7,7 +7,7 @@
 
 (in-package :cm)
 
-(load "sources/data/partition-table.lisp")
+(load (asdf:system-relative-pathname 'nudruz "data/partition-table.lisp"))
 
 ;; first, some needed basic stuff
 
