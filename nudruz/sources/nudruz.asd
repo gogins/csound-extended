@@ -54,7 +54,8 @@
   (:file "nudruz-csound")
   (:file "example-csd") 
   (:file "data/besthex")
-  ;; MKG: Corrupts things somehow. (:file "data/chords")
+  ;; MKG: Corrupts things somehow. 
+  (:file "data/chords")
   (:file "data/codes")
   (:file "data/drumpatts")
   (:file "data/ordparts")
