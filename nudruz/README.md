@@ -45,7 +45,7 @@ code.
 In order to load `nudruz.asd` you must first install a number of its 
 dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
 packages, some must be installed by cloning Git repositories, some must be 
-installed using Quicklisp, and some must be installed by downloading acrhives. 
+installed using Quicklisp, and some must be installed by downloading archives. 
 In all cases you must create a symbolic link from the package code to your 
 ` ~/.local/share/common-lisp/source/` directory. For example:
 

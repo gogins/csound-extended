@@ -55,8 +55,11 @@
               wait (* pulse (next tempo))))))
 
 
-(defparameter pnotes '(e4 fs b cs5 d fs4 e cs5 b4 fs d5 cs))
+(defparameter pnotes '(e4 fs b cs5 d fs4 g4 e cs5 b4 fs d5 cs))
 
-(events (piano-phase pnotes .15 .5 5 3) "reich.cm.midi")
+(let ((csound-seq (new seq :name "csound-test")))
+(events (piano-phase pnotes .15 .5 5 3) csound-seq)
+(render-with-csound csound-seq csd-text 2 100))
+
 
 
