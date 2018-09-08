@@ -46,6 +46,7 @@ if(BUILD_CSOUND_AC)
 	    Event.cpp
 	    ImageToScore.cpp
 	    Lindenmayer.cpp
+            Lisp.cpp
 	    MCRM.cpp
 	    Midifile.cpp
 	    MusicModel.cpp
@@ -94,7 +95,7 @@ if(BUILD_CSOUND_AC)
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
         ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
-    target_link_libraries(libCsoundAC PRIVATE libcsnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY})
+    target_link_libraries(libCsoundAC PRIVATE libcsnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ecl)
     if(USE_SYSTEM_PORTSMF)
         target_link_libraries(libCsoundAC PRIVATE ${PORTSMF_LIBRARY})
     endif()

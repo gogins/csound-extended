@@ -44,4 +44,6 @@ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main"
 sudo apt-get update
 sudo apt-get install -y clang-5.0
+echo "Updating Embeddable Common Lisp..."
+sudo apt-get install ecl
 echo "Finished updating all Debian packages required for csound-extended."
