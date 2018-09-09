@@ -1,13 +1,14 @@
 (in-package :cm)
 
-;; WITHCLOCC.LISP -- some stuff that requires clocc libraries
+;; WITHCLOCC.LISP -- some stuff that requires clocc libraries.
+;; NOTE WELL: NOT ANY MORE! Replaced clocc modules with vendor.lisp.
 
 
 ;; PROPER-SUBSETS
 ;; power set of a list, minus trivial (empty & complete) sets
 (defun proper-subsets (a-list)
     (butlast 
-     (set-difference (cllib:subsets a-list) (list a-list 'nil))))
+     (set-difference (subsets a-list) (list a-list 'nil))))
 
 ;; SUBSETS-LEN
 ;; all subsets of specified size
@@ -15,13 +16,13 @@
 (defun subsets-len (a-list len)
   (set-difference
    (mapcar (lambda (x) (if (= (length x) len) x)) 
-           (cllib:subsets (remove-duplicates a-list)))
+           (subsets (remove-duplicates a-list)))
    (list 'nil)))
 
 ;; PERMUTATIONS --  returns all permutations of a list
 (defun permutations (a-list)
   (loop for x in 
-        (cllib:permutations-list (make-array (length a-list) 
+        (permutations-list (make-array (length a-list) 
                                              :initial-contents a-list))
         collect (coerce x 'list)))
 

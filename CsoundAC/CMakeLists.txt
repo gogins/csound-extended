@@ -36,33 +36,33 @@ check_deps(BUILD_CSOUND_AC_LUA_INTERFACE SWIG_FOUND LUAJIT_LIBRARY BUILD_CSOUND_
 
 if(BUILD_CSOUND_AC)
     set(libcsoundac_SRCS
-	    Cell.cpp
-	    ChordLindenmayer.cpp
-	    Composition.cpp
-	    Conversions.cpp
-	    Counterpoint.cpp
-	    CounterpointMain.cpp
-	    CounterpointNode.cpp
-	    Event.cpp
-	    ImageToScore.cpp
-	    Lindenmayer.cpp
-            Lisp.cpp
-	    MCRM.cpp
-	    Midifile.cpp
-	    MusicModel.cpp
-	    Node.cpp
-	    Random.cpp
-	    Rescale.cpp
-	    Score.cpp
-	    ScoreModel.cpp
-	    ScoreNode.cpp
-	    Sequence.cpp
-	    Shell.cpp
-	    Soundfile.cpp
-	    StrangeAttractor.cpp
-	    System.cpp
-	    Voicelead.cpp
-	    VoiceleadingNode.cpp)
+        Cell.cpp
+        ChordLindenmayer.cpp
+        Composition.cpp
+        Conversions.cpp
+        Counterpoint.cpp
+        CounterpointMain.cpp
+        CounterpointNode.cpp
+        Event.cpp
+        ImageToScore.cpp
+        Lindenmayer.cpp
+        Lisp.cpp
+        MCRM.cpp
+        Midifile.cpp
+        MusicModel.cpp
+        Node.cpp
+        Random.cpp
+        Rescale.cpp
+        Score.cpp
+        ScoreModel.cpp
+        ScoreNode.cpp
+        Sequence.cpp
+        Shell.cpp
+        Soundfile.cpp
+        StrangeAttractor.cpp
+        System.cpp
+        Voicelead.cpp
+        VoiceleadingNode.cpp)
 
     check_deps(USE_SYSTEM_PORTSMF PORTSMF_LIBRARY)
     if(NOT USE_SYSTEM_PORTSMF)
@@ -130,7 +130,7 @@ if(BUILD_CSOUND_AC)
         include(${SWIG_USE_FILE})
         set(CMAKE_SWIG_OUTDIR ${BUILD_LIB_DIR})
         include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-	    list(APPEND CMAKE_SWIG_FLAGS "-includeall" "-verbose")
+        list(APPEND CMAKE_SWIG_FLAGS "-includeall" "-verbose")
     endif()
 
     if(BUILD_CSOUND_AC_PYTHON_INTERFACE)
@@ -149,10 +149,10 @@ if(BUILD_CSOUND_AC)
             swig_link_libraries(CsoundAC libCsoundAC libcsnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${PYTHON_LIBRARIES})
         endif()
 
-  	    if(APPLE)
+        if(APPLE)
             set_target_properties(${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTIES
                 LINK_FLAGS "-undefined dynamic_lookup")
-       	endif()
+        endif()
 
         target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
         set_target_properties(${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTIES
@@ -180,10 +180,10 @@ if(BUILD_CSOUND_AC)
           SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC libcsnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${LUAJIT_LIBRARY})
         endif()
 
-  	    if(APPLE)
+        if(APPLE)
             set_target_properties(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PROPERTIES
                 LINK_FLAGS "-undefined dynamic_lookup")
-       	endif()
+        endif()
         target_include_directories(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PRIVATE ${LUA_H_PATH})
 
         set_target_properties(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PROPERTIES

@@ -17,14 +17,6 @@
 (push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
 (print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
 
-(load "~/.local/share/common-lisp/source/clocc/clocc.fasl")
-(load (translate-logical-pathname "clocc:src;cllib;base"))
-(load (translate-logical-pathname "clocc:src;cllib;matrix"))
-(load (translate-logical-pathname "clocc:src;cllib;gnuplot"))
-; (load (translate-logical-pathname "clocc:src;cllib;octave"))
-(load (translate-logical-pathname "clocc:src;cllib;iter"))
-(load (translate-logical-pathname "clocc:src;cllib;stat"))
-(load (translate-logical-pathname "clocc:src;cllib;rng"))
 #+sbcl
 (require :sb-posix)
 
@@ -53,6 +45,7 @@
    ;; also maybe other things that won't load, and reorder by dependency if necessary.
   (:file "nudruz-csound")
   (:file "example-csd") 
+  (:file "vendor")
   (:file "data/besthex")
   ;; MKG: Corrupts things somehow. 
   (:file "data/chords")

@@ -9,11 +9,10 @@ The generated score is placed into the seq that is passed to events.
 
 (require "asdf")
 (print (format t "ASDF version: ~S~%" (asdf:asdf-version)))
-#+lispworks
 (push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
 (print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
 
-(asdf:make :nudruz)
+(asdf:load-system :nudruz)
 
 (in-package :cm)
 

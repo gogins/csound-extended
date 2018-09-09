@@ -3,7 +3,7 @@
 ;;; $Revision$
 ;;; $Date$
 (require "asdf")
-(asdf:make :nudruz)
+(asdf:load-system :nudruz)
 (in-package :cm)
 
 (defun piano-phase (trope pulse amp stay move)

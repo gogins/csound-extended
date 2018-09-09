@@ -1,5 +1,5 @@
 (require "asdf")
-(asdf:make :nudruz)
+(asdf:load-system :nudruz)
 (in-package :cm)
 
 ;;; Second-order Markov process. The transition table is taken 

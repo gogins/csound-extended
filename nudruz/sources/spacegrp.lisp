@@ -20,7 +20,7 @@
          (nupits (loop repeat adjlen for x in pitlist collect x))
          (nutps (loop repeat adjlen for y in tplist collect y))
 	 (dims (list 2 (length nupits))))
-    (cllib:matrix-transpose
+    (matrix-transpose
      (make-array dims :initial-contents (list nupits nutps)))))
 
 ;;; different mappings in/out of spacegroups
@@ -91,20 +91,20 @@
 ;; create 2x2 scaling matrix
 ;; (scale-array 3) = 
 (defun scale-array (scalesize)
-  (cllib:matrix-multiply scalesize
-			 (cllib:matrix-id 2)))
+  (matrix-multiply scalesize
+			 (matrix-id 2)))
 
 ;; SCALE-PTP scale pitch & rhythm
 ;; (scale-ptp 3 (lists->ptp '(1 2 3) '(2 2 1)))
 ;; =  #2A((3 0) (6 6) (9 12))
 (defun scale-ptp (scalesize ptparray1)
-  (cllib:matrix-multiply ptparray1 (scale-array scalesize)))
+  (matrix-multiply ptparray1 (scale-array scalesize)))
 
 ;; MX-APPLY -- basic operation
 ;; myarray = #2A((3 1) (2 2) (6 4) (7 5))
 ;; (mx-apply mx12 myarray) = #2A((4 -1) (4 -2) (10 -4) (12 -5))
 (defun mx-apply (a-mx ptp-array)
-  (cllib:matrix-multiply ptp-array a-mx))
+  (matrix-multiply ptp-array a-mx))
 
 ;; HEAP-MX -- make a random list of 'spacegroup' transforms
 ;; (heap-mx matz12 2) = (#2A((0 -1) (1 -1)) #2A((1 0) (0 1)))
@@ -212,7 +212,7 @@
 		 (lambda (a b) (copylist (list a) b))
 		 (indices (length myregs))
 		 (take-poly myregs))))))
-    (cllib:matrix-transpose
+    (matrix-transpose
      (make-array (list 2 (length places)) 
 		 :initial-contents (list places rgs)))))
 

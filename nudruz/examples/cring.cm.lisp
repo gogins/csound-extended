@@ -4,7 +4,7 @@
 ;;; $Date$
 
 (require "asdf")
-(asdf:make :nudruz)
+(asdf:load-system :nudruz)
 (in-package :cm)
 
 ;;;
