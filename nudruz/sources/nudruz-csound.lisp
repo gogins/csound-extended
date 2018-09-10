@@ -97,6 +97,7 @@ performance, e.g.
             (if csound-instance
                 (setq cs csound-instance)
                 (progn
+                    (setq result (csound:csoundInitialize 3))
                     (setq cs (csound:csoundCreate (cffi:null-pointer)))
                     (format t "csoundCreate returned: ~S.~%" cs)
                 )
@@ -106,14 +107,24 @@ performance, e.g.
             (format t "csoundCompileCsdText returned: ~D.~%" result)
             (setq result (csound:csoundStart cs))
             (format t "csoundStart returned: ~D.~%" result)
+            ; #+ecl 
+            ; (progn 
+                ; (defparameter sigmask (mp:block-signals))
+                ; (loop
+                    ; (setq result (csound:csoundPerformKsmps cs))
+                    ; (when (not (equal result 0)) (return))
+                ; )
+                ; (mp:restore-signals sigmask)
+            ; )
+            ; #-ecl
             (loop
                 (setq result (csound:csoundPerformKsmps cs))
-                (when (not (equal result 0))(return))
+                (when (not (equal result 0)) (return))
             )
-            (setq result(csound:csoundCleanup cs))
+            (setq result (csound:csoundCleanup cs))
             (format t "csoundCleanup returned: ~D.~%" result)
             (sleep 5)
-            (if (not csound)
+            (if (not csound-instance)
                 (csound:csoundDestroy cs)
                 (format t "csoundDestroy was called.~%")
             )

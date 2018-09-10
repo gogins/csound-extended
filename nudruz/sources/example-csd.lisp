@@ -5,7 +5,7 @@
  
 (defparameter csd-text #>qqq><CsoundSynthesizer>
 <CsOptions>
--m0 --m-dB=1 -d -odac
+-m0 --m-dB=1 -d -o dac
 </CsOptions>
 <CsLicense>
 
