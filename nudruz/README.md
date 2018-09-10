@@ -57,12 +57,10 @@ lrwxrwxrwx 1 mkg mkg 64 Aug 24 12:41 babel -> /home/mkg/quicklisp/dists/quicklis
 lrwxrwxrwx 1 mkg mkg 69 Aug 24 12:40 bordeaux-threads -> /home/mkg/quicklisp/dists/quicklisp/software/bordeaux-threads-v0.8.6/
 lrwxrwxrwx 1 mkg mkg 69 Aug 24 12:35 cl-heredoc -> /home/mkg/quicklisp/dists/quicklisp/software/cl-heredoc-20101006-git/
 lrwxrwxrwx 1 mkg mkg 16 Aug 25 11:18 clm -> /home/mkg/clm-5/
-lrwxrwxrwx 1 mkg mkg 45 Aug 25 11:27 clocc -> /home/mkg/csound-extended/dependencies/clocc/
 lrwxrwxrwx 1 mkg mkg 43 Aug 24 12:01 cm2 -> /home/mkg/csound-extended/dependencies/cm2/
 lrwxrwxrwx 1 mkg mkg 56 Aug 25 11:33 csound -> /home/mkg/csound-extended/dependencies/csound/interfaces
 lrwxrwxrwx 1 mkg mkg 41 Aug 25 12:01 nudruz -> /home/mkg/csound-extended/nudruz/sources/
 lrwxrwxrwx 1 mkg mkg 67 Aug 24 12:40 screamer -> /home/mkg/quicklisp/dists/quicklisp/software/screamer-20150709-git/
 lrwxrwxrwx 1 mkg mkg 75 Aug 24 12:40 trivial-features -> /home/mkg/quicklisp/dists/quicklisp/software/trivial-features-20161204-git/
 ```
-Please note, the `clocc` package has no ASDF definition and must be loaded from 
-its `clocc.fasl` file, but you still need a symbolic link to it as noted above.
+

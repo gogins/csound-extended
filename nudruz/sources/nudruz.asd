@@ -34,9 +34,6 @@
     "cm2"
     "csound"
     "rsm-mod"
-    "sb-introspect"
-    "sb-posix"
-    "rsm-mod"
     "screamer"
     "trivial-features")
   :serial t
