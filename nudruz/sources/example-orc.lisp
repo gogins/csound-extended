@@ -3,7 +3,7 @@
  
 (in-package :cm)
 
-(defparameter csd-text #>qqq>
+(defparameter orc-text #>qqq>
 sr                              =                       48000
 ksmps                           =                       20
 nchnls                          =                       2

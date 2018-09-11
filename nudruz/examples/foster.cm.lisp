@@ -111,7 +111,7 @@
                 (foster 90 12 0)
                 (foster 90 24 0))
                 csound-seq)
-    (render-with-csound csound-seq csd-text 57 100))
+    (render-with-csd csound-seq csd-text :channel-offset 57 :velocity-scale 100))
 
 
 

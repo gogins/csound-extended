@@ -59,7 +59,8 @@
 
 (let ((csound-seq (new seq :name "csound-test")))
 (events (piano-phase pnotes .15 .5 5 3) csound-seq)
-(render-with-csound csound-seq csd-text 2 100))
+(render-with-csd csound-seq csd-text :channel-offset 2 :velocity-scale 100))
+(quit)
 
 
 

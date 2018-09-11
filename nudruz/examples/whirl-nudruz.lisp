@@ -19,5 +19,6 @@ The generated score is placed into the seq that is passed to events.
 
 (let ((csound-seq (new seq :name "csound-test")))
 (events (whirl 10 .1 .5 20 10 50 harms) csound-seq)
-(render-with-csound csound-seq csd-text 9 100))
+(render-with-csd csound-seq csd-text :channel-offset 9 :velocity-scale 100))
+(quit)
 

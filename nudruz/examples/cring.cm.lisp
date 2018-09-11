@@ -197,4 +197,5 @@
               (dograndshire (rhythm 'qq 100) 32  -36 .7)
               )
         csound-seq)
-(render-with-csound csound-seq csd-text 8 100))
+        (render-with-csd csound-seq csd-text :channel-offset 8 :velocity-scale 100))
+(quit)

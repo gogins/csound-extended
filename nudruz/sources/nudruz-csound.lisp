@@ -57,19 +57,28 @@ using 'test' for character equality.
           
 (defun seq-to-sco (seq &optional (channel-offset 1) (velocity-scale 127))
 "
-Translates all MIDI events in a Common Music seq object to Csound sco text,
+Translates all MIDI events in a Common Music 'seq' object to Csound sco text,
 with an optional channel offset and velocity scaling.
 "
-    (format t "Building Csound sco from seq...~%")
-    (defun curried-event-to-istatement (event)
-        (event-to-istatement event channel-offset velocity-scale))
-    (setq score-list (mapcar 'curried-event-to-istatement (subobjects seq)))
-    (setq sco-text (format nil "~{~A~^ ~}" score-list))
+    (let 
+        ((score-list (list))
+        (score-text ""))
+        (progn 
+            (format t "Building Csound sco from seq...~%")
+            (defun curried-event-to-istatement (event)
+                (event-to-istatement event channel-offset velocity-scale))
+            (setq score-list (mapcar 'curried-event-to-istatement (subobjects seq)))
+            (setq sco-text (format nil "~{~A~^ ~}" score-list))
+        )
+    )
 )
 
-(defun build-csd (orc sco  &optional (options "--midi-key=4 --midi-velocity=5 -m195 -RWdfo"(output "dac")))
-    ((let csd "")
-    (let csd_template "<CsoundSynthesizer>
+(defparameter csound-default-options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")
+
+(defun build-csd (orc &key (sco "")(options default-csound-options)(output "dac"))
+    (let
+        ((csd "")
+        (csd-template "<CsoundSynthesizer>
 <CsOptions>
 ~A -o ~A
 </CsOptions>
@@ -80,42 +89,42 @@ with an optional channel offset and velocity scaling.
 ~A
 </CsScore>
 </CsoundSynthesizer>
-"))
-    (setq csd (format nil csd-template options output orc sco))
+~%")
+        )
+        (setq csd (format nil csd-template options output orc sco))
+    )
 )
 
-(defun render-with-csound-orc (sequence orc &optional (options "") (channel-offset 1) (velocity-scale 127) (csound-instance nil))
-    ((let csd "")
-    (let sco-text "")
-    (result 0))
-    (progn
-        (setq csd (build-csd orc sco options))
-        (setq result (render-with-csound sequence csd channel-offset velocity-scale csound-instance))
+(defun render-with-orc (sequence orc &key (options csound-default-options)(output "dac")(channel-offset 1) (velocity-scale 127)(csound-instance nil))
+    (let 
+        ((csd "")
+        (sco-text "")
+        (result 0))
+        (progn
+            (setq csd (build-csd orc :options options :output output))
+            (setq result (render-with-csd sequence csd :channel-offset channel-offset :velocity-scale velocity-scale :csound-instance csound-instance))
+        )
     )
 )
     
-(defun render-with-csound (sequence csd &optional (channel-offset 1) (velocity-scale 127) (csound-instance nil))
+(defun render-with-csd (seq csd &key (channel-offset 1) (velocity-scale 127) (csound-instance nil))
 "
-Given a Common Music seq 'sequence', translates each of its events into a
-Csound 'i' statement, optionally offsetting the channel number and/or
-rescaling MIDI velocity, then renders the resulting score using 'csd-text'.
-A CSD is used because it can contain any textual Csound input in one block of
-raw text. The score generated from 'sequence' is appended to any <CsScore>
-lines found in 'csd-text'. This is done so that Csound will quit performing
-at the end of the score. It is possible to call csoundReadScore during the
-performance. This function returns the Csound object that it uses.
+Given a Common Music 'seq', translates each of its MIDI events into a Csound 
+'i' statement, optionally offsetting the channel number and/or rescaling MIDI 
+velocity, then renders the resulting score using the Csound 'csd'. The 
+generated score is appended to the <CsScore> element of `csd`. It is 
+possible to call csoundReadScore during the performance. This function returns 
+the Csound object that it uses.
 
-The optional 'csound' parameter is used to call Csound if passed. This enables
-'render-with-csound' to be run in a separate thread of execution, and for
-the caller to control Csound instrument parameters during real time
-performance, e.g.
+The optional csound parameter is used to call Csound if passed. This enables
+render-with-csound to be run in a separate thread of execution, and for the 
+caller to control Csound instrument parameters during real time performance, e.g.
 
 (setq csound (csoundCreate 0))
 (setq my-thread (bt:make-thread (lambda () (render-with-csound cs csd 1 127 csound))))
 (csoundSetControlChannel csound 'mychannel' myvalue)
 (bt:join-thread my-thread)
 "
-
     (let
         ((score-list (list))
         (cs 0)
@@ -124,7 +133,7 @@ performance, e.g.
         (new-csd-text "")
         (csd-pointer 0))
         (progn
-            (setq sco-text (seq-to-sco sequence channel-offset velocity-scale))
+            (setq sco-text (seq-to-sco seq channel-offset velocity-scale))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
             (format t "new-csd-text: ~A~%" new-csd-text)
             (setq csd-pointer (cffi:foreign-string-alloc new-csd-text))
@@ -141,16 +150,6 @@ performance, e.g.
             (format t "csoundCompileCsdText returned: ~D.~%" result)
             (setq result (csound:csoundStart cs))
             (format t "csoundStart returned: ~D.~%" result)
-            ; #+ecl 
-            ; (progn 
-                ; (defparameter sigmask (mp:block-signals))
-                ; (loop
-                    ; (setq result (csound:csoundPerformKsmps cs))
-                    ; (when (not (equal result 0)) (return))
-                ; )
-                ; (mp:restore-signals sigmask)
-            ; )
-            ; #-ecl
             (loop
                 (setq result (csound:csoundPerformKsmps cs))
                 (when (not (equal result 0)) (return))
