@@ -54,7 +54,46 @@ using 'test' for character equality.
                            :end (or pos (length string)))
           when pos do (write-string replacement out)
           while pos)))
+          
+(defun seq-to-sco (seq &optional (channel-offset 1) (velocity-scale 127))
+"
+Translates all MIDI events in a Common Music seq object to Csound sco text,
+with an optional channel offset and velocity scaling.
+"
+    (format t "Building Csound sco from seq...~%")
+    (defun curried-event-to-istatement (event)
+        (event-to-istatement event channel-offset velocity-scale))
+    (setq score-list (mapcar 'curried-event-to-istatement (subobjects seq)))
+    (setq sco-text (format nil "~{~A~^ ~}" score-list))
+)
 
+(defun build-csd (orc sco  &optional (options "--midi-key=4 --midi-velocity=5 -m195 -RWdfo"(output "dac")))
+    ((let csd "")
+    (let csd_template "<CsoundSynthesizer>
+<CsOptions>
+~A -o ~A
+</CsOptions>
+<CsInstruments>
+~A
+</CsInstruments>
+<CsScore>
+~A
+</CsScore>
+</CsoundSynthesizer>
+"))
+    (setq csd (format nil csd-template options output orc sco))
+)
+
+(defun render-with-csound-orc (sequence orc &optional (options "") (channel-offset 1) (velocity-scale 127) (csound-instance nil))
+    ((let csd "")
+    (let sco-text "")
+    (result 0))
+    (progn
+        (setq csd (build-csd orc sco options))
+        (setq result (render-with-csound sequence csd channel-offset velocity-scale csound-instance))
+    )
+)
+    
 (defun render-with-csound (sequence csd &optional (channel-offset 1) (velocity-scale 127) (csound-instance nil))
 "
 Given a Common Music seq 'sequence', translates each of its events into a
@@ -85,12 +124,7 @@ performance, e.g.
         (new-csd-text "")
         (csd-pointer 0))
         (progn
-            (format t "Building Csound score...~%")
-            (defun curried-event-to-istatement (event)
-                (event-to-istatement event channel-offset velocity-scale))
-            (setq score-list (mapcar 'curried-event-to-istatement (subobjects sequence)))
-            (setq sco-text (format nil "~{~A~^ ~}" score-list))
-            ;(print sco-text)
+            (setq sco-text (seq-to-sco sequence channel-offset velocity-scale))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
             (format t "new-csd-text: ~A~%" new-csd-text)
             (setq csd-pointer (cffi:foreign-string-alloc new-csd-text))
