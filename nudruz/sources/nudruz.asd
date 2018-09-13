@@ -4,10 +4,7 @@
 ;;; Michael Gogins
 ;;;
 
-;; We need to do some non-ASDF stuff in here first because nudruz uses clocc.
-
-(require "asdf")    
-(print (format t "ASDF version: ~D~%" (asdf:asdf-version)))
+(require :asdf)    
 #+sbcl
 (require 'sb-introspect)
 ;;; Turn off all those zillions of SBCL warnings.
@@ -15,7 +12,6 @@
 (declaim #+sbcl (sb-ext:muffle-conditions sb-ext:compiler-note))
 #+lispworks
 (push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
-(print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
 
 #+sbcl
 (require :sb-posix)

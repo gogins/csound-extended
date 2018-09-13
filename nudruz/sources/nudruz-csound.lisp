@@ -135,7 +135,7 @@ caller to control Csound instrument parameters during real time performance, e.g
         (progn
             (setq sco-text (seq-to-sco seq channel-offset velocity-scale))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
-            (format t "new-csd-text: ~A~%" new-csd-text)
+            ; (format t "new-csd-text: ~A~%" new-csd-text)
             (setq csd-pointer (cffi:foreign-string-alloc new-csd-text))
             (if csound-instance
                 (setq cs csound-instance)
