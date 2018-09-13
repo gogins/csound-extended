@@ -27,11 +27,12 @@
     "bordeaux-threads"
     "cffi"
     "cl-heredoc"
-    "cm2"
     "csound"
+    "cm2"
     "rsm-mod"
     "screamer"
-    "trivial-features")
+    "trivial-features"
+    )
   :serial t
   :components  
   (;; MKG: The strategy here is to comment out demos etc. or anything else that makes a noise,

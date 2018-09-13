@@ -46,6 +46,8 @@ sudo apt-get update
 sudo apt-get install -y clang-5.0
 echo "Updating cl-rsm-mod..."
 sudo apt-get install cl-rsm-mod
+echo "Updating libatomic-ops-dev..."
+sudo apt-get install libatomic-ops-dev
 echo "Updating Embeddable Common Lisp..."
 sudo apt-get install ecl
 echo "Finished updating all Debian packages required for csound-extended."
