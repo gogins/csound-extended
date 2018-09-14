@@ -23,6 +23,7 @@
 #include "Platform.hpp"
 #include <limits>
 #include <map>
+#include <sstream>
 #include "Lisp.hpp"
 #include "Score.hpp"
 #include "System.hpp"
@@ -34,7 +35,6 @@ namespace csound
 {
 
 cl_object evaluate_form(const std::string &form) {
-    //return cl_safe_eval(c_string_to_object(form.c_str()), Cnil, Cnil);
     return cl_eval(c_string_to_object(form.c_str()));
 }
 
@@ -79,14 +79,26 @@ void seqToScore(cl_object &seq, Score &score)
 
 void scoreToSeq(Score &score, cl_object &seq)
 {
-   for (size_t i = 0, n = score.size(); i < n; ++i) {
+    char event_form_buffer[0x200];
+    // Common Music uses a plain Lisp list for a sequence. This makes it awkward to 
+    // simply append envets from C++ to Lisp. So, we build up code that will 
+    // create the list of events all in one go.
+    std::stringstream stream;
+    stream << "(setf (slot-value score-from-children 'subobjects) (list ";
+    for (size_t i = 0, n = score.size(); i < n; ++i) {
         const Event &event = score[i];
-        cl_object time_ = ecl_make_double_float(event.getTime());
-        cl_object channel = ecl_make_double_float(event.getChannel());
-        cl_object keynum = ecl_make_double_float(event.getKey());
-        cl_object duration = ecl_make_double_float(event.getDuration());
-        cl_object amplitude = ecl_make_double_float(event.getVelocity() / 127.0);
+        auto time_ = event.getTime();
+        auto channel = event.getInstrument();
+        auto keynum = event.getKey();
+        auto duration = event.getDuration();
+        auto amplitude = (event.getVelocity() / double(127));
+        std::snprintf(event_form_buffer, 0x200, "(new midi :time  %f :channel %f :keynum %f :duration %f :amplitude %f)", time_, channel, keynum, duration, amplitude);
+        stream << event_form_buffer;
     }
+    stream << "))";
+    auto code = stream.str();
+    std::cerr << code << std::endl;
+    cl_object result = evaluate_form(code);
 }
 
 LispNode::LispNode()
@@ -151,6 +163,7 @@ void LispGenerator::generate(Score &score_from_this)
         //std::printf("result type: %d\n", ecl_t_of(result));
     }
     seqToScore(result, score_from_this);
+    System::inform("LispGenerator::generate.\n");
 }
 
 LispTransformer::LispTransformer()
@@ -163,14 +176,31 @@ LispTransformer::~LispTransformer()
 
 void LispTransformer::transform(Score &score_from_children)
 {
-    cl_object seq = c_string_to_object("(new seq :name \"score-from-children\")");
+    System::inform("LispGenerator::transform...\n");
+    System::inform("score_from_children size: %d\n", score_from_children.size());
+    cl_object result;    
+    // These forms must be evaluated to set up the environment 
+    // before score_from_children can be translated to the  cm:seq
+    // score-from-children.
+    //result = evaluate_form("(require :asdf)");
+    //result = evaluate_form("(require :nudruz)");
+    //result = evaluate_form("(in-package :cm)");
+    cl_object seq = evaluate_form(R"qqq(
+(progn
+    (defparameter score-from-children (new seq :name "score-from-children"))
+    (list-objects score-from-children)
+    score-from-children
+)
+)qqq");
     scoreToSeq(score_from_children, seq);
-    cl_object result;
     for (auto it = top_level_forms.begin(); it != top_level_forms.end(); ++it) {
-        // The final form must return the seq to be translated.
-        cl_object result = evaluate_form(*it);
+        // The final form must return the seq to be translated back to the score.
+        result = evaluate_form(*it);
     }
+    // Replace the original score_from_children with the transformed version.
+    score_from_children.clear();
     seqToScore(result, score_from_children);
+    System::inform("LispGenerator::transform.\n");
 }
 
 }

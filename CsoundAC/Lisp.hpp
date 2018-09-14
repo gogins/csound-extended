@@ -142,9 +142,11 @@ public:
     virtual ~LispTransformer();
     /**
      * To transform score_from_children, the Lisp code should operate on a 
-     * Common Music seq object named "score-from-children", which will be 
+     * Common Music seq instance named "score-from-children", which will be 
      * translated from score_from_children before transformation, and then 
-     * translated back to score_from_children after transformation.
+     * translated back to score_from_children after transformation. Please 
+     * note, before doing any of this, the asdf, nudruz, and cm packages 
+     * will be loaded.
      */
     virtual void transform(Score &score_from_children);
 };
