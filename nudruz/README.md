@@ -42,6 +42,14 @@ Music (cm2).
 everything except for examples and files containing unfinished or unworkable 
 code. 
 
+6. The `nudruz` system, as well as the Common Music system `cm2`, have been 
+brought into the `:cm` package and have been made available to embedded Lisp 
+code that can run in the `csound::LispGenerator` and `csound::LispTransformer`
+nodes of the SilenceAC system for algorithmic composition, using Embeddable 
+Common Lisp to run the Lisp code. With this facility, it is possible to 
+combine the use of Common Music, nudruz, and CsoundAC algorithms and code to 
+compose music.
+
 In order to load `nudruz.asd` you must first install a number of its 
 dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
 packages, some must be installed by cloning Git repositories, some must be 

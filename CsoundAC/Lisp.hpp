@@ -49,8 +49,14 @@ template<typename Head, typename... Tail> struct are_cl_objects<Head, Tail...> {
 constexpr static bool p = is_cl_object<Head>::p && are_cl_objects<Tail...>::p; };
     
 /**
+ * This function must be called with the arc and argv from main() before any 
+ * Lisp code is executed.
+ */
+void initialize_ecl(int argc, char **argv);
+
+/**
  * Evaluates a _SINGLE_ Lisp form. Please note, in Embeddable Common Lisp, 
- * `(require :xxx)` and some other forms only work if they are at the top 
+ * `(require :xxx)` and some other forms work only if they are at the top 
  * level. That may necessitate repeated calls to this function from the 
  * embedding system.
  */
@@ -81,13 +87,20 @@ void seqToScore(cl_object &seq_, Score &score);
  * in the Score to Common Music MIDI events in the seq. MIDI channel 0 is 
  * Csound insno 1.
  */
-void scoreToSeq(Score &score, cl_object &seq);
+cl_object scoreToSeq(Score &score, std::string seq_name);
 
 #endif
     
 /**
- * Base class for Nodes that can use embedded Lisp code to 
- * generate or transform Events.
+ * Base class for Nodes that can use embedded Lisp code to generate or 
+ * transform Events. In order to use the Common Music or nudruz packages to do 
+ * this, first execute the following sequence of calls:
+ * ```
+ * csound::initialize_ecl(argc, (char **)argv);
+ * csound::evaluate_form("(require :asdf)");
+ * csound::evaluate_form("(require :nudruz)");
+ * csound::evaluate_form("(in-package :cm)");
+ * ```
  */
 class SILENCE_PUBLIC LispNode :
     public Node
@@ -97,12 +110,7 @@ protected:
 public:
     LispNode();
     virtual ~LispNode();
-    /**
-     * This function must be called with arc and argv from main() before any 
-     * Lisp code is executed.
-     */
-    virtual void initialize_ecl(int argc, char **argv);
-    /**
+     /**
      * Sets the Lisp code that will generate or transform a Silence score.
      * Please note, each top-level form must be appended in sequence, e.g. 
      * `require` and `in-package` should be added before a `progn` containing 
@@ -129,7 +137,6 @@ public:
      */
     virtual void generate(Score &score_from_this);
 };
-
 
 /**
  * Node that uses Lisp code to transform Events produced by child Nodes.

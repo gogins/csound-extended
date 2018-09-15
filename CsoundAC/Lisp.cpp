@@ -34,6 +34,17 @@
 namespace csound
 {
 
+void initialize_ecl(int argc, char **argv)
+{
+    static bool initialized_ecl = false;
+    if (initialized_ecl) {
+        return;
+    } 
+    initialized_ecl = true;
+    cl_boot(argc, argv);
+    atexit(cl_shutdown);
+    System::inform("LispNode: initialized Embeddable Common Lisp.\n");
+}
 cl_object evaluate_form(const std::string &form) {
     return cl_eval(c_string_to_object(form.c_str()));
 }
@@ -77,8 +88,15 @@ void seqToScore(cl_object &seq, Score &score)
     }
 }
 
-void scoreToSeq(Score &score, cl_object &seq)
+cl_object scoreToSeq(Score &score, std::string seq_name)
 {
+    cl_object seq = evaluate_form(R"qqq(
+(progn
+    (defparameter score-from-children (new seq :name "score-from-children"))
+    (list-objects score-from-children)
+    score-from-children
+)
+)qqq");
     char event_form_buffer[0x200];
     // Common Music uses a plain Lisp list for a sequence. This makes it awkward to 
     // simply append envets from C++ to Lisp. So, we build up code that will 
@@ -97,8 +115,9 @@ void scoreToSeq(Score &score, cl_object &seq)
     }
     stream << "))";
     auto code = stream.str();
-    std::cerr << code << std::endl;
+    // std::cerr << code << std::endl;
     cl_object result = evaluate_form(code);
+    return seq;
 }
 
 LispNode::LispNode()
@@ -107,18 +126,6 @@ LispNode::LispNode()
 
 LispNode::~LispNode()
 {
-}
-
-void LispNode::initialize_ecl(int argc, char **argv)
-{
-    static bool initialized_ecl = false;
-    if (initialized_ecl) {
-        return;
-    } 
-    initialized_ecl = true;
-    cl_boot(argc, argv);
-    atexit(cl_shutdown);
-    System::inform("LispNode: initialized Embeddable Common Lisp.\n");
 }
 
 void LispNode::appendTopLevelForm(const std::string top_level_form)
@@ -185,14 +192,7 @@ void LispTransformer::transform(Score &score_from_children)
     //result = evaluate_form("(require :asdf)");
     //result = evaluate_form("(require :nudruz)");
     //result = evaluate_form("(in-package :cm)");
-    cl_object seq = evaluate_form(R"qqq(
-(progn
-    (defparameter score-from-children (new seq :name "score-from-children"))
-    (list-objects score-from-children)
-    score-from-children
-)
-)qqq");
-    scoreToSeq(score_from_children, seq);
+    cl_object seq = scoreToSeq(score_from_children, "score-from-children");
     for (auto it = top_level_forms.begin(); it != top_level_forms.end(); ++it) {
         // The final form must return the seq to be translated back to the score.
         result = evaluate_form(*it);

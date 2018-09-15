@@ -22,14 +22,14 @@ int main(int argc, const char **argv)
     model.setAlbum("Silence");
     model.setYear("2018");
     model.setPerformanceRightsOrganization("Irreducible Productions, ASCAP");
+    csound::initialize_ecl(argc, (char **)argv);
+    csound::evaluate_form(R"qqq((print (format t "--- Hello, World, from Embeddable Common Lisp.~%")))qqq");
+    csound::evaluate_form("(require :asdf)");
+    csound::evaluate_form("(require :nudruz)");
+    csound::evaluate_form("(in-package :cm)");
     csound::LispGenerator lisp_generator;
-    lisp_generator.initialize_ecl(argc, (char **)argv);
-    lisp_generator.appendTopLevelForm(R"qqq((print (format t "--- Hello, World, from Embeddable Common Lisp.~%")))qqq");
-    lisp_generator.appendTopLevelForm(R"qqq((require :asdf))qqq");
-    lisp_generator.appendTopLevelForm(R"qqq((require :nudruz))qqq");
-    lisp_generator.appendTopLevelForm(R"qqq((in-package :cm))qqq");
     lisp_generator.appendTopLevelForm(R"qqq(
-(progn 
+(progn
     (let ((csound-seq (new seq :name "csound-test")))
     (events (tzplay) csound-seq)
     (print (format t "--- Good-bye, World, from Embeddable Common Lisp.~%"))
@@ -41,8 +41,10 @@ int main(int argc, const char **argv)
     lisp_transformer.appendTopLevelForm(R"qqq(
 (progn 
 `   (print "Testing LispTransformer...")
+    (print "Begore transformation...")
     (list-objects score-from-children)
     (map-objects (lambda (k) (+ k 12)) score-from-children :slot! 'keynum)
+    (print "After transformation.")
     (list-objects score-from-children)
     score-from-children)
 )
