@@ -20,7 +20,7 @@ information, read the code.
 ## Changes
 
 1.  All code has been brought into the Common Music package (that is, of 
-course, the Lisp version of Common Music available from 
+course, the Lisp version of Common Music, version 2, available from 
 svn://svn.code.sf.net/p/commonmusic/code/branches/cm2). The reason for doing 
 this is that some functions already were dependent upon Common Music code, and 
 changing this would have required making many more changes. As a result, 
@@ -29,8 +29,7 @@ Music.
 
 2. Residual uses of Scheme syntax and of CLisp-compatible but Steel Bank 
 Common Lisp-incompatible syntax have been made conditional, and `(define` 
-has been replaced wth `(defparameter` if no parameters are used, or with 
-`(defun` if parameters are used.
+has been replaced wth `(defparameter` or `(defun`.
 
 3. Csound classes in nudruz have been replaced with the Csound FFI facility, 
 because the use of Csound is no longer supported in the Lisp branch of Common 
@@ -54,8 +53,8 @@ In order to load `nudruz.asd` you must first install a number of its
 dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
 packages, some must be installed by cloning Git repositories, some must be 
 installed using Quicklisp, and some must be installed by downloading archives. 
-In all cases you must create a symbolic link from the package code to your 
-` ~/.local/share/common-lisp/source/` directory. For example:
+In all cases except for packages you must create a symbolic link 
+to your ` ~/.local/share/common-lisp/source/` directory. For example:
 
 ```
 mkg@bodhimandala:~/csound-extended/nudruz$ ls -ll ~/.local/share/common-lisp/source/

@@ -10,7 +10,6 @@ The generated score is placed into the seq that is passed to events.
 (require :nudruz)
 (in-package :cm)
 (progn 
-    (package-name (symbol-package 'seq))
     (let ((csound-seq (new seq :name "csound-test")))
     (events (tzplay) csound-seq)
     (render-with-orc csound-seq orc-text :channel-offset 25 :velocity-scale 100))
