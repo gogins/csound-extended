@@ -48,7 +48,7 @@ code.
 6. The `nudruz` system, as well as the Common Music system `cm2`, have been 
 brought into the `:cm` package and have been made available to embedded Lisp 
 code that can run in the `csound::LispGenerator` and `csound::LispTransformer`
-nodes of the SilenceAC system for algorithmic composition, using Embeddable 
+nodes of the CsoundAC system for algorithmic composition, using Embeddable 
 Common Lisp to run the Lisp code. With this facility, it is possible to 
 combine the use of Common Music, nudruz, and CsoundAC algorithms and code to 
 compose music.
