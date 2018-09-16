@@ -4,12 +4,16 @@
 This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is 
 hosted with his permission. Drew's code is licensed under the terms of the GNU 
 Lesser General Public License. The code has been edited to make it more 
-usable with Steel Bank Common Lisp and the current version of Csound. 
+usable with different implementations of Common Lisp, and with the current 
+version of Csound. In particular, there is now a `nudruz.asd` system 
+definition that will loads all dependencies of `nudruz`, including Common 
+Music verison 2 and others. This has been tested with Steel Bank Common Lisp 
+and with Embeddable Common Lisp.
 
 It is a goal of this project for this code to run in OpenMusic, but at this 
 time, the free version of OpenMusic uses a release of LispWorks that does not 
-compile Lisp code, but only loads it. I have not been able to work around this 
-limitation.
+compile Lisp code, but only loads it. Therefore, ASDF cannot be used in OpenMusic
+.I have not been able to work around this limitation.
 
 ## Documentation
 
@@ -53,8 +57,8 @@ In order to load `nudruz.asd` you must first install a number of its
 dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
 packages, some must be installed by cloning Git repositories, some must be 
 installed using Quicklisp, and some must be installed by downloading archives. 
-In all cases except for packages you must create a symbolic link 
-to your ` ~/.local/share/common-lisp/source/` directory. For example:
+In all cases except for system packages, you must create a symbolic link 
+to your `~/.local/share/common-lisp/source/` directory. For example:
 
 ```
 mkg@bodhimandala:~/csound-extended/nudruz$ ls -ll ~/.local/share/common-lisp/source/

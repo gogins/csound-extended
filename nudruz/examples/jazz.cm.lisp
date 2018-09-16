@@ -381,22 +381,14 @@ sprouted process generates one measure of a particular part.
              sprout (jazz-bass scale (transpose root -12)
                                tempo ampl)
              wait (rhythm 'w tempo))))
-#|
-
-(events (list #&combo
-              (jazz-combo 48 jazz-changes
-                          jazz-tempo jazz-scale))
-        "jazz.mid")
-
-(events (list #&combo
-              (jazz-combo 48 jazz-changes
-                          jazz-tempo jazz-scale))
-        "jazz.mid")
-|#
 
 ; Currently orc-text doesn't do percussion; jazz-combo is for General MIDI.
+; Alternatively, one could not sprout the percussion parts, and send the seq
+; to Csound.
+
 (let ((csound-seq (new seq :name "csound-seq")))
 (events (jazz-combo 48 jazz-changes jazz-tempo jazz-scale)
         "jazz.mid"))
+(quit)
 
 
