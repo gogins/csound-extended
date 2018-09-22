@@ -7,6 +7,9 @@
 
 (in-package :cm)
 
+(defmacro makecyc (a-list)
+  `(new cycle of ,a-list))
+
 (load (asdf:system-relative-pathname 'nudruz "data/partition-table.lisp"))
 
 ;; first, some needed basic stuff
@@ -1144,10 +1147,6 @@
           (car (if (numberp (nth x a-list)) (nth x a-list)
               (set-difference (nth x a-list)
                               (list (nth x tops) (nth x bottoms))))))))
-
-;; MAKECYC -- a quick helpful macro
-(defmacro makecyc (a-list)
-  `(new cycle of ,a-list))
 
 ; MAKEPAT - a generalized 'makecyc'
 ; added August 2005

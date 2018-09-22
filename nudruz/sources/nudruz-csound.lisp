@@ -62,7 +62,8 @@ with an optional channel offset and velocity scaling.
 "
     (let 
         ((score-list (list))
-        (score-text ""))
+        (score-text "")
+        (sco-text ""))
         (progn 
             (format t "Building Csound sco from seq...~%")
             (defun curried-event-to-istatement (event)
@@ -73,9 +74,14 @@ with an optional channel offset and velocity scaling.
     )
 )
 
-(defparameter csound-default-options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")
+(defun write-to-file (name content)
+  (with-open-file (stream name 
+                           :direction :output
+                           :if-exists :overwrite
+                           :if-does-not-exist :create )
+  (write-line content stream)))
 
-(defun build-csd (orc &key (sco "")(options default-csound-options)(output "dac"))
+(defun build-csd (orc &key (sco "")(options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac"))
     (let
         ((csd "")
         (csd-template "<CsoundSynthesizer>
@@ -95,7 +101,7 @@ with an optional channel offset and velocity scaling.
     )
 )
 
-(defun render-with-orc (sequence orc &key (options csound-default-options)(output "dac")(channel-offset 1) (velocity-scale 127)(csound-instance nil))
+(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac")(channel-offset 1) (velocity-scale 127)(csound-instance nil))
     (let 
         ((csd "")
         (sco-text "")
@@ -107,7 +113,7 @@ with an optional channel offset and velocity scaling.
     )
 )
     
-(defun render-with-csd (seq csd &key (channel-offset 1) (velocity-scale 127) (csound-instance nil))
+(defun render-with-csd (seq csd &key (channel-offset 1)(velocity-scale 127)(csound-instance nil))
 "
 Given a Common Music 'seq', translates each of its MIDI events into a Csound 
 'i' statement, optionally offsetting the channel number and/or rescaling MIDI 
@@ -135,7 +141,8 @@ caller to control Csound instrument parameters during real time performance, e.g
         (progn
             (setq sco-text (seq-to-sco seq channel-offset velocity-scale))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
-            ; (format t "new-csd-text: ~A~%" new-csd-text)
+            ;(format t "new-csd-text:~%~A~%" new-csd-text)
+            (write-to-file "temp-generated-csd.csd" new-csd-text)
             (setq csd-pointer (cffi:foreign-string-alloc new-csd-text))
             (if csound-instance
                 (setq cs csound-instance)
@@ -165,6 +172,11 @@ caller to control Csound instrument parameters during real time performance, e.g
             (format t "The Csound performance has ended: ~D.~%" result)
         )
     )
+)   
+
+(defun post-process (soundfile-pathname title composer copyright &key date artist license publisher label album track)
+"Given the pathname to a master-quality soundfile, normalizes the file and 
+translates it to CD audio, mp3, and mp4 formats, each tagged with metadata."
 )
 
 
