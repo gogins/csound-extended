@@ -37,7 +37,7 @@
                                 (transpose melody x)) 'r ))))
     (when (not (= (length tiling-vector) 
 		  (* (length melody) (length transp-levels))))
-      (error "Length mismatch ~a with ~a" pattern-list oldies))
+      (error "Length mismatch to ~a" tiling-vector))
     (place-tiles tranpatts tiling-vector)))
 
 ;; PLACEFRAG-CANTILES - placing melodies (frags) into tiling vector

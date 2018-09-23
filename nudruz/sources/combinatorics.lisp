@@ -68,19 +68,6 @@
 		( 9 2 1 ) ( 10 1 1 ) )))
      :test #'seq-eql))
 
-;; ORDERED PARTITIONS -- 4-12 contained in "data/ordparts.lisp"
-;(load "sources/data/ordparts.lisp")
-
-(defun ordered-partitions (n)
-  (nth n (list nil nil nil nil ordparts4 ordparts5 ordparts6 ordparts7
-	       ordparts8 ordparts9 ordparts10 ordparts11 ordparts12)))
-
-;; UNORDERED PARTITIONS
-;; 'n' must be 4 thru 12!!
-(defun partitions (n)
-  (nth n (list nil nil nil nil parts4 parts5 parts6 parts7
-	       parts8 parts9 parts10 parts11 parts12)))
-
 (defparameter parts4
     '( ( 1 1 1 1 ) ( 2 1 1 ) ( 2 2 ) ( 3 1 ) ( 4 ) ))
 (defparameter parts5
@@ -13467,4 +13454,16 @@
   ( 1 0 0 0 0 0 0 0 0 0 
    0 0 ) ))
 
+;; ORDERED PARTITIONS -- 4-12 contained in "data/ordparts.lisp"
+;(load "sources/data/ordparts.lisp")
+
+(defun ordered-partitions (n)
+  (nth n (list nil nil nil nil ordparts4 ordparts5 ordparts6 ordparts7
+	       ordparts8 ordparts9 ordparts10 ordparts11 ordparts12)))
+
+;; UNORDERED PARTITIONS
+;; 'n' must be 4 thru 12!!
+(defun partitions (n)
+  (nth n (list nil nil nil nil parts4 parts5 parts6 parts7
+	       parts8 parts9 parts10 parts11 parts12)))
 

@@ -323,7 +323,9 @@
                                1)
                               ((and (> x 0)
                                     (eql (nth x mlint) -2)
-                                    (eql (nth (- x 1 mlint) 2)))
+                                    ; MKG changed
+                                    ; (eql (nth (- x 1 mlint) 2)))
+                                    (eql (nth (- x 1) mlint) 2))
                                -1)
                               (t (nth x mlint)))))))
 
@@ -522,9 +524,9 @@
 (mapcar (lambda (x) (quantize x .25))
 (ransegs 20 :min 0 :max 20))
 
-
-
-.25))
+; MKG looks like leftover stuff...
+;
+;.25))
 
 (quantize 3.4444 .25)
 

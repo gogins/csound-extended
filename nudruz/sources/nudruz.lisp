@@ -2002,21 +2002,21 @@
 ;; FOLLOWING-5 -- tends to move gradually from one area to another
 ;; used mostly for registers
 ;; May 2009: changed to range 3-7
-;mkg (defun following-5 
-;mkg       (new graph of 
-;mkg 	   `((3 :id A :to B)
-;mkg 	     (4 :id B :to ,(new weighting of '(A B C)))
-;mkg 	     (5 :id C :to ,(new weighting of '(B C D)))
-;mkg 	     (6 :id D :to ,(new weighting of '(C D E)))
-;mkg 	     (7 :id E :to D))))
+(defparameter following-5 
+      (new graph of 
+	   `((3 :id A :to B)
+	     (4 :id B :to ,(new weighting of '(A B C)))
+	     (5 :id C :to ,(new weighting of '(B C D)))
+	     (6 :id D :to ,(new weighting of '(C D E)))
+	     (7 :id E :to D))))
 
 ;; FOLLOWING-3 -- tends to move gradually from one area to another
 ;; used mostly for registers
-;mkg (defun following-3 
-;mkg       (new graph of 
-;mkg 	   `((4 :id A :to B)
-;mkg 	     (5 :id B :to ,(new weighting of '(A B C)))
-;mkg 	     (6 :id C :to B))))
+(defparameter following-3 
+      (new graph of 
+	   `((4 :id A :to B)
+	     (5 :id B :to ,(new weighting of '(A B C)))
+	     (6 :id C :to B))))
 
 ;;; RHYTHM STUFF
 
