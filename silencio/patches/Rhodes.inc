@@ -1,5 +1,8 @@
 gk_Rhodes_level init 0
-instr Rhodes
+gi_Rhodes_sine ftgen 0, 0, 65536, 10, 1
+gi_Rhodes_cosine ftgen 0, 0, 65536, 11, 1
+gi_Rhodes_blank ftgen 0, 0, 65536, 10, 0 ; Blank wavetable for some Cook FM opcodes.
+instr 1,2,3,4
 ; Authors: Perry Cook, John ffitch, Michael Gogins
 if p3 == -1 then
   p3 = 1000000
@@ -10,7 +13,7 @@ i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
 k_space_front_to_back = p6
-k_space_left_to_right = p7
+k_space_left_to_right = .5
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
@@ -23,14 +26,11 @@ iindex = 4
 icrossfade = 3
 ivibedepth = 0.2
 iviberate = 6
-isine ftgenonce 0, 0, 65536, 10, 1
-icosine ftgenonce 0, 0, 65536, 11, 1
-icookblank ftgenonce 0, 0, 65536, 10, 0 ; Blank wavetable for some Cook FM opcodes.
-ifn1 = isine
-ifn2 = icosine
-ifn3 = isine
-ifn4 = icookblank
-ivibefn = isine
+ifn1 = gi_Rhodes_sine
+ifn2 = gi_Rhodes_cosine
+ifn3 = gi_Rhodes_sine
+ifn4 = gi_Rhodes_blank
+ivibefn = gi_Rhodes_sine
 a_signal fmrhode i_amplitude, i_frequency, iindex, icrossfade, ivibedepth, iviberate, ifn1, ifn2, ifn3, ifn4, ivibefn
 i_attack = .002
 i_sustain = p3
@@ -51,3 +51,4 @@ outleta "outright", a_out_right
 #endif
 prints "Rhodes         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin
+

@@ -25,6 +25,7 @@
   :depends-on ("alexandria" 
     "babel" 
     "bordeaux-threads"
+    "fomus"
     "cffi"
     "cl-heredoc"
     "csound"

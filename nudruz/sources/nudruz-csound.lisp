@@ -23,7 +23,7 @@
 ; and essentially defines a Steel Bank Common Lisp interface to a subset of
 ; the most useful functions in csound.h. At the present time, only pointers,
 ; strings, and other primitive types are used in this interface.
-
+(require :fomus)
 (in-package :cm)
 
 (set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)
@@ -74,12 +74,49 @@ with an optional channel offset and velocity scaling.
     )
 )
 
-(defun write-to-file (name content)
+(defun csd-to-file (name content)
+"
+Writes the contents of a CSD to a file, replacing the file if it exists.
+"
   (with-open-file (stream name 
                            :direction :output
                            :if-exists :overwrite
                            :if-does-not-exist :create )
   (write-line content stream)))
+  
+  
+(defun seq-to-lilypond (sequence filename parts partids-for-channels voices-for-channels)
+"
+Translates MIDI events in the sequence to a Lilypond score using Fomus.
+MIDI channels must be assigned to Lilypond part IDs and Lilypond 
+voices in the hashtables.
+"
+    (let 
+        ((fomus-events (list)))
+        (progn 
+            (format t "Building Lilypond score ~A from seq...~%" filename)
+            (defun midi-event-to-fomus-event (event)
+                (new fomus:note :partid (gethash (midi-channel event) partids-for-channels)
+                    :off (object-time event)
+                    :dur (midi-duration event)
+                    :note (midi-keynum event)
+                    ;:voice (gethash (midi-channel event) voices-for-channels)
+                )
+            )
+            (setf fomus-events (mapcar 'midi-event-to-fomus-event (subobjects sequence)))
+            (events fomus-events filename :parts parts :view t)
+            (format t "Generated ~d Fomus events.~%" (list-length fomus-events))
+        )
+    )
+)
+
+(defun seq-to-midifile (sequence filename)
+"
+Writes a sequence containing MIDI events to a MIDI file, replacing the file if 
+it exists.
+"
+(events sequence filename :play nil)
+)
 
 (defun build-csd (orc &key (sco "")(options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac"))
     (let
@@ -142,7 +179,7 @@ caller to control Csound instrument parameters during real time performance, e.g
             (setq sco-text (seq-to-sco seq channel-offset velocity-scale))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
             ;(format t "new-csd-text:~%~A~%" new-csd-text)
-            (write-to-file "temp-generated-csd.csd" new-csd-text)
+            (csd-to-file "temp-generated-csd.csd" new-csd-text)
             (setq csd-pointer (cffi:foreign-string-alloc new-csd-text))
             (if csound-instance
                 (setq cs csound-instance)

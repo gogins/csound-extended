@@ -55,3 +55,9 @@
 [submodule "dependencies/cm2"]
 	path = dependencies/cm2
 	url = https://github.com/andersvi/cm2.git
+[submodule "dependencies/--force"]
+	path = dependencies/--force
+	url = https://github.com/ormf/fomus.git
+[submodule "dependencies/fomus"]
+	path = dependencies/fomus
+	url = https://github.com/ormf/fomus.git
