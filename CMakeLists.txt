@@ -23,7 +23,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "csound-base")
-#add_definitions(-DGMM_VERSION=513 -Dlinux)
+add_definitions(-DGMM_VERSION=513)
 add_definitions(-Dlinux)
 
 # This is used for both Csound and CsoundAC SONAMEs.

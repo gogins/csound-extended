@@ -23,7 +23,6 @@
 ; and essentially defines a Steel Bank Common Lisp interface to a subset of
 ; the most useful functions in csound.h. At the present time, only pointers,
 ; strings, and other primitive types are used in this interface.
-(require :fomus)
 (in-package :cm)
 
 (set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)

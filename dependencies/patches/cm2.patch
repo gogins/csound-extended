@@ -1,0 +1,25 @@
+diff --git a/cm2.asd b/cm2.asd
+index e95bd05..134618e 100644
+--- a/cm2.asd
++++ b/cm2.asd
+@@ -99,6 +99,7 @@ which means ASDF loads both the .lisp file and the .fasl file."
+ 	    :pathname "src"
+ 	    :components ((:file "pkg")
+ 			 #+sbcl (:file "sbcl")
++             #+ecl (:file "ecl")
+ 			 #+lispworks (:file "lispworks")
+ 			 (:file "stocl")
+ 			 (:file "level1")
+diff --git a/src/ecl.lisp b/src/ecl.lisp
+index 1e1082a..2bb3dd8 100644
+--- a/src/ecl.lisp
++++ b/src/ecl.lisp
+@@ -38,7 +38,7 @@
+ 
+ (defun finalize-class (class) 
+   class
+-  ;(clos:finalize-inheritance class)
++  (clos:finalize-inheritance class)
+   (values))
+ 
+ (defmethod validate-class ((class t) (superclass t))
