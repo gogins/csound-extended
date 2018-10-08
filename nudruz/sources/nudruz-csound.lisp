@@ -95,15 +95,25 @@ voices in the hashtables.
         (progn 
             (format t "Building Lilypond score ~A from seq...~%" filename)
             (defun midi-event-to-fomus-event (event)
-                (new fomus:note :partid (gethash (midi-channel event) partids-for-channels)
-                    :off (object-time event)
-                    :dur (midi-duration event)
-                    :note (midi-keynum event)
-                    ;:voice (gethash (midi-channel event) voices-for-channels)
+                (let
+                    ((off_ (object-time event))
+                    (dur_ (midi-duration event))
+                    (note_ (midi-keynum event))
+                    (partid_ (gethash (midi-channel event) partids-for-channels))
+                    (voice_ (gethash (midi-channel event) voices-for-channels)))
+                    (progn
+                        (format t "fomus event :off ~,6f :dur ~,6f :note ~,6f :partid ~,6f :voice ~,6f ~%" off_ dur_ note_ partid_ voice_)
+                        (new fomus:note :partid partid_
+                            :off off_
+                            :dur dur_
+                            :note note_
+                            :voice voice_)
+                    )
                 )
             )
             (setf fomus-events (mapcar 'midi-event-to-fomus-event (subobjects sequence)))
             (events fomus-events filename :parts parts :view t)
+            ;(events fomus-events filename :parts parts :output '(:data (:musicxml :view t)))
             (format t "Generated ~d Fomus events.~%" (list-length fomus-events))
         )
     )

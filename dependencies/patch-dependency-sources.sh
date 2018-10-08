@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "Applying patches to dependency sources..."
-patch -N VST_SDK/VST2_SDK/pluginterfaces/vst2.x/aeffect.h < patches/aeffect.h.patch
+patch -N -d cm2 -p1 < patches/cm2.patch
 echo "Finished applying patches to dependency sources."

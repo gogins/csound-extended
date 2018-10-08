@@ -179,7 +179,7 @@
 ;;; demonstration follows ...
 ;;;
 (defun tzplay ()
-  (process for thischord in (tzrandchain '(3 26 48) 20)
+  (process for thischord in (tzrandchain '(3 26 48) 120)
            for dur = (pick 3 4 5)
            output (multievent 'midi :keynum
                               :keynum (transp thischord 40)
