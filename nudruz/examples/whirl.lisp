@@ -8,12 +8,12 @@ The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
 (require :cm2)
-(require :nudruz)
 (require :fomus)
+(require :nudruz)
 (in-package :cm)
 
 (defparameter csound-seq (new seq :name "csound-test"))
-(events (tzplay) csound-seq)
+(events (whirl 10 .1 .5 20 10 50 harms) csound-seq)
 (defparameter *piano-part* 
   (new fomus:part
    :name "Piano"
@@ -22,9 +22,9 @@ The generated score is placed into the seq that is passed to events.
 (defparameter partids (make-hash-table))
 (setf (gethash 0 partids) 0)
 (defparameter voices (make-hash-table))
-(setf (gethash 0 voices) (list 1 2 3))
-(seq-to-lilypond csound-seq "tzplay.ly" *piano-part* partids voices)
-;(render-with-orc csound-seq orc-text :channel-offset 25 :velocity-scale 100)
-    
-
+(defparameter voicelist 1)
+(setf (gethash 0 voices) voicelist)
+(seq-to-lilypond csound-seq "whirl.ly" *piano-part* partids voices :title "Whirl" :composer "Drew Krause")
+(render-with-csd csound-seq csd-text :channel-offset 9 :velocity-scale 100 :csd-filename "whirl.csd")
+(quit)
 

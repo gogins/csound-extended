@@ -201,7 +201,7 @@
         csound-seq)
 (defparameter *piano-part* 
     (new fomus:part
-        :name "Piano"
+        :name "Bells"
         :partid 0 
         :instr '(:piano :staves 2)
     )
@@ -209,8 +209,7 @@
 (defparameter partids (make-hash-table))
 (setf (gethash 0 partids) 0)
 (defparameter voices (make-hash-table))
-(setf (gethash 0 voices) '(1 2))
-(seq-to-lilypond csound-seq "cring.cm.ly" *piano-part* partids voices)
-        
-(render-with-csd csound-seq csd-text :channel-offset 8 :velocity-scale 100)
+(setf (gethash 0 voices) (list 1 2))
+(seq-to-lilypond csound-seq "cring-cm.ly" *piano-part* partids voices :title "Change Ringing" :composer "Rick Taube?")        
+(render-with-csd csound-seq csd-text :channel-offset 14 :velocity-scale 100 :csd-filename "cring-cm.csd")
 (quit)

@@ -146,19 +146,19 @@ it exists.
     )
 )
 
-(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac")(channel-offset 1) (velocity-scale 127)(csound-instance nil))
+(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac")(channel-offset 1)(velocity-scale 127)(csound-instance nil)(csd-filename "tmp-generated.csd"))
     (let 
         ((csd "")
         (sco-text "")
         (result 0))
         (progn
             (setq csd (build-csd orc :options options :output output))
-            (setq result (render-with-csd sequence csd :channel-offset channel-offset :velocity-scale velocity-scale :csound-instance csound-instance))
+            (setq result (render-with-csd sequence csd :channel-offset channel-offset :velocity-scale velocity-scale :csound-instance csound-instance :csd-filename csd-filename))
         )
     )
 )
     
-(defun render-with-csd (seq csd &key (channel-offset 1)(velocity-scale 127)(csound-instance nil))
+(defun render-with-csd (seq csd &key (channel-offset 1)(velocity-scale 127)(csound-instance nil)(csd-filename "temp-csd.csd"))
 "
 Given a Common Music 'seq', translates each of its MIDI events into a Csound 
 'i' statement, optionally offsetting the channel number and/or rescaling MIDI 
@@ -187,7 +187,7 @@ caller to control Csound instrument parameters during real time performance, e.g
             (setq sco-text (seq-to-sco seq channel-offset velocity-scale))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
             ;(format t "new-csd-text:~%~A~%" new-csd-text)
-            (csd-to-file "temp-generated-csd.csd" new-csd-text)
+            (csd-to-file csd-filename new-csd-text)
             (setq csd-pointer (cffi:foreign-string-alloc new-csd-text))
             (if csound-instance
                 (setq cs csound-instance)

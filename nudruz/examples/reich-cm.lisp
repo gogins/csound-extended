@@ -1,9 +1,6 @@
-;;; **********************************************************************
-;;; $Name$
-;;; $Revision$
-;;; $Date$
-(require "asdf")
-(asdf:load-system :nudruz)
+(require :asdf)
+(require :nudruz)
+(require :fomus)
 (in-package :cm)
 
 (defun piano-phase (trope pulse amp stay move)
@@ -57,9 +54,20 @@
 
 (defparameter pnotes '(e4 fs b cs5 d fs4 g4 e cs5 b4 fs d5 cs))
 
-(let ((csound-seq (new seq :name "csound-test")))
+(defparameter csound-seq (new seq :name "csound-test"))
 (events (piano-phase pnotes .15 .5 5 3) csound-seq)
-(render-with-csd csound-seq csd-text :channel-offset 2 :velocity-scale 100))
+(defparameter *piano-part* 
+  (new fomus:part
+   :name "Piano"
+   :partid 0 
+   :instr '(:piano :staves 2)))
+(defparameter partids (make-hash-table))
+(setf (gethash 0 partids) 0)
+(defparameter voices (make-hash-table))
+(setf (gethash 0 voices) 1)
+(seq-to-lilypond csound-seq "reich.cm.ly" *piano-part* partids voices :title "Piano Phase" :subtitle "Part of it, anyway" :composer "Steve Reich")
+(seq-to-midifile csound-seq "reich.cm.mid")
+(render-with-csd csound-seq csd-text :channel-offset 2 :velocity-scale 100)
 (quit)
 
 
