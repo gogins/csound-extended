@@ -1,4 +1,4 @@
-; S T E E L   B A N K   C O M M O N   L I S P   F F I   I N T E R F A C E   T O   C S O U N D . H
+; C O M M O N   M U S I C   C F F I   I N T E R F A C E   T O   C S O U N D
 ;
 ; Copyright (C) 2016 Michael Gogins
 ;
@@ -84,37 +84,36 @@ Writes the contents of a CSD to a file, replacing the file if it exists.
   (write-line content stream)))
   
   
-(defun seq-to-lilypond (sequence filename parts partids-for-channels voices-for-channels)
+(defun seq-to-lilypond (sequence filename fomus-parts partids-for-channels voices-for-channels)
 "
-Translates MIDI events in the sequence to a Lilypond score using Fomus.
-MIDI channels must be assigned to Lilypond part IDs and Lilypond 
-voices in the hashtables.
+Translates MIDI events in the sequence to a Lilypond score using Fomus. MIDI 
+channels must be assigned to Lilypond part IDs and Lilypond voices in the 
+hashtables. If the :voice parameter is a list, it should contain as many 
+voices as there actually are for the corresponding channel.
 "
     (let 
         ((fomus-events (list)))
         (progn 
             (format t "Building Lilypond score ~A from seq...~%" filename)
             (defun midi-event-to-fomus-event (event)
-                (let
-                    ((off_ (object-time event))
-                    (dur_ (midi-duration event))
-                    (note_ (midi-keynum event))
-                    (partid_ (gethash (midi-channel event) partids-for-channels))
-                    (voice_ (gethash (midi-channel event) voices-for-channels)))
-                    (progn
-                        (format t "fomus event :off ~,6f :dur ~,6f :note ~,6f :partid ~,6f :voice ~,6f ~%" off_ dur_ note_ partid_ voice_)
-                        (new fomus:note :partid partid_
-                            :off off_
-                            :dur dur_
-                            :note note_
-                            :voice voice_)
-                    )
+                (new fomus:note 
+                    :partid (gethash (midi-channel event) partids-for-channels)
+                    :off (object-time event)
+                    :dur (midi-duration event)
+                    :note (midi-keynum event)
+                    :voice (gethash (midi-channel event) voices-for-channels)
                 )
             )
             (setf fomus-events (mapcar 'midi-event-to-fomus-event (subobjects sequence)))
-            (events fomus-events filename :parts parts :view t)
-            ;(events fomus-events filename :parts parts :output '(:data (:musicxml :view t)))
-            (format t "Generated ~d Fomus events.~%" (list-length fomus-events))
+            (format t "Generated: ~d Fomus events.~%" (list-length fomus-events))            
+            (setf fomus-events (remove-duplicates fomus-events 
+                :test  #'(lambda (x y)
+                    (equal (format nil "~A" x) (format nil "~A" y))
+                )))
+            (format t "Removed duplicates: ~d Fomus events.~%" (list-length fomus-events))
+            (events (new seq :name "Lilypond" :subobjects fomus-events) filename :auto-voicing t :verbose 2 :auto-quantize t :view t :parts (list fomus-parts))
+            ; CMN output does not produce a usable score, see #61.
+            ;(events (new seq :name "Common Music Notation" :subobjects fomus-events) "temp.eps")
         )
     )
 )
@@ -124,7 +123,7 @@ voices in the hashtables.
 Writes a sequence containing MIDI events to a MIDI file, replacing the file if 
 it exists.
 "
-(events sequence filename :play nil)
+    (events sequence filename :play nil)
 )
 
 (defun build-csd (orc &key (sco "")(options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac"))

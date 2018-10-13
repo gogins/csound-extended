@@ -2,10 +2,12 @@
 ;;; $Name$
 ;;; $Revision$
 ;;; $Date$
-
-(require "asdf")
-(asdf:load-system :nudruz)
+(require :asdf)
+(require :cm2)
+(require :nudruz)
+(require :fomus)
 (in-package :cm)
+
 
 ;;;
 ;;; Examples of "change ringing".  I was made aware of this compositional
@@ -191,11 +193,24 @@
                    duration (* r 1.5)))
              (wait r))))
 
-(let ((csound-seq (new seq :name "csound-test")))
+(defparameter csound-seq (new seq :name "csound-test"))
 (events (list (dograndshire (rhythm 's  100) 100  12 .4)
               (dograndshire (rhythm 'e  100) 50  -12 .5)
               (dograndshire (rhythm 'qq 100) 32  -36 .7)
               )
         csound-seq)
-        (render-with-csd csound-seq csd-text :channel-offset 8 :velocity-scale 100))
+(defparameter *piano-part* 
+    (new fomus:part
+        :name "Piano"
+        :partid 0 
+        :instr '(:piano :staves 2)
+    )
+)
+(defparameter partids (make-hash-table))
+(setf (gethash 0 partids) 0)
+(defparameter voices (make-hash-table))
+(setf (gethash 0 voices) '(1 2))
+(seq-to-lilypond csound-seq "cring.cm.ly" *piano-part* partids voices)
+        
+(render-with-csd csound-seq csd-text :channel-offset 8 :velocity-scale 100)
 (quit)

@@ -17,11 +17,12 @@ The generated score is placed into the seq that is passed to events.
 (defparameter *piano-part* 
   (new fomus:part
    :name "Piano"
-   :instr :piano :partid 0))
+   :partid 0 
+   :instr '(:piano :staves 2)))
 (defparameter partids (make-hash-table))
 (setf (gethash 0 partids) 0)
 (defparameter voices (make-hash-table))
-(setf (gethash 0 voices) (list 1 2 3 4))
+(setf (gethash 0 voices) (list 1 2 3))
 (seq-to-lilypond csound-seq "tzplay.ly" *piano-part* partids voices)
 ;(render-with-orc csound-seq orc-text :channel-offset 25 :velocity-scale 100)
     
