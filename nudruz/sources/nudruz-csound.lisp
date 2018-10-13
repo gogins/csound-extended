@@ -86,10 +86,11 @@ Writes the contents of a CSD to a file, replacing the file if it exists.
   
 (defun seq-to-lilypond (sequence filename fomus-parts partids-for-channels voices-for-channels &key (title nil)(subtitle nil)(composer nil))
 "
-Translates MIDI events in the sequence to a Lilypond score using Fomus. MIDI 
-channels must be assigned to Lilypond part IDs and Lilypond voices in the 
-hashtables. If the :voice parameter is a list, it should contain as many 
-voices for the corresponding channel as there actually are in that channel.
+Attempts to translate MIDI events in the sequence to a Lilypond score using 
+Fomus (but does not always succeed). MIDI channels must be assigned to 
+Lilypond part IDs and Lilypond voices in the hashtables. If the :voice 
+parameter is a list, it should contain as many voices for the corresponding 
+channel as there actually are in that channel.
 "
     (let 
         ((fomus-events (list)))
@@ -175,6 +176,8 @@ caller to control Csound instrument parameters during real time performance, e.g
 (setq my-thread (bt:make-thread (lambda () (render-with-csound cs csd 1 127 csound))))
 (csoundSetControlChannel csound 'mychannel' myvalue)
 (bt:join-thread my-thread)
+
+A copy of the .csd file that is rendered is saved for archival purposes.
 "
     (let
         ((score-list (list))
@@ -218,10 +221,5 @@ caller to control Csound instrument parameters during real time performance, e.g
         )
     )
 )   
-
-(defun post-process (soundfile-pathname title composer copyright &key date artist license publisher label album track)
-"Given the pathname to a master-quality soundfile, normalizes the file and 
-translates it to CD audio, mp3, and mp4 formats, each tagged with metadata."
-)
 
 

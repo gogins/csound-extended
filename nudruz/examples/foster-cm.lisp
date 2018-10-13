@@ -1,6 +1,9 @@
-(require "asdf")
-(asdf:load-system :nudruz)
+(require :asdf)
+(require :cm2)
+(require :fomus)
+(require :nudruz)
 (in-package :cm)
+
 
 ;;; Second-order Markov process. The transition table is taken 
 ;;; from chapter 8 of "Computer Music" by Dodge/Jerse. Sounds
@@ -104,14 +107,25 @@
 ;              (foster 90 12 0)
 ;              (foster 90 24 0))
 ;        "foster.midi")
-(let ((csound-seq (new seq :name "csound-test")))
-    (events (list 
-                (foster 90 -12 0)
-                (foster 90 0 0)
-                (foster 90 12 0)
-                (foster 90 24 0))
-                csound-seq)
-    (render-with-csd csound-seq csd-text :channel-offset 57 :velocity-scale 100))
+(defparameter csound-seq (new seq :name "csound-test"))
+(events (list 
+            (foster 90 -12 0)
+            (foster 90 0 0)
+            (foster 90 12 0)
+            (foster 90 24 0))
+            csound-seq)
+(defparameter *piano-part* 
+  (new fomus:part
+   :name "Piano"
+   :partid 0 
+   :instr '(:piano :staves 2)))
+(defparameter partids (make-hash-table))
+(setf (gethash 0 partids) 0)
+(defparameter voices (make-hash-table))
+(defparameter voicelist (list 1 2 3 4))
+(setf (gethash 0 voices) voicelist)
+(seq-to-lilypond csound-seq "foster-cm.ly" *piano-part* partids voices :title "Foster" :subtitle "A travesty" :composer "Rich Taube?")
+(render-with-csd csound-seq csd-text :channel-offset 57 :velocity-scale 100 :csd-filename "foster-cm.csd"))
 
 
 
