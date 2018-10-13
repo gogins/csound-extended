@@ -24,7 +24,7 @@ The generated score is placed into the seq that is passed to events.
 (defparameter voices (make-hash-table))
 (defparameter voicelist 1)
 (setf (gethash 0 voices) voicelist)
-(seq-to-lilypond csound-seq "whirl.ly" *piano-part* partids voices)
+(seq-to-lilypond csound-seq "whirl.ly" *piano-part* partids voices :title "Whirl" :composer "Drew Krause")
 (render-with-csd csound-seq csd-text :channel-offset 9 :velocity-scale 100)
 (quit)
 

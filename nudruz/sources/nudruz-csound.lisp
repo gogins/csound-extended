@@ -84,12 +84,12 @@ Writes the contents of a CSD to a file, replacing the file if it exists.
   (write-line content stream)))
   
   
-(defun seq-to-lilypond (sequence filename fomus-parts partids-for-channels voices-for-channels)
+(defun seq-to-lilypond (sequence filename fomus-parts partids-for-channels voices-for-channels &key (title nil)(subtitle nil)(composer nil))
 "
 Translates MIDI events in the sequence to a Lilypond score using Fomus. MIDI 
 channels must be assigned to Lilypond part IDs and Lilypond voices in the 
 hashtables. If the :voice parameter is a list, it should contain as many 
-voices as there actually are for the corresponding channel.
+voices for the corresponding channel as there actually are in that channel.
 "
     (let 
         ((fomus-events (list)))
@@ -109,9 +109,9 @@ voices as there actually are for the corresponding channel.
             (setf fomus-events (remove-duplicates fomus-events 
                 :test  #'(lambda (x y)
                     (equal (format nil "~A" x) (format nil "~A" y))
-                )))
+            )))
             (format t "Removed duplicates: ~d Fomus events.~%" (list-length fomus-events))
-            (events (new seq :name "Lilypond" :subobjects fomus-events) filename :auto-voicing t :verbose 2 :auto-quantize t :view t :parts (list fomus-parts))
+            (events (new seq :name "Lilypond" :subobjects fomus-events) filename :auto-voicing t :verbose 2 :auto-quantize t :view t :parts (list fomus-parts) :title title :subtitle subtitle :composer composer)
             ; CMN output does not produce a usable score, see #61.
             ;(events (new seq :name "Common Music Notation" :subobjects fomus-events) "temp.eps")
         )
