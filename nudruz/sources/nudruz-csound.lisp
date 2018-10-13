@@ -33,7 +33,7 @@ Translates a Common Music MIDI event to a Csound score event
 (i-statement), which is terminated with a newline. An offset, which may
 be any number, is added to the MIDI channel number.
 "
-    (format nil "i ~,6f ~,6f ~,6f ~,6f ~,6f 0 0 0 0 0 0~%" (+ channel-offset (midi-channel event)) (object-time event)(midi-duration event)(keynum (midi-keynum event))(* velocity-scale (midi-amplitude event)))
+    (format nil "i ~,6f ~,6f ~,6f ~,6f ~,6f 0 0.5 0 0 0 0~%" (+ channel-offset (midi-channel event)) (object-time event)(midi-duration event)(keynum (midi-keynum event))(* velocity-scale (midi-amplitude event)))
 )
 (export 'event-to-istatement)
 
