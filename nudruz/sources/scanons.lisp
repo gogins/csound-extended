@@ -21,7 +21,7 @@
 (defun scanons (mlen tlevel vcs &optional (consvec '(3 4 7 8 9)))
   (remove-duplicates
    (loop for scan in 
-         (scanons-nd mlen tlevel vcs consvec)
+         (screamer-user::scanons-nd mlen tlevel vcs consvec)
          collect (transp-to 0 scan))
    :test #'list-eql))
 

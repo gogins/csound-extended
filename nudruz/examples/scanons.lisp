@@ -11,15 +11,21 @@ The generated score is placed into the seq that is passed to events.
 (require :fomus)
 (require :nudruz)
 (in-package :cm)
+(use-package :screamer-user)
 
 (defparameter csound-seq (new seq :name "csound-test"))
+
 (events
- (let ((mypits (heapvec 100 10 50))
-       (durs (strums 20 2 6 4 6)))
-   (list
-    (splay mypits (ferney '(1) '(4) durs))
-    (splay (transp mypits 3) (ferney '(1) '(5) durs))
-    (splay (transp mypits 21) (ferney '(1) '(3) durs)))) csound-seq)
+ (splay
+  (loop for scan in 
+        '((0 4 7 11) (0 3 6 10) (0 3 7 10) (0 4 7 10) 
+          (0 3 6 9) (0 3 7 5) (0 4 7 6)
+          (0 -1 2 6) (0 3 6 5) (0 4 2 6) (0 -2 2 5) 
+          (0 -1 2 5) (0 3 2 5) (0 -2 2 0)
+          (0 -1 2 1))
+        append (stack-can (transp '(0 3 6 5) (+ 50 (random 12))) 7 3))
+  .75) csound-seq)
+
 (defparameter *piano-part* 
   (new fomus:part
    :name "Piano"
@@ -30,7 +36,7 @@ The generated score is placed into the seq that is passed to events.
 (defparameter voices (make-hash-table))
 (defparameter voicelist 1)
 (setf (gethash 0 voices) voicelist)
-(seq-to-lilypond csound-seq "finnissy.ly" *piano-part* partids voices :title "Finnissy Effect" :composer "Drew Krause")
-(render-with-csd csound-seq csd-text :channel-offset 43 :velocity-scale 100 :csd-filename "finnissy.csd")
+(seq-to-lilypond csound-seq "scanons.ly" *piano-part* partids voices :title "Stacked Canons" :composer "Drew Krause")
+(render-with-csd csound-seq csd-text :channel-offset 21 :velocity-scale 150 :csd-filename "scanons.csd")
 (quit)
 
