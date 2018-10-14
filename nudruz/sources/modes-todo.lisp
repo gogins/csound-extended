@@ -1,10 +1,8 @@
+(require :asdf)
+(require :cm2)
+(require :fomus)
+(require :nudruz)
 (in-package :cm)
-
-; MODES-TODO.LISP
-
-(load "nudruz.lisp")
-(load "rewrite.lisp")
-(load "modes.lisp")
 
 
 ;; list of all pits in mode

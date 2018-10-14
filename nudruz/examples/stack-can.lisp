@@ -17,14 +17,14 @@ The generated score is placed into the seq that is passed to events.
 
 (events
  (splay
-  (loop for scan in 
-        '((0 4 7 11) (0 3 6 10) (0 3 7 10) (0 4 7 10) 
-          (0 3 6 9) (0 3 7 5) (0 4 7 6)
-          (0 -1 2 6) (0 3 6 5) (0 4 2 6) (0 -2 2 5) 
-          (0 -1 2 5) (0 3 2 5) (0 -2 2 0)
-          (0 -1 2 1))
-        append (stack-can (transp '(0 3 6 5) (+ 50 (random 12))) 7 3))
-  .75) csound-seq)
+  (transp
+   (mapcar (lambda (x) (car (stack-by x 7))) 
+	   (flatter
+	    (mapcar (lambda (x) (stravrot x 'n))
+		    (subsequences (randhexrow) 6))))
+   45)
+  (makecyc (transp (code->durs (resclassvec 3 5 7)) 2)))
+csound-seq)
 
 (defparameter *piano-part* 
   (new fomus:part
@@ -34,9 +34,9 @@ The generated score is placed into the seq that is passed to events.
 (defparameter partids (make-hash-table))
 (setf (gethash 0 partids) 0)
 (defparameter voices (make-hash-table))
-(defparameter voicelist 1)
+(defparameter voicelist '(1 2 3 4))
 (setf (gethash 0 voices) voicelist)
-(seq-to-lilypond csound-seq "scanons.ly" *piano-part* partids voices :title "Stacked Canons" :composer "Drew Krause")
-(render-with-csd csound-seq csd-text :channel-offset 57 :velocity-scale 150 :csd-filename "scanons.csd")
+(seq-to-lilypond csound-seq "stack-can.ly" *piano-part* partids voices :title "stack-can" :composer "Drew Krause")
+(render-with-csd csound-seq csd-text :channel-offset 9 :velocity-scale 100 :csd-filename "stack-can.csd")
 (quit)
 

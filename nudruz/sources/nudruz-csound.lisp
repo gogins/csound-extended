@@ -27,14 +27,28 @@
 
 (set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)
 
-(defun event-to-istatement (event channel-offset velocity-scale)
+(defun event-to-istatement (event channel-offset velocity-scale arrangement)
 "
 Translates a Common Music MIDI event to a Csound score event
 (i-statement), which is terminated with a newline. An offset, which may
-be any number, is added to the MIDI channel number.
+be any number, is added to the MIDI channel number. After that, if the 
+arrangement parameter is not nil, the existing event is remapped to a new 
+instrument number and the velocity is modified.
 "
-    (format nil "i ~,6f ~,6f ~,6f ~,6f ~,6f 0 0.5 0 0 0 0~%" (+ channel-offset (midi-channel event)) (object-time event)(midi-duration event)(keynum (midi-keynum event))(* velocity-scale (midi-amplitude event)))
-)
+    (let 
+        ((insno)
+        (velocity)
+        (pan 0.5))
+        (progn 
+        (setf insno (+ channel-offset (midi-channel event)))
+        (setf velocity (* velocity-scale (midi-amplitude event)))
+        (when arrangement
+            (setf pan (third (gethash insno arrangement)))
+            (setf velocity (+ velocity (second (gethash insno arrangement))))
+            (setf insno (first (gethash insno arrangement))))
+    (format nil "i ~,6f ~,6f ~,6f ~,6f ~,6f 0 ~,6f 0 0 0 0~%" insno (object-time event)(midi-duration event)
+    (midi-keynum event) velocity pan)
+)))
 (export 'event-to-istatement)
 
 (defun replace-all (string part replacement &key (test #'char=))
@@ -54,10 +68,14 @@ using 'test' for character equality.
           when pos do (write-string replacement out)
           while pos)))
           
-(defun seq-to-sco (seq &optional (channel-offset 1) (velocity-scale 127))
+(defun seq-to-sco (seq &optional (channel-offset 1) (velocity-scale 127) &key (arrangement nil))
 "
 Translates all MIDI events in a Common Music 'seq' object to Csound sco text,
-with an optional channel offset and velocity scaling.
+with an optional channel offset and velocity scaling. The arrangement 
+parameter, if passed, is used to reassign the instrument numbers and 
+add to/subtract from the MIDI velocities in the sequence. The arrangement 
+consists of a hashtable mapping original Csound instrument numbers 
+to a list '(new-inso add-velocity pan).
 "
     (let 
         ((score-list (list))
@@ -66,7 +84,7 @@ with an optional channel offset and velocity scaling.
         (progn 
             (format t "Building Csound sco from seq...~%")
             (defun curried-event-to-istatement (event)
-                (event-to-istatement event channel-offset velocity-scale))
+                (event-to-istatement event channel-offset velocity-scale arrangement))
             (setq score-list (mapcar 'curried-event-to-istatement (subobjects seq)))
             (setq sco-text (format nil "~{~A~^ ~}" score-list))
         )
@@ -147,19 +165,22 @@ it exists.
     )
 )
 
-(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac")(channel-offset 1)(velocity-scale 127)(csound-instance nil)(csd-filename "tmp-generated.csd"))
+(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")
+    (output "dac")(channel-offset 1)(velocity-scale 127)(csound-instance nil)
+    (csd-filename "tmp-generated.csd")(arrangement nil))
     (let 
         ((csd "")
         (sco-text "")
         (result 0))
         (progn
             (setq csd (build-csd orc :options options :output output))
-            (setq result (render-with-csd sequence csd :channel-offset channel-offset :velocity-scale velocity-scale :csound-instance csound-instance :csd-filename csd-filename))
+            (setq result (render-with-csd sequence csd :channel-offset channel-offset :velocity-scale velocity-scale :csound-instance csound-instance :csd-filename csd-filename :arrangement arrangement))
         )
     )
 )
     
-(defun render-with-csd (seq csd &key (channel-offset 1)(velocity-scale 127)(csound-instance nil)(csd-filename "temp-csd.csd"))
+(defun render-with-csd (seq csd &key (channel-offset 1)(velocity-scale 127)
+    (csound-instance nil)(csd-filename "temp-csd.csd")(arrangement nil))
 "
 Given a Common Music 'seq', translates each of its MIDI events into a Csound 
 'i' statement, optionally offsetting the channel number and/or rescaling MIDI 
@@ -168,9 +189,10 @@ generated score is appended to the <CsScore> element of `csd`. It is
 possible to call csoundReadScore during the performance. This function returns 
 the Csound object that it uses.
 
-The optional csound parameter is used to call Csound if passed. This enables
+The csound parameter is used to call Csound if passed. This enables 
 render-with-csound to be run in a separate thread of execution, and for the 
-caller to control Csound instrument parameters during real time performance, e.g.
+caller to control Csound instrument parameters during real time performance, 
+e.g.
 
 (setq csound (csoundCreate 0))
 (setq my-thread (bt:make-thread (lambda () (render-with-csound cs csd 1 127 csound))))
@@ -187,7 +209,7 @@ A copy of the .csd file that is rendered is saved for archival purposes.
         (new-csd-text "")
         (csd-pointer 0))
         (progn
-            (setq sco-text (seq-to-sco seq channel-offset velocity-scale))
+            (setq sco-text (seq-to-sco seq channel-offset velocity-scale :arrangement arrangement))
             (setq new-csd-text (replace-all csd "</CsScore>" (concatenate 'string sco-text "</CsScore>")))
             ;(format t "new-csd-text:~%~A~%" new-csd-text)
             (csd-to-file csd-filename new-csd-text)

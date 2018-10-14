@@ -1,6 +1,8 @@
+(require :asdf)
+(require :cm2)
+(require :fomus)
+(require :nudruz)
 (in-package :cm)
-(load "nudruz.lisp")
-(load "rhythm.lisp")
 
 ;; RPCYC -- makes a long list of keynums
 (defparameter rpcyc
