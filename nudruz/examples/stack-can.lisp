@@ -7,8 +7,6 @@ Contrary to CM documentation, the events function does not return a usable seq o
 The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
-(require :cm2)
-(require :fomus)
 (require :nudruz)
 (in-package :cm)
 (use-package :screamer-user)
@@ -28,7 +26,7 @@ csound-seq)
 
 (defparameter *piano-part* 
   (new fomus:part
-   :name "Piano"
+   :name "Filtered Sines"
    :partid 0 
    :instr '(:piano :staves 2)))
 (defparameter partids (make-hash-table))

@@ -197,7 +197,7 @@
               (dograndshire (rhythm 'qq 100) 32  -36 .7)
               )
         csound-seq)
-(print-objects csound-seq)
+(list-objects csound-seq)
 (defparameter *piano-part* 
     (new fomus:part
         :name "Bells"
@@ -211,5 +211,5 @@
 (defparameter voicelist '(1 2 3))
 (setf (gethash 0 voices) voicelist)
 ;(seq-to-lilypond csound-seq "cring-cm.ly" *piano-part* partids voices :title "Change Ringing" :composer "Rick Taube?")        
-(render-with-csd csound-seq csd-text :channel-offset 7 :velocity-scale 100 :csd-filename "cring-cm.csd")
+(render-with-csd csound-seq csd-text :channel-offset 56 :velocity-scale 100 :csd-filename "cring-cm.csd")
 (quit)

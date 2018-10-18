@@ -65,7 +65,7 @@
 (setf (gethash 0 partids) 0)
 (defparameter voices (make-hash-table))
 (setf (gethash 0 voices) 1)
-(seq-to-lilypond csound-seq "reich.cm.ly" *piano-part* partids voices :title "Piano Phase" :subtitle "Part of it, anyway" :composer "Steve Reich")
+;(seq-to-lilypond csound-seq "reich.cm.ly" *piano-part* partids voices :title "Piano Phase" :subtitle "Part of it, anyway" :composer "Steve Reich")
 (seq-to-midifile csound-seq "reich.cm.mid")
 (render-with-csd csound-seq csd-text :channel-offset 2 :velocity-scale 100)
 (quit)

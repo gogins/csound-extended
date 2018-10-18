@@ -42,13 +42,13 @@ instrument number and the velocity is modified.
         (progn 
         (setf insno (+ channel-offset (midi-channel event)))
         (setf velocity (* velocity-scale (midi-amplitude event)))
-        (setf keynum (midi-keynum event))
+        (setf midikey (keynum (midi-keynum event)))
         (when arrangement
             (setf pan (third (gethash insno arrangement)))
             (setf velocity (+ velocity (second (gethash insno arrangement))))
             (setf insno (first (gethash insno arrangement))))
     (format nil "i ~,6f ~,6f ~,6f ~,6f ~,6f 0 ~,6f 0 0 0 0~%" insno (object-time event)(midi-duration event)
-    keynum velocity pan)
+    midikey velocity pan)
 )))
 (export 'event-to-istatement)
 

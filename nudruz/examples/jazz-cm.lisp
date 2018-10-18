@@ -388,7 +388,7 @@ sprouted process generates one measure of a particular part.
 
 (let ((csound-seq (new seq :name "csound-seq")))
 (events (jazz-combo 48 jazz-changes jazz-tempo jazz-scale)
-        "jazz.mid"))
+        "jazz-cm.mid"))
 (quit)
 
 

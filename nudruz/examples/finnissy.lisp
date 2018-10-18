@@ -7,8 +7,6 @@ Contrary to CM documentation, the events function does not return a usable seq o
 The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
-(require :cm2)
-(require :fomus)
 (require :nudruz)
 (in-package :cm)
 
@@ -22,7 +20,7 @@ The generated score is placed into the seq that is passed to events.
     (splay (transp mypits 21) (ferney '(1) '(3) durs)))) csound-seq)
 (defparameter *piano-part* 
   (new fomus:part
-   :name "Piano"
+   :name "STKRhodey"
    :partid 0 
    :instr '(:piano :staves 2)))
 (defparameter partids (make-hash-table))
@@ -31,6 +29,6 @@ The generated score is placed into the seq that is passed to events.
 (defparameter voicelist 1)
 (setf (gethash 0 voices) voicelist)
 (seq-to-lilypond csound-seq "finnissy.ly" *piano-part* partids voices :title "Finnissy Effect" :composer "Drew Krause")
-(render-with-csd csound-seq csd-text :channel-offset 43 :velocity-scale 100 :csd-filename "finnissy.csd")
+(render-with-csd csound-seq csd-text :channel-offset 43 :velocity-scale 120 :csd-filename "finnissy.csd")
 (quit)
 

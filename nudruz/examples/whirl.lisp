@@ -14,7 +14,7 @@ The generated score is placed into the seq that is passed to events.
 (events (whirl 10 .1 .5 20 10 50 harms) csound-seq)
 (defparameter *piano-part* 
   (new fomus:part
-   :name "Piano"
+   :name "Xing"
    :partid 0 
    :instr '(:piano :staves 2)))
 (defparameter partids (make-hash-table))
@@ -23,6 +23,6 @@ The generated score is placed into the seq that is passed to events.
 (defparameter voicelist 1)
 (setf (gethash 0 voices) voicelist)
 (seq-to-lilypond csound-seq "whirl.ly" *piano-part* partids voices :title "Whirl" :composer "Drew Krause")
-(render-with-csd csound-seq csd-text :channel-offset 9 :velocity-scale 100 :csd-filename "whirl.csd")
+(render-with-csd csound-seq csd-text :channel-offset 56 :velocity-scale 100 :csd-filename "whirl.csd")
 (quit)
 

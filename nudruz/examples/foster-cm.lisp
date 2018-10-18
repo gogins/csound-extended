@@ -1,6 +1,4 @@
 (require :asdf)
-(require :cm2)
-(require :fomus)
 (require :nudruz)
 (in-package :cm)
 
@@ -125,7 +123,7 @@
 (defparameter voicelist (list 1 2 3 4))
 (setf (gethash 0 voices) voicelist)
 (seq-to-lilypond csound-seq "foster-cm.ly" *piano-part* partids voices :title "Foster" :subtitle "A travesty" :composer "Rich Taube?")
-(render-with-csd csound-seq csd-text :channel-offset 57 :velocity-scale 100 :csd-filename "foster-cm.csd"))
+(render-with-csd csound-seq csd-text :channel-offset 55 :velocity-scale 120 :csd-filename "foster-cm.csd")
 
 
 

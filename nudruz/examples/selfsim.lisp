@@ -7,9 +7,6 @@ Contrary to CM documentation, the events function does not return a usable seq o
 The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
-(require :sb-posix)
-(require :cm2)
-(require :fomus)
 (require :nudruz)
 (in-package :cm)
 (use-package :screamer-user)
@@ -17,14 +14,13 @@ The generated score is placed into the seq that is passed to events.
 (defparameter csound-seq (new seq :name "csound-test"))
 
 (events 
-   ; (selfsim cyclops2p5x9 '(0 2 3) '(2 5 9) '(68 80 76) .25)
-    (selfsim cyclops6x7 (shuffle (transp '(60 62 64 65) 12)) '(6 8 13 15) '(0 -7 -14 -21) .25)
+   (selfsim cyclops2p5x9 '(0 2 3) '(2 5 9) '(68 80 76) .25)
     csound-seq
 )
 
 (defparameter *piano-part* 
   (new fomus:part
-   :name "Piano"
+   :name "Fender Rhodes"
    :partid 0 
    :instr '(:piano :staves 2)))
 (defparameter partids (make-hash-table))
