@@ -1,6 +1,6 @@
 # CSOUND-EXTENDED
 
-Version 0.1.2
+Version 0.1.3
 Michael Gogins
 
 This repository contains various extensions to Csound that have been moved 
@@ -37,6 +37,11 @@ These extensions include:
     with all Csound/HTML5 environments.
     
 9.  An online _playable_ version of the [_**Csound Reference Manual**_](https://gogins.github.io/csound-extended/html/indexframes.html).
+
+10. nudruz, a Common Lisp library for algorithmic composition by Drew Krause, 
+    hosted here with his permission. This is based upon and includes 
+    the Common Music library for algorithmic composition and the Fomus 
+    library for semi-automatically notated generated scores.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no 
 longer maintained here. This is due to efforts by Steinberg to force 

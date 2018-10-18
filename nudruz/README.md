@@ -7,8 +7,8 @@ Lesser General Public License. The code has been edited to make it more
 usable with different implementations of Common Lisp, and with the current 
 version of Csound. In particular, there is now a `nudruz.asd` system 
 definition that will load all dependencies of `nudruz`, including Common 
-Music verison 2 and others. This has been tested with Steel Bank Common Lisp 
-and with Embeddable Common Lisp.
+Music verison 2, Fomus, and others. This has been tested with Steel Bank 
+Common Lisp and with Embeddable Common Lisp.
 
 It is a goal of this project for this code to run in OpenMusic, but at this 
 time, the free version of OpenMusic uses a release of LispWorks that does not 
