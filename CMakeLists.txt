@@ -215,8 +215,11 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
 
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with CsoundHtml5, CsoundAC, and others.")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Extends Csound with CsoundHtml5, CsoundAC, and others.")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian/control")
+set(CPACK_STRIP_FILES ON)
 set(CPACK_PACKAGE_NAME "csound-extended")
 set(CPACK_PACKAGE_CONTACT "csound-devel@listserv.heanet.ie")
 set(CPACK_PACKAGE_VERSION "$ENV{CSOUND_EXTENDED_VERSION}")

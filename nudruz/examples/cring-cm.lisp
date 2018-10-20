@@ -3,6 +3,7 @@
 ;;; $Revision$
 ;;; $Date$
 (require :asdf)
+(require :fomus)
 (require :nudruz)
 (in-package :cm)
 
@@ -140,8 +141,8 @@
         (new cycle of (new cycle of '((1 2) (0 2))) for (1- n))
         '(1 2))))
 
-;(peals (new rotation of '(a b c d) rotations (plain-hunt)))
-;(peals (new rotation of '(a b c d e) rotations (grandsire 5)))
+(peals (new rotation of '(a b c d) rotations (plain-hunt)))
+(peals (new rotation of '(a b c d e) rotations (grandsire 5)))
 
 (defprocess chrds (n p r d k a z)
   (process with j 
@@ -158,25 +159,25 @@
                  (incf j i))
            (setf k (+ k z))
            (wait r)))
-(events
- (list
+; (events
+ ; (list
+  ; (chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
+         ; .5 .5 48 .3 0)
   (chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
-         .5 .5 48 .3 0)
-  ;(chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
-  ;       .7 2 20 .3 1)
-  )
- ;"midi.port"
- "brad2.midi"
- )
+        .7 2 20 .3 1)
+  ; )
+ "midi.port"
+ ; "brad2.midi"
+ ; )
 
-(events
- (list
-  (chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
-         .7 2 80 .3 -1)
-  (chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
-         .7 2 20 .3 1)
-  )
- "brad3.midi")
+; (events
+ ; (list
+  ; (chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
+         ; .7 2 80 .3 -1)
+  ; (chrds 60 (new rotation of '(0 3 4 7 8 11) rotations (plain-bob 6))
+         ; .7 2 20 .3 1)
+  ; )
+ ; "brad3.midi")
                
 (defprocess dograndshire (r n tr am)
   (let ((pat (new rotation of '(cs4 ds fs gs as g a d)
