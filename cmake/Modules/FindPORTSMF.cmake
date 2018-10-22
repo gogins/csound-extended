@@ -4,7 +4,7 @@
 #  PORTSMF_INCLUDE_DIRS - The PortSMF include directories.
 #  PORTSMF_LIBRARIES - The libraries needed to use MusicXML.
 
-find_path(PORTSMF_INCLUDE_DIR allegro.h PATH_SUFFIXES portsmf)
+find_path(PORTSMF_INCLUDE_DIR allegro.h PATH_SUFFIXES portsmf portSMF)
 find_library(PORTSMF_LIBRARY NAMES portSMF)
 
 set(PORTSMF_INCLUDE_DIRS ${PORTSMF_INCLUDE_DIR} )

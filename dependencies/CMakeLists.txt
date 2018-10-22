@@ -1,9 +1,9 @@
 include(ExternalProject)
 
-add_subdirectory(csound)
-add_subdirectory(liblo/cmake)
+#add_subdirectory(csound)
+#add_subdirectory(liblo/cmake)
 add_subdirectory(libmusicxml/cmake)
-add_subdirectory(portaudio)
+#add_subdirectory(portaudio)
 
 ExternalProject_Add(libsndfile
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libsndfile"
@@ -28,8 +28,8 @@ ExternalProject_Add(stk
     INSTALL_COMMAND "")
     
 add_custom_target(csound-dependencies ALL
-    DEPENDS liblo libmusicxml libsndfile portaudio luajit)
+    DEPENDS liblo libmusicxml libsndfile stk luajit)
 
-add_custom_target(csound ALL
-    DEPENDS csound-dependencies)
+#add_custom_target(csound ALL
+#    DEPENDS csound-dependencies)
 

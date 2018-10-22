@@ -54,13 +54,12 @@ if(DEFINED ENV{QMAKE})
 else()
     set(QMAKE "qmake")
 endif()
-message("Using qmake: ${QMAKE}.")
 if(DEFINED ENV{Qt5_DIR})
     set(Qt5_DIR $ENV{Qt5_DIR})
     message("Using Qt5_DIR: ${Qt5_DIR}.")
 endif()
 message("Using qmake: ${QMAKE}.")
-set(CSOUND_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/dependencies/csound/include")
+##set(CSOUND_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/dependencies/csound/include")
 message(STATUS "CSOUND_INCLUDE_PATH: ${CSOUND_INCLUDE_PATH}")
 set(VSTSDK2X_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dependencies/VST_SDK/VST2_SDK")
 message(STATUS "VSTSDK2X_INCLUDE_DIR: ${VSTSDK2X_INCLUDE_DIR}")
@@ -115,34 +114,44 @@ option(BUILD_WEBSOCKET_OPCODE "Build the websocket opcode" ON)
 option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
 
 # All dependencies are to be located from here. 
+
 # Local TARGETS are not PACKAGES!
 # Locally installed packages must be searched locally first!
 # Locally built packages must be searched locally first!
 
-# find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+# First we locate all system packages, these are used to make the Ubuntu 
+# csound-extended package, even though local packages may be used for other 
+# targets.
+
+find_package(Csound REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(FLTK REQUIRED NO_MODULE)
 include(${FLTK_USE_FILE})
 find_package(FAUST)
-# find_package(fluidsynth)
+find_package(FluidSynth)
 find_package(Gettext)
 find_package(GMM)
 find_package(Java)
 find_package(JNI)
-# find_package(LIBLO)
+find_package(LIBLO)
 find_package(LLVM)
 # find_package(LUAJIT HINTS ${CMAKE_SOURCE_DIR}/dependencies/luajit-2.0})
 # Just set these from our fixed local build:
 set(LUA_H_PATH "${CMAKE_SOURCE_DIR}/dependencies/luajit-2.0/src")
 set(LUAJIT_LIBRARY "${CMAKE_SOURCE_DIR}/dependencies/luajit-2.0/src/libluajit.so")
 find_package(PORTSMF)
-find_package(portaudio2)
 find_package(PNG)
 find_package(PythonLibs 2.7)
+find_package(SWIG)
+include(UseSWIG)
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED PATHS "~/Qt/5.10.0/gcc_64/lib/cmake/Qt5" CONFIGS "Qt5Config.cmake")
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED HINTS "~/Qt/5.10.0")
 find_package(STK)
 find_package(SWIG)
 find_package(ZLIB)
+
+include_directories("${CSOUND_INCLUDE_DIR}")
+include_directories("${CSOUND_INCLUDE_DIR}/csound")
 
 # Copied from dependencies/csound/CMakeLists.txt:
 

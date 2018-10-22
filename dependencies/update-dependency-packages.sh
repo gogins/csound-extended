@@ -1,53 +1,67 @@
 #!/bin/bash
 echo "Updating all Debian packages required for csound-extended..."
 echo
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt update
+sudo apt upgrade
 echo "Updating build-essential..."
-sudo apt-get install build-essential
+sudo apt install build-essential
 echo "Updating automake..."
-sudo apt-get install automake
+sudo apt install automake
 echo "Updating autoconf..."
-sudo apt-get install autoconf
+sudo apt install autoconf
 echo "Updating autotools..."
-sudo apt-get install autotools
+sudo apt install autotools
 echo "Updating libtool..."
-sudo apt-get install libtool
+sudo apt install libtool
 echo "Updating autogen..."
-sudo apt-get install autogen
+sudo apt install autogen
+echo "Updating csound..."
+sudo apt install csound
+sudo apt install csound-data
+sudo apt install csound-doc
+sudo apt install csound-utils
+sudo apt install csoundqt
+sudo apt install csoundqt-examples
+sudo apt install libcsnd-dev
+sudo apt install libcsound64-6.0
+sudo apt install libcsound64-dev
+sudo apt install multimedia-csound
+sudo apt install python-csound
 echo "Updating libeigen3-dev..."
-sudo apt-get install libeigen3-dev
+sudo apt install libeigen3-dev
 echo "Updating FLTK 1.3..."
-sudo apt-get install fluid
-sudo apt-get install libfltk1.3-dev
-sudo apt-get install libfltk-images1.3
+sudo apt install fluid
+sudo apt install libfltk1.3-dev
+sudo apt install libfltk-images1.3
 echo "Updating fluidsynth..."
-sudo apt-get install libfluidsynth-dev
+sudo apt install libfluidsynth-dev
 echo "Updating gcc-arm-linux-gnueabi..."
-sudo apt-get install gcc-arm-linux-gnueabi
+sudo apt install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."
-sudo apt-get install portaudio19-dev
+sudo apt install portaudio19-dev
 echo "Updating PortMidi..."
-sudo apt-get install libportmidi-dev
+sudo apt install libportmidi-dev
 echo "Updating PortSMF..."
-sudo apt-get install libportsmf-dev
+sudo apt install libportsmf-dev
 echo "Updating qt5base-dev..."
-sudo apt-get install qt5base-dev
+sudo apt install qt5base-dev
 echo "Updating qtwebengine5-dev..."
-sudo apt-get install qtwebengine5-dev
+sudo apt install qtwebengine5-dev
 echo "Updating gcc-aarch64-linux-gnu..."
-sudo apt-get install gcc-aarch64-linux-gnu
+sudo apt install gcc-aarch64-linux-gnu
 echo "Updating linux-libc-dev:i386..."
-sudo apt-get install linux-libc-dev:i386
+sudo apt install linux-libc-dev:i386
 echo "Updating LLVM..."
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main"
-sudo apt-get update
-sudo apt-get install -y clang-5.0
+sudo apt update
+sudo apt install -y clang-5.0
 echo "Updating cl-rsm-mod..."
-sudo apt-get install cl-rsm-mod
+sudo apt install cl-rsm-mod
 echo "Updating libatomic-ops-dev..."
-sudo apt-get install libatomic-ops-dev
+sudo apt install libatomic-ops-dev
 echo "Updating Embeddable Common Lisp..."
-sudo apt-get install ecl
+sudo apt install ecl
+echo "Updating STK..."
+sudo apt install libstk0-dev
 echo "Finished updating all Debian packages required for csound-extended."
