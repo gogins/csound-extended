@@ -37,6 +37,8 @@ echo "Updating fluidsynth..."
 sudo apt install libfluidsynth-dev
 echo "Updating gcc-arm-linux-gnueabi..."
 sudo apt install gcc-arm-linux-gnueabi
+echo "Updating git-buildpackage..."
+sudo apt install git-buildpackage
 echo "Updating PortAudio..."
 sudo apt install portaudio19-dev
 echo "Updating PortMidi..."

@@ -1,6 +1,4 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: csound-extended
-Source: https://github.com/gogins/csound-extended/archive/develop.zip
 
 Files: *
 Copyright:  2018, Michael Gogins <michael.gogins@gmail.com>

@@ -87,7 +87,7 @@ if(BUILD_CSOUND_AC)
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
 
     set_target_properties(libCsoundAC PROPERTIES
-        SOVERSION "${EXTENDED_CSOUND_APIVERSION}"
+        SOVERSION "${APIVERSION}"
         OUTPUT_NAME CsoundAC
         RUNTIME_OUTPUT_DIRECTORY "${BUILD_BIN_DIR}"
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
@@ -161,7 +161,7 @@ if(BUILD_CSOUND_AC)
         install(TARGETS ${SWIG_MODULE_CsoundAC_REAL_NAME}
             LIBRARY DESTINATION "${PYTHON_MODULE_INSTALL_DIR}"
             ARCHIVE DESTINATION "${PYTHON_MODULE_INSTALL_DIR}")
-        install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
+            install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
             DESTINATION ${PYTHON_MODULE_INSTALL_DIR})
     endif()
 

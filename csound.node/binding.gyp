@@ -8,12 +8,10 @@
             ['OS=="linux"',
                 {
                     'libraries': [
-                        '-L$(CSOUND_HOME)/../cs6make -lcsound64',
+                        '-lcsound64',
                     ],
                     'include_dirs': [
-                        '$(CSOUND_HOME)/include/',
-                        '../build-linux',
-                        '../dependencies/csound/include',
+                        '/usr/include/csound',
                     ],
                     'cflags_cc!': [
                         '-fno-exceptions',

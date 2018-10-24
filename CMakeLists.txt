@@ -210,34 +210,78 @@ ExternalProject_Add(CsoundNode
     BUILD_COMMAND nw-gyp rebuild --target=0.30.2
     INSTALL_COMMAND "")
 install(FILES "${CMAKE_SOURCE_DIR}/csound.node/build/Release/csound.node"
-    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+    # PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
     DESTINATION "${EXECUTABLE_INSTALL_DIR}"
     COMPONENT csound-node)
 
 # These are the real targets: the packages.
 
-install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
-        DESTINATION share/doc/csound-extended
-        RENAME copyright)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
-        DESTINATION share/doc/csound-extended)
+# distro codename
+# find stuff we need
+find_program(LSB_RELEASE_CMD lsb_release)
+if(NOT DISTRO_CODENAME)
+  if(NOT LSB_RELEASE_CMD)
+    message(WARNING "DEB Generator: Can't find lsb_release in your path. Setting DISTRO_CODENAME to unknown.")
+    set(DISTRO_CODENAME unknown)
+  else()
+    execute_process(COMMAND ${LSB_RELEASE_CMD} -cs
+                    OUTPUT_VARIABLE DISTRO_CODENAME
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  endif()
+endif()
 
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask)
+set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
+set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Extends Csound with CsoundHtml5, CsoundAC, and others.")
-set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian/control")
-set(CPACK_STRIP_FILES ON)
 set(CPACK_PACKAGE_NAME "csound-extended")
-set(CPACK_PACKAGE_CONTACT "csound-devel@listserv.heanet.ie")
 set(CPACK_PACKAGE_VERSION "$ENV{CSOUND_EXTENDED_VERSION}")
 set(CPACK_STRIP_FILES "YES")
-set(CPACK_DEB_COMPONENT_INSTALL "ON")   
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+
+set(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")   
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers")
+set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with CsoundHtml5, CsoundAC, cmask, Common Music,
+ csound.node for NW.js, csound-wasm, and other features.")
+set(CPACK_DEBIAN_PACKAGE_ENHANCES "csound, libsound64-dev, csound-python")
+set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS "ON")
+set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY "> =")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/gogins/csound-extended")
+set(CPACK_DEBIAN_PACKAGE_LICENSE "https://github.com/gogins/csound-extended")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
+set(CPACK_DEBIAN_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
-set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask)
-set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE 1)
+
+# generate a Debian compliant changelog
+string(TIMESTAMP RFC2822_TIMESTAMP "%a, %d %b %Y %H:%M:%S -0400" UTC)
+set(CHANGELOG_HEADER "csound-extended (${CPACK_PACKAGE_VERSION}) ${DISTRO_CODENAME}\; urgency=high")
+# two spaces between maintainer and timestamp is NOT a mistake
+set(CHANGELOG_FOOTER " -- ${CPACK_DEBIAN_PACKAGE_MAINTAINER}  ${RFC2822_TIMESTAMP}")
+execute_process(COMMAND bash ${CMAKE_SOURCE_DIR}/git-changelog.sh
+    OUTPUT_VARIABLE CHANGELOG 
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+# message("CHANGELOG:\n${CHANGELOG}")
+string(REPLACE "\"" "" CHANGELOG ${CHANGELOG})
+#file(WRITE ${CMAKE_SOURCE_DIR}/debian/changelog.Debian ${CHANGELOG_HEADER}\n${CHANGELOG}\n\n${CHANGELOG_FOOTER})
+#execute_process(COMMAND gzip -f -9 -n ${CMAKE_SOURCE_DIR}/debian/changelog.Debian)
+file(WRITE ${CMAKE_SOURCE_DIR}/debian/changelog ${CHANGELOG_HEADER}\n${CHANGELOG}\n\n${CHANGELOG_FOOTER})
+execute_process(COMMAND gzip -f -9 -n ${CMAKE_SOURCE_DIR}/debian/changelog)
+unset(CHANGELOG_HEADER)
+unset(CHANGELOG_FOOTER)
+unset(RFC2822_TIMESTAMP)
+
+install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME copyright)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
+install(FILES "${CMAKE_SOURCE_DIR}/debian/changelog.gz"
+    DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}")
+
 
 include (CPack)
