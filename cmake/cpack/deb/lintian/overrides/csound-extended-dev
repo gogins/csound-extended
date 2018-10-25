@@ -1,0 +1,5 @@
+# Documentation for this package is not man pages.
+csound-extended-dev binary: binary-without-manpage
+csound-extended-dev binary: description-starts-with-package-name
+# This is a develop package and unstripped binaries are useful.
+csound-extended-dev binary: unstripped-binary-or-object
