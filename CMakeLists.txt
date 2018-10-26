@@ -126,7 +126,8 @@ option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
 find_package(Csound REQUIRED)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(FLTK REQUIRED NO_MODULE)
-include(${FLTK_USE_FILE})
+#message("FLTK_USE_FILE: ${FLTK_USE_FILE}")
+#include(${FLTK_USE_FILE})
 find_package(FAUST)
 find_package(FluidSynth)
 find_package(Gettext)
@@ -191,7 +192,9 @@ add_custom_target(doxygen_reference
     COMMAND doxygen
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc")
 
-add_subdirectory(dependencies)
+# If we're not building Csound locally, we don't need these dependencies.
+# add_subdirectory(dependencies)
+
 add_subdirectory(Opcodes/cmask)
 add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundHtml5
@@ -247,9 +250,12 @@ set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends Csound with additional features.
- Additional features include CsoundHtml5, CsoundAC, cmask, Common Music,
- csound.node for NW.js, csound-wasm, and others.")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language and library Csound.
+ Additional features include the CsoundHtml5 'front end' for Csound wth HTML5, 
+ CsoundAC for algorithmic composition, the cmask opcode for algorithmic composition 
+ and granular synthesis, Common Music and nudruz libraries for algorithmic composition, 
+ csound.node to run Csound in the JavaScript context of NW.js, csound-wasm to run Csound 
+ in the JavaScript context of Web browsers, and others.")
 set(CPACK_DEBIAN_PACKAGE_ENHANCES "csound, libsound64-dev, csound-python, csoundqt")
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS "ON")
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")
@@ -287,7 +293,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
 install(FILES "${CMAKE_SOURCE_DIR}/debian/changelog.gz"
     DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}")
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-extended-dev
-    DESTINATION share/lintian/overrides
+    DESTINATION "share/lintian/overrides/"
     COMPONENT csound-extended-dev)
 
 include (CPack)

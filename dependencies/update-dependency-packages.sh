@@ -31,8 +31,8 @@ echo "Updating libeigen3-dev..."
 sudo apt install libeigen3-dev
 echo "Updating FLTK 1.3..."
 sudo apt install fluid
-sudo apt install libfltk1.3-dev
-sudo apt install libfltk-images1.3
+sudo apt install libfltk1.1-dev
+sudo apt install libfltk-images1.1
 echo "Updating fluidsynth..."
 sudo apt install libfluidsynth-dev
 echo "Updating gcc-arm-linux-gnueabi..."

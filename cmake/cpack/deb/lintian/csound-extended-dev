@@ -1,0 +1,15 @@
+# Documentation for this package is not provided as man pages,
+# but is included as README.md files, examples, and doxygen-genrated HTML.
+csound-extended-dev binary: binary-without-manpage
+
+# This package contains more than one shared object and more than one progran;
+# a generic name is more useful.
+csound-extended-dev source: package-name-doesnt-match-sonames
+
+# The package maintainer is not in control of the spelling of all commit 
+# messages.
+csound-extended-dev source: spelling-error-in-changelog
+csound-extended-dev binary: spelling-error-in-changelog
+
+# This is a develop package and unstripped binaries are useful.
+csound-extended-dev binary: unstripped-binary-or-object

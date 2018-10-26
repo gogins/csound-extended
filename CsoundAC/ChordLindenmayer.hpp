@@ -77,6 +77,9 @@ struct SILENCE_PUBLIC Turtle
     {
         initialize();
     }
+    virtual ~Turtle() 
+    {
+    }
     Turtle(const Turtle &other)
     {
         *this = other;
