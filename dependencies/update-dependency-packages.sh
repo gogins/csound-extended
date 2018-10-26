@@ -29,10 +29,10 @@ sudo apt install multimedia-csound
 sudo apt install python-csound
 echo "Updating libeigen3-dev..."
 sudo apt install libeigen3-dev
-echo "Updating FLTK 1.3..."
+echo "Updating FLTK..."
 sudo apt install fluid
 sudo apt install libfltk1.1-dev
-sudo apt install libfltk-images1.1
+sudo apt install libfltk-images
 echo "Updating fluidsynth..."
 sudo apt install libfluidsynth-dev
 echo "Updating gcc-arm-linux-gnueabi..."

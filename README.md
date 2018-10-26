@@ -12,7 +12,7 @@ These extensions include:
     interfaces.
    
 2.  csound.node, a C++ add-on that embeds Csound in the JavaScript context of 
-    Web pages running in nwjs from https://nwjs.io/.
+    Web pages running in MW.js from https://nwjs.io/.
    
 3.  CsoundHtml5, a lightweight editor and "front end" for Csound that embeds 
     HTML5 capabilities for Csound. This makes it possible to compose music by 
@@ -57,22 +57,22 @@ each platform, there is one build system.
 
 ## Installation
 
-The csound-extended project is currently in an early stage of development.
-You are advised to install packages locally, e.g. in your home directory
-or perhaps to `/usr/local` (the default installation prefix). Currently the 
-software may be installed in the following ways:
-
-1.  Download and install the local binary archives released from this 
-    repository. You can either install them in your home directory, and 
-    configure them for running by adding the `bin` directory to your 
-    `ld.so.conf`, or copy the entire contents of the archive to 
-    `/usr/local/`. In either case, you should then run ldconfig and set 
-    the Csound environment variables as described in the 
-    _**Csound Reference Manual**_.
+1.  CsoundAC and other Linux binaries are installed from the Debian package 
+    released from this repository, e.g. 
+    `sudo apt install ./csound-extended-dev-1.0.0-Linux.deb`.  
     
-2.  Build from sources, as described below. You may then install the software 
+2.  The  `silencio` library and WebAssembly build of Csound are packaged in 
+    the `csound-extended-wasm.0.1.2.zip` archive released from this 
+    repository.
+    
+3.  The Csound for Android app is available from the Google Play Store, or may 
+    be installed from the `CsoundApplication-release.apk` package released 
+    from this repository.
+    
+4.  Build from sources, as described below. You may then install the software 
     by running `sudo make install` in the `build-linux` directory. However, be 
-    warned that this installs the software in `/usr/local`. 
+    warned that this installs the software in `/usr/local`.  You will also 
+    need to separately install Csound.
 
 ## Building
 
