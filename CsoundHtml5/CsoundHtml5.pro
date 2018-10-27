@@ -10,7 +10,7 @@ TEMPLATE = app
 CONFIG   += c++11
 QT       += core gui widgets
 QT       += network webenginewidgets webchannel
-linux:CSOUND_HOME = /usr/local
+linux:CSOUND_HOME = /usr
 win32-msvc2015:CSOUND_HOME = C:/Program_Files/Csound_x64
 SOURCES += main.cpp \
     csoundwebview.cpp \

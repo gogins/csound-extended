@@ -57,8 +57,8 @@ each platform, there is one build system.
 
 ## Installation
 
-1.  CsoundAC and other Linux binaries are installed from the Debian package 
-    released from this repository, e.g. 
+1.  CsoundAC and other Linux binaries and other resources are installed from 
+    the Debian package released from this repository, e.g. 
     `sudo apt install ./csound-extended-dev-1.0.0-Linux.deb`.  
     
 2.  The  `silencio` library and WebAssembly build of Csound are packaged in 
@@ -79,6 +79,10 @@ each platform, there is one build system.
 Currently, the supported platforms are Linux, Android, and WebAssembly. 
 The code is generally "cross-platform" in nature and this build system could 
 be adapted to build for Windows or OS X.
+
+Please note, the Linux package for native code (CsoundAC etc.) is built using 
+the Ubuntu system packages for Csound, whereas the Csound for Android app and 
+the WebAssembly module are built from Csound source code cloned from GitHub.
  
 First clone the Git repository at `https://github.com/gogins/csound-extended.`
 
