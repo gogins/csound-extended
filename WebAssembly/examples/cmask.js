@@ -1,5 +1,14 @@
-var cmask_module = function(cmask_module) {
+
+var cmask_module = (function() {
+  var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
+  return (
+function(cmask_module) {
   cmask_module = cmask_module || {};
+
+// Copyright 2010 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
 
 // The Module object: Our interface to the outside world. We import
 // and export values on it. There are various ways Module can be used:
@@ -41,39 +50,40 @@ Module['quit'] = function(status, toThrow) {
 Module['preRun'] = [];
 Module['postRun'] = [];
 
-// The environment setup code below is customized to use Module.
-// *** Environment setup code ***
+// Determine the runtime environment we are in. You can customize this by
+// setting the ENVIRONMENT setting at compile time (see settings.js).
+
 var ENVIRONMENT_IS_WEB = false;
 var ENVIRONMENT_IS_WORKER = false;
 var ENVIRONMENT_IS_NODE = false;
 var ENVIRONMENT_IS_SHELL = false;
+ENVIRONMENT_IS_WEB = typeof window === 'object';
+ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
+ENVIRONMENT_IS_NODE = typeof process === 'object' && typeof require === 'function' && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
+ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
+
+if (Module['ENVIRONMENT']) {
+  throw new Error('Module.ENVIRONMENT has been deprecated. To force the environment, use the ENVIRONMENT compile-time option (for example, -s ENVIRONMENT=web or -s ENVIRONMENT=node)');
+}
 
 // Three configurations we can be running in:
 // 1) We could be the application main() thread running in the main JS UI thread. (ENVIRONMENT_IS_WORKER == false and ENVIRONMENT_IS_PTHREAD == false)
 // 2) We could be the application main() thread proxied to worker. (with Emscripten -s PROXY_TO_WORKER=1) (ENVIRONMENT_IS_WORKER == true, ENVIRONMENT_IS_PTHREAD == false)
 // 3) We could be an application pthread running in a worker. (ENVIRONMENT_IS_WORKER == true and ENVIRONMENT_IS_PTHREAD == true)
 
-if (Module['ENVIRONMENT']) {
-  if (Module['ENVIRONMENT'] === 'WEB') {
-    ENVIRONMENT_IS_WEB = true;
-  } else if (Module['ENVIRONMENT'] === 'WORKER') {
-    ENVIRONMENT_IS_WORKER = true;
-  } else if (Module['ENVIRONMENT'] === 'NODE') {
-    ENVIRONMENT_IS_NODE = true;
-  } else if (Module['ENVIRONMENT'] === 'SHELL') {
-    ENVIRONMENT_IS_SHELL = true;
+// `/` should be present at the end if `scriptDirectory` is not empty
+var scriptDirectory = '';
+function locateFile(path) {
+  if (Module['locateFile']) {
+    return Module['locateFile'](path, scriptDirectory);
   } else {
-    throw new Error('Module[\'ENVIRONMENT\'] value is not valid. must be one of: WEB|WORKER|NODE|SHELL.');
+    return scriptDirectory + path;
   }
-} else {
-  ENVIRONMENT_IS_WEB = typeof window === 'object';
-  ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
-  ENVIRONMENT_IS_NODE = typeof process === 'object' && typeof require === 'function' && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
-  ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
 }
 
-
 if (ENVIRONMENT_IS_NODE) {
+  scriptDirectory = __dirname + '/';
+
   // Expose functionality in the same simple way that the shells work
   // Note that we pollute the global namespace here, otherwise we break in node
   var nodeFS;
@@ -113,14 +123,17 @@ if (ENVIRONMENT_IS_NODE) {
   });
   // Currently node will swallow unhandled rejections, but this behavior is
   // deprecated, and in the future it will exit with error status.
-  process['on']('unhandledRejection', function(reason, p) {
-    Module['printErr']('node.js exiting due to unhandled promise rejection');
-    process['exit'](1);
-  });
+  process['on']('unhandledRejection', abort);
+
+  Module['quit'] = function(status) {
+    process['exit'](status);
+  };
 
   Module['inspect'] = function () { return '[Emscripten Module object]'; };
 } else
 if (ENVIRONMENT_IS_SHELL) {
+
+
   if (typeof read != 'undefined') {
     Module['read'] = function shell_read(f) {
       return read(f);
@@ -144,12 +157,33 @@ if (ENVIRONMENT_IS_SHELL) {
   }
 
   if (typeof quit === 'function') {
-    Module['quit'] = function(status, toThrow) {
+    Module['quit'] = function(status) {
       quit(status);
     }
   }
 } else
 if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
+  if (ENVIRONMENT_IS_WORKER) { // Check worker, not web, since window could be polyfilled
+    scriptDirectory = self.location.href;
+  } else if (document.currentScript) { // web
+    scriptDirectory = document.currentScript.src;
+  }
+  // When MODULARIZE (and not _INSTANCE), this JS may be executed later, after document.currentScript
+  // is gone, so we saved it, and we use it here instead of any other info.
+  if (_scriptDir) {
+    scriptDirectory = _scriptDir;
+  }
+  // blob urls look like blob:http://site.com/etc/etc and we cannot infer anything from them.
+  // otherwise, slice off the final part of the url to find the script directory.
+  // if scriptDirectory does not contain a slash, lastIndexOf will return -1,
+  // and scriptDirectory will correctly be replaced with an empty string.
+  if (scriptDirectory.indexOf('blob:') !== 0) {
+    scriptDirectory = scriptDirectory.substr(0, scriptDirectory.lastIndexOf('/')+1);
+  } else {
+    scriptDirectory = '';
+  }
+
+
   Module['read'] = function shell_read(url) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, false);
@@ -185,20 +219,17 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
   Module['setWindowTitle'] = function(title) { document.title = title };
 } else
 {
-  throw new Error('not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)');
+  throw new Error('environment detection error');
 }
 
+// Set up the out() and err() hooks, which are how we can print to stdout or
+// stderr, respectively.
+// If the user provided Module.print or printErr, use that. Otherwise,
 // console.log is checked first, as 'print' on the web will open a print dialogue
 // printErr is preferable to console.warn (works better in shells)
 // bind(console) is necessary to fix IE/Edge closed dev tools panel behavior.
-Module['print'] = typeof console !== 'undefined' ? console.log.bind(console) : (typeof print !== 'undefined' ? print : null);
-Module['printErr'] = typeof printErr !== 'undefined' ? printErr : ((typeof console !== 'undefined' && console.warn.bind(console)) || Module['print']);
-
-// *** Environment setup code ***
-
-// Closure helpers
-Module.print = Module['print'];
-Module.printErr = Module['printErr'];
+var out = Module['print'] || (typeof console !== 'undefined' ? console.log.bind(console) : (typeof print !== 'undefined' ? print : null));
+var err = Module['printErr'] || (typeof printErr !== 'undefined' ? printErr : ((typeof console !== 'undefined' && console.warn.bind(console)) || out));
 
 // Merge back in the overrides
 for (key in moduleOverrides) {
@@ -210,7 +241,18 @@ for (key in moduleOverrides) {
 // reclaim data used e.g. in memoryInitializerRequest, which is a large typed array.
 moduleOverrides = undefined;
 
+// perform assertions in shell.js after we set up out() and err(), as otherwise if an assertion fails it cannot print the message
+assert(typeof Module['memoryInitializerPrefixURL'] === 'undefined', 'Module.memoryInitializerPrefixURL option was removed, use Module.locateFile instead');
+assert(typeof Module['pthreadMainPrefixURL'] === 'undefined', 'Module.pthreadMainPrefixURL option was removed, use Module.locateFile instead');
+assert(typeof Module['cdInitializerPrefixURL'] === 'undefined', 'Module.cdInitializerPrefixURL option was removed, use Module.locateFile instead');
+assert(typeof Module['filePackagePrefixURL'] === 'undefined', 'Module.filePackagePrefixURL option was removed, use Module.locateFile instead');
 
+
+
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
 
 // {{PREAMBLE_ADDITIONS}}
 
@@ -226,6 +268,7 @@ function staticAlloc(size) {
   assert(!staticSealed);
   var ret = STATICTOP;
   STATICTOP = (STATICTOP + size + 15) & -16;
+  assert(STATICTOP < TOTAL_MEMORY, 'not enough memory for static allocation - increase TOTAL_MEMORY');
   return ret;
 }
 
@@ -276,7 +319,7 @@ function warnOnce(text) {
   if (!warnOnce.shown) warnOnce.shown = {};
   if (!warnOnce.shown[text]) {
     warnOnce.shown[text] = 1;
-    Module.printErr(text);
+    err(text);
   }
 }
 
@@ -297,7 +340,7 @@ var functionPointers = new Array(1);
 // 'sig' parameter is only used on LLVM wasm backend
 function addFunction(func, sig) {
   if (typeof sig === 'undefined') {
-    Module.printErr('warning: addFunction(): You should provide a wasm function signature string as a second argument. This is not necessary for asm.js and asm2wasm, but is required for the LLVM wasm backend, so it is recommended for full portability.');
+    err('warning: addFunction(): You should provide a wasm function signature string as a second argument. This is not necessary for asm.js and asm2wasm, but is required for the LLVM wasm backend, so it is recommended for full portability.');
   }
   var base = 0;
   for (var i = base; i < base + 1; i++) {
@@ -461,7 +504,13 @@ function ftfault() {
 // Runtime essentials
 //========================================
 
-var ABORT = 0; // whether we are quitting the application. no code should run after this. set in exit() and abort()
+// whether we are quitting the application. no code should run after this.
+// set in exit() and abort()
+var ABORT = false;
+
+// set by exit() and abort().  Passed to 'onExit' handler.
+// NOTE: This is also used as the process return code code in shell environments
+// but only when noExitRuntime is false.
 var EXITSTATUS = 0;
 
 /** @type {function(*, string=)} */
@@ -513,8 +562,15 @@ var toC = {
   'string': JSfuncs['stringToC'], 'array': JSfuncs['arrayToC']
 };
 
+
 // C calling interface.
-function ccall (ident, returnType, argTypes, args, opts) {
+function ccall(ident, returnType, argTypes, args, opts) {
+  function convertReturnValue(ret) {
+    if (returnType === 'string') return Pointer_stringify(ret);
+    if (returnType === 'boolean') return Boolean(ret);
+    return ret;
+  }
+
   var func = getCFunc(ident);
   var cArgs = [];
   var stack = 0;
@@ -531,26 +587,14 @@ function ccall (ident, returnType, argTypes, args, opts) {
     }
   }
   var ret = func.apply(null, cArgs);
-  if (returnType === 'string') ret = Pointer_stringify(ret);
-  else if (returnType === 'boolean') ret = Boolean(ret);
-  if (stack !== 0) {
-    stackRestore(stack);
-  }
+  ret = convertReturnValue(ret);
+  if (stack !== 0) stackRestore(stack);
   return ret;
 }
 
-function cwrap (ident, returnType, argTypes) {
-  argTypes = argTypes || [];
-  var cfunc = getCFunc(ident);
-  // When the function takes numbers and returns a number, we can just return
-  // the original function
-  var numericArgs = argTypes.every(function(type){ return type === 'number'});
-  var numericRet = returnType !== 'string';
-  if (numericRet && numericArgs) {
-    return cfunc;
-  }
+function cwrap(ident, returnType, argTypes, opts) {
   return function() {
-    return ccall(ident, returnType, argTypes, arguments);
+    return ccall(ident, returnType, argTypes, arguments, opts);
   }
 }
 
@@ -778,7 +822,10 @@ function UTF8ArrayToString(u8Array, idx) {
 
     var str = '';
     while (1) {
-      // For UTF8 byte structure, see http://en.wikipedia.org/wiki/UTF-8#Description and https://www.ietf.org/rfc/rfc2279.txt and https://tools.ietf.org/html/rfc3629
+      // For UTF8 byte structure, see:
+      // http://en.wikipedia.org/wiki/UTF-8#Description
+      // https://www.ietf.org/rfc/rfc2279.txt
+      // https://tools.ietf.org/html/rfc3629
       u0 = u8Array[idx++];
       if (!u0) return str;
       if (!(u0 & 0x80)) { str += String.fromCharCode(u0); continue; }
@@ -825,8 +872,9 @@ function UTF8ToString(ptr) {
 //   str: the Javascript string to copy.
 //   outU8Array: the array to copy to. Each index in this array is assumed to be one 8-byte element.
 //   outIdx: The starting offset in the array to begin the copying.
-//   maxBytesToWrite: The maximum number of bytes this function can write to the array. This count should include the null
-//                    terminator, i.e. if maxBytesToWrite=1, only the null terminator will be written and nothing else.
+//   maxBytesToWrite: The maximum number of bytes this function can write to the array.
+//                    This count should include the null terminator,
+//                    i.e. if maxBytesToWrite=1, only the null terminator will be written and nothing else.
 //                    maxBytesToWrite=0 does not write any bytes to the output, not even the null terminator.
 // Returns the number of bytes written, EXCLUDING the null terminator.
 
@@ -841,7 +889,10 @@ function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
     // See http://unicode.org/faq/utf_bom.html#utf16-3
     // For UTF8 byte structure, see http://en.wikipedia.org/wiki/UTF-8#Description and https://www.ietf.org/rfc/rfc2279.txt and https://tools.ietf.org/html/rfc3629
     var u = str.charCodeAt(i); // possibly a lead surrogate
-    if (u >= 0xD800 && u <= 0xDFFF) u = 0x10000 + ((u & 0x3FF) << 10) | (str.charCodeAt(++i) & 0x3FF);
+    if (u >= 0xD800 && u <= 0xDFFF) {
+      var u1 = str.charCodeAt(++i);
+      u = 0x10000 + ((u & 0x3FF) << 10) | (u1 & 0x3FF);
+    }
     if (u <= 0x7F) {
       if (outIdx >= endIdx) break;
       outU8Array[outIdx++] = u;
@@ -1088,7 +1139,7 @@ function demangleAll(text) {
   return text.replace(regex,
     function(x) {
       var y = demangle(x);
-      return x === y ? x : (x + ' [' + y + ']');
+      return x === y ? x : (y + ' [' + x + ']');
     });
 }
 
@@ -1191,6 +1242,7 @@ function abortStackOverflow(allocSize) {
   abort('Stack overflow! Attempted to allocate ' + allocSize + ' bytes on the stack, but stack has only ' + (STACK_MAX - stackSave() + allocSize) + ' bytes available!');
 }
 
+
 function abortOnCannotGrowMemory() {
   abort('Cannot enlarge memory arrays. Either (1) compile with  -s TOTAL_MEMORY=X  with X higher than the current value ' + TOTAL_MEMORY + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
 }
@@ -1198,14 +1250,10 @@ function abortOnCannotGrowMemory() {
 if (!Module['reallocBuffer']) Module['reallocBuffer'] = function(size) {
   var ret;
   try {
-    if (ArrayBuffer.transfer) {
-      ret = ArrayBuffer.transfer(buffer, size);
-    } else {
-      var oldHEAP8 = HEAP8;
-      ret = new ArrayBuffer(size);
-      var temp = new Int8Array(ret);
-      temp.set(oldHEAP8);
-    }
+    var oldHEAP8 = HEAP8;
+    ret = new ArrayBuffer(size);
+    var temp = new Int8Array(ret);
+    temp.set(oldHEAP8);
   } catch(e) {
     return false;
   }
@@ -1223,7 +1271,7 @@ function enlargeMemory() {
   var LIMIT = 2147483648 - PAGE_MULTIPLE; // We can do one page short of 2GB as theoretical maximum.
 
   if (HEAP32[DYNAMICTOP_PTR>>2] > LIMIT) {
-    Module.printErr('Cannot enlarge memory, asked to go up to ' + HEAP32[DYNAMICTOP_PTR>>2] + ' bytes, but the limit is ' + LIMIT + ' bytes!');
+    err('Cannot enlarge memory, asked to go up to ' + HEAP32[DYNAMICTOP_PTR>>2] + ' bytes, but the limit is ' + LIMIT + ' bytes!');
     return false;
   }
 
@@ -1242,13 +1290,14 @@ function enlargeMemory() {
     }
   }
 
+
   var start = Date.now();
 
   var replacement = Module['reallocBuffer'](TOTAL_MEMORY);
   if (!replacement || replacement.byteLength != TOTAL_MEMORY) {
-    Module.printErr('Failed to grow the heap from ' + OLD_TOTAL_MEMORY + ' bytes to ' + TOTAL_MEMORY + ' bytes, not enough memory!');
+    err('Failed to grow the heap from ' + OLD_TOTAL_MEMORY + ' bytes to ' + TOTAL_MEMORY + ' bytes, not enough memory!');
     if (replacement) {
-      Module.printErr('Expected to get back a buffer of size ' + TOTAL_MEMORY + ' bytes, but instead got back a buffer of size ' + replacement.byteLength);
+      err('Expected to get back a buffer of size ' + TOTAL_MEMORY + ' bytes, but instead got back a buffer of size ' + replacement.byteLength);
     }
     // restore the state to before this call, we failed
     TOTAL_MEMORY = OLD_TOTAL_MEMORY;
@@ -1261,7 +1310,7 @@ function enlargeMemory() {
   updateGlobalBufferViews();
 
   if (!Module["usingWasm"]) {
-    Module.printErr('Warning: Enlarging memory arrays, this is not fast! ' + [OLD_TOTAL_MEMORY, TOTAL_MEMORY]);
+    err('Warning: Enlarging memory arrays, this is not fast! ' + [OLD_TOTAL_MEMORY, TOTAL_MEMORY]);
   }
 
 
@@ -1278,7 +1327,7 @@ try {
 
 var TOTAL_STACK = Module['TOTAL_STACK'] || 5242880;
 var TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 268435456;
-if (TOTAL_MEMORY < TOTAL_STACK) Module.printErr('TOTAL_MEMORY should be larger than TOTAL_STACK, was ' + TOTAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
+if (TOTAL_MEMORY < TOTAL_STACK) err('TOTAL_MEMORY should be larger than TOTAL_STACK, was ' + TOTAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
 
 // Initialize the runtime's memory
 // check for full engine support (use string 'subarray' to avoid closure compiler confusion)
@@ -1462,7 +1511,10 @@ function reSign(value, bits, ignore) {
   return value;
 }
 
-assert(Math['imul'] && Math['fround'] && Math['clz32'] && Math['trunc'], 'this is a legacy browser, build with LEGACY_VM_SUPPORT');
+assert(Math['imul'], 'This browser does not support Math.imul(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill');
+assert(Math['fround'], 'This browser does not support Math.fround(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill');
+assert(Math['clz32'], 'This browser does not support Math.clz32(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill');
+assert(Math['trunc'], 'This browser does not support Math.trunc(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill');
 
 var Math_abs = Math.abs;
 var Math_cos = Math.cos;
@@ -1489,7 +1541,7 @@ var Math_trunc = Math.trunc;
 // A counter of dependencies for calling run(). If we need to
 // do asynchronous work before running, increment this and
 // decrement it. Incrementing must happen in a place like
-// PRE_RUN_ADDITIONS (used by emcc to add file preloading).
+// Module.preRun (used by emcc to add file preloading).
 // Note that you can add dependencies in preRun, even though
 // it happens right before run - run will be postponed until
 // the dependencies are met.
@@ -1527,17 +1579,17 @@ function addRunDependency(id) {
         for (var dep in runDependencyTracking) {
           if (!shown) {
             shown = true;
-            Module.printErr('still waiting on run dependencies:');
+            err('still waiting on run dependencies:');
           }
-          Module.printErr('dependency: ' + dep);
+          err('dependency: ' + dep);
         }
         if (shown) {
-          Module.printErr('(end of list)');
+          err('(end of list)');
         }
       }, 10000);
     }
   } else {
-    Module.printErr('warning: run dependency added without ID');
+    err('warning: run dependency added without ID');
   }
 }
 
@@ -1550,7 +1602,7 @@ function removeRunDependency(id) {
     assert(runDependencyTracking[id]);
     delete runDependencyTracking[id];
   } else {
-    Module.printErr('warning: run dependency removed without ID');
+    err('warning: run dependency removed without ID');
   }
   if (runDependencies == 0) {
     if (runDependencyWatcher !== null) {
@@ -1576,6 +1628,11 @@ var memoryInitializer = null;
 
 
 
+
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
 
 // Prefix of data URIs emitted by SINGLE_FILE and related options.
 var dataURIPrefix = 'data:application/octet-stream;base64,';
@@ -1610,16 +1667,14 @@ function integrateWasmJS() {
   var wasmBinaryFile = 'cmask.wasm';
   var asmjsCodeFile = 'cmask.temp.asm.js';
 
-  if (typeof Module['locateFile'] === 'function') {
-    if (!isDataURI(wasmTextFile)) {
-      wasmTextFile = Module['locateFile'](wasmTextFile);
-    }
-    if (!isDataURI(wasmBinaryFile)) {
-      wasmBinaryFile = Module['locateFile'](wasmBinaryFile);
-    }
-    if (!isDataURI(asmjsCodeFile)) {
-      asmjsCodeFile = Module['locateFile'](asmjsCodeFile);
-    }
+  if (!isDataURI(wasmTextFile)) {
+    wasmTextFile = locateFile(wasmTextFile);
+  }
+  if (!isDataURI(wasmBinaryFile)) {
+    wasmBinaryFile = locateFile(wasmBinaryFile);
+  }
+  if (!isDataURI(asmjsCodeFile)) {
+    asmjsCodeFile = locateFile(asmjsCodeFile);
   }
 
   // utilities
@@ -1643,7 +1698,7 @@ function integrateWasmJS() {
     // TODO: in shorter term, just copy up to the last static init write
     var oldBuffer = Module['buffer'];
     if (newBuffer.byteLength < oldBuffer.byteLength) {
-      Module['printErr']('the new buffer in mergeMemory is smaller than the previous one. in native wasm, we should grow memory here');
+      err('the new buffer in mergeMemory is smaller than the previous one. in native wasm, we should grow memory here');
     }
     var oldView = new Int8Array(oldBuffer);
     var newView = new Int8Array(newBuffer);
@@ -1654,10 +1709,6 @@ function integrateWasmJS() {
     updateGlobalBufferViews();
   }
 
-  function fixImports(imports) {
-    return imports;
-  }
-
   function getBinary() {
     try {
       if (Module['wasmBinary']) {
@@ -1666,7 +1717,7 @@ function integrateWasmJS() {
       if (Module['readBinary']) {
         return Module['readBinary'](wasmBinaryFile);
       } else {
-        throw "on the web, we need the wasm binary to be preloaded and set on Module['wasmBinary']. emcc.py will do that for you when generating HTML (but not JS)";
+        throw "both async and sync fetching of the wasm failed";
       }
     }
     catch (err) {
@@ -1700,12 +1751,12 @@ function integrateWasmJS() {
     if (typeof WebAssembly !== 'object') {
       // when the method is just native-wasm, our error message can be very specific
       abort('No WebAssembly support found. Build with -s WASM=0 to target JavaScript instead.');
-      Module['printErr']('no native wasm support detected');
+      err('no native wasm support detected');
       return false;
     }
     // prepare memory import
     if (!(Module['wasmMemory'] instanceof WebAssembly.Memory)) {
-      Module['printErr']('no native wasm Memory in use');
+      err('no native wasm Memory in use');
       return false;
     }
     env['memory'] = Module['wasmMemory'];
@@ -1734,7 +1785,7 @@ function integrateWasmJS() {
       try {
         return Module['instantiateWasm'](info, receiveInstance);
       } catch(e) {
-        Module['printErr']('Module.instantiateWasm callback failed with error: ' + e);
+        err('Module.instantiateWasm callback failed with error: ' + e);
         return false;
       }
     }
@@ -1753,8 +1804,8 @@ function integrateWasmJS() {
     function instantiateArrayBuffer(receiver) {
       getBinaryPromise().then(function(binary) {
         return WebAssembly.instantiate(binary, info);
-      }).then(receiver).catch(function(reason) {
-        Module['printErr']('failed to asynchronously prepare wasm: ' + reason);
+      }).then(receiver, function(reason) {
+        err('failed to asynchronously prepare wasm: ' + reason);
         abort(reason);
       });
     }
@@ -1764,12 +1815,11 @@ function integrateWasmJS() {
         !isDataURI(wasmBinaryFile) &&
         typeof fetch === 'function') {
       WebAssembly.instantiateStreaming(fetch(wasmBinaryFile, { credentials: 'same-origin' }), info)
-        .then(receiveInstantiatedSource)
-        .catch(function(reason) {
+        .then(receiveInstantiatedSource, function(reason) {
           // We expect the most common failure cause to be a bad MIME type for the binary,
           // in which case falling back to ArrayBuffer instantiation should work.
-          Module['printErr']('wasm streaming compile failed: ' + reason);
-          Module['printErr']('falling back to ArrayBuffer instantiation');
+          err('wasm streaming compile failed: ' + reason);
+          err('falling back to ArrayBuffer instantiation');
           instantiateArrayBuffer(receiveInstantiatedSource);
         });
     } else {
@@ -1824,8 +1874,6 @@ function integrateWasmJS() {
   // doesn't need to care that it is wasm or olyfilled wasm or asm.js.
 
   Module['asm'] = function(global, env, providedBuffer) {
-    env = fixImports(env);
-
     // import table
     if (!env['table']) {
       var TABLE_SIZE = Module['wasmTableSize'];
@@ -1855,7 +1903,7 @@ function integrateWasmJS() {
     var exports;
     exports = doNativeWasm(global, env, providedBuffer);
 
-    assert(exports, 'no binaryen method succeeded. consider enabling more options, like interpreting, if you want that: https://github.com/kripken/emscripten/wiki/WebAssembly#binaryen-methods');
+    assert(exports, 'no binaryen method succeeded. consider enabling more options, like interpreting, if you want that: http://kripken.github.io/emscripten-site/docs/compiling/WebAssembly.html#binaryen-methods');
 
 
     return exports;
@@ -1876,8 +1924,8 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 213136;
-/* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_cmask_library_cpp() } }, { func: function() { __GLOBAL__sub_I_bind_cpp() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
+STATICTOP = STATIC_BASE + 215152;
+/* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__I_000101_884() } }, { func: function() { __GLOBAL__sub_I_cmask_library_cpp() } }, { func: function() { __GLOBAL__sub_I_bind_cpp() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } }, { func: function() { __GLOBAL__sub_I_memory_resource_cpp() } });
 
 
 
@@ -1885,7 +1933,7 @@ STATICTOP = STATIC_BASE + 213136;
 
 
 
-var STATIC_BUMP = 213136;
+var STATIC_BUMP = 215152;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
@@ -1929,10 +1977,6 @@ function copyTempDouble(ptr) {
 // {{PRE_LIBRARY}}
 
 
-  function ___block_all_sigs() {
-  Module['printErr']('missing function: __block_all_sigs'); abort(-1);
-  }
-
   
   
   function _emscripten_get_now() { abort() }
@@ -1948,7 +1992,7 @@ function copyTempDouble(ptr) {
   
   function ___setErrNo(value) {
       if (Module['___errno_location']) SAFE_HEAP_STORE(((Module['___errno_location']())|0), ((value)|0), 4);
-      else Module.printErr('failed to set errno from JS');
+      else err('failed to set errno from JS');
       return value;
     }function _clock_gettime(clk_id, tp) {
       // int clock_gettime(clockid_t clk_id, struct timespec *tp);
@@ -1966,10 +2010,6 @@ function copyTempDouble(ptr) {
       return 0;
     }function ___clock_gettime() {
   return _clock_gettime.apply(null, arguments)
-  }
-
-  function ___clone() {
-  Module['printErr']('missing function: __clone'); abort(-1);
   }
 
   function ___cxa_allocate_exception(size) {
@@ -2048,7 +2088,7 @@ function copyTempDouble(ptr) {
       try {
         return _free(ptr);
       } catch(e) { // XXX FIXME
-        Module.printErr('exception during cxa_free_exception: ' + e);
+        err('exception during cxa_free_exception: ' + e);
       }
     }function ___cxa_end_catch() {
       // Clear state flag.
@@ -2148,18 +2188,6 @@ function copyTempDouble(ptr) {
       ___setErrNo(ERRNO_CODES.EPERM);
       return -1;
     }
-
-  function ___muldc3() {
-  Module['printErr']('missing function: __muldc3'); abort(-1);
-  }
-
-  function ___mulsc3() {
-  Module['printErr']('missing function: __mulsc3'); abort(-1);
-  }
-
-  function ___restore_sigs() {
-  Module['printErr']('missing function: __restore_sigs'); abort(-1);
-  }
 
   
   
@@ -2415,26 +2443,26 @@ function copyTempDouble(ptr) {
           return tty.input.shift();
         },put_char:function (tty, val) {
           if (val === null || val === 10) {
-            Module['print'](UTF8ArrayToString(tty.output, 0));
+            out(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           } else {
             if (val != 0) tty.output.push(val); // val == 0 would cut text output off in the middle.
           }
         },flush:function (tty) {
           if (tty.output && tty.output.length > 0) {
-            Module['print'](UTF8ArrayToString(tty.output, 0));
+            out(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           }
         }},default_tty1_ops:{put_char:function (tty, val) {
           if (val === null || val === 10) {
-            Module['printErr'](UTF8ArrayToString(tty.output, 0));
+            err(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           } else {
             if (val != 0) tty.output.push(val);
           }
         },flush:function (tty) {
           if (tty.output && tty.output.length > 0) {
-            Module['printErr'](UTF8ArrayToString(tty.output, 0));
+            err(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           }
         }}};
@@ -2677,6 +2705,18 @@ function copyTempDouble(ptr) {
           }
           return size;
         },write:function (stream, buffer, offset, length, position, canOwn) {
+          // If memory can grow, we don't want to hold on to references of
+          // the memory Buffer, as they may get invalidated. That means
+          // we need to do a copy here.
+          // FIXME: this is inefficient as the file packager may have
+          //        copied the data into memory already - we may want to
+          //        integrate more there and let the file packager loading
+          //        code be able to query if memory growth is on or off.
+          if (canOwn) {
+            warnOnce('file packager has copied file data into memory, but in memory growth we are forced to copy it again (see --no-heap-copy)');
+          }
+          canOwn = false;
+  
           if (!length) return 0;
           var node = stream.node;
           node.timestamp = Date.now();
@@ -4314,7 +4354,7 @@ function copyTempDouble(ptr) {
           if (!FS.readFiles) FS.readFiles = {};
           if (!(path in FS.readFiles)) {
             FS.readFiles[path] = 1;
-            Module['printErr']('read file: ' + path);
+            err('read file: ' + path);
           }
         }
         try {
@@ -4536,7 +4576,7 @@ function copyTempDouble(ptr) {
           random_device = function() { return require('crypto')['randomBytes'](1)[0]; };
         } else {
           // default for ES5 platforms
-          random_device = function() { return (Math.random()*256)|0; };
+          random_device = function() { abort("random_device"); /*Math.random() is not safe for random number generation, so this fallback random_device implementation aborts... see kripken/emscripten/pull/7096 */ };
         }
         FS.createDevice('/dev', 'random', random_device);
         FS.createDevice('/dev', 'urandom', random_device);
@@ -4606,7 +4646,7 @@ function copyTempDouble(ptr) {
       },ensureErrnoError:function () {
         if (FS.ErrnoError) return;
         FS.ErrnoError = function ErrnoError(errno, node) {
-          //Module.printErr(stackTrace()); // useful for debugging
+          //err(stackTrace()); // useful for debugging
           this.node = node;
           this.setErrno = function(errno) {
             this.errno = errno;
@@ -5252,19 +5292,7 @@ function copyTempDouble(ptr) {
         return low;
       },getZero:function () {
         assert(SYSCALLS.get() === 0);
-      }};function ___syscall1(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // exit
-      var status = SYSCALLS.get();
-      Module['exit'](status);
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall10(which, varargs) {SYSCALLS.varargs = varargs;
+      }};function ___syscall10(which, varargs) {SYSCALLS.varargs = varargs;
   try {
    // unlink
       var path = SYSCALLS.getStr();
@@ -6846,25 +6874,6 @@ function copyTempDouble(ptr) {
   }
 
 
-  
-  function ___syscall214(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // setgid32
-      var uid = SYSCALLS.get();
-      if (uid !== 0) return -ERRNO_CODES.EPERM;
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }function ___syscall203() {
-  return ___syscall214.apply(null, arguments)
-  }
-
-  function ___syscall204() {
-  return ___syscall214.apply(null, arguments)
-  }
-
   function ___syscall205(which, varargs) {SYSCALLS.varargs = varargs;
   try {
    // getgroups32
@@ -7238,19 +7247,6 @@ function copyTempDouble(ptr) {
       path = SYSCALLS.calculateAt(dirfd, path);
       FS.chmod(path, mode);
       return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall307(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // faccessat
-      var dirfd = SYSCALLS.get(), path = SYSCALLS.getStr(), amode = SYSCALLS.get(), flags = SYSCALLS.get();
-      assert(flags === 0);
-      path = SYSCALLS.calculateAt(dirfd, path);
-      return SYSCALLS.doAccess(path, amode);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
@@ -8650,53 +8646,99 @@ function copyTempDouble(ptr) {
 
   function __embind_register_std_string(rawType, name) {
       name = readLatin1String(name);
+      var stdStringIsUTF8
+      //process only std::string bindings with UTF8 support, in contrast to e.g. std::basic_string<unsigned char>
+      = (name === "std::string");
+  
       registerType(rawType, {
           name: name,
           'fromWireType': function(value) {
               var length = HEAPU32[value >> 2];
-              var a = new Array(length);
-              for (var i = 0; i < length; ++i) {
-                  a[i] = String.fromCharCode(HEAPU8[value + 4 + i]);
+  
+              var str;
+              if(stdStringIsUTF8) {
+                  //ensure null termination at one-past-end byte if not present yet
+                  var endChar = HEAPU8[value + 4 + length];
+                  var endCharSwap = 0;
+                  if(endChar != 0)
+                  {
+                    endCharSwap = endChar;
+                    HEAPU8[value + 4 + length] = 0;
+                  }
+  
+                  var decodeStartPtr = value + 4;
+                  //looping here to support possible embedded '0' bytes
+                  for (var i = 0; i <= length; ++i) {
+                    var currentBytePtr = value + 4 + i;
+                    if(HEAPU8[currentBytePtr] == 0)
+                    {
+                      var stringSegment = UTF8ToString(decodeStartPtr);
+                      if(str === undefined)
+                        str = stringSegment;
+                      else
+                      {
+                        str += String.fromCharCode(0);
+                        str += stringSegment;
+                      }
+                      decodeStartPtr = currentBytePtr + 1;
+                    }
+                  }
+  
+                  if(endCharSwap != 0)
+                    HEAPU8[value + 4 + length] = endCharSwap;
+              } else {
+                  var a = new Array(length);
+                  for (var i = 0; i < length; ++i) {
+                      a[i] = String.fromCharCode(HEAPU8[value + 4 + i]);
+                  }
+                  str = a.join('');
               }
+  
               _free(value);
-              return a.join('');
+              
+              return str;
           },
           'toWireType': function(destructors, value) {
               if (value instanceof ArrayBuffer) {
                   value = new Uint8Array(value);
               }
+              
+              var getLength;
+              var valueIsOfTypeString = (typeof value === 'string');
   
-              function getTAElement(ta, index) {
-                  return ta[index];
-              }
-              function getStringElement(string, index) {
-                  return string.charCodeAt(index);
-              }
-              var getElement;
-              if (value instanceof Uint8Array) {
-                  getElement = getTAElement;
-              } else if (value instanceof Uint8ClampedArray) {
-                  getElement = getTAElement;
-              } else if (value instanceof Int8Array) {
-                  getElement = getTAElement;
-              } else if (typeof value === 'string') {
-                  getElement = getStringElement;
-              } else {
+              if (!(valueIsOfTypeString || value instanceof Uint8Array || value instanceof Uint8ClampedArray || value instanceof Int8Array)) {
                   throwBindingError('Cannot pass non-string to std::string');
               }
-  
-              // assumes 4-byte alignment
-              var length = value.length;
-              var ptr = _malloc(4 + length);
-              HEAPU32[ptr >> 2] = length;
-              for (var i = 0; i < length; ++i) {
-                  var charCode = getElement(value, i);
-                  if (charCode > 255) {
-                      _free(ptr);
-                      throwBindingError('String has UTF-16 code units that do not fit in 8 bits');
-                  }
-                  HEAPU8[ptr + 4 + i] = charCode;
+              if (stdStringIsUTF8 && valueIsOfTypeString) {
+                  getLength = function() {return lengthBytesUTF8(value);};
+              } else {
+                  getLength = function() {return value.length;};
               }
+              
+              // assumes 4-byte alignment
+              var length = getLength();
+              var ptr = _malloc(4 + length + 1);
+              HEAPU32[ptr >> 2] = length;
+  
+              if (stdStringIsUTF8 && valueIsOfTypeString) {
+                  stringToUTF8(value, ptr + 4, length + 1);
+              } else {
+                  if(valueIsOfTypeString) {
+                      for (var i = 0; i < length; ++i) {
+                          var charCode = value.charCodeAt(i);
+                          if (charCode > 255) {
+                              _free(ptr);
+                              throwBindingError('String has UTF-16 code units that do not fit in 8 bits');
+                          }
+                          HEAPU8[ptr + 4 + i] = charCode;
+                      }
+                  } else {
+                      for (var i = 0; i < length; ++i) {
+                          HEAPU8[ptr + 4 + i] = value[i];
+                      }
+                  }
+              }
+  
               if (destructors !== null) {
                   destructors.push(_free, ptr);
               }
@@ -8772,7 +8814,7 @@ function copyTempDouble(ptr) {
   function __exit(status) {
       // void _exit(int status);
       // http://pubs.opengroup.org/onlinepubs/000095399/functions/exit.html
-      Module['exit'](status);
+      exit(status);
     }
 
   function _abort() {
@@ -8784,18 +8826,6 @@ function copyTempDouble(ptr) {
       return ((Date.now() - _clock.start) * (1000000 / 1000))|0;
     }
 
-
-  function _endgrent() {
-  Module['printErr']('missing function: endgrent'); abort(-1);
-  }
-
-  function _execl(/* ... */) {
-      // int execl(const char *path, const char *arg0, ... /*, (char *)0 */);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/exec.html
-      // We don't support executing external code.
-      ___setErrNo(ERRNO_CODES.ENOEXEC);
-      return -1;
-    }
 
   function _exit(status) {
       __exit(status);
@@ -8821,10 +8851,6 @@ function copyTempDouble(ptr) {
       _getenv.ret = allocateUTF8(ENV[name]);
       return _getenv.ret;
     }
-
-  function _getgrent() {
-  Module['printErr']('missing function: getgrent'); abort(-1);
-  }
 
   function _getnameinfo(sa, salen, node, nodelen, serv, servlen, flags) {
       var info = __read_sockaddr(sa, salen);
@@ -8897,28 +8923,33 @@ function copyTempDouble(ptr) {
       return addr;
     }
 
-  function _kill(pid, sig) {
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/kill.html
-      // Makes no sense in a single-process environment.
-  	  // Should kill itself somtimes depending on `pid`
-      Module.printErr('Calling stub instead of kill()');
-      ___setErrNo(ERRNO_CODES.EPERM);
-      return -1;
+   
+
+   
+
+  function _llvm_copysign_f32(x, y) {
+      return y < 0 || (y === 0 && 1/y < 0) ? -Math_abs(x) : Math_abs(x);
     }
 
-   
-
-   
+  function _llvm_copysign_f64(x, y) {
+      return y < 0 || (y === 0 && 1/y < 0) ? -Math_abs(x) : Math_abs(x);
+    }
 
   var _llvm_cos_f64=Math_cos;
 
   var _llvm_exp_f64=Math_exp;
+
+  var _llvm_fabs_f32=Math_abs;
 
   var _llvm_fabs_f64=Math_abs;
 
   var _llvm_floor_f64=Math_floor;
 
   var _llvm_log_f64=Math_log;
+
+   
+
+   
 
   var _llvm_nacl_atomic_cmpxchg_i32=undefined;
 
@@ -8984,6 +9015,48 @@ function copyTempDouble(ptr) {
       }
       return _usleep((seconds * 1e6) + (nanoseconds / 1000));
     }
+
+  
+  function _fpathconf(fildes, name) {
+      // long fpathconf(int fildes, int name);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/encrypt.html
+      // NOTE: The first parameter is ignored, so pathconf == fpathconf.
+      // The constants here aren't real values. Just mimicking glibc.
+      switch (name) {
+        case 0:
+          return 32000;
+        case 1:
+        case 2:
+        case 3:
+          return 255;
+        case 4:
+        case 5:
+        case 16:
+        case 17:
+        case 18:
+          return 4096;
+        case 6:
+        case 7:
+        case 20:
+          return 1;
+        case 8:
+          return 0;
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 14:
+        case 15:
+        case 19:
+          return -1;
+        case 13:
+          return 64;
+      }
+      ___setErrNo(ERRNO_CODES.EINVAL);
+      return -1;
+    }function _pathconf() {
+  return _fpathconf.apply(null, arguments)
+  }
 
   function _pthread_cleanup_pop() {
       assert(_pthread_cleanup_push.level == __ATEXIT__.length, 'cannot pop if something else added meanwhile!');
@@ -9062,13 +9135,7 @@ function copyTempDouble(ptr) {
       return 0;
     }
 
-  function _pthread_sigmask() {
-  Module['printErr']('missing function: pthread_sigmask'); abort(-1);
-  }
-
-  function _res_query() {
-  Module['printErr']('missing function: res_query'); abort(-1);
-  }
+  function _pthread_sigmask() { return 0; }
 
   
     
@@ -9082,11 +9149,358 @@ function copyTempDouble(ptr) {
       return 0;
     }
 
-  function _setgrent() {
-  Module['printErr']('missing function: setgrent'); abort(-1);
-  }
+  function _setitimer() {
+      throw 'setitimer() is not implemented yet';
+    }
+
+  function _sigfillset(set) {
+      SAFE_HEAP_STORE(((set)|0), ((-1>>>0)|0), 4);
+      return 0;
+    }
 
   
+  function __isLeapYear(year) {
+        return year%4 === 0 && (year%100 !== 0 || year%400 === 0);
+    }
+  
+  function __arraySum(array, index) {
+      var sum = 0;
+      for (var i = 0; i <= index; sum += array[i++]);
+      return sum;
+    }
+  
+  
+  var __MONTH_DAYS_LEAP=[31,29,31,30,31,30,31,31,30,31,30,31];
+  
+  var __MONTH_DAYS_REGULAR=[31,28,31,30,31,30,31,31,30,31,30,31];function __addDays(date, days) {
+      var newDate = new Date(date.getTime());
+      while(days > 0) {
+        var leap = __isLeapYear(newDate.getFullYear());
+        var currentMonth = newDate.getMonth();
+        var daysInCurrentMonth = (leap ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR)[currentMonth];
+  
+        if (days > daysInCurrentMonth-newDate.getDate()) {
+          // we spill over to next month
+          days -= (daysInCurrentMonth-newDate.getDate()+1);
+          newDate.setDate(1);
+          if (currentMonth < 11) {
+            newDate.setMonth(currentMonth+1)
+          } else {
+            newDate.setMonth(0);
+            newDate.setFullYear(newDate.getFullYear()+1);
+          }
+        } else {
+          // we stay in current month
+          newDate.setDate(newDate.getDate()+days);
+          return newDate;
+        }
+      }
+  
+      return newDate;
+    }function _strftime(s, maxsize, format, tm) {
+      // size_t strftime(char *restrict s, size_t maxsize, const char *restrict format, const struct tm *restrict timeptr);
+      // http://pubs.opengroup.org/onlinepubs/009695399/functions/strftime.html
+  
+      var tm_zone = ((SAFE_HEAP_LOAD((((tm)+(40))|0), 4, 0))|0);
+  
+      var date = {
+        tm_sec: ((SAFE_HEAP_LOAD(((tm)|0), 4, 0))|0),
+        tm_min: ((SAFE_HEAP_LOAD((((tm)+(4))|0), 4, 0))|0),
+        tm_hour: ((SAFE_HEAP_LOAD((((tm)+(8))|0), 4, 0))|0),
+        tm_mday: ((SAFE_HEAP_LOAD((((tm)+(12))|0), 4, 0))|0),
+        tm_mon: ((SAFE_HEAP_LOAD((((tm)+(16))|0), 4, 0))|0),
+        tm_year: ((SAFE_HEAP_LOAD((((tm)+(20))|0), 4, 0))|0),
+        tm_wday: ((SAFE_HEAP_LOAD((((tm)+(24))|0), 4, 0))|0),
+        tm_yday: ((SAFE_HEAP_LOAD((((tm)+(28))|0), 4, 0))|0),
+        tm_isdst: ((SAFE_HEAP_LOAD((((tm)+(32))|0), 4, 0))|0),
+        tm_gmtoff: ((SAFE_HEAP_LOAD((((tm)+(36))|0), 4, 0))|0),
+        tm_zone: tm_zone ? Pointer_stringify(tm_zone) : ''
+      };
+  
+      var pattern = Pointer_stringify(format);
+  
+      // expand format
+      var EXPANSION_RULES_1 = {
+        '%c': '%a %b %d %H:%M:%S %Y',     // Replaced by the locale's appropriate date and time representation - e.g., Mon Aug  3 14:02:01 2013
+        '%D': '%m/%d/%y',                 // Equivalent to %m / %d / %y
+        '%F': '%Y-%m-%d',                 // Equivalent to %Y - %m - %d
+        '%h': '%b',                       // Equivalent to %b
+        '%r': '%I:%M:%S %p',              // Replaced by the time in a.m. and p.m. notation
+        '%R': '%H:%M',                    // Replaced by the time in 24-hour notation
+        '%T': '%H:%M:%S',                 // Replaced by the time
+        '%x': '%m/%d/%y',                 // Replaced by the locale's appropriate date representation
+        '%X': '%H:%M:%S'                  // Replaced by the locale's appropriate date representation
+      };
+      for (var rule in EXPANSION_RULES_1) {
+        pattern = pattern.replace(new RegExp(rule, 'g'), EXPANSION_RULES_1[rule]);
+      }
+  
+      var WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
+      function leadingSomething(value, digits, character) {
+        var str = typeof value === 'number' ? value.toString() : (value || '');
+        while (str.length < digits) {
+          str = character[0]+str;
+        }
+        return str;
+      };
+  
+      function leadingNulls(value, digits) {
+        return leadingSomething(value, digits, '0');
+      };
+  
+      function compareByDay(date1, date2) {
+        function sgn(value) {
+          return value < 0 ? -1 : (value > 0 ? 1 : 0);
+        };
+  
+        var compare;
+        if ((compare = sgn(date1.getFullYear()-date2.getFullYear())) === 0) {
+          if ((compare = sgn(date1.getMonth()-date2.getMonth())) === 0) {
+            compare = sgn(date1.getDate()-date2.getDate());
+          }
+        }
+        return compare;
+      };
+  
+      function getFirstWeekStartDate(janFourth) {
+          switch (janFourth.getDay()) {
+            case 0: // Sunday
+              return new Date(janFourth.getFullYear()-1, 11, 29);
+            case 1: // Monday
+              return janFourth;
+            case 2: // Tuesday
+              return new Date(janFourth.getFullYear(), 0, 3);
+            case 3: // Wednesday
+              return new Date(janFourth.getFullYear(), 0, 2);
+            case 4: // Thursday
+              return new Date(janFourth.getFullYear(), 0, 1);
+            case 5: // Friday
+              return new Date(janFourth.getFullYear()-1, 11, 31);
+            case 6: // Saturday
+              return new Date(janFourth.getFullYear()-1, 11, 30);
+          }
+      };
+  
+      function getWeekBasedYear(date) {
+          var thisDate = __addDays(new Date(date.tm_year+1900, 0, 1), date.tm_yday);
+  
+          var janFourthThisYear = new Date(thisDate.getFullYear(), 0, 4);
+          var janFourthNextYear = new Date(thisDate.getFullYear()+1, 0, 4);
+  
+          var firstWeekStartThisYear = getFirstWeekStartDate(janFourthThisYear);
+          var firstWeekStartNextYear = getFirstWeekStartDate(janFourthNextYear);
+  
+          if (compareByDay(firstWeekStartThisYear, thisDate) <= 0) {
+            // this date is after the start of the first week of this year
+            if (compareByDay(firstWeekStartNextYear, thisDate) <= 0) {
+              return thisDate.getFullYear()+1;
+            } else {
+              return thisDate.getFullYear();
+            }
+          } else {
+            return thisDate.getFullYear()-1;
+          }
+      };
+  
+      var EXPANSION_RULES_2 = {
+        '%a': function(date) {
+          return WEEKDAYS[date.tm_wday].substring(0,3);
+        },
+        '%A': function(date) {
+          return WEEKDAYS[date.tm_wday];
+        },
+        '%b': function(date) {
+          return MONTHS[date.tm_mon].substring(0,3);
+        },
+        '%B': function(date) {
+          return MONTHS[date.tm_mon];
+        },
+        '%C': function(date) {
+          var year = date.tm_year+1900;
+          return leadingNulls((year/100)|0,2);
+        },
+        '%d': function(date) {
+          return leadingNulls(date.tm_mday, 2);
+        },
+        '%e': function(date) {
+          return leadingSomething(date.tm_mday, 2, ' ');
+        },
+        '%g': function(date) {
+          // %g, %G, and %V give values according to the ISO 8601:2000 standard week-based year.
+          // In this system, weeks begin on a Monday and week 1 of the year is the week that includes
+          // January 4th, which is also the week that includes the first Thursday of the year, and
+          // is also the first week that contains at least four days in the year.
+          // If the first Monday of January is the 2nd, 3rd, or 4th, the preceding days are part of
+          // the last week of the preceding year; thus, for Saturday 2nd January 1999,
+          // %G is replaced by 1998 and %V is replaced by 53. If December 29th, 30th,
+          // or 31st is a Monday, it and any following days are part of week 1 of the following year.
+          // Thus, for Tuesday 30th December 1997, %G is replaced by 1998 and %V is replaced by 01.
+  
+          return getWeekBasedYear(date).toString().substring(2);
+        },
+        '%G': function(date) {
+          return getWeekBasedYear(date);
+        },
+        '%H': function(date) {
+          return leadingNulls(date.tm_hour, 2);
+        },
+        '%I': function(date) {
+          var twelveHour = date.tm_hour;
+          if (twelveHour == 0) twelveHour = 12;
+          else if (twelveHour > 12) twelveHour -= 12;
+          return leadingNulls(twelveHour, 2);
+        },
+        '%j': function(date) {
+          // Day of the year (001-366)
+          return leadingNulls(date.tm_mday+__arraySum(__isLeapYear(date.tm_year+1900) ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR, date.tm_mon-1), 3);
+        },
+        '%m': function(date) {
+          return leadingNulls(date.tm_mon+1, 2);
+        },
+        '%M': function(date) {
+          return leadingNulls(date.tm_min, 2);
+        },
+        '%n': function() {
+          return '\n';
+        },
+        '%p': function(date) {
+          if (date.tm_hour >= 0 && date.tm_hour < 12) {
+            return 'AM';
+          } else {
+            return 'PM';
+          }
+        },
+        '%S': function(date) {
+          return leadingNulls(date.tm_sec, 2);
+        },
+        '%t': function() {
+          return '\t';
+        },
+        '%u': function(date) {
+          var day = new Date(date.tm_year+1900, date.tm_mon+1, date.tm_mday, 0, 0, 0, 0);
+          return day.getDay() || 7;
+        },
+        '%U': function(date) {
+          // Replaced by the week number of the year as a decimal number [00,53].
+          // The first Sunday of January is the first day of week 1;
+          // days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
+          var janFirst = new Date(date.tm_year+1900, 0, 1);
+          var firstSunday = janFirst.getDay() === 0 ? janFirst : __addDays(janFirst, 7-janFirst.getDay());
+          var endDate = new Date(date.tm_year+1900, date.tm_mon, date.tm_mday);
+  
+          // is target date after the first Sunday?
+          if (compareByDay(firstSunday, endDate) < 0) {
+            // calculate difference in days between first Sunday and endDate
+            var februaryFirstUntilEndMonth = __arraySum(__isLeapYear(endDate.getFullYear()) ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR, endDate.getMonth()-1)-31;
+            var firstSundayUntilEndJanuary = 31-firstSunday.getDate();
+            var days = firstSundayUntilEndJanuary+februaryFirstUntilEndMonth+endDate.getDate();
+            return leadingNulls(Math.ceil(days/7), 2);
+          }
+  
+          return compareByDay(firstSunday, janFirst) === 0 ? '01': '00';
+        },
+        '%V': function(date) {
+          // Replaced by the week number of the year (Monday as the first day of the week)
+          // as a decimal number [01,53]. If the week containing 1 January has four
+          // or more days in the new year, then it is considered week 1.
+          // Otherwise, it is the last week of the previous year, and the next week is week 1.
+          // Both January 4th and the first Thursday of January are always in week 1. [ tm_year, tm_wday, tm_yday]
+          var janFourthThisYear = new Date(date.tm_year+1900, 0, 4);
+          var janFourthNextYear = new Date(date.tm_year+1901, 0, 4);
+  
+          var firstWeekStartThisYear = getFirstWeekStartDate(janFourthThisYear);
+          var firstWeekStartNextYear = getFirstWeekStartDate(janFourthNextYear);
+  
+          var endDate = __addDays(new Date(date.tm_year+1900, 0, 1), date.tm_yday);
+  
+          if (compareByDay(endDate, firstWeekStartThisYear) < 0) {
+            // if given date is before this years first week, then it belongs to the 53rd week of last year
+            return '53';
+          }
+  
+          if (compareByDay(firstWeekStartNextYear, endDate) <= 0) {
+            // if given date is after next years first week, then it belongs to the 01th week of next year
+            return '01';
+          }
+  
+          // given date is in between CW 01..53 of this calendar year
+          var daysDifference;
+          if (firstWeekStartThisYear.getFullYear() < date.tm_year+1900) {
+            // first CW of this year starts last year
+            daysDifference = date.tm_yday+32-firstWeekStartThisYear.getDate()
+          } else {
+            // first CW of this year starts this year
+            daysDifference = date.tm_yday+1-firstWeekStartThisYear.getDate();
+          }
+          return leadingNulls(Math.ceil(daysDifference/7), 2);
+        },
+        '%w': function(date) {
+          var day = new Date(date.tm_year+1900, date.tm_mon+1, date.tm_mday, 0, 0, 0, 0);
+          return day.getDay();
+        },
+        '%W': function(date) {
+          // Replaced by the week number of the year as a decimal number [00,53].
+          // The first Monday of January is the first day of week 1;
+          // days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
+          var janFirst = new Date(date.tm_year, 0, 1);
+          var firstMonday = janFirst.getDay() === 1 ? janFirst : __addDays(janFirst, janFirst.getDay() === 0 ? 1 : 7-janFirst.getDay()+1);
+          var endDate = new Date(date.tm_year+1900, date.tm_mon, date.tm_mday);
+  
+          // is target date after the first Monday?
+          if (compareByDay(firstMonday, endDate) < 0) {
+            var februaryFirstUntilEndMonth = __arraySum(__isLeapYear(endDate.getFullYear()) ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR, endDate.getMonth()-1)-31;
+            var firstMondayUntilEndJanuary = 31-firstMonday.getDate();
+            var days = firstMondayUntilEndJanuary+februaryFirstUntilEndMonth+endDate.getDate();
+            return leadingNulls(Math.ceil(days/7), 2);
+          }
+          return compareByDay(firstMonday, janFirst) === 0 ? '01': '00';
+        },
+        '%y': function(date) {
+          // Replaced by the last two digits of the year as a decimal number [00,99]. [ tm_year]
+          return (date.tm_year+1900).toString().substring(2);
+        },
+        '%Y': function(date) {
+          // Replaced by the year as a decimal number (for example, 1997). [ tm_year]
+          return date.tm_year+1900;
+        },
+        '%z': function(date) {
+          // Replaced by the offset from UTC in the ISO 8601:2000 standard format ( +hhmm or -hhmm ).
+          // For example, "-0430" means 4 hours 30 minutes behind UTC (west of Greenwich).
+          var off = date.tm_gmtoff;
+          var ahead = off >= 0;
+          off = Math.abs(off) / 60;
+          // convert from minutes into hhmm format (which means 60 minutes = 100 units)
+          off = (off / 60)*100 + (off % 60);
+          return (ahead ? '+' : '-') + String("0000" + off).slice(-4);
+        },
+        '%Z': function(date) {
+          return date.tm_zone;
+        },
+        '%%': function() {
+          return '%';
+        }
+      };
+      for (var rule in EXPANSION_RULES_2) {
+        if (pattern.indexOf(rule) >= 0) {
+          pattern = pattern.replace(new RegExp(rule, 'g'), EXPANSION_RULES_2[rule](date));
+        }
+      }
+  
+      var bytes = intArrayFromString(pattern, false);
+      if (bytes.length > maxsize) {
+        return 0;
+      }
+  
+      writeArrayToMemory(bytes, s);
+      return bytes.length-1;
+    }
+
+  function _strftime_l(s, maxsize, format, tm) {
+      return _strftime(s, maxsize, format, tm); // no locale support yet
+    }
+
   function _sysconf(name) {
       // long sysconf(int name);
       // http://pubs.opengroup.org/onlinepubs/009695399/functions/sysconf.html
@@ -9232,371 +9646,7 @@ function copyTempDouble(ptr) {
       }
       ___setErrNo(ERRNO_CODES.EINVAL);
       return -1;
-    }function _setgroups(ngroups, gidset) {
-      // int setgroups(int ngroups, const gid_t *gidset);
-      // https://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man2/setgroups.2.html
-      if (ngroups < 1 || ngroups > _sysconf(3)) {
-        ___setErrNo(ERRNO_CODES.EINVAL);
-        return -1;
-      } else {
-        // We have just one process/user/group, so it makes no sense to set groups.
-        ___setErrNo(ERRNO_CODES.EPERM);
-        return -1;
-      }
     }
-
-  function _setitimer() {
-      throw 'setitimer() is not implemented yet';
-    }
-
-  function _sigfillset(set) {
-      SAFE_HEAP_STORE(((set)|0), ((-1>>>0)|0), 4);
-      return 0;
-    }
-
-  
-  function __isLeapYear(year) {
-        return year%4 === 0 && (year%100 !== 0 || year%400 === 0);
-    }
-  
-  function __arraySum(array, index) {
-      var sum = 0;
-      for (var i = 0; i <= index; sum += array[i++]);
-      return sum;
-    }
-  
-  
-  var __MONTH_DAYS_LEAP=[31,29,31,30,31,30,31,31,30,31,30,31];
-  
-  var __MONTH_DAYS_REGULAR=[31,28,31,30,31,30,31,31,30,31,30,31];function __addDays(date, days) {
-      var newDate = new Date(date.getTime());
-      while(days > 0) {
-        var leap = __isLeapYear(newDate.getFullYear());
-        var currentMonth = newDate.getMonth();
-        var daysInCurrentMonth = (leap ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR)[currentMonth];
-  
-        if (days > daysInCurrentMonth-newDate.getDate()) {
-          // we spill over to next month
-          days -= (daysInCurrentMonth-newDate.getDate()+1);
-          newDate.setDate(1);
-          if (currentMonth < 11) {
-            newDate.setMonth(currentMonth+1)
-          } else {
-            newDate.setMonth(0);
-            newDate.setFullYear(newDate.getFullYear()+1);
-          }
-        } else {
-          // we stay in current month 
-          newDate.setDate(newDate.getDate()+days);
-          return newDate;
-        }
-      }
-  
-      return newDate;
-    }function _strftime(s, maxsize, format, tm) {
-      // size_t strftime(char *restrict s, size_t maxsize, const char *restrict format, const struct tm *restrict timeptr);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/strftime.html
-  
-      var tm_zone = ((SAFE_HEAP_LOAD((((tm)+(40))|0), 4, 0))|0);
-  
-      var date = {
-        tm_sec: ((SAFE_HEAP_LOAD(((tm)|0), 4, 0))|0),
-        tm_min: ((SAFE_HEAP_LOAD((((tm)+(4))|0), 4, 0))|0),
-        tm_hour: ((SAFE_HEAP_LOAD((((tm)+(8))|0), 4, 0))|0),
-        tm_mday: ((SAFE_HEAP_LOAD((((tm)+(12))|0), 4, 0))|0),
-        tm_mon: ((SAFE_HEAP_LOAD((((tm)+(16))|0), 4, 0))|0),
-        tm_year: ((SAFE_HEAP_LOAD((((tm)+(20))|0), 4, 0))|0),
-        tm_wday: ((SAFE_HEAP_LOAD((((tm)+(24))|0), 4, 0))|0),
-        tm_yday: ((SAFE_HEAP_LOAD((((tm)+(28))|0), 4, 0))|0),
-        tm_isdst: ((SAFE_HEAP_LOAD((((tm)+(32))|0), 4, 0))|0),
-        tm_gmtoff: ((SAFE_HEAP_LOAD((((tm)+(36))|0), 4, 0))|0),
-        tm_zone: tm_zone ? Pointer_stringify(tm_zone) : ''
-      };
-  
-      var pattern = Pointer_stringify(format);
-  
-      // expand format
-      var EXPANSION_RULES_1 = {
-        '%c': '%a %b %d %H:%M:%S %Y',     // Replaced by the locale's appropriate date and time representation - e.g., Mon Aug  3 14:02:01 2013
-        '%D': '%m/%d/%y',                 // Equivalent to %m / %d / %y
-        '%F': '%Y-%m-%d',                 // Equivalent to %Y - %m - %d
-        '%h': '%b',                       // Equivalent to %b
-        '%r': '%I:%M:%S %p',              // Replaced by the time in a.m. and p.m. notation
-        '%R': '%H:%M',                    // Replaced by the time in 24-hour notation
-        '%T': '%H:%M:%S',                 // Replaced by the time
-        '%x': '%m/%d/%y',                 // Replaced by the locale's appropriate date representation
-        '%X': '%H:%M:%S'                  // Replaced by the locale's appropriate date representation
-      };
-      for (var rule in EXPANSION_RULES_1) {
-        pattern = pattern.replace(new RegExp(rule, 'g'), EXPANSION_RULES_1[rule]);
-      }
-  
-      var WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  
-      function leadingSomething(value, digits, character) {
-        var str = typeof value === 'number' ? value.toString() : (value || '');
-        while (str.length < digits) {
-          str = character[0]+str;
-        }
-        return str;
-      };
-  
-      function leadingNulls(value, digits) {
-        return leadingSomething(value, digits, '0');
-      };
-  
-      function compareByDay(date1, date2) {
-        function sgn(value) {
-          return value < 0 ? -1 : (value > 0 ? 1 : 0);
-        };
-  
-        var compare;
-        if ((compare = sgn(date1.getFullYear()-date2.getFullYear())) === 0) {
-          if ((compare = sgn(date1.getMonth()-date2.getMonth())) === 0) {
-            compare = sgn(date1.getDate()-date2.getDate());
-          }
-        }
-        return compare;
-      };
-  
-      function getFirstWeekStartDate(janFourth) {
-          switch (janFourth.getDay()) {
-            case 0: // Sunday
-              return new Date(janFourth.getFullYear()-1, 11, 29);
-            case 1: // Monday
-              return janFourth;
-            case 2: // Tuesday
-              return new Date(janFourth.getFullYear(), 0, 3);
-            case 3: // Wednesday
-              return new Date(janFourth.getFullYear(), 0, 2);
-            case 4: // Thursday
-              return new Date(janFourth.getFullYear(), 0, 1);
-            case 5: // Friday
-              return new Date(janFourth.getFullYear()-1, 11, 31);
-            case 6: // Saturday
-              return new Date(janFourth.getFullYear()-1, 11, 30);
-          }
-      };
-  
-      function getWeekBasedYear(date) {
-          var thisDate = __addDays(new Date(date.tm_year+1900, 0, 1), date.tm_yday);
-  
-          var janFourthThisYear = new Date(thisDate.getFullYear(), 0, 4);
-          var janFourthNextYear = new Date(thisDate.getFullYear()+1, 0, 4);
-  
-          var firstWeekStartThisYear = getFirstWeekStartDate(janFourthThisYear);
-          var firstWeekStartNextYear = getFirstWeekStartDate(janFourthNextYear);
-  
-          if (compareByDay(firstWeekStartThisYear, thisDate) <= 0) {
-            // this date is after the start of the first week of this year
-            if (compareByDay(firstWeekStartNextYear, thisDate) <= 0) {
-              return thisDate.getFullYear()+1;
-            } else {
-              return thisDate.getFullYear();
-            }
-          } else { 
-            return thisDate.getFullYear()-1;
-          }
-      };
-  
-      var EXPANSION_RULES_2 = {
-        '%a': function(date) {
-          return WEEKDAYS[date.tm_wday].substring(0,3);
-        },
-        '%A': function(date) {
-          return WEEKDAYS[date.tm_wday];
-        },
-        '%b': function(date) {
-          return MONTHS[date.tm_mon].substring(0,3);
-        },
-        '%B': function(date) {
-          return MONTHS[date.tm_mon];
-        },
-        '%C': function(date) {
-          var year = date.tm_year+1900;
-          return leadingNulls((year/100)|0,2);
-        },
-        '%d': function(date) {
-          return leadingNulls(date.tm_mday, 2);
-        },
-        '%e': function(date) {
-          return leadingSomething(date.tm_mday, 2, ' ');
-        },
-        '%g': function(date) {
-          // %g, %G, and %V give values according to the ISO 8601:2000 standard week-based year. 
-          // In this system, weeks begin on a Monday and week 1 of the year is the week that includes 
-          // January 4th, which is also the week that includes the first Thursday of the year, and 
-          // is also the first week that contains at least four days in the year. 
-          // If the first Monday of January is the 2nd, 3rd, or 4th, the preceding days are part of 
-          // the last week of the preceding year; thus, for Saturday 2nd January 1999, 
-          // %G is replaced by 1998 and %V is replaced by 53. If December 29th, 30th, 
-          // or 31st is a Monday, it and any following days are part of week 1 of the following year. 
-          // Thus, for Tuesday 30th December 1997, %G is replaced by 1998 and %V is replaced by 01.
-          
-          return getWeekBasedYear(date).toString().substring(2);
-        },
-        '%G': function(date) {
-          return getWeekBasedYear(date);
-        },
-        '%H': function(date) {
-          return leadingNulls(date.tm_hour, 2);
-        },
-        '%I': function(date) {
-          var twelveHour = date.tm_hour;
-          if (twelveHour == 0) twelveHour = 12;
-          else if (twelveHour > 12) twelveHour -= 12;
-          return leadingNulls(twelveHour, 2);
-        },
-        '%j': function(date) {
-          // Day of the year (001-366)
-          return leadingNulls(date.tm_mday+__arraySum(__isLeapYear(date.tm_year+1900) ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR, date.tm_mon-1), 3);
-        },
-        '%m': function(date) {
-          return leadingNulls(date.tm_mon+1, 2);
-        },
-        '%M': function(date) {
-          return leadingNulls(date.tm_min, 2);
-        },
-        '%n': function() {
-          return '\n';
-        },
-        '%p': function(date) {
-          if (date.tm_hour >= 0 && date.tm_hour < 12) {
-            return 'AM';
-          } else {
-            return 'PM';
-          }
-        },
-        '%S': function(date) {
-          return leadingNulls(date.tm_sec, 2);
-        },
-        '%t': function() {
-          return '\t';
-        },
-        '%u': function(date) {
-          var day = new Date(date.tm_year+1900, date.tm_mon+1, date.tm_mday, 0, 0, 0, 0);
-          return day.getDay() || 7;
-        },
-        '%U': function(date) {
-          // Replaced by the week number of the year as a decimal number [00,53]. 
-          // The first Sunday of January is the first day of week 1; 
-          // days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
-          var janFirst = new Date(date.tm_year+1900, 0, 1);
-          var firstSunday = janFirst.getDay() === 0 ? janFirst : __addDays(janFirst, 7-janFirst.getDay());
-          var endDate = new Date(date.tm_year+1900, date.tm_mon, date.tm_mday);
-          
-          // is target date after the first Sunday?
-          if (compareByDay(firstSunday, endDate) < 0) {
-            // calculate difference in days between first Sunday and endDate
-            var februaryFirstUntilEndMonth = __arraySum(__isLeapYear(endDate.getFullYear()) ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR, endDate.getMonth()-1)-31;
-            var firstSundayUntilEndJanuary = 31-firstSunday.getDate();
-            var days = firstSundayUntilEndJanuary+februaryFirstUntilEndMonth+endDate.getDate();
-            return leadingNulls(Math.ceil(days/7), 2);
-          }
-  
-          return compareByDay(firstSunday, janFirst) === 0 ? '01': '00';
-        },
-        '%V': function(date) {
-          // Replaced by the week number of the year (Monday as the first day of the week) 
-          // as a decimal number [01,53]. If the week containing 1 January has four 
-          // or more days in the new year, then it is considered week 1. 
-          // Otherwise, it is the last week of the previous year, and the next week is week 1. 
-          // Both January 4th and the first Thursday of January are always in week 1. [ tm_year, tm_wday, tm_yday]
-          var janFourthThisYear = new Date(date.tm_year+1900, 0, 4);
-          var janFourthNextYear = new Date(date.tm_year+1901, 0, 4);
-  
-          var firstWeekStartThisYear = getFirstWeekStartDate(janFourthThisYear);
-          var firstWeekStartNextYear = getFirstWeekStartDate(janFourthNextYear);
-  
-          var endDate = __addDays(new Date(date.tm_year+1900, 0, 1), date.tm_yday);
-  
-          if (compareByDay(endDate, firstWeekStartThisYear) < 0) {
-            // if given date is before this years first week, then it belongs to the 53rd week of last year
-            return '53';
-          } 
-  
-          if (compareByDay(firstWeekStartNextYear, endDate) <= 0) {
-            // if given date is after next years first week, then it belongs to the 01th week of next year
-            return '01';
-          }
-  
-          // given date is in between CW 01..53 of this calendar year
-          var daysDifference;
-          if (firstWeekStartThisYear.getFullYear() < date.tm_year+1900) {
-            // first CW of this year starts last year
-            daysDifference = date.tm_yday+32-firstWeekStartThisYear.getDate()
-          } else {
-            // first CW of this year starts this year
-            daysDifference = date.tm_yday+1-firstWeekStartThisYear.getDate();
-          }
-          return leadingNulls(Math.ceil(daysDifference/7), 2);
-        },
-        '%w': function(date) {
-          var day = new Date(date.tm_year+1900, date.tm_mon+1, date.tm_mday, 0, 0, 0, 0);
-          return day.getDay();
-        },
-        '%W': function(date) {
-          // Replaced by the week number of the year as a decimal number [00,53]. 
-          // The first Monday of January is the first day of week 1; 
-          // days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
-          var janFirst = new Date(date.tm_year, 0, 1);
-          var firstMonday = janFirst.getDay() === 1 ? janFirst : __addDays(janFirst, janFirst.getDay() === 0 ? 1 : 7-janFirst.getDay()+1);
-          var endDate = new Date(date.tm_year+1900, date.tm_mon, date.tm_mday);
-  
-          // is target date after the first Monday?
-          if (compareByDay(firstMonday, endDate) < 0) {
-            var februaryFirstUntilEndMonth = __arraySum(__isLeapYear(endDate.getFullYear()) ? __MONTH_DAYS_LEAP : __MONTH_DAYS_REGULAR, endDate.getMonth()-1)-31;
-            var firstMondayUntilEndJanuary = 31-firstMonday.getDate();
-            var days = firstMondayUntilEndJanuary+februaryFirstUntilEndMonth+endDate.getDate();
-            return leadingNulls(Math.ceil(days/7), 2);
-          }
-          return compareByDay(firstMonday, janFirst) === 0 ? '01': '00';
-        },
-        '%y': function(date) {
-          // Replaced by the last two digits of the year as a decimal number [00,99]. [ tm_year]
-          return (date.tm_year+1900).toString().substring(2);
-        },
-        '%Y': function(date) {
-          // Replaced by the year as a decimal number (for example, 1997). [ tm_year]
-          return date.tm_year+1900;
-        },
-        '%z': function(date) {
-          // Replaced by the offset from UTC in the ISO 8601:2000 standard format ( +hhmm or -hhmm ).
-          // For example, "-0430" means 4 hours 30 minutes behind UTC (west of Greenwich).
-          var off = date.tm_gmtoff;
-          var ahead = off >= 0;
-          off = Math.abs(off) / 60;
-          // convert from minutes into hhmm format (which means 60 minutes = 100 units)
-          off = (off / 60)*100 + (off % 60);
-          return (ahead ? '+' : '-') + String("0000" + off).slice(-4);
-        },
-        '%Z': function(date) {
-          return date.tm_zone;
-        },
-        '%%': function() {
-          return '%';
-        }
-      };
-      for (var rule in EXPANSION_RULES_2) {
-        if (pattern.indexOf(rule) >= 0) {
-          pattern = pattern.replace(new RegExp(rule, 'g'), EXPANSION_RULES_2[rule](date));
-        }
-      }
-  
-      var bytes = intArrayFromString(pattern, false);
-      if (bytes.length > maxsize) {
-        return 0;
-      } 
-  
-      writeArrayToMemory(bytes, s);
-      return bytes.length-1;
-    }
-
-  function _strftime_l(s, maxsize, format, tm) {
-      return _strftime(s, maxsize, format, tm); // no locale support yet
-    }
-
 
   function _time(ptr) {
       var ret = (Date.now()/1000)|0;
@@ -9657,6 +9707,11 @@ assert(DYNAMIC_BASE < TOTAL_MEMORY, "TOTAL_MEMORY not big enough for stack");
 
 var ASSERTIONS = true;
 
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
+
 /** @type {function(string, boolean=, number=)} */
 function intArrayFromString(stringy, dontAddNull, length) {
   var len = length > 0 ? length : lengthBytesUTF8(stringy)+1;
@@ -9683,56 +9738,58 @@ function intArrayToString(array) {
 
 
 
-function nullFunc_di(x) { Module["printErr"]("Invalid function pointer called with signature 'di'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_di(x) { err("Invalid function pointer called with signature 'di'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_ii(x) { Module["printErr"]("Invalid function pointer called with signature 'ii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_ii(x) { err("Invalid function pointer called with signature 'ii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iii(x) { Module["printErr"]("Invalid function pointer called with signature 'iii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iii(x) { err("Invalid function pointer called with signature 'iii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiii(x) { err("Invalid function pointer called with signature 'iiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiii(x) { err("Invalid function pointer called with signature 'iiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiid(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiid(x) { err("Invalid function pointer called with signature 'iiiiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiii(x) { err("Invalid function pointer called with signature 'iiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiiid(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiiid(x) { err("Invalid function pointer called with signature 'iiiiiid'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiiii(x) { err("Invalid function pointer called with signature 'iiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiiiii(x) { err("Invalid function pointer called with signature 'iiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiiiiii(x) { err("Invalid function pointer called with signature 'iiiiiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_iiiiij(x) { Module["printErr"]("Invalid function pointer called with signature 'iiiiij'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_iiiiij(x) { err("Invalid function pointer called with signature 'iiiiij'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_v(x) { Module["printErr"]("Invalid function pointer called with signature 'v'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_v(x) { err("Invalid function pointer called with signature 'v'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_vi(x) { Module["printErr"]("Invalid function pointer called with signature 'vi'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_vi(x) { err("Invalid function pointer called with signature 'vi'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_vidd(x) { Module["printErr"]("Invalid function pointer called with signature 'vidd'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_vidd(x) { err("Invalid function pointer called with signature 'vidd'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_vii(x) { Module["printErr"]("Invalid function pointer called with signature 'vii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_vii(x) { err("Invalid function pointer called with signature 'vii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_viii(x) { Module["printErr"]("Invalid function pointer called with signature 'viii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_viii(x) { err("Invalid function pointer called with signature 'viii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_viiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_viiii(x) { err("Invalid function pointer called with signature 'viiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_viiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_viiiii(x) { err("Invalid function pointer called with signature 'viiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_viiiiii(x) { Module["printErr"]("Invalid function pointer called with signature 'viiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_viiiiii(x) { err("Invalid function pointer called with signature 'viiiiii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
-function nullFunc_viijii(x) { Module["printErr"]("Invalid function pointer called with signature 'viijii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  Module["printErr"]("Build with ASSERTIONS=2 for more info.");abort(x) }
+function nullFunc_viijii(x) { err("Invalid function pointer called with signature 'viijii'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this)");  err("Build with ASSERTIONS=2 for more info.");abort(x) }
 
 Module['wasmTableSize'] = 1364;
 
 Module['wasmMaxTableSize'] = 1364;
 
 function invoke_di(index,a1) {
+  var sp = stackSave();
   try {
     return Module["dynCall_di"](index,a1);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9743,9 +9800,11 @@ function jsCall_di(index,a1) {
 }
 
 function invoke_ii(index,a1) {
+  var sp = stackSave();
   try {
     return Module["dynCall_ii"](index,a1);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9756,9 +9815,11 @@ function jsCall_ii(index,a1) {
 }
 
 function invoke_iii(index,a1,a2) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iii"](index,a1,a2);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9769,9 +9830,11 @@ function jsCall_iii(index,a1,a2) {
 }
 
 function invoke_iiii(index,a1,a2,a3) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiii"](index,a1,a2,a3);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9782,9 +9845,11 @@ function jsCall_iiii(index,a1,a2,a3) {
 }
 
 function invoke_iiiii(index,a1,a2,a3,a4) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiii"](index,a1,a2,a3,a4);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9795,9 +9860,11 @@ function jsCall_iiiii(index,a1,a2,a3,a4) {
 }
 
 function invoke_iiiiid(index,a1,a2,a3,a4,a5) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiid"](index,a1,a2,a3,a4,a5);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9808,9 +9875,11 @@ function jsCall_iiiiid(index,a1,a2,a3,a4,a5) {
 }
 
 function invoke_iiiiii(index,a1,a2,a3,a4,a5) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiii"](index,a1,a2,a3,a4,a5);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9821,9 +9890,11 @@ function jsCall_iiiiii(index,a1,a2,a3,a4,a5) {
 }
 
 function invoke_iiiiiid(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiiid"](index,a1,a2,a3,a4,a5,a6);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9834,9 +9905,11 @@ function jsCall_iiiiiid(index,a1,a2,a3,a4,a5,a6) {
 }
 
 function invoke_iiiiiii(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiiii"](index,a1,a2,a3,a4,a5,a6);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9847,9 +9920,11 @@ function jsCall_iiiiiii(index,a1,a2,a3,a4,a5,a6) {
 }
 
 function invoke_iiiiiiii(index,a1,a2,a3,a4,a5,a6,a7) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiiiii"](index,a1,a2,a3,a4,a5,a6,a7);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9860,9 +9935,11 @@ function jsCall_iiiiiiii(index,a1,a2,a3,a4,a5,a6,a7) {
 }
 
 function invoke_iiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiiiiii"](index,a1,a2,a3,a4,a5,a6,a7,a8);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9873,9 +9950,11 @@ function jsCall_iiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8) {
 }
 
 function invoke_iiiiij(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
   try {
     return Module["dynCall_iiiiij"](index,a1,a2,a3,a4,a5,a6);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9886,9 +9965,11 @@ function jsCall_iiiiij(index,a1,a2,a3,a4,a5) {
 }
 
 function invoke_v(index) {
+  var sp = stackSave();
   try {
     Module["dynCall_v"](index);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9899,9 +9980,11 @@ function jsCall_v(index) {
 }
 
 function invoke_vi(index,a1) {
+  var sp = stackSave();
   try {
     Module["dynCall_vi"](index,a1);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9912,9 +9995,11 @@ function jsCall_vi(index,a1) {
 }
 
 function invoke_vidd(index,a1,a2,a3) {
+  var sp = stackSave();
   try {
     Module["dynCall_vidd"](index,a1,a2,a3);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9925,9 +10010,11 @@ function jsCall_vidd(index,a1,a2,a3) {
 }
 
 function invoke_vii(index,a1,a2) {
+  var sp = stackSave();
   try {
     Module["dynCall_vii"](index,a1,a2);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9938,9 +10025,11 @@ function jsCall_vii(index,a1,a2) {
 }
 
 function invoke_viii(index,a1,a2,a3) {
+  var sp = stackSave();
   try {
     Module["dynCall_viii"](index,a1,a2,a3);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9951,9 +10040,11 @@ function jsCall_viii(index,a1,a2,a3) {
 }
 
 function invoke_viiii(index,a1,a2,a3,a4) {
+  var sp = stackSave();
   try {
     Module["dynCall_viiii"](index,a1,a2,a3,a4);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9964,9 +10055,11 @@ function jsCall_viiii(index,a1,a2,a3,a4) {
 }
 
 function invoke_viiiii(index,a1,a2,a3,a4,a5) {
+  var sp = stackSave();
   try {
     Module["dynCall_viiiii"](index,a1,a2,a3,a4,a5);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9977,9 +10070,11 @@ function jsCall_viiiii(index,a1,a2,a3,a4,a5) {
 }
 
 function invoke_viiiiii(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
   try {
     Module["dynCall_viiiiii"](index,a1,a2,a3,a4,a5,a6);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -9990,9 +10085,11 @@ function jsCall_viiiiii(index,a1,a2,a3,a4,a5,a6) {
 }
 
 function invoke_viijii(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
   try {
     Module["dynCall_viijii"](index,a1,a2,a3,a4,a5,a6);
   } catch(e) {
+    stackRestore(sp);
     if (typeof e !== 'number' && e !== 'longjmp') throw e;
     Module["setThrew"](1, 0);
   }
@@ -10004,7 +10101,7 @@ function jsCall_viijii(index,a1,a2,a3,a4,a5) {
 
 Module.asmGlobalArg = {};
 
-Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "segfault": segfault, "alignfault": alignfault, "ftfault": ftfault, "nullFunc_di": nullFunc_di, "nullFunc_ii": nullFunc_ii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_v": nullFunc_v, "nullFunc_vi": nullFunc_vi, "nullFunc_vidd": nullFunc_vidd, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_viijii": nullFunc_viijii, "invoke_di": invoke_di, "jsCall_di": jsCall_di, "invoke_ii": invoke_ii, "jsCall_ii": jsCall_ii, "invoke_iii": invoke_iii, "jsCall_iii": jsCall_iii, "invoke_iiii": invoke_iiii, "jsCall_iiii": jsCall_iiii, "invoke_iiiii": invoke_iiiii, "jsCall_iiiii": jsCall_iiiii, "invoke_iiiiid": invoke_iiiiid, "jsCall_iiiiid": jsCall_iiiiid, "invoke_iiiiii": invoke_iiiiii, "jsCall_iiiiii": jsCall_iiiiii, "invoke_iiiiiid": invoke_iiiiiid, "jsCall_iiiiiid": jsCall_iiiiiid, "invoke_iiiiiii": invoke_iiiiiii, "jsCall_iiiiiii": jsCall_iiiiiii, "invoke_iiiiiiii": invoke_iiiiiiii, "jsCall_iiiiiiii": jsCall_iiiiiiii, "invoke_iiiiiiiii": invoke_iiiiiiiii, "jsCall_iiiiiiiii": jsCall_iiiiiiiii, "invoke_iiiiij": invoke_iiiiij, "jsCall_iiiiij": jsCall_iiiiij, "invoke_v": invoke_v, "jsCall_v": jsCall_v, "invoke_vi": invoke_vi, "jsCall_vi": jsCall_vi, "invoke_vidd": invoke_vidd, "jsCall_vidd": jsCall_vidd, "invoke_vii": invoke_vii, "jsCall_vii": jsCall_vii, "invoke_viii": invoke_viii, "jsCall_viii": jsCall_viii, "invoke_viiii": invoke_viiii, "jsCall_viiii": jsCall_viiii, "invoke_viiiii": invoke_viiiii, "jsCall_viiiii": jsCall_viiiii, "invoke_viiiiii": invoke_viiiiii, "jsCall_viiiiii": jsCall_viiiiii, "invoke_viijii": invoke_viijii, "jsCall_viijii": jsCall_viijii, "___block_all_sigs": ___block_all_sigs, "___clock_gettime": ___clock_gettime, "___clone": ___clone, "___cxa_allocate_exception": ___cxa_allocate_exception, "___cxa_begin_catch": ___cxa_begin_catch, "___cxa_current_primary_exception": ___cxa_current_primary_exception, "___cxa_decrement_exception_refcount": ___cxa_decrement_exception_refcount, "___cxa_end_catch": ___cxa_end_catch, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___cxa_free_exception": ___cxa_free_exception, "___cxa_increment_exception_refcount": ___cxa_increment_exception_refcount, "___cxa_pure_virtual": ___cxa_pure_virtual, "___cxa_rethrow": ___cxa_rethrow, "___cxa_rethrow_primary_exception": ___cxa_rethrow_primary_exception, "___cxa_throw": ___cxa_throw, "___cxa_uncaught_exception": ___cxa_uncaught_exception, "___gxx_personality_v0": ___gxx_personality_v0, "___lock": ___lock, "___map_file": ___map_file, "___muldc3": ___muldc3, "___mulsc3": ___mulsc3, "___restore_sigs": ___restore_sigs, "___resumeException": ___resumeException, "___setErrNo": ___setErrNo, "___syscall1": ___syscall1, "___syscall10": ___syscall10, "___syscall102": ___syscall102, "___syscall114": ___syscall114, "___syscall118": ___syscall118, "___syscall12": ___syscall12, "___syscall121": ___syscall121, "___syscall122": ___syscall122, "___syscall125": ___syscall125, "___syscall132": ___syscall132, "___syscall133": ___syscall133, "___syscall14": ___syscall14, "___syscall140": ___syscall140, "___syscall142": ___syscall142, "___syscall144": ___syscall144, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall147": ___syscall147, "___syscall148": ___syscall148, "___syscall15": ___syscall15, "___syscall150": ___syscall150, "___syscall151": ___syscall151, "___syscall152": ___syscall152, "___syscall153": ___syscall153, "___syscall163": ___syscall163, "___syscall168": ___syscall168, "___syscall180": ___syscall180, "___syscall181": ___syscall181, "___syscall183": ___syscall183, "___syscall191": ___syscall191, "___syscall192": ___syscall192, "___syscall193": ___syscall193, "___syscall194": ___syscall194, "___syscall195": ___syscall195, "___syscall196": ___syscall196, "___syscall197": ___syscall197, "___syscall198": ___syscall198, "___syscall199": ___syscall199, "___syscall20": ___syscall20, "___syscall200": ___syscall200, "___syscall201": ___syscall201, "___syscall202": ___syscall202, "___syscall203": ___syscall203, "___syscall204": ___syscall204, "___syscall205": ___syscall205, "___syscall207": ___syscall207, "___syscall209": ___syscall209, "___syscall211": ___syscall211, "___syscall212": ___syscall212, "___syscall214": ___syscall214, "___syscall218": ___syscall218, "___syscall219": ___syscall219, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall268": ___syscall268, "___syscall269": ___syscall269, "___syscall272": ___syscall272, "___syscall29": ___syscall29, "___syscall295": ___syscall295, "___syscall296": ___syscall296, "___syscall297": ___syscall297, "___syscall298": ___syscall298, "___syscall3": ___syscall3, "___syscall300": ___syscall300, "___syscall301": ___syscall301, "___syscall302": ___syscall302, "___syscall303": ___syscall303, "___syscall304": ___syscall304, "___syscall305": ___syscall305, "___syscall306": ___syscall306, "___syscall307": ___syscall307, "___syscall308": ___syscall308, "___syscall320": ___syscall320, "___syscall324": ___syscall324, "___syscall33": ___syscall33, "___syscall330": ___syscall330, "___syscall331": ___syscall331, "___syscall333": ___syscall333, "___syscall334": ___syscall334, "___syscall337": ___syscall337, "___syscall34": ___syscall34, "___syscall340": ___syscall340, "___syscall345": ___syscall345, "___syscall36": ___syscall36, "___syscall38": ___syscall38, "___syscall39": ___syscall39, "___syscall4": ___syscall4, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "___syscall5": ___syscall5, "___syscall51": ___syscall51, "___syscall54": ___syscall54, "___syscall57": ___syscall57, "___syscall6": ___syscall6, "___syscall60": ___syscall60, "___syscall63": ___syscall63, "___syscall64": ___syscall64, "___syscall66": ___syscall66, "___syscall75": ___syscall75, "___syscall77": ___syscall77, "___syscall83": ___syscall83, "___syscall85": ___syscall85, "___syscall9": ___syscall9, "___syscall91": ___syscall91, "___syscall94": ___syscall94, "___syscall96": ___syscall96, "___syscall97": ___syscall97, "___unlock": ___unlock, "___wait": ___wait, "__addDays": __addDays, "__arraySum": __arraySum, "__embind_register_bool": __embind_register_bool, "__embind_register_emval": __embind_register_emval, "__embind_register_float": __embind_register_float, "__embind_register_function": __embind_register_function, "__embind_register_integer": __embind_register_integer, "__embind_register_memory_view": __embind_register_memory_view, "__embind_register_std_string": __embind_register_std_string, "__embind_register_std_wstring": __embind_register_std_wstring, "__embind_register_void": __embind_register_void, "__emval_decref": __emval_decref, "__emval_register": __emval_register, "__exit": __exit, "__inet_ntop4_raw": __inet_ntop4_raw, "__inet_ntop6_raw": __inet_ntop6_raw, "__inet_pton4_raw": __inet_pton4_raw, "__inet_pton6_raw": __inet_pton6_raw, "__isLeapYear": __isLeapYear, "__read_sockaddr": __read_sockaddr, "__write_sockaddr": __write_sockaddr, "_abort": _abort, "_clock": _clock, "_clock_gettime": _clock_gettime, "_embind_repr": _embind_repr, "_emscripten_get_now": _emscripten_get_now, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_endgrent": _endgrent, "_execl": _execl, "_exit": _exit, "_fork": _fork, "_getenv": _getenv, "_getgrent": _getgrent, "_getnameinfo": _getnameinfo, "_gmtime_r": _gmtime_r, "_inet_addr": _inet_addr, "_kill": _kill, "_llvm_cos_f64": _llvm_cos_f64, "_llvm_exp_f64": _llvm_exp_f64, "_llvm_fabs_f64": _llvm_fabs_f64, "_llvm_floor_f64": _llvm_floor_f64, "_llvm_log_f64": _llvm_log_f64, "_llvm_pow_f64": _llvm_pow_f64, "_llvm_sin_f64": _llvm_sin_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_llvm_trap": _llvm_trap, "_nanosleep": _nanosleep, "_pthread_cleanup_pop": _pthread_cleanup_pop, "_pthread_cleanup_push": _pthread_cleanup_push, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_cond_signal": _pthread_cond_signal, "_pthread_cond_timedwait": _pthread_cond_timedwait, "_pthread_cond_wait": _pthread_cond_wait, "_pthread_detach": _pthread_detach, "_pthread_equal": _pthread_equal, "_pthread_getspecific": _pthread_getspecific, "_pthread_join": _pthread_join, "_pthread_key_create": _pthread_key_create, "_pthread_mutex_destroy": _pthread_mutex_destroy, "_pthread_mutex_init": _pthread_mutex_init, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_pthread_once": _pthread_once, "_pthread_setcancelstate": _pthread_setcancelstate, "_pthread_setspecific": _pthread_setspecific, "_pthread_sigmask": _pthread_sigmask, "_res_query": _res_query, "_sched_yield": _sched_yield, "_setgrent": _setgrent, "_setgroups": _setgroups, "_setitimer": _setitimer, "_sigfillset": _sigfillset, "_strftime": _strftime, "_strftime_l": _strftime_l, "_sysconf": _sysconf, "_time": _time, "_usleep": _usleep, "_wait": _wait, "_waitpid": _waitpid, "count_emval_handles": count_emval_handles, "craftInvokerFunction": craftInvokerFunction, "createNamedFunction": createNamedFunction, "embind__requireFunction": embind__requireFunction, "embind_init_charCodes": embind_init_charCodes, "ensureOverloadTable": ensureOverloadTable, "exposePublicSymbol": exposePublicSymbol, "extendError": extendError, "floatReadValueFromPointer": floatReadValueFromPointer, "getShiftFromSize": getShiftFromSize, "getTypeName": getTypeName, "get_first_emval": get_first_emval, "heap32VectorToArray": heap32VectorToArray, "init_emval": init_emval, "integerReadValueFromPointer": integerReadValueFromPointer, "makeLegalFunctionName": makeLegalFunctionName, "new_": new_, "readLatin1String": readLatin1String, "registerType": registerType, "replacePublicSymbol": replacePublicSymbol, "runDestructors": runDestructors, "simpleReadValueFromPointer": simpleReadValueFromPointer, "throwBindingError": throwBindingError, "throwInternalError": throwInternalError, "throwUnboundTypeError": throwUnboundTypeError, "whenDependentTypesAreResolved": whenDependentTypesAreResolved, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX };
+Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "segfault": segfault, "alignfault": alignfault, "ftfault": ftfault, "nullFunc_di": nullFunc_di, "nullFunc_ii": nullFunc_ii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_v": nullFunc_v, "nullFunc_vi": nullFunc_vi, "nullFunc_vidd": nullFunc_vidd, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_viijii": nullFunc_viijii, "invoke_di": invoke_di, "jsCall_di": jsCall_di, "invoke_ii": invoke_ii, "jsCall_ii": jsCall_ii, "invoke_iii": invoke_iii, "jsCall_iii": jsCall_iii, "invoke_iiii": invoke_iiii, "jsCall_iiii": jsCall_iiii, "invoke_iiiii": invoke_iiiii, "jsCall_iiiii": jsCall_iiiii, "invoke_iiiiid": invoke_iiiiid, "jsCall_iiiiid": jsCall_iiiiid, "invoke_iiiiii": invoke_iiiiii, "jsCall_iiiiii": jsCall_iiiiii, "invoke_iiiiiid": invoke_iiiiiid, "jsCall_iiiiiid": jsCall_iiiiiid, "invoke_iiiiiii": invoke_iiiiiii, "jsCall_iiiiiii": jsCall_iiiiiii, "invoke_iiiiiiii": invoke_iiiiiiii, "jsCall_iiiiiiii": jsCall_iiiiiiii, "invoke_iiiiiiiii": invoke_iiiiiiiii, "jsCall_iiiiiiiii": jsCall_iiiiiiiii, "invoke_iiiiij": invoke_iiiiij, "jsCall_iiiiij": jsCall_iiiiij, "invoke_v": invoke_v, "jsCall_v": jsCall_v, "invoke_vi": invoke_vi, "jsCall_vi": jsCall_vi, "invoke_vidd": invoke_vidd, "jsCall_vidd": jsCall_vidd, "invoke_vii": invoke_vii, "jsCall_vii": jsCall_vii, "invoke_viii": invoke_viii, "jsCall_viii": jsCall_viii, "invoke_viiii": invoke_viiii, "jsCall_viiii": jsCall_viiii, "invoke_viiiii": invoke_viiiii, "jsCall_viiiii": jsCall_viiiii, "invoke_viiiiii": invoke_viiiiii, "jsCall_viiiiii": jsCall_viiiiii, "invoke_viijii": invoke_viijii, "jsCall_viijii": jsCall_viijii, "___clock_gettime": ___clock_gettime, "___cxa_allocate_exception": ___cxa_allocate_exception, "___cxa_begin_catch": ___cxa_begin_catch, "___cxa_current_primary_exception": ___cxa_current_primary_exception, "___cxa_decrement_exception_refcount": ___cxa_decrement_exception_refcount, "___cxa_end_catch": ___cxa_end_catch, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___cxa_free_exception": ___cxa_free_exception, "___cxa_increment_exception_refcount": ___cxa_increment_exception_refcount, "___cxa_pure_virtual": ___cxa_pure_virtual, "___cxa_rethrow": ___cxa_rethrow, "___cxa_rethrow_primary_exception": ___cxa_rethrow_primary_exception, "___cxa_throw": ___cxa_throw, "___cxa_uncaught_exception": ___cxa_uncaught_exception, "___gxx_personality_v0": ___gxx_personality_v0, "___lock": ___lock, "___map_file": ___map_file, "___resumeException": ___resumeException, "___setErrNo": ___setErrNo, "___syscall10": ___syscall10, "___syscall102": ___syscall102, "___syscall114": ___syscall114, "___syscall118": ___syscall118, "___syscall12": ___syscall12, "___syscall121": ___syscall121, "___syscall122": ___syscall122, "___syscall125": ___syscall125, "___syscall132": ___syscall132, "___syscall133": ___syscall133, "___syscall14": ___syscall14, "___syscall140": ___syscall140, "___syscall142": ___syscall142, "___syscall144": ___syscall144, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall147": ___syscall147, "___syscall148": ___syscall148, "___syscall15": ___syscall15, "___syscall150": ___syscall150, "___syscall151": ___syscall151, "___syscall152": ___syscall152, "___syscall153": ___syscall153, "___syscall163": ___syscall163, "___syscall168": ___syscall168, "___syscall180": ___syscall180, "___syscall181": ___syscall181, "___syscall183": ___syscall183, "___syscall191": ___syscall191, "___syscall192": ___syscall192, "___syscall193": ___syscall193, "___syscall194": ___syscall194, "___syscall195": ___syscall195, "___syscall196": ___syscall196, "___syscall197": ___syscall197, "___syscall198": ___syscall198, "___syscall199": ___syscall199, "___syscall20": ___syscall20, "___syscall200": ___syscall200, "___syscall201": ___syscall201, "___syscall202": ___syscall202, "___syscall205": ___syscall205, "___syscall207": ___syscall207, "___syscall209": ___syscall209, "___syscall211": ___syscall211, "___syscall212": ___syscall212, "___syscall218": ___syscall218, "___syscall219": ___syscall219, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall268": ___syscall268, "___syscall269": ___syscall269, "___syscall272": ___syscall272, "___syscall29": ___syscall29, "___syscall295": ___syscall295, "___syscall296": ___syscall296, "___syscall297": ___syscall297, "___syscall298": ___syscall298, "___syscall3": ___syscall3, "___syscall300": ___syscall300, "___syscall301": ___syscall301, "___syscall302": ___syscall302, "___syscall303": ___syscall303, "___syscall304": ___syscall304, "___syscall305": ___syscall305, "___syscall306": ___syscall306, "___syscall308": ___syscall308, "___syscall320": ___syscall320, "___syscall324": ___syscall324, "___syscall33": ___syscall33, "___syscall330": ___syscall330, "___syscall331": ___syscall331, "___syscall333": ___syscall333, "___syscall334": ___syscall334, "___syscall337": ___syscall337, "___syscall34": ___syscall34, "___syscall340": ___syscall340, "___syscall345": ___syscall345, "___syscall36": ___syscall36, "___syscall38": ___syscall38, "___syscall39": ___syscall39, "___syscall4": ___syscall4, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "___syscall5": ___syscall5, "___syscall51": ___syscall51, "___syscall54": ___syscall54, "___syscall57": ___syscall57, "___syscall6": ___syscall6, "___syscall60": ___syscall60, "___syscall63": ___syscall63, "___syscall64": ___syscall64, "___syscall66": ___syscall66, "___syscall75": ___syscall75, "___syscall77": ___syscall77, "___syscall83": ___syscall83, "___syscall85": ___syscall85, "___syscall9": ___syscall9, "___syscall91": ___syscall91, "___syscall94": ___syscall94, "___syscall96": ___syscall96, "___syscall97": ___syscall97, "___unlock": ___unlock, "___wait": ___wait, "__addDays": __addDays, "__arraySum": __arraySum, "__embind_register_bool": __embind_register_bool, "__embind_register_emval": __embind_register_emval, "__embind_register_float": __embind_register_float, "__embind_register_function": __embind_register_function, "__embind_register_integer": __embind_register_integer, "__embind_register_memory_view": __embind_register_memory_view, "__embind_register_std_string": __embind_register_std_string, "__embind_register_std_wstring": __embind_register_std_wstring, "__embind_register_void": __embind_register_void, "__emval_decref": __emval_decref, "__emval_register": __emval_register, "__exit": __exit, "__inet_ntop4_raw": __inet_ntop4_raw, "__inet_ntop6_raw": __inet_ntop6_raw, "__inet_pton4_raw": __inet_pton4_raw, "__inet_pton6_raw": __inet_pton6_raw, "__isLeapYear": __isLeapYear, "__read_sockaddr": __read_sockaddr, "__write_sockaddr": __write_sockaddr, "_abort": _abort, "_clock": _clock, "_clock_gettime": _clock_gettime, "_embind_repr": _embind_repr, "_emscripten_get_now": _emscripten_get_now, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_exit": _exit, "_fork": _fork, "_fpathconf": _fpathconf, "_getenv": _getenv, "_getnameinfo": _getnameinfo, "_gmtime_r": _gmtime_r, "_inet_addr": _inet_addr, "_llvm_copysign_f32": _llvm_copysign_f32, "_llvm_copysign_f64": _llvm_copysign_f64, "_llvm_cos_f64": _llvm_cos_f64, "_llvm_exp_f64": _llvm_exp_f64, "_llvm_fabs_f32": _llvm_fabs_f32, "_llvm_fabs_f64": _llvm_fabs_f64, "_llvm_floor_f64": _llvm_floor_f64, "_llvm_log_f64": _llvm_log_f64, "_llvm_pow_f64": _llvm_pow_f64, "_llvm_sin_f64": _llvm_sin_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_llvm_trap": _llvm_trap, "_nanosleep": _nanosleep, "_pathconf": _pathconf, "_pthread_cleanup_pop": _pthread_cleanup_pop, "_pthread_cleanup_push": _pthread_cleanup_push, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_cond_signal": _pthread_cond_signal, "_pthread_cond_timedwait": _pthread_cond_timedwait, "_pthread_cond_wait": _pthread_cond_wait, "_pthread_detach": _pthread_detach, "_pthread_equal": _pthread_equal, "_pthread_getspecific": _pthread_getspecific, "_pthread_join": _pthread_join, "_pthread_key_create": _pthread_key_create, "_pthread_mutex_destroy": _pthread_mutex_destroy, "_pthread_mutex_init": _pthread_mutex_init, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_pthread_once": _pthread_once, "_pthread_setcancelstate": _pthread_setcancelstate, "_pthread_setspecific": _pthread_setspecific, "_pthread_sigmask": _pthread_sigmask, "_sched_yield": _sched_yield, "_setitimer": _setitimer, "_sigfillset": _sigfillset, "_strftime": _strftime, "_strftime_l": _strftime_l, "_sysconf": _sysconf, "_time": _time, "_usleep": _usleep, "_wait": _wait, "_waitpid": _waitpid, "count_emval_handles": count_emval_handles, "craftInvokerFunction": craftInvokerFunction, "createNamedFunction": createNamedFunction, "embind__requireFunction": embind__requireFunction, "embind_init_charCodes": embind_init_charCodes, "ensureOverloadTable": ensureOverloadTable, "exposePublicSymbol": exposePublicSymbol, "extendError": extendError, "floatReadValueFromPointer": floatReadValueFromPointer, "getShiftFromSize": getShiftFromSize, "getTypeName": getTypeName, "get_first_emval": get_first_emval, "heap32VectorToArray": heap32VectorToArray, "init_emval": init_emval, "integerReadValueFromPointer": integerReadValueFromPointer, "makeLegalFunctionName": makeLegalFunctionName, "new_": new_, "readLatin1String": readLatin1String, "registerType": registerType, "replacePublicSymbol": replacePublicSymbol, "runDestructors": runDestructors, "simpleReadValueFromPointer": simpleReadValueFromPointer, "throwBindingError": throwBindingError, "throwInternalError": throwInternalError, "throwUnboundTypeError": throwUnboundTypeError, "whenDependentTypesAreResolved": whenDependentTypesAreResolved, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
@@ -10013,6 +10110,12 @@ var real___GLOBAL__I_000101 = asm["__GLOBAL__I_000101"]; asm["__GLOBAL__I_000101
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real___GLOBAL__I_000101.apply(null, arguments);
+};
+
+var real___GLOBAL__I_000101_884 = asm["__GLOBAL__I_000101_884"]; asm["__GLOBAL__I_000101_884"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real___GLOBAL__I_000101_884.apply(null, arguments);
 };
 
 var real___GLOBAL__sub_I_bind_cpp = asm["__GLOBAL__sub_I_bind_cpp"]; asm["__GLOBAL__sub_I_bind_cpp"] = function() {
@@ -10031,6 +10134,12 @@ var real___GLOBAL__sub_I_iostream_cpp = asm["__GLOBAL__sub_I_iostream_cpp"]; asm
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real___GLOBAL__sub_I_iostream_cpp.apply(null, arguments);
+};
+
+var real___GLOBAL__sub_I_memory_resource_cpp = asm["__GLOBAL__sub_I_memory_resource_cpp"]; asm["__GLOBAL__sub_I_memory_resource_cpp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real___GLOBAL__sub_I_memory_resource_cpp.apply(null, arguments);
 };
 
 var real___ZSt18uncaught_exceptionv = asm["__ZSt18uncaught_exceptionv"]; asm["__ZSt18uncaught_exceptionv"] = function() {
@@ -10091,6 +10200,18 @@ var real__llvm_bswap_i32 = asm["_llvm_bswap_i32"]; asm["_llvm_bswap_i32"] = func
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real__llvm_bswap_i32.apply(null, arguments);
+};
+
+var real__llvm_maxnum_f32 = asm["_llvm_maxnum_f32"]; asm["_llvm_maxnum_f32"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__llvm_maxnum_f32.apply(null, arguments);
+};
+
+var real__llvm_maxnum_f64 = asm["_llvm_maxnum_f64"]; asm["_llvm_maxnum_f64"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__llvm_maxnum_f64.apply(null, arguments);
 };
 
 var real__main = asm["_main"]; asm["_main"] = function() {
@@ -10211,6 +10332,10 @@ var __GLOBAL__I_000101 = Module["__GLOBAL__I_000101"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["__GLOBAL__I_000101"].apply(null, arguments) };
+var __GLOBAL__I_000101_884 = Module["__GLOBAL__I_000101_884"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["__GLOBAL__I_000101_884"].apply(null, arguments) };
 var __GLOBAL__sub_I_bind_cpp = Module["__GLOBAL__sub_I_bind_cpp"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -10223,6 +10348,10 @@ var __GLOBAL__sub_I_iostream_cpp = Module["__GLOBAL__sub_I_iostream_cpp"] = func
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["__GLOBAL__sub_I_iostream_cpp"].apply(null, arguments) };
+var __GLOBAL__sub_I_memory_resource_cpp = Module["__GLOBAL__sub_I_memory_resource_cpp"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["__GLOBAL__sub_I_memory_resource_cpp"].apply(null, arguments) };
 var __ZSt18uncaught_exceptionv = Module["__ZSt18uncaught_exceptionv"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -10267,6 +10396,14 @@ var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments) };
+var _llvm_maxnum_f32 = Module["_llvm_maxnum_f32"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_llvm_maxnum_f32"].apply(null, arguments) };
+var _llvm_maxnum_f64 = Module["_llvm_maxnum_f64"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_llvm_maxnum_f64"].apply(null, arguments) };
 var _main = Module["_main"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -10481,6 +10618,7 @@ if (!Module["writeArrayToMemory"]) Module["writeArrayToMemory"] = function() { a
 if (!Module["writeAsciiToMemory"]) Module["writeAsciiToMemory"] = function() { abort("'writeAsciiToMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 Module["addRunDependency"] = addRunDependency;
 Module["removeRunDependency"] = removeRunDependency;
+if (!Module["ENV"]) Module["ENV"] = function() { abort("'ENV' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 Module["FS"] = FS;
 Module["FS_createFolder"] = FS.createFolder;
 Module["FS_createPath"] = FS.createPath;
@@ -10510,7 +10648,9 @@ if (!Module["getCompilerSetting"]) Module["getCompilerSetting"] = function() { a
 if (!Module["stackSave"]) Module["stackSave"] = function() { abort("'stackSave' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Module["stackRestore"]) Module["stackRestore"] = function() { abort("'stackRestore' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Module["stackAlloc"]) Module["stackAlloc"] = function() { abort("'stackAlloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Module["establishStackSpace"]) Module["establishStackSpace"] = function() { abort("'establishStackSpace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };if (!Module["ALLOC_NORMAL"]) Object.defineProperty(Module, "ALLOC_NORMAL", { get: function() { abort("'ALLOC_NORMAL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
+if (!Module["establishStackSpace"]) Module["establishStackSpace"] = function() { abort("'establishStackSpace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Module["print"]) Module["print"] = function() { abort("'print' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Module["printErr"]) Module["printErr"] = function() { abort("'printErr' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };if (!Module["ALLOC_NORMAL"]) Object.defineProperty(Module, "ALLOC_NORMAL", { get: function() { abort("'ALLOC_NORMAL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Module["ALLOC_STACK"]) Object.defineProperty(Module, "ALLOC_STACK", { get: function() { abort("'ALLOC_STACK' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Module["ALLOC_STATIC"]) Object.defineProperty(Module, "ALLOC_STATIC", { get: function() { abort("'ALLOC_STATIC' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Module["ALLOC_DYNAMIC"]) Object.defineProperty(Module, "ALLOC_DYNAMIC", { get: function() { abort("'ALLOC_DYNAMIC' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
@@ -10602,7 +10742,7 @@ Module['callMain'] = function callMain(args) {
       if (e && typeof e === 'object' && e.stack) {
         toLog = [e, e.stack];
       }
-      Module.printErr('exception thrown: ' + toLog);
+      err('exception thrown: ' + toLog);
       Module['quit'](1, e);
     }
   } finally {
@@ -10669,13 +10809,13 @@ function checkUnflushedContent() {
   // builds we do so just for this check, and here we see if there is any
   // content to flush, that is, we check if there would have been
   // something a non-ASSERTIONS build would have not seen.
-  // How we flush the streams depends on whether we are in NO_FILESYSTEM
+  // How we flush the streams depends on whether we are in FILESYSTEM=0
   // mode (which has its own special function for this; otherwise, all
   // the code is inside libc)
-  var print = Module['print'];
-  var printErr = Module['printErr'];
+  var print = out;
+  var printErr = err;
   var has = false;
-  Module['print'] = Module['printErr'] = function(x) {
+  out = err = function(x) {
     has = true;
   }
   try { // it doesn't matter if it fails
@@ -10696,10 +10836,10 @@ function checkUnflushedContent() {
       });
     }
   } catch(e) {}
-  Module['print'] = print;
-  Module['printErr'] = printErr;
+  out = print;
+  err = printErr;
   if (has) {
-    warnOnce('stdio streams had content in them that was not flushed. you should set NO_EXIT_RUNTIME to 0 (see the FAQ), or make sure to emit a newline when you printf etc.');
+    warnOnce('stdio streams had content in them that was not flushed. you should set EXIT_RUNTIME to 1 (see the FAQ), or make sure to emit a newline when you printf etc.');
   }
 }
 
@@ -10717,7 +10857,7 @@ function exit(status, implicit) {
   if (Module['noExitRuntime']) {
     // if exit() was called, we may warn the user if the runtime isn't actually being shut down
     if (!implicit) {
-      Module.printErr('exit(' + status + ') called, but NO_EXIT_RUNTIME is set, so halting execution but not exiting the runtime or preventing further async execution (build with NO_EXIT_RUNTIME=0, if you want a true shutdown)');
+      err('exit(' + status + ') called, but EXIT_RUNTIME is not set, so halting execution but not exiting the runtime or preventing further async execution (build with EXIT_RUNTIME=1, if you want a true shutdown)');
     }
   } else {
 
@@ -10730,12 +10870,8 @@ function exit(status, implicit) {
     if (Module['onExit']) Module['onExit'](status);
   }
 
-  if (ENVIRONMENT_IS_NODE) {
-    process['exit'](status);
-  }
   Module['quit'](status, new ExitStatus(status));
 }
-Module['exit'] = exit;
 
 var abortDecorators = [];
 
@@ -10745,8 +10881,8 @@ function abort(what) {
   }
 
   if (what !== undefined) {
-    Module.print(what);
-    Module.printErr(what);
+    out(what);
+    err(what);
     what = JSON.stringify(what)
   } else {
     what = '';
@@ -10766,8 +10902,6 @@ function abort(what) {
 }
 Module['abort'] = abort;
 
-// {{PRE_RUN_ADDITIONS}}
-
 if (Module['preInit']) {
   if (typeof Module['preInit'] == 'function') Module['preInit'] = [Module['preInit']];
   while (Module['preInit'].length > 0) {
@@ -10785,8 +10919,6 @@ Module["noExitRuntime"] = true;
 
 run();
 
-// {{POST_RUN_ADDITIONS}}
-
 
 
 
@@ -10798,7 +10930,9 @@ run();
 
 
   return cmask_module;
-};
+}
+);
+})();
 if (typeof exports === 'object' && typeof module === 'object')
     module.exports = cmask_module;
   else if (typeof define === 'function' && define['amd'])

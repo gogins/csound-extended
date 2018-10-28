@@ -651,7 +651,7 @@ public:
             oboe::AudioApi audioApi = audio_stream_out->getAudioApi();
             Message("CsoundOboe::Start: Oboe audio API is: %s.\n", audioApi == oboe::AudioApi::AAudio ? "AAudio" : "OpenSLES");
             Message("CsoundOboe::Start: Started Oboe audio output stream...\n");
-            oboe::ErrorOrValue<double> latency = audio_stream_out->calculateLatencyMillis();
+            oboe::ResultWithValue<double> latency = audio_stream_out->calculateLatencyMillis();
             if (latency) {
                 Message("CsoundOboe::Start: Output stream latency is: %9.4f milliseconds.\n", latency.value());
             }
