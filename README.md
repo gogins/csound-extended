@@ -59,7 +59,15 @@ each platform, there is one build system.
 
 1.  CsoundAC and other Linux binaries and other resources are installed from 
     the Debian package released from this repository, e.g. 
-    `sudo apt install ./csound-extended-dev-1.0.0-Linux.deb`.  
+    `sudo apt install ./csound-extended-dev-1.0.0-Linux.deb`.  The Lisp 
+    systems are installed in `/usr/share/common-lisp/csound-extended-dev/` 
+    but in order to load `nudruz.asd` you must first install a number of its 
+    dependencies, listed in `nudruz.asd`. Some of these can be installed 
+    as Linux packages, some must be installed by cloning Git repositories, 
+    some must be installed using Quicklisp, and some must be installed by 
+    downloading archives. In all cases except for system packages, you must 
+    create a symbolic link to your `~/.local/share/common-lisp/source/` 
+    directory. 
     
 2.  The  `silencio` library and WebAssembly build of Csound are packaged in 
     the `csound-extended-wasm.0.1.2.zip` archive released from this 
@@ -69,10 +77,10 @@ each platform, there is one build system.
     be installed from the `CsoundApplication-release.apk` package released 
     from this repository.
     
-4.  Build from sources, as described below. You may then install the software 
-    by running `sudo make install` in the `build-linux` directory. However, be 
-    warned that this installs the software in `/usr/local`.  You will also 
-    need to separately install Csound.
+You may also install locally by first building from sources, as described 
+below. You may then install the software by running `sudo make install` in 
+the `build-linux` directory. However, be warned that this installs the 
+software in `/usr/local`. You will also need to separately install Csound.
 
 ## Building
 

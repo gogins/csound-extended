@@ -136,10 +136,7 @@ find_package(Java)
 find_package(JNI)
 find_package(LIBLO)
 find_package(LLVM)
-# find_package(LUAJIT HINTS ${CMAKE_SOURCE_DIR}/dependencies/luajit-2.0})
-# Just set these from our fixed local build:
-set(LUA_H_PATH "${CMAKE_SOURCE_DIR}/dependencies/luajit-2.0/src")
-set(LUAJIT_LIBRARY "${CMAKE_SOURCE_DIR}/dependencies/luajit-2.0/src/libluajit.so")
+find_package(LUAJIT)
 find_package(PORTSMF)
 find_package(PNG)
 find_package(PythonLibs 2.7)
@@ -239,7 +236,7 @@ set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "$ENV{CSOUND_EXTENDED_VERSION}")
+set(CPACK_PACKAGE_VERSION "1.0.0")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
@@ -265,6 +262,7 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
 set(CPACK_DEBIAN_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
+set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 
 # generate a Debian compliant changelog
 string(TIMESTAMP RFC2822_TIMESTAMP "%a, %d %b %Y %H:%M:%S -0400" UTC)
@@ -290,6 +288,26 @@ install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
     RENAME copyright)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/dependencies/cm2/
+    DESTINATION share/common-lisp/source/${CPACK_DEBIAN_PACKAGE_NAME}/cm2
+    FILES_MATCHING 
+    PATTERN "*.asd"
+    PATTERN "*.lisp"
+    PATTERN "*.lsp"
+#    PATTERN "*.html"
+#    PATTERN "*.css"
+#    PATTERN "*.png"
+    PATTERN "*.md"
+    PATTERN "*.pdf")
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/nudruz/
+    DESTINATION share/common-lisp/source/${CPACK_DEBIAN_PACKAGE_NAME}/nudruz
+    FILES_MATCHING 
+    PATTERN "*.asd"
+    PATTERN "*.lisp"
+    PATTERN "*.lsp"
+    PATTERN "*.md"
+    PATTERN "*.csd"
+    PATTERN "*.orc")
 install(FILES "${CMAKE_SOURCE_DIR}/debian/changelog.gz"
     DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}")
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-extended-dev
