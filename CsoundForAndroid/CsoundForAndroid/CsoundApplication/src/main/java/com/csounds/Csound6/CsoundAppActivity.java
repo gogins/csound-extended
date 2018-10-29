@@ -6,7 +6,7 @@
  *
  * See CsoundAppActivity.java and csound_oboe.hpp for more information.
  */
-package com.csounds.Csound6
+package com.csounds.Csound6;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
