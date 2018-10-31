@@ -182,6 +182,12 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         }
     }
 
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+
     // Copy the file indicated by fromAssetPath to
     // the public external storage music directory.
     // The asset directory becomes a subdirectory of the music directory.
@@ -190,12 +196,14 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         InputStream in = null;
         OutputStream out = null;
         File outputFile = null;
+        boolean result;
         try {
             File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            outputFile = new File(externalStoragePublicDirectory.toString() + "/" + fromAssetPath);
+            outputFile = new File(externalStoragePublicDirectory, fromAssetPath);
+            result = outputFile.mkdirs();
             String filename = outputFile.getName();
             File directory = outputFile.getParentFile();
-            directory.mkdirs();
+            result = directory.mkdirs();
             outputFile.createNewFile();
             in = assetManager.open(fromAssetPath);
             out = new FileOutputStream(outputFile);
@@ -234,7 +242,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             String[] files = getAssets().list("rawwaves");
             for (int i = 0; i < files.length; i++) {
                 String file = files[i];
-                copyAsset("rawwaves/" + file.toString());
+                copyAsset("rawwaves/" + file);
             }
             File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
             String rawwavePath = externalStoragePublicDirectory.toString() + "/rawwaves/";
@@ -475,29 +483,29 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     private void setScreenLayout(SharedPreferences sharedPreferences) {
         screenLayout = sharedPreferences.getString("screenLayout", "1");
         if (screenLayout.equals("1")) {
-            channelsLayout.setVisibility(channelsLayout.GONE);
-            webView.setVisibility(webView.GONE);
-            messageScrollView.setVisibility(messageScrollView.VISIBLE);
+            channelsLayout.setVisibility(View.GONE);
+            webView.setVisibility(View.GONE);
+            messageScrollView.setVisibility(View.VISIBLE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (screenLayout.equals("2")) {
-            channelsLayout.setVisibility(channelsLayout.GONE);
-            webView.setVisibility(webView.VISIBLE);
-            messageScrollView.setVisibility(messageScrollView.GONE);
+            channelsLayout.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+            messageScrollView.setVisibility(View.GONE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (screenLayout.equals("3")) {
-            channelsLayout.setVisibility(channelsLayout.GONE);
-            webView.setVisibility(webView.VISIBLE);
-            messageScrollView.setVisibility(messageScrollView.VISIBLE);
+            channelsLayout.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+            messageScrollView.setVisibility(View.VISIBLE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (screenLayout.equals("4")) {
-            channelsLayout.setVisibility(channelsLayout.VISIBLE);
-            webView.setVisibility(webView.GONE);
-            messageScrollView.setVisibility(messageScrollView.GONE);
+            channelsLayout.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
+            messageScrollView.setVisibility(View.GONE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else if (screenLayout.equals("5")) {
-            channelsLayout.setVisibility(channelsLayout.VISIBLE);
-            webView.setVisibility(webView.GONE);
-            messageScrollView.setVisibility(messageScrollView.VISIBLE);
+            channelsLayout.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
+            messageScrollView.setVisibility(View.VISIBLE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         View mainLayout = findViewById(R.id.mainLayout);
@@ -589,7 +597,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 + "<CsInstruments>\n" + "</CsInstruments>\n" + "<CsScore>\n"
                 + "</CsScore>\n" + "</CsoundSynthesizer>\n";
         setContentView(R.layout.main);
-        newButton = (Button) findViewById(R.id.newButton);
+        newButton = findViewById(R.id.newButton);
         newButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -623,7 +631,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 alert.show();
             }
         });
-        openButton = (Button) findViewById(R.id.openButton);
+        openButton = findViewById(R.id.openButton);
         openButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //loadFileList();
@@ -647,7 +655,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 fileOpenDialog.chooseFile_or_Dir(fileOpenDialog.default_file_name);
             }
         });
-        saveAsButton = (Button) findViewById(R.id.saveAsButton);
+        saveAsButton = findViewById(R.id.saveAsButton);
         saveAsButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //loadFileList();
@@ -704,7 +712,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 fileOpenDialog.chooseFile_or_Dir(fileOpenDialog.default_file_name);
             }
         });
-        editButton = (Button) findViewById(R.id.editButton);
+        editButton = findViewById(R.id.editButton);
         editButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 if (csound_file != null) {
@@ -715,8 +723,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 }
             }
         });
-        channelsLayout = (LinearLayout) findViewById(R.id.channelsLayout);
-        webView = (WebView) findViewById(R.id.htmlView);
+        channelsLayout = findViewById(R.id.channelsLayout);
+        webView = findViewById(R.id.htmlView);
         webView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode,
                                         String description, String failingUrl) {
@@ -725,8 +733,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                         .show();
             }
         });
-        messageTextView = (TextView) findViewById(R.id.messageTextView);
-        messageScrollView = (ScrollView) findViewById(R.id.csoundMessages);
+        messageTextView = findViewById(R.id.messageTextView);
+        messageScrollView = findViewById(R.id.csoundMessages);
         sliders.add((SeekBar) findViewById(R.id.seekBar1));
         sliders.add((SeekBar) findViewById(R.id.seekBar2));
         sliders.add((SeekBar) findViewById(R.id.seekBar3));
@@ -737,8 +745,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         buttons.add((Button) findViewById(R.id.button3));
         buttons.add((Button) findViewById(R.id.button4));
         buttons.add((Button) findViewById(R.id.button5));
-        pad = (Button) findViewById(R.id.pad);
-        startStopButton = (ToggleButton) findViewById(R.id.runButton);
+        pad = findViewById(R.id.pad);
+        startStopButton = findViewById(R.id.runButton);
         startStopButton.setOnClickListener(new OnClickListener() {
             public synchronized void onClick(View v) {
                 if (csound_file == null) {
@@ -954,7 +962,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                TextView textView = (TextView) view
+                TextView textView = view
                         .findViewById(android.R.id.text1);
                 textView.setCompoundDrawablesWithIntrinsicBounds(
                         fileList[position].icon, 0, 0, 0);

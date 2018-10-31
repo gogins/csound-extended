@@ -1,0 +1,7 @@
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path name="my_csd" path="csd/"/>
+    <external-files-path name="my_html" path="html/"/>
+    <external-files-path name="my_downloads" path="Download/"/>
+    <external-files-path name="my_music" path="Music/"/>
+    <files-path path="rawwaves/" name="rawwaves" />
+</paths>

@@ -4,11 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-class CsoundService extends Service {
+public class CsoundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //TODO do something useful
-        return Service.START_NOT_STICKY;
+        return Service.START_STICKY;
     }
 
     @Override
