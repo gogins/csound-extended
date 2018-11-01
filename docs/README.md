@@ -1,6 +1,5 @@
 # csound-extended WebAssembly Live Examples
 
-
 Csound for WebAssembly implements almost all features of Csound as a WebAssembly 
 module that will run Csound from a JavaScript interface in any current 
 Web browser. This version includes useful plugin opcodes statically 

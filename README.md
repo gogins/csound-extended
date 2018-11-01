@@ -1,7 +1,8 @@
-# CSOUND-EXTENDED
+Michael Gogins<br>
+https://github.com/gogins<br>
+http://michaelgogins.tumblr.com
 
-Version 0.1.3
-Michael Gogins
+## Introduction
 
 This repository contains various extensions to Csound that have been moved 
 out of the core Csound Git repository at https://github.com/csound/csound. 
@@ -55,11 +56,25 @@ This repository uses the core Csound repository, and some other third-party
 dependencies, as Git submodules, packages, or direct source downloads. For 
 each platform, there is one build system.
 
+Please log any bug reports or requests for enhancements at 
+https://github.com/gogins/csound-extended/issues.
+
+## Changes
+
+The major change for version 1.0.0 is the creation of regular Debian packages.
+
+CsoundAC has gained the ability to run Common Lisp code for generating or 
+modifying generated scores.
+
+CsoundForAndroid has been upgraded to target Android API version 26.
+
+See https://github.com/gogins/csound-extended/commits/develop for the commit log.
+
 ## Installation
 
 1.  CsoundAC and other Linux binaries and other resources are installed from 
     the Debian package released from this repository, e.g. 
-    `sudo apt install ./csound-extended-dev-1.0.0-Linux.deb`.  The Lisp 
+    `sudo apt install ./csound-extended-dev-version-Linux.deb`.  The Lisp 
     systems are installed in `/usr/share/common-lisp/csound-extended-dev/` 
     but in order to load `nudruz.asd` you must first install a number of its 
     dependencies, listed in `nudruz.asd`. Some of these can be installed 
@@ -70,7 +85,7 @@ each platform, there is one build system.
     directory. 
     
 2.  The  `silencio` library and WebAssembly build of Csound are packaged in 
-    the `csound-extended-wasm.0.1.2.zip` archive released from this 
+    the `csound-extended-wasm-version.zip` archive released from this 
     repository.
     
 3.  The Csound for Android app is available from the Google Play Store, or may 
@@ -198,23 +213,7 @@ does the following:
 
 4.  Creates a release package.
 
-## License
 
-Csound is copyright (c) 1991 Barry Vercoe, John ffitch, and other contributors.
-csound-extended is copyright (c) 2018 by Michael Gogins.
 
-Csound and csound-extended are free software; you can redistribute them
-and/or modify them under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
 
-Csound and csound-extended are distributed in the hope that they will be 
-useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser 
-General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this software; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-02110-1301 USA
 

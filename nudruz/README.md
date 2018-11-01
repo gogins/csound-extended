@@ -1,5 +1,10 @@
-# NUDRUZ
-## Michael Gogins
+# nudruz
+
+Michael Gogins<br>
+https://github.com/gogins<br>
+http://michaelgogins.tumblr.com
+
+## Introduction
 
 This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is 
 hosted with his permission. Drew's code is licensed under the terms of the GNU 
@@ -15,13 +20,13 @@ time, the free version of OpenMusic uses a release of LispWorks that does not
 compile Lisp code, but only loads it. Therefore, ASDF cannot be used in OpenMusic. 
 I have not been able to work around this limitation.
 
-## Documentation
+### Documentation
 
 [Drew's talk](http://files.meetup.com/1748515/Drew%20Krause%20slides.pdf) 
 provides an overview and demonstration of the capabilities of nudruz. For more 
 information, read the code.
 
-## Changes
+### Changes
 
 1.  All code has been brought into the Common Music package (that is, of 
 course, the Lisp version of Common Music, version 2, available from 

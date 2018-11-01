@@ -1,6 +1,8 @@
 # Csound for WebAssembly
 
-Authors: Edward Costello, Steven Yi, Henri Manson, Michael Gogins
+Edward Costello, Steven Yi, Henri Manson, Michael Gogins<br>
+https://github.com/gogins<br>
+http://michaelgogins.tumblr.com
 
 ## Introduction
 
@@ -18,12 +20,25 @@ feature:
   app, and in `csound.node`.
   
 * Additional Csound API methods exposed to JavaScript.
-  
-See the README.md in the csound-extended directory for build instructions.
 
+Please log any bug reports or requests for enhancements at 
+https://github.com/gogins/csound-extended/issues.
+
+## Changes
+
+See https://github.com/gogins/csound-extended/commits/develop for the commit log.
+
+## Installation
+
+Download `csound-extended-wasm.zip` from the release page here. Unzip it and 
+it is ready to use.
+
+## Usage
+  
 The examples herein will run from the [GitHub pages of the csound-extended 
-repository](https://gogins.github.io/csound-extended/). To run the examples locally, either clone and build this 
-repository, or download the `csound-wasm*.zip` release and unzip it. 
+repository](https://gogins.github.io/csound-extended/). To run the examples 
+locally, either clone and build this repository, or download the 
+`csound-extended-wasm-version.zip` archive and unpack it. 
 
 Then, run the self-contained Web server, `httpd.py`, in the WebAssembly 
 directory, and navigate in your Web browser to localhost at the port reported 
@@ -37,3 +52,8 @@ WebAssembly.
 The `csound_loader.js` script is provided as a convenient method of 
 detecting and using available implementations of Csound that run in HTML5 
 environments.
+
+## Building
+
+See the main README.md of csound-extended for build instructions.
+
