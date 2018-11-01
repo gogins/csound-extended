@@ -1,7 +1,11 @@
 # Csound Patches
 
-## Copyright (C) 2017 by Michael Gogins
-## These patches are licensed under the terms of the GNU Lesser General Public License version 2.
+Michael Gogins<br>
+https://github.com/gogins<br>
+http://michaelgogins.tumblr.com
+
+
+# Introduction
 
 This directory contains Csound patches written in such a way as to be
 completely modular. I use these patches to compose my own pieces. Most of
@@ -46,3 +50,11 @@ file implements a complete system for spatializing audio based on the
 excellent work of <a href='xxx'>Jan Jacob Hofmann</a>. For a working example 
 of the spatialization system, see <a href='SpatializedDrone.inc'>`SpatializedDrone`</a>
 
+# Changes
+
+See https://github.com/gogins/csound-extended/commits/develop for the commit log.
+
+
+# License
+
+These patches are licensed under the terms of the GNU Lesser General Public License, v2.2.
