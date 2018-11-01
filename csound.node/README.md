@@ -12,10 +12,10 @@ the user interface is defined in HTML and the program logic is defined in JavaSc
 C++ addons, which expose JavaScript functions that call into C++ libraries, also can
 be used. The application executes in an embedded Web browser based on Google Chrome.
 
-`csound.node` is a C++ addon for NW.js that embeds [Csound][csound] into the JavaScript context
+csound.node is a C++ addon for NW.js that embeds [Csound][csound] into the JavaScript context
 of Web pages running in NW.js. Such pages can call core methods of the Csound API
 as member functions of a `csound` object that belongs to the window. The
-`csound/examples/html` directory contains a number of examples that run in NW.js with
+csound/examples/html directory contains a number of examples that run in NW.js with
 `csound.node` (the CSD examples will also run on Csound for Android or in CsoundQt).
 
 Therefore, NW.js with `csound.node` can be used not only for composing and performing
@@ -23,12 +23,12 @@ Csound pieces, but also for developing standalone applications that incorporate 
 It can be used, for example, to develop sound art installations, visual music, or kiosk-type
 applications.
 
-The `NW_Csound_Demo.html` piece is an example of
+The NW_Csound_Demo.html piece is an example of
 an HTML file that embeds not only Csound, but also a Csound orchestra and score. The
-`GameOfLife3D.csd` piece is an example of a CSD file that embeds a Web page in the
+GameOfLife3D.csd piece is an example of a CSD file that embeds a Web page in the
 `<html>` element of the CSD file. See below for how to run these.
 
-The motivation for `csound.node` should be obvious. It works on all personal computer
+The motivation for csound.node should be obvious. It works on all personal computer
 platforms, the build steps are simple, and the
 end product makes all of the myriad capabilities of HTML5 available to Csound pieces,
 including JavaScript, user-defined HTML user interfaces, 3-dimensional animated computer
