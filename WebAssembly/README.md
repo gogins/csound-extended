@@ -1,4 +1,4 @@
-# Csound for WebAssembly
+# csound-extended-wasm
 
 Edward Costello, Steven Yi, Henri Manson, Michael Gogins<br>
 https://github.com/gogins<br>
