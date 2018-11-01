@@ -29,8 +29,8 @@ So we should have:
 buildToolsVersion 26.0.1
 compileSdkVersion 23
 targetSdkVersion 26
-minSdkVersion 21
-APP_PLATFORM android-21
+minSdkVersion 22
+APP_PLATFORM android-22
 
 */
 buildscript {

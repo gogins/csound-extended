@@ -41,6 +41,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -51,7 +52,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
+import android.provider.OpenableColumns;
+import android.support.v4.content.FileProvider;
+import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -104,7 +109,6 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     ArrayList<Button> buttons = new ArrayList<Button>();
     ArrayList<String> str = new ArrayList<String>();
     private Boolean firstLvl = true;
-    private Item[] fileList = null;
     private File path = new File(Environment.getExternalStorageDirectory() + "");
     private String chosenFile;
     private static final int BROWSE_DIALOG = 0xFFFFFFFF;
@@ -128,6 +132,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     private String screenLayout = "2";
     protected CsoundCallbackWrapper oboe_callback_wrapper = null;
     Intent csound_service_intent = null;
+    static final int PICK_FILE_REQUEST = 8391;
 
     static {
         int result = 0;
@@ -200,7 +205,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         try {
             File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
             outputFile = new File(externalStoragePublicDirectory, fromAssetPath);
-            result = outputFile.mkdirs();
+            //result = outputFile.mkdirs();
             String filename = outputFile.getName();
             File directory = outputFile.getParentFile();
             result = directory.mkdirs();
@@ -265,8 +270,12 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         switch (item.getItemId()) {
             case R.id.itemGuide:
                 File user_guide = copyAsset("Csound6_User_Guide.pdf");
-                Intent i = new Intent(Intent.ACTION_VIEW,  Uri.fromFile(user_guide));
-                startActivity(i);
+                Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, user_guide);
+                //Uri uri = Uri.fromFile(user_guide);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setDataAndType(uri, "application/pdf");
+                startActivity(intent);
                 return true;
             case R.id.itemHelp:
                 goToUrl("http://csound.github.io/docs/manual/indexframes.html");
@@ -278,8 +287,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 goToUrl("http://csound.github.io/csound_for_android_privacy.html");
                 return true;
             case R.id.itemSettings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(this, SettingsActivity.class);
+                startActivity(intent1);
                 return true;
             case R.id.itemTrapped: {
                 outFile = copyAsset("Csound6AndroidExamples/Boulanger/trapped.csd");
@@ -419,7 +428,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     public void setTitle(String title) {
-        String fullTitle = "Csound:";
+        String fullTitle = "Csound";
         if (title != null) {
             fullTitle = fullTitle + ": " + title;
         }
@@ -427,7 +436,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     /**
-     * Opens the CSD and searches for a <CsHtml5> element.
+     * Opens the CSD and searches for a <html> element.
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void parseWebLayout() {
@@ -601,7 +610,8 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         newButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(
-                        CsoundAppActivity.this);
+                        CsoundAppActivity.this,
+                         R.style.csoundAlertDialogStyle);
                 alert.setTitle("New CSD...");
                 alert.setMessage("Filename:");
                 final EditText input = new EditText(CsoundAppActivity.this);
@@ -615,10 +625,12 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                         .getExternalStorageDirectory();
                                 csound_file = new File(root, value);
                                 writeTemplateFile();
+
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                Uri uri = Uri.parse("file://"
-                                        + csound_file.getAbsolutePath());
+                                Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, csound_file);
                                 intent.setDataAndType(uri, "text/plain");
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                                 startActivity(intent);
                             }
                         });
@@ -634,92 +646,32 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         openButton = findViewById(R.id.openButton);
         openButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                //loadFileList();
-                //showDialog(BROWSE_DIALOG);
-                //Create FileOpenDialog and register a callback
-                SimpleFileDialog fileOpenDialog = new SimpleFileDialog(
-                        new ContextThemeWrapper(CsoundAppActivity.this, R.style.csoundAlertDialogStyle),
-                        "FileOpen..",
-                        new SimpleFileDialog.SimpleFileDialogListener() {
-                            @Override
-                            public void onChosenDir(String chosenDir) {
-                                CsoundAppActivity.this.OnFileChosen(new File(chosenDir));
-                            }
-                        }
-                );
-                if (csound_file != null) {
-                    fileOpenDialog.default_file_name = csound_file.getAbsolutePath();
-                } else {
-                    fileOpenDialog.default_file_name = Environment.getExternalStorageDirectory().getAbsolutePath();
-                }
-                fileOpenDialog.chooseFile_or_Dir(fileOpenDialog.default_file_name);
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                Intent chooser = Intent.createChooser(intent, "Open file");
+                startActivityForResult(chooser, PICK_FILE_REQUEST);
             }
         });
         saveAsButton = findViewById(R.id.saveAsButton);
         saveAsButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                //loadFileList();
-                //showDialog(BROWSE_DIALOG);
-                //Create FileOpenDialog and register a callback
-                SimpleFileDialog fileOpenDialog = new SimpleFileDialog(
-                        new ContextThemeWrapper(CsoundAppActivity.this, R.style.csoundAlertDialogStyle),
-                        "FileSave..",
-                        new SimpleFileDialog.SimpleFileDialogListener() {
-                            @Override
-                            public void onChosenDir(String chosenDir) {
-                                int index = chosenDir.indexOf("//");
-                                if (index >= 0) {
-                                    chosenDir = chosenDir.substring(index + 1);
-                                }
-                                if (csound_file == null) {
-                                    Context context = getApplicationContext();
-                                    CharSequence text = "'Save as' aborted; there is no existing file to save.";
-                                    int duration = Toast.LENGTH_SHORT;
-                                    Toast toast = Toast.makeText(context, text, duration);
-                                    toast.show();
-                                } else {
-                                    File newFile = new File(chosenDir);
-                                    if (csound_file.equals(newFile)) {
-                                        Context context = getApplicationContext();
-                                        CharSequence text = "'Save as' aborted; the new file is the same as the old file!";
-                                        int duration = Toast.LENGTH_SHORT;
-                                        Toast toast = Toast.makeText(context, text, duration);
-                                        toast.show();
-                                    } else {
-                                        try {
-                                            FileInputStream in = new FileInputStream(csound_file);
-                                            FileOutputStream out = new FileOutputStream(newFile);
-                                            copyFile(in, out);
-                                            in.close();
-                                            in = null;
-                                            out.flush();
-                                            out.close();
-                                            out = null;
-                                            CsoundAppActivity.this.OnFileChosen(newFile);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                );
-                if (csound_file != null) {
-                    fileOpenDialog.default_file_name = csound_file.getParent();
-                } else {
-                    fileOpenDialog.default_file_name = Environment.getExternalStorageDirectory().getAbsolutePath();
-                }
-                fileOpenDialog.chooseFile_or_Dir(fileOpenDialog.default_file_name);
             }
         });
         editButton = findViewById(R.id.editButton);
         editButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (csound_file != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    Uri uri = Uri.parse("file://" + csound_file.getAbsolutePath());
-                    intent.setDataAndType(uri, "text/plain");
-                    startActivity(intent);
+                try {
+                    if (csound_file != null) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, csound_file);
+                        intent.setDataAndType(uri, "text/plain");
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    Log.d("Csound", e.getMessage());
                 }
             }
         });
@@ -918,123 +870,26 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 csound_file = new File(intent.getData().getPath());
                 setTitle(csound_file.getName());
             }
+            if (requestCode == PICK_FILE_REQUEST && intent != null) {
+                String filepath = null;
+                Uri uri = intent.getData();
+                String uri_string = uri.toString();
+                String uri_path = uri.getPath();
+                Log.i("Csound", "Uri: " + uri_string);
+                if (uri_string.startsWith("content://")) {
+                    final String[] split = uri_string.split(":");
+                    final String[] pathpart = uri_path.split(":");
+                    filepath = Environment.getExternalStorageDirectory() + "/"+ pathpart[1];
+                }
+                csound_file = new File(filepath);
+                csound_file.setReadable(true);
+                csound_file.setWritable(true);
+                setTitle(csound_file.getName());
+                parseWebLayout();
+            }
         } catch (Exception e) {
             Log.e("Csound:", e.toString());
         }
-    }
-
-    private void loadFileList() {
-        try {
-            path.mkdirs();
-        } catch (SecurityException e) {
-            Log.e("Csound:", "unable to write on the sd card ");
-        }
-
-        if (path.exists()) {
-            FilenameFilter filter = new FilenameFilter() {
-                public boolean accept(File dir, String filename) {
-                    File sel = new File(dir, filename);
-                    return (sel.isFile() || sel.isDirectory())
-                            && !sel.isHidden();
-                }
-            };
-            String[] fList = path.list(filter);
-            fileList = new Item[fList.length];
-            for (int i = 0; i < fList.length; i++) {
-                fileList[i] = new Item(fList[i], R.drawable.file_icon);
-                File sel = new File(path, fList[i]);
-                if (sel.isDirectory()) {
-                    fileList[i].icon = R.drawable.directory_icon;
-                }
-            }
-            if (!firstLvl) {
-                Item temp[] = new Item[fileList.length + 1];
-                for (int i = 0; i < fileList.length; i++) {
-                    temp[i + 1] = fileList[i];
-                }
-                temp[0] = new Item("Up", R.drawable.directory_up);
-                fileList = temp;
-            }
-        }
-        adapter = new ArrayAdapter<Item>(this,
-                android.R.layout.select_dialog_item, android.R.id.text1,
-                fileList) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = view
-                        .findViewById(android.R.id.text1);
-                textView.setCompoundDrawablesWithIntrinsicBounds(
-                        fileList[position].icon, 0, 0, 0);
-                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
-                textView.setCompoundDrawablePadding(dp5);
-                return view;
-            }
-        };
-    }
-
-    private class Item {
-        public String file;
-        public int icon;
-
-        public Item(String file, Integer icon) {
-            this.file = file;
-            this.icon = icon;
-        }
-
-        @Override
-        public String toString() {
-            return file;
-        }
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
-        AlertDialog.Builder builder = new Builder(this);
-        if (fileList == null) {
-            dialog = builder.create();
-            return dialog;
-        }
-        switch (id) {
-            case BROWSE_DIALOG:
-                builder.setTitle("Choose your file");
-                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    @SuppressWarnings("deprecation")
-                    public void onClick(DialogInterface dialog, int which) {
-                        chosenFile = fileList[which].file;
-                        File sel = new File(path + "/" + chosenFile);
-                        if (sel.isDirectory()) {
-                            firstLvl = false;
-                            str.add(chosenFile);
-                            fileList = null;
-                            path = new File(sel + "");
-                            loadFileList();
-                            removeDialog(BROWSE_DIALOG);
-                            showDialog(BROWSE_DIALOG);
-                        } else if (chosenFile.equalsIgnoreCase("up")
-                                && !sel.exists()) {
-                            String s = str.remove(str.size() - 1);
-                            path = new File(path.toString().substring(0,
-                                    path.toString().lastIndexOf(s)));
-                            fileList = null;
-                            if (str.isEmpty()) {
-                                firstLvl = true;
-                            }
-                            loadFileList();
-                            removeDialog(BROWSE_DIALOG);
-                            showDialog(BROWSE_DIALOG);
-                        } else
-                            OnFileChosen(sel);
-                    }
-                });
-                break;
-            case ERROR_DIALOG:
-                builder.setTitle(errorMessage);
-                break;
-        }
-        dialog = builder.show();
-        return dialog;
     }
 
     @JavascriptInterface
