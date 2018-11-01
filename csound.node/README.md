@@ -74,7 +74,7 @@ your text editor to automate the construction and deployment
 of the manifest file, or you can use a template package.json and make a copy of your
 piece with the name given in the manifest every time you want to run the piece.
 
-# Installation
+## Installation
 
 See the installation instructions in the csound-extended main README.md.
 
