@@ -10,8 +10,8 @@ This archive of Lisp code from [Drew Krause](http://www.drew-krause.com/) is
 hosted with his permission. Drew's code is licensed under the terms of the GNU 
 Lesser General Public License. The code has been edited to make it more 
 usable with different implementations of Common Lisp, and with the current 
-version of Csound. In particular, there is now a `nudruz.asd` system 
-definition that will load all dependencies of `nudruz`, including Common 
+version of Csound. In particular, there is now a nudruz.asd system 
+definition that will load all dependencies of nudruz, including Common 
 Music verison 2, Fomus, and others. This has been tested with Steel Bank 
 Common Lisp and with Embeddable Common Lisp.
 
@@ -49,7 +49,7 @@ Music (cm2).
 
 4. In a few cases, redefined symbols have been disambiguated.
 
-5. I have created a `nudruz.asd` system definition. It tries to include 
+5. I have created a nudruz.asd system definition. It tries to include 
 everything except for examples and files containing unfinished or unworkable 
 code. 
 
@@ -63,14 +63,14 @@ compose music.
 
 See https://github.com/gogins/csound-extended/commits/develop for the commit log.
 
-# Installation
+## Installation
 
-In order to load `nudruz.asd` you must first install a number of its 
-dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
+In order to load nudruz.asd you must first install a number of its 
+dependencies, listed in nudruz.asd. Some of these can be installed as Linux 
 packages, some must be installed by cloning Git repositories, some must be 
 installed using Quicklisp, and some must be installed by downloading archives. 
 In all cases except for system packages, you must create a symbolic link 
-to your `~/.local/share/common-lisp/source/` directory. For example:
+to your ~/.local/share/common-lisp/source/ directory. For example:
 
 ```
 mkg@bodhimandala:~/csound-extended/nudruz$ ls -ll ~/.local/share/common-lisp/source/
