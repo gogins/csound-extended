@@ -313,5 +313,31 @@ install(FILES "${CMAKE_SOURCE_DIR}/debian/changelog.gz"
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-extended-dev
     DESTINATION "share/lintian/overrides/"
     COMPONENT csound-extended-dev)
+    
+# And all the README.md files, renamed to not conflict...
+
+install(FILES "README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
+install(FILES "csound.node/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-CSOUND-NODE.md")
+install(FILES "silencio/patches/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-CSOUND-PATCHES.md")
+install(FILES "silencio/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-SILENCIO.md")
+install(FILES "CsoundHtml5/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-CSOUNDHTML5.md")
+install(FILES "nudruz/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-NUDRUZ.md")
+install(FILES "WebAssembly/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-WEBASSEMBLY.md")
+install(FILES "OM2Csound/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-OM2CSOUND.md")
 
 include (CPack)
