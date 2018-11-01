@@ -1,12 +1,10 @@
-# Silencio
+# csound-silencio
 
 Michael Gogins<br>
-http://michaelgogins.tumblr.com<br>
-michael /dot/ gogins /at/ gmail /dot/ com
+https://github.com/gogins<br>
+http://michaelgogins.tumblr.com
 
 ## Introduction
-
-This code is licensed under the terms of the GNU Library General Public License, version 2.
 
 Generative music, algorithmic composition, score generation, call it what you will. Silencio is the first system for algorithmic composition that is designed to run on smartphones and tablets as well as personal computers. 
 
@@ -31,6 +29,26 @@ Both the Lua and the JavaScript versions of Silencio are designed to be used wit
 5. Csound for PNaCl: Lua (I think) and JavaScript (for sure) versions.
 
 Currently, the environments I recommend for musicians are csound.node running in [NW.js](http://nwjs.io/) on the desktop, and [Csound for Android](https://play.google.com/store/apps/details?id=com.csounds.Csound6&hl=en) for mobile devices.
+
+Please log any bug reports or requests for enhancements at 
+https://github.com/gogins/csound-extended/issues.
+
+## Changes
+
+See https://github.com/gogins/csound-extended/commits/develop for the commit log.
+
+## License
+
+This code is licensed under the terms of the GNU Library General Public License, version 2.1.
+
+## Installation
+
+Please see the main README.md for csound-extended.
+
+## Building
+
+Please see the main README.md for csound-extended.
+
 
 ## News
 
