@@ -30,7 +30,7 @@ See https://github.com/gogins/csound-extended/commits/develop for the commit log
 
 ## Installation
 
-Download `csound-extended-wasm.zip` from the release page here. Unzip it and 
+Download `csound-extended-wasm-version.zip` from the release page here. Unzip it and 
 it is ready to use.
 
 ## Usage

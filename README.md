@@ -77,27 +77,27 @@ See https://github.com/gogins/csound-extended/commits/develop for the commit log
 1.  CsoundAC and other Linux binaries and other resources are installed from 
     the Debian package released from this repository, e.g. 
     `sudo apt install ./csound-extended-dev-version-Linux.deb`.  The Lisp 
-    systems are installed in `/usr/share/common-lisp/csound-extended-dev/` 
-    but in order to load `nudruz.asd` you must first install a number of its 
-    dependencies, listed in `nudruz.asd`. Some of these can be installed 
+    systems are installed in /usr/share/common-lisp/csound-extended-dev/ 
+    but in order to load nudruz.asd you must first install a number of its 
+    dependencies, listed in nudruz.asd. Some of these can be installed 
     as Linux packages, some must be installed by cloning Git repositories, 
     some must be installed using Quicklisp, and some must be installed by 
     downloading archives. In all cases except for system packages, you must 
-    create a symbolic link to your `~/.local/share/common-lisp/source/` 
+    create a symbolic link to your ~/.local/share/common-lisp/source/ 
     directory. 
     
-2.  The  `silencio` library and WebAssembly build of Csound are packaged in 
-    the `csound-extended-wasm-version.zip` archive released from this 
+2.  The  silencio library and WebAssembly build of Csound are packaged in 
+    the csound-extended-wasm-version.zip archive released from this 
     repository.
     
 3.  The Csound for Android app is available from the Google Play Store, or may 
-    be installed from the `CsoundApplication-release.apk` package released 
+    be installed from the CsoundApplication-release.apk package released 
     from this repository.
     
 You may also install locally by first building from sources, as described 
 below. You may then install the software by running `sudo make install` in 
-the `build-linux` directory. However, be warned that this installs the 
-software in `/usr/local`. You will also need to separately install Csound.
+the build-linux directory. However, be warned that this installs the 
+software in /usr/local. You will also need to separately install Csound.
 
 ## Building
 
@@ -109,7 +109,7 @@ Please note, the Linux package for native code (CsoundAC etc.) is built using
 the Ubuntu system packages for Csound, whereas the Csound for Android app and 
 the WebAssembly module are built from Csound source code cloned from GitHub.
  
-First clone the Git repository at `https://github.com/gogins/csound-extended.`
+First clone the Git repository at https://github.com/gogins/csound-extended.
 
 ### Building on Linux
 
@@ -125,7 +125,7 @@ When the build is complete, all targets have been built and the package
 files have been generated.
 
 The following environment variables MUST be set before building, perhaps in 
-your `.profile` script. Obviously, modify the paths as required to suit your 
+your .profile script. Obviously, modify the paths as required to suit your 
 home directory and installation details.
 
 ```
@@ -149,9 +149,9 @@ Subsequently, you can perform these steps independently.
 
 To make clean, execute `bash clean-linux.sh`. 
 
-To install, change to `build-linux` and execute `sudo make install`.
+To install, change to build-linux and execute `sudo make install`.
 
-Add `/usr/local/csound` to your `/etc/ld.so.conf` file and run `sudo ldconfig`.
+Add /usr/local/csound to your /etc/ld.so.conf file and run `sudo ldconfig`.
 
 ### Building for Android
 
@@ -169,43 +169,43 @@ Prerequisites for building include:
 
 2.  In order to enable local NDK builds (i.e. in individual subdirectories), 
     you must set the following environment variables, probably in your 
-    `.profile` script:
+    .profile script:
     
-    2.1.    `ANDROID_NDK_ROOT` with the full pathname of your Android Native 
-            Development kit, typically `$ANDROID_SDK_ROOT/ndk-bundle`.
+    2.1.    ANDROID_NDK_ROOT with the full pathname of your Android Native 
+            Development kit, typically $ANDROID_SDK_ROOT/ndk-bundle.
             
-    2.2.    `ANDROID_SDK_ROOT` with the full pathname of your Android Software 
-            Development kit, perhaps something like `~/Android/Sdk`.
+    2.2.    ANDROID_SDK_ROOT with the full pathname of your Android Software 
+            Development kit, perhaps something like ~/Android/Sdk.
             
-    2.3.    `CSOUND_SRC_ROOT` with the full pathname to this repository's 
-            `dependencies/csound` subdirectory.
+    2.3.    CSOUND_SRC_ROOT with the full pathname to this repository's 
+            dependencies/csound subdirectory.
             
-    2.4.    `NDK_MODULE_PATH` with the full pathname to this repository's 
-            `CsoundForAndroid/ndk-libraries` subdirectory.
+    2.4.    NDK_MODULE_PATH with the full pathname to this repository's 
+            CsoundForAndroid/ndk-libraries subdirectory.
 
 To build for Android on Linux for the first time, change to the 
-`CsoundForAndroid` subdirectory of this repository and execute 
+CsoundForAndroid subdirectory of this repository and execute 
 `bash fresh-build-android.sh`, which does the following:
 
 1.  Execute `bash update-dependencies`. Do this periodically or whenever 
     you think a dependency has changed.
     
 2.  Execute `bash build-android.sh`. The build system compiles all native 
-    libraries, including the Csound library `libcsoundandroid.so`, required 
+    libraries, including the Csound library libcsoundandroid.so, required 
     by the Csound for Android app, and copies them to the 
     appropriate subdirectories for further building and packaging.
     
-Run Android Studio and load the `CsoundForAndroid/build.gradle` project.
+Run Android Studio and load the CsoundForAndroid/build.gradle project.
 
 Attach an Android device, enable USB debugging on it, and debug the 
 CsoundApplication project.
     
 For a production build, apply to me for the signing key, build for 
-release, and generate a signed `.apk`.
+release, and generate a signed .apk.
     
 ### Building for WebAssembly
 
-To build for WebAssembly for the first time, change to the `WebAssembly` 
+To build for WebAssembly for the first time, change to the WebAssembly 
 subdirectory of this repository and execute `bash build-all.sh`,  which 
 does the following:
 

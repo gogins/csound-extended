@@ -20,6 +20,9 @@ time, the free version of OpenMusic uses a release of LispWorks that does not
 compile Lisp code, but only loads it. Therefore, ASDF cannot be used in OpenMusic. 
 I have not been able to work around this limitation.
 
+Please log any bug reports or requests for enhancements at 
+https://github.com/gogins/csound-extended/issues.
+
 ### Documentation
 
 [Drew's talk](http://files.meetup.com/1748515/Drew%20Krause%20slides.pdf) 
@@ -57,6 +60,10 @@ nodes of the CsoundAC system for algorithmic composition, using Embeddable
 Common Lisp to run the Lisp code. With this facility, it is possible to 
 combine the use of Common Music, nudruz, and CsoundAC algorithms and code to 
 compose music.
+
+See https://github.com/gogins/csound-extended/commits/develop for the commit log.
+
+# Installation
 
 In order to load `nudruz.asd` you must first install a number of its 
 dependencies, listed in `nudruz.asd`. Some of these can be installed as Linux 
