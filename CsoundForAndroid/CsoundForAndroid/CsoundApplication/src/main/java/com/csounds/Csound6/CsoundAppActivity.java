@@ -625,7 +625,6 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                         .getExternalStorageDirectory();
                                 csound_file = new File(root, value);
                                 writeTemplateFile();
-
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, csound_file);
                                 intent.setDataAndType(uri, "text/plain");
