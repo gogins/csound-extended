@@ -124,8 +124,8 @@ gkMasterLevel                   init                    1.5
                                 connect                 "ChebyshevDrone",       "outright", "Reverberation",        "inright"
                                 connect                 "ChebyshevMelody",      "outleft", 	"Reverberation",        "inleft"
                                 connect                 "ChebyshevMelody",      "outright", "Reverberation",        "inright"
-                                connect                 "Compressor",           "outleft", 	"ParametricEq1",        "inleft"
-                                connect                 "Compressor",           "outright", "ParametricEq1",        "inright"
+                                connect                 "Compressor",           "outleft", 	"MasterOutput",         "inleft"
+                                connect                 "Compressor",           "outright", "MasterOutput",         "inright"
                                 connect                 "DelayedPluckedString", "outleft", 	"Reverberation",        "inleft"
                                 connect                 "DelayedPluckedString", "outright", "Reverberation",        "inright"
                                 connect                 "EnhancedFMBell",       "outleft", 	"Reverberation",        "inleft"
@@ -164,10 +164,6 @@ gkMasterLevel                   init                    1.5
                                 connect                 "ModulatedFM",          "outright", "Reverberation",        "inright"
                                 connect                 "Melody",               "outleft", 	"Reverberation",        "inleft"
                                 connect                 "Melody",               "outright", "Reverberation",        "inright"
-                                connect                 "ParametricEq1",        "outleft", 	"ParametricEq2",        "inleft"
-                                connect                 "ParametricEq1",        "outright", "ParametricEq2",        "inright"
-                                connect                 "ParametricEq2",        "outleft", 	"MasterOutput",         "inleft"
-                                connect                 "ParametricEq2",        "outright", "MasterOutput",         "inright"
                                 connect                 "PlainPluckedString",   "outleft", 	"Reverberation",        "inleft"
                                 connect                 "PlainPluckedString",   "outright", "Reverberation",        "inright"
                                 connect                 "PRCBeeThree",          "outleft", 	"Reverberation",        "inleft"
@@ -3080,15 +3076,18 @@ aoutleft, aoutright             pan2                    asignal * adeclick, i_pa
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-if (gkReverberationEnabled == 0) then
+if (gkReverberationEnabled == 0) goto reverberation_if_label
+goto reverberation_else_label
+reverberation_if_label:
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 kdry				            =			            1.0 - gkReverberationWet
-else
+goto reverberation_endif_label
+reverberation_else_label:
 awetleft, awetright             reverbsc                ainleft, ainright, gkReverberationDelay, 18000.0
 aoutleft			            =			            ainleft *  kdry + awetleft  * gkReverberationWet
 aoutright			            =			            ainright * kdry + awetright * gkReverberationWet
-endif
+reverberation_endif_label:
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
                                 endin
@@ -3099,65 +3098,18 @@ endif
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-                                if (gkCompressorEnabled == 0) then
+                                if (gkCompressorEnabled == 0) goto compressor_if_label
+                                goto compressor_else_label
+                                compressor_if_label:
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
-                                else
+                                goto compressor_endif_label
+                                compressor_else_label:
 aoutleft                        compress                ainleft,        ainleft,  gkCompressorThreshold, 100 * gkCompressorLowKnee, 100 * gkCompressorHighKnee, 100 * gkCompressorRatio, gkCompressorAttack, gkCompressorRelease, .05
 aoutright                       compress                ainright,       ainright, gkCompressorThreshold, 100 * gkCompressorLowKnee, 100 * gkCompressorHighKnee, 100 * gkCompressorRatio, gkCompressorAttack, gkCompressorRelease, .05
-                                endif
+                                compressor_endif_label:
                                 outleta                 "outleft",      aoutleft
                                 outleta                 "outright",     aoutright
-                                endin
-
-                                instr                   ParametricEq1
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-ainleft                         inleta                  "inleft"
-ainright                        inleta                  "inright"
-                                if (gkParametricEq1Enabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-                                else
-                                if (gkParametricEq1Mode == 0) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 0
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 0
-                                elseif  (gkParametricEq1Mode == 0.001) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 1
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 1
-                                elseif  (gkParametricEq1Mode == 0.002) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 2
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 2
-                                endif
-                                endif
-                                outleta                 "outleft",  aoutleft
-                                outleta                 "outright", aoutright
-                                endin
-
-                                instr                   ParametricEq2
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-ainleft                         inleta                  "inleft"
-ainright                        inleta                  "inright"
-                                if                      (gkParametricEq2Enabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-                                else
-                                if                      (gkParametricEq2Mode == 0) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 0
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 0
-                                elseif                  (gkParametricEq2Mode == 0.001) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 1
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 1
-                                elseif                  (gkParametricEq2Mode == 0.002) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 2
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 2
-                                endif
-                                endif
-                                outleta                 "outleft", 	aoutleft
-                                outleta                 "outright", aoutright
                                 endin
 
                                 instr                   MasterOutput
@@ -6217,15 +6169,18 @@ aoutleft, aoutright             pan2                    asignal * adeclick, i_pa
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-if (gkReverberationEnabled == 0) then
+if (gkReverberationEnabled == 0) goto reverberation_if_label
+goto reverberation_else_label
+reverberation_if_label:
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 kdry				            =			            1.0 - gkReverberationWet
-else
+goto reverberation_endif_label
+reverberation_else_label:
 awetleft, awetright             reverbsc                ainleft, ainright, gkReverberationDelay, 18000.0
 aoutleft			            =			            ainleft *  kdry + awetleft  * gkReverberationWet
 aoutright			            =			            ainright * kdry + awetright * gkReverberationWet
-endif
+reverberation_endif_label:
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
                                 endin
@@ -6236,65 +6191,18 @@ endif
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-                                if (gkCompressorEnabled == 0) then
+                                if (gkCompressorEnabled == 0) goto compressor_if_label
+                                goto compressor_else_label
+                                compressor_if_label:
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
-                                else
+                                goto compressor_endif_label
+                                compressor_else_label:
 aoutleft                        compress                ainleft,        ainleft,  gkCompressorThreshold, 100 * gkCompressorLowKnee, 100 * gkCompressorHighKnee, 100 * gkCompressorRatio, gkCompressorAttack, gkCompressorRelease, .05
 aoutright                       compress                ainright,       ainright, gkCompressorThreshold, 100 * gkCompressorLowKnee, 100 * gkCompressorHighKnee, 100 * gkCompressorRatio, gkCompressorAttack, gkCompressorRelease, .05
-                                endif
+                                compressor_endif_label:
                                 outleta                 "outleft",      aoutleft
                                 outleta                 "outright",     aoutright
-                                endin
-
-                                instr                   ParametricEq1
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-ainleft                         inleta                  "inleft"
-ainright                        inleta                  "inright"
-                                if (gkParametricEq1Enabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-                                else
-                                if (gkParametricEq1Mode == 0) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 0
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 0
-                                elseif  (gkParametricEq1Mode == 0.001) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 1
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 1
-                                elseif  (gkParametricEq1Mode == 0.002) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 2
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 2
-                                endif
-                                endif
-                                outleta                 "outleft",  aoutleft
-                                outleta                 "outright", aoutright
-                                endin
-
-                                instr                   ParametricEq2
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-ainleft                         inleta                  "inleft"
-ainright                        inleta                  "inright"
-                                if                      (gkParametricEq2Enabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-                                else
-                                if                      (gkParametricEq2Mode == 0) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 0
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 0
-                                elseif                  (gkParametricEq2Mode == 0.001) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 1
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 1
-                                elseif                  (gkParametricEq2Mode == 0.002) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 2
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 2
-                                endif
-                                endif
-                                outleta                 "outleft", 	aoutleft
-                                outleta                 "outright", aoutright
                                 endin
 
                                 instr                   MasterOutput

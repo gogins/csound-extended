@@ -3,12 +3,14 @@
 ;;;; August 2018
 
 #|
-Contrary to CM documentation, the events function does not return a usable seq object.
-The generated score is placed into the seq that is passed to events.
+Contrary to CM documentation, the events function does not return a usable seq 
+object. The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
+;; There's a bug in Fomus. The first time you run this program, uncomment the 
+;; following line, then run it again with the line commented out again.
+;;(require :fomus)
 (require :nudruz)
-(require :fomus)
 (in-package :cm)
 
 (defparameter csound-seq (new seq :name "csound-test"))
