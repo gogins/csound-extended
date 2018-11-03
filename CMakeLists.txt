@@ -317,10 +317,11 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-exten
 # Test examples.
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}/test-examples
     PATTERN "*.ly" EXCLUDE
     PATTERN "*.sco" EXCLUDE
     PATTERN "*.mid" EXCLUDE
+    PATTERN "*.midi" EXCLUDE
     PATTERN "*.pdf" EXCLUDE
     PATTERN "*.ps" EXCLUDE
     PATTERN "*generated.csd EXCLUDE")
