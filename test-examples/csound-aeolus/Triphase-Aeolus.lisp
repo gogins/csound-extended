@@ -10,7 +10,7 @@ ksmps = 64
 nchnls = 2 
 0dbfs = 1
 
-; May need to be changed! If things aren't configured properly,
+; You should change this! If things aren't configured properly,
 ; the wave soundfiles may not be properly generated.
 gi_aeolus aeolus_init "/home/mkg/michael.gogins.studio/music/stops-0.3.0", "Aeolus", "waves", 0, 3
 
