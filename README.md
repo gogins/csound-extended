@@ -7,8 +7,8 @@ http://michaelgogins.tumblr.com
 ## Introduction
 
 This repository contains various extensions to Csound that have been moved 
-out of the core Csound Git repository at https://github.com/csound/csound. 
-These extensions include:
+out of the core Csound Git repository at https://github.com/csound/csound, 
+and collected from older projects of mine. These extensions include:
 
 1.  CsoundAC, an algorithmic composition library designed to be used with 
     Csound. Csound is written in C++ and has C++, Python, Java, and Lua 
@@ -34,7 +34,8 @@ These extensions include:
 6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly 
     module that will run Csound from a JavaScript interface in any current 
     Web browser. This version includes useful plugin opcodes statically 
-    linked. Some live examples run from [here](https://gogins.github.io/csound-extended/).
+    linked. Some live examples run from 
+    [here](https://github.com/gogins/csound-extended/tree/develop/docs).
     
 7.  Silencio, a JavaScript algorithmic composition library designed to work 
     with all Csound/HTML5 environments.
@@ -44,7 +45,7 @@ These extensions include:
 10. nudruz, a Common Lisp library for algorithmic composition by Drew Krause, 
     hosted here with his permission. This is based upon and includes 
     the Common Music library for algorithmic composition and the Fomus 
-    library for semi-automatically notated generated scores.
+    library for automatically notating generated scores.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no 
 longer maintained here. This is due to efforts by Steinberg to force 
@@ -52,7 +53,7 @@ developers to move to the VST3 SDK, which has a more restrictive license that
 I do not wish to work with.
      
 New extensions may be added by me in the future. If you would like to add your 
-own extension, enter an issue in this repository or submit a pull request.
+own extensions, enter an issue in this repository or submit a pull request.
 
 This repository uses the core Csound repository, and some other third-party 
 dependencies, as Git submodules, packages, or direct source downloads. For 
@@ -60,6 +61,12 @@ each platform, there is one build system.
 
 Please log any bug reports or requests for enhancements at 
 https://github.com/gogins/csound-extended/issues.
+
+## Examples
+
+Some tests of basic functionality that also serve as examples and can be used 
+as templates for new compositions are installed in the 
+/usr/share/doc/csound-extended-dev/test-examples directory.
 
 ## Changes
 

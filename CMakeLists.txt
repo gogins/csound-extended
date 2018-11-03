@@ -314,10 +314,24 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-exten
     DESTINATION "share/lintian/overrides/"
     COMPONENT csound-extended-dev)
     
+# Test examples.
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    PATTERN "*.ly" EXCLUDE
+    PATTERN "*.sco" EXCLUDE
+    PATTERN "*.mid" EXCLUDE
+    PATTERN "*.pdf" EXCLUDE
+    PATTERN "*.ps" EXCLUDE
+    PATTERN "*generated.csd EXCLUDE")
+    
 # And all the README.md files, renamed to not conflict...
 
 install(FILES "README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
+install(FILES "test-examples/README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
+    RENAME "README-TEST-EXAMPLES.md")
 install(FILES "csound.node/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
     RENAME "README-CSOUND-NODE.md")
