@@ -304,13 +304,6 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 }
             }
             return true;
-            case R.id.itemLuaScoregen: {
-                outFile = copyAsset("Csound6AndroidExamples/Gogins/lua_scoregen.csd");
-                if (outFile != null){
-                    OnFileChosen(outFile);
-                }
-            }
-            return true;
             case R.id.itemPartikkel: {
                 outFile = copyAsset("Csound6AndroidExamples/Khosravi/partikkel.csd");
                 if (outFile != null){

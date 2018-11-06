@@ -57,55 +57,6 @@ else
 fi
 cd ..
 
-echo "Building luajit-2.1..."
-cd luajit-2.0
-
-# The luajit library can't be compiled with the clang NDK, so we cross-compile using gcc.
-# We have to turn large file support OFF.
-# PREFIX and ARM produce directories compatible with ndk-build.
-
-# Build for arm. 
-make clean
-make HOST_CC="gcc -m32" BUILD_MODE=static CROSS=arm-linux-gnueabi- TARGET_CFLAGS="-mcpu=cortex-a8 -mfloat-abi=softfp -fPIC -D_FILE_OFFSET_BITS=32" -j6
-if [ $? -eq 0 ]; then
-    echo OK
-else
-    echo "Not building luaJIT library..."
-fi
-make install PREFIX=`pwd`/jni/local MULTILIB=libs/armeabi-v7a
-if [ $? -eq 0 ]; then
-    echo OK
-else
-    echo "Not building luaJIT library..."
-fi
-# Build for arm64.
-make clean
-make HOST_CC="gcc" BUILD_MODE=static CROSS=aarch64-linux-gnu- TARGET_CFLAGS="-fPIC -D_FILE_OFFSET_BITS=32" -j6
-if [ $? -eq 0 ]; then
-    echo OK
-else
-    echo "Not building luaJIT library..."
-fi
-make install PREFIX=`pwd`/jni/local MULTILIB=libs/arm64-v8a
-if [ $? -eq 0 ]; then
-    echo OK
-else
-    echo "Not building luaJIT library..."
-fi
-# Make certain that LuaCsound links only with the STATIC LuaJIT library.
-find . -name *.so* -delete
-cd ..
-
-cd luajit-opcodes
-echo "Building `pwd`..."
-$NDK_BUILD_CMD $1
-if [ $? -eq 0 ]; then
-    echo OK
-else
-    echo "Not building `pwd` library..."
-fi
-cd ..
-
 cd oboe-csound
 echo "Building `pwd`..."
 $NDK_BUILD_CMD $1

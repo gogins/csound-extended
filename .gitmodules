@@ -31,9 +31,6 @@
 [submodule "CsoundForAndroid/ndk-libraries/oboe"]
 	path = CsoundForAndroid/ndk-libraries/oboe
 	url = https://github.com/google/oboe.git
-[submodule "CsoundForAndroid/ndk-libraries/luajit-2.0"]
-	path = CsoundForAndroid/ndk-libraries/luajit-2.0
-	url = https://luajit.org/git/luajit-2.0.git
 [submodule "CsoundForAndroid/ndk-libraries/stk"]
 	path = CsoundForAndroid/ndk-libraries/stk
 	url = https://github.com/thestk/stk.git
