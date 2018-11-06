@@ -50,7 +50,8 @@ and collected from older projects of mine. These extensions include:
 With regret I must announce that CsoundVST and the vst4cs opcodes are no 
 longer maintained here. This is due to efforts by Steinberg to force 
 developers to move to the VST3 SDK, which has a more restrictive license that 
-I do not wish to work with.
+I do not wish to work with. However, these are avaiable from me as freeware 
+binaries from https://michaelgogins.tumblr.com/csound_extended.
      
 New extensions may be added by me in the future. If you would like to add your 
 own extensions, enter an issue in this repository or submit a pull request.
@@ -83,7 +84,8 @@ See https://github.com/gogins/csound-extended/commits/develop for the commit log
 
 1.  CsoundAC and other Linux binaries and other resources are installed from 
     the Debian package released from this repository, e.g. 
-    `sudo apt install ./csound-extended-dev-version-Linux.deb`.  The Lisp 
+    `sudo apt install ./csound-extended-dev-version-Linux.deb`.  Please note, 
+    this package conflicts with the system packages for CsoundAC. The Lisp 
     systems are installed in /usr/share/common-lisp/csound-extended-dev/ 
     but in order to load nudruz.asd you must first install a number of its 
     dependencies, listed in nudruz.asd. Some of these can be installed 
@@ -104,7 +106,8 @@ See https://github.com/gogins/csound-extended/commits/develop for the commit log
 You may also install locally by first building from sources, as described 
 below. You may then install the software by running `sudo make install` in 
 the build-linux directory. However, be warned that this installs the 
-software in /usr/local. You will also need to separately install Csound.
+software in /usr/local. You will also first need to separately install 
+Csound.
 
 ## Building
 

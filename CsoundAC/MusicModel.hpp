@@ -77,14 +77,6 @@ public:
      */
     virtual void clear();
     /**
-     * Sets the self-contained Orchestra.
-     */
-    virtual void setCppSound(CppSound *orchestra);
-    /**
-     * Return the self-contained Orchestra.
-     */
-    virtual CppSound *getCppSound();
-    /**
      * Set the Csound orchestra
      * (convenience wrapper for CppSound::setOrchestra()).
      */
@@ -175,6 +167,47 @@ public:
      *                 normalize, CD, MP3, tag, and play it.
      */
     virtual int processArgs(const std::vector<std::string> &args);
+
+    virtual int cppsoundCleanup() {
+        return cppSound->Cleanup();
+    }
+    virtual int cppsoundCompile(int argc, const char **argv) {
+        return cppSound->Compile(argc, argv);
+    }
+    virtual int cppsoundCompileCsdText(const std::string &csd_text) {
+        return cppSound->CompileCsdText(csd_text.c_str());
+    }
+    virtual std::string cppsoundGetCommand() const {
+        return cppSound->getCommand();
+    }
+    virtual void cppsoundInputMessage(const std::string &message) const {
+        cppSound->inputMessage(message.c_str());
+    }
+    virtual int cppsoundLoad(std::string filename) {
+        return cppSound->load(filename);
+    }
+    virtual int cppsoundPerform() {
+        return cppSound->perform();
+    }
+    virtual int cppsoundPerformKsmps() {
+        return cppSound->PerformKsmps();
+    }
+    virtual void cppsoundReset() {
+        cppSound->Reset();
+    }
+    virtual void cppsoundSetCommand(const std::string &command) {
+        cppSound->setCommand(command);
+    }
+    virtual void cppsoundSetFilename(const std::string &filename) {
+        cppSound->setFilename(filename);
+    }
+    virtual int cppsoundStart() {
+        return cppSound->Start();
+    }
+    virtual void cppsoundStop() {
+        cppSound->stop();
+    }
+    
 protected:
     /**
      * Self-contained Csound object.

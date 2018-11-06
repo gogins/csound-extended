@@ -245,7 +245,7 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")   
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers")
-set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev")
+set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev, libcsoundac6.0v5")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language and library Csound.
  Additional features include the CsoundHtml5 'front end' for Csound wth HTML5, 
@@ -318,12 +318,14 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-exten
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}/test-examples
+    FILES_MATCHING 
     PATTERN "*.ly" EXCLUDE
     PATTERN "*.sco" EXCLUDE
     PATTERN "*.mid" EXCLUDE
     PATTERN "*.midi" EXCLUDE
     PATTERN "*.pdf" EXCLUDE
     PATTERN "*.ps" EXCLUDE
+    PATTERN "*arachronic-Piano" EXCLUDE
     PATTERN "*generated.csd EXCLUDE")
     
 # And all the README.md files, renamed to not conflict...

@@ -90,12 +90,16 @@ int MusicModel::perform()
     int errorStatus = 0;
     cppSound->setCommand(getCsoundCommand());
     createCsoundScore(csoundScoreHeader);
-    errorStatus = cppSound->perform();
+    std::string csd = cppSound->getCSD();
+    
+    errorStatus = csoundCompileCsdText(cppSound->getCsound(), csd.c_str());
+    errorStatus = csoundStart(cppCsound-getCsound());
+    errorStatus = csoundPerform(cppSound->getCsound());
     if (errorStatus == 1) {
         errorStatus = 0;
     }
     // The Csound command is managed from MusicModel,
-    // not from CppSound. So we clear out what we set.
+    // not from g. So we clear out what we set.
     cppSound->setCommand("");
     return errorStatus;
 }
@@ -105,23 +109,6 @@ void MusicModel::clear()
     Node::clear();
     Composition::clear();
     cppSound->removeScore();
-}
-
-void MusicModel::setCppSound(CppSound *cppSound)
-{
-    if(!cppSound)
-    {
-        this->cppSound = &cppSound_;
-    }
-    else
-    {
-        this->cppSound = cppSound;
-    }
-}
-
-CppSound *MusicModel::getCppSound()
-{
-    return cppSound;
 }
 
 void MusicModel::setCsoundOrchestra(std::string orchestra)
@@ -204,7 +191,7 @@ std::string MusicModel::getCsoundCommand() const
     if (command_.size() == 0) {
         char buffer[0x200];
         std::sprintf(buffer,
-                     "csound --midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
+                     "--midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
                      threadCount,
                      getOutputSoundfileFilepath().c_str());
         command_ = buffer;

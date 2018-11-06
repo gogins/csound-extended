@@ -27,9 +27,13 @@ Please log any bug reports or requests for enhancements at https://github.com/go
 
 See https://github.com/gogins/csound-extended/commits/develop for the commit log.
 
+## Usage
+
+Just like the regular OM2Csound.
+
 ## Installation
 
-First install the regular OM2Csound library. Then, copy the 
+First install the regular OM2Csound library in the regular way. Then, copy the 
 sources/csound-synth.lisp and sources/csound-preferences.lisp files from 
 here over the regular files.
 

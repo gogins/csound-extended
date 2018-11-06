@@ -1,6 +1,5 @@
 <CsoundSynthesizer>
 <CsOptions>
-csound -f -h -+rtmidi=null -M0 -d -n -m7 --midi-key=4 --midi-velocity=5 temp.orc temp.sco
 </CsOptions>
 <CsLicense>
 
@@ -37,6 +36,11 @@ Modify instruments if desired, or copy them and change them.
 In your piece, load the whole orchestra into Csound, 
 and send Csound notes from your piece.
 
+0dbfs does not work in VST hosts, you have to explicitly rescale the 
+output signal in the master output.
+
+Pan is not specified by VST hosts, the orchestra has to set it.
+
 </CsLicense>
 <CsInstruments>
 sr                              =                       48000
@@ -54,18 +58,14 @@ iampheadroom                    init                    ampdb(idbaheadroom)
                                 prints                  "Amplitude at headroom:        %9.4f\n", iampheadroom
                                 prints                  "Balance so the overall amps at the end of performance -6 dbfs.\n"
 
-giPianoteq                      vstinit                 "C:\\utah\\opt\\pianoteq-3.5\\Pianoteq.dll", 0
+giPianoteq                      vstinit                 "/home/mkg/pianoteq_linux_v630/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
                                 vstinfo                 giPianoteq
 
 giFluidsynth		            fluidEngine		        0, 0
-giFluidSteinway		            fluidLoad		        "Piano Steinway Grand Model C (21,738KB).sf2",  giFluidsynth, 1
+giFluidSteinway		            fluidLoad		        "Steinway_C.sf2",  giFluidsynth, 1
                                 fluidProgramSelect	    giFluidsynth, 0, giFluidSteinway, 0, 1
-giFluidGM		                fluidLoad		        "63.3mg The Sound Site Album Bank V1.0.SF2", giFluidsynth, 1
+giFluidGM		                fluidLoad		        "sf_GMbank.sf2", giFluidsynth, 1
                                 fluidProgramSelect	    giFluidsynth, 1, giFluidGM, 0, 59
-giFluidMarimba		            fluidLoad		        "Marimba Moonman (414KB).SF2", giFluidsynth, 1
-                                fluidProgramSelect	    giFluidsynth, 2, giFluidMarimba, 0, 0
-giFluidOrgan		            fluidLoad		        "Organ Jeux V1.4 (3,674KB).SF2", giFluidsynth, 1
-                                fluidProgramSelect	    giFluidsynth, 3, giFluidOrgan, 0, 4
 
 giFlatQ                         init                    sqrt(0.5)
 giseed				            init                    0.5
@@ -119,7 +119,7 @@ gkParametricEq2Gain             chnexport               "gkParametricEq2Gain", 1
 gkParametricEq2Q                chnexport               "gkParametricEq2Q", 1
 
 gkMasterLevel                   chnexport               "gkMasterLevel", 1
-gkMasterLevel                   init                    1.5
+gkMasterLevel                   init                    0.000001
 
                                 connect                 "BanchoffKleinBottle",  "outleft", 	"Reverberation",        "inleft"
                                 connect                 "BanchoffKleinBottle",  "outright", "Reverberation",        "inright"
@@ -131,8 +131,8 @@ gkMasterLevel                   init                    1.5
                                 connect                 "ChebyshevDrone",       "outright", "Reverberation",        "inright"
                                 connect                 "ChebyshevMelody",      "outleft", 	"Reverberation",        "inleft"
                                 connect                 "ChebyshevMelody",      "outright", "Reverberation",        "inright"
-                                connect                 "Compressor",           "outleft", 	"ParametricEq1",        "inleft"
-                                connect                 "Compressor",           "outright", "ParametricEq1",        "inright"
+                                connect                 "Compressor",           "outleft", 	"MasterOutput",         "inleft"
+                                connect                 "Compressor",           "outright", "MasterOutput",         "inright"
                                 connect                 "DelayedPluckedString", "outleft", 	"Reverberation",        "inleft"
                                 connect                 "DelayedPluckedString", "outright", "Reverberation",        "inright"
                                 connect                 "EnhancedFMBell",       "outleft", 	"Reverberation",        "inleft"
@@ -173,10 +173,6 @@ gkMasterLevel                   init                    1.5
                                 connect                 "ModulatedFM",          "outright", "Reverberation",        "inright"
                                 connect                 "Melody",               "outleft", 	"Reverberation",        "inleft"
                                 connect                 "Melody",               "outright", "Reverberation",        "inright"
-                                connect                 "ParametricEq1",        "outleft", 	"ParametricEq2",        "inleft"
-                                connect                 "ParametricEq1",        "outright", "ParametricEq2",        "inright"
-                                connect                 "ParametricEq2",        "outleft", 	"MasterOutput",         "inleft"
-                                connect                 "ParametricEq2",        "outright", "MasterOutput",         "inright"
                                 connect                 "PlainPluckedString",   "outleft", 	"Reverberation",        "inleft"
                                 connect                 "PlainPluckedString",   "outright", "Reverberation",        "inright"
                                 connect                 "PRCBeeThree",          "outleft", 	"Reverberation",        "inleft"
@@ -254,8 +250,6 @@ gkMasterLevel                   init                    1.5
                                 alwayson                "FluidAudio", 0, 32
                                 alwayson                "Reverberation"
                                 alwayson                "Compressor"
-                                alwayson                "ParametricEq1"
-                                alwayson                "ParametricEq2"
                                 alwayson                "MasterOutput"
 
                                 instr                   BanchoffKleinBottle
@@ -760,48 +754,6 @@ i_pitchclassset                 =                       p10
 i_homogeneity                   =                       p11
                                 ; Use channel assigned in fluidLoad.
 ichannel                        =                       1
-                                fluidNote		        giFluidsynth, ichannel, i_midikey, i_midivelocity
-                                endin
-
-                                instr                   FluidMarimba
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-                                pset                    0, 0, 3600
-i_instrument                    =                       p1
-i_time                          =                       p2
-i_duration                      =                       p3
-i_midikey                       =                       p4
-i_midivelocity                  =                       p5
-i_phase                         =                       p6
-i_pan                           =                       p7
-i_depth                         =                       p8
-i_height                        =                       p9
-i_pitchclassset                 =                       p10
-i_homogeneity                   =                       p11
-                                ; Use channel assigned in fluidLoad.
-ichannel                        =                       2
-                                fluidNote		        giFluidsynth, ichannel, i_midikey, i_midivelocity
-                                endin
-
-                                instr                   FluidOrgan
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-                                pset                    0, 0, 3600
-i_instrument                    =                       p1
-i_time                          =                       p2
-i_duration                      =                       p3
-i_midikey                       =                       p4
-i_midivelocity                  =                       p5
-i_phase                         =                       p6
-i_pan                           =                       p7
-i_depth                         =                       p8
-i_height                        =                       p9
-i_pitchclassset                 =                       p10
-i_homogeneity                   =                       p11
-                                ; Use channel assigned in fluidLoad.
-ichannel                        =                       3
                                 fluidNote		        giFluidsynth, ichannel, i_midikey, i_midivelocity
                                 endin
                                 
@@ -3127,12 +3079,16 @@ i_midikey                       =                       p4
 i_midivelocity                  =                       p5
 ainleft                         init                    0.0
 ainright                        init                    0.0
-aoutleft, aoutright             vstaudiog               giPianoteq, ainleft, ainright
+aoutleft, aoutright             vstaudio                giPianoteq, ainleft, ainright
 aoutleft			            = 			            i_midivelocity * aoutleft 
 aoutright			            =			            i_midivelocity * aoutright 
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
                                 endin
+
+                                //////////////////////////////////////////////
+                                // OUTPUT INSTRUMENTS MUST GO BELOW HERE
+                                //////////////////////////////////////////////
 
                                 instr                   Reverberation
                                 //////////////////////////////////////////////
@@ -3140,15 +3096,18 @@ aoutright			            =			            i_midivelocity * aoutright
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-if (gkReverberationEnabled == 0) then
+if (gkReverberationEnabled == 0) goto reverberation_if_label
+goto reverberation_else_label
+reverberation_if_label:
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 kdry				            =			            1.0 - gkReverberationWet
-else
+goto reverberation_endif_label
+reverberation_else_label:
 awetleft, awetright             reverbsc                ainleft, ainright, gkReverberationDelay, 18000.0
 aoutleft			            =			            ainleft *  kdry + awetleft  * gkReverberationWet
 aoutright			            =			            ainright * kdry + awetright * gkReverberationWet
-endif
+reverberation_endif_label:
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
                                 endin
@@ -3159,65 +3118,18 @@ endif
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-                                if (gkCompressorEnabled == 0) then
+                                if (gkCompressorEnabled == 0) goto compressor_if_label
+                                goto compressor_else_label
+                                compressor_if_label:
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
-                                else
+                                goto compressor_endif_label
+                                compressor_else_label:
 aoutleft                        compress                ainleft,        ainleft,  gkCompressorThreshold, 100 * gkCompressorLowKnee, 100 * gkCompressorHighKnee, 100 * gkCompressorRatio, gkCompressorAttack, gkCompressorRelease, .05
 aoutright                       compress                ainright,       ainright, gkCompressorThreshold, 100 * gkCompressorLowKnee, 100 * gkCompressorHighKnee, 100 * gkCompressorRatio, gkCompressorAttack, gkCompressorRelease, .05
-                                endif
+                                compressor_endif_label:
                                 outleta                 "outleft",      aoutleft
                                 outleta                 "outright",     aoutright
-                                endin   
-
-                                instr                   ParametricEq1
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-ainleft                         inleta                  "inleft"
-ainright                        inleta                  "inright"
-                                if (gkParametricEq1Enabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-                                else
-                                if (gkParametricEq1Mode == 0) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 0
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 0
-                                elseif  (gkParametricEq1Mode == 0.001) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 1
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 1
-                                elseif  (gkParametricEq1Mode == 0.002) then
-aoutleft                        pareq                   ainleft,        15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 2
-aoutright                       pareq                   ainright,       15000 * gkParametricEq1Frequency, 10 * gkParametricEq1Gain, giFlatQ + 10 * gkParametricEq1Q, 2
-                                endif
-                                endif
-                                outleta                 "outleft",  aoutleft
-                                outleta                 "outright", aoutright
-                                endin
-
-                                instr                   ParametricEq2
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-ainleft                         inleta                  "inleft"
-ainright                        inleta                  "inright"
-                                if                      (gkParametricEq2Enabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-                                else
-                                if                      (gkParametricEq2Mode == 0) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 0
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 0
-                                elseif                  (gkParametricEq2Mode == 0.001) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 1
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 1
-                                elseif                  (gkParametricEq2Mode == 0.002) then
-aoutleft                        pareq                   ainleft, 	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 2
-aoutright                       pareq                   ainright,	15000 * gkParametricEq2Frequency, 10 * gkParametricEq2Gain, giFlatQ + 10 * gkParametricEq2Q, 2
-                                endif
-                                endif
-                                outleta                 "outleft", 	aoutleft
-                                outleta                 "outright", aoutright
                                 endin
 
                                 instr                   MasterOutput
