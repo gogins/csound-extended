@@ -3145,6 +3145,7 @@ aoutright                       =                       gkMasterLevel * ainright
                                 
 </CsInstruments>
 <CsScore>
-f 0 3600
+; Uncomment this for VST performance.
+; f 0 3600
 </CsScore>
 </CsoundSynthesizer>

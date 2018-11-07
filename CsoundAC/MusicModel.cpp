@@ -88,19 +88,25 @@ void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
 int MusicModel::perform()
 {
     int errorStatus = 0;
+    std::string old_command = cppSound->getCommand();
+    auto csound_command = getCsoundCommand();
+    System::message("MusicModel::perform using Csound command: %s\n", csound_command.c_str());
     cppSound->setCommand(getCsoundCommand());
     createCsoundScore(csoundScoreHeader);
     std::string csd = cppSound->getCSD();
-    
+    //System::message("MusicModel::perform using csd: %s\n", csd.c_str());
     errorStatus = csoundCompileCsdText(cppSound->getCsound(), csd.c_str());
-    errorStatus = csoundStart(cppCsound-getCsound());
-    errorStatus = csoundPerform(cppSound->getCsound());
+    errorStatus = csoundStart(cppSound->getCsound());
+    while (true) {
+        errorStatus = csoundPerformKsmps(cppSound->getCsound());
+        if (errorStatus != 0) {
+            break;
+        }
+    }
     if (errorStatus == 1) {
         errorStatus = 0;
     }
-    // The Csound command is managed from MusicModel,
-    // not from g. So we clear out what we set.
-    cppSound->setCommand("");
+    cppSound->setCommand(old_command);
     return errorStatus;
 }
 
@@ -187,16 +193,20 @@ void MusicModel::setCsoundCommand(std::string command)
 
 std::string MusicModel::getCsoundCommand() const
 {
-    std::string command_ = cppSound->getCommand();
-    if (command_.size() == 0) {
-        char buffer[0x200];
-        std::sprintf(buffer,
-                     "--midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
-                     threadCount,
-                     getOutputSoundfileFilepath().c_str());
-        command_ = buffer;
+    std::string csound_command = cppSound->getCommand();
+    if (csound_command.size() > 0) {
+        return csound_command;
     }
-    return command_;
+    auto output_soundfile_filepath = getOutputSoundfileFilepath();
+    if (output_soundfile_filepath.size() == 0) {
+        output_soundfile_filepath = "music_model_output.wav";
+    }
+    char buffer[0x200];
+    std::sprintf(buffer,
+                 "--midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
+                 threadCount,
+                 output_soundfile_filepath.c_str());
+    return buffer;
 }
 
 intptr_t MusicModel::getThis()

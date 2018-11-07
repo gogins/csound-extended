@@ -76,7 +76,14 @@ The major change for version 1.0.0 is the creation of regular Debian packages.
 CsoundAC has gained the ability to run Common Lisp code for generating or 
 modifying generated scores.
 
-CsoundForAndroid has been upgraded to target Android API version 26.
+CsoundAC has been refactored so that the csnd6 library interfaces for Lua 
+and Python are not required. The methods of CppSound have been exposed in the 
+MusicModel class, e.g. CppSound::CompileCsdText is exposed as 
+MusicModel::cppsoundCompileCsdText.
+
+CsoundForAndroid has been upgraded to target Android API version 26. It also 
+has lost the LuaJIT opcodes because the Android NDK must now use clang, but 
+LuaJIT cannot be built for Android with clang.
 
 See https://github.com/gogins/csound-extended/commits/develop for the commit log.
 

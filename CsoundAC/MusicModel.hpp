@@ -69,7 +69,12 @@ public:
     virtual int render();
     virtual void stop();
     /**
-     * Uses csound to perform the current score.
+     * Uses Csound to perform the current score. If a Csound command has been 
+     * set in this, that is used; otherwise, if an output soundfile has been 
+     * specified in this, a command line is generated and used; otherwise, a 
+     * default command line is used.
+     *
+     * In all cases, a CSD file is generated in memory and rendered.
      */
     virtual int perform();
     /**
