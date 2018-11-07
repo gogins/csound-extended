@@ -77,7 +77,7 @@ CsoundAC has gained the ability to run Common Lisp code for generating or
 modifying generated scores.
 
 CsoundAC has been refactored so that the csnd6 library interfaces for Lua 
-and Python are not required. The methods of CppSound have been exposed in the 
+and Python are not required. Most methods of CppSound have been exposed in the 
 MusicModel class, e.g. CppSound::CompileCsdText is exposed as 
 MusicModel::cppsoundCompileCsdText.
 

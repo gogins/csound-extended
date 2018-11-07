@@ -19,6 +19,9 @@ As such, these examples can serve as templates for new compositions.
 
 ## Installation
 
+A number of these pieces require configuration or editing before they will 
+run.
+
 Examples that use csound-aeolus require the example to be edited to find 
 the Aeolus stops directory,
 
@@ -34,8 +37,55 @@ directory, you must create a symbolic link to the silencio directory.
 
 ## Testing
 
-The very basic test plan that I use is:
+The rather basic test plan that I use is as follows.
 
+### Pre-Requisites
+
+Rebuild and reinstall:
+
+- csound-extended-dev 
+
+- csound-extended-wasm 
+
+- The Csound for Android app
+
+- csound-aeolus 
+
+- csound-vst 
+    
+### Tests
+
+Change to the `test-examples` directory and perform the following tests:
+
+- csound: First, run the .csd file with the csound command to ensure that 
+  Csound itself has been properly installed. 
+
+- cmask: Run the .csd files with the csound command. 
+
+- csoundac: Compile the Parachronic-Piano.cpp file using the build script in 
+  the comment at the top of the file, and execute 
+  `./Parachronic-Piano --audio`. Run the .py file and the .lua file.
+  
+- csound-aeolus: Run the aeolus program to create some stops, and then 
+  execute `sbcl --script Triphase-Aeolus.lisp`.
+
+- csound-for-android: Run all the Gogins examples from the app.
+
+- csound-html5: In your Web browser, go to 
+  `https://gogins.github.io/csound-extended/message.html`, and click on the 
+  _Play_ button.
+
+- csound-link: Not tested at this time.
+
+- csound.node: In the `test-examples` directory, execute `nwjs csound.node` 
+  and select the _Play_ menu item.
+
+- csound-vst: Run Reaper, and load and play the `csound-vst.RPP` file.
+
+- nudruz: Use Steel Bank Common Lisp to execute the .lisp files.
+
+- For the OpenMusic Csound interface, since it's a drop-in replacement for the 
+  original OM2Csound, just run an OM2Csound synthesis example.
 
 
 
