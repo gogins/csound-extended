@@ -236,7 +236,7 @@ set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_VERSION "1.0.1")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
@@ -319,14 +319,15 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-exten
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}/test-examples
     FILES_MATCHING 
-    PATTERN "*.ly" EXCLUDE
-    PATTERN "*.sco" EXCLUDE
-    PATTERN "*.mid" EXCLUDE
-    PATTERN "*.midi" EXCLUDE
-    PATTERN "*.pdf" EXCLUDE
-    PATTERN "*.ps" EXCLUDE
-    PATTERN "*arachronic-Piano" EXCLUDE
-    PATTERN "*generated.csd EXCLUDE")
+    PATTERN "*.lisp" 
+    PATTERN "*.csd"
+    PATTERN "*.RPP"
+    PATTERN "*.aif"
+    PATTERN "*.html"
+    PATTERN "*.json"
+    PATTERN "*.cpp"
+    PATTERN "*.lua"
+    PATTERN "*.py")
     
 # And all the README.md files, renamed to not conflict...
 

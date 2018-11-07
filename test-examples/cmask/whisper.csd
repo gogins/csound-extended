@@ -12,7 +12,7 @@ nchnls = 10
 Score cmask {{ 
 {
 ;f1 0 262144 1 "whisp.aif" 0 4 1
-f1 0 2621442 1 "tigre.wav" 0 0 1
+f1 0 2621442 1 "tigre.aif" 0 0 1
 f2 0 8192 19 1 1 270 1
 f4 0 8192 9 .25 1 0	
 }

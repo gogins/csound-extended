@@ -35,10 +35,6 @@ directory. The NODE_PATH environment variable must also include the path where
 csound.node has been installed. In addition, in the test-examples/csound.node 
 directory, you must create a symbolic link to the silencio directory.
 
-## Testing
-
-The rather basic test plan that I use is as follows.
-
 ### Pre-Requisites
 
 Rebuild and reinstall:
@@ -52,6 +48,8 @@ Rebuild and reinstall:
 - csound-aeolus 
 
 - csound-vst 
+
+- OM2Csound
     
 ### Tests
 
@@ -62,9 +60,10 @@ Change to the `test-examples` directory and perform the following tests:
 
 - cmask: Run the .csd files with the csound command. 
 
-- csoundac: Compile the Parachronic-Piano.cpp file using the build script in 
+- csound-ac: Compile the Parachronic-Piano.cpp file using the build script in 
   the comment at the top of the file, and execute 
-  `./Parachronic-Piano --audio`. Run the .py file and the .lua file.
+  `./Parachronic-Piano --csound --audio PortAudio --device dac`. 
+  Run the .py file and the .lua file. 
   
 - csound-aeolus: Run the aeolus program to create some stops, and then 
   execute `sbcl --script Triphase-Aeolus.lisp`.
@@ -80,12 +79,12 @@ Change to the `test-examples` directory and perform the following tests:
 - csound.node: In the `test-examples` directory, execute `nwjs csound.node` 
   and select the _Play_ menu item.
 
-- csound-vst: Run Reaper, and load and play the `csound-vst.RPP` file.
+- csound-vst: Run Reaper, and load and play the `csound-vst.RPP` file. 
 
-- nudruz: Use Steel Bank Common Lisp to execute the .lisp files.
+- nudruz: Use Steel Bank Common Lisp to execute the .lisp files. 
 
 - For the OpenMusic Csound interface, since it's a drop-in replacement for the 
-  original OM2Csound, just run an OM2Csound synthesis example.
+  original OM2Csound, just run an OM2Csound synthesis example. 
 
 
 
