@@ -1,9 +1,9 @@
 /**
  * \page csoundforandroid Csound for Android App
- *
+ * <p>
  * This Android app provides pretty much all of Csound, including an HTML/JavaScript interface
  * that runs HTML5 code in the <html> element of a csd file.
- *
+ * <p>
  * See CsoundAppActivity.java and csound_oboe.hpp for more information.
  */
 package com.csounds.Csound6;
@@ -11,12 +11,10 @@ package com.csounds.Csound6;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,11 +24,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,10 +35,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -52,25 +49,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
-import android.provider.OpenableColumns;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.provider.DocumentFile;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -82,16 +75,16 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
-import csnd6.Csound;
 import csnd6.CsoundCallbackWrapper;
 import csnd6.CsoundOboe;
 
+import static android.support.v4.app.ActivityCompat.*;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
-        CsoundObj.MessagePoster, */ SharedPreferences.OnSharedPreferenceChangeListener {
+        CsoundObj.MessagePoster, */ SharedPreferences.OnSharedPreferenceChangeListener, OnRequestPermissionsResultCallback {
     Uri templateUri = null;
     Button newButton = null;
     Button openButton = null;
@@ -139,14 +132,14 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
         try {
             java.lang.System.loadLibrary("sndfile");
         } catch (Throwable e) {
-            Log.e("Csound: ","sndfile native code library failed to load.\n");
+            Log.e("Csound: ", "sndfile native code library failed to load.\n");
             Log.e("Csound: ", e.toString());
         }
         try {
             java.lang.System.loadLibrary("csoundandroid");
         } catch (Throwable e) {
-            Log.e("Csound: ","Csound: csoundandroid native code library failed to load.\n"
-                            + e);
+            Log.e("Csound: ", "Csound: csoundandroid native code library failed to load.\n"
+                    + e);
             Log.e("Csound: ", e.toString());
         }
         try {
@@ -166,6 +159,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     protected void writeTemplateFile() {
+        if (checkDangerousPermissions() == false) {
+            return;
+        }
         File root = Environment.getExternalStorageDirectory();
         try {
             if (root.canWrite()) {
@@ -197,6 +193,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     // the public external storage music directory.
     // The asset directory becomes a subdirectory of the music directory.
     private File copyAsset(String fromAssetPath) {
+        if (checkDangerousPermissions() == false) {
+            return null;
+        }
         AssetManager assetManager = getAssets();
         InputStream in = null;
         OutputStream out = null;
@@ -236,7 +235,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 Method method = os.getClass().getMethod("setenv", String.class, String.class, boolean.class);
                 method.invoke(os, variable, value, true);
             }
-        } catch ( Exception e) {
+        } catch (Exception e) {
             Log.w("Csound:", Log.getStackTraceString(e));
             Log.w("Csound:", e.getMessage());
         }
@@ -292,60 +291,60 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 return true;
             case R.id.itemTrapped: {
                 outFile = copyAsset("Csound6AndroidExamples/Boulanger/trapped.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
             }
             return true;
             case R.id.itemDroneIV: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/Drone-IV.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
             }
             return true;
             case R.id.itemPartikkel: {
                 outFile = copyAsset("Csound6AndroidExamples/Khosravi/partikkel.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
             }
             return true;
             case R.id.itemXanadu: {
                 outFile = copyAsset("Csound6AndroidExamples/Kung/xanadu.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
                 return true;
             }
             case R.id.itemModulatedDelay: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/ModulateInput.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
                 return true;
             }
             case R.id.itemBuiltinChannels: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/BuiltinChannels.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
                 return true;
             }
             case R.id.itemMessage: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/silencio/js/jquery.js");
-                if (outFile == null){
+                if (outFile == null) {
                     return true;
                 }
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/Message.html");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
                 return true;
             }
             case R.id.itemKoanI: {
                 outFile = copyAsset("Csound6AndroidExamples/McCurdy/i.csd");
-                if (outFile != null){
+                if (outFile != null) {
                     OnFileChosen(outFile);
                 }
                 return true;
@@ -366,6 +365,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     private StringBuilder csoundMessageStringBuilder = new StringBuilder();
+
     private synchronized void postMessageClear_(String message_,
                                                 boolean doClear_) {
         final String message = message_;
@@ -383,7 +383,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 messageScrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 // Send Csound messages to the WebView's console.log function.
                 // This should happen when and only when a newline appears.
-                for (int i = 0, n = message.length(); i < n; i++){
+                for (int i = 0, n = message.length(); i < n; i++) {
                     char c = message.charAt(i);
                     if (c == '\n') {
                         String line = csoundMessageStringBuilder.toString();
@@ -434,6 +434,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void parseWebLayout() {
         try {
+            if (checkDangerousPermissions() == false) {
+                return;
+            }
             FileReader in = new FileReader(csound_file);
             StringBuilder contents = new StringBuilder();
             char[] buffer = new char[4096];
@@ -547,7 +550,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             Log.e("Csound:", "Could not stop csound_oboe: \n" + e.toString());
         }
         finishAndRemoveTask();
-     }
+    }
 
     /**
      * Called when the activity is first created.
@@ -604,7 +607,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(
                         CsoundAppActivity.this,
-                         R.style.csoundAlertDialogStyle);
+                        R.style.csoundAlertDialogStyle);
                 alert.setTitle("New CSD...");
                 alert.setMessage("Filename:");
                 final EditText input = new EditText(CsoundAppActivity.this);
@@ -721,17 +724,17 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                     csnd6.csndJNI.csoundSetGlobalEnv("SADIR", SADIR);
                     csnd6.csndJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
                     String driver = sharedPreferences.getString("audioDriver", "");
-                        csound_oboe = new csnd6.CsoundOboe();
-                        oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
-                            @Override
-                            public void MessageCallback(int attr, String msg) {
-                                Log.d("CsoundOboe:", msg);
-                                postMessage(msg);
-                            }
-                        };
-                        oboe_callback_wrapper.SetMessageCallback();
-                        webView.addJavascriptInterface(csound_oboe, "csound");
-                        webView.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
+                    csound_oboe = new csnd6.CsoundOboe();
+                    oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
+                        @Override
+                        public void MessageCallback(int attr, String msg) {
+                            Log.d("CsoundOboe:", msg);
+                            postMessage(msg);
+                        }
+                    };
+                    oboe_callback_wrapper.SetMessageCallback();
+                    webView.addJavascriptInterface(csound_oboe, "csound");
+                    webView.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
                     // Csound will not be in scope of any JavaScript on the page
                     // until the page is reloaded. Also, we want to show any edits
                     // to the page.
@@ -780,31 +783,31 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                         // Add trackpad handler.
                         pad.setOnTouchListener(new View.OnTouchListener() {
                             public boolean onTouch(View v, MotionEvent event) {
-                            int action = event.getAction() & MotionEvent.ACTION_MASK;
-                            double xpos = 0;
-                            double ypos = 0;
-                            boolean selected = false;
-                            switch (action) {
-                                case MotionEvent.ACTION_DOWN:
-                                case MotionEvent.ACTION_POINTER_DOWN:
-                                    pad.setPressed(true);
-                                    selected = true;
-                                    break;
-                                case MotionEvent.ACTION_POINTER_UP:
-                                case MotionEvent.ACTION_UP:
-                                    selected = false;
-                                    pad.setPressed(false);
-                                    break;
-                                case MotionEvent.ACTION_MOVE:
-                                    break;
-                            }
-                            if (selected == true) {
-                                xpos = event.getX() / v.getWidth();
-                                ypos = 1. - (event.getY() / v.getHeight());
-                            }
-                            csound_oboe.setChannel("trackpad.x", xpos);
-                            csound_oboe.setChannel("trackpad.y", ypos);
-                            return true;
+                                int action = event.getAction() & MotionEvent.ACTION_MASK;
+                                double xpos = 0;
+                                double ypos = 0;
+                                boolean selected = false;
+                                switch (action) {
+                                    case MotionEvent.ACTION_DOWN:
+                                    case MotionEvent.ACTION_POINTER_DOWN:
+                                        pad.setPressed(true);
+                                        selected = true;
+                                        break;
+                                    case MotionEvent.ACTION_POINTER_UP:
+                                    case MotionEvent.ACTION_UP:
+                                        selected = false;
+                                        pad.setPressed(false);
+                                        break;
+                                    case MotionEvent.ACTION_MOVE:
+                                        break;
+                                }
+                                if (selected == true) {
+                                    xpos = event.getX() / v.getWidth();
+                                    ypos = 1. - (event.getY() / v.getHeight());
+                                }
+                                csound_oboe.setChannel("trackpad.x", xpos);
+                                csound_oboe.setChannel("trackpad.y", ypos);
+                                return true;
                             }
                         });
                         // Add motion handler.
@@ -816,6 +819,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
                                     // Not used.
                                 }
+
                                 public void onSensorChanged(SensorEvent event) {
                                     double accelerometerX = event.values[0];
                                     double accelerometerY = event.values[1];
@@ -842,9 +846,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                     // Make sure this is still set after starting.
                     String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
                             "OPCODE6DIR");
-                        csound_oboe.message(
-                                "OPCODE6DIR has been set to: " + getOPCODE6DIR
-                                        + "\n");
+                    csound_oboe.message(
+                            "OPCODE6DIR has been set to: " + getOPCODE6DIR
+                                    + "\n");
                 } else {
                     csound_oboe.stop();
                     postMessage("Csound has been stopped.\n");
@@ -852,6 +856,25 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
             }
         });
         setScreenLayout(sharedPreferences);
+    }
+
+    static final int MY_REQUEST_DANGEROUS_PERMISSIONS = 2149;
+
+    protected boolean checkDangerousPermissions() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.RECORD_AUDIO)
+                        != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(CsoundAppActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO},
+                    MY_REQUEST_DANGEROUS_PERMISSIONS);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -863,6 +886,9 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 setTitle(csound_file.getName());
             }
             if (requestCode == PICK_FILE_REQUEST && intent != null) {
+                if (checkDangerousPermissions() == false) {
+                    return;
+                }
                 String filepath = null;
                 Uri uri = intent.getData();
                 String uri_string = uri.toString();
@@ -871,7 +897,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
                 if (uri_string.startsWith("content://")) {
                     final String[] split = uri_string.split(":");
                     final String[] pathpart = uri_path.split(":");
-                    filepath = Environment.getExternalStorageDirectory() + "/"+ pathpart[1];
+                    filepath = Environment.getExternalStorageDirectory() + "/" + pathpart[1];
                 }
                 csound_file = new File(filepath);
                 csound_file.setReadable(true);
