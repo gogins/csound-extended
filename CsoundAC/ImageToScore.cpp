@@ -34,6 +34,7 @@
 #include <complex>
 #include <set>
 #include <functional>
+#include <opencv2/imgcodecs.hpp>
 
 namespace csound
 {
@@ -277,13 +278,13 @@ void ImageToScore::generate()
 
     void ImageToScore2::pixel_to_event(double x, double y, double hue, double value, Event &event) const {
       event[Event::STATUS] = 144;
-      event[Event::TIME] = ((x / double(image->w())) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
+      event[Event::TIME] = ((x / double(transformed_image.cols)) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
       event[Event::INSTRUMENT] = (hue * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
-      event[Event::KEY] = int((((image->h() - y) / double(image->h())) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
+      event[Event::KEY] = int((((transformed_image.rows - y) / transformed_image.rows) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
       event[Event::VELOCITY] = (value * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
 
     }
-    
+
     ImageToScore2::ImageToScore2(void) {
     }
 
@@ -316,11 +317,11 @@ void ImageToScore::generate()
     }
 
   void ImageToScore2::generate() {
-    System::inform("BEGAN ImageToScore2:generate()...\n")
-    original_image = cv:imload(image_filename);
+    System::inform("BEGAN ImageToScore2:generate()...\n");
+    original_image = cv::imread(image_filename);
     auto rows = original_image.rows;
-    auto columns = original_imge.cols;
-    System::inform("ENDED ImageToScore2:generate().\n")
+    auto columns = original_image.cols;
+    System::inform("ENDED ImageToScore2:generate().\n");
   }
 
 }

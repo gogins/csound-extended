@@ -28,7 +28,7 @@
 %}
 #else
 #include "Silence.hpp"
-#include <opencv2/core.hpp>
+#include <opencv2/core/core.hpp>
 #endif
 
 class Fl_Image;
