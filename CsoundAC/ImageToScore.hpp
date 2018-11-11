@@ -28,6 +28,7 @@
 %}
 #else
 #include "Silence.hpp"
+#include <opencv2/core.hpp>
 #endif
 
 class Fl_Image;
@@ -59,6 +60,35 @@ public:
     virtual double getMinimumValue() const;
     virtual void generate();
 };
+
+/**
+* Translates images files to scores.
+* The OpenCV library is used to do an improved mapping
+* from images to scores.
+*/
+class SILENCE_PUBLIC ImageToScore2 : public ScoreNode
+{
+protected:
+    std::string image_filename;
+    cv::Mat original_image;
+    cv::Mat transformed_image;
+    size_t maximum_voice_count;
+    size_t instrument_count;
+    size_t semitone_count;
+    double value_threshhold;
+    virtual void pixel_to_event(double x, double y, double hue, double value, Event &event) const;
+public:
+    ImageToScore2(void);
+    virtual ~ImageToScore2(void);
+    virtual void setImageFilename(std::string imageFilename);
+    virtual std::string getImageFilename() const;
+    virtual void setMaximumVoiceCount(size_t maximumVoiceCount);
+    virtual size_t getMaximumVoiceCount() const;
+    virtual void setMinimumValue(double value_threshhold);
+    virtual double getMinimumValue() const;
+    virtual void generate();
+};
+
 }
 
 #endif

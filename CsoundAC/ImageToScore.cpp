@@ -35,7 +35,6 @@
 #include <set>
 #include <functional>
 
-
 namespace csound
 {
 
@@ -275,4 +274,53 @@ void ImageToScore::generate()
     }
     System::inform("ENDED ImageToScore::generate().\n");
 }
+
+    void ImageToScore2::pixel_to_event(double x, double y, double hue, double value, Event &event) const {
+      event[Event::STATUS] = 144;
+      event[Event::TIME] = ((x / double(image->w())) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
+      event[Event::INSTRUMENT] = (hue * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
+      event[Event::KEY] = int((((image->h() - y) / double(image->h())) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
+      event[Event::VELOCITY] = (value * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
+
+    }
+    
+    ImageToScore2::ImageToScore2(void) {
+    }
+
+    ImageToScore2::~ImageToScore2(void) {
+    }
+
+    void ImageToScore2::setImageFilename(std::string image_filename_)
+    {
+      image_filename = image_filename_;
+    }
+
+    std::string ImageToScore2::getImageFilename() const {
+      return image_filename;
+    }
+
+    void ImageToScore2::setMaximumVoiceCount(size_t maximum_voice_count_) {
+      maximum_voice_count = maximum_voice_count_;
+    }
+    size_t ImageToScore2::getMaximumVoiceCount() const {
+      return maximum_voice_count;
+    }
+
+    void ImageToScore2::setMinimumValue(double value_threshhold_)
+    {
+      value_threshhold = value_threshhold_;
+    }
+
+    double ImageToScore2::getMinimumValue() const {
+      return value_threshhold;
+    }
+
+  void ImageToScore2::generate() {
+    System::inform("BEGAN ImageToScore2:generate()...\n")
+    original_image = cv:imload(image_filename);
+    auto rows = original_image.rows;
+    auto columns = original_imge.cols;
+    System::inform("ENDED ImageToScore2:generate().\n")
+  }
+
 }

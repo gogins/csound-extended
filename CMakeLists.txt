@@ -47,7 +47,7 @@ add_definitions(-DUSE_DOUBLE)
 set(USE_DOUBLE "Yes")
 configure_file(${CMAKE_SOURCE_DIR}/dependencies/csound/include/float-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/float-version.h)
 set(QT_INSTALL_PREFIX "/usr")
-# If you have a local installation of the Qt SDK, set an environment variable 
+# If you have a local installation of the Qt SDK, set an environment variable
 # QMAKE with the pathname to your local qmake.
 if(DEFINED ENV{QMAKE})
     set(QMAKE $ENV{QMAKE})
@@ -113,14 +113,14 @@ option(BUILD_STATIC_LIBRARY "Build the static Csound library" ON)
 option(BUILD_WEBSOCKET_OPCODE "Build the websocket opcode" ON)
 option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
 
-# All dependencies are to be located from here. 
+# All dependencies are to be located from here.
 
 # Local TARGETS are not PACKAGES!
 # Locally installed packages must be searched locally first!
 # Locally built packages must be searched locally first!
 
-# First we locate all system packages, these are used to make the Ubuntu 
-# csound-extended package, even though local packages may be used for other 
+# First we locate all system packages, these are used to make the Ubuntu
+# csound-extended package, even though local packages may be used for other
 # targets.
 
 find_package(Csound REQUIRED)
@@ -137,6 +137,7 @@ find_package(JNI)
 find_package(LIBLO)
 find_package(LLVM)
 find_package(LUAJIT)
+find_package(OpenCV REQUIRED)
 find_package(PORTSMF)
 find_package(PNG)
 find_package(PythonLibs 2.7)
@@ -185,7 +186,7 @@ function(make_plugin libname srcs)
 endfunction(make_plugin)
 
 add_custom_target(doxygen_reference
-    ALL 
+    ALL
     COMMAND doxygen
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc")
 
@@ -243,15 +244,15 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 
 set(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")   
+set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev, libcsoundac6.0v5")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language and library Csound.
- Additional features include the CsoundHtml5 'front end' for Csound wth HTML5, 
- CsoundAC for algorithmic composition, the cmask opcode for algorithmic composition 
- and granular synthesis, Common Music and nudruz libraries for algorithmic composition, 
- csound.node to run Csound in the JavaScript context of NW.js, csound-wasm to run Csound 
+ Additional features include the CsoundHtml5 'front end' for Csound wth HTML5,
+ CsoundAC for algorithmic composition, the cmask opcode for algorithmic composition
+ and granular synthesis, Common Music and nudruz libraries for algorithmic composition,
+ csound.node to run Csound in the JavaScript context of NW.js, csound-wasm to run Csound
  in the JavaScript context of Web browsers, and others.")
 set(CPACK_DEBIAN_PACKAGE_ENHANCES "csound, libsound64-dev, csound-python, csoundqt")
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS "ON")
@@ -270,7 +271,7 @@ set(CHANGELOG_HEADER "csound-extended-dev (${CPACK_PACKAGE_VERSION}) ${DISTRO_CO
 # two spaces between maintainer and timestamp is NOT a mistake
 set(CHANGELOG_FOOTER " -- ${CPACK_DEBIAN_PACKAGE_MAINTAINER}  ${RFC2822_TIMESTAMP}")
 execute_process(COMMAND bash ${CMAKE_SOURCE_DIR}/git-changelog.sh
-    OUTPUT_VARIABLE CHANGELOG 
+    OUTPUT_VARIABLE CHANGELOG
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 # message("CHANGELOG:\n${CHANGELOG}")
@@ -290,7 +291,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/dependencies/cm2/
     DESTINATION share/common-lisp/source/${CPACK_DEBIAN_PACKAGE_NAME}/cm2
-    FILES_MATCHING 
+    FILES_MATCHING
     PATTERN "*.asd"
     PATTERN "*.lisp"
     PATTERN "*.lsp"
@@ -301,7 +302,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/dependencies/cm2/
     PATTERN "*.pdf")
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/nudruz/
     DESTINATION share/common-lisp/source/${CPACK_DEBIAN_PACKAGE_NAME}/nudruz
-    FILES_MATCHING 
+    FILES_MATCHING
     PATTERN "*.asd"
     PATTERN "*.lisp"
     PATTERN "*.lsp"
@@ -313,13 +314,13 @@ install(FILES "${CMAKE_SOURCE_DIR}/debian/changelog.gz"
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-extended-dev
     DESTINATION "share/lintian/overrides/"
     COMPONENT csound-extended-dev)
-    
+
 # Test examples.
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}/test-examples
-    FILES_MATCHING 
-    PATTERN "*.lisp" 
+    FILES_MATCHING
+    PATTERN "*.lisp"
     PATTERN "*.csd"
     PATTERN "*.RPP"
     PATTERN "*.aif"
@@ -328,7 +329,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
     PATTERN "*.cpp"
     PATTERN "*.lua"
     PATTERN "*.py")
-    
+
 # And all the README.md files, renamed to not conflict...
 
 install(FILES "README.md"
