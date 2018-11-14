@@ -96,7 +96,7 @@ if(BUILD_CSOUND_AC)
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
         ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
-    target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ecl)
+    target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ecl)
     if(USE_SYSTEM_PORTSMF)
         target_link_libraries(libCsoundAC PRIVATE ${PORTSMF_LIBRARY})
     endif()
@@ -115,17 +115,17 @@ if(BUILD_CSOUND_AC)
     endif()
 
     if(MUSICXML_LIBRARY)
-        target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY})
+        target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY})
     endif()
-    
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}" 
-        DESTINATION "include/csound" 
+
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
+        DESTINATION "include/csound"
         FILES_MATCHING PATTERN "*.hpp")
-        
+
     install(TARGETS libCsoundAC
         LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
         ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
-            
+
     if(SWIG_FOUND)
         message(STATUS "SWIG_USE_FILE: " ${SWIG_USE_FILE})
         include(${SWIG_USE_FILE})
@@ -144,10 +144,10 @@ if(BUILD_CSOUND_AC)
             SWIG_MODULE_NAME CsoundAC)
 
         swig_add_module(CsoundAC python CsoundAC.i)
-        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${PYTHON_LIBRARIES})
+        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${PYTHON_LIBRARIES})
 
         if(MUSICXML_LIBRARY)
-            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${PYTHON_LIBRARIES})
+            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${PYTHON_LIBRARIES})
         endif()
 
         if(APPLE)
@@ -175,10 +175,10 @@ if(BUILD_CSOUND_AC)
             PROPERTIES CPLUSPLUS ON
             SWIG_MODULE_NAME luaCsoundAC)
         SWIG_ADD_MODULE(luaCsoundAC lua luaCsoundAC.i)
-        SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${LUAJIT_LIBRARY})
+        SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES}  ${LIBSNDFILE_LIBRARY} ${LUAJIT_LIBRARY})
 
         if(MUSICXML_LIBRARY)
-          SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${LUAJIT_LIBRARY})
+          SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${LUAJIT_LIBRARY})
         endif()
 
         if(APPLE)
@@ -199,4 +199,3 @@ if(BUILD_CSOUND_AC)
     endif()
 
 endif()
-

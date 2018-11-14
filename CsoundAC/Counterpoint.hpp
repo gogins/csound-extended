@@ -99,10 +99,12 @@ public:
     virtual void clear();
     Counterpoint();
     virtual ~Counterpoint();
+    #ifndef SWIG
     int ABS(int i);
     int MIN(int a, int b);
     int MAX(int a, int b);
     void ARRBLT(int *dest, int *source, int num);
+    #endif
     enum
     {
         Unison = 0,

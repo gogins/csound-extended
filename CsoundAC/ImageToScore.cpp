@@ -39,6 +39,12 @@
 namespace csound
 {
 
+struct HSV {
+    uchar H;
+    uchar S;
+    uchar V;
+};
+
 ImageToScore::ImageToScore(void) : image(0), maximumVoiceCount(4), minimumValue(0)
 {
 }
@@ -276,52 +282,183 @@ void ImageToScore::generate()
     System::inform("ENDED ImageToScore::generate().\n");
 }
 
-    void ImageToScore2::pixel_to_event(double x, double y, double hue, double value, Event &event) const {
-      event[Event::STATUS] = 144;
-      event[Event::TIME] = ((x / double(transformed_image.cols)) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
-      event[Event::INSTRUMENT] = (hue * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
-      event[Event::KEY] = int((((transformed_image.rows - y) / transformed_image.rows) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
-      event[Event::VELOCITY] = (value * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
+void ImageToScore2::pixel_to_event(double x, double y, double hue, double value, Event &event) const {
+    event[Event::STATUS] = 144;
+    event[Event::TIME] = ((x / double(transformed_image.cols)) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
+    event[Event::INSTRUMENT] = (hue * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
+    event[Event::KEY] = int((((transformed_image.rows - y) / transformed_image.rows) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
+    event[Event::VELOCITY] = (value * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
+}
 
-    }
+ImageToScore2::ImageToScore2(void) {
+}
 
-    ImageToScore2::ImageToScore2(void) {
-    }
+ImageToScore2::~ImageToScore2(void) {
+}
 
-    ImageToScore2::~ImageToScore2(void) {
-    }
+void ImageToScore2::setImageFilename(std::string image_filename_)
+{
+    image_filename = image_filename_;
+}
 
-    void ImageToScore2::setImageFilename(std::string image_filename_)
-    {
-      image_filename = image_filename_;
-    }
+std::string ImageToScore2::getImageFilename() const {
+    return image_filename;
+}
 
-    std::string ImageToScore2::getImageFilename() const {
-      return image_filename;
-    }
+void ImageToScore2::setMaximumVoiceCount(size_t maximum_voice_count_) {
+    maximum_voice_count = maximum_voice_count_;
+}
 
-    void ImageToScore2::setMaximumVoiceCount(size_t maximum_voice_count_) {
-      maximum_voice_count = maximum_voice_count_;
-    }
-    size_t ImageToScore2::getMaximumVoiceCount() const {
-      return maximum_voice_count;
-    }
+size_t ImageToScore2::getMaximumVoiceCount() const {
+    return maximum_voice_count;
+}
 
-    void ImageToScore2::setMinimumValue(double value_threshhold_)
-    {
-      value_threshhold = value_threshhold_;
-    }
+void ImageToScore2::gaussianBlur(double sigma_x_, double sigma_y_, int kernel_size_, int kernel_shape_) {
+    do_blur = true;
+    sigma_x = sigma_x_;
+    sigma_y = sigma_y_;
+    kernel_size = kernel_size_;
+    kernel_shape = kernel_shape_;
+}
 
-    double ImageToScore2::getMinimumValue() const {
-      return value_threshhold;
-    }
+void ImageToScore2::condense(int row_count_) {
+    do_condense = true;
+    row_count = row_count_;
+}
 
-  void ImageToScore2::generate() {
+void ImageToScore2::contrast(double gain_, double bias_) {
+    do_contrast = true;
+    gain = gain_;
+    bias = bias_;
+}
+
+void ImageToScore2::dilate(int kernel_shape_, int kernel_size_) {
+    do_dilate = true;
+    kernel_size = kernel_size_;
+    kernel_shape = kernel_shape_;
+}
+
+void ImageToScore2::erode(int kernel_shape_, int kernel_size_) {
+    do_erode = true;
+    kernel_size = kernel_size_;
+    kernel_shape = kernel_shape_;
+}
+
+void ImageToScore2::sharpen(int kernel_size_, double sigma_x_, double sigma_y_, double alpha_,
+                            double beta_, double gamma_) {
+    do_sharpen = true;
+    sigma_x = sigma_x_;
+    sigma_y = sigma_y_;
+    alpha = alpha_;
+    beta = beta_;
+    gamma = gamma_;
+}
+
+void ImageToScore2::threshhold(double value_threshhold_) {
+    do_threshhold = true;
+    value_threshhold = value_threshhold_;
+}
+
+void ImageToScore2::generate() {
     System::inform("BEGAN ImageToScore2:generate()...\n");
-    original_image = cv::imread(image_filename);
-    auto rows = original_image.rows;
-    auto columns = original_image.cols;
+    original_image = cv::imread(image_filename, cv::IMREAD_COLOR);
+    if (show_steps) {
+        cv::imshow("Original", original_image);
+        cv::waitKey(0);
+    }
+    // First we process the image, then we translate it.
+    cv::Mat source_image = original_image;
+    if (do_blur) {
+        cv::Mat output_image;
+        cv::GaussianBlur (source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
+        if (show_steps) {
+            cv::imshow("Blur", output_image);
+            cv::waitKey(0);
+        }
+        source_image = output_image;
+    }
+    if (do_sharpen) {
+        cv::Mat output_image;
+        cv::GaussianBlur(source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
+        if (show_steps) {
+            cv::imshow("Blur", output_image);
+            cv::waitKey(0);
+        }
+        cv::Mat sharpened_image;
+        cv::addWeighted(source_image, alpha, output_image, beta, gamma, sharpened_image);
+        if (show_steps) {
+            cv::imshow("Sharpen", sharpened_image);
+            cv::waitKey(0);
+        }
+        source_image = sharpened_image;
+    }
+    if (do_erode) {
+        cv::Mat output_image;
+        cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
+        cv::erode(source_image, output_image, kernel);
+        if (show_steps) {
+            cv::imshow("Erode", output_image);
+            cv::waitKey(0);
+        }
+        source_image = output_image;
+    }
+    if (do_dilate) {
+        cv::Mat output_image;
+        cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
+        cv::dilate(source_image, output_image, kernel);
+        if (show_steps) {
+            cv::imshow("Erode", output_image);
+            cv::waitKey(0);
+        }
+        source_image = output_image;
+    }
+    if (do_contrast) {
+        cv::Mat output_image =  cv::Mat::zeros( source_image.size(), source_image.type() );
+        source_image.convertTo(output_image, -1, gain, bias);
+        if (show_steps) {
+            cv::imshow("Erode", output_image);
+            cv::waitKey(0);
+        }
+        source_image = output_image;
+    }
+    if (do_threshhold) {
+        cv::Mat output_image;
+        cv::threshold(source_image, output_image, value_threshhold, 0, cv::THRESH_TOZERO);
+        if (show_steps) {
+            cv::imshow("Threshhold", output_image);
+            cv::waitKey(0);
+        }
+        source_image = output_image;
+    }
+    if (do_condense) {
+        cv::Mat output_image;
+        cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count));
+        if (show_steps) {
+            cv::imshow("Condense", output_image);
+            cv::waitKey(0);
+        }
+        source_image = output_image;
+    }
+    transformed_image = source_image;
+    // Now translate the processed image to notes. The width dimension of the
+    // image represents time, and the height dimension of the image represents
+    // pitch. The basic idea is that, along each row of pixels, if the value
+    // goes above a threshhold, a note is starting; if the value goes below that
+    // threshhold, the note is ending. It might be that too many notes are
+    // created at a particular time. Therefore, the notes are ordered by
+    // salience and only the most salient are retained. First of course we
+    // translate to HSV, which seems to be the best color model for our
+    // purposes.
+    cv::cvtColor(source_image, source_image, cv::COLOR_BGR2HSV_FULL);
+    for (int column = 0; column < source_image.cols; ++column) {
+        for (int row = 0;
+                row < source_image.rows;
+                ++row) {
+            HSV *hsv = source_image.ptr<HSV>(row, column);
+
+        }
+    }
     System::inform("ENDED ImageToScore2:generate().\n");
-  }
+}
 
 }

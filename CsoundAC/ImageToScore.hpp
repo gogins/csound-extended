@@ -29,6 +29,8 @@
 #else
 #include "Silence.hpp"
 #include <opencv2/core/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 #endif
 
 class Fl_Image;
@@ -64,7 +66,10 @@ public:
 /**
 * Translates images files to scores.
 * The OpenCV library is used to do an improved mapping
-* from images to scores.
+* from images to scores. Various image processing algorithms may be applied to
+* the original image before the resulting image is translated to notes. Any
+* number of such operations may be specified, but the order of processing is
+* fixed.
 */
 class SILENCE_PUBLIC ImageToScore2 : public ScoreNode
 {
@@ -73,10 +78,8 @@ protected:
     cv::Mat original_image;
     cv::Mat transformed_image;
     size_t maximum_voice_count;
-    size_t instrument_count;
-    size_t semitone_count;
-    double value_threshhold;
     virtual void pixel_to_event(double x, double y, double hue, double value, Event &event) const;
+    bool show_steps = false;
 public:
     ImageToScore2(void);
     virtual ~ImageToScore2(void);
@@ -84,8 +87,65 @@ public:
     virtual std::string getImageFilename() const;
     virtual void setMaximumVoiceCount(size_t maximumVoiceCount);
     virtual size_t getMaximumVoiceCount() const;
-    virtual void setMinimumValue(double value_threshhold);
-    virtual double getMinimumValue() const;
+    /**
+     * Blur the image using a Gaussian kernel before translating the image to
+     * notes. Kernel size should be odd.
+     */
+    virtual void gaussianBlur(double sigma_x_, double sigma_y_ = 0, int kernel_size_ = 9, int kernel_shape_ = cv::MORPH_RECT);
+    bool do_blur = false;
+    double sigma_x;
+    double sigma_y;
+    int kernel_shape = cv::MORPH_RECT;
+    int kernel_size = 9;
+    /**
+     * Translate the image to the specified number of rows before translating
+     * it to notes. If this operation is performed, it is always the last
+     * operation before translating the resulting image to notes.
+     */
+    virtual void condense(int row_count_);
+    bool do_condense = false;
+    int row_count = -1;
+    /**
+     * Change the contrast of the image by the specified factors before
+     * translating it to notes.
+     */
+    virtual void contrast(double gain_, double bias_);
+    double gain = 0;
+    double bias = 0;
+    bool do_contrast = false;
+    /**
+     * Increase the thickness of features in the image before translating to to
+     * notes.
+     */
+    virtual void dilate(int kernel_shape_, int kernel_size_);
+    bool do_dilate = false;
+    /**
+     * Decrease the thickness of features in the image before translating it to
+     * notes.
+     */
+    virtual void erode(int kernel_shape, int kernel_size_);
+    bool do_erode = false;
+    /**
+     * Sharpen the image before translating to notes. First the image is
+     * blurred, and then the blurred image is subtracted from the original
+     * image.
+     */
+    virtual void sharpen(int kernel_size_, double sigma_x_, double sigma_y_, double alpha,
+        double beta, double gamma);
+    bool do_sharpen = false;
+    double alpha = 0;
+    double beta = 0;
+    double gamma = 0;
+    /**
+     * Set all values beneath the threshhold to zero before translating the
+     * image to notes.
+     */
+    virtual void threshhold(double value_threshhold_);
+    bool do_threshhold = false;
+    double value_threshhold = 0;
+    /**
+     * Apply any image processing, then translate the resulting image to notes.
+     */
     virtual void generate();
 };
 
