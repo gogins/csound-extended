@@ -39,12 +39,6 @@
 namespace csound
 {
 
-struct HSV {
-    uchar H;
-    uchar S;
-    uchar V;
-};
-
 ImageToScore::ImageToScore(void) : image(0), maximumVoiceCount(4), minimumValue(0)
 {
 }
@@ -282,12 +276,12 @@ void ImageToScore::generate()
     System::inform("ENDED ImageToScore::generate().\n");
 }
 
-void ImageToScore2::pixel_to_event(double x, double y, double hue, double value, Event &event) const {
+void ImageToScore2::pixel_to_event(double x, double y, const HSV &hsv, Event &event) const {
     event[Event::STATUS] = 144;
     event[Event::TIME] = ((x / double(transformed_image.cols)) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
-    event[Event::INSTRUMENT] = (hue * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
+    event[Event::INSTRUMENT] = (hsv.h * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
     event[Event::KEY] = int((((transformed_image.rows - y) / transformed_image.rows) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
-    event[Event::VELOCITY] = (value * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
+    event[Event::VELOCITY] = (hsv.v * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
 }
 
 ImageToScore2::ImageToScore2(void) {
@@ -448,14 +442,80 @@ void ImageToScore2::generate() {
     // created at a particular time. Therefore, the notes are ordered by
     // salience and only the most salient are retained. First of course we
     // translate to HSV, which seems to be the best color model for our
-    // purposes.
+    // purposes. Processing the image before translating can reduce the number
+    // of salient notes.
     cv::cvtColor(source_image, source_image, cv::COLOR_BGR2HSV_FULL);
-    for (int column = 0; column < source_image.cols; ++column) {
-        for (int row = 0;
+    Event startingEvent;
+    Event endingEvent;
+    // Index is round(velocity * 1000 + channel).
+    std::map<int, Event> startingEvents;
+    // Index is round(key).
+    std::map<int, Event> pendingEvents;
+    HSV prior_pixel;
+    HSV current_pixel;
+    HSV next_pixel;
+    for (double column = 0; column < source_image.cols; ++column) {
+        // Find starting events, i.e. an event based on a pixel whose value
+        // exceeds the threshhold but the prior pixel did not.
+        for (double row = 0;
                 row < source_image.rows;
                 ++row) {
-            HSV *hsv = source_image.ptr<HSV>(row, column);
-
+            if (column == 0.0) {
+                prior_pixel.clear();
+            } else {
+                prior_pixel = *source_image.ptr<HSV>(int(row), int(column - 1));
+            }
+            current_pixel = *source_image.ptr<HSV>(int(row), int(column));
+            if (prior_pixel.v < value_threshhold && current_pixel.v >= value_threshhold) {
+                pixel_to_event(column, row, current_pixel, startingEvent);
+                System::debug("Starting event at  (x =%5d, y =%5d, value = %8.2f): %s\n", size_t(column), size_t(row), current_pixel.v, startingEvent.toString().c_str());
+                int startingEventsIndex = int(startingEvent.getVelocityNumber() * 1000.0 + startingEvent.getChannel());
+                startingEvents[startingEventsIndex] = startingEvent;
+            }
+            // Insert starting events into the pending event list, in order of
+            // decreasing loudness, until the pending event list has no more than
+            // maximumCount events...
+            for (std::map<int, Event>::reverse_iterator startingEventsIterator = startingEvents.rbegin();
+                    startingEventsIterator != startingEvents.rend();
+                    ++startingEventsIterator) {
+                if (pendingEvents.size() < maximum_voice_count) {
+                    int pendingEventIndex = startingEventsIterator->second.getKeyNumber();
+                    // ...but do not interrupt an already playing event.
+                    if (pendingEvents.find(pendingEventIndex) == pendingEvents.end()) {
+                        System::debug("Pending event at   (x =%5d, y =%5d, value = %8.2f): %s\n", size_t(column), size_t(row), current_pixel.v, startingEventsIterator->second.toString().c_str());
+                        pendingEvents[pendingEventIndex] = startingEventsIterator->second;
+                    }
+                } else {
+                    break;
+                }
+            }
+            // Remove ending events from the pending event list and insert them into
+            // the score.
+            for (double row = 0;
+                    row < source_image.rows;
+                    ++row) {
+                if (column < source_image.cols) {
+                    next_pixel = *source_image.ptr<HSV>(int(row), int(column + 1));
+                } else {
+                    next_pixel.clear();
+                }
+                current_pixel = *source_image.ptr<HSV>(int(row), int(column));
+                if (current_pixel.v >= value_threshhold && next_pixel.v < value_threshhold) {
+                    pixel_to_event(column, row, next_pixel, endingEvent);
+                    System::debug("Ending event at    (x =%5d, y =%5d, value = %8.2f): %s\n", size_t(column), size_t(row), current_pixel.v, endingEvent.toString().c_str());
+                    int pendingEventIndex = endingEvent.getKeyNumber();
+                    if (pendingEvents.find(pendingEventIndex) != pendingEvents.end()) {
+                        Event &startingEvent = pendingEvents[pendingEventIndex];
+                        startingEvent.setDuration(endingEvent.getTime() - startingEvent.getTime());
+                        if (startingEvent.getDuration() > 0.0) {
+                            score.push_back(startingEvent);
+                            System::inform("Inserting event at (x =%5d, y =%5d):                   %s\n", size_t(column), size_t(row), startingEvent.toString().c_str());
+                            System::inform("Events pending=        %5d\n", pendingEvents.size());
+                        }
+                    }
+                    pendingEvents.erase(pendingEventIndex);
+                }
+            }
         }
     }
     System::inform("ENDED ImageToScore2:generate().\n");

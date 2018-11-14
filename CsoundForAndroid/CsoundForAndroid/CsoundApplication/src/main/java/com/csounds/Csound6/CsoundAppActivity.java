@@ -859,7 +859,7 @@ public class CsoundAppActivity extends Activity implements /* CsoundObjListener,
     }
 
     static final int MY_REQUEST_DANGEROUS_PERMISSIONS = 2149;
-
+Chr
     protected boolean checkDangerousPermissions() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)

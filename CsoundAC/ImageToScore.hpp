@@ -63,6 +63,18 @@ public:
     virtual void generate();
 };
 
+struct HSV {
+    HSV() : h(0), s(0), v(0) {};
+    void clear() {
+        h = 0;
+        s = 0;
+        v = 0;
+    }
+    uchar h;
+    uchar s;
+    uchar v;
+};
+
 /**
 * Translates images files to scores.
 * The OpenCV library is used to do an improved mapping
@@ -78,7 +90,7 @@ protected:
     cv::Mat original_image;
     cv::Mat transformed_image;
     size_t maximum_voice_count;
-    virtual void pixel_to_event(double x, double y, double hue, double value, Event &event) const;
+    virtual void pixel_to_event(double x, double y, const HSV &hsv, Event &event) const;
     bool show_steps = false;
 public:
     ImageToScore2(void);
@@ -114,7 +126,7 @@ public:
     double bias = 0;
     bool do_contrast = false;
     /**
-     * Increase the thickness of features in the image before translating to to
+     * Increase the thickness of features in the image before translating it to
      * notes.
      */
     virtual void dilate(int kernel_shape_, int kernel_size_);
@@ -130,21 +142,22 @@ public:
      * blurred, and then the blurred image is subtracted from the original
      * image.
      */
-    virtual void sharpen(int kernel_size_, double sigma_x_, double sigma_y_, double alpha,
-        double beta, double gamma);
+    virtual void sharpen(int kernel_size_, double sigma_x_, double sigma_y_, double alpha_,
+        double beta_, double gamma_);
     bool do_sharpen = false;
     double alpha = 0;
     double beta = 0;
     double gamma = 0;
     /**
-     * Set all values beneath the threshhold to zero before translating the
+     * Set all values less than the threshhold to zero before translating the
      * image to notes.
      */
     virtual void threshhold(double value_threshhold_);
     bool do_threshhold = false;
     double value_threshhold = 0;
     /**
-     * Apply any image processing, then translate the resulting image to notes.
+     * Perform any image processing, then translate the resulting image to
+     * notes.
      */
     virtual void generate();
 };
