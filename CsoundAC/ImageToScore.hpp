@@ -91,8 +91,8 @@ protected:
     cv::Mat transformed_image;
     size_t maximum_voice_count;
     virtual void pixel_to_event(double x, double y, const HSV &hsv, Event &event) const;
-    bool show_steps = false;
 public:
+    bool show_steps = false;
     ImageToScore2(void);
     virtual ~ImageToScore2(void);
     virtual void setImageFilename(std::string imageFilename);

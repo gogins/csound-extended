@@ -290,8 +290,7 @@ ImageToScore2::ImageToScore2(void) {
 ImageToScore2::~ImageToScore2(void) {
 }
 
-void ImageToScore2::setImageFilename(std::string image_filename_)
-{
+void ImageToScore2::setImageFilename(std::string image_filename_) {
     image_filename = image_filename_;
 }
 
@@ -354,8 +353,10 @@ void ImageToScore2::threshhold(double value_threshhold_) {
 }
 
 void ImageToScore2::generate() {
-    System::inform("BEGAN ImageToScore2:generate()...\n");
+    System::inform("BEGAN ImageToScore2::generate()...\n");
+    System::inform("image_filename: %s\n", image_filename.c_str());
     original_image = cv::imread(image_filename, cv::IMREAD_COLOR);
+    System::inform("Read image: columns: %d rows: %d type: %d depth: %d\n", original_image.cols, original_image.rows, original_image.type(), original_image.depth());
     if (show_steps) {
         cv::imshow("Original", original_image);
         cv::waitKey(0);
@@ -444,7 +445,7 @@ void ImageToScore2::generate() {
     // translate to HSV, which seems to be the best color model for our
     // purposes. Processing the image before translating can reduce the number
     // of salient notes.
-    cv::cvtColor(source_image, source_image, cv::COLOR_BGR2HSV_FULL);
+    cv::cvtColor(transformed_image, source_image, cv::COLOR_BGR2HSV_FULL);
     Event startingEvent;
     Event endingEvent;
     // Index is round(velocity * 1000 + channel).
@@ -466,9 +467,9 @@ void ImageToScore2::generate() {
                 prior_pixel = *source_image.ptr<HSV>(int(row), int(column - 1));
             }
             current_pixel = *source_image.ptr<HSV>(int(row), int(column));
-            if (prior_pixel.v < value_threshhold && current_pixel.v >= value_threshhold) {
+            if (prior_pixel.v <= value_threshhold && current_pixel.v > value_threshhold) {
                 pixel_to_event(column, row, current_pixel, startingEvent);
-                System::debug("Starting event at  (x =%5d, y =%5d, value = %8.2f): %s\n", size_t(column), size_t(row), current_pixel.v, startingEvent.toString().c_str());
+                System::debug("Starting event at  (x =%5d, y =%5d, value =%5d): %s\n", size_t(column), size_t(row), current_pixel.v, startingEvent.toString().c_str());
                 int startingEventsIndex = int(startingEvent.getVelocityNumber() * 1000.0 + startingEvent.getChannel());
                 startingEvents[startingEventsIndex] = startingEvent;
             }
@@ -482,7 +483,7 @@ void ImageToScore2::generate() {
                     int pendingEventIndex = startingEventsIterator->second.getKeyNumber();
                     // ...but do not interrupt an already playing event.
                     if (pendingEvents.find(pendingEventIndex) == pendingEvents.end()) {
-                        System::debug("Pending event at   (x =%5d, y =%5d, value = %8.2f): %s\n", size_t(column), size_t(row), current_pixel.v, startingEventsIterator->second.toString().c_str());
+                        System::debug("Pending event at   (x =%5d, y =%5d, value =%5d): %s\n", size_t(column), size_t(row), current_pixel.v, startingEventsIterator->second.toString().c_str());
                         pendingEvents[pendingEventIndex] = startingEventsIterator->second;
                     }
                 } else {
@@ -500,9 +501,9 @@ void ImageToScore2::generate() {
                     next_pixel.clear();
                 }
                 current_pixel = *source_image.ptr<HSV>(int(row), int(column));
-                if (current_pixel.v >= value_threshhold && next_pixel.v < value_threshhold) {
+                if (current_pixel.v > value_threshhold && next_pixel.v <= value_threshhold) {
                     pixel_to_event(column, row, next_pixel, endingEvent);
-                    System::debug("Ending event at    (x =%5d, y =%5d, value = %8.2f): %s\n", size_t(column), size_t(row), current_pixel.v, endingEvent.toString().c_str());
+                    System::debug("Ending event at    (x =%5d, y =%5d, value =%5d): %s\n", size_t(column), size_t(row), current_pixel.v, endingEvent.toString().c_str());
                     int pendingEventIndex = endingEvent.getKeyNumber();
                     if (pendingEvents.find(pendingEventIndex) != pendingEvents.end()) {
                         Event &startingEvent = pendingEvents[pendingEventIndex];
@@ -518,7 +519,7 @@ void ImageToScore2::generate() {
             }
         }
     }
-    System::inform("ENDED ImageToScore2:generate().\n");
+    System::inform("ENDED ImageToScore2::generate() with %d events.\n", score.size());
 }
 
 }
