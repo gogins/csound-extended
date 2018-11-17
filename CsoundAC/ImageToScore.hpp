@@ -88,9 +88,9 @@ class SILENCE_PUBLIC ImageToScore2 : public ScoreNode
 protected:
     std::string image_filename;
     cv::Mat original_image;
-    cv::Mat transformed_image;
-    size_t maximum_voice_count;
-    virtual void pixel_to_event(double x, double y, const HSV &hsv, Event &event) const;
+    cv::Mat processed_image;
+    size_t maximum_voice_count = 7;
+    virtual void pixel_to_event(int column, int row, const HSV &hsv, Event &event) const;
 public:
     bool show_steps = false;
     ImageToScore2(void);
@@ -159,6 +159,7 @@ public:
      * Perform any image processing, then translate the resulting image to
      * notes.
      */
+    virtual void processImage();
     virtual void generate();
 };
 

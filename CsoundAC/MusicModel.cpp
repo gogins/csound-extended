@@ -23,6 +23,7 @@
 #include "System.hpp"
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <stdint.h>
 
 namespace csound
@@ -94,6 +95,12 @@ int MusicModel::perform()
     cppSound->setCommand(getCsoundCommand());
     createCsoundScore(csoundScoreHeader);
     std::string csd = cppSound->getCSD();
+    // Always save the generated csd.
+    std::string csd_filename = getOutputSoundfileFilepath() + "-generated.csd";
+    std::ofstream stream;
+    stream.open(csd_filename.c_str(), std::ofstream::out | std::ofstream::trunc);
+    stream.write(csd.c_str(), csd.size());
+    stream.close();
     //System::message("MusicModel::perform using csd: %s\n", csd.c_str());
     errorStatus = csoundCompileCsdText(cppSound->getCsound(), csd.c_str());
     errorStatus = csoundStart(cppSound->getCsound());

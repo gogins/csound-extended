@@ -276,14 +276,6 @@ void ImageToScore::generate()
     System::inform("ENDED ImageToScore::generate().\n");
 }
 
-void ImageToScore2::pixel_to_event(double x, double y, const HSV &hsv, Event &event) const {
-    event[Event::STATUS] = 144;
-    event[Event::TIME] = ((x / double(transformed_image.cols)) * score.scaleTargetRanges[Event::TIME]) + score.scaleTargetMinima[Event::TIME];
-    event[Event::INSTRUMENT] = (hsv.h * score.scaleTargetRanges[Event::INSTRUMENT]) + score.scaleTargetMinima[Event::INSTRUMENT];
-    event[Event::KEY] = int((((transformed_image.rows - y) / transformed_image.rows) * score.scaleTargetRanges[Event::KEY]) + score.scaleTargetMinima[Event::KEY] + 0.5);
-    event[Event::VELOCITY] = (hsv.v * score.scaleTargetRanges[Event::VELOCITY]) + score.scaleTargetRanges[Event::VELOCITY];
-}
-
 ImageToScore2::ImageToScore2(void) {
 }
 
@@ -352,89 +344,113 @@ void ImageToScore2::threshhold(double value_threshhold_) {
     value_threshhold = value_threshhold_;
 }
 
+void ImageToScore2::processImage(){
+  System::inform("BEGAN ImageToScore2::processImage()...\n");
+  System::inform("image_filename: %s\n", image_filename.c_str());
+  original_image = cv::imread(image_filename, cv::IMREAD_COLOR);
+  System::inform("Read image: columns: %d rows: %d type: %d depth: %d\n", original_image.cols, original_image.rows, original_image.type(), original_image.depth());
+  if (show_steps) {
+      cv::namedWindow("Original", cv::WINDOW_NORMAL);
+      cv::imshow("Original", original_image);
+      cv::waitKey(0);
+  }
+  // First we process the image, then we translate it.
+  cv::Mat source_image = original_image;
+  if (do_blur) {
+      cv::Mat output_image;
+      cv::GaussianBlur (source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
+      if (show_steps) {
+          cv::imshow("Blur", output_image);
+          cv::waitKey(0);
+      }
+      source_image = output_image;
+  }
+  if (do_sharpen) {
+      cv::Mat output_image;
+      cv::GaussianBlur(source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
+      if (show_steps) {
+          cv::imshow("Blur", output_image);
+          cv::waitKey(0);
+      }
+      cv::Mat sharpened_image;
+      cv::addWeighted(source_image, alpha, output_image, beta, gamma, sharpened_image);
+      if (show_steps) {
+          cv::imshow("Sharpen", sharpened_image);
+          cv::waitKey(0);
+      }
+      source_image = sharpened_image;
+  }
+  if (do_erode) {
+      cv::Mat output_image;
+      cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
+      cv::erode(source_image, output_image, kernel);
+      if (show_steps) {
+          cv::imshow("Erode", output_image);
+          cv::waitKey(0);
+      }
+      source_image = output_image;
+  }
+  if (do_dilate) {
+      cv::Mat output_image;
+      cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
+      cv::dilate(source_image, output_image, kernel);
+      if (show_steps) {
+          cv::imshow("Erode", output_image);
+          cv::waitKey(0);
+      }
+      source_image = output_image;
+  }
+  if (do_contrast) {
+      cv::Mat output_image =  cv::Mat::zeros( source_image.size(), source_image.type() );
+      source_image.convertTo(output_image, -1, gain, bias);
+      if (show_steps) {
+          cv::imshow("Erode", output_image);
+          cv::waitKey(0);
+      }
+      source_image = output_image;
+  }
+  if (do_threshhold) {
+      cv::Mat output_image;
+      cv::threshold(source_image, output_image, value_threshhold, 0, cv::THRESH_TOZERO);
+      if (show_steps) {
+          cv::imshow("Threshhold", output_image);
+          cv::waitKey(0);
+      }
+      source_image = output_image;
+  }
+  if (do_condense) {
+      cv::Mat output_image;
+      cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count));
+      if (show_steps) {
+          cv::imshow("Condense", output_image);
+          cv::waitKey(0);
+      }
+      source_image = output_image;
+  }
+  processed_image = source_image;
+  System::inform("Ended ImageToScore2::processImage().\n");
+}
+
+void ImageToScore2::pixel_to_event(int column, int row, const HSV &hsv, Event &event_) const {
+    double status = 144.;
+    event_.setStatus(status);
+    double time_ = double(column) / processed_image.cols;
+    time_ = time_ * score.scaleTargetRanges.getTime() + score.scaleTargetMinima.getTime();
+    event_.setTime(time_);
+    double instrument = double(hsv.h) / 255.;
+    instrument = instrument * score.scaleTargetRanges.getInstrument() + score.scaleTargetMinima.getInstrument();
+    event_.setInstrument(instrument);
+    double key = double(processed_image.rows - row) / processed_image.rows;
+    key = instrument * score.scaleTargetRanges.getKey() + score.scaleTargetMinima.getKey();
+    event_.setKey(key);
+    double velocity = double(hsv.v) / 255.;
+    velocity = velocity * score.scaleTargetRanges.getVelocity() + score.scaleTargetMinima.getVelocity();
+    event_.setVelocity(velocity);
+}
+
 void ImageToScore2::generate() {
     System::inform("BEGAN ImageToScore2::generate()...\n");
-    System::inform("image_filename: %s\n", image_filename.c_str());
-    original_image = cv::imread(image_filename, cv::IMREAD_COLOR);
-    System::inform("Read image: columns: %d rows: %d type: %d depth: %d\n", original_image.cols, original_image.rows, original_image.type(), original_image.depth());
-    if (show_steps) {
-        cv::imshow("Original", original_image);
-        cv::waitKey(0);
-    }
-    // First we process the image, then we translate it.
-    cv::Mat source_image = original_image;
-    if (do_blur) {
-        cv::Mat output_image;
-        cv::GaussianBlur (source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
-        if (show_steps) {
-            cv::imshow("Blur", output_image);
-            cv::waitKey(0);
-        }
-        source_image = output_image;
-    }
-    if (do_sharpen) {
-        cv::Mat output_image;
-        cv::GaussianBlur(source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
-        if (show_steps) {
-            cv::imshow("Blur", output_image);
-            cv::waitKey(0);
-        }
-        cv::Mat sharpened_image;
-        cv::addWeighted(source_image, alpha, output_image, beta, gamma, sharpened_image);
-        if (show_steps) {
-            cv::imshow("Sharpen", sharpened_image);
-            cv::waitKey(0);
-        }
-        source_image = sharpened_image;
-    }
-    if (do_erode) {
-        cv::Mat output_image;
-        cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
-        cv::erode(source_image, output_image, kernel);
-        if (show_steps) {
-            cv::imshow("Erode", output_image);
-            cv::waitKey(0);
-        }
-        source_image = output_image;
-    }
-    if (do_dilate) {
-        cv::Mat output_image;
-        cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
-        cv::dilate(source_image, output_image, kernel);
-        if (show_steps) {
-            cv::imshow("Erode", output_image);
-            cv::waitKey(0);
-        }
-        source_image = output_image;
-    }
-    if (do_contrast) {
-        cv::Mat output_image =  cv::Mat::zeros( source_image.size(), source_image.type() );
-        source_image.convertTo(output_image, -1, gain, bias);
-        if (show_steps) {
-            cv::imshow("Erode", output_image);
-            cv::waitKey(0);
-        }
-        source_image = output_image;
-    }
-    if (do_threshhold) {
-        cv::Mat output_image;
-        cv::threshold(source_image, output_image, value_threshhold, 0, cv::THRESH_TOZERO);
-        if (show_steps) {
-            cv::imshow("Threshhold", output_image);
-            cv::waitKey(0);
-        }
-        source_image = output_image;
-    }
-    if (do_condense) {
-        cv::Mat output_image;
-        cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count));
-        if (show_steps) {
-            cv::imshow("Condense", output_image);
-            cv::waitKey(0);
-        }
-        source_image = output_image;
-    }
-    transformed_image = source_image;
+    processImage();
     // Now translate the processed image to notes. The width dimension of the
     // image represents time, and the height dimension of the image represents
     // pitch. The basic idea is that, along each row of pixels, if the value
@@ -445,7 +461,7 @@ void ImageToScore2::generate() {
     // translate to HSV, which seems to be the best color model for our
     // purposes. Processing the image before translating can reduce the number
     // of salient notes.
-    cv::cvtColor(transformed_image, source_image, cv::COLOR_BGR2HSV_FULL);
+    cv::cvtColor(processed_image, processed_image, cv::COLOR_BGR2HSV_FULL);
     Event startingEvent;
     Event endingEvent;
     // Index is round(velocity * 1000 + channel).
@@ -455,21 +471,23 @@ void ImageToScore2::generate() {
     HSV prior_pixel;
     HSV current_pixel;
     HSV next_pixel;
-    for (double column = 0; column < source_image.cols; ++column) {
+    std::set<csound::Event> unique_events;
+    for (int column = 0; column < processed_image.cols; ++column) {
+        System::inform("Processing column %d...\n", int(column));
         // Find starting events, i.e. an event based on a pixel whose value
         // exceeds the threshhold but the prior pixel did not.
-        for (double row = 0;
-                row < source_image.rows;
+        for (int row = 0;
+                row < processed_image.rows;
                 ++row) {
-            if (column == 0.0) {
+            if (column == 0) {
                 prior_pixel.clear();
             } else {
-                prior_pixel = *source_image.ptr<HSV>(int(row), int(column - 1));
+                prior_pixel = *processed_image.ptr<HSV>(row, column - 1);
             }
-            current_pixel = *source_image.ptr<HSV>(int(row), int(column));
+            current_pixel = *processed_image.ptr<HSV>(row, column);
             if (prior_pixel.v <= value_threshhold && current_pixel.v > value_threshhold) {
                 pixel_to_event(column, row, current_pixel, startingEvent);
-                System::debug("Starting event at  (x =%5d, y =%5d, value =%5d): %s\n", size_t(column), size_t(row), current_pixel.v, startingEvent.toString().c_str());
+                System::debug("Starting event at   column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, startingEvent.toString().c_str());
                 int startingEventsIndex = int(startingEvent.getVelocityNumber() * 1000.0 + startingEvent.getChannel());
                 startingEvents[startingEventsIndex] = startingEvent;
             }
@@ -483,7 +501,7 @@ void ImageToScore2::generate() {
                     int pendingEventIndex = startingEventsIterator->second.getKeyNumber();
                     // ...but do not interrupt an already playing event.
                     if (pendingEvents.find(pendingEventIndex) == pendingEvents.end()) {
-                        System::debug("Pending event at   (x =%5d, y =%5d, value =%5d): %s\n", size_t(column), size_t(row), current_pixel.v, startingEventsIterator->second.toString().c_str());
+                        System::debug("Pending event at    column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, startingEventsIterator->second.toString().c_str());
                         pendingEvents[pendingEventIndex] = startingEventsIterator->second;
                     }
                 } else {
@@ -492,32 +510,37 @@ void ImageToScore2::generate() {
             }
             // Remove ending events from the pending event list and insert them into
             // the score.
-            for (double row = 0;
-                    row < source_image.rows;
+            for (int row = 0;
+                    row < processed_image.rows;
                     ++row) {
-                if (column < source_image.cols) {
-                    next_pixel = *source_image.ptr<HSV>(int(row), int(column + 1));
+                current_pixel = *processed_image.ptr<HSV>(int(row), column);
+                if (column < processed_image.cols) {
+                    next_pixel = *processed_image.ptr<HSV>(int(row), column + 1);
                 } else {
                     next_pixel.clear();
                 }
-                current_pixel = *source_image.ptr<HSV>(int(row), int(column));
                 if (current_pixel.v > value_threshhold && next_pixel.v <= value_threshhold) {
-                    pixel_to_event(column, row, next_pixel, endingEvent);
-                    System::debug("Ending event at    (x =%5d, y =%5d, value =%5d): %s\n", size_t(column), size_t(row), current_pixel.v, endingEvent.toString().c_str());
+                    pixel_to_event(column, row, current_pixel, endingEvent);
+                    System::debug("Ending event at     column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, endingEvent.toString().c_str());
                     int pendingEventIndex = endingEvent.getKeyNumber();
                     if (pendingEvents.find(pendingEventIndex) != pendingEvents.end()) {
-                        Event &startingEvent = pendingEvents[pendingEventIndex];
-                        startingEvent.setDuration(endingEvent.getTime() - startingEvent.getTime());
-                        if (startingEvent.getDuration() > 0.0) {
-                            score.push_back(startingEvent);
-                            System::inform("Inserting event at (x =%5d, y =%5d):                   %s\n", size_t(column), size_t(row), startingEvent.toString().c_str());
-                            System::inform("Events pending=        %5d\n", pendingEvents.size());
+                        Event event = pendingEvents[pendingEventIndex];
+                        event.setDuration(endingEvent.getTime() - event.getTime());
+                        if (event.getDuration() > 0.0) {
+                            //score.push_back(startingEvent);
+                            unique_events.insert(event);
+                            System::inform("Inserting event at column: %5d row: %5d             %s\n", column, row, event.toString().c_str());
+                            System::inform("Events pending:            %5d\n", pendingEvents.size());
+                            System::inform("Events inserted:           %5d\n", unique_events.size());
                         }
                     }
                     pendingEvents.erase(pendingEventIndex);
                 }
             }
         }
+        score.clear();
+        std::copy(unique_events.begin(), unique_events.end(), std::back_inserter(score));
+        score.sort();
     }
     System::inform("ENDED ImageToScore2::generate() with %d events.\n", score.size());
 }

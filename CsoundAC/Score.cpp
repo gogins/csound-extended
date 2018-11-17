@@ -530,7 +530,7 @@ void Score::initialize(void)
 {
     std::vector<Event>::clear();
     scaleTargetMinima[Event::STATUS] = 0;
-    scaleTargetMinima[Event::INSTRUMENT] = 0;
+    scaleTargetMinima[Event::INSTRUMENT] = 1;
     scaleTargetMinima[Event::TIME] = 0;
     scaleTargetMinima[Event::DURATION] = 0.125;
     scaleTargetMinima[Event::KEY] = 36.0;
