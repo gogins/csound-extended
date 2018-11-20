@@ -27,7 +27,7 @@
 #include <FL/Fl_PNM_Image.H>
 #include <FL/Fl_XPM_Image.H>
 #include <FL/Fl_GIF_Image.H>
-#include <FL/Fl_BMP_Image.H>
+///#include <FL/Fl_BMP_Image.H>
 #include <FL/Fl_PNG_Image.H>
 #include <FL/Fl_JPEG_Image.H>
 #include <cmath>
@@ -166,8 +166,8 @@ void ImageToScore::generate()
         //    image = new Fl_XPM_Image(imageFilename.c_str());
     } else if(imageFilename.find(".pnm") != std::string::npos || imageFilename.find(".PNM") != std::string::npos) {
         image = new Fl_PNM_Image(imageFilename.c_str());
-    } else if(imageFilename.find(".bmp") != std::string::npos || imageFilename.find(".BMP") != std::string::npos) {
-        image = new Fl_BMP_Image(imageFilename.c_str());
+    ///} else if(imageFilename.find(".bmp") != std::string::npos || imageFilename.find(".BMP") != std::string::npos) {
+    ///    image = new Fl_BMP_Image(imageFilename.c_str());
     } else {
         System::error("Image file '%s' not found, or unsupported image format.\n", getImageFilename().c_str());
     }
@@ -317,16 +317,18 @@ void ImageToScore2::contrast(double gain_, double bias_) {
     bias = bias_;
 }
 
-void ImageToScore2::dilate(int kernel_shape_, int kernel_size_) {
+void ImageToScore2::dilate(int kernel_shape_, int kernel_size_, int iterations_) {
     do_dilate = true;
     kernel_size = kernel_size_;
     kernel_shape = kernel_shape_;
+    iterations = iterations_;
 }
 
-void ImageToScore2::erode(int kernel_shape_, int kernel_size_) {
+void ImageToScore2::erode(int kernel_shape_, int kernel_size_, int iterations_) {
     do_erode = true;
     kernel_size = kernel_size_;
     kernel_shape = kernel_shape_;
+    iterations = iterations_;
 }
 
 void ImageToScore2::sharpen(int kernel_size_, double sigma_x_, double sigma_y_, double alpha_,
@@ -344,87 +346,75 @@ void ImageToScore2::threshhold(double value_threshhold_) {
     value_threshhold = value_threshhold_;
 }
 
+void ImageToScore2::write_processed_file(std::string operation, const cv::Mat &processed_image) const {
+    char buffer[0x200];
+    std::snprintf(buffer, 0x200, "%s-%s.jpg", image_filename.c_str(), operation.c_str());
+    cv::imwrite(buffer, processed_image);
+}
+
 void ImageToScore2::processImage(){
   System::inform("BEGAN ImageToScore2::processImage()...\n");
   System::inform("image_filename: %s\n", image_filename.c_str());
   original_image = cv::imread(image_filename, cv::IMREAD_COLOR);
   System::inform("Read image: columns: %d rows: %d type: %d depth: %d\n", original_image.cols, original_image.rows, original_image.type(), original_image.depth());
-  if (show_steps) {
-      cv::namedWindow("Original", cv::WINDOW_NORMAL);
-      cv::imshow("Original", original_image);
-      cv::waitKey(0);
-  }
   // First we process the image, then we translate it.
   cv::Mat source_image = original_image;
   if (do_blur) {
+      System::inform("Blur...\n");
       cv::Mat output_image;
       cv::GaussianBlur (source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
-      if (show_steps) {
-          cv::imshow("Blur", output_image);
-          cv::waitKey(0);
-      }
+      write_processed_file("Blur", output_image);
       source_image = output_image;
   }
   if (do_sharpen) {
+      System::inform("Sharpen...\n");
       cv::Mat output_image;
       cv::GaussianBlur(source_image, output_image, cv::Size(kernel_size, kernel_size), sigma_x, sigma_y);
-      if (show_steps) {
-          cv::imshow("Blur", output_image);
-          cv::waitKey(0);
-      }
       cv::Mat sharpened_image;
       cv::addWeighted(source_image, alpha, output_image, beta, gamma, sharpened_image);
-      if (show_steps) {
-          cv::imshow("Sharpen", sharpened_image);
-          cv::waitKey(0);
-      }
+      write_processed_file("Sharpen", output_image);
       source_image = sharpened_image;
   }
   if (do_erode) {
+      System::inform("Erode..\n");      
       cv::Mat output_image;
       cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
-      cv::erode(source_image, output_image, kernel);
-      if (show_steps) {
-          cv::imshow("Erode", output_image);
-          cv::waitKey(0);
+      for (int i = 0; i < iterations; ++i) {
+        cv::erode(source_image, output_image, kernel);
+        source_image = output_image;
       }
-      source_image = output_image;
+      write_processed_file("Erode", output_image);
   }
   if (do_dilate) {
+      System::inform("Dilate...\n");
       cv::Mat output_image;
       cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
-      cv::dilate(source_image, output_image, kernel);
-      if (show_steps) {
-          cv::imshow("Erode", output_image);
-          cv::waitKey(0);
+      for (int i = 0; i < iterations; ++i) {
+        cv::dilate(source_image, output_image, kernel);
+        source_image = output_image;
       }
-      source_image = output_image;
+      write_processed_file("Dilate", output_image);
   }
   if (do_contrast) {
+      System::inform("Contrast...\n");
       cv::Mat output_image =  cv::Mat::zeros( source_image.size(), source_image.type() );
       source_image.convertTo(output_image, -1, gain, bias);
-      if (show_steps) {
-          cv::imshow("Erode", output_image);
-          cv::waitKey(0);
-      }
+      write_processed_file("Contrast", output_image);
       source_image = output_image;
   }
   if (do_threshhold) {
+      System::inform("Threshhold...\n");
       cv::Mat output_image;
       cv::threshold(source_image, output_image, value_threshhold, 0, cv::THRESH_TOZERO);
-      if (show_steps) {
-          cv::imshow("Threshhold", output_image);
-          cv::waitKey(0);
-      }
+      write_processed_file("Threshhold", output_image);
       source_image = output_image;
   }
   if (do_condense) {
+      System::inform("Condense...\n");
       cv::Mat output_image;
-      cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count));
-      if (show_steps) {
-          cv::imshow("Condense", output_image);
-          cv::waitKey(0);
-      }
+      cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count), 1);
+      System::inform("New size columns: %5d  rows: %5d\n", output_image.cols, output_image.rows);
+      write_processed_file("Condense", output_image);
       source_image = output_image;
   }
   processed_image = source_image;
@@ -439,9 +429,10 @@ void ImageToScore2::pixel_to_event(int column, int row, const HSV &hsv, Event &e
     event_.setTime(time_);
     double instrument = double(hsv.h) / 255.;
     instrument = instrument * score.scaleTargetRanges.getInstrument() + score.scaleTargetMinima.getInstrument();
+    instrument = std::round(instrument);
     event_.setInstrument(instrument);
     double key = double(processed_image.rows - row) / processed_image.rows;
-    key = instrument * score.scaleTargetRanges.getKey() + score.scaleTargetMinima.getKey();
+    key = key * score.scaleTargetRanges.getKey() + score.scaleTargetMinima.getKey();
     event_.setKey(key);
     double velocity = double(hsv.v) / 255.;
     velocity = velocity * score.scaleTargetRanges.getVelocity() + score.scaleTargetMinima.getVelocity();
@@ -475,10 +466,11 @@ void ImageToScore2::generate() {
     for (int column = 0; column < processed_image.cols; ++column) {
         System::inform("Processing column %d...\n", int(column));
         // Find starting events, i.e. an event based on a pixel whose value
-        // exceeds the threshhold but the prior pixel did not.
-        for (int row = 0;
-                row < processed_image.rows;
-                ++row) {
+        // exceeds the threshhold but the prior pixel did not. We want to favor 
+        // the bass.
+        for (int row = processed_image.rows - 1;
+                row >= 0;
+                --row) {
             if (column == 0) {
                 prior_pixel.clear();
             } else {
@@ -510,9 +502,9 @@ void ImageToScore2::generate() {
             }
             // Remove ending events from the pending event list and insert them into
             // the score.
-            for (int row = 0;
-                    row < processed_image.rows;
-                    ++row) {
+            for (int row = processed_image.rows - 1;
+                    row >= 0;
+                    --row) {
                 current_pixel = *processed_image.ptr<HSV>(int(row), column);
                 if (column < processed_image.cols) {
                     next_pixel = *processed_image.ptr<HSV>(int(row), column + 1);

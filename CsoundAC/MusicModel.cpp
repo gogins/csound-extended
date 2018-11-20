@@ -295,7 +295,7 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         System::inform("Executing command: %s\n", command);
         errorStatus = std::system(command);
     }
-    if ((argsmap.find("--post") != argsmap.end()) && !errorStatus && postPossible) {
+    if ((argsmap.find("--post") != argsmap.end()) && postPossible) {
         errorStatus = translateMaster();
         playSoundfileName = getNormalizedSoundfileFilepath();
     }

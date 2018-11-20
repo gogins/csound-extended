@@ -92,7 +92,6 @@ protected:
     size_t maximum_voice_count = 7;
     virtual void pixel_to_event(int column, int row, const HSV &hsv, Event &event) const;
 public:
-    bool show_steps = false;
     ImageToScore2(void);
     virtual ~ImageToScore2(void);
     virtual void setImageFilename(std::string imageFilename);
@@ -129,14 +128,15 @@ public:
      * Increase the thickness of features in the image before translating it to
      * notes.
      */
-    virtual void dilate(int kernel_shape_, int kernel_size_);
+    virtual void dilate(int kernel_shape_, int kernel_size_, int iterations = 1);
     bool do_dilate = false;
     /**
      * Decrease the thickness of features in the image before translating it to
      * notes.
      */
-    virtual void erode(int kernel_shape, int kernel_size_);
+    virtual void erode(int kernel_shape, int kernel_size_, int iterations = 1);
     bool do_erode = false;
+    int iterations = 1;
     /**
      * Sharpen the image before translating to notes. First the image is
      * blurred, and then the blurred image is subtracted from the original
@@ -155,6 +155,8 @@ public:
     virtual void threshhold(double value_threshhold_);
     bool do_threshhold = false;
     double value_threshhold = 0;
+    void write_processed_file(std::string operation, const cv::Mat &processed_image) const;
+    
     /**
      * Perform any image processing, then translate the resulting image to
      * notes.
