@@ -541,6 +541,7 @@ public:
                 is_playing = false;
                 csound_result = Cleanup();
                 Reset();
+                oboeStream->close();
                 return oboe::DataCallbackResult::Stop;
             }
             // Otherwise, copy the Csound output audio to the Oboe output
