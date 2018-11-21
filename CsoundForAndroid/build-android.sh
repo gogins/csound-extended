@@ -107,6 +107,16 @@ else
 fi
 cd ..
 
+cd plugin-opcodes
+echo "Building `pwd`..."
+$NDK_BUILD_CMD $1
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Not building `pwd` library..."
+fi
+cd ..
+
 cd stk-opcodes
 echo "Building `pwd`..."
 $NDK_BUILD_CMD $1

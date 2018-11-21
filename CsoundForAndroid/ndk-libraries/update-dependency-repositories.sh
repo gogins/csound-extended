@@ -35,4 +35,9 @@ echo "pulling from `pwd`"
 git checkout master
 git pull
 cd ..
+cd ../../dependencies/csound
+echo "pulling from `pwd`"    
+git checkout develop
+git pull
+cd ../../CsoundForAndroid
 echo "Finished pulling from submodule repositories."
