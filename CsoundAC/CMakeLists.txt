@@ -25,13 +25,13 @@ find_library(JPEG_LIBRARY jpeg)
 find_library(PNG_LIBRARY NAMES png png16 libpng16)
 find_library(Z_LIBRARY NAMES z zlib)
 
-if(NOT LUAJIT_LIBRARY)
-    find_library(LUAJIT_LIBRARY luajit-5.1)
-endif()
-if(NOT LUAJIT_LIBRARY AND WIN32)
-    find_library(LUAJIT_LIBRARY lua51)
-endif()
-find_path(LUA_H_PATH lua.h PATH_SUFFIXES luajit-2.1)
+##if(NOT LUAJIT_LIBRARY)
+##    find_library(LUAJIT_LIBRARY luajit-5.1)
+##endif()
+##if(NOT LUAJIT_LIBRARY AND WIN32)
+##    find_library(LUAJIT_LIBRARY lua51)
+##endif()
+##find_path(LUA_H_PATH lua.h PATH_SUFFIXES luajit-2.1)
 
 list(APPEND CMAKE_SWIG_FLAGS
 "-I${CMAKE_SOURCE_DIR}/dependencies/csound/interfaces")
@@ -88,6 +88,7 @@ if(BUILD_CSOUND_AC)
     target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
+    target_include_directories(libCsoundAC PRIVATE ${LUAJIT_INCLUDE_DIRS})
 
     set_target_properties(libCsoundAC PROPERTIES
         SOVERSION "${APIVERSION}"
@@ -175,7 +176,7 @@ if(BUILD_CSOUND_AC)
             PROPERTIES CPLUSPLUS ON
             SWIG_MODULE_NAME luaCsoundAC)
         SWIG_ADD_MODULE(luaCsoundAC lua luaCsoundAC.i)
-        SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES}  ${LIBSNDFILE_LIBRARY} ${LUAJIT_LIBRARY})
+        SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES}  ${LIBSNDFILE_LIBRARY} ${LUAJIT_LIBRARIES})
 
         if(MUSICXML_LIBRARY)
           SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${LUAJIT_LIBRARY})
@@ -185,7 +186,9 @@ if(BUILD_CSOUND_AC)
             set_target_properties(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PROPERTIES
                 LINK_FLAGS "-undefined dynamic_lookup")
         endif()
-        target_include_directories(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PRIVATE ${LUA_H_PATH} ${CMAKE_SOURCE_DIR}/dependencies/csound/interfaces)
+        target_include_directories(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/csound/interfaces)
+        target_include_directories(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PRIVATE ${LUAJIT_INCLUDE_DIRS})
+
 
         set_target_properties(${SWIG_MODULE_luaCsoundAC_REAL_NAME} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"

@@ -21,7 +21,7 @@
 */
 #if defined(SWIGLUA)
 
-/* This function already gets exported in other form */
+/* This function already gets exported in another form */
 /* Don't export this to avoid build failures on amd64 */
 %ignore Counterpoint::message(const char*, va_list);
 %ignore csound::print(const char*, va_list);

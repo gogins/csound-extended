@@ -41,12 +41,12 @@ echo "Updating git-buildpackage..."
 sudo apt install git-buildpackage
 echo "Updating libluajit-5.1-dev..."
 sudo apt install libluajit-5.1-dev
+sudo apt install luajit
 echo "Updating opencv..."
 sudo apt install libopencv-dev
 echo "Updating PortAudio..."
 sudo apt install portaudio19-dev
-echo "Updating PortMidi..."
-sudo apt install libportmidi-dev
+echo "Updating luajitsudo apt install libportmidi-dev
 echo "Updating PortSMF..."
 sudo apt install libportsmf-dev
 echo "Updating qt5base-dev..."
