@@ -1,4 +1,4 @@
-; C O M M O N   M U S I C   C F F I   I N T E R F A C E   T O   C S O U N D
+    ; C O M M O N   M U S I C   C F F I   I N T E R F A C E   T O   C S O U N D
 ;
 ; Copyright (C) 2016 Michael Gogins
 ;

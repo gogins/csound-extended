@@ -4,9 +4,11 @@ gk_Bower_release init .0125
 gk_Bower_level init 0.5
 gk_Bower_pressure init 0.25
 instr Bower
-if p3 == -1 then
+if p3 == -1 goto indefinite
+  goto non_indefinite
+indefinite:
   p3 = 1000000
-endif
+non_indefinite:
 i_instrument = p1
 i_time = p2
 i_duration = p3

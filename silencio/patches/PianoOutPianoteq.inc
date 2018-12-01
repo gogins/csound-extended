@@ -4,7 +4,7 @@ k_gain = ampdb(gk_Piano_level)
 i_overall_amps = 80
 i_normalization = ampdb(-i_overall_amps) * 2
 i_amplitude = ampdb(80) * i_normalization
-giPianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+giPianoteq vstinit "/home/mkg/pianoteq_linux_v630/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
 ; Should be "D4 Daily Practice".
 vstprogset giPianoteq, 0
 ; Sustain off.
@@ -19,7 +19,7 @@ i_midi_key = p4
 i_midi_velocity = p5
 ainleft init 0.0
 ainright init 0.0
-aoutleft, aoutright vstaudiog giPianoteq, ainleft, ainright
+aoutleft, aoutright vstaudio giPianoteq, ainleft, ainright
 ; printks "vstaudiog:       %9.4f   %9.4f\n", 0.5, aoutleft, aoutright
 #ifdef USE_SPATIALIZATION
 a_signal = a_out_left + a_out_right
