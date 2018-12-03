@@ -1,0 +1,18 @@
+; apt-get install libffi-dev
+; apt-get install liblapack-dev libblas-dev libgfortran3
+(load "~/quicklisp/setup.lisp")
+(ql:quickload :matlisp)
+(named-readtables:in-readtable :infix-dispatch-table)
+(ql:quickload :weyl)
+(in-package :weyl)
+(defparameter R (get-polynomial-ring (get-rational-integers) '(m e s)))
+(let ((count 0))
+(permute ' (a b c) (p)
+(print p)
+(incf count))
+(format t "~%~D permutations total. ~%" count))
+(in-package :matlisp)
+(copy! (random-normal '(2 2)) (zeros '(2 2) '((complex double-float))))
+(let ((a (random-normal '(2 2)))
+	   (b (random-normal 2)))
+      #i(a * b))
