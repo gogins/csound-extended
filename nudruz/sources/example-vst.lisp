@@ -5,7 +5,7 @@
 
 (defparameter csd-vst #>qqq><CsoundSynthesizer>
 <CsOptions>
--m195 -d -o dac
+-m195 -d -odac
 </CsOptions>
 <CsLicense>
 
