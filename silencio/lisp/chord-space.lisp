@@ -13,4 +13,7 @@
 (defparameter CSM (transpose M 1))
 (print CSM)
 (print (keynum 'a7 :through CSM))
+(defparameter M9 (new mode :degrees    '(c  d  e    g     b  c)))
+(defparameter m9 (new mode :degrees    '(c  d  ef    g     bf  c)))
+
 

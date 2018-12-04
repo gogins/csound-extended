@@ -301,7 +301,7 @@ aoutleft                        =                       aampenv * aox
 aoutright                       =                       aampenv * aoy
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "BanchoffKlein  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   BandedWG
@@ -331,7 +331,7 @@ asignal                         STKBandedWG             ifrequency,1
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "BandedWG       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   BassModel
@@ -402,7 +402,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "BassModel      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   ChebyshevDrone
@@ -440,7 +440,7 @@ asignal                         =                       asignal * aenvelope
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ChebyshevDrone i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   ChebyshevMelody
@@ -505,7 +505,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ChebyshevMelod i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   DelayedPluckedString
@@ -556,7 +556,7 @@ asignal2                        balance                 asignal1, asignal
 aoutleft, aoutright             pan2                    asignal2 * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "DelayedPlucked i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   EnhancedFMBell
@@ -564,7 +564,6 @@ aoutleft, aoutright             pan2                    asignal2 * adeclick, i_p
                                 // Original by John ffitch.
                                 // Adapted by Michael Gogins.
                                 //////////////////////////////////////////////////////
-
 i_instrument                    =                       p1
 i_time                          =                       p2
 i_duration                      =                       p3
@@ -614,7 +613,7 @@ asignal                         =                       aenvelope * (acar + arvb
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "EnhancedFMBell i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FenderRhodesModel
@@ -657,7 +656,7 @@ asignal                         fmrhode                 iamplitude, ifrequency, 
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FenderRhodes   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FilteredSines
@@ -732,7 +731,7 @@ aoutleft                        =                       a17 * adeclick
 aoutright                       =                       a18 * adeclick
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FilteredSines  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Flute
@@ -805,7 +804,7 @@ a3                              =                       a1 + a2 + anoise
 aoutleft, aoutright             pan2                    a3 * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Flute          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMModerateIndex
@@ -846,7 +845,7 @@ asignal                         =                       (aouta + aoutb) * kinden
 aoutleft, aoutright		        pan2			        asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMModerateInd  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMModerateIndex2
@@ -887,7 +886,7 @@ asignal                         =                       (aouta + aoutb) * kinden
 aoutleft, aoutright		        pan2			        asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMModerateInd2 i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMModulatedChorusing
@@ -947,7 +946,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMModulatedCho i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMWaterBell
@@ -955,7 +954,6 @@ aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 // Original by Steven Yi.
                                 // Adapted by Michael Gogins.
                                 //////////////////////////////////////////////
-
 i_instrument                    =                       p1
 i_time                          =                       p2
 i_duration                      =                       p3
@@ -1006,7 +1004,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    iamplitude * asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMWaterBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Granular
@@ -1073,7 +1071,7 @@ aoutleft                        =                       aoutl * kamp * iamplitud
 aoutright                       =                       aoutr * kamp * iamplitude
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Granular       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Guitar
@@ -1114,7 +1112,7 @@ asignal                         =                       aout * kenv * kamp
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Guitar         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Guitar2
@@ -1154,7 +1152,7 @@ asignal                         dcblock                 asignal
 aoutleft, aoutright		        pan2			        asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Guitar2        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr 			        Harpsichord
@@ -1192,7 +1190,7 @@ adeclick                        linsegr                 0, iattack, 1, isustain,
 aoutleft, aoutright             pan2                    asignal * adeclick, ipan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   HeavyMetalModel
@@ -1238,7 +1236,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "HeavyMetalMod  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Hypocycloid
@@ -1303,7 +1301,7 @@ irightgain                      =                       sqrt(2.0) / 2.0 * (cos(i
 ileftgain                       =                       sqrt(2.0) / 2.0 * (cos(itheta) - sin(itheta))
                                 outleta                 "outleft",  aoutleft * ileftgain
                                 outleta                 "outright", aoutright * irightgain
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Hypocycloid    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr			        ModerateFM
@@ -1347,7 +1345,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ModerateFM     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr 			        ModulatedFM
@@ -1405,7 +1403,7 @@ asignal                         =                       (aleft + aright) * iampl
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ModulatedFM    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   PlainPluckedString
@@ -1438,7 +1436,7 @@ asignal                         =                       (asignal1 + asignal2) * 
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PlainPlucked   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   PRCBeeThree
@@ -1467,7 +1465,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PRCBeeThree    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                instr                   PRCBeeThreeDelayed
@@ -1511,7 +1509,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal2 * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PRCBeeThreeDel i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   PRCBowed
@@ -1546,7 +1544,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PRCBosed       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBandedWG
@@ -1577,7 +1575,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBandedWG    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBeeThree
@@ -1610,7 +1608,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    aphased * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBeeThree    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBlowBotl
@@ -1642,7 +1640,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBlowBotl    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBlowHole
@@ -1674,7 +1672,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBlowHole    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBowed
@@ -1712,7 +1710,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBowed       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKClarinet
@@ -1744,7 +1742,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKClarinet    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKDrummer
@@ -1776,7 +1774,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKDrummer     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKFlute
@@ -1814,7 +1812,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKFlute       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKFMVoices
@@ -1852,7 +1850,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKFMVoices    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKHvyMetl
@@ -1890,7 +1888,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKHvyMetl     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKMandolin
@@ -1922,7 +1920,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKMandolin    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKModalBar
@@ -1971,7 +1969,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKModalBar    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                  instr                   STKMoog
@@ -2003,7 +2001,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKMoog        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                  instr                   STKPercFlut
@@ -2035,7 +2033,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKPercFlut    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKPlucked
@@ -2067,7 +2065,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKPlucked     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKResonate
@@ -2105,7 +2103,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKResonate    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKRhodey
@@ -2137,7 +2135,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKRhodey      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKSaxofony
@@ -2177,7 +2175,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKSaxofony    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKShakers
@@ -2239,7 +2237,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKShakers     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKSimple
@@ -2276,7 +2274,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKSimple      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKSitar
@@ -2308,7 +2306,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKSitar       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKTubeBell
@@ -2340,7 +2338,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKTubeBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKVoicForm
@@ -2372,7 +2370,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKVoicForm    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKWhistle
@@ -2404,7 +2402,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKWhistle     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKWurley
@@ -2436,7 +2434,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKWurley        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   StringPad
@@ -2481,7 +2479,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "StringPad      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   ToneWheelOrgan
@@ -2541,7 +2539,7 @@ asignal                         =                       iamplitude * (asubfund +
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ToneWheelOrgan i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   TubularBellModel
@@ -2584,7 +2582,7 @@ asignal                         fmbell                  1.0, ifrequency, iindex,
 aoutleft, aoutright		        pan2	                asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "TubularBellMod %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   WaveguideGuitar
@@ -2780,7 +2778,7 @@ asignal                         =                       (1500 * (afwav + abkwav 
 aoutleft, aoutright             pan2                    asignal * iamplitude, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "WaveguideGuit  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Xing
@@ -2841,7 +2839,7 @@ asignal                         =                       asignal
 aoutleft, aoutright		        pan2			        asignal * adeclick, .875;ipan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Xing          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr			        ZakianFlute
@@ -3064,7 +3062,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 //////////////////////////////////////////////
@@ -3395,7 +3393,7 @@ aoutleft                        =                       aampenv * aox
 aoutright                       =                       aampenv * aoy
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "BanchoffKlein  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   BandedWG
@@ -3425,7 +3423,7 @@ asignal                         STKBandedWG             ifrequency,1
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "BandedWG       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   BassModel
@@ -3496,7 +3494,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "BassModel      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   ChebyshevDrone
@@ -3534,7 +3532,7 @@ asignal                         =                       asignal * aenvelope
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ChebyshevDrone i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   ChebyshevMelody
@@ -3599,7 +3597,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ChebyshevMel   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   DelayedPluckedString
@@ -3650,7 +3648,7 @@ asignal2                        balance                 asignal1, asignal
 aoutleft, aoutright             pan2                    asignal2 * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "DelayedPlucked i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   EnhancedFMBell
@@ -3708,7 +3706,7 @@ asignal                         =                       aenvelope * (acar + arvb
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "EnhancedFMBell i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FenderRhodesModel
@@ -3751,7 +3749,7 @@ asignal                         fmrhode                 iamplitude, ifrequency, 
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FenderRhodes   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FilteredSines
@@ -3826,7 +3824,7 @@ aoutleft                        =                       a17 * adeclick
 aoutright                       =                       a18 * adeclick
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FilteredSines  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Flute
@@ -3899,7 +3897,7 @@ a3                              =                       a1 + a2 + anoise
 aoutleft, aoutright             pan2                    a3 * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Flute          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMModerateIndex
@@ -3940,7 +3938,7 @@ asignal                         =                       (aouta + aoutb) * kinden
 aoutleft, aoutright		        pan2			        asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMModerateInd  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMModerateIndex2
@@ -3981,7 +3979,7 @@ asignal                         =                       (aouta + aoutb) * kinden
 aoutleft, aoutright		        pan2			        asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMModerateInd2 i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMModulatedChorusing
@@ -4041,7 +4039,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMModulatedCho i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   FMWaterBell
@@ -4049,7 +4047,6 @@ aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 // Original by Steven Yi.
                                 // Adapted by Michael Gogins.
                                 //////////////////////////////////////////////
-
 i_instrument                    =                       p1
 i_time                          =                       p2
 i_duration                      =                       p3
@@ -4100,7 +4097,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    iamplitude * asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "FMWaterBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Granular
@@ -4167,7 +4164,7 @@ aoutleft                        =                       aoutl * kamp * iamplitud
 aoutright                       =                       aoutr * kamp * iamplitude
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Granular       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Guitar
@@ -4208,7 +4205,7 @@ asignal                         =                       aout * kenv * kamp
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Guitar         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Guitar2
@@ -4248,7 +4245,7 @@ asignal                         dcblock                 asignal
 aoutleft, aoutright		        pan2			        asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Guitar2        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr 			        Harpsichord
@@ -4286,7 +4283,7 @@ adeclick                        linsegr                 0, iattack, 1, isustain,
 aoutleft, aoutright             pan2                    asignal * adeclick, ipan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   HeavyMetalModel
@@ -4332,7 +4329,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "HeavyMetalMod  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Hypocycloid
@@ -4397,7 +4394,7 @@ irightgain                      =                       sqrt(2.0) / 2.0 * (cos(i
 ileftgain                       =                       sqrt(2.0) / 2.0 * (cos(itheta) - sin(itheta))
                                 outleta                 "outleft",  aoutleft * ileftgain
                                 outleta                 "outright", aoutright * irightgain
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Hypocycloid    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr			        ModerateFM
@@ -4441,7 +4438,7 @@ asignal                         =                       asignal * iamplitude
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ModerateFM     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr 			        ModulatedFM
@@ -4499,7 +4496,7 @@ asignal                         =                       (aleft + aright) * iampl
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ModulatedFM    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
 gk_PianoNote_midi_dynamic_range init                    127
@@ -4561,7 +4558,7 @@ asignal                         =                       (asignal1 + asignal2) * 
 aoutleft, aoutright		        pan2			        asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PlainPluckedSt i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   PRCBeeThree
@@ -4590,7 +4587,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PRCBeeThree    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                instr                   PRCBeeThreeDelayed
@@ -4634,7 +4631,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal2 * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PRCBeeThreeDel i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   PRCBowed
@@ -4669,7 +4666,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "PRCBowed       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBandedWG
@@ -4700,7 +4697,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBandedWG    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBeeThree
@@ -4733,7 +4730,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    aphased * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBeeThree    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBlowBotl
@@ -4765,7 +4762,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBlowBotl    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBlowHole
@@ -4797,7 +4794,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBlowHole    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKBowed
@@ -4835,7 +4832,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKBowed       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKClarinet
@@ -4867,7 +4864,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKClarinet    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKDrummer
@@ -4899,7 +4896,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKDrummer     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKFlute
@@ -4937,7 +4934,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKFlute       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKFMVoices
@@ -4975,7 +4972,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKFMVoices    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKHvyMetl
@@ -5013,7 +5010,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKHvyMetl     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKMandolin
@@ -5045,7 +5042,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKMandolin    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKModalBar
@@ -5094,7 +5091,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKModalBar    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                  instr                   STKMoog
@@ -5126,7 +5123,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKMoog        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                  instr                   STKPercFlut
@@ -5158,7 +5155,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKPercFlut    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKPlucked
@@ -5190,7 +5187,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKPlucked     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKResonate
@@ -5228,7 +5225,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKResonate    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKRhodey
@@ -5260,7 +5257,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKRhodey      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKSaxofony
@@ -5300,7 +5297,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKSaxofony    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKShakers
@@ -5362,7 +5359,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKShakers     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKSimple
@@ -5399,7 +5396,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKSimple      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKSitar
@@ -5431,7 +5428,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKSitar       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKTubeBell
@@ -5463,7 +5460,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKTubeBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKVoicForm
@@ -5495,7 +5492,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKVoicForm    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKWhistle
@@ -5527,7 +5524,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKWhistle     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   STKWurley
@@ -5559,7 +5556,7 @@ adeclick                        linsegr                 0, idampingattack, 1, id
 aoutleft, aoutright             pan2                    asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "STKWurley     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   StringPad
@@ -5604,7 +5601,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "StringPad      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   ToneWheelOrgan
@@ -5664,7 +5661,7 @@ asignal                         =                       iamplitude * (asubfund +
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ToneWheelOrgan i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   TubularBellModel
@@ -5707,7 +5704,7 @@ asignal                         fmbell                  1.0, ifrequency, iindex,
 aoutleft, aoutright		        pan2	                asignal * iamplitude * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "TubularBellMod i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   WaveguideGuitar
@@ -5903,7 +5900,7 @@ asignal                         =                       (1500 * (afwav + abkwav 
 aoutleft, aoutright             pan2                    asignal * iamplitude, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "WaveguideGuit  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Xing
@@ -5964,7 +5961,7 @@ asignal                         =                       asignal
 aoutleft, aoutright		        pan2			        asignal * adeclick, .875;ipan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Xing           i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr			        ZakianFlute
@@ -6187,7 +6184,7 @@ adeclick                        linsegr                 0.0, iattack, 1.0, isust
 aoutleft, aoutright             pan2                    asignal * adeclick, i_pan
                                 outleta                 "outleft",  aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 //////////////////////////////////////////////
@@ -6246,7 +6243,7 @@ aoutright			            =			            ainright * kdry + awetright * gkReverber
 reverberation_endif_label:
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+                                prints                  "Reverberation  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   Compressor
@@ -6267,6 +6264,7 @@ aoutright                       compress                ainright,       ainright
                                 compressor_endif_label:
                                 outleta                 "outleft",      aoutleft
                                 outleta                 "outright",     aoutright
+                                prints                  "Compressor     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   MasterOutput
@@ -6278,7 +6276,7 @@ ainright                        inleta                  "inright"
 aoutleft                        =                       gkMasterLevel * ainleft
 aoutright                       =                       gkMasterLevel * ainright
                                 outs                    aoutleft, aoutright
+                                prints                  "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
-                                prints                  "instr %4d t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
 qqq)
 
