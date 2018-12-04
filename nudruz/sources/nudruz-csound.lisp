@@ -29,7 +29,7 @@
 
 (defun event-to-istatement (event channel-offset velocity-scale arrangement)
 "
-Translates a Common Music MIDI event to a Csound score event
+Translates a Common Music MIDI channel event to a Csound score event
 (i-statement), which is terminated with a newline. An offset, which may
 be any number, is added to the MIDI channel number. After that, if the 
 arrangement parameter is not nil, the existing event is remapped to a new 
@@ -37,9 +37,12 @@ instrument number and the velocity is modified.
 "
     (let 
         ((insno)
+        (midikey)
         (velocity)
         (pan 0.5))
+        (if (string-equal (class-name (class-of event)) "MIDI")
         (progn 
+        (inspect event)
         (setf insno (+ channel-offset (midi-channel event)))
         (setf velocity (* velocity-scale (midi-amplitude event)))
         (setf midikey (keynum (midi-keynum event)))
@@ -48,7 +51,8 @@ instrument number and the velocity is modified.
             (setf velocity (+ velocity (second (gethash insno arrangement))))
             (setf insno (first (gethash insno arrangement))))
     (format nil "i ~,6f ~,6f ~,6f ~,6f ~,6f 0 ~,6f 0 0 0 0~%" insno (object-time event)(midi-duration event)
-    midikey velocity pan)
+    midikey velocity pan))
+    (format nil "; ~a~%" event)
 )))
 (export 'event-to-istatement)
 
@@ -71,7 +75,7 @@ using 'test' for character equality.
           
 (defun seq-to-sco (seq &optional (channel-offset 1) (velocity-scale 127) &key (arrangement nil))
 "
-Translates all MIDI events in a Common Music 'seq' object to Csound sco text,
+Translates all MIDI channel events in a Common Music 'seq' object to Csound sco text,
 with an optional channel offset and velocity scaling. The arrangement 
 parameter, if passed, is used to reassign the instrument numbers and 
 add to/subtract from the MIDI velocities in the sequence. The arrangement 
@@ -87,7 +91,7 @@ to a list '(new-inso add-velocity pan).
             (defun curried-event-to-istatement (event)
                 (event-to-istatement event channel-offset velocity-scale arrangement))
             (setq score-list (mapcar 'curried-event-to-istatement (subobjects seq)))
-            (setq sco-text (format nil "~{~A~^ ~}" score-list))
+            (setq sco-text (format nil "~{~A~^~}" score-list))
         )
     )
 )
@@ -98,7 +102,7 @@ Writes the contents of a CSD to a file, replacing the file if it exists.
 "
   (with-open-file (stream name 
                            :direction :output
-                           :if-exists :overwrite
+                           :if-exists :supersede
                            :if-does-not-exist :create )
   (write-line content stream)))
   
