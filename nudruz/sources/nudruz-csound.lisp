@@ -265,13 +265,13 @@ that can be processed in Common Music.
     )
 )
     
-(defun cope-to-seq (cope-events)
+(defun cope-events-to-seq (cope-events)
 "
 Translates an event list produced by David Cope's 'Computer Models of Musical 
 Creativity' software into a CM::SEQ object.
 "
     (let 
-        ((cm-seq (new seq :name "cm-seq")))
+        ((midi-events))
         (defun cope-event-to-midi-event (event)
             (new midi 
                 :time(/ (first event) 1000.)
@@ -281,8 +281,10 @@ Creativity' software into a CM::SEQ object.
                 :duration (/ (third event) 1000.)
             )
         )
-        (setf (subobjects sequence) (mapcar 'cope-event-to-midi-event (cope-events)))
-        (format t "Translated: ~d MIDI events.~%" (list-length (subobjects sequence)))
+        (setf midi-events (mapcar 'cope-event-to-midi-event cope-events))
+        ;(print midi-events)
+        (format t "Translated: ~d MIDI events.~%" (list-length midi-events))
+        (new seq :name "cm-seq" :subobjects midi-events)
     )
 )
             
