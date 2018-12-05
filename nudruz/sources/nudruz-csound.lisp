@@ -33,7 +33,8 @@ Translates a Common Music MIDI channel event to a Csound score event
 (i-statement), which is terminated with a newline. An offset, which may
 be any number, is added to the MIDI channel number. After that, if the 
 arrangement parameter is not nil, the existing event is remapped to a new 
-instrument number and the velocity is modified.
+instrument number and the velocity is modified. MIDI events that are 
+not channel events are included, but as comments.
 "
     (let 
         ((insno)
@@ -42,7 +43,7 @@ instrument number and the velocity is modified.
         (pan 0.5))
         (if (string-equal (class-name (class-of event)) "MIDI")
         (progn 
-        (inspect event)
+        ; (inspect event)
         (setf insno (+ channel-offset (midi-channel event)))
         (setf velocity (* velocity-scale (midi-amplitude event)))
         (setf midikey (keynum (midi-keynum event)))
@@ -248,5 +249,21 @@ A copy of the .csd file that is rendered is saved for archival purposes.
         )
     )
 )   
+
+(defun midifile-to-seq (midi-filename)
+"
+Import a standard midi file to a Common Music seq object such that notes
+are not CM::MIDI-EVENT binary objects, but rather regular CM::MIDI objects 
+that can be processed in Common Music.
+"
+    (let 
+        ((raw-seq)
+        (cooked-seq))
+        (setf raw-seq (import-events midi-filename :tracks true :meta-exclude true))
+        (setf cooked-seq (new seq :name "csound-seq"))
+        (events raw-seq cooked-seq)
+    )
+)
+        
 
 
