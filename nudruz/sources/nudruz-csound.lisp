@@ -264,6 +264,29 @@ that can be processed in Common Music.
         (events raw-seq cooked-seq)
     )
 )
+    
+(defun cope-to-seq (cope-events)
+"
+Translates an event list produced by David Cope's 'Computer Models of Musical 
+Creativity' software into a CM::SEQ object.
+"
+    (let 
+        ((cm-seq (new seq :name "cm-seq")))
+        (defun cope-event-to-midi-event (event)
+            (new midi 
+                :time(/ (first event) 1000.)
+                :keynum (second event)
+                :amplitude (/ (fifth event) 127.)
+                :channel (- (fourth event) 1)
+                :duration (/ (third event) 1000.)
+            )
+        )
+        (setf (subobjects sequence) (mapcar 'cope-event-to-midi-event (cope-events)))
+        (format t "Translated: ~d MIDI events.~%" (list-length (subobjects sequence)))
+    )
+)
+            
+ 
         
 
 
