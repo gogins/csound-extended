@@ -6,6 +6,12 @@ echo "Pulling from `pwd`..."
 git pull 
 git branch
 cd ..
+cd cope/cmcc
+git checkout master
+echo "Pulling from `pwd`..."
+git pull 
+git branch
+cd ../..
 cd csound
 echo "Pulling from `pwd`..."
 git checkout develop
