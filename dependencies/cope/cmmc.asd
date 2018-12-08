@@ -20,6 +20,7 @@
   :version "1.0"
   :author "David Cope (http://artsites.ucsc.edu/faculty/cope/), ASDF file by Michael Gogins <michael.gogins@gmail.com>"
   :serial f
+  :license "Public Domain"
   
   ; Files commented out below depend on MCL and I don't want to patch them 
   ; (at least not yet), or are init files not needed here.
@@ -85,14 +86,14 @@
     (:file "david-cope-cmmc/markov-chapter-3/Markov")
     
     ; (:file "david-cope-cmmc/sorcerer-chapter-5/init")
-    
-    (:file "david-cope-cmmc/improvise-chapter-4/improvise")
-    
+        
     ; (:file "david-cope-cmmc/improvise-chapter-4/play-midi-QT")
     ; (:file "david-cope-cmmc/improvise-chapter-4/windows")
     ; (:file "david-cope-cmmc/improvise-chapter-4/midi-file-read")
     ; (:file "david-cope-cmmc/improvise-chapter-4/init")
     
+    (:file "david-cope-cmmc/improvise-chapter-4/improvise")
+
     (:file "david-cope-cmmc/improvise-chapter-4/utilities")
     (:file "david-cope-cmmc/improvise-chapter-4/sample-databases/georgiaiam")
     (:file "david-cope-cmmc/improvise-chapter-4/sample-databases/improv-1")

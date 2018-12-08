@@ -211,7 +211,7 @@ gkMasterLevel                   init                    1.5
                                 alwayson                "Compressor"
                                 alwayson                "MasterOutput"
                                                                 
-gi_aeolus                       aeolus_init             "../stops-0.3.0", "Aeolus", "waves", 0, 3
+gi_aeolus                       aeolus_init             "stops-0.3.0", "Aeolus", "waves", 0, 3
 
                                 instr Aeolus_I 
                                 //////////////////////////////////////////////
