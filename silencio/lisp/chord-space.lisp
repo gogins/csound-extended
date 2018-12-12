@@ -27,4 +27,6 @@
 ;(print transforms)
 (defparameter I (weyl:one-matrix transforms 11))
 (print I)
+(setf (weyl:ref I 2 3) 3)
+(print I)
 (quit)

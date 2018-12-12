@@ -3121,7 +3121,7 @@ aoutleft, aoutright             pan2                    asignal * adeclick, i_pa
                                 //////////////////////////////////////////////
                                 // By Michael Gogins.
                                 //////////////////////////////////////////////
-                                aeolus_preset           gi_aeolus, 1, 1, "/home/mkg/.aeolus-presets"
+                                aeolus_preset           gi_aeolus, 1, 1, ".aeolus-presets"
                                 ;aeolus_group_mode gi_aeolus, 0, 2
                                 ;aeolus_group_mode gi_aeolus, 1, 2
                                 ;aeolus_group_mode gi_aeolus, 2, 2
@@ -3136,9 +3136,10 @@ aoutleft, aoutright             pan2                    asignal * adeclick, i_pa
                                 ;aeolus_stop gi_aeolus, 52
 a_out[]                         init                    2
 a_out                           aeolus_out              gi_aeolus
+                                out                     a_out
                                 outleta                 "outleft",  a_out[0] * 0dbfs
                                 outleta                 "outright", a_out[1] * 0dbfs
-                                prints                  "AeousOut       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+                                prints                  "AeolusOut      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin        
 
 gk_Piano_level                  init                    0

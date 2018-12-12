@@ -151,7 +151,7 @@ it exists.
     (events sequence filename :play nil)
 )
 
-(defun build-csd (orc &key (sco "")(options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")(output "dac"))
+(defun build-csd (orc &key (sco "")(options "--midi-key=4 --midi-velocity=5 -m195 -+msg_color=0 -RWdf")(output "dac"))
     (let
         ((csd "")
         (csd-template "<CsoundSynthesizer>
@@ -171,7 +171,7 @@ it exists.
     )
 )
 
-(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -RWdf")
+(defun render-with-orc (sequence orc &key (options "--midi-key=4 --midi-velocity=5 -m195 -+msg_color=0 -RWdf")
     (output "dac")(channel-offset 1)(velocity-scale 127)(csound-instance nil)
     (csd-filename "tmp-generated.csd")(arrangement nil))
     (let 

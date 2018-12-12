@@ -10,6 +10,7 @@
 ;;; Turn off all those zillions of SBCL warnings.
 (declaim #+sbcl (sb-ext:muffle-conditions style-warning))
 (declaim #+sbcl (sb-ext:muffle-conditions sb-ext:compiler-note))
+(declaim #+sbcl (sb-ext:muffle-conditions asdf::deprecated-function-warning))
 #+lispworks
 (push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
 
