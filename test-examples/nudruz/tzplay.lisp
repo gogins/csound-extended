@@ -6,11 +6,11 @@
 Contrary to CM documentation, the events function does not return a usable seq 
 object. The generated score is placed into the seq that is passed to events.
 |#
-(require :asdf)
+(load "~/quicklisp/setup.lisp")
 ;; There's a bug in Fomus. The first time you run this program, uncomment the 
 ;; following line, then run it again with the line commented out again.
 ;;(require :fomus)
-(require :nudruz)
+(ql:quickload :nudruz)
 (in-package :cm)
 
 (defparameter csound-seq (new seq :name "csound-test"))

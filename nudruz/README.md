@@ -87,3 +87,9 @@ lrwxrwxrwx 1 mkg mkg 67 Aug 24 12:40 screamer -> /home/mkg/quicklisp/dists/quick
 lrwxrwxrwx 1 mkg mkg 75 Aug 24 12:40 trivial-features -> /home/mkg/quicklisp/dists/quicklisp/software/trivial-features-20161204-git/
 ```
 
+In general, you should use Quicklisp rather than ASDF to load packages and 
+systems in Common Lisp, because Quicklisp can load ASDF systems, but ASDF cannot 
+download ASDF systems.
+
+The nudruz code and examples run in the package `:cm` although it should be 
+possible to rewrite them to run them in other packages.

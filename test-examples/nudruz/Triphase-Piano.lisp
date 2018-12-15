@@ -1,5 +1,5 @@
-(require :asdf)
-(require :nudruz)
+(load "~/quicklisp/setup.lisp")
+(ql:quickload :nudruz)
 (in-package :cm)
 
 (defun piano-phase (trope pulse amp stay move)
