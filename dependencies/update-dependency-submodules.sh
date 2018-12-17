@@ -1,5 +1,4 @@
 #!/bin/bash 
-clear 
 echo "Updating all submodules for csound-extended..."
 git submodule update --init --recursive --remote
 git submodule update --recursive
