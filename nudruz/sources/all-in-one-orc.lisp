@@ -211,13 +211,21 @@ gkMasterLevel                   init                    1.5
                                 alwayson                "Compressor"
                                 alwayson                "MasterOutput"
                                                                 
-gi_aeolus                       aeolus_init             "stops-0.3.0", "Aeolus", "waves", 0, 3
+gi_aeolus                       aeolus_init             "/home/mkg/stops-0.3.0", "Aeolus", "waves", 0, 3
+
+                                instr Aeolus_P 
+                                //////////////////////////////////////////////
+                                // By Michael Gogins.
+                                //////////////////////////////////////////////
+                                aeolus_note             gi_aeolus, p1 - 1, p4, p5
+                                prints                  "Aeolus_P       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+                                endin
 
                                 instr Aeolus_I 
                                 //////////////////////////////////////////////
                                 // By Michael Gogins.
                                 //////////////////////////////////////////////
-                                aeolus_note             gi_aeolus, p1, p4, p5
+                                aeolus_note             gi_aeolus, p1 - 1, p4, p5
                                 prints                  "Aeolus_I       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
@@ -225,7 +233,7 @@ gi_aeolus                       aeolus_init             "stops-0.3.0", "Aeolus",
                                 //////////////////////////////////////////////
                                 // By Michael Gogins.
                                 //////////////////////////////////////////////
-                                aeolus_note             gi_aeolus, p1, p4, p5
+                                aeolus_note             gi_aeolus, p1 - 1, p4, p5
                                 prints                  "Aeolus_II      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
@@ -233,32 +241,8 @@ gi_aeolus                       aeolus_init             "stops-0.3.0", "Aeolus",
                                 //////////////////////////////////////////////
                                 // By Michael Gogins.
                                 //////////////////////////////////////////////
-                                aeolus_note             gi_aeolus, p1, p4, p5
+                                aeolus_note             gi_aeolus, p1 - 1, p4, p5
                                 prints                  "Aeolus_III     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
-                                endin
-
-                                instr Aeolus_IV
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-                                aeolus_note             gi_aeolus, p1, p4, p5
-                                prints                  "Aeolus_IV      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
-                                endin
-
-                                instr Aeolus_V 
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-                                aeolus_note             gi_aeolus, p1, p4, p5
-                                prints                  "Aeolus_V       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
-                                endin
-
-                                instr Aeolus_I 
-                                //////////////////////////////////////////////
-                                // By Michael Gogins.
-                                //////////////////////////////////////////////
-                                aeolus_note             gi_aeolus, p1, p4, p5
-                                prints                  "Aeolus_I       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
 
                                 instr                   BanchoffKleinBottle
@@ -3121,7 +3105,7 @@ aoutleft, aoutright             pan2                    asignal * adeclick, i_pa
                                 //////////////////////////////////////////////
                                 // By Michael Gogins.
                                 //////////////////////////////////////////////
-                                aeolus_preset           gi_aeolus, 1, 1, ".aeolus-presets"
+                                aeolus_preset           gi_aeolus, 0, 0
                                 ;aeolus_group_mode gi_aeolus, 0, 2
                                 ;aeolus_group_mode gi_aeolus, 1, 2
                                 ;aeolus_group_mode gi_aeolus, 2, 2
