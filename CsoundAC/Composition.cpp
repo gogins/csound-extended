@@ -33,12 +33,18 @@ Composition::Composition() :
     tonesPerOctave(12.0),
     conformPitches(false),
     tieOverlappingNotes(false),
-    duration(0)
+    duration(0),
+    score(baseScore)
 {
 }
 
 Composition::~Composition()
 {
+}
+
+void Composition::setScore(Score &score_) 
+{
+    score = score_;
 }
 
 int Composition::render()

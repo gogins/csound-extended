@@ -283,6 +283,10 @@ public:
     virtual void setOutputSoundfileName(std::string name);
     virtual void clearOutputSoundfileName();
     virtual void generateAllNames();
+    /** 
+     * Sets the score in this to the indicated score.
+     */
+    virtual void setScore(Score &score);
 protected:
     /**
      * Required metadata.
@@ -390,7 +394,8 @@ protected:
      * Generated.
      */
     std::string bext_orig_ref;
-    Score score;
+    Score baseScore;
+    Score &score;
     double tonesPerOctave;
     bool conformPitches;
     bool tieOverlappingNotes;

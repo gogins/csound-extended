@@ -31,6 +31,7 @@
 #include <cstdarg>
 #include <eigen3/Eigen/Dense>
 #include <Event.hpp>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -49,6 +50,7 @@
 #include <cstdarg>
 #include <eigen3/Eigen/Dense>
 #include <Event.hpp>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -3050,6 +3052,205 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
         }
     }
 }
+
+/**
+ * Score equipped with chords. The notes in the score may be conformed to the
+ * chord that obtains at the time of the notes. The times and durations of
+ * notes and chords are rescaled together. This is done by finding minimum and
+ * maximum times by counting both note times and chord times.
+ */
+class ChordScore : public Score {
+public:
+    std::map<double, Chord> chords_for_times;
+    virtual void insertChord(double tyme, const Chord &chord) {
+        chords_for_times[tyme] = chord;
+    }
+    /**
+     * Returns a pointer to the first chord that starts at or after the
+     * specified time. If there is no such chord, a null pointer is returned.
+     */
+    virtual Chord *getChord(double time_) {
+        auto it = chords_for_times.lower_bound(time_);
+        if (it != chords_for_times.end()) {
+            return &it->second;
+        } else {
+            return nullptr;
+        }
+    }
+
+    /**
+     * Conforms the pitch-classes of the events in this to the closest
+     * pitch-class of the chord, if any, that obtains at that time.
+     */
+    virtual void conformToChords(bool tie_overlaps = true, bool octave_equivalence = true) {
+        sort();
+        if (chords_for_times.begin() != chords_for_times.end()) {
+            for (auto event_iterator = begin(); event_iterator != end(); ++event_iterator) {
+                auto chord_iterator = chords_for_times.lower_bound(event_iterator->getTime());
+                if (chord_iterator != chords_for_times.end()) {
+                    conformToChord(*event_iterator, chord_iterator->second, octave_equivalence);
+                }
+            }
+        }
+        if (tie_overlaps == true) {
+            tieOverlappingNotes(true);
+        }
+    }
+
+    void getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range)
+    {
+        if(beginAt == endAt) {
+            return;
+        }
+        const Event &beginEvent = score[beginAt];
+        double maximum = beginEvent[dimension];
+        const Event &endEvent = score[endAt - 1];
+        minimum = endEvent[dimension];
+        if(dimension == Event::TIME) {
+            const Event &e = score[beginAt];
+            maximum = std::max(e.getTime(), e.getTime() + e.getDuration());
+            minimum = std::min(e.getTime(), e.getTime() + e.getDuration());
+            double beginning;
+            double ending;
+            for( ; beginAt != endAt; ++beginAt) {
+                const Event &event = score[beginAt];
+                beginning = std::min(event.getTime(), event.getTime() + event.getDuration());
+                ending = std::max(event.getTime(), event.getTime() + event.getDuration());
+                if(ending > maximum) {
+                    maximum = ending;
+                } else if(beginning < minimum) {
+                    minimum = beginning;
+                }
+            }
+            // Also take into account chord times.
+            auto chord_begin = chords_for_times.begin();
+            auto chord_rbegin = chords_for_times.rbegin();
+            if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
+                minimum = std::min(minimum, chord_begin->first);
+                maximum = std::max(maximum, chord_rbegin->first);
+            }
+        } else {
+            for( ; beginAt != endAt; ++beginAt) {
+                const Event &event = score[beginAt];
+                if(event[dimension] > maximum) {
+                    maximum = event[dimension];
+                }
+                if(event[dimension] < minimum) {
+                    minimum = event[dimension];
+                }
+            }
+        }
+        range = maximum - minimum;
+    }
+
+    void setScale(std::vector<Event> &score,
+                  int dimension,
+                  bool rescaleMinimum,
+                  bool rescaleRange,
+                  size_t beginAt,
+                  size_t endAt,
+                  double targetMinimum,
+                  double targetRange)
+    {
+        if(!(rescaleMinimum || rescaleRange)) {
+            return;
+        }
+        if(beginAt == endAt) {
+            return;
+        }
+        double actualMinimum;
+        double actualRange;
+        getScale(score, dimension, beginAt, endAt, actualMinimum, actualRange);
+        double scale;
+        if(actualRange == 0.0) {
+            scale = 1.0;
+        } else {
+            scale = targetRange / actualRange;
+        }
+        for( ; beginAt != endAt; ++beginAt) {
+            Event &event = score[beginAt];
+            event[dimension] = event[dimension] - actualMinimum;
+            if(rescaleRange) {
+                event[dimension] = event[dimension] * scale;
+            }
+            if(rescaleMinimum) {
+                event[dimension] = event[dimension] + targetMinimum;
+            } else {
+                event[dimension] = event[dimension] + actualMinimum;
+            }
+        }
+        // Also rescale chord times.
+        if (dimension == Event::TIME) {
+            std::map<double, Chord> temp;
+            for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
+                double tyme = it->first;
+                const Chord &chord = it->second;
+                tyme = tyme - actualMinimum;
+                if (rescaleRange) {
+                    tyme = tyme * scale;
+                }
+                if (rescaleMinimum) {
+                    tyme = tyme + targetMinimum;
+                } else {
+                    tyme = tyme + actualMinimum;
+                }
+                temp[tyme] = chord;
+            }
+            chords_for_times = temp;
+        }
+    }
+
+    double getDuration()
+    {
+        double start = 0.0;
+        double end = 0.0;
+        for (int i = 0, n = size(); i < n; ++i) {
+            const Event &event = at(i);
+            if (i == 0) {
+                start = event.getTime();
+                end = event.getOffTime();
+            } else {
+                if (event.getTime() < start) {
+                    start = event.getTime();
+                }
+                if (event.getOffTime() > end) {
+                    end = event.getOffTime();
+                }
+            }
+        }
+        auto chord_begin = chords_for_times.begin();
+        auto chord_rbegin = chords_for_times.rbegin();
+        if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
+            start = std::min(start, chord_begin->first);
+            end = std::max(end, chord_rbegin->first);
+        }
+        return end - start;
+    }
+
+    void setDuration(double targetDuration)
+    {
+        double currentDuration = getDuration();
+        if (currentDuration == 0.0) {
+            return;
+        }
+        double factor = targetDuration / currentDuration;
+        for (size_t i = 0, n = size(); i < n; i++) {
+            Event &event = (*this)[i];
+            double time_ = event.getTime();
+            double duration = event.getDuration();
+            event.setTime(time_ * factor);
+            event.setDuration(duration * factor);
+        }
+        std::map<double, Chord> temp;
+        for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
+            double tyme = it->first;
+            const Chord &chord = it->second;
+            tyme = tyme * factor;
+            temp[tyme] = chord;
+        }
+        chords_for_times = temp;
+    }
+};
 
 } // End of namespace csound.
 #endif
