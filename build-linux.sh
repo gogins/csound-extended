@@ -17,4 +17,5 @@ cd ..
 echo "Running lintian..."
 lintian --no-tag-display-limit build-linux/csound-extended-*.deb
 find build-linux/*.so* -ls
+find build-linux/*.deb -ls
 echo "Finished building all for Linux."

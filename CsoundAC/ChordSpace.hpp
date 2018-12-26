@@ -530,14 +530,15 @@ public:
         *this = other;
     }
     virtual Chord &operator = (const Chord &other) {
-        if (this != &other) {
-            resizeLike(other);
-            for (int i = 0, n = rows(); i < n; ++i) {
-                for (int j = 0, m = cols(); j < m; ++j) {
-                    coeffRef(i, j) = other.coeff(i, j);
-                }
-            }
-        }
+        Eigen::MatrixXd::operator=(other);
+        //if (this != &other) {
+        //    resizeLike(other);
+        //    for (int i = 0, n = rows(); i < n; ++i) {
+        //        for (int j = 0, m = cols(); j < m; ++j) {
+        //            coeffRef(i, j) = other.coeff(i, j);
+        //        }
+        //    }
+        //}
         return *this;
     }
 #if __cpplusplus >= 201103L
@@ -3059,10 +3060,10 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
  * notes and chords are rescaled together. This is done by finding minimum and
  * maximum times by counting both note times and chord times.
  */
-class ChordScore : public Score {
+class SILENCE_PUBLIC ChordScore : public Score {
 public:
     std::map<double, Chord> chords_for_times;
-    virtual void insertChord(double tyme, const Chord &chord) {
+    virtual void insertChord(double tyme, const Chord chord) {
         chords_for_times[tyme] = chord;
     }
     /**
