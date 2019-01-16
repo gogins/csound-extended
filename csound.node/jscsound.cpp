@@ -42,7 +42,7 @@
 #include <uv.h>
 #include <v8.h>
 
-using namespace v8;
+using namespace v8; 
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -107,9 +107,14 @@ static Persistent<Function, CopyablePersistentTraits<Function>> console_function
         auto code = String::NewFromUtf8(isolate, "(function(arg) {\n\
             console.log(arg);\n\
         })");
-        auto result = Script::Compile(code)->Run();
-        auto function_handle = Handle<Function>::Cast(result);
-        function.Reset(isolate, function_handle);
+        auto maybe_local_script = Script::Compile(isolate->GetCurrentContext(), code);
+        Local<Script> local_script;
+        maybe_local_script.ToLocal(&local_script);
+        auto maybe_local_result = local_script->Run(isolate->GetCurrentContext());
+        Local<Value> local_result;
+        maybe_local_result.ToLocal(&local_result);
+        Local<Function> local_function = Local<Function>::Cast(local_result);
+        function.Reset(isolate, local_function);
     }
     return function;
 }
@@ -118,7 +123,7 @@ void setMessageCallback(const FunctionCallbackInfo<Value>& args)
 {
     Isolate* isolate = Isolate::GetCurrent();
     HandleScope scope(isolate);
-    csound_message_callback.Reset(isolate,  Handle<Function>::Cast(args[0]));
+    csound_message_callback.Reset(isolate, Handle<Function>::Cast(args[0]));
 }
 
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
@@ -317,9 +322,13 @@ void rewindScore(const FunctionCallbackInfo<Value>& args)
 double run_javascript(Isolate *isolate, std::string code)
 {
     Handle<String> source = String::NewFromUtf8(isolate, code.c_str());
-    Handle<Script> script = Script::Compile(source);
-    Handle<Value> result = script->Run();
-    return result->NumberValue();
+    auto script = Script::Compile(isolate->GetCurrentContext(), source);
+    Local<Script> local_script;
+    script.ToLocal(&local_script);
+    auto result = local_script->Run(isolate->GetCurrentContext());
+    Local<Value> value;
+    result.ToLocal(&value);
+    return value->NumberValue();
 }
 
 /**

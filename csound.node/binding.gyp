@@ -1,4 +1,7 @@
 {
+    "dependencies": {
+        "node-addon-api": "^1.3.0"
+    },
     "targets": [{
         "target_name": "csound",
         "sources": [
