@@ -1441,6 +1441,7 @@ if (typeof console === 'undefined') {
             fill(rootName, rootPitch, "7b5", "C            E    Gb          Bb  ");
             fill(rootName, rootPitch, "7b9", "C  Db        E       G        Bb  ");
             fill(rootName, rootPitch, "7b9b5", "C  Db        E    Gb          Bb  ");
+            fill(rootName, rootPitch, "7#9", "C  D#        E       G        Bb  ");
             fill(rootName, rootPitch, "9", "C     D      E       G        Bb  ");
             fill(rootName, rootPitch, "9#11", "C     D      E F#    G        Bb  ");
             fill(rootName, rootPitch, "13", "C     D      E F     G     A  Bb  ");
