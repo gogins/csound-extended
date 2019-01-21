@@ -1931,7 +1931,7 @@ if (typeof console === 'undefined') {
             var event = s.data[index];
             ChordSpace.conformToChord(event, chord, octaveEquivalence);
         }
-        console.log('Conform to: ' + chord.name() + ' from: ' + start + ' to: ' + end_ + ' notes: ' + s.data.length + '.');
+        console.log('Conform to: ' + chord + ' from: ' + start + ' to: ' + end_ + ' notes: ' + s.data.length + '.');
         return s;
     };
 
@@ -2002,22 +2002,22 @@ if (typeof console === 'undefined') {
         else if (c === 'T') t.upTempo();
         else if (c === 't') t.downTempo();
         else if (c === 'C') {
-            this.chordsForTimes[t.event.start] = t.chord.clone();
+            this.chordsForTimes[t.event.time] = t.chord.clone();
         } else if (c === 'K') {
             t.K();
-            this.chordsForTimes[t.event.start] = t.chord.clone();
+            this.chordsForTimes[t.event.time] = t.chord.clone();
         } else {
             var parts = c.split(',');
             var cc = parts[0];
             if (cc === 'T') {
                 t.T(Number(parts[1]));
-                this.chordsForTimes[t.event.start] = t.chord.clone();
+                this.chordsForTimes[t.event.time] = t.chord.clone();
             } else if (cc === 'I') {
                 t.I(Number(parts[1]));
-                this.chordsForTimes[t.event.start] = t.chord.clone();
+                this.chordsForTimes[t.event.time] = t.chord.clone();
             } else if (cc === 'Q') {
                 t.Q(Number(parts[1]));
-                this.chordsForTimes[t.event.start] = t.chord.clone();
+                this.chordsForTimes[t.event.time] = t.chord.clone();
             } else if (cc === 'J') {
                 t.J(Number(parts[1], Number(parts[2])));
                 this.chordsForTimes[t.event.start] = t.chord.clone();
@@ -2034,7 +2034,7 @@ if (typeof console === 'undefined') {
                     t.tempo *= operand;
                 } else if (operation === '/') {
                     t.tempo /= operand;
-                    csound.message('tempo:' + t.tempo + '\n');
+                    //csound.message('tempo:' + t.tempo + '\n');
                 }
             }
         }
@@ -2059,12 +2059,13 @@ if (typeof console === 'undefined') {
                 times.push(tyme);
             }
         }
-        var end = this.score.duration();
-        for (var i = 0; i < times.length; i++) {
+        times.push(this.score.getDuration());
+        times.sort(function(a, b) { return a - b; });
+        for (var i = 0; i < times.length - 1; i++) {
             var begin = times[i];
-            var chord = this.chordsForTimes[tyme];
+            var end = times[i + 1];
+            var chord = this.chordsForTimes[begin];
             ChordSpace.apply(this.score, begin, end, chord, false);
-            end = begin;
         }
     };
 
