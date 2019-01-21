@@ -2065,7 +2065,7 @@ if (typeof console === 'undefined') {
             var begin = times[i];
             var end = times[i + 1];
             var chord = this.chordsForTimes[begin];
-            ChordSpace.apply(this.score, begin, end, chord, false);
+            ChordSpace.apply(this.score, chord, begin, end, false);
         }
     };
 
