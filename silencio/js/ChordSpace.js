@@ -2051,6 +2051,7 @@ if (typeof console === 'undefined') {
     /**
      * Conforms the pitch of each event in this,
      * to the closest pitch-class in the chord that applies to the event's time.
+     * NOTE: Must do this before rescaling the times in the score.
      */
     ChordSpace.LSys.prototype.conformToChords = function() {
         var times = [];
