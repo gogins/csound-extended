@@ -1150,11 +1150,13 @@ if (typeof console === 'undefined') {
     };
     Turtle.prototype.go = function(context) {
         var nextP = this.next();
-        context.strokeStyle = tinycolor(this.instrument).toString();
-        context.beginPath();
-        context.moveTo(this.p.x, this.p.y);
-        context.lineTo(nextP.x, nextP.y);
-        context.stroke();
+        if (context !== null) {
+            context.strokeStyle = tinycolor(this.instrument).toString();
+            context.beginPath();
+            context.moveTo(this.p.x, this.p.y);
+            context.lineTo(nextP.x, nextP.y);
+            context.stroke();
+        }
         this.p = nextP;
     };
     Turtle.prototype.move = function() {
@@ -1228,6 +1230,13 @@ if (typeof console === 'undefined') {
             this.sentence = next.join("");
         }
     };
+    LSys.prototype.write_score = function(t) {
+        t.reset();
+        for (i = 0; this.sentence.length > i; i++) {
+            c = this.sentence[i];
+            this.interpret(c, t, null);
+        }
+    }
     LSys.prototype.draw = function(t, context, W, H) {
         context.fillStyle = 'black';
         context.fillRect(0, 0, W, H);
