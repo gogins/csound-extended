@@ -1455,7 +1455,7 @@ if (typeof console === 'undefined') {
     Chord.prototype.name = function() {
         var chordName = ChordSpace.namesForChords[this.eOP().hash()];
         if (typeof chordName === 'undefined') {
-            chordName = '';
+            chordName = this.eOP().toName();
         }
         return chordName;
     };
@@ -1876,11 +1876,13 @@ if (typeof console === 'undefined') {
                 closestPitchClass = chordPitchClass;
             }
         }
-        if (octaveEquivalence === true) {
-            return closestPitchClass;
-        } else {
-            return octave + closestPitchClass;
+        var newPitch = closestPitchClass;
+        if (octaveEquivalence !== true) {
+            newPitch = octave + newPitch;
         }
+        //var message = sprintf("chord: %s pitch: %s original pc: %s octave: %s new pc: %s new pitch: %s\n", chord, pitch, pitchClass, octave, closestPitchClass, newPitch);
+        //csound.message(message);
+        return newPitch;
     };
 
     // If the event is a note, moves its pitch
@@ -1925,13 +1927,21 @@ if (typeof console === 'undefined') {
     // and up to but not including the end time, moves the pitch of the note to
     // belong to the chord, using the conformToChord function.
     ChordSpace.apply = function(score, chord, start, end_, octaveEquivalence) {
+        if (typeof chord === 'undefined') {
+            return;
+        }
         octaveEquivalence = typeof octaveEquivalence !== 'undefined' ? octaveEquivalence : true;
         var s = score.slice(start, end_, true);
         for (var index = 0; index < s.size(); index++) {
             var event = s.data[index];
             ChordSpace.conformToChord(event, chord, octaveEquivalence);
         }
-        console.log('Conform to: ' + chord + ' from: ' + start + ' to: ' + end_ + ' notes: ' + s.data.length + '.');
+        var message = sprintf('Conform to: %-20.20s from: %12.4f to: %12.4f notes: %5d.', chord.name(), parseFloat(start), parseFloat(end_), parseInt(s.data.length));
+        if (typeof csound !== 'undefined') {
+            csound.message(message + '\n');
+        } else {
+            console.log(message);
+        }
         return s;
     };
 
