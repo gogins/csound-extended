@@ -2,13 +2,11 @@
 (export '(aaron3pt
           aaron4pt
           abs-intv
-          abs-intv
           addaug-motive
           addaugs
           Add-Children-to-Open
           adddur-motive
           add-rests
-          all-btwn
           all-codewords
           all-combos
           all-contours-in-set
@@ -50,7 +48,6 @@
           basic-scontours
           beat-intersection
           bestmatch
-          bestmatch
           bestmatch-nondet
           bestpath
           best-tz-path
@@ -73,7 +70,6 @@
           bzmult-simple
           bz-taxipath
           canned-frags
-          cantest
           c-distance
           chain-contour-util
           c-hanoi
@@ -123,13 +119,11 @@
           conjunct-fragments
           consmatch
           consn-p
-          consn-p
           contains-seq
           contains-set
           contains-test
           containsv
           contour-chain
-          contour-constraints-nd
           contour-equiv
           contour-inversion
           convert-into-patt
@@ -193,7 +187,6 @@
           durwarp-clump
           durweight
           each-distance
-          ebt
           embed
           embell-func
           embellpc-func
@@ -203,7 +196,6 @@
           end-with
           entropy
           Entry
-          eqlsum
           eql-summer
           erasedurs
           event-to-istatement
@@ -304,7 +296,6 @@
           initial-codeword
           interlock
           intv
-          intv
           inverse-codeword
           inverse-idx
           inverse-motive
@@ -339,7 +330,6 @@
           list-complement
           listdist
           listdist-mod
-          list-eql
           list-eql
           listinv
           listmax
@@ -448,7 +438,6 @@
           mxchain
           mxlist
           myhand
-          near-ebt
           nearest-mult
           nearest-pcform
           neighbor
@@ -461,10 +450,7 @@
           nform-rgr-path
           Node-F-Value
           Node-Less-Than?
-          n-of-list
-          n-of-listv
           no-nils
-          nonmatch
           non-matches
           nono-distribute
           nonret-motive?
@@ -480,7 +466,6 @@
           nths
           ntn->clist
           ntn->clists
-          ntn-to-clists
           numidi-in
           numidi-in1
           numidi-vin
@@ -671,9 +656,7 @@
           scale-spectrum-low
           scale-spectrum-top
           scale-stepper
-          scan-constraint-nd
           scanons
-          scanons-nd
           scan-simuls
           scf
           scontours
@@ -837,7 +820,6 @@
           tzdims
           tzfactors->moves
           tzmin-sum
-          tzpathfactors
           tzpath-vector-len
           tzpath-vectors
           tzplay
@@ -868,7 +850,6 @@
           wiggle
           wiggle-to
           wigline
-          wigto
           write-output-to-file
           zigzag
           zigzag-by-size
