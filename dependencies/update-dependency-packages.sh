@@ -23,6 +23,10 @@ sudo apt-get install libfltk1.3-dev
 sudo apt-get install libfltk-images1.3
 echo "Updating fluidsynth..."
 sudo apt-get install libfluidsynth-dev
+echo "Updating libgit2-dev..."
+sudo apt-get install libgit2-dev
+echo "Updating libtag1-dev..."
+sudo apt-get install libtag1-dev
 echo "Updating gcc-arm-linux-gnueabi..."
 sudo apt-get install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."
@@ -31,6 +35,8 @@ echo "Updating PortMidi..."
 sudo apt-get install libportmidi-dev
 echo "Updating PortSMF..."
 sudo apt-get install libportsmf-dev
+echo "Updating libsox-dev..."
+sudo apt-get install libsox-dev
 echo "Updating qt5base-dev..."
 sudo apt-get install qt5base-dev
 echo "Updating qtwebengine5-dev..."

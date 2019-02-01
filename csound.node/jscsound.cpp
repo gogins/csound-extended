@@ -437,6 +437,7 @@ void init(Handle<Object> target)
     NODE_SET_METHOD(target, "CompileCsd", compileCsd);
     NODE_SET_METHOD(target, "CompileCsdText", compileCsdText);
     NODE_SET_METHOD(target, "CompileOrc", compileOrc);
+    NODE_SET_METHOD(target, "EvalCode", evalCode);
     NODE_SET_METHOD(target, "GetControlChannel", getControlChannel);
     NODE_SET_METHOD(target, "GetKsmps", getKsmps);
     NODE_SET_METHOD(target, "GetNchnls", getNchnls);
@@ -464,6 +465,7 @@ void init(Handle<Object> target)
     NODE_SET_METHOD(target, "compileCsd", compileCsd);
     NODE_SET_METHOD(target, "compileCsdText", compileCsdText);
     NODE_SET_METHOD(target, "compileOrc", compileOrc);
+    NODE_SET_METHOD(target, "evalCode", evalCode);
     NODE_SET_METHOD(target, "getControlChannel", getControlChannel);
     NODE_SET_METHOD(target, "getKsmps", getKsmps);
     NODE_SET_METHOD(target, "getNchnls", getNchnls);
