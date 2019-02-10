@@ -80,9 +80,14 @@ namespace csound {
             virtual void TagForId3v2(std::string filepath) {
                 Message("Tagging: %s\n", filepath.c_str());
                 TagLib::FileRef file_ref(filepath.c_str());
-                file_ref.tag()->setArtist(artist.c_str());
-                file_ref.tag()->setTitle(title.c_str());
-                file_ref.save();
+                TagLib::PropertyMap map = file_ref.file()->properties();
+                map.replace("COMPOSER", TagLib::String(author.c_str()));
+                map.replace("ARTIST", TagLib::String(artist.c_str()));
+                map.replace("TITLE", TagLib::String(title.c_str()));
+                map.replace("ALBUM", TagLib::String(album.c_str()));
+                map.replace("TRACKNUMBER", TagLib::String(track.c_str()));
+                file_ref.file()->setProperties(map);
+                file_ref.file()->save();
             }
             /**
              * Uses the SoX library to normalize the amplitude of the output 
@@ -181,13 +186,13 @@ namespace csound {
             /**
              * Sets the track number of the composition.
              */
-            virtual void SetTrack(int track_) {
+            virtual void SetTrack(std::string track_) {
                 track = track_;
             }
             /**
              * Returns the track number of the composition.
              */
-            virtual int GetTrack() const {
+            virtual std::string GetTrack() const {
                 return track;
             }
             /**
@@ -257,8 +262,8 @@ namespace csound {
             }
             /**
              * Like PerformAndReset, but performs post-processing, translation, 
-             * and tagging after rendering, so that this all is done in the 
-             * performance thread.
+             * and tagging after rendering, so that these things are all done 
+             * in the rendering thread.
              */
             virtual int PerformAndPostProcess() {
                 performance_thread = std::thread(&CsoundProducer::PerformAndPostProcessRoutine, this);
@@ -277,10 +282,11 @@ namespace csound {
             std::string title;
             std::string album;
             std::string year;
-            int track;
+            std::string track;
             std::string license;
             std::string copyright;
             std::string publisher;
+            std::string comment;
             std::string git_hash;
             std::string output_type = "wav";
             std::string output_format = "float";

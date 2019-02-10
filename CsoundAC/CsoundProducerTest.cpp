@@ -247,6 +247,8 @@ int main(int argc, const char **argv) {
     csound.SetAuthor("Michael Gogins");
     csound.SetArtist("Mike Gogins");
     csound.SetTitle("Csound Producer Test");
+    csound.SetAlbum("Test");
+    csound.SetTrack("1");
     csound.SetOutput("test", "wav", "float");
     csound.CompileCsdText(csd_text);
     csound.Start();
