@@ -65,6 +65,8 @@ namespace csound {
              * author-title[-git_hash] with all spaces replaced by underscores.
              */
             virtual std::string GetFilenameBase() {
+                std::string author = tags["COMPOSER"].toString().to8Bit();
+                std::string title = tags["TITLE"].toString().to8Bit();
                 std::string filename_base = author + "-" + title;
                 if (do_git_commit == true) {
                     filename_base.append("-");
@@ -77,16 +79,10 @@ namespace csound {
                 }
                 return filename_base;
             }
-            virtual void TagForId3v2(std::string filepath) {
+            virtual void SaveMetadata(std::string filepath) {
                 Message("Tagging: %s\n", filepath.c_str());
                 TagLib::FileRef file_ref(filepath.c_str());
-                TagLib::PropertyMap map = file_ref.file()->properties();
-                map.replace("COMPOSER", TagLib::String(author.c_str()));
-                map.replace("ARTIST", TagLib::String(artist.c_str()));
-                map.replace("TITLE", TagLib::String(title.c_str()));
-                map.replace("ALBUM", TagLib::String(album.c_str()));
-                map.replace("TRACKNUMBER", TagLib::String(track.c_str()));
-                file_ref.file()->setProperties(map);
+                file_ref.file()->setProperties(tags);
                 file_ref.file()->save();
             }
             /**
@@ -94,10 +90,11 @@ namespace csound {
              * soundfile to -6 dBFS.
              */
             virtual void NormalizeOutputSoundfile() {
-                sox_format_t *input;
-                sox_effects_chain_t *effects_chain;
-                sox_effect_t *normalizer;
-                sox_format_t *output;
+                auto input_filename = GetBaseFilename() + "." + type;
+                auto input = sox_open_read(filename.c_str(), nullptr, nullptr, nullptr);
+                auto output_filename = GetFilenameBase() + ".normalized." + type;
+                auto output = sox_open_write(output_filename.c_str(), &input->signal, nullptr, nullptr, nullptr);
+                auto effects_chain = sox_create_effects_chain(&in->encoding, &out->encoding);
             }
             virtual void TranslateToMp3() {
             }
@@ -112,7 +109,7 @@ namespace csound {
                 std::string output = GetFilenameBase();
                 output.append(".");
                 output.append(output_type);
-                TagForId3v2(output);
+                SaveMetadata(output);
 
                 NormalizeOutputSoundfile();
                 TranslateToMp3();
@@ -121,115 +118,40 @@ namespace csound {
                 TranslateToFlac();
                 Message("Ended CsoundProducer::PostProcess().\n");
             }
-             /**
-             * Sets the name of the composer or other author.
-             */
-            virtual void SetAuthor(std::string author_) {
-                author = author_;
-            }
             /**
-             * Returns the name of the composer or other author.
+             * Sets the value of a metadata tag. Valid tags include the 
+             * following (see https://taglib.org/api/index.html):            
+             * TITLE
+             * ALBUM
+             * ARTIST
+             * ALBUMARTIST
+             * SUBTITLE
+             * TRACKNUMBER
+             * DISCNUMBER
+             * DATE
+             * ORIGINALDATE
+             * GENRE
+             * COMMENT
+             * COMPOSER
+             * LYRICIST
+             * CONDUCTOR
+             * REMIXER
+             * PERFORMER:<XXXX>
+             * ISRC
+             * ASIN
+             * BPM
+             * COPYRIGHT
+             * ENCODEDBY
+             * MOOD
+             * COMMENT
+             * MEDIA
+             * LABEL
+             * CATALOGNUMBER
+             * BARCODE          
+             * Other and even user-defined tags may also be used.
              */
-            virtual std::string GetAuthor() const {
-                return author;
-            }
-            /**
-             * Sets the name of the performer or other artist. For computer music, 
-             * the artist is usually the same as the author.
-             */
-            virtual void SetArtist(std::string artist_) {
-                artist = artist_;
-            }
-            /**
-             * Returns the name of the performer or other artist. For computer 
-             * music, the artist is usually the same as the author.
-             */
-            virtual std::string GetArtist() const {
-                return artist;
-            }
-            /**
-             * Sets the title of the composition.
-             */
-            virtual void SetTitle(std::string title_) {
-                title = title_;
-            }
-            /**
-             * Returns the title of the composition.
-             */
-            virtual std::string GetTitle() const {
-                return title;
-            }
-            /**
-             * Sets the album of the composition.
-             */
-            virtual void SetAlbum(std::string album_) {
-                album = album_;
-            }
-            /**
-             * Returns the album of the composition.
-             */
-            virtual std::string GetAlbum() const {
-                return album;
-            }
-            /**
-             * Sets the year of the composition.
-             */
-            virtual void SetYear(std::string year_) {
-                year = year_;
-            }
-            /**
-             * Returns the year of the composition.
-             */
-            virtual std::string GetYear() const {
-                return year;
-            }
-            /**
-             * Sets the track number of the composition.
-             */
-            virtual void SetTrack(std::string track_) {
-                track = track_;
-            }
-            /**
-             * Returns the track number of the composition.
-             */
-            virtual std::string GetTrack() const {
-                return track;
-            }
-            /**
-             * Sets the license of the composition.
-             */
-            virtual void SetLicense(std::string license_) {
-                license = license_;
-            }
-            /**
-             * Returns the license of the composition.
-             */
-            virtual std::string GetLicense() const {
-                return license;
-            }
-            /**
-             * Sets the copyright of the composition.
-             */
-            virtual void SetCopyright(std::string copyright_) {
-                copyright = copyright_;
-            }
-            /**
-             * Returns the copyright of the composition.
-             */
-            virtual std::string GetCopyright() const {
-                return copyright;
-            }
-            /**
-             * Sets the publisher of the composition.
-             */
-            virtual void SetPublisher(std::string publisher_) {
-                publisher = publisher_;
-            }
-            /**
-             * Returns the publisher of the composition.
-             */
-            virtual std::string GetPublisher() const {
-                return publisher;
+            virtual void SetMetadata(std::string tag, std::string value) {
+                tags.replace(tag.c_str(), TagLib::String(value.c_str()));
             }
             /**
              * Override to not only set but also save type and format.
@@ -277,16 +199,7 @@ namespace csound {
             }
         protected:
             bool do_git_commit = false;
-            std::string author;
-            std::string artist;
-            std::string title;
-            std::string album;
-            std::string year;
-            std::string track;
-            std::string license;
-            std::string copyright;
-            std::string publisher;
-            std::string comment;
+            TagLib::PropertyMap tags;        
             std::string git_hash;
             std::string output_type = "wav";
             std::string output_format = "float";

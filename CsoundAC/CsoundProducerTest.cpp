@@ -244,11 +244,11 @@ i1 45.5 . . 11.04   ;E
 int main(int argc, const char **argv) {
     csound::CsoundProducer csound;
     csound.SetDoGitCommit(false);
-    csound.SetAuthor("Michael Gogins");
-    csound.SetArtist("Mike Gogins");
-    csound.SetTitle("Csound Producer Test");
-    csound.SetAlbum("Test");
-    csound.SetTrack("1");
+    csound.SetTag("COMPOSER", "Michael Gogins");
+    csound.SetTag("ARTIST", "Mike Gogins");
+    csound.SetTag("TITLE", "Csound Producer Test");
+    csound.SetTag("ALBUM", "Test");
+    csound.SetTag("TRACKNUMBER", "1");
     csound.SetOutput("test", "wav", "float");
     csound.CompileCsdText(csd_text);
     csound.Start();
