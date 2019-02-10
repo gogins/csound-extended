@@ -78,6 +78,11 @@ namespace csound {
                 return filename_base;
             }
             virtual void TagForId3v2(std::string filepath) {
+                Message("Tagging: %s\n", filepath.c_str());
+                TagLib::FileRef file_ref(filepath.c_str());
+                file_ref.tag()->setArtist(artist.c_str());
+                file_ref.tag()->setTitle(title.c_str());
+                file_ref.save();
             }
             /**
              * Uses the SoX library to normalize the amplitude of the output 
@@ -98,11 +103,18 @@ namespace csound {
             virtual void TranslateToFlac() {
             }
             virtual void PostProcess() {
+                Message("Began CsoundProducer::PostProcess()...\n");
+                std::string output = GetFilenameBase();
+                output.append(".");
+                output.append(output_type);
+                TagForId3v2(output);
+
                 NormalizeOutputSoundfile();
                 TranslateToMp3();
                 TranslateToCdAudio();
                 TranslateToMp4();
                 TranslateToFlac();
+                Message("Ended CsoundProducer::PostProcess().\n");
             }
              /**
              * Sets the name of the composer or other author.

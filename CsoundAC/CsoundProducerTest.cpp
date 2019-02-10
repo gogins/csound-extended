@@ -243,12 +243,14 @@ i1 45.5 . . 11.04   ;E
 
 int main(int argc, const char **argv) {
     csound::CsoundProducer csound;
+    csound.SetDoGitCommit(false);
     csound.SetAuthor("Michael Gogins");
+    csound.SetArtist("Mike Gogins");
     csound.SetTitle("Csound Producer Test");
-    csound.SetOutput("dac", "wav", "float");
+    csound.SetOutput("test", "wav", "float");
     csound.CompileCsdText(csd_text);
     csound.Start();
-    int thread = csound.Perform();
+    int thread = csound.PerformAndPostProcess();
     std::cout << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
     csound.Join();
     std::cout << "Finished." << std::endl;
