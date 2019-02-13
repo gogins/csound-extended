@@ -1,4 +1,5 @@
 #include "CsoundProducer.hpp"
+#include <iostream>
 
 const char csd_text[] = R"(
 <CsoundSynthesizer>
@@ -9,6 +10,7 @@ const char csd_text[] = R"(
 sr          =           96000
 ksmps       =           100
 nchnls      =           2
+0dbfs       =           100000
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and
 ;       pitch-shifted and delayed taps thru exponential
@@ -244,11 +246,17 @@ i1 45.5 . . 11.04   ;E
 int main(int argc, const char **argv) {
     csound::CsoundProducer csound;
     csound.SetDoGitCommit(false);
-    csound.SetTag("COMPOSER", "Michael Gogins");
-    csound.SetTag("ARTIST", "Mike Gogins");
-    csound.SetTag("TITLE", "Csound Producer Test");
-    csound.SetTag("ALBUM", "Test");
-    csound.SetTag("TRACKNUMBER", "1");
+    csound.SetMetadata("artist", "Michael Gogins");
+    csound.SetMetadata("copyright", "Copyright (C) 2019 by Michael Gogins");
+    csound.SetMetadata("performer", "Mike Gogins");
+    csound.SetMetadata("title", "Csound Producer Test");
+    csound.SetMetadata("album", "Test");
+    csound.SetMetadata("track", "1");
+    csound.SetMetadata("date", "2019");
+    csound.SetMetadata("publisher", "Irreducible Productions, ASCAP");
+    csound.SetMetadata("comment", "Test soundfile for CsoundProducer class.");
+    csound.SetMetadata("license", "CC BY-NC-SA");
+    csound.SetMetadata("genre", "Electroacoustic");
     csound.SetOutput("test", "wav", "float");
     csound.CompileCsdText(csd_text);
     csound.Start();

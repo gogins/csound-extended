@@ -11,6 +11,9 @@ echo "Updating autoconf..."
 sudo apt-get install autoconf
 echo "Updating autotools..."
 sudo apt-get install autotools
+echo "Updating FFmpeg..."
+sudo apt-get install ffmpeg
+sudo apt-get install libavfilter-dev
 echo "Updating libtool..."
 sudo apt-get install libtool
 echo "Updating autogen..."
@@ -25,8 +28,6 @@ echo "Updating fluidsynth..."
 sudo apt-get install libfluidsynth-dev
 echo "Updating libgit2-dev..."
 sudo apt-get install libgit2-dev
-echo "Updating libtag1-dev..."
-sudo apt-get install libtag1-dev
 echo "Updating gcc-arm-linux-gnueabi..."
 sudo apt-get install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."

@@ -4,14 +4,19 @@
 #include <csound/csound_threaded.hpp>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
-#include <sox.h>
+#include <iostream>
+#include <map>
 #include <string>
-#include <taglib/tlist.h>
-#include <taglib/fileref.h>
-#include <taglib/tfile.h>
-#include <taglib/tag.h>
-#include <taglib/tpropertymap.h>
+
+//#include <unistd.h>
+
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavfilter/buffersink.h>
+#include <libavfilter/buffersrc.h>
+#include <libavutil/opt.h>
 
 namespace csound {
     
@@ -24,10 +29,8 @@ namespace csound {
     class CsoundProducer : public CsoundThreaded {
         public:
             CsoundProducer() {
-                auto result = sox_format_init();
             }
             virtual ~CsoundProducer() {
-                sox_format_quit();
             }
             /**
              * If enabled, assumes that the code embedding this piece is within a 
@@ -65,8 +68,8 @@ namespace csound {
              * author-title[-git_hash] with all spaces replaced by underscores.
              */
             virtual std::string GetFilenameBase() {
-                std::string author = tags["COMPOSER"].toString().to8Bit();
-                std::string title = tags["TITLE"].toString().to8Bit();
+                std::string author = GetMetadata("artist");
+                std::string title = GetMetadata("title");
                 std::string filename_base = author + "-" + title;
                 if (do_git_commit == true) {
                     filename_base.append("-");
@@ -79,79 +82,58 @@ namespace csound {
                 }
                 return filename_base;
             }
-            virtual void SaveMetadata(std::string filepath) {
-                Message("Tagging: %s\n", filepath.c_str());
-                TagLib::FileRef file_ref(filepath.c_str());
-                file_ref.file()->setProperties(tags);
-                file_ref.file()->save();
-            }
             /**
-             * Uses the SoX library to normalize the amplitude of the output 
-             * soundfile to -6 dBFS.
+             * Uses ffmpeg to translate the output soundfile of this piece to 
+             * a normalized output file, an MP3 file, a CD audio file, a FLAC 
+             * soundfile, and an MP4 video file suitable for posting to 
+             * YouTube. All files are tagged with metadata. 
              */
-            virtual void NormalizeOutputSoundfile() {
-                auto input_filename = GetBaseFilename() + "." + type;
-                auto input = sox_open_read(filename.c_str(), nullptr, nullptr, nullptr);
-                auto output_filename = GetFilenameBase() + ".normalized." + type;
-                auto output = sox_open_write(output_filename.c_str(), &input->signal, nullptr, nullptr, nullptr);
-                auto effects_chain = sox_create_effects_chain(&in->encoding, &out->encoding);
-            }
-            virtual void TranslateToMp3() {
-            }
-            virtual void TranslateToCdAudio() {
-            }
-            virtual void TranslateToMp4() {
-            }
-            virtual void TranslateToFlac() {
-            }
             virtual void PostProcess() {
                 Message("Began CsoundProducer::PostProcess()...\n");
-                std::string output = GetFilenameBase();
-                output.append(".");
-                output.append(output_type);
-                SaveMetadata(output);
-
-                NormalizeOutputSoundfile();
-                TranslateToMp3();
-                TranslateToCdAudio();
-                TranslateToMp4();
-                TranslateToFlac();
+                std::string filename_base = GetFilenameBase();
+                char buffer[0x1000];
+                // FFmpeg requires two passes to SET the loudness.
+                // http://k.ylo.ph/2016/04/04/loudnorm.html
+                const char *volumedetect_command = "ffmpeg -i %s.%s -af \"volumedetect\" -vn -sn -dn -f null /dev/null 2>&1";
+                std::snprintf(buffer, 0x1000, volumedetect_command, filename_base.c_str(), output_type.c_str());
+                FILE *pipe = popen(buffer, "r");
+                double max_volume = 0;
+                while (std::fgets(buffer, 0x1000, pipe) != nullptr) {
+                    auto found = std::strstr(buffer, "max_volume: ");
+                    if (found != nullptr) {
+                        found = std::strstr(found, " ");
+                        max_volume = std::atof(found);
+                        Message("Original maximum level: %f dBFS\n", max_volume);
+                        break;
+                    }
+                }
+                auto result = pclose(pipe);
+                max_volume = (max_volume + 6) * -1;
+                Message("Correction: %f dB\n", max_volume);
+                const char *volume_command = "ffmpeg -i %s.%s -filter:a \"volume=%fdB\" \"%s-normalized.wav\"";
+                std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), output_type.c_str(), max_volume, filename_base.c_str());
+                std::printf(buffer);
+                result = std::system(buffer);
                 Message("Ended CsoundProducer::PostProcess().\n");
             }
             /**
-             * Sets the value of a metadata tag. Valid tags include the 
-             * following (see https://taglib.org/api/index.html):            
-             * TITLE
-             * ALBUM
-             * ARTIST
-             * ALBUMARTIST
-             * SUBTITLE
-             * TRACKNUMBER
-             * DISCNUMBER
-             * DATE
-             * ORIGINALDATE
-             * GENRE
-             * COMMENT
-             * COMPOSER
-             * LYRICIST
-             * CONDUCTOR
-             * REMIXER
-             * PERFORMER:<XXXX>
-             * ISRC
-             * ASIN
-             * BPM
-             * COPYRIGHT
-             * ENCODEDBY
-             * MOOD
-             * COMMENT
-             * MEDIA
-             * LABEL
-             * CATALOGNUMBER
-             * BARCODE          
+             * Sets the value of a metadata tag. See:
+             * https://www.ffmpeg.org/doxygen/trunk/group__metadata__api.html
              * Other and even user-defined tags may also be used.
              */
             virtual void SetMetadata(std::string tag, std::string value) {
-                tags.replace(tag.c_str(), TagLib::String(value.c_str()));
+                tags[tag] = value;
+            }
+            /** 
+             * Returns the value of the metadata for the tag, or an empty 
+             * string if the tag does not exist.
+             */
+            virtual std::string GetMetadata(std::string tag) const {
+                if (tags.find(tag) != tags.end()) {
+                    return tags.at(tag);
+                } else {
+                    return "";
+                }
             }
             /**
              * Override to not only set but also save type and format.
@@ -199,7 +181,7 @@ namespace csound {
             }
         protected:
             bool do_git_commit = false;
-            TagLib::PropertyMap tags;        
+            std::map<std::string, std::string> tags;        
             std::string git_hash;
             std::string output_type = "wav";
             std::string output_format = "float";
