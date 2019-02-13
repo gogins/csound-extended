@@ -110,9 +110,9 @@ namespace csound {
                 auto result = pclose(pipe);
                 max_volume = (max_volume + 6) * -1;
                 Message("Correction: %f dB\n", max_volume);
-                const char *volume_command = "ffmpeg -i %s.%s -filter:a \"volume=%fdB\" \"%s-normalized.wav\"";
+                const char *volume_command = "ffmpeg -i %s.%s -filter:a \"volume=%fdB\" -codec:a pcm_s32le -format:a flt \"%s-normalized.wav\"";
                 std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), output_type.c_str(), max_volume, filename_base.c_str());
-                std::printf(buffer);
+                std::printf("%s", buffer);
                 result = std::system(buffer);
                 Message("Ended CsoundProducer::PostProcess().\n");
             }
