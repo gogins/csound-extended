@@ -90,6 +90,15 @@ namespace csound {
              */
             virtual void PostProcess() {
                 Message("Began CsoundProducer::PostProcess()...\n");
+                std::string tag_options;
+                for (auto it = tags.begin(); it != tags.end(); ++it) {
+                    tag_options.append(" ");
+                    tag_options.append("-metadata ");
+                    tag_options.append(it->first);
+                    tag_options.append("=\"");
+                    tag_options.append(it->second);
+                    tag_options.append("\" ");
+                }
                 std::string filename_base = GetFilenameBase();
                 char buffer[0x1000];
                 // FFmpeg requires two passes to SET the loudness.
@@ -103,15 +112,28 @@ namespace csound {
                     if (found != nullptr) {
                         found = std::strstr(found, " ");
                         max_volume = std::atof(found);
-                        Message("Original maximum level: %f dBFS\n", max_volume);
+                        Message("Original maximum level: %9.4f dBFS\n", max_volume);
                         break;
                     }
                 }
                 auto result = pclose(pipe);
                 max_volume = (max_volume + 6) * -1;
-                Message("Correction: %f dB\n", max_volume);
-                const char *volume_command = "ffmpeg -i %s.%s -filter:a \"volume=%fdB\" -codec:a pcm_s32le -format:a flt \"%s-normalized.wav\"";
-                std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), output_type.c_str(), max_volume, filename_base.c_str());
+                Message("Correction: %9.4f dB\n", max_volume);
+                const char *volume_command = "ffmpeg -y -i %s.%s -filter:a \"volume=%fdB\" -codec:a pcm_s32le -format:a flt %s \"%s-normalized.wav\"";
+                std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), output_type.c_str(), max_volume, tag_options.c_str(), filename_base.c_str());
+                std::printf("%s", buffer);
+                result = std::system(buffer);
+                const char *mp3_command = "ffmpeg -y -i %s-normalized.wav -acodec libmp3lame -b:a 192k -r:a 48k %s \"%s.mp3\"";
+                std::snprintf(buffer, 0x1000, mp3_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
+                std::printf("%s", buffer);
+                result = std::system(buffer);
+                result = std::system(buffer);
+                const char *cda_command = "ffmpeg -y -i %s-normalized.wav -acodec pcm_s16le -ac 2 -f wav %s \"%s.cd.wav\"";
+                std::snprintf(buffer, 0x1000, cda_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
+                std::printf("%s", buffer);
+                result = std::system(buffer);
+                const char *flac_command = "ffmpeg -y -i %s-normalized.wav -af aformat=s32 %s \"%s.flac\"";
+                std::snprintf(buffer, 0x1000, flac_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
                 result = std::system(buffer);
                 Message("Ended CsoundProducer::PostProcess().\n");

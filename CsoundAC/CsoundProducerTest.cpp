@@ -252,6 +252,7 @@ int main(int argc, const char **argv) {
     csound.SetMetadata("title", "Csound Producer Test");
     csound.SetMetadata("album", "Test");
     csound.SetMetadata("track", "1");
+    csound.SetMetadata("tracknumber", "1");
     csound.SetMetadata("date", "2019");
     csound.SetMetadata("publisher", "Irreducible Productions, ASCAP");
     csound.SetMetadata("comment", "Test soundfile for CsoundProducer class.");
