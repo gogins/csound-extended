@@ -132,7 +132,7 @@ namespace csound {
                 Message("MP3 command:         %s\n", buffer);
                 result = std::system(buffer);
                 
-                const char *cda_command = "ffmpeg -y -i %s-normalized.wav -acodec pcm_s16le -ac 2 -f wav %s \"%s.cd.wav\"";
+                const char *cda_command = "ffmpeg -y -i %s-normalized.wav -acodec pcm_s16le -ar 44100 -ac 2 -f wav %s \"%s.cd.wav\"";
                 std::snprintf(buffer, 0x1000, cda_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
                 Message("CD audio command:    %s\n", buffer);
@@ -144,8 +144,8 @@ namespace csound {
                 Message("FLAC command:        %s\n", buffer);
                 result = std::system(buffer);
                 
-                const char *png_command = "ffmpeg -y -i %s-normalized.wav -lavfi aresample=44100 showspectrumpic=s=wxga:mode=separate:color=6: %s %s.png";
-                std::snprintf(buffer, 0x1000, png_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
+                const char *png_command = "ffmpeg -y -i %s.cd.wav -lavfi showspectrumpic=s=wxga:mode=separate %s.png";
+                std::snprintf(buffer, 0x1000, png_command, filename_base.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
                 Message("Spectrogram command: %s\n", buffer);
                 result = std::system(buffer);
@@ -161,8 +161,8 @@ namespace csound {
                 std::string publisher = GetMetadata("publisher");
                 std::string copyright = GetMetadata("copyright");
                 std::string license = GetMetadata("license");
-                const char *label_command = "ffmpeg -y -i %s-unlabeled.mp4 -max_muxing_queue_size 9999 -vf drawtext=fontfile=OpenSans-Regular.ttf:text='%s\n%s\n%s\n%s':fontcolor=white:fontsize=36:alpha=.5:x=w/2-tw/2:y=h/6 -codec:a copy %s.mp4";
-                std::snprintf(buffer, 0x1000, label_command, filename_base.c_str(), artist.c_str(), title.c_str(), copyright.c_str(), publisher.c_str(), filename_base.c_str());
+                const char *label_command = "ffmpeg -y -i %s-unlabeled.mp4 -max_muxing_queue_size 9999 -vf drawtext=fontfile=OpenSans-Regular.ttf:text='%s\n%s\n%s\n%s %s':fontcolor=white:fontsize=36:alpha=.5:x=w/2-tw/2:y=h/6 -codec:a copy %s.mp4";
+                std::snprintf(buffer, 0x1000, label_command, filename_base.c_str(), artist.c_str(), title.c_str(), publisher.c_str(), copyright.c_str(), license.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
                 Message("Label command:       %s\n", buffer);
                 result = std::system(buffer);
