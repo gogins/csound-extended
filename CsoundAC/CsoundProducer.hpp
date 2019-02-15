@@ -119,22 +119,52 @@ namespace csound {
                 auto result = pclose(pipe);
                 max_volume = (max_volume + 6) * -1;
                 Message("Correction: %9.4f dB\n", max_volume);
+                
                 const char *volume_command = "ffmpeg -y -i %s.%s -filter:a \"volume=%fdB\" -codec:a pcm_s32le -format:a flt %s \"%s-normalized.wav\"";
                 std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), output_type.c_str(), max_volume, tag_options.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
+                Message("Volume command:      %s\n", buffer);
                 result = std::system(buffer);
+                
                 const char *mp3_command = "ffmpeg -y -i %s-normalized.wav -acodec libmp3lame -b:a 192k -r:a 48k %s \"%s.mp3\"";
                 std::snprintf(buffer, 0x1000, mp3_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
+                Message("MP3 command:         %s\n", buffer);
                 result = std::system(buffer);
-                result = std::system(buffer);
+                
                 const char *cda_command = "ffmpeg -y -i %s-normalized.wav -acodec pcm_s16le -ac 2 -f wav %s \"%s.cd.wav\"";
                 std::snprintf(buffer, 0x1000, cda_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
+                Message("CD audio command:    %s\n", buffer);
                 result = std::system(buffer);
+                
                 const char *flac_command = "ffmpeg -y -i %s-normalized.wav -af aformat=s32 %s \"%s.flac\"";
                 std::snprintf(buffer, 0x1000, flac_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
                 std::printf("%s", buffer);
+                Message("FLAC command:        %s\n", buffer);
+                result = std::system(buffer);
+                
+                const char *png_command = "ffmpeg -y -i %s-normalized.wav -lavfi aresample=44100 showspectrumpic=s=wxga:mode=separate:color=6: %s %s.png";
+                std::snprintf(buffer, 0x1000, png_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
+                std::printf("%s", buffer);
+                Message("Spectrogram command: %s\n", buffer);
+                result = std::system(buffer);
+
+                const char *mp4_command = "ffmpeg -y -loop 1 -framerate 2 -i %s.png -i %s-normalized.wav -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" %s %s-unlabeled.mp4";
+                std::snprintf(buffer, 0x1000, mp4_command, filename_base.c_str(), filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
+                std::printf("%s", buffer);
+                Message("MP4 command:         %s\n", buffer);
+                result = std::system(buffer);
+                
+                std::string artist = GetMetadata("artist");
+                std::string title = GetMetadata("title");
+                std::string publisher = GetMetadata("publisher");
+                std::string copyright = GetMetadata("copyright");
+                std::string license = GetMetadata("license");
+                const char *label_command = "ffmpeg -y -i %s-unlabeled.mp4 -max_muxing_queue_size 9999 -vf drawtext=fontfile=OpenSans-Regular.ttf:text='%s\n%s\n%s\n%s':fontcolor=white:fontsize=36:alpha=.5:x=w/2-tw/2:y=h/6 -codec:a copy %s.mp4";
+                std::snprintf(buffer, 0x1000, label_command, filename_base.c_str(), artist.c_str(), title.c_str(), copyright.c_str(), publisher.c_str(), filename_base.c_str());
+                std::printf("%s", buffer);
+                Message("Label command:       %s\n", buffer);
                 result = std::system(buffer);
                 Message("Ended CsoundProducer::PostProcess().\n");
             }

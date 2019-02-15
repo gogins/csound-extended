@@ -247,14 +247,14 @@ int main(int argc, const char **argv) {
     csound::CsoundProducer csound;
     csound.SetDoGitCommit(false);
     csound.SetMetadata("artist", "Michael Gogins");
-    csound.SetMetadata("copyright", "Copyright (C) 2019 by Michael Gogins");
+    csound.SetMetadata("copyright", "Copyright 2019 by Michael Gogins");
     csound.SetMetadata("performer", "Mike Gogins");
     csound.SetMetadata("title", "Csound Producer Test");
     csound.SetMetadata("album", "Test");
     csound.SetMetadata("track", "1");
     csound.SetMetadata("tracknumber", "1");
     csound.SetMetadata("date", "2019");
-    csound.SetMetadata("publisher", "Irreducible Productions, ASCAP");
+    csound.SetMetadata("publisher", "Irreducible Productions ASCAP");
     csound.SetMetadata("comment", "Test soundfile for CsoundProducer class.");
     csound.SetMetadata("license", "CC BY-NC-SA");
     csound.SetMetadata("genre", "Electroacoustic");
