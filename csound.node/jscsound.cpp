@@ -414,7 +414,7 @@ void setMetadata(const FunctionCallbackInfo<Value>& args)
     Isolate* isolate = Isolate::GetCurrent();
     HandleScope scope(isolate);
     v8::String::Utf8Value key(args[0]->ToString());
-    v8::String::Utf8Value value(args[0]->ToString());
+    v8::String::Utf8Value value(args[1]->ToString());
     csound_.SetMetadata(*key, *value);
 }
 
