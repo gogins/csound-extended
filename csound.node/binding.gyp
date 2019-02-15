@@ -15,6 +15,7 @@
                     ],
                     'include_dirs': [
                         '/usr/include/csound',
+                        '../CsoundAC'
                     ],
                     'cflags_cc!': [
                         '-fno-exceptions',
