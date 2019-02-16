@@ -47,18 +47,6 @@ add_definitions(-DUSE_DOUBLE)
 set(USE_DOUBLE "Yes")
 configure_file(${CMAKE_SOURCE_DIR}/dependencies/csound/include/float-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/float-version.h)
 set(QT_INSTALL_PREFIX "/usr")
-# If you have a local installation of the Qt SDK, set an environment variable
-# QMAKE with the pathname to your local qmake.
-if(DEFINED ENV{QMAKE})
-    set(QMAKE $ENV{QMAKE})
-else()
-    set(QMAKE "qmake")
-endif()
-if(DEFINED ENV{Qt5_DIR})
-    set(Qt5_DIR $ENV{Qt5_DIR})
-    message("Using Qt5_DIR: ${Qt5_DIR}.")
-endif()
-message("Using qmake: ${QMAKE}.")
 ##set(CSOUND_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/dependencies/csound/include")
 message(STATUS "CSOUND_INCLUDE_PATH: ${CSOUND_INCLUDE_PATH}")
 set(VSTSDK2X_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dependencies/VST_SDK/VST2_SDK")
@@ -198,7 +186,7 @@ add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundHtml5
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CsoundHtml5"
     BUILD_IN_SOURCE "1"
-    CONFIGURE_COMMAND "${QMAKE}"
+    CONFIGURE_COMMAND "qmake"
     BUILD_COMMAND "make")
 install(FILES "${CMAKE_SOURCE_DIR}/CsoundHtml5/CsoundHtml5"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
