@@ -265,3 +265,27 @@ void QCsound::csoundMessageCallback(int attributes,
     }
 }
 
+void QCsound::setMetadata(const QString &key, const QString &value)
+{
+    csound.SetMetadata(key.toStdString(), value.toStdString());
+}
+
+QString QCsound::getMetadata(const QString &key) const
+{
+    return csound.GetMetadata(key.toStdString()).c_str();
+}
+
+void QCsound::setDoGitCommit(bool do_git_commit) {
+    csound.SetDoGitCommit(do_git_commit);
+}
+
+bool QCsound::getDoGitCommit() const {
+    return csound.GetDoGitCommit();
+}
+
+int QCsound::performAndPostProcess() {
+    return csound.PerformAndPostProcess();
+}
+
+
+

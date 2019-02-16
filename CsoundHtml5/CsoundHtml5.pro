@@ -40,6 +40,7 @@ linux:INCLUDEPATH += $$CSOUND_HOME/include/csound
 linux:INCLUDEPATH += $$CSOUND_HOME/H
 win32-msvc2015:INCLUDEPATH += $$CSOUND_HOME/include/csound
 INCLUDEPATH += .
+INCLUDEPATH += ../CsoundAC
 win32-msvc2015:CSOUND_LIB = $$CSOUND_HOME\\lib\\csound64.lib
 linux:CSOUND_LIB = $$CSOUND_HOME/lib/libcsound64.so
 LIBS += $$CSOUND_LIB

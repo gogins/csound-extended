@@ -25,7 +25,7 @@
 
 #include <QObject>
 #include <QDebug>
-#include <csound_threaded.hpp>
+#include <CsoundProducer.hpp>
 #include <csoundwebview.h>
 
 class CsoundWebView;
@@ -85,6 +85,11 @@ public slots:
     double tableGet(int table_number, int index);
     int tableLength(int table_number);
     void tableSet(int table_number, int index, double value);
+    void setMetadata(const QString &key, const QString &value);
+    QString getMetadata(const QString &key) const;
+    void setDoGitCommit(bool do_git_commit);
+    bool getDoGitCommit() const;
+    int performAndPostProcess();
 signals:
     void passMessages(QString message);
 private:
@@ -96,7 +101,7 @@ private:
                                const char *format,
                                va_list args);
     QObject *message_callback;
-    CsoundThreaded csound;
+    csound::CsoundProducer csound;
     QString csound_messages_buffer;
 };
 
