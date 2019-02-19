@@ -1,17 +1,92 @@
 #ifndef CSOUND_PRODUCER_HPP
 #define CSOUND_PRODUCER_HPP
 
+#include <Python.h>
 #include <csound/csound_threaded.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
+extern "C"
+{
+    #include <lua.h>
+    #include <lauxlib.h>
+    #include <lualib.h>
+}
 #include <map>
+#include <ecl/ecl.h>
 #include <string>
 
 namespace csound {
     
+#if !defined(SWIG)
+    
+template<typename T> struct is_cl_object { constexpr static bool p = false; };
+template<> struct is_cl_object<cl_object> { constexpr static bool p = true; };
+template<typename...> struct are_cl_objects { constexpr static bool p = true; };
+template<typename Head, typename... Tail> struct are_cl_objects<Head, Tail...> {
+constexpr static bool p = is_cl_object<Head>::p && are_cl_objects<Tail...>::p; };
+    
+/**
+ * This function must be called with the arc and argv from main() before any 
+ * Lisp code is executed.
+ */
+inline void initialize_ecl(int argc, char **argv)
+{
+    static bool initialized_ecl = false;
+    if (initialized_ecl) {
+        return;
+    } 
+    initialized_ecl = true;
+    cl_boot(argc, argv);
+    atexit(cl_shutdown);
+    std::printf("Initialized Embeddable Common Lisp.\n");
+}
+
+/**
+ * Evaluates a _SINGLE_ Lisp form. Please note, in Embeddable Common Lisp, 
+ * `(require :xxx)` and some other forms work only if they are at the top 
+ * level. That may necessitate repeated calls to this function from the 
+ * embedding system.
+ */
+inline cl_object evaluate_form(const std::string &form) {
+    return cl_eval(c_string_to_object(form.c_str()));
+}
+    
+/**
+ * Translate a Lisp string to a C++ string.
+ */
+std::string to_std_string(cl_object lisp_object) {
+    std::string result;
+    size_t length = 0;
+    bool is_unicode = ECL_EXTENDED_STRING_P(lisp_object);
+    if (is_unicode) {
+        length = lisp_object->string.dim;
+        for (size_t i = 0; i < length; ++i) {
+            auto c = lisp_object->string.self[i];
+            result += (char) c;
+        }
+    } else {
+        length = lisp_object->base_string.dim;
+        for (size_t i = 0; i < length; ++i) {
+            auto c = lisp_object->base_string.self[i];
+            result += (char) c;
+        }
+    }
+    return result;
+}
+    
+/**
+ * Creates a DEFUN abstraction in C++.
+ */
+template <typename... Params>
+void defun(const std::string &name, cl_object fun(Params... params)) {
+    static_assert(are_cl_objects<Params...>::p, "ECL Functions may only take cl_object as argument.");
+    ecl_def_c_function(c_string_to_object(name.c_str()), (cl_objectfn_fixed)fun, sizeof...(Params));
+}
+
+#endif
     
     /**
      * Uses ffmpeg to translate a soundfile to a normalized output 
@@ -20,7 +95,7 @@ namespace csound {
      * tagged with metadata. This function is called automatically by 
      * PerformAndPostProcess. 
      */
-    static void PostProcess(std::map<std::string, std::string> tags, std::string filename) {
+    static void PostProcess(std::map<const std::string, std::string> &tags, const std::string filename) {
         auto period_index = filename.rfind(".");
         std::string filename_base = filename.substr(0, period_index);
         std::string filename_extension = filename.substr(period_index + 1, std::string::npos);
@@ -106,13 +181,16 @@ namespace csound {
     /** 
      * Optionally adds metadata, performs post-processing, translates to 
      * various soundfile formats as automatic steps in the Csound rendering of 
-     * a composition to a soundfile. 
+     * a composition to a soundfile. Also enables running scripts that 
+     * can interact with Csound.
      */
     class CsoundProducer : public CsoundThreaded {
         public:
             CsoundProducer() {
+                // Inject this class' Csound object into the runtime context 
+                // of various scripting languages.
             }
-            virtual ~CsoundProducer() {
+            virtual ~CsoundProducer()  
             }
             /**
              * If enabled, assumes that the code embedding this piece is within a 
@@ -230,12 +308,89 @@ namespace csound {
             virtual bool GetDoGitCommit() const {
                 return do_git_commit;
             }
+            virtual lua_State *GetLuaState() {
+                return L;
+            }
+            virtual void InitializeLuaState(lua_State L_ = nullptr) {
+                if (L != nullptr) {
+                    lua_close(L);
+                }
+                if (L_ == nullptr) {
+                    L = luaL_newstate();
+                    luaL_openlibs(L);
+                } else {
+                    L = L_;
+                }
+                // Ensure that this instance of Csound is available in the 
+                // LuaJIT runtime context. 
+                lua_pushlightuserdata(L, csound);
+                lua_setfield(L, LUA_GLOBALSINDEX, "csound");
+            }
+            virtual void InitializePython() {
+                Py_Initialize();
+                // Ensure that this instance of Csound is available in the 
+                // Python runtime context.
+                PyObject* csound_capsule = PyCapsule_New(csound, "csound", nullptr);
+            }
+            virtual cl_env_ptr GetCommonLispEnvironment() {
+                return cl_env_ptr;
+            }
+            virtual void InitializeCommonLisp(int argc = 0, const char **argv = nullptr) {
+                initialize_ecl(argc, argv);
+                cl_env_ptr = ecl_process_env();
+                // Ensure that this instance of Csound is available in the 
+                // Embeddable Common Lisp runtime context. 
+                // This is done by creating a CFFI form with the address of 
+                // this instance of Csound. It becomes a global pointer *csound*.
+                const char *template_ = "(progn (defcvar \"*csound*\" :pointer)(setf *csound* %p))"
+                char form[0x100];
+                std::snprintf(form, 0x100, template_, csound);
+                cl_object lisp_csound = c_string_to_object(form);
+            }
+            /**
+             * Runs a script in a dynamic language, e.g. to generate a score 
+             * for Csound to render. This instance of Csound is exposed in the 
+             * runtime context of the script as a raw pointer or handle named 
+             * "csound"; the script itself must define or load a 
+             * usable interface to this Csound object. RunScript is normally 
+             * called after Compile* and either before or after Perform, and 
+             * can be called any number of times during rendering. The 
+             * available languages are "LuaJIT", "Python3.6m", and 
+             * "Common Lisp".
+             */
+            virtual int RunScript(const std::string script, const std::string language) {
+                int result = 0;
+                if (language == "LuaJIT") {
+                    const char *luacode = script.c_str();
+                    Message("Executing (L: 0x%p) Lua code.\n", L);
+                    result = luaL_dostring(L, luacode);
+                    if (result == 0) {
+                        //log(csound, "Result: %d\n", result);
+                    } else {
+                        Message("luaL_dostring failed with: %d\n%s\n", result, lua_tostring(L, -1));
+                    }
+                } else if (language == "Python3.6m") {
+                    result = PyRun_SimpleString(script.c_str());
+                    if (result == 0) {
+                        //log(csound, "Result: %d\n", result);
+                    } else {
+                        Message("PyRun_SimpleString failed with: %d\n", result);
+                    }
+                } else if (language == "Common Lisp") {
+                } else {
+                    Message("Sorry, CsoundProducer does not support %s in this environment.\n", language.c_str());
+                    return -1;
+                }
+                return result;
+            }
         protected:
             bool do_git_commit = false;
             std::map<std::string, std::string> tags;        
             std::string git_hash;
             std::string output_type = "wav";
             std::string output_format = "float";
+            lua_State *L = nullptr;
+            cl_env_ptr common_lisp_environment = nullptr;
     };
     
 };
