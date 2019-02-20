@@ -266,7 +266,7 @@ int main(int argc, const char **argv) {
     csound.InitializePython();
     csound.RunScript("print('Hello, World! from Python3.6m: csound: 0x%x' % (csound))", "Python3.6m");
     csound.InitializeCommonLisp(argc, argv);
-    csound.RunScript("(format t \"*csound*: 0x~X~%)\" *csound*)", "Common Lisp");
+    csound.RunScript("(format t \"*csound*: 0x~x~%)\" *csound*)", "Common Lisp");
     int thread = csound.Perform();//AndPostProcess();
     std::cout << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
     csound.Join();
