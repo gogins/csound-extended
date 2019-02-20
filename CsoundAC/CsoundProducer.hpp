@@ -95,7 +95,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
      * tagged with metadata. This function is called automatically by 
      * PerformAndPostProcess. 
      */
-    static void PostProcess(std::map<const std::string, std::string> &tags, const std::string filename) {
+    static void PostProcess(std::map<std::string, std::string> &tags, std::string filename) {
         auto period_index = filename.rfind(".");
         std::string filename_base = filename.substr(0, period_index);
         std::string filename_extension = filename.substr(period_index + 1, std::string::npos);
@@ -190,7 +190,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 // Inject this class' Csound object into the runtime context 
                 // of various scripting languages.
             }
-            virtual ~CsoundProducer()  
+            virtual ~CsoundProducer() {
             }
             /**
              * If enabled, assumes that the code embedding this piece is within a 
@@ -311,7 +311,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             virtual lua_State *GetLuaState() {
                 return L;
             }
-            virtual void InitializeLuaState(lua_State L_ = nullptr) {
+            virtual void InitializeLuaJIT(lua_State *L_ = nullptr) {
                 if (L != nullptr) {
                     lua_close(L);
                 }
@@ -329,23 +329,26 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             virtual void InitializePython() {
                 Py_Initialize();
                 // Ensure that this instance of Csound is available in the 
-                // Python runtime context.
-                PyObject* csound_capsule = PyCapsule_New(csound, "csound", nullptr);
+                // Python runtime context. For ctcsound, the CSOUND pointer 
+                // is just an int.
+                char code[0x100];
+                std::snprintf(code, 0x100, "csound = int(%p)", csound);
+                PyRun_SimpleString(code);
             }
             virtual cl_env_ptr GetCommonLispEnvironment() {
-                return cl_env_ptr;
+                return common_lisp_environment;
             }
-            virtual void InitializeCommonLisp(int argc = 0, const char **argv = nullptr) {
-                initialize_ecl(argc, argv);
-                cl_env_ptr = ecl_process_env();
+            virtual void InitializeCommonLisp(int argc, const char **argv) {
+                initialize_ecl(argc, (char **)argv);
+                common_lisp_environment = ecl_process_env();
                 // Ensure that this instance of Csound is available in the 
                 // Embeddable Common Lisp runtime context. 
                 // This is done by creating a CFFI form with the address of 
                 // this instance of Csound. It becomes a global pointer *csound*.
-                const char *template_ = "(progn (defcvar \"*csound*\" :pointer)(setf *csound* %p))"
+                const char *template_ = "(defparameter *csound* %ld)";
                 char form[0x100];
                 std::snprintf(form, 0x100, template_, csound);
-                cl_object lisp_csound = c_string_to_object(form);
+                cl_object lisp_csound = evaluate_form(form);
             }
             /**
              * Runs a script in a dynamic language, e.g. to generate a score 
@@ -377,6 +380,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                         Message("PyRun_SimpleString failed with: %d\n", result);
                     }
                 } else if (language == "Common Lisp") {
+                    evaluate_form(script.c_str());
                 } else {
                     Message("Sorry, CsoundProducer does not support %s in this environment.\n", language.c_str());
                     return -1;

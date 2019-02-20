@@ -261,7 +261,13 @@ int main(int argc, const char **argv) {
     csound.SetOutput("test", "wav", "float");
     csound.CompileCsdText(csd_text);
     csound.Start();
-    int thread = csound.PerformAndPostProcess();
+    csound.InitializeLuaJIT();
+    csound.RunScript("print('Hello, World! from LuaJIT: csound: ' .. tostring(csound));", "LuaJIT");
+    csound.InitializePython();
+    csound.RunScript("print('Hello, World! from Python3.6m: csound: 0x%x' % (csound))", "Python3.6m");
+    csound.InitializeCommonLisp(argc, argv);
+    csound.RunScript("(format t \"*csound*: 0x~X~%)\" *csound*)", "Common Lisp");
+    int thread = csound.Perform();//AndPostProcess();
     std::cout << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
     csound.Join();
     std::cout << "Finished." << std::endl;
