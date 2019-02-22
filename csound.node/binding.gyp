@@ -11,7 +11,7 @@
             ['OS=="linux"',
                 {
                     'libraries': [
-                        '-lcsound64',
+                        '-lcsound64 -lecl -lecl -lluajit-5.1 -lpython3.6m -lgc -lpthread',
                     ],
                     'include_dirs': [
                         '/usr/include/csound',

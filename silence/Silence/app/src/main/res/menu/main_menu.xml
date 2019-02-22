@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/item_new"
+        android:orderInCategory="300"
+        android:title="New..."
+        app:showAsAction="ifRoom|withText">
+
+    </item>
+    <item
+            android:id="@+id/item_open"
+            android:orderInCategory="300"
+            android:title="Open..."
+            app:showAsAction="always|withText">
+
+    </item>
+    <item
+            android:id="@+id/item_save"
+            android:orderInCategory="300"
+            android:title="Save"
+            app:showAsAction="ifRoom|withText">
+    </item>
+    <item
+            android:id="@+id/item_save_as"
+            android:orderInCategory="300"
+            android:title="Save as..."
+            app:showAsAction="ifRoom|withText">
+    </item>
+    <item
+            android:id="@+id/item_run"
+            android:orderInCategory="300"
+            android:title="Run"
+            app:showAsAction="always|withText">
+    </item>
+
+    <item
+            android:id="@+id/item_settings"
+            android:orderInCategory="300"
+            android:title="Settings"
+            app:showAsAction="never|withText">
+    </item>
+    <item
+            android:id="@+id/item_help"
+            android:orderInCategory="300"
+            android:title="Help"
+            app:showAsAction="never|withText">
+    </item>
+    <item
+            android:id="@+id/item_about"
+            android:orderInCategory="300"
+            android:title="About"
+            app:showAsAction="never|withText">
+    </item>
+
+
+
+</menu>
