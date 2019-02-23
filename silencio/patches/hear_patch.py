@@ -2,7 +2,7 @@ import ctcsound
 import random
 import sys
 
-output ="dac"
+output ="test"
 
 patch_name = sys.argv[1]
 print("patch_name: ", patch_name)
