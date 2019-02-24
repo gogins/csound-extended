@@ -289,7 +289,9 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 auto output_filename = GetFilenameBase();
                 output_filename.append(".");
                 output_filename.append(output_type);
-                PostProcess(tags, output_filename);
+                if (keep_running == true) {
+                    PostProcess(tags, output_filename);
+                }
                 Message("Ended CsoundProducer::PerformAndPostProcessRoutine() with %d.\n", result);
                 return result;
             }
