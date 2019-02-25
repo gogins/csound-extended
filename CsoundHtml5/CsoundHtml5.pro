@@ -34,9 +34,16 @@ FORMS    += \
     findreplacedialog.ui \
     findreplaceform.ui
 RC_ICONS = cs.ico
-message("All configuration is via CMake variable CSOUND_HOME.")
+# For dynamic language support.
+linux {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += python3
+    PKGCONFIG += luajit
+}
+message("All Csound configuration is via CMake variable CSOUND_HOME.")
 message("These point to installation directories, not source directories.")
 linux:INCLUDEPATH += $$CSOUND_HOME/include/csound
+linux:INCLUDEPATH += $$CSOUND_HOME/H
 linux:INCLUDEPATH += $$CSOUND_HOME/H
 win32-msvc2015:INCLUDEPATH += $$CSOUND_HOME/include/csound
 INCLUDEPATH += .
@@ -44,6 +51,7 @@ INCLUDEPATH += ../CsoundAC
 win32-msvc2015:CSOUND_LIB = $$CSOUND_HOME\\lib\\csound64.lib
 linux:CSOUND_LIB = $$CSOUND_HOME/lib/libcsound64.so
 LIBS += $$CSOUND_LIB
+linux:LIBS += /usr/lib/libecl.so
 win32-msvc2015:LIBS += user32.lib
 linux:DEFINES += NDEBUG
 unix:QMAKE_CFLAGS += -Wno_unused_parameter

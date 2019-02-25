@@ -25,10 +25,13 @@
 
 #include <QObject>
 #include <QDebug>
-#include <CsoundProducer.hpp>
 #include <csoundwebview.h>
+#include <csound.h>
 
 class CsoundWebView;
+namespace csound {
+    class CsoundProducer;
+}
 
 class QCsound : public QObject
 {
@@ -89,7 +92,60 @@ public slots:
     QString getMetadata(const QString &key) const;
     void setDoGitCommit(bool do_git_commit);
     bool getDoGitCommit() const;
-    int performAndPostProcess();
+
+    int Cleanup();
+    int CompileCsd(const QString &filename);
+    int CompileCsdText(const QString &text);
+    int CompileOrc(const QString &text);
+    double EvalCode(const QString &text);
+    double Get0dBFS();
+    int GetApiVersion();
+    double GetControlChannel(const QString &name);
+    CSOUND *GetCsound();
+    qint64 GetCurrentTimeSamples();
+    QString GetEnv(const QString &name);
+    int GetKsmps();
+    int GetNchnls();
+    int GetNchnlsInput();
+    QString GetOutputName();
+    double GetScoreOffsetSeconds();
+    double GetScoreTime();
+    int GetSr();
+    QString GetStringChannel(const QString &name);
+    int GetVersion();
+    bool IsPlaying();
+    int IsScorePending();
+    void Message(const QString &text);
+    int Perform();
+    int PerformKsmps();
+    int ReadScore(const QString &text);
+    void Reset();
+    void RewindScore();
+    int RunUtility(const QString &command, int argc, char **argv);
+    int ScoreEvent(char type, const double *pFields, long numFields);
+    void SetControlChannel(const QString &name, double value);
+    int SetGlobalEnv(const QString &name, const QString &value);
+    void SetHostData(void *host_data);
+    void SetMessageCallback(QObject *callback);
+    void SetInput(const QString &name);
+    int SetOption(const QString &name);
+    void SetOutput(const QString &name, const QString &type, const QString &format);
+    void SetScoreOffsetSeconds(double value);
+    void SetScorePending(bool value);
+    void SetStringChannel(const QString &name, const QString &value);
+    int Start();
+    void Stop();
+    double TableGet(int table_number, int index);
+    int TableLength(int table_number);
+    void TableSet(int table_number, int index, double value);
+    void SetMetadata(const QString &key, const QString &value);
+    QString GetMetadata(const QString &key) const;
+    void SetDoGitCommit(bool do_git_commit);
+    bool GetDoGitCommit() const;
+    int PerformAndPostProcess();
+    int PerformAndPostProcess();
+
+
 signals:
     void passMessages(QString message);
 private:
@@ -101,7 +157,7 @@ private:
                                const char *format,
                                va_list args);
     QObject *message_callback;
-    csound::CsoundProducer csound;
+    csound::CsoundProducer *csound;
     QString csound_messages_buffer;
 };
 
