@@ -10,12 +10,11 @@ cmake ..
 make -j6 VERBOSE=1
 echo "Building packages..."
 sudo make package
-echo "Debian package contents:"
-find . -name '*.deb' -exec dpkg -f '{}' ';' 
-find . -name '*.deb' -exec dpkg -c '{}' ';' 
+echo "Debian packages and contents..."
+find . -name '*.deb' -ls -exec dpkg -f '{}' ';' 
+find . -name '*.deb' -ls -exec dpkg -c '{}' ';' 
 cd ..
 echo "Running lintian..."
 lintian --no-tag-display-limit build-linux/csound-extended-*.deb
-find build-linux/*.so* -ls
-find build-linux/*.deb -ls
+bash executable-targets-linux.sh
 echo "Finished building all for Linux."
