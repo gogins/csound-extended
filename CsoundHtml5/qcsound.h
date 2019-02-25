@@ -40,6 +40,7 @@ public:
     explicit QCsound(QObject *parent = 0);
     virtual ~QCsound();
     void setMessageCallback(void (*messageCallback)(CSOUND *csound, int level, const char *format, va_list valist));
+    void SetMessageCallback(void (*messageCallback)(CSOUND *csound, int level, const char *format, va_list valist));
     CsoundWebView *csound_web_view;
 public slots:
     ///void registerConsole(ConsoleWidget *console);
@@ -92,6 +93,7 @@ public slots:
     QString getMetadata(const QString &key) const;
     void setDoGitCommit(bool do_git_commit);
     bool getDoGitCommit() const;
+    int performAndPostProcess();
 
     int Cleanup();
     int CompileCsd(const QString &filename);
@@ -143,9 +145,6 @@ public slots:
     void SetDoGitCommit(bool do_git_commit);
     bool GetDoGitCommit() const;
     int PerformAndPostProcess();
-    int PerformAndPostProcess();
-
-
 signals:
     void passMessages(QString message);
 private:

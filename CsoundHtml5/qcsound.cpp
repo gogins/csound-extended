@@ -52,6 +52,10 @@ int QCsound::cleanup() {
     return csound->Cleanup();
 }
 
+int QCsound::performAndPostProcess() {
+    return csound->PerformAndPostProcess();
+}
+
 int QCsound::compileCsd(const QString &filename) {
     return csound->CompileCsd(filename.toLocal8Bit());
 }
@@ -286,158 +290,154 @@ bool QCsound::getDoGitCommit() const {
     return csound->GetDoGitCommit();
 }
 
-int QCsound::performAndPostProcess() {
-    return csound->PerformAndPostProcess();
-}
-
-int QCsound::cleanup() {
+int QCsound::Cleanup() {
     return csound->Cleanup();
 }
 
-int QCsound::compileCsd(const QString &filename) {
+int QCsound::CompileCsd(const QString &filename) {
     return csound->CompileCsd(filename.toLocal8Bit());
 }
 
-int QCsound::compileCsdText(const QString &text) {
+int QCsound::CompileCsdText(const QString &text) {
     return csound->CompileCsdText(text.toLocal8Bit());
 }
 
-int QCsound::compileOrc(const QString &text) {
+int QCsound::CompileOrc(const QString &text) {
     return csound->CompileOrc(text.toLocal8Bit());
 }
 
-double QCsound::evalCode(const QString &text) {
+double QCsound::EvalCode(const QString &text) {
     return csound->EvalCode(text.toLocal8Bit());
 }
 
-double QCsound::get0dBFS() {
+double QCsound::Get0dBFS() {
     return csound->Get0dBFS(); //cs->Get0dBFS();
 }
 
-int QCsound::getApiVersion() {
+int QCsound::GetApiVersion() {
     return csound->GetAPIVersion();
 }
 
-double QCsound::getControlChannel(const QString &name) {
+double QCsound::GetControlChannel(const QString &name) {
     int result = 0;
     double value = csound->GetControlChannel(name.toLocal8Bit(), &result);
     return value;
 }
 
-CSOUND* QCsound::getCsound() {
+CSOUND* QCsound::GetCsound() {
     return csound->GetCsound();
 }
 
-qint64 QCsound::getCurrentTimeSamples() { // FIXME: unknown type int64_t qint64
+qint64 QCsound::GetCurrentTimeSamples() { // FIXME: unknown type int64_t qint64
     return csound->GetCurrentTimeSamples();
 }
 
-QString QCsound::getEnv(const QString &name) { // not sure, if it works... test with setGlobalEnv
+QString QCsound::GetEnv(const QString &name) { // not sure, if it works... test with setGlobalEnv
     return csound->GetEnv(name.toLocal8Bit());
 }
 
-int QCsound::getKsmps() {
+int QCsound::GetKsmps() {
     return csound->GetKsmps();
 }
 
-int QCsound::getNchnls() {
+int QCsound::GetNchnls() {
     return csound->GetNchnls();
 }
 
-int QCsound::getNchnlsInput() {
+int QCsound::GetNchnlsInput() {
     return csound->GetNchnlsInput();
 }
 
-QString QCsound::getOutputName() {
+QString QCsound::GetOutputName() {
     return QString(csound->GetOutputName());
 }
 
-double QCsound::getScoreOffsetSeconds() {
+double QCsound::GetScoreOffsetSeconds() {
     return csound->GetScoreOffsetSeconds();
 }
 
-double QCsound::getScoreTime() {
+double QCsound::GetScoreTime() {
     return csound->GetScoreTime();
 }
 
-int QCsound::getSr() {
+int QCsound::GetSr() {
     return csound->GetSr();
 }
 
-QString QCsound::getStringChannel(const QString &name) {
+QString QCsound::GetStringChannel(const QString &name) {
     char buffer[0x100];
     csound->GetStringChannel(name.toLocal8Bit(), buffer);
     return QString(buffer);
 }
 
-int QCsound::getVersion() {
+int QCsound::GetVersion() {
     return csound->GetVersion();
 }
 
-bool QCsound::isPlaying() {
+bool QCsound::IsPlaying() {
     return csound->IsPlaying();
 }
 
-int QCsound::isScorePending() {
+int QCsound::IsScorePending() {
     return csound->IsScorePending();
 }
 
-void QCsound::message(const QString &text) {
+void QCsound::Message(const QString &text) {
     csound->Message("%s", text.toLocal8Bit().constData());
 }
 
-int QCsound::perform() {
+int QCsound::Perform() {
     // Perform in a separate thread of execution.
     return csound->PerformAndReset();
 }
 
-int QCsound::performKsmps() {
+int QCsound::PerformKsmps() {
     return csound->PerformKsmps();
 }
 
-int QCsound::readScore(const QString &text) {
+int QCsound::ReadScore(const QString &text) {
     csound->ReadScore(text.toLocal8Bit());
     return 0;
 }
 
-void QCsound::reset() {
+void QCsound::Reset() {
     csound->Reset();
 }
 
-void QCsound::rewindScore() {
+void QCsound::RewindScore() {
     csound->RewindScore();
 }
 
-int QCsound::runUtility(const QString &command, int argc, char **argv) {
+int QCsound::RunUtility(const QString &command, int argc, char **argv) {
     return csound->RunUtility(command.toLocal8Bit(), argc, argv); // probably does not work from JS due char **
 }
 
-int QCsound::scoreEvent(char opcode, const double *pfields, long field_count) {
+int QCsound::ScoreEvent(char opcode, const double *pfields, long field_count) {
     csound->ScoreEvent(opcode, pfields, field_count);
     return 0;
 }
 
-void QCsound::setControlChannel(const QString &name, double value) {
+void QCsound::SetControlChannel(const QString &name, double value) {
     csound->SetControlChannel(name.toLocal8Bit(), value);
 }
 
-int QCsound::setGlobalEnv(const QString &name, const QString &value) {
+int QCsound::SetGlobalEnv(const QString &name, const QString &value) {
     return csound->SetGlobalEnv(name.toLocal8Bit(), value.toLocal8Bit());
 }
 
-void QCsound::setHostData(void *host_data) {
+void QCsound::SetHostData(void *host_data) {
     csound->SetHostData(host_data);
 }
 
-void QCsound::setInput(const QString &name){
+void QCsound::SetInput(const QString &name){
     csound->SetInput(name.toLocal8Bit());
 }
 
-void QCsound::setMessageCallback(void (*messageCallback)(CSOUND *csound, int level, const char *format, va_list valist)){
+void QCsound::SetMessageCallback(void (*messageCallback)(CSOUND *csound, int level, const char *format, va_list valist)){
     csound->SetMessageCallback(messageCallback);
 }
 
-void QCsound::setMessageCallback(QObject *object) {
+void QCsound::SetMessageCallback(QObject *object) {
     qDebug() << "setMessageCallback with " << object;
 }
 
@@ -482,32 +482,6 @@ int QCsound::TableLength(int table_number){
 
 void QCsound::TableSet(int table_number, int index, double value){
     csound->TableSet(table_number, index, value);
-}
-
-void QCsound::CsoundMessageCallback_(CSOUND *csound,
-                                         int attributes,
-                                         const char *format,
-                                         va_list args) {
-    return reinterpret_cast<QCsound *>(csoundGetHostData(csound))->csoundMessageCallback(attributes, format, args);
-}
-
-void QCsound::CsoundMessageCallback(int attributes,
-                           const char *format,
-                           va_list args)
-{
-    (void) attributes;
-    QString message = QString::vasprintf(format, args);
-    qDebug() << message;
-    passMessages(message);
-    for (int i = 0, n = message.length(); i < n; i++) {
-        if (message[i] == '\n') {
-            QString code = QString("console.log(\"%1\\n\");").arg(csound_messages_buffer);
-            csound_web_view->evaluateJavaScript(code);
-            csound_messages_buffer.clear();
-        } else {
-            csound_messages_buffer.append(message[i]);
-        }
-    }
 }
 
 void QCsound::SetMetadata(const QString &key, const QString &value)
