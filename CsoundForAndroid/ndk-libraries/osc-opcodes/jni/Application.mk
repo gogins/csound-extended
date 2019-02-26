@@ -1,4 +1,4 @@
-APP_ABI := armeabi-v7a arm64-v8a
+APP_ABI := armeabi-v7a arm64-v8a x86_64
 APP_CPPFLAGS += -fexceptions -frtti -std=c++11
 APP_OPTIM := release
 APP_PLATFORM := android-21
