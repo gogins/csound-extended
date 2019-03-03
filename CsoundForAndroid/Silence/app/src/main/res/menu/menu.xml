@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/action_new"
+            android:title="New..."
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/action_open"
+            android:title="Open..."
+            app:showAsAction="always"/>
+    <item
+            android:id="@+id/action_save"
+            android:title="Save"
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/action_save_as"
+            android:title="Save as..."
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/action_render"
+            android:title="Render"
+            app:showAsAction="always"/>
+    <item
+            android:id="@+id/action_examples"
+            android:title="Examples..."
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_settings"
+            android:title="Settings..."
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_about"
+            android:title="About..."
+            app:showAsAction="never"/>
+</menu>
