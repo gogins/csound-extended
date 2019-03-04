@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.TextView
 
@@ -27,14 +28,24 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     }
     override fun onTabUnselected(tab: TabLayout.Tab?) {
         when (tab?.text) {
-            "Editor" -> editor?.visibility = View.INVISIBLE
+            "Editor" -> editor?.visibility = View.GONE
+            "Messages" -> messages?.visibility = View.GONE
+            "HTML" -> html_view?.visibility = View.GONE
+            "Help" -> help_view?.visibility = View.GONE
+            "Portal" -> portal_view?.visibility = View.GONE
         }
     }
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab?.text) {
             "Editor" -> editor?.visibility = View.VISIBLE
+            "Messages" -> messages?.visibility = View.VISIBLE
+            "HTML" -> html_view?.visibility = View.VISIBLE
+            "Help" -> help_view?.visibility = View.VISIBLE
+            "Portal" -> portal_view?.visibility = View.VISIBLE
         }
     }
+    // We do not use Fragments because state is not shared.
+    // Instead we hide and show widgets to simulate tabs.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,12 +53,18 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         tabs = findViewById<TabLayout>(R.id.tab_layout)
         tabs.addOnTabSelectedListener(this)
         editor = findViewById<EditText>(R.id.editor)
-        messages = findViewById<TextView>(R.id.editor)
-
-
-        // Example of a call to a native method
-        sample_text.text = stringFromJNI()
-
+        editor.visibility = View.VISIBLE
+        messages = findViewById<TextView>(R.id.messages)
+        messages.visibility = View.GONE
+        html_view = findViewById<WebView>(R.id.html_view)
+        html_view.visibility = View.GONE
+        help_view = findViewById<WebView>(R.id.help_view)
+        help_view.visibility = View.GONE
+        help_view.getSettings().setJavaScriptEnabled(true)
+        help_view.setWebViewClient(WebViewClient())
+        help_view.loadUrl("https://gogins.github.io/csound-extended/html/indexframes.html")
+        portal_view = findViewById<WebView>(R.id.portal_view)
+        portal_view.visibility = View.GONE
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -58,35 +75,27 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         // Handle presses on the action bar menu items
         when (item.itemId) {
             R.id.action_new -> {
-                sample_text.text = "New"
                 return true
             }
             R.id.action_open -> {
-                sample_text.text = "Open..."
                 return true
             }
             R.id.action_save-> {
-                sample_text.text = "Save"
                 return true
             }
             R.id.action_save_as-> {
-                sample_text.text = "Save as..."
                 return true
             }
             R.id.action_render-> {
-                sample_text.text = "Render"
                 return true
             }
             R.id.action_settings-> {
-                sample_text.text = "Settings..."
                 return true
             }
             R.id.action_examples -> {
-                sample_text.text = "Examples..."
                 return true
             }
             R.id.action_about -> {
-                sample_text.text = "About..."
                 return true
             }
         }
