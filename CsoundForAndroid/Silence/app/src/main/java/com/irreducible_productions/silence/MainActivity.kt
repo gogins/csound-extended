@@ -7,9 +7,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.R.layout
 import android.R.menu
 import android.support.design.widget.TabLayout
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
@@ -44,6 +46,18 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
             "Portal" -> portal_view?.visibility = View.VISIBLE
         }
     }
+    private inner class InnerWebViewClient : WebViewClient() {
+        override fun shouldOverrideUrlLoading(view: WebView, url: WebResourceRequest): Boolean {
+            return false
+        }
+     }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        //if (keyCode == KeyEvent.KEYCODE_BACK && webview.canGoBack()) {
+        //    webview.goBack()
+        //    return true
+        //}
+        return super.onKeyDown(keyCode, event)
+    }
     // We do not use Fragments because state is not shared.
     // Instead we hide and show widgets to simulate tabs.
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +74,18 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         html_view.visibility = View.GONE
         help_view = findViewById<WebView>(R.id.help_view)
         help_view.visibility = View.GONE
-        help_view.getSettings().setJavaScriptEnabled(true)
-        help_view.setWebViewClient(WebViewClient())
-        help_view.loadUrl("https://gogins.github.io/csound-extended/html/indexframes.html")
+        help_view.getSettings().javaScriptEnabled = true
+        help_view.getSettings().setBuiltInZoomControls(true)
+        help_view.getSettings().setDisplayZoomControls(false)
+        help_view.webViewClient = InnerWebViewClient()
+        help_view.loadUrl("https://csound.com/docs/manual/indexframes.html")
         portal_view = findViewById<WebView>(R.id.portal_view)
         portal_view.visibility = View.GONE
+        portal_view.getSettings().javaScriptEnabled = true
+        portal_view.getSettings().setBuiltInZoomControls(true)
+        portal_view.getSettings().setDisplayZoomControls(false)
+        portal_view.webViewClient = InnerWebViewClient()
+        portal_view.loadUrl("https://csound.com/")
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
