@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     thread(nullptr)
 {
     csound.setHostData(this);
-    csound.setMessageCallback(&messageCallback);    
+    ///csound.setMessageCallback(&messageCallback);
     csound.csound_web_view = ui->htmlTab;
     ui->setupUi(this);
     ui->htmlTab->page()->setWebChannel(&channel);
@@ -168,6 +168,7 @@ QString getElement(const QString &text, const QString &tag)
 
 void MainWindow::replaceBrowser(int which)
 {
+#if (QT_VERSION < 0x050800)
     if (which == 1) {
         auto index = ui->tabs->indexOf(ui->htmlTab);
         ui->tabs->removeWidget(ui->htmlTab);
@@ -190,14 +191,13 @@ void MainWindow::replaceBrowser(int which)
         ui->portalView->setUrl(QUrl("http://csound.github.io/"));
     }
     csound.csound_web_view = ui->htmlTab;
+#endif
 }
 
 void MainWindow::saveAndLoadHtml()
 {
     qDebug() << "CsoundHtml5: " << __FUNCTION__;
-#if (QT_VERSION < 0x050800)
     replaceBrowser(1);
-#endif
     auto text = ui->csdEdit->toPlainText();
     QFile csdfile(filename);
     csdfile.open(QIODevice::WriteOnly | QIODevice::Text);

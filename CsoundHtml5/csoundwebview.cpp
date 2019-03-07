@@ -8,7 +8,6 @@ CsoundWebView::CsoundWebView(QWidget* parent) :
     QWebEngineView(parent) {
     qDebug() << "CsoundHtml5: " << __FUNCTION__ << QThread::currentThreadId();
     settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled,true);
-
 }
 
 CsoundWebView::~CsoundWebView() {

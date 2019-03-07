@@ -64,3 +64,6 @@
 [submodule "dependencies/cope/david-cope-cmmc"]
 	path = dependencies/cope/david-cope-cmmc
 	url = https://github.com/HeinrichApfelmus/david-cope-cmmc.git
+[submodule "CsoundForAndroid/ndk-libraries/ecl"]
+	path = CsoundForAndroid/ndk-libraries/ecl
+	url = https://gitlab.com/embeddable-common-lisp/ecl.git

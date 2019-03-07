@@ -25,25 +25,24 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private lateinit var messages: TextView
     private lateinit var help_view: WebView
     private lateinit var portal_view: WebView
-
     override fun onTabReselected(tab: TabLayout.Tab?) {
     }
     override fun onTabUnselected(tab: TabLayout.Tab?) {
         when (tab?.text) {
-            "Editor" -> editor?.visibility = View.GONE
-            "Messages" -> messages?.visibility = View.GONE
-            "HTML" -> html_view?.visibility = View.GONE
-            "Help" -> help_view?.visibility = View.GONE
-            "Portal" -> portal_view?.visibility = View.GONE
+            "Editor" -> editor.visibility = View.GONE
+            "Messages" -> messages.visibility = View.GONE
+            "HTML" -> html_view.visibility = View.GONE
+            "Help" -> help_view.visibility = View.GONE
+            "Portal" -> portal_view.visibility = View.GONE
         }
     }
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab?.text) {
-            "Editor" -> editor?.visibility = View.VISIBLE
-            "Messages" -> messages?.visibility = View.VISIBLE
-            "HTML" -> html_view?.visibility = View.VISIBLE
-            "Help" -> help_view?.visibility = View.VISIBLE
-            "Portal" -> portal_view?.visibility = View.VISIBLE
+            "Editor" -> editor.visibility = View.VISIBLE
+            "Messages" -> messages.visibility = View.VISIBLE
+            "HTML" -> html_view.visibility = View.VISIBLE
+            "Help" -> help_view.visibility = View.VISIBLE
+            "Portal" -> portal_view.visibility = View.VISIBLE
         }
     }
     private inner class InnerWebViewClient : WebViewClient() {
@@ -130,7 +129,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     companion object {
         // Used to load the 'native-lib' library on application startup.
         init {
-            System.loadLibrary("native-lib")
+            //System.loadLibrary("native-lib")
         }
     }
 }

@@ -27,6 +27,8 @@
 #include <QDebug>
 #include <csoundwebview.h>
 #include <csound.h>
+#include <thread>
+#include <mutex>
 
 class CsoundWebView;
 namespace csound {
@@ -158,6 +160,7 @@ private:
     QObject *message_callback;
     csound::CsoundProducer *csound;
     QString csound_messages_buffer;
+    std::mutex messages_mutex;
 };
 
 #endif // CsoundHtmlWrapper_H

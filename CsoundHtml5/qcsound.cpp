@@ -258,8 +258,9 @@ void QCsound::csoundMessageCallback(int attributes,
                            va_list args)
 {
     (void) attributes;
+    //std::lock_guard<std::mutex> lock(messages_mutex);
     QString message = QString::vasprintf(format, args);
-    qDebug() << message;
+    //qDebug() << message;
     passMessages(message);
     for (int i = 0, n = message.length(); i < n; i++) {
         if (message[i] == '\n') {
