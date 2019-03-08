@@ -5,10 +5,4 @@
     <EditTextPreference android:key="SSDIR" android:title="Samples directory" android:enabled="true"/>
     <EditTextPreference android:key="SADIR" android:title="Analysis directory" android:enabled="true"/>
     <EditTextPreference android:key="INCDIR" android:title="Include directory" android:enabled="true"/>
-    <ListPreference
-        android:title="Screen Layout"
-        android:key="screenLayout"
-        android:defaultValue="5"
-        android:entries="@array/layoutEntries"
-        android:entryValues="@array/layoutValues" />
 </PreferenceScreen>

@@ -26,8 +26,8 @@ weird hacks to ensure binary built with APP_PLATFORM=android-23 to work on Ginge
 
 So we should have:
 
-buildToolsVersion 26.0.1
-compileSdkVersion 23
+buildToolsVersion 28
+compileSdkVersion 28
 targetSdkVersion 26
 minSdkVersion 22
 APP_PLATFORM android-22

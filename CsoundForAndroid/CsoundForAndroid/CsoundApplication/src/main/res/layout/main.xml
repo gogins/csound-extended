@@ -1,80 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainLayout"
-    android:backgroundTint="#000000"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:backgroundTint="#000000"
+    android:orientation="vertical">
 
-    <TableRow
-        android:id="@+id/tableRow1"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent"
+        android:backgroundTint="#000000"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize"
+            android:id="@+id/toolbar">
+        </android.support.v7.widget.Toolbar>
 
-        <Button
-            android:id="@+id/newButton"
-            style="@style/csoundButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:minHeight="36dip"
-            android:tag="csound:newButton"
-            android:text="@string/New" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabMode="scrollable">
 
-        <Button
-            android:id="@+id/openButton"
-            style="@style/csoundButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:minHeight="36dip"
-            android:tag="csound:openButton"
-            android:text="@string/Open" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Editor" />
 
-        <Button
-            android:id="@+id/saveAsButton"
-            style="@style/csoundButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:minHeight="36dip"
-            android:tag="csound:saveAsButton"
-            android:text="@string/Save_as" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Messages" />
 
-        <Button
-            android:id="@+id/editButton"
-            style="@style/csoundButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:minHeight="36dip"
-            android:text="@string/Edit" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HTML" />
 
-        <ToggleButton
-            android:id="@+id/runButton"
-            style="@style/csoundButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:minHeight="36dip"
-            android:textOff="@string/Start"
-            android:textOn="@string/Stop" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Widgets" />
 
-    </TableRow>
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Help" />
 
-    <TableLayout
-        android:id="@+id/channelsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Portal" />
+        </android.support.design.widget.TabLayout>
+
+        <EditText
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:minLines="6"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="10sp"
+            android:gravity="left|top"
+            android:isScrollContainer="true"
+            android:typeface="monospace" />
+
+        <TableLayout
+        android:id="@+id/widgets_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1">
-
         <SeekBar
             android:id="@+id/seekBar1"
             style="@style/csoundSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/slider1" />
-
         <TextView
             android:id="@+id/textView1"
             style="@style/csoundSeekBar"
@@ -82,13 +92,11 @@
             android:layout_height="wrap_content"
             android:text="@string/slider1"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
         <SeekBar
             android:id="@+id/seekBar2"
             style="@style/csoundSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
         <TextView
             android:id="@+id/textView2"
             style="@style/csoundSeekBar"
@@ -96,13 +104,11 @@
             android:layout_height="wrap_content"
             android:text="@string/slider2"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
         <SeekBar
             android:id="@+id/seekBar3"
             style="@style/csoundSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
         <TextView
             android:id="@+id/textView3"
             style="@style/csoundSeekBar"
@@ -110,13 +116,11 @@
             android:layout_height="wrap_content"
             android:text="@string/slider3"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
         <SeekBar
             android:id="@+id/seekBar4"
             style="@style/csoundSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
         <TextView
             android:id="@+id/textView4"
             style="@style/csoundSeekBar"
@@ -124,13 +128,11 @@
             android:layout_height="wrap_content"
             android:text="@string/slider4"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
         <SeekBar
             android:id="@+id/seekBar5"
             style="@style/csoundSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
         <TextView
             android:id="@+id/textView5"
             style="@style/csoundSeekBar"
@@ -138,12 +140,10 @@
             android:layout_height="wrap_content"
             android:text="@string/slider5"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
         <TableRow
             android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <Button
                 android:id="@+id/button1"
                 style="@style/csoundButtonStyle"
@@ -153,7 +153,6 @@
                 android:minHeight="36dp"
                 android:text="@string/butt1"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
             <Button
                 android:id="@+id/button2"
                 style="@style/csoundButtonStyle"
@@ -163,7 +162,6 @@
                 android:minHeight="36dp"
                 android:text="@string/butt2"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
             <Button
                 android:id="@+id/button3"
                 style="@style/csoundButtonStyle"
@@ -173,7 +171,6 @@
                 android:minHeight="36dp"
                 android:text="@string/butt3"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
             <Button
                 android:id="@+id/button4"
                 style="@style/csoundButtonStyle"
@@ -183,7 +180,6 @@
                 android:minHeight="36dp"
                 android:text="@string/butt4"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
             <Button
                 android:id="@+id/button5"
                 style="@style/csoundButtonStyle"
@@ -193,30 +189,22 @@
                 android:minHeight="36dp"
                 android:text="@string/butt5"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
         </TableRow>
 
-        <Button
-            android:id="@+id/pad"
-            style="@style/csoundButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="-5dip"
-            android:text="@string/trackpad" />
+            <Button
+                android:id="@+id/pad"
+                style="@style/csoundButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/trackpad" />
     </TableLayout>
-
-    <WebView
-        android:id="@+id/htmlView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3" />
+    </LinearLayout>
 
     <ScrollView
-        android:id="@+id/csoundMessages"
+        android:id="@+id/messages_tab"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
         <TextView
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
@@ -225,7 +213,24 @@
             android:textColor="#00ff00"
             android:textSize="10sp"
             android:typeface="monospace" />
-
     </ScrollView>
 
-</TableLayout>
+    <WebView
+        android:id="@+id/html_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
+    <WebView
+        android:id="@+id/help_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
+    <WebView
+        android:id="@+id/portal_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
+</LinearLayout>
