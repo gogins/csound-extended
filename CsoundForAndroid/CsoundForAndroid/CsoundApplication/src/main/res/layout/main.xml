@@ -64,14 +64,14 @@
         <EditText
             android:id="@+id/editor"
             android:layout_width="match_parent"
-            android:inputType="text"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
+            android:fitsSystemWindows="false"
+            android:gravity="left|top"
+            android:inputType="textMultiLine|text"
+            android:isScrollContainer="true"
             android:minLines="6"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="10sp"
-            android:gravity="left|top"
-            android:isScrollContainer="true"
             android:typeface="monospace" />
 
         <TableLayout
