@@ -11,11 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b127a74-9d17-4e14-b9bb-2279472fe603" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CsoundApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CsoundApplication.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/menu.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" afterDir="false" />
@@ -79,16 +75,16 @@
         <counts>
           <entry key="dummy" value="9" />
           <entry key="gradle" value="15" />
-          <entry key="java" value="2875" />
-          <entry key="txt" value="14" />
+          <entry key="java" value="2883" />
+          <entry key="txt" value="20" />
           <entry key="xml" value="294" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="15" />
-          <entry key="JAVA" value="2875" />
-          <entry key="PLAIN_TEXT" value="23" />
+          <entry key="JAVA" value="2883" />
+          <entry key="PLAIN_TEXT" value="29" />
           <entry key="XML" value="294" />
         </counts>
       </usages-collector>
@@ -96,12 +92,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/res/layout/main.xml">
           <provider selected="true" editor-type-id="android-designer2" />
           <provider editor-type-id="text-editor">
             <state relative-caret-position="286">
-              <caret line="61" column="34" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
+              <caret line="62" column="34" selection-start-line="62" selection-start-column="34" selection-end-line="62" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -139,11 +135,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="272" column="55" selection-start-line="272" selection-start-column="55" selection-end-line="272" selection-end-column="55" />
+            <state relative-caret-position="-3820">
+              <caret line="396" column="59" selection-start-line="396" selection-start-column="59" selection-end-line="396" selection-end-column="59" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#19458#19459#0" expanded="true" />
@@ -220,8 +216,8 @@
         <option value="$PROJECT_DIR$/src/main/res/xml/settings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/SettingsActivity.java" />
         <option value="$PROJECT_DIR$/src/main/res/menu/menu.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" />
       </list>
     </option>
   </component>
@@ -452,9 +448,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.32982844" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.32982844" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Build Variants" order="4" side_tool="true" />
@@ -468,7 +465,7 @@
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="6" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Build" order="7" visible="true" />
+      <window_info anchor="bottom" id="Build" order="7" visible="true" />
       <window_info anchor="bottom" id="Android Profiler" order="8" />
       <window_info anchor="bottom" id="Find" order="9" />
       <window_info anchor="bottom" id="Messages" order="10" />
@@ -489,7 +486,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>909</line>
+          <line>911</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
@@ -586,10 +583,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="62" column="34" selection-start-line="62" selection-start-column="34" selection-end-line="62" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="272" column="55" selection-start-line="272" selection-start-column="55" selection-end-line="272" selection-end-column="55" />
+        <state relative-caret-position="-3820">
+          <caret line="396" column="59" selection-start-line="396" selection-start-column="59" selection-end-line="396" selection-end-column="59" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#19458#19459#0" expanded="true" />
@@ -597,14 +602,6 @@
             <element signature="e#19586#19587#0" expanded="true" />
             <element signature="e#19635#19636#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/main.xml">
-      <provider selected="true" editor-type-id="android-designer2" />
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="61" column="34" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
         </state>
       </provider>
     </entry>

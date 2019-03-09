@@ -392,6 +392,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             case R.id.action_save:
                 return true;
             case R.id.action_save_as:
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                Intent chooser = Intent.createChooser(intent, "Save as");
+                startActivityForResult(chooser, PICK_FILE_REQUEST);
                 return true;
             case R.id.action_render:
                 synchronized (this) {
@@ -620,11 +625,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     private void OnFileChosen(File file) {
-        ///setContentView(R.layout.main);
         Log.d("Csound:", file.getAbsolutePath());
         csound_file = file;
-        String text = "";
-        editor_tab.setText(text);
         setTitle(csound_file.getName());
         parseWebLayout();
     }
