@@ -64,7 +64,6 @@ import android.widget.ToggleButton;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -98,7 +97,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     MenuItem helpItem = null;
     MenuItem aboutItem = null;
     CsoundOboe csound_oboe = null;
-    File csound_file = null;
+    ///File csound_file = null;
+    Uri csound_uri = null;
     Button pad = null;
     ArrayList<SeekBar> sliders = new ArrayList<SeekBar>();
     ArrayList<Button> buttons = new ArrayList<Button>();
@@ -123,7 +123,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     private String screenLayout = "2";
     protected CsoundCallbackWrapper oboe_callback_wrapper = null;
     Intent csound_service_intent = null;
-    static final int PICK_FILE_REQUEST = 8391;
+    static final int OPEN_FILE_REQUEST = 8391;
+    static final int SAVE_FILE_REQUEST = 8392;
+    static final int NEW_FILE_REQUEST = 8393;
     private boolean is_running = false;
     protected Handler handler = new Handler();
     private TabLayout tabs = null;
@@ -162,27 +164,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
     }
 
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-    }
-
-    protected void writeTemplateFile() {
-        if (checkDangerousPermissions() == false) {
-            return;
-        }
-        File root = Environment.getExternalStorageDirectory();
-        try {
-            if (root.canWrite()) {
-                FileWriter filewriter = new FileWriter(csound_file);
-                BufferedWriter out = new BufferedWriter(filewriter);
-                out.write(csdTemplate);
-                out.close();
-            }
-        } catch (IOException e) {
-            Log.e("Csound:", "Could not write file " + e.getMessage());
-        }
     }
 
     private static void copyFile(InputStream in, OutputStream out) throws IOException {
@@ -326,9 +310,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         // otherwise, do not start Csound, and assume the
         // file is HTML with JavaScript that will call
         // csound_obj.perform() as in csound.node().
-        if (csound_file.toString().toLowerCase().endsWith(".csd")) {
+        if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
-            result = csound_oboe.compileCsd(csound_file.getAbsolutePath());
+            String code = editor_tab.getText().toString();
+            result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
             result = csound_oboe.performAndReset();
         }
@@ -350,54 +335,34 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         File outFile = null;
         switch (item.getItemId()) {
             case R.id.action_new:
-                AlertDialog.Builder alert = new AlertDialog.Builder(
-                        CsoundAppActivity.this,
-                        R.style.csoundAlertDialogStyle);
-                alert.setTitle("New CSD...");
-                alert.setMessage("Filename:");
-                final EditText input = new EditText(CsoundAppActivity.this);
-                alert.setView(input);
-                alert.setPositiveButton("Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                String value = input.getText().toString();
-                                File root = Environment
-                                        .getExternalStorageDirectory();
-                                csound_file = new File(root, value);
-                                writeTemplateFile();
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, csound_file);
-                                intent.setDataAndType(uri, "text/plain");
-                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                startActivity(intent);
-                            }
-                        });
-                alert.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                            }
-                        });
-                alert.show();
+                Intent new_intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                new_intent.setType("*/*");
+                new_intent.addCategory(Intent.CATEGORY_OPENABLE);
+                Intent new_chooser = Intent.createChooser(new_intent, "Name");
+                startActivityForResult(new_chooser, NEW_FILE_REQUEST);
                 return true;
             case R.id.action_open:
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*");
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 Intent chooser = Intent.createChooser(intent, "Open file");
-                startActivityForResult(chooser, PICK_FILE_REQUEST);
+                startActivityForResult(chooser, OPEN_FILE_REQUEST);
                 return true;
             case R.id.action_save:
+                String text = editor_tab.getText().toString();
+                try {
+                    saveTextToUri(text, csound_uri);
+                } catch (Exception e) {
+
+                }
                 return true;
             case R.id.action_save_as:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                Intent chooser = Intent.createChooser(intent, "Save as");
-                startActivityForResult(chooser, PICK_FILE_REQUEST);
-                return true;
+                Intent save_as_intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                save_as_intent.setType("*/*");
+                save_as_intent.addCategory(Intent.CATEGORY_OPENABLE);
+                Intent save_as_chooser = Intent.createChooser(save_as_intent, "Save as");
+                startActivityForResult(save_as_chooser, SAVE_FILE_REQUEST);
+            return true;
             case R.id.action_render:
                 synchronized (this) {
                     if (is_running == false) {
@@ -430,42 +395,42 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             case R.id.itemTrapped: {
                 outFile = copyAsset("Csound6AndroidExamples/Boulanger/trapped.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
             }
             return true;
             case R.id.itemDroneIV: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/Drone-IV.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
             }
             return true;
             case R.id.itemPartikkel: {
                 outFile = copyAsset("Csound6AndroidExamples/Khosravi/partikkel.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
             }
             return true;
             case R.id.itemXanadu: {
                 outFile = copyAsset("Csound6AndroidExamples/Kung/xanadu.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
                 return true;
             }
             case R.id.itemModulatedDelay: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/ModulateInput.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
                 return true;
             }
             case R.id.itemBuiltinChannels: {
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/BuiltinChannels.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
                 return true;
             }
@@ -476,14 +441,14 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 }
                 outFile = copyAsset("Csound6AndroidExamples/Gogins/Message.html");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
                 return true;
             }
             case R.id.itemKoanI: {
                 outFile = copyAsset("Csound6AndroidExamples/McCurdy/i.csd");
                 if (outFile != null) {
-                    OnFileChosen(outFile);
+                    LoadFile(outFile);
                 }
                 return true;
             }
@@ -567,15 +532,19 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     /**
-     * Opens the CSD and searches for a <html> element.
+     * Loads text from a file, normally a source code file.
+     *
+     * @param file Filepath to the file.
+     * @return Source code.
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    protected void parseWebLayout() {
+    public String loadTextFile(File file) {
+        String code = null;
         try {
             if (checkDangerousPermissions() == false) {
-                return;
+                return "";
             }
-            FileReader in = new FileReader(csound_file);
+            FileReader in = new FileReader(file);
             StringBuilder contents = new StringBuilder();
             char[] buffer = new char[4096];
             int read = 0;
@@ -584,13 +553,42 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 read = in.read(buffer);
             } while (read >= 0);
             in.close();
-            String csdText = contents.toString();
-            editor_tab.setText(csdText);
-            int start = csdText.indexOf("<html");
-            int end = csdText.indexOf("</html>") + 7;
+            code = contents.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return code;
+    }
+
+    /**
+     * Saves text to a file, normally from the code editor.
+     * @param code
+     * @param file
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void saveTextFile(String code, File file) {
+        try {
+            if (checkDangerousPermissions() == false) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Opens the CSD and searches for a <html> element.
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    protected void parseWebLayout() {
+        try {
+            String code = editor_tab.getText().toString();
+            int start = code.indexOf("<html");
+            int end = code.indexOf("</html>") + 7;
             if (!(start == -1 || end == -1)) {
-                html5Page = csdText.substring(start, end);
-                if (html5Page.length() > 1) {
+                String html5_page = code.substring(start, end);
+                if (html5_page.length() > 1) {
                     html_tab.setLayerType(View.LAYER_TYPE_NONE, null);
                     WebSettings settings = html_tab.getSettings();
                     // Page itself must specify utf-8 in meta tag?
@@ -606,10 +604,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         settings.setJavaScriptEnabled(true);
                     }
-                    File basePath = csound_file.getParentFile();
-                    baseUrl = basePath.toURI().toURL();
+                    ///File basePath = csound_file.getParentFile();
+                    ///baseUrl = basePath.toURI().toURL();
+                    baseUrl = new URL(csound_uri.toString());
                     html_tab.loadDataWithBaseURL(baseUrl.toString(),
-                            html5Page, "text/html", "utf-8", null);
+                            html5_page, "text/html", "utf-8", null);
                 }
             } else {
                 html_tab.onPause();
@@ -617,17 +616,17 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             }
             View mainLayout = findViewById(R.id.mainLayout);
             mainLayout.invalidate();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void OnFileChosen(File file) {
+    private void LoadFile(File file) {
         Log.d("Csound:", file.getAbsolutePath());
-        csound_file = file;
-        setTitle(csound_file.getName());
+        ///csound_file = file;
+        String code = loadTextFile(file);
+        editor_tab.setText(code);
+        setTitle(file.getName());
         parseWebLayout();
     }
 
@@ -902,32 +901,53 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
     }
 
+    public void saveTextToUri(String text, Uri uri) throws java.io.FileNotFoundException,
+            java.io.IOException,
+            java.lang.NullPointerException {
+        OutputStream outputStream = getContentResolver().openOutputStream(uri);
+        outputStream.write(text.getBytes());
+        outputStream.close();
+    }
+
+    public String loadTextFromUri(Uri uri) throws java.io.FileNotFoundException, java.io.IOException {
+        InputStream inputStream = getContentResolver().openInputStream(uri);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String line; (line = bufferedReader.readLine()) != null; ) {
+            stringBuilder.append(line).append('\n');
+        }
+        String text = stringBuilder.toString();
+        return text;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
         try {
-            if (requestCode == R.id.action_new && intent != null) {
-                csound_file = new File(intent.getData().getPath());
-                setTitle(csound_file.getName());
+            if (requestCode == NEW_FILE_REQUEST && intent != null) {
+                csound_uri = intent.getData();
+                editor_tab.setText(csdTemplate);
+                saveTextToUri(csdTemplate, csound_uri);
+                setTitle(csound_uri.getLastPathSegment());
             }
-            if (requestCode == PICK_FILE_REQUEST && intent != null) {
+            if (requestCode == SAVE_FILE_REQUEST && intent != null) {
                 if (checkDangerousPermissions() == false) {
                     return;
                 }
-                String filepath = null;
-                Uri uri = intent.getData();
-                String uri_string = uri.toString();
-                String uri_path = uri.getPath();
-                Log.i("Csound", "Uri: " + uri_string);
-                if (uri_string.startsWith("content://")) {
-                    final String[] split = uri_string.split(":");
-                    final String[] pathpart = uri_path.split(":");
-                    filepath = Environment.getExternalStorageDirectory() + "/" + pathpart[1];
+                csound_uri = intent.getData();
+                String text = editor_tab.getText().toString();
+                saveTextToUri(text, csound_uri);
+                setTitle(csound_uri.getLastPathSegment());
+            }
+            if (requestCode == OPEN_FILE_REQUEST && intent != null) {
+                if (checkDangerousPermissions() == false) {
+                    return;
                 }
-                csound_file = new File(filepath);
-                csound_file.setReadable(true);
-                csound_file.setWritable(true);
-                setTitle(csound_file.getName());
+                csound_uri = intent.getData();
+                String text = loadTextFromUri(csound_uri);
+                editor_tab.setText(text);
+                setTitle(csound_uri.getLastPathSegment());
                 parseWebLayout();
             }
         } catch (Exception e) {
