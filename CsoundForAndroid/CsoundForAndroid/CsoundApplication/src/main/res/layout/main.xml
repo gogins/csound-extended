@@ -6,79 +6,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#000000"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mainLayout"
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="#000000"
-        android:orientation="vertical">
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize"
-            android:id="@+id/toolbar">
-        </android.support.v7.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar">
+    </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable">
+        <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tabMode="scrollable">
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Editor" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Messages" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HTML" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Widgets" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Help" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Portal" />
-        </android.support.design.widget.TabLayout>
-
-        <EditText
-            android:id="@+id/editor"
-            android:layout_width="match_parent"
+            android:text="Editor" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="false"
-            android:gravity="left|top"
-            android:inputType="textMultiLine|text"
-            android:isScrollContainer="true"
-            android:minLines="6"
-            android:textColor="@android:color/holo_orange_light"
-            android:textSize="10sp"
-            android:typeface="monospace" />
+            android:text="Messages" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HTML" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Widgets" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Portal" />
+    </android.support.design.widget.TabLayout>
 
-        <TableLayout
+    <EditText
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:gravity="left|top"
+        android:inputType="textMultiLine|text"
+        android:isScrollContainer="true"
+        android:minLines="6"
+        android:textColor="@android:color/holo_orange_light"
+        android:textSize="10sp"
+        android:typeface="monospace" />
+
+    <WebView
+        android:id="@+id/html_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TableLayout
         android:id="@+id/widgets_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="match_parent" >
         <SeekBar
             android:id="@+id/seekBar1"
             style="@style/csoundSeekBar"
@@ -190,21 +181,18 @@
                 android:text="@string/butt5"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-
-            <Button
-                android:id="@+id/pad"
-                style="@style/csoundButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/trackpad" />
+        <Button
+            android:id="@+id/pad"
+            style="@style/csoundButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/trackpad" />
     </TableLayout>
-    </LinearLayout>
 
     <ScrollView
         android:id="@+id/messages_tab"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent" >
         <TextView
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
@@ -216,21 +204,13 @@
     </ScrollView>
 
     <WebView
-        android:id="@+id/html_tab"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3" />
-
-    <WebView
         android:id="@+id/help_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_height="match_parent" />
 
     <WebView
         android:id="@+id/portal_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

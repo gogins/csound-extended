@@ -46,6 +46,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -160,7 +162,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
 
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -271,6 +272,77 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         return true;
     }
 
+    public void startRendering() {
+        File file = new File(OPCODE6DIR);
+        File[] files = file.listFiles();
+        CsoundAppActivity.this
+                .postMessage("Loading Csound plugins:\n");
+        for (int i = 0; i < files.length; i++) {
+            String pluginPath = files[i].getAbsoluteFile()
+                    .toString();
+            try {
+                CsoundAppActivity.this.postMessage(pluginPath
+                        + "\n");
+                System.load(pluginPath);
+            } catch (Throwable e) {
+                CsoundAppActivity.this.postMessage(e.toString()
+                        + "\n");
+            }
+        }
+        // This must be set before the Csound object is created.
+        csnd6.csndJNI.csoundSetGlobalEnv("OPCODE6DIR", OPCODE6DIR);
+        csnd6.csndJNI.csoundSetGlobalEnv("SFDIR", SFDIR);
+        csnd6.csndJNI.csoundSetGlobalEnv("SSDIR", SSDIR);
+        csnd6.csndJNI.csoundSetGlobalEnv("SADIR", SADIR);
+        csnd6.csndJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
+        String driver = PreferenceManager
+                .getDefaultSharedPreferences(this).getString("audioDriver", "");
+        csound_oboe = new csnd6.CsoundOboe();
+        oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
+            @Override
+            public void MessageCallback(int attr, String msg) {
+                Log.d("CsoundOboe:", msg);
+                postMessage(msg);
+            }
+        };
+        oboe_callback_wrapper.SetMessageCallback();
+        html_tab.addJavascriptInterface(csound_oboe, "csound");
+        html_tab.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
+        // Csound will not be in scope of any JavaScript on the page
+        // until the page is reloaded. Also, we want to show any edits
+        // to the page.
+        parseWebLayout();
+        postMessageClear("Csound is starting...\n");
+        // Make sure this stuff really got packaged.
+        String samples[] = null;
+        try {
+            samples = getAssets().list("samples");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // If the Csound file is a CSD, start Csound;
+        // otherwise, do not start Csound, and assume the
+        // file is HTML with JavaScript that will call
+        // csound_obj.perform() as in csound.node().
+        if (csound_file.toString().toLowerCase().endsWith(".csd")) {
+            int result = 0;
+            result = csound_oboe.compileCsd(csound_file.getAbsolutePath());
+            result = csound_oboe.start();
+            result = csound_oboe.performAndReset();
+        }
+        // Make sure this is still set after starting.
+        String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
+                "OPCODE6DIR");
+        csound_oboe.message(
+                "OPCODE6DIR has been set to: " + getOPCODE6DIR
+                        + "\n");
+    }
+
+    public void stopRendering() {
+        csound_oboe.stop();
+        postMessage("Csound has been stopped.\n");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         File outFile = null;
@@ -320,160 +392,14 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             case R.id.action_save_as:
                 return true;
             case R.id.action_render:
-                if (is_running == false) {
-                    is_running = true;
-                    File file = new File(OPCODE6DIR);
-                    File[] files = file.listFiles();
-                    CsoundAppActivity.this
-                            .postMessage("Loading Csound plugins:\n");
-                    for (int i = 0; i < files.length; i++) {
-                        String pluginPath = files[i].getAbsoluteFile()
-                                .toString();
-                        try {
-                            CsoundAppActivity.this.postMessage(pluginPath
-                                    + "\n");
-                            System.load(pluginPath);
-                        } catch (Throwable e) {
-                            CsoundAppActivity.this.postMessage(e.toString()
-                                    + "\n");
-                        }
+                synchronized(this) {
+                    if (is_running == false) {
+                        is_running = true;
+                        startRendering();
+                    } else {
+                        is_running = false;
+                        stopRendering();
                     }
-                    // This must be set before the Csound object is created.
-                    csnd6.csndJNI.csoundSetGlobalEnv("OPCODE6DIR", OPCODE6DIR);
-                    csnd6.csndJNI.csoundSetGlobalEnv("SFDIR", SFDIR);
-                    csnd6.csndJNI.csoundSetGlobalEnv("SSDIR", SSDIR);
-                    csnd6.csndJNI.csoundSetGlobalEnv("SADIR", SADIR);
-                    csnd6.csndJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
-                    String driver = PreferenceManager
-                            .getDefaultSharedPreferences(this).getString("audioDriver", "");
-                    csound_oboe = new csnd6.CsoundOboe();
-                    oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
-                        @Override
-                        public void MessageCallback(int attr, String msg) {
-                            Log.d("CsoundOboe:", msg);
-                            postMessage(msg);
-                        }
-                    };
-                    oboe_callback_wrapper.SetMessageCallback();
-                    html_tab.addJavascriptInterface(csound_oboe, "csound");
-                    html_tab.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
-                    // Csound will not be in scope of any JavaScript on the page
-                    // until the page is reloaded. Also, we want to show any edits
-                    // to the page.
-                    parseWebLayout();
-                    postMessageClear("Csound is starting...\n");
-                    // Make sure this stuff really got packaged.
-                    String samples[] = null;
-                    try {
-                        samples = getAssets().list("samples");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (screenLayout.equals("4") || screenLayout.equals("5")) {
-                        // Add slider handlers.
-                        for (int i = 0; i < 5; i++) {
-                            SeekBar seekBar = sliders.get(i);
-                            final String channelName = "slider" + (i + 1);
-                            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                                public void onStopTrackingTouch(SeekBar seekBar) {
-                                    // TODO Auto-generated method stub
-                                }
-
-                                public void onStartTrackingTouch(SeekBar seekBar) {
-                                    // TODO Auto-generated method stub
-                                }
-
-                                public void onProgressChanged(SeekBar seekBar, int progress,
-                                                              boolean fromUser) {
-                                    if (fromUser) {
-                                        double value = progress / (double) seekBar.getMax();
-                                        csound_oboe.setChannel(channelName, value);
-                                    }
-                                }
-                            });
-                        }
-                        // Add button handlers.
-                        for (int i = 0; i < 5; i++) {
-                            Button button = buttons.get(i);
-                            final String channelName = "butt" + (i + 1);
-                            button.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-                                    csound_oboe.setChannel(channelName, 1.0);
-                                }
-                            });
-                        }
-                        // Add trackpad handler.
-                        pad.setOnTouchListener(new View.OnTouchListener() {
-                            public boolean onTouch(View v, MotionEvent event) {
-                                int action = event.getAction() & MotionEvent.ACTION_MASK;
-                                double xpos = 0;
-                                double ypos = 0;
-                                boolean selected = false;
-                                switch (action) {
-                                    case MotionEvent.ACTION_DOWN:
-                                    case MotionEvent.ACTION_POINTER_DOWN:
-                                        pad.setPressed(true);
-                                        selected = true;
-                                        break;
-                                    case MotionEvent.ACTION_POINTER_UP:
-                                    case MotionEvent.ACTION_UP:
-                                        selected = false;
-                                        pad.setPressed(false);
-                                        break;
-                                    case MotionEvent.ACTION_MOVE:
-                                        break;
-                                }
-                                if (selected == true) {
-                                    xpos = event.getX() / v.getWidth();
-                                    ypos = 1. - (event.getY() / v.getHeight());
-                                }
-                                csound_oboe.setChannel("trackpad.x", xpos);
-                                csound_oboe.setChannel("trackpad.y", ypos);
-                                return true;
-                            }
-                        });
-                        // Add motion handler.
-                        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-                        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-                        if (sensors.size() > 0) {
-                            Sensor sensor = sensors.get(0);
-                            SensorEventListener motionListener = new SensorEventListener() {
-                                public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                                    // Not used.
-                                }
-
-                                public void onSensorChanged(SensorEvent event) {
-                                    double accelerometerX = event.values[0];
-                                    double accelerometerY = event.values[1];
-                                    double accelerometerZ = event.values[2];
-                                    csound_oboe.setChannel("accelerometerX", accelerometerX);
-                                    csound_oboe.setChannel("accelerometerY", accelerometerY);
-                                    csound_oboe.setChannel("accelerometerZ", accelerometerZ);
-                                }
-                            };
-                            int microseconds = 1000000 / 20;
-                            sensorManager.registerListener(motionListener, sensor, microseconds);
-                        }
-                    }
-                    // If the Csound file is a CSD, start Csound;
-                    // otherwise, do not start Csound, and assume the
-                    // file is HTML with JavaScript that will call
-                    // csound_obj.perform() as in csound.node().
-                    if (csound_file.toString().toLowerCase().endsWith(".csd")) {
-                        int result = 0;
-                        result = csound_oboe.compileCsd(csound_file.getAbsolutePath());
-                        result = csound_oboe.start();
-                        result = csound_oboe.performAndReset();
-                    }
-                    // Make sure this is still set after starting.
-                    String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
-                            "OPCODE6DIR");
-                    csound_oboe.message(
-                            "OPCODE6DIR has been set to: " + getOPCODE6DIR
-                                    + "\n");
-                } else {
-                    csound_oboe.stop();
-                    postMessage("Csound has been stopped.\n");
                 }
                 return true;
             case R.id.itemGuide:
@@ -717,8 +643,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         super.onDestroy();
         final boolean b = stopService(csound_service_intent);
         try {
-            if (csound_oboe != null) {
-                csound_oboe.stop();
+            synchronized(this) {
+                if (csound_oboe != null) {
+                    csound_oboe.stop();
+                }
             }
         } catch (Exception e) {
             Log.e("Csound:", "Could not stop csound_oboe: \n" + e.toString());
@@ -729,9 +657,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     }
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -739,7 +664,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         Log.d("Csound:", "onCreate...");
         // Start a service that will keep this activity's process running in the background.
-        csound_service_intent = new Intent(this, com.csounds.Csound6.CsoundService.class);
+        csound_service_intent = new Intent(this, CsoundService.class);
         ComponentName componentName = startService(csound_service_intent);
         // We ask for the data directory in case Android changes on
         // us without warning.
@@ -780,44 +705,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 + "</CsLicense>\n" + "<CsOptions>\n" + "</CsOptions>\n"
                 + "<CsInstruments>\n" + "</CsInstruments>\n" + "<CsScore>\n"
                 + "</CsScore>\n" + "</CsoundSynthesizer>\n";
-        ///setContentView(R.layout.main);
-        /***
-        saveAsButton = findViewById(R.id.action_save_as);
-        saveAsButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-            }
-        });
-        editButton = findViewById(R.id.action_about);
-        editButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    if (csound_file != null) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, csound_file);
-                        intent.setDataAndType(uri, "text/plain");
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        startActivity(intent);
-                    }
-                } catch (Exception e) {
-                    Log.d("Csound", e.getMessage());
-                }
-            }
-        });
-        ***/
         tabs = findViewById(R.id.tab_layout);
         tabs.addOnTabSelectedListener(this);
         widgets_tab = findViewById(R.id.widgets_tab);
         widgets_tab.setVisibility(View.GONE);
         html_tab = findViewById(R.id.html_tab);
-        html_tab.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
-                Toast.makeText(CsoundAppActivity.this,
-                        "WebView error! " + description, Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
         editor_tab = findViewById(R.id.editor);
         editor_tab.setVisibility(View.VISIBLE);
         html_tab = findViewById(R.id.html_tab);
@@ -840,6 +732,119 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         buttons.add((Button) findViewById(R.id.button4));
         buttons.add((Button) findViewById(R.id.button5));
         pad = findViewById(R.id.pad);
+        html_tab.getSettings().setJavaScriptEnabled(true);
+        html_tab.getSettings().setBuiltInZoomControls(true);
+        html_tab.getSettings().setDisplayZoomControls(false);
+        html_tab.setWebViewClient(new CsoundWebViewClient());
+        help_tab.getSettings().setJavaScriptEnabled(true);
+        help_tab.getSettings().setBuiltInZoomControls(true);
+        help_tab.getSettings().setDisplayZoomControls(false);
+        help_tab.setWebViewClient(new CsoundWebViewClient());
+        help_tab.loadUrl("https://csound.com/docs/manual/indexframes.html");
+        portal_tab.getSettings().setJavaScriptEnabled(true);
+        portal_tab.getSettings().setBuiltInZoomControls(true);
+        portal_tab.getSettings().setDisplayZoomControls(false);
+        portal_tab.setWebViewClient(new CsoundWebViewClient());
+        portal_tab.loadUrl("https://csound.com/");
+        // Add slider handlers.
+        for (int i = 0; i < 5; i++) {
+            SeekBar seekBar = sliders.get(i);
+            final String channelName = "slider" + (i + 1);
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    // TODO Auto-generated method stub
+                }
+
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    // TODO Auto-generated method stub
+                }
+
+                public void onProgressChanged(SeekBar seekBar, int progress,
+                                              boolean fromUser) {
+                    if (fromUser) {
+                        double value = progress / (double) seekBar.getMax();
+                        synchronized(this) {
+                            if (csound_oboe != null) {
+                                csound_oboe.setChannel(channelName, value);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // Add button handlers.
+        for (int i = 0; i < 5; i++) {
+            Button button = buttons.get(i);
+            final String channelName = "butt" + (i + 1);
+            button.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    synchronized(this) {
+                        if (csound_oboe != null) {
+                            csound_oboe.setChannel(channelName, 1.0);
+                        }
+                    }
+                }
+            });
+        }
+        // Add trackpad handler.
+        pad.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction() & MotionEvent.ACTION_MASK;
+                double xpos = 0;
+                double ypos = 0;
+                boolean selected = false;
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        pad.setPressed(true);
+                        selected = true;
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                    case MotionEvent.ACTION_UP:
+                        selected = false;
+                        pad.setPressed(false);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                }
+                if (selected == true) {
+                    xpos = event.getX() / v.getWidth();
+                    ypos = 1. - (event.getY() / v.getHeight());
+                }
+                synchronized(this) {
+                    if (csound_oboe != null) {
+                        csound_oboe.setChannel("trackpad.x", xpos);
+                        csound_oboe.setChannel("trackpad.y", ypos);
+                    }
+                }
+                return true;
+            }
+        });
+        // Add motion handler.
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        if (sensors.size() > 0) {
+            Sensor sensor = sensors.get(0);
+            SensorEventListener motionListener = new SensorEventListener() {
+                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                    // Not used.
+                }
+                public void onSensorChanged(SensorEvent event) {
+                    double accelerometerX = event.values[0];
+                    double accelerometerY = event.values[1];
+                    double accelerometerZ = event.values[2];
+                    synchronized(this) {
+                        if (csound_oboe != null) {
+                            csound_oboe.setChannel("accelerometerX", accelerometerX);
+                            csound_oboe.setChannel("accelerometerY", accelerometerY);
+                            csound_oboe.setChannel("accelerometerZ", accelerometerZ);
+                        }
+                    }
+                }
+            };
+            int microseconds = 1000000 / 20;
+            sensorManager.registerListener(motionListener, sensor, microseconds);
+        }
     }
 
     @Override
@@ -944,7 +949,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         String text = tab.getText().toString();
-        if        (text.contentEquals("Editor")) {
+        if (text.contentEquals("Editor")) {
             editor_tab.setVisibility(View.VISIBLE);
         } else if (text.contentEquals("Widgets")) {
             widgets_tab.setVisibility(View.VISIBLE);
@@ -962,7 +967,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
         String text = tab.getText().toString();
-        if        (text.contentEquals("Editor")) {
+        if (text.contentEquals("Editor")) {
             editor_tab.setVisibility(View.GONE);
         } else if (text.contentEquals("Widgets")) {
             widgets_tab.setVisibility(View.GONE);
@@ -980,5 +985,24 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    /**
+     * Enable self-contained browsers to run JavaScript and load external URLs.
+     */
+    private class CsoundWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading (WebView view,
+                                                 WebResourceRequest request) {
+            return false;
+        }
+        @Override
+        public void onReceivedError (WebView view,
+                                     WebResourceRequest request,
+                                     WebResourceError error) {
+            Toast.makeText(CsoundAppActivity.this,
+                    "WebView error! " + error.toString(), Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 }

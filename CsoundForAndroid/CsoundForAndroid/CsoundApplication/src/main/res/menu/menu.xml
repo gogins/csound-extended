@@ -21,18 +21,6 @@
         android:id="@+id/action_render"
         android:title="Render"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/action_examples"
-        android:title="Examples..."
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_settings"
-        android:title="Settings..."
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_about"
-        android:title="About..."
-        app:showAsAction="never"/>
     <item android:id="@+id/itemExamples" android:title="Examples" android:enabled="true" android:visible="true">
         <menu>
             <item android:id="@+id/itemTrapped" android:visible="true" android:titleCondensed="Trapped in Convert" android:title="Trapped in Convert, Richard Boulanger" android:enabled="true"/>
