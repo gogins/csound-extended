@@ -134,6 +134,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     private ScrollView messages_tab = null;
     private WebView help_tab = null;
     private WebView portal_tab = null;
+    private MenuItem renderItem = null;
 
     static {
         int result = 0;
@@ -269,6 +270,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        renderItem = menu.findItem(R.id.action_render);
         return true;
     }
 
@@ -392,13 +394,15 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             case R.id.action_save_as:
                 return true;
             case R.id.action_render:
-                synchronized(this) {
+                synchronized (this) {
                     if (is_running == false) {
                         is_running = true;
+                        renderItem.setTitle("Stop");
                         startRendering();
                     } else {
                         is_running = false;
                         stopRendering();
+                        renderItem.setTitle("Run");
                     }
                 }
                 return true;
@@ -410,12 +414,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 guide_intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 guide_intent.setDataAndType(uri, "application/pdf");
                 startActivity(guide_intent);
-                return true;
-            case R.id.itemHelp:
-                goToUrl("http://csound.github.io/docs/manual/indexframes.html");
-                return true;
-            case R.id.itemAbout:
-                goToUrl("http://csound.github.io/");
                 return true;
             case R.id.itemPrivacy:
                 goToUrl("http://csound.github.io/csound_for_android_privacy.html");
@@ -643,7 +641,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         super.onDestroy();
         final boolean b = stopService(csound_service_intent);
         try {
-            synchronized(this) {
+            synchronized (this) {
                 if (csound_oboe != null) {
                     csound_oboe.stop();
                 }
@@ -763,7 +761,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                                               boolean fromUser) {
                     if (fromUser) {
                         double value = progress / (double) seekBar.getMax();
-                        synchronized(this) {
+                        synchronized (this) {
                             if (csound_oboe != null) {
                                 csound_oboe.setChannel(channelName, value);
                             }
@@ -778,7 +776,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             final String channelName = "butt" + (i + 1);
             button.setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
-                    synchronized(this) {
+                    synchronized (this) {
                         if (csound_oboe != null) {
                             csound_oboe.setChannel(channelName, 1.0);
                         }
@@ -811,7 +809,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     xpos = event.getX() / v.getWidth();
                     ypos = 1. - (event.getY() / v.getHeight());
                 }
-                synchronized(this) {
+                synchronized (this) {
                     if (csound_oboe != null) {
                         csound_oboe.setChannel("trackpad.x", xpos);
                         csound_oboe.setChannel("trackpad.y", ypos);
@@ -829,11 +827,12 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
                     // Not used.
                 }
+
                 public void onSensorChanged(SensorEvent event) {
                     double accelerometerX = event.values[0];
                     double accelerometerY = event.values[1];
                     double accelerometerZ = event.values[2];
-                    synchronized(this) {
+                    synchronized (this) {
                         if (csound_oboe != null) {
                             csound_oboe.setChannel("accelerometerX", accelerometerX);
                             csound_oboe.setChannel("accelerometerY", accelerometerY);
@@ -959,7 +958,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             html_tab.setVisibility(View.VISIBLE);
         } else if (text.contentEquals("Help")) {
             help_tab.setVisibility(View.VISIBLE);
-        } else if (text.contentEquals("Portal")) {
+        } else if (text.contentEquals("About")) {
             portal_tab.setVisibility(View.VISIBLE);
         }
     }
@@ -977,7 +976,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             html_tab.setVisibility(View.GONE);
         } else if (text.contentEquals("Help")) {
             help_tab.setVisibility(View.GONE);
-        } else if (text.contentEquals("Portal")) {
+        } else if (text.contentEquals("About")) {
             portal_tab.setVisibility(View.GONE);
         }
     }
@@ -992,14 +991,15 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
      */
     private class CsoundWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading (WebView view,
-                                                 WebResourceRequest request) {
+        public boolean shouldOverrideUrlLoading(WebView view,
+                                                WebResourceRequest request) {
             return false;
         }
+
         @Override
-        public void onReceivedError (WebView view,
-                                     WebResourceRequest request,
-                                     WebResourceError error) {
+        public void onReceivedError(WebView view,
+                                    WebResourceRequest request,
+                                    WebResourceError error) {
             Toast.makeText(CsoundAppActivity.this,
                     "WebView error! " + error.toString(), Toast.LENGTH_SHORT)
                     .show();

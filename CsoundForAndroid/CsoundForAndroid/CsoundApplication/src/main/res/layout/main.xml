@@ -45,19 +45,22 @@
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Portal" />
+            android:text="About" />
     </android.support.design.widget.TabLayout>
 
     <EditText
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@android:color/transparent"
         android:fitsSystemWindows="false"
         android:gravity="left|top"
         android:inputType="textMultiLine|text"
         android:isScrollContainer="true"
         android:minLines="6"
-        android:textColor="@android:color/holo_orange_light"
+        android:padding="5dp"
+        android:textColor="#ff9e80"
         android:textSize="10sp"
         android:typeface="monospace" />
 
@@ -193,11 +196,13 @@
         android:id="@+id/messages_tab"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
         <TextView
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minLines="6"
+            android:layout_margin="5dp"
+            android:padding="5dp"
             android:textColor="#00ff00"
             android:textSize="10sp"
             android:typeface="monospace" />
