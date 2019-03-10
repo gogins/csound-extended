@@ -12,7 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3b127a74-9d17-4e14-b9bb-2279472fe603" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CsoundApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CsoundApplication.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" afterDir="false" />
@@ -78,7 +77,7 @@
         <counts>
           <entry key="dummy" value="9" />
           <entry key="gradle" value="15" />
-          <entry key="java" value="6249" />
+          <entry key="java" value="6412" />
           <entry key="txt" value="20" />
           <entry key="xml" value="294" />
         </counts>
@@ -86,7 +85,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="15" />
-          <entry key="JAVA" value="6249" />
+          <entry key="JAVA" value="6412" />
           <entry key="PLAIN_TEXT" value="29" />
           <entry key="XML" value="294" />
         </counts>
@@ -122,8 +121,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
-              <caret line="617" selection-start-line="617" selection-end-line="617" />
+            <state relative-caret-position="353">
+              <caret line="615" selection-start-line="615" selection-end-line="615" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -462,7 +461,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.32982844" />
@@ -489,7 +487,7 @@
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
       <window_info anchor="right" id="Gradle" order="5" weight="0.32982844" />
-      <window_info anchor="right" id="Device File Explorer" order="6" sideWeight="0.5339967" side_tool="true" visible="true" weight="0.0" />
+      <window_info anchor="right" id="Device File Explorer" order="6" sideWeight="0.5339967" side_tool="true" weight="0.32982844" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -500,45 +498,45 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>959</line>
+          <line>965</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>881</line>
+          <line>887</line>
           <properties />
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>644</line>
+          <line>645</line>
           <properties />
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>989</line>
+          <line>995</line>
           <properties />
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>995</line>
+          <line>1001</line>
           <properties />
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>874</line>
+          <line>605</line>
           <properties />
-          <option name="timeStamp" value="31" />
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>606</line>
+          <line>873</line>
           <properties />
-          <option name="timeStamp" value="32" />
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -660,8 +658,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="617" selection-start-line="617" selection-end-line="617" />
+        <state relative-caret-position="353">
+          <caret line="615" selection-start-line="615" selection-end-line="615" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

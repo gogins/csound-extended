@@ -604,7 +604,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                         settings.setJavaScriptEnabled(true);
                     }
                     String filepath = getFilepathFromUri(csound_uri);
-                    baseUrl = new URL(filepath);
+                    File file = new File(filepath);
+                    baseUrl = file.toURL();
                     html_tab.loadDataWithBaseURL(baseUrl.toString(),
                             html5_page, "text/html", "utf-8", null);
                 }
@@ -872,7 +873,12 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             String uri_path = uri.getPath();
             final String[] split = uri_string.split(":");
             final String[] pathpart = uri_path.split(":");
-            String filepath = Environment.getExternalStorageDirectory() + "/" + pathpart[1];
+            String filepath = "";
+            if (pathpart.length > 1) {
+                filepath = Environment.getExternalStorageDirectory() + "/" + pathpart[1];
+            } else {
+                filepath = uri_path;
+            }
             File file = new File(filepath);
             absolute_filepath = file.getAbsolutePath();
             return absolute_filepath;
