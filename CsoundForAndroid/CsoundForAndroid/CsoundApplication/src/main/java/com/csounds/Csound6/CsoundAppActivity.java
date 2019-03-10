@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -72,6 +73,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -306,13 +308,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // If the Csound file is a CSD, start Csound;
-        // otherwise, do not start Csound, and assume the
-        // file is HTML with JavaScript that will call
-        // csound_obj.perform() as in csound.node().
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
             String code = editor_tab.getText().toString();
+            String filepath = getFilepathFromUri(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
             result = csound_oboe.performAndReset();
@@ -363,6 +362,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 Intent save_as_chooser = Intent.createChooser(save_as_intent, "Save as");
                 startActivityForResult(save_as_chooser, SAVE_FILE_REQUEST);
             return true;
+            // TODO: Automatically save before rendering.
             case R.id.action_render:
                 synchronized (this) {
                     if (is_running == false) {
@@ -379,7 +379,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             case R.id.itemGuide:
                 File user_guide = copyAsset("Csound6_User_Guide.pdf");
                 Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, user_guide);
-                //Uri uri = Uri.fromFile(user_guide);
                 Intent guide_intent = new Intent(Intent.ACTION_VIEW, uri);
                 guide_intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 guide_intent.setDataAndType(uri, "application/pdf");
@@ -604,9 +603,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         settings.setJavaScriptEnabled(true);
                     }
-                    ///File basePath = csound_file.getParentFile();
-                    ///baseUrl = basePath.toURI().toURL();
-                    baseUrl = new URL(csound_uri.toString());
+                    String filepath = getFilepathFromUri(csound_uri);
+                    baseUrl = new URL(filepath);
                     html_tab.loadDataWithBaseURL(baseUrl.toString(),
                             html5_page, "text/html", "utf-8", null);
                 }
@@ -627,6 +625,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         String code = loadTextFile(file);
         editor_tab.setText(code);
         setTitle(file.getName());
+        csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
         parseWebLayout();
     }
 
@@ -855,6 +854,34 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
     }
 
+    private String getFilenameFromUri(android.net.Uri uri) {
+        String result = uri.getPath();
+        int cut = result.lastIndexOf('/');
+        if (cut != -1) {
+            result = result.substring(cut + 1);
+        }
+        return result;
+    }
+
+    private String getFilepathFromUri(android.net.Uri uri) {
+        String absolute_filepath = null;
+        // We must distinguish between content (external) Uris and
+        // internal (root) Uris.
+        try {
+            String uri_string = uri.toString();
+            String uri_path = uri.getPath();
+            final String[] split = uri_string.split(":");
+            final String[] pathpart = uri_path.split(":");
+            String filepath = Environment.getExternalStorageDirectory() + "/" + pathpart[1];
+            File file = new File(filepath);
+            absolute_filepath = file.getAbsolutePath();
+            return absolute_filepath;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return absolute_filepath;
+    }
+
     private void hideSystemUI() {
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
@@ -929,7 +956,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri = intent.getData();
                 editor_tab.setText(csdTemplate);
                 saveTextToUri(csdTemplate, csound_uri);
-                setTitle(csound_uri.getLastPathSegment());
+                String title = getFilenameFromUri(csound_uri);
+                setTitle(title);
             }
             if (requestCode == SAVE_FILE_REQUEST && intent != null) {
                 if (checkDangerousPermissions() == false) {
@@ -938,7 +966,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri = intent.getData();
                 String text = editor_tab.getText().toString();
                 saveTextToUri(text, csound_uri);
-                setTitle(csound_uri.getLastPathSegment());
+                String title = getFilenameFromUri(csound_uri);
+                setTitle(title);
             }
             if (requestCode == OPEN_FILE_REQUEST && intent != null) {
                 if (checkDangerousPermissions() == false) {
@@ -947,9 +976,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
                 editor_tab.setText(text);
-                setTitle(csound_uri.getLastPathSegment());
                 parseWebLayout();
-            }
+                String title = getFilenameFromUri(csound_uri);
+                setTitle(title);
+             }
         } catch (Exception e) {
             Log.e("Csound:", e.toString());
         }
