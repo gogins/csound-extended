@@ -22,7 +22,6 @@
         android:theme="@style/csoundTheme"
         android:icon="@drawable/cs"
         android:hardwareAccelerated="true"
-
         android:allowBackup="false">
         <activity
             android:label="@string/app_name"

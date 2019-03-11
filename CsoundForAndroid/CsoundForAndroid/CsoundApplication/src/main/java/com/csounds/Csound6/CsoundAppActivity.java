@@ -37,12 +37,14 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -329,6 +331,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         File outFile = null;
         switch (item.getItemId()) {
             case R.id.action_new:
+                Intent.
                 Intent new_intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 new_intent.setType("*/*");
                 new_intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -716,6 +719,18 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         html_tab = findViewById(R.id.html_tab);
         editor_tab = findViewById(R.id.editor);
         editor_tab.setVisibility(View.VISIBLE);
+/*
+        editor_tab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    ///performSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
+*/
         html_tab = findViewById(R.id.html_tab);
         html_tab.setVisibility(View.GONE);
         messages_tab = findViewById((R.id.messages_tab));
@@ -1058,12 +1073,12 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                                                 WebResourceRequest request) {
             return false;
         }
-
         @Override
         public void onReceivedError(WebView view,
                                     WebResourceRequest request,
                                     WebResourceError error) {
             String originalUrl = view.getOriginalUrl();
+            (new Throwable()).printStackTrace();
             Toast.makeText(CsoundAppActivity.this,
                     "WebView error for " + request.getUrl() + " from " + originalUrl + "! " + error.getDescription(), Toast.LENGTH_LONG)
                     .show();
