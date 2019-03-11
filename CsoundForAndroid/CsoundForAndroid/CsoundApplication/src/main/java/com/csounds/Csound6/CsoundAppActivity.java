@@ -37,6 +37,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +52,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -327,11 +329,25 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+///        if (v.getId() == R.id.action) {
+            ///ListView lv = (ListView) v;
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            Object obj = (Object) editor_tab;
+
+            menu.add("Call");
+            menu.add("Email");
+            menu.add("Edit");
+            menu.add("Delete");
+
+///        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         File outFile = null;
         switch (item.getItemId()) {
             case R.id.action_new:
-                Intent.
                 Intent new_intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 new_intent.setType("*/*");
                 new_intent.addCategory(Intent.CATEGORY_OPENABLE);
