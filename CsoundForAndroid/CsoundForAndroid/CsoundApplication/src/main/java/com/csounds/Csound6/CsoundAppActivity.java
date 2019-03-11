@@ -12,7 +12,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -30,13 +29,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -63,17 +60,14 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -261,6 +255,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     public void startRendering() {
+        messageTextView.setText("");
         File file = new File(OPCODE6DIR);
         File[] files = file.listFiles();
         CsoundAppActivity.this
@@ -299,7 +294,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         // Csound will not be in scope of any JavaScript on the page
         // until the page is reloaded. Also, we want to show any edits
         // to the page.
-        parseWebLayout();
+        loadWebView();
         postMessageClear("Csound is starting...\n");
         // Make sure this stuff really got packaged.
         String samples[] = null;
@@ -311,7 +306,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
             String code = editor_tab.getText().toString();
-            String filepath = getFilepathFromUri(csound_uri);
+            String filepath = uriToFilepath(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
             result = csound_oboe.performAndReset();
@@ -576,11 +571,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
 
     }
 
-    /**
-     * Opens the CSD and searches for a <html> element.
-     */
+    // TODO: This works if the .html file is loaded from the filesystem, but not if it is loaded
+    // as an example.
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    protected void parseWebLayout() {
+    protected void loadWebView() {
         try {
             String code = editor_tab.getText().toString();
             int start = code.indexOf("<html");
@@ -603,10 +597,21 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         settings.setJavaScriptEnabled(true);
                     }
-                    String filepath = getFilepathFromUri(csound_uri);
+                    String filepath = uriToFilepath(csound_uri);
                     File file = new File(filepath);
-                    baseUrl = file.toURL();
-                    html_tab.loadDataWithBaseURL(baseUrl.toString(),
+                    baseUrl = file.getParentFile().toURI().toURL();
+                    String baseUrlString = baseUrl.toString();
+                    baseUrlString = baseUrlString.replace("file:/root/", "file:/");
+                    String baseUriPath = csound_uri.getPath();
+                    html_tab.addJavascriptInterface(csound_oboe, "csound");
+                    html_tab.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
+                    Log.d("Csound:", "csound_uri.toString(): " + csound_uri.toString());
+                    Log.d("Csound:", "csound_uri.getPath(): " + csound_uri.getPath());
+                    Log.d("Csound:", "baseUrlString: " + baseUrlString);
+                    if (baseUrlString.endsWith("/") == false) {
+                        baseUrlString = baseUrlString + "/";
+                    }
+                    html_tab.loadDataWithBaseURL(baseUrlString,
                             html5_page, "text/html", "utf-8", null);
                 }
             } else {
@@ -627,7 +632,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         editor_tab.setText(code);
         setTitle(file.getName());
         csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
-        parseWebLayout();
+        loadWebView();
     }
 
     @Override
@@ -855,7 +860,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
     }
 
-    private String getFilenameFromUri(android.net.Uri uri) {
+    private String uriToFilename(android.net.Uri uri) {
         String result = uri.getPath();
         int cut = result.lastIndexOf('/');
         if (cut != -1) {
@@ -864,7 +869,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         return result;
     }
 
-    private String getFilepathFromUri(android.net.Uri uri) {
+    private String uriToFilepath(android.net.Uri uri) {
         String absolute_filepath = null;
         // We must distinguish between content (external) Uris and
         // internal (root) Uris.
@@ -962,7 +967,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri = intent.getData();
                 editor_tab.setText(csdTemplate);
                 saveTextToUri(csdTemplate, csound_uri);
-                String title = getFilenameFromUri(csound_uri);
+                String title = uriToFilename(csound_uri);
                 setTitle(title);
             }
             if (requestCode == SAVE_FILE_REQUEST && intent != null) {
@@ -972,7 +977,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri = intent.getData();
                 String text = editor_tab.getText().toString();
                 saveTextToUri(text, csound_uri);
-                String title = getFilenameFromUri(csound_uri);
+                String title = uriToFilename(csound_uri);
                 setTitle(title);
             }
             if (requestCode == OPEN_FILE_REQUEST && intent != null) {
@@ -982,8 +987,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
                 editor_tab.setText(text);
-                parseWebLayout();
-                String title = getFilenameFromUri(csound_uri);
+                loadWebView();
+                String title = uriToFilename(csound_uri);
                 setTitle(title);
              }
         } catch (Exception e) {
@@ -1058,8 +1063,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         public void onReceivedError(WebView view,
                                     WebResourceRequest request,
                                     WebResourceError error) {
+            String originalUrl = view.getOriginalUrl();
             Toast.makeText(CsoundAppActivity.this,
-                    "WebView error! " + error.toString(), Toast.LENGTH_SHORT)
+                    "WebView error for " + request.getUrl() + " from " + originalUrl + "! " + error.getDescription(), Toast.LENGTH_LONG)
                     .show();
         }
     }
