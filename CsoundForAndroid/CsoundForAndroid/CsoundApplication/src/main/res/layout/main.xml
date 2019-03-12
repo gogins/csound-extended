@@ -17,12 +17,6 @@
         android:id="@+id/toolbar">
     </android.support.v7.widget.Toolbar>
 
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:imeOptions="actionGo|actionNext"
-        android:inputType="text" />
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="wrap_content"
@@ -54,21 +48,32 @@
             android:text="About" />
     </android.support.design.widget.TabLayout>
 
-    <EditText
-        android:id="@+id/editor"
+    <LinearLayout
+        android:id="@+id/editor_tab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="false"
-        android:gravity="left|top"
-        android:inputType="textMultiLine|text"
-        android:isScrollContainer="true"
-        android:minLines="6"
-        android:padding="5dp"
-        android:textColor="#ff9e80"
-        android:textSize="10sp"
-        android:typeface="monospace" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch|actionNext"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="false"
+            android:gravity="left|top"
+            android:inputType="textMultiLine|text"
+            android:isScrollContainer="true"
+            android:minLines="6"
+            android:padding="5dp"
+            android:textColor="#ff9e80"
+            android:textSize="10sp"
+            android:typeface="monospace"></EditText>
+    </LinearLayout>
 
     <WebView
         android:id="@+id/html_tab"

@@ -55,6 +55,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -129,7 +130,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     private boolean is_running = false;
     protected Handler handler = new Handler();
     private TabLayout tabs = null;
-    private EditText editor_tab = null;
+    private EditText editor = null;
+    private LinearLayout editor_tab = null;
     private TextView messageTextView = null;
     private WebView html_tab = null;
     private TableLayout widgets_tab = null;
@@ -309,7 +311,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
-            String code = editor_tab.getText().toString();
+            String code = editor.getText().toString();
             String filepath = uriToFilepath(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
@@ -328,19 +330,15 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         postMessage("Csound has been stopped.\n");
     }
 
+    // Maybe this has a hint... https://stackoverflow.com/questions/41673185/disable-edittext-context-menu
+
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-///        if (v.getId() == R.id.action) {
-            ///ListView lv = (ListView) v;
-            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            Object obj = (Object) editor_tab;
-
-            menu.add("Call");
-            menu.add("Email");
-            menu.add("Edit");
-            menu.add("Delete");
-
-///        }
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {//local=v;
+        if (v.getId() == editor.getId()) {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            menu.add(Menu.NONE, v.getId(), 0, "Search");
+        }
     }
 
     @Override
@@ -362,7 +360,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 startActivityForResult(chooser, OPEN_FILE_REQUEST);
                 return true;
             case R.id.action_save:
-                String text = editor_tab.getText().toString();
+                String text = editor.getText().toString();
                 try {
                     saveTextToUri(text, csound_uri);
                 } catch (Exception e) {
@@ -595,7 +593,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void loadWebView() {
         try {
-            String code = editor_tab.getText().toString();
+            String code = editor.getText().toString();
             int start = code.indexOf("<html");
             int end = code.indexOf("</html>") + 7;
             if (!(start == -1 || end == -1)) {
@@ -648,7 +646,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         Log.d("Csound:", file.getAbsolutePath());
         ///csound_file = file;
         String code = loadTextFile(file);
-        editor_tab.setText(code);
+        editor.setText(code);
         setTitle(file.getName());
         csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
         loadWebView();
@@ -733,7 +731,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         widgets_tab = findViewById(R.id.widgets_tab);
         widgets_tab.setVisibility(View.GONE);
         html_tab = findViewById(R.id.html_tab);
-        editor_tab = findViewById(R.id.editor);
+        editor_tab = findViewById(R.id.editor_tab);
+        editor = findViewById(R.id.editor);
+        registerForContextMenu(editor);
+
         editor_tab.setVisibility(View.VISIBLE);
 /*
         editor_tab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -996,7 +997,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         try {
             if (requestCode == NEW_FILE_REQUEST && intent != null) {
                 csound_uri = intent.getData();
-                editor_tab.setText(csdTemplate);
+                editor.setText(csdTemplate);
                 saveTextToUri(csdTemplate, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1006,7 +1007,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     return;
                 }
                 csound_uri = intent.getData();
-                String text = editor_tab.getText().toString();
+                String text = editor.getText().toString();
                 saveTextToUri(text, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1017,7 +1018,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 }
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
-                editor_tab.setText(text);
+                editor.setText(text);
                 loadWebView();
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
