@@ -47,6 +47,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -87,7 +88,7 @@ import static android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCa
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObjListener,
         CsoundObj.MessagePoster, */ TabLayout.OnTabSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener,
+        SharedPreferences.OnSharedPreferenceChangeListener, ValueCallback<String>,
         OnRequestPermissionsResultCallback {
     String code = "";
     Uri templateUri = null;
@@ -1029,11 +1030,16 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @JavascriptInterface
     public void setEditorText(String text) {
         code = text;
+        editor.evaluateJavascript("setCodeMirrorText(" + text + ");", null);
+    }
+
+    public void onReceiveValue(String text) {
+        code = text;
     }
 
     @JavascriptInterface
-    public String getEditorText() {
-        return code;
+    public void getEditorText() {
+        editor.evaluateJavascript("getCodeMirrorText();", this);
     }
 
     @JavascriptInterface

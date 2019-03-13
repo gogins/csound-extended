@@ -12,5 +12,11 @@ var codemirror_editor = CodeMirror(document.body, {
   theme: "cobalt",
   height: "auto",
 });
+var setCodemirrorText = function(text) {
+    editor.setValue(text);
+};
+var getCodemirrorText = function() {
+    var text = editor.getValue();
+}
 </script>
 </body>
