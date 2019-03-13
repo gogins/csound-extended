@@ -89,6 +89,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         CsoundObj.MessagePoster, */ TabLayout.OnTabSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
         OnRequestPermissionsResultCallback {
+    String code = "";
     Uri templateUri = null;
     Button newButton = null;
     Button openButton = null;
@@ -130,7 +131,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     private boolean is_running = false;
     protected Handler handler = new Handler();
     private TabLayout tabs = null;
-    private EditText editor = null;
+    private WebView editor = null;
     private LinearLayout editor_tab = null;
     private TextView messageTextView = null;
     private WebView html_tab = null;
@@ -311,7 +312,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
-            String code = editor.getText().toString();
+            String code = "";
+            //String code = editor.getText().toString();
             String filepath = uriToFilepath(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
@@ -328,17 +330,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     public void stopRendering() {
         csound_oboe.stop();
         postMessage("Csound has been stopped.\n");
-    }
-
-    // Maybe this has a hint... https://stackoverflow.com/questions/41673185/disable-edittext-context-menu
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {//local=v;
-        if (v.getId() == editor.getId()) {
-            super.onCreateContextMenu(menu, v, menuInfo);
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.add(Menu.NONE, v.getId(), 0, "Search");
-        }
     }
 
     @Override
@@ -360,7 +351,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 startActivityForResult(chooser, OPEN_FILE_REQUEST);
                 return true;
             case R.id.action_save:
-                String text = editor.getText().toString();
+                String text = "";
+                //editor.getText().toString();
                 try {
                     saveTextToUri(text, csound_uri);
                 } catch (Exception e) {
@@ -593,7 +585,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void loadWebView() {
         try {
-            String code = editor.getText().toString();
+            String code = "";
+            //String code = editor.getText().toString();
             int start = code.indexOf("<html");
             int end = code.indexOf("</html>") + 7;
             if (!(start == -1 || end == -1)) {
@@ -646,7 +639,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         Log.d("Csound:", file.getAbsolutePath());
         ///csound_file = file;
         String code = loadTextFile(file);
-        editor.setText(code);
+        ///editor.setText(code);
         setTitle(file.getName());
         csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
         loadWebView();
@@ -782,6 +775,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         portal_tab.getSettings().setDisplayZoomControls(false);
         portal_tab.setWebViewClient(new CsoundWebViewClient());
         portal_tab.loadUrl("https://csound.com/");
+        editor.getSettings().setJavaScriptEnabled(true);
+        editor.getSettings().setBuiltInZoomControls(true);
+        editor.getSettings().setDisplayZoomControls(false);
+        editor.setWebViewClient(new CsoundWebViewClient());
+        editor.loadUrl("file:///android_asset/codemirror_editor.html");
         // Add slider handlers.
         for (int i = 0; i < 5; i++) {
             SeekBar seekBar = sliders.get(i);
@@ -997,7 +995,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         try {
             if (requestCode == NEW_FILE_REQUEST && intent != null) {
                 csound_uri = intent.getData();
-                editor.setText(csdTemplate);
+                ///editor.setText(csdTemplate);
                 saveTextToUri(csdTemplate, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1007,7 +1005,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     return;
                 }
                 csound_uri = intent.getData();
-                String text = editor.getText().toString();
+                String text = "";
+                ///String text = editor.getText().toString();
                 saveTextToUri(text, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1018,7 +1017,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 }
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
-                editor.setText(text);
+                ///editor.setText(text);
                 loadWebView();
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1026,6 +1025,15 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         } catch (Exception e) {
             Log.e("Csound:", e.toString());
         }
+    }
+    @JavascriptInterface
+    public void setEditorText(String text) {
+        code = text;
+    }
+
+    @JavascriptInterface
+    public String getEditorText() {
+        return code;
     }
 
     @JavascriptInterface

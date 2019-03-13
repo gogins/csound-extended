@@ -53,26 +53,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionSearch|actionNext"
-            android:inputType="text" />
-        <EditText
+        <WebView
             android:id="@+id/editor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            android:fitsSystemWindows="false"
-            android:gravity="left|top"
-            android:inputType="textMultiLine|text"
-            android:isScrollContainer="true"
-            android:minLines="6"
-            android:padding="5dp"
-            android:textColor="#ff9e80"
-            android:textSize="10sp"
-            android:typeface="monospace"></EditText>
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"></WebView>
     </LinearLayout>
 
     <WebView

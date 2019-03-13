@@ -49,7 +49,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-    }
+        maven {
+            url 'https://jitpack.io'
+        }    }
     allprojects {
         gradle.projectsEvaluated {
             tasks.withType(JavaCompile) {

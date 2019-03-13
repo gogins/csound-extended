@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.Susmit-A:AndroidAceEditor:0.5.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/AndroidAceEditor-0.5.0.aar/5b9b61eedfb94da7aaacad2e95125d62/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/AndroidAceEditor-0.5.0.aar/5b9b61eedfb94da7aaacad2e95125d62/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Susmit-A/AndroidAceEditor/0.5.0/fda116e9086be1c088ecbbaceaf9bbc283964415/AndroidAceEditor-0.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
