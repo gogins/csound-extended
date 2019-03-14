@@ -1,22 +1,27 @@
+<!DOCTYPE html>
+<html height="100%">
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/css/css.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/theme/cobalt.css">
 </head>
-<body>
+<body height="100%">
 <script>
 var codemirror_editor = CodeMirror(document.body, {
   mode:  "javascript",
   lineNumbers: "true",
   theme: "cobalt",
-  height: "auto",
+  height: "100%",
 });
-var setCodemirrorText = function(text) {
-    editor.setValue(text);
+var setCodeMirrorText = function() {
+    var text = csoundApp.getCsoundText();
+    codemirror_editor.setValue(text);
 };
-var getCodemirrorText = function() {
-    var text = editor.getValue();
+var getCodeMirrorText = function() {
+    var text = codemirror_editor.getValue();
+    csoundApp.setCsoundText(text);
 }
 </script>
 </body>
+</html>

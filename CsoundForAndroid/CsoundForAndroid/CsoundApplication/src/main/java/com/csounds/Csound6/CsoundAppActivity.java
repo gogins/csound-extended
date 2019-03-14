@@ -36,6 +36,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -88,7 +89,7 @@ import static android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCa
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObjListener,
         CsoundObj.MessagePoster, */ TabLayout.OnTabSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener, ValueCallback<String>,
+        SharedPreferences.OnSharedPreferenceChangeListener,
         OnRequestPermissionsResultCallback {
     String code = "";
     Uri templateUri = null;
@@ -298,7 +299,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         };
         oboe_callback_wrapper.SetMessageCallback();
         html_tab.addJavascriptInterface(csound_oboe, "csound");
-        html_tab.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
+        html_tab.addJavascriptInterface(this, "csoundApp");
         // Csound will not be in scope of any JavaScript on the page
         // until the page is reloaded. Also, we want to show any edits
         // to the page.
@@ -615,7 +616,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     baseUrlString = baseUrlString.replace("file:/root/", "file:/");
                     String baseUriPath = csound_uri.getPath();
                     html_tab.addJavascriptInterface(csound_oboe, "csound");
-                    html_tab.addJavascriptInterface(CsoundAppActivity.this, "csoundApp");
+                    html_tab.addJavascriptInterface(CsoundAppActivity.this, "CsoundApp");
                     Log.d("Csound:", "csound_uri.toString(): " + csound_uri.toString());
                     Log.d("Csound:", "csound_uri.getPath(): " + csound_uri.getPath());
                     Log.d("Csound:", "baseUrlString: " + baseUrlString);
@@ -641,6 +642,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         ///csound_file = file;
         String code = loadTextFile(file);
         ///editor.setText(code);
+        this.setEditorText(code);
         setTitle(file.getName());
         csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
         loadWebView();
@@ -780,7 +782,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         editor.getSettings().setBuiltInZoomControls(true);
         editor.getSettings().setDisplayZoomControls(false);
         editor.setWebViewClient(new CsoundWebViewClient());
+        editor.addJavascriptInterface(this, "csoundApp");
         editor.loadUrl("file:///android_asset/codemirror_editor.html");
+        editor.setBackgroundColor(0);
         // Add slider handlers.
         for (int i = 0; i < 5; i++) {
             SeekBar seekBar = sliders.get(i);
@@ -1027,19 +1031,23 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             Log.e("Csound:", e.toString());
         }
     }
-    @JavascriptInterface
     public void setEditorText(String text) {
         code = text;
-        editor.evaluateJavascript("setCodeMirrorText(" + text + ");", null);
+        editor.evaluateJavascript("setCodeMirrorText();", null);
     }
 
-    public void onReceiveValue(String text) {
+    public void getEditorText() {
+        editor.evaluateJavascript("getCodeMirrorText();", null);
+    }
+
+    @JavascriptInterface
+    public void setCsoundText(String text) {
         code = text;
     }
 
     @JavascriptInterface
-    public void getEditorText() {
-        editor.evaluateJavascript("getCodeMirrorText();", this);
+    public String getCsoundText() {
+        return code;
     }
 
     @JavascriptInterface
