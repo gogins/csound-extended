@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html height="100%">
+<html height="auto">
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.js"></script>
+<script src-"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/addon/search/search.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/css/css.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/theme/cobalt.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/javascript/javascript.js"></script>
 </head>
-<body height="100%">
+<body height="auto">
 <script>
 var codemirror_editor = CodeMirror(document.body, {
   mode:  "javascript",
   lineNumbers: "true",
   theme: "cobalt",
+  viewportMargin: "100",
   height: "100%",
+  mode: "javascript",
 });
 var setCodeMirrorText = function() {
     var text = csoundApp.getCsoundText();

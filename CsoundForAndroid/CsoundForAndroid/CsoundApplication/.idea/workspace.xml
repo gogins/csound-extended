@@ -12,7 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3b127a74-9d17-4e14-b9bb-2279472fe603" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CsoundApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CsoundApplication.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" afterDir="false" />
@@ -27,6 +26,28 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="837">
+                    <caret line="1061" column="33" selection-start-line="1061" selection-start-column="25" selection-end-line="1061" selection-end-column="33" />
+                    <folding>
+                      <element signature="imports" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
   </component>
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
@@ -68,7 +89,7 @@
           <entry key="apk" value="1" />
           <entry key="gradle" value="10" />
           <entry key="html" value="2" />
-          <entry key="java" value="15" />
+          <entry key="java" value="16" />
           <entry key="properties" value="1" />
           <entry key="xml" value="20" />
         </counts>
@@ -78,7 +99,7 @@
           <entry key="APK" value="1" />
           <entry key="Groovy" value="10" />
           <entry key="HTML" value="2" />
-          <entry key="JAVA" value="15" />
+          <entry key="JAVA" value="16" />
           <entry key="Properties" value="1" />
           <entry key="XML" value="20" />
         </counts>
@@ -87,8 +108,8 @@
         <counts>
           <entry key="dummy" value="9" />
           <entry key="gradle" value="46" />
-          <entry key="html" value="373" />
-          <entry key="java" value="8918" />
+          <entry key="html" value="573" />
+          <entry key="java" value="9042" />
           <entry key="txt" value="30" />
           <entry key="xml" value="389" />
         </counts>
@@ -96,8 +117,8 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="46" />
-          <entry key="HTML" value="373" />
-          <entry key="JAVA" value="8918" />
+          <entry key="HTML" value="573" />
+          <entry key="JAVA" value="9042" />
           <entry key="PLAIN_TEXT" value="39" />
           <entry key="XML" value="389" />
         </counts>
@@ -106,24 +127,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="786" column="35" selection-start-line="786" selection-start-column="35" selection-end-line="786" selection-end-column="35" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#42226#42227#0" expanded="true" />
-                <element signature="e#42297#42298#0" expanded="true" />
-                <element signature="e#42395#42396#0" expanded="true" />
-                <element signature="e#42422#42423#0" expanded="true" />
-                <element signature="e#42485#42486#0" expanded="true" />
-                <element signature="e#42506#42507#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/Message.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -133,11 +136,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/assets/codemirror_editor.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+            <state relative-caret-position="72">
+              <caret line="4" column="94" selection-start-line="4" selection-start-column="94" selection-end-line="4" selection-end-column="94" />
             </state>
           </provider>
         </entry>
@@ -203,8 +206,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>parseWebLayout</find>
-      <find>loadTextFile</find>
       <find>getFilepath</find>
       <find>parseWeb</find>
       <find>javascriptinterface</find>
@@ -233,6 +234,8 @@
       <find>Java</find>
       <find>JavascriptInterface</find>
       <find>Javasc</find>
+      <find>.setText</find>
+      <find>.getText</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -250,8 +253,8 @@
         <option value="$PROJECT_DIR$/../build.gradle" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/res/layout/main.xml" />
-        <option value="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" />
+        <option value="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" />
       </list>
     </option>
   </component>
@@ -508,7 +511,7 @@
       <window_info anchor="bottom" id="Run" order="0" />
       <window_info anchor="bottom" id="Logcat" order="1" />
       <window_info anchor="bottom" id="TODO" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3888889" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3888889" />
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="6" show_stripe_button="false" />
@@ -561,31 +564,31 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>1005</line>
+          <line>1001</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>663</line>
+          <line>659</line>
           <properties />
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>1121</line>
+          <line>1116</line>
           <properties />
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>1118</line>
+          <line>1113</line>
           <properties />
           <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
-          <line>1034</line>
+          <line>1029</line>
           <properties />
           <option name="timeStamp" value="49" />
         </line-breakpoint>
@@ -717,26 +720,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/assets/codemirror_editor.html">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+        <state relative-caret-position="837">
+          <caret line="1061" column="33" selection-start-line="1061" selection-start-column="25" selection-end-line="1061" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/main/assets/codemirror_editor.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="786" column="35" selection-start-line="786" selection-start-column="35" selection-end-line="786" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#42226#42227#0" expanded="true" />
-            <element signature="e#42297#42298#0" expanded="true" />
-            <element signature="e#42395#42396#0" expanded="true" />
-            <element signature="e#42422#42423#0" expanded="true" />
-            <element signature="e#42485#42486#0" expanded="true" />
-            <element signature="e#42506#42507#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="72">
+          <caret line="4" column="94" selection-start-line="4" selection-start-column="94" selection-end-line="4" selection-end-column="94" />
         </state>
       </provider>
     </entry>

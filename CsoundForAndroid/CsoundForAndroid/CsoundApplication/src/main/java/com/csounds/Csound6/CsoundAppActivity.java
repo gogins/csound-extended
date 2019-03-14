@@ -314,8 +314,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
-            String code = "";
-            //String code = editor.getText().toString();
+            getEditorText();
             String filepath = uriToFilepath(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
@@ -353,10 +352,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 startActivityForResult(chooser, OPEN_FILE_REQUEST);
                 return true;
             case R.id.action_save:
-                String text = "";
-                //editor.getText().toString();
+                getEditorText();
                 try {
-                    saveTextToUri(text, csound_uri);
+                    saveTextToUri(code, csound_uri);
                 } catch (Exception e) {
 
                 }
@@ -587,8 +585,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void loadWebView() {
         try {
-            String code = "";
-            //String code = editor.getText().toString();
+            getEditorText();
             int start = code.indexOf("<html");
             int end = code.indexOf("</html>") + 7;
             if (!(start == -1 || end == -1)) {
@@ -641,8 +638,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         Log.d("Csound:", file.getAbsolutePath());
         ///csound_file = file;
         String code = loadTextFile(file);
-        ///editor.setText(code);
-        this.setEditorText(code);
+        setEditorText(code);
         setTitle(file.getName());
         csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
         loadWebView();
@@ -1000,7 +996,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         try {
             if (requestCode == NEW_FILE_REQUEST && intent != null) {
                 csound_uri = intent.getData();
-                ///editor.setText(csdTemplate);
+                setEditorText(csdTemplate);
                 saveTextToUri(csdTemplate, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1010,9 +1006,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     return;
                 }
                 csound_uri = intent.getData();
-                String text = "";
-                ///String text = editor.getText().toString();
-                saveTextToUri(text, csound_uri);
+                getEditorText();
+                saveTextToUri(code, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
             }
@@ -1022,7 +1017,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 }
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
-                ///editor.setText(text);
+                setEditorText(text);
                 loadWebView();
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
