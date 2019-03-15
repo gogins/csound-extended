@@ -385,6 +385,12 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 getEditorTextAndRun();
                 ///render();
                 return true;
+            case R.id.action_find:
+                editor.evaluateJavascript("codemirror_editor.execCommand('find');", null);
+                return true;
+            case R.id.action_replace:
+                editor.evaluateJavascript("codemirror_editor.execCommand('replace');", null);
+                return true;
             case R.id.itemGuide:
                 File user_guide = copyAsset("Csound6_User_Guide.pdf");
                 Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, user_guide);
