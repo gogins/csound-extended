@@ -23,10 +23,17 @@ codemirror_editor.refresh();
 var setCodeMirrorText = function() {
     var text = csoundApp.getCsoundText();
     codemirror_editor.setValue(text);
+    return "setCodeMirrorText";
 };
 var getCodeMirrorText = function() {
     var text = codemirror_editor.getValue();
     csoundApp.setCsoundText(text);
+    return "getCodeMirrorText";
+}
+var getCodeMirrorTextAndRun = function() {
+    var text = codemirror_editor.getValue();
+    csoundApp.setCsoundText(text);
+    return 'getCodeMirrorTextAndRun';
 }
 </script>
 </body>

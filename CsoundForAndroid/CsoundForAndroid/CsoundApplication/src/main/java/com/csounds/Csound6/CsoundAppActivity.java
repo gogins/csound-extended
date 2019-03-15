@@ -78,6 +78,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import csnd6.CsoundCallbackWrapper;
 import csnd6.CsoundOboe;
@@ -89,7 +91,7 @@ import static android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCa
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObjListener,
         CsoundObj.MessagePoster, */ TabLayout.OnTabSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener,
+        SharedPreferences.OnSharedPreferenceChangeListener, ValueCallback<String>,
         OnRequestPermissionsResultCallback {
     String code = "";
     Uri templateUri = null;
@@ -142,7 +144,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     private WebView help_tab = null;
     private WebView portal_tab = null;
     private MenuItem renderItem = null;
-
     static {
         int result = 0;
         try {
@@ -314,7 +315,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
-            getEditorText();
+            ///getEditorText();
             String filepath = uriToFilepath(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
@@ -331,6 +332,20 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     public void stopRendering() {
         csound_oboe.stop();
         postMessage("Csound has been stopped.\n");
+    }
+
+    public void render() {
+        synchronized (this) {
+            if (is_running == false) {
+                is_running = true;
+                renderItem.setTitle("Stop");
+                startRendering();
+            } else {
+                is_running = false;
+                stopRendering();
+                renderItem.setTitle("Run");
+            }
+        }
     }
 
     @Override
@@ -365,20 +380,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 save_as_intent.addCategory(Intent.CATEGORY_OPENABLE);
                 Intent save_as_chooser = Intent.createChooser(save_as_intent, "Save as");
                 startActivityForResult(save_as_chooser, SAVE_FILE_REQUEST);
-            return true;
-            // TODO: Automatically save before rendering.
+                return true;
             case R.id.action_render:
-                synchronized (this) {
-                    if (is_running == false) {
-                        is_running = true;
-                        renderItem.setTitle("Stop");
-                        startRendering();
-                    } else {
-                        is_running = false;
-                        stopRendering();
-                        renderItem.setTitle("Run");
-                    }
-                }
+                getEditorTextAndRun();
+                ///render();
                 return true;
             case R.id.itemGuide:
                 File user_guide = copyAsset("Csound6_User_Guide.pdf");
@@ -1027,16 +1032,30 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
     }
     public void setEditorText(String text) {
+        Log.i("Csound:", "setEditorText...");
         code = text;
-        editor.evaluateJavascript("setCodeMirrorText();", null);
+        editor.evaluateJavascript("setCodeMirrorText();", this);
     }
 
     public void getEditorText() {
-        editor.evaluateJavascript("getCodeMirrorText();", null);
+        Log.i("Csound:", "getEditorText...");
+        editor.evaluateJavascript("getCodeMirrorText();", this);
+    }
+
+    public void getEditorTextAndRun() {
+        Log.i("Csound:", "getEditorTextAndRun...");
+        editor.evaluateJavascript("getCodeMirrorTextAndRun();", this);
     }
 
     @JavascriptInterface
     public void setCsoundText(String text) {
+        Log.i("Csound:", "setCsoundText...");
+        code = text;
+    }
+
+    @JavascriptInterface
+    public void setCsoundTextAndRun(String text) {
+        Log.i("Csound:", "setCsoundTextAndRun...");
         code = text;
     }
 
@@ -1096,6 +1115,13 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onReceiveValue(String value) {
+        if (value.contains("getCodeMirrorTextAndRun")) {
+            render();
+        }
     }
 
     /**
