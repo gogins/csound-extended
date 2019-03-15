@@ -7,17 +7,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/theme/cobalt.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/javascript/javascript.js"></script>
+    <style type="text/css">
+        .CodeMirror { height: 99vh; width: 99vw;}
+    </style>
 </head>
-<body height="auto">
+<body height="100%">
 <script>
 var codemirror_editor = CodeMirror(document.body, {
   mode:  "javascript",
   lineNumbers: "true",
   theme: "cobalt",
-  viewportMargin: "100",
-  height: "100%",
   mode: "javascript",
 });
+codemirror_editor.refresh();
 var setCodeMirrorText = function() {
     var text = csoundApp.getCsoundText();
     codemirror_editor.setValue(text);
