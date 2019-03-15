@@ -3,9 +3,9 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<title></title>
-	<meta name="generator" content="LibreOffice 6.0.6.2 (Linux)"/>
+	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2018-11-06T08:13:03.603276052"/>
+	<meta name="changed" content="2019-03-16T07:36:23.959261731"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -28,7 +28,7 @@
 <body lang="en-US" dir="ltr">
 <h1 class="western" align="center" style="margin-top: 0.08in; margin-bottom: 0in">
 User Guide<br/>
-Csound 6.12.0 for Android 
+Csound for Android 
 </h1>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Michael
 Gogins</b></i></p>
@@ -37,12 +37,40 @@ November 2018</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in"><br/>
 
 </p>
-<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">Introduction</h1>
 <p style="margin-top: 0.08in; margin-bottom: 0in">This is an
 extremely basic guide to using the Csound for Android app. It should
 be just enough to get you started if you already have some experience
 with Csound or, at least, some other “Music N” type software
 synthesizer.</p>
+<h1 class="western">Changes in This Version</h1>
+<p style="margin-top: 0.08in; margin-bottom: 0in">This version of
+Csound for Android includes many changes and improvements:</p>
+<ul>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in">The app is
+	now built for 64 bit CPU architecture.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in">The app now
+	has a built-in text editor based on CodeMirror that includes find
+	and replace.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in">The user
+	interface is tabbed for instantly switching between editing and
+	performing.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound
+	Reference Manual appears in its own tab.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in">Embeddable
+	Common Lisp is available as well as the nudruz and Common Music
+	libraries for algorithmic composition in Common Lisp.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in">The software
+	repository and build system have been simplified. Csound for Android
+	and all native libraries and other dependencies are built directly
+	from Android Studio.</p>
+</ul>
+<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">Introduction</h1>
 <p style="margin-top: 0.08in; margin-bottom: 0in">The Csound for
 Android app is an Android version of Csound, an audio and music
 synthesis and processing language of great power, created by Barry
@@ -81,10 +109,39 @@ the more frequently used plugin opcodes:</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in">The Doppler
 	opcode.</p>
 </ul>
+<p style="margin-top: 0.08in; margin-bottom: 0in">In addition, Csound
+for Android now includes Embeddable Common Lisp along with the nudruz
+and Common Music libraries for algorithmic composition in Lisp.</p>
 <h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">User
 Interface</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The menu buttons
-perform the following functions: 
+<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound for
+Android user interface uses tabs for easy and swift changes of
+context, for example between editing and performing. The tabs are:</p>
+<ul>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Editor</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– Provides a built-in text editor based on CodeMirror, with find
+	and replace functionality.</span></span></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Messages</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– Shows all diagnostic and informative messages printed by Csound.</span></span></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>HTML</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– Provides a built-in HTML5-enabled Web browser for the display of
+	custom user interfaces, computer graphics and animations, and so on.</span></span></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Widgets</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– Provides a predefined set of 5 sliders, 5 buttons, and a
+	trackpad that send updates to predefined Csound control channels.
+	These widgets are backwards compatible with previous versions of the
+	Csound for Android app.</span></span></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Help</b></i></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>About</b></i></p>
+</ul>
+<p style="margin-top: 0.08in; margin-bottom: 0in">The task menu of
+Csound for Android provides the following functions: 
 </p>
 <ul>
 	<li/>
@@ -95,11 +152,19 @@ perform the following functions:
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Save
 	as...</b></i> <span style="font-variant: normal">– Saves the
-	current CSD file under a new name, and opens the new file</span>.</p>
+	current CSD </span><span style="font-variant: normal">or other</span><span style="font-variant: normal">
+	file </span><span style="font-variant: normal">being edited </span><span style="font-variant: normal">under
+	a new name.</span></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Save</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– Saves the current CSD or other file being edited to the user’s
+	storage.</span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Open </b></i><span style="font-variant: normal">–
 	O</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">pens
-	an existing CSD file in the root directory of the user's storage.</span></span></span>
+	an existing CSD </span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">or
+	other</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">
+	file in the root directory of the user's storage.</span></span></span>
 	The user's storage filesystem can be navigated to find other files.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Edit</b></i>
