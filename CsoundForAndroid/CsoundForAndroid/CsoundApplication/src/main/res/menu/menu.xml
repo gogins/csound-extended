@@ -29,7 +29,8 @@
         android:id="@+id/action_replace"
         android:title="Replace..."
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/itemExamples" android:title="Examples" android:enabled="true" android:visible="true">
+    <item
+        android:title="Examples" android:enabled="true" android:visible="true">
         <menu>
             <item android:id="@+id/itemTrapped" android:visible="true" android:titleCondensed="Trapped in Convert" android:title="Trapped in Convert, Richard Boulanger" android:enabled="true"/>
             <item android:id="@+id/itemDroneIV" android:visible="true" android:titleCondensed="Drone IV" android:title="Drone IV, Michael Gogins" android:enabled="true"/>

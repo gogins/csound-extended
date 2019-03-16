@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-03-16T18:43:57.618742913"/>
+	<meta name="changed" content="2019-03-17T06:14:00.839516198"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -90,9 +90,8 @@ to be actively developed. It has many advanced features for sound
 synthesis including user-designable instruments, an easy to learn
 programming language with a type system, several phase vocoders,
 several sample players, a plethora of digital oscillators, filters,
-and envelope generators, transparent multi-threading for high
-performance on multi-core systems, and an embedded Lua just-in-time
-compiler.</p>
+and envelope generators, and transparent multi-threading for high
+performance on multi-core systems.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Csound for Android app is by Victor Lazzarini, Steven Yi, Michael
 Gogins, and others. The app contains virtually all of Csound,
@@ -180,10 +179,10 @@ task menu of Csound for Android provides the following functions:
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Open</b></i> – Opens a file for editing. The file can be a
-	Csound .csd file, an HTML5 .html file, a Lua .lua file, or a Common
-	Lisp .lisp file. Each of these languages has access to the same
-	instance of Csound that is exposed in the HTML tab or to the widgets
-	in the Widgets tab.</p>
+	Csound .csd file, an HTML5 .html file, or a Common Lisp .lisp file.
+	Each of these languages has access to the same instance of Csound
+	that is exposed in the HTML tab or to the widgets in the Widgets
+	tab.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Save as...</b></i> <span style="font-variant: normal">–
@@ -200,9 +199,7 @@ task menu of Csound for Android provides the following functions:
 	performance; if Csound is running, stops the performance. If the
 	file is an .html file, it is reloaded in the HTML tab which has
 	access to a Csound object encapsulating the app’s builtin instance
-	of Csound. If the file is a .lua file, it is executed by an embedded
-	LuaJIT runtime that has access to the app’s instance of Csound as
-	a light userdata. If the file is a .lisp file, it is executed by an
+	of Csound. If the file is a .lisp file, it is executed by an
 	embedded Common Lisp runtime that has access to the app’s instance
 	of Csound as a native pointer. If the Csound options include <font face="Courier New, monospace">-odac</font><font face="Liberation Serif, serif">,
 	Csound's audio output will go to the device audio output. If the
@@ -376,9 +373,6 @@ change <font face="Courier New, monospace">-odac</font> above to
 <font face="Courier New, monospace">-o/sdcard/test.wav</font>.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">That's
 it!</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
-
-</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
 
 </p>
