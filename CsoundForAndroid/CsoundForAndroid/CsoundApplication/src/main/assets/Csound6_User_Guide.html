@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-03-16T07:36:23.959261731"/>
+	<meta name="changed" content="2019-03-16T18:43:57.618742913"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -26,232 +26,233 @@
 	</style>
 </head>
 <body lang="en-US" dir="ltr">
-<h1 class="western" align="center" style="margin-top: 0.08in; margin-bottom: 0in">
+<h1 class="western" align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 User Guide<br/>
 Csound for Android 
 </h1>
-<p align="center" style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Michael
-Gogins</b></i></p>
-<p align="center" style="margin-top: 0.08in; margin-bottom: 0in"><i><b>6
-November 2018</b></i></p>
-<p align="center" style="margin-top: 0.08in; margin-bottom: 0in"><br/>
+<p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+<i><b>Michael Gogins</b></i></p>
+<p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+<i><b>16 March 2019</b></i></p>
+<p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+<br/>
 
 </p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">This is an
-extremely basic guide to using the Csound for Android app. It should
-be just enough to get you started if you already have some experience
-with Csound or, at least, some other “Music N” type software
-synthesizer.</p>
-<h1 class="western">Changes in This Version</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">This version of
-Csound for Android includes many changes and improvements:</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">This
+is an extremely basic guide to using the Csound for Android app. It
+should be just enough to get you started if you already have some
+experience with Csound or, at least, some other “Music N” type
+software synthesizer.</p>
+<h1 class="western" style="line-height: 115%">Changes in This Version</h1>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">This
+version of Csound for Android features many changes and improvements:</p>
 <ul>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The app is
-	now built for 64 bit CPU architecture.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The app is now built for 64 bit CPU architecture.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The app now
-	has a built-in text editor based on CodeMirror that includes find
-	and replace.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	Audio input and output now are implemented using Google’s Oboe
+	library, which encapsulates differences between audio drivers on
+	different Android platforms. Oboe is integrated with Csound in a new
+	CsoundOboe C++ class.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The user
-	interface is tabbed for instantly switching between editing and
-	performing.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The app now has a built-in text editor based on CodeMirror. The
+	editor includes find and replace functions.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound
-	Reference Manual appears in its own tab.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The user interface is tabbed for instantly switching between editing
+	and performing.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Embeddable
-	Common Lisp is available as well as the nudruz and Common Music
-	libraries for algorithmic composition in Common Lisp.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The <i><b>Csound Reference Manual</b></i> appears in its own tab.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The software
-	repository and build system have been simplified. Csound for Android
-	and all native libraries and other dependencies are built directly
-	from Android Studio.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	Embeddable Common Lisp is available, as well as the nudruz and
+	Common Music libraries, to support algorithmic composition in Common
+	Lisp.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The software repository and build system have been simplified.
+	Csound for Android and all native libraries and other dependencies
+	are built directly from Android Studio.</p>
 </ul>
-<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">Introduction</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound for
-Android app is an Android version of Csound, an audio and music
-synthesis and processing language of great power, created by Barry
-Vercoe in 1984, maintained with complete backward compatibility since
-then, and widely used and taught for the creation of electroacoustic
-and computer music. Desite its age, Csound continues to be actively
-developed. It has many advanced features for sound synthesis
-including user-designable instruments, an easy to learn programming
-language with a type system, several phase vocoders, several sample
-players, a plethora of digital oscillators, filters, and envelope
-generators, transparent multi-threading for high performance on
-multi-core systems, and an embedded Lua just-in-time compiler.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound for
-Android app is by Victor Lazzarini, Steven Yi, Michael Gogins, and
-others. The app contains virtually all of Csound, including some of
-the more frequently used plugin opcodes:</p>
+<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+Introduction</h1>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+Csound for Android app is an Android version of Csound, an audio and
+music synthesis and processing language of great power, created by
+Barry Vercoe in 1984, maintained with complete backward compatibility
+since then, and widely used and taught for the creation of
+electroacoustic and computer music. Desite its age, Csound continues
+to be actively developed. It has many advanced features for sound
+synthesis including user-designable instruments, an easy to learn
+programming language with a type system, several phase vocoders,
+several sample players, a plethora of digital oscillators, filters,
+and envelope generators, transparent multi-threading for high
+performance on multi-core systems, and an embedded Lua just-in-time
+compiler.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+Csound for Android app is by Victor Lazzarini, Steven Yi, Michael
+Gogins, and others. The app contains virtually all of Csound,
+including some of the more frequently used plugin opcodes:</p>
 <ul>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The signal
-	flow graph opcodes, for chaining instruments into effects chains and
-	so on.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The signal flow graph opcodes, for chaining instruments into effects
+	chains and so on.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The
-	Fluidsynth opcodes for playing SF2 samples.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The Fluidsynth opcodes for playing SF2 samples.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The
-	libstdutil library.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The libstdutil library.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The scanned
-	synthesis opcodes.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The scanned synthesis opcodes.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Open
-	Sound Control (OSC) opcodes which allow Csound to communicate over
-	networks with other software in a low-latency and flexible manner.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The Open Sound Control (OSC) opcodes which allow Csound to
+	communicate over networks with other software in a low-latency and
+	flexible manner.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Doppler
-	opcode.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The Doppler opcode.</p>
 </ul>
-<p style="margin-top: 0.08in; margin-bottom: 0in">In addition, Csound
-for Android now includes Embeddable Common Lisp along with the nudruz
-and Common Music libraries for algorithmic composition in Lisp.</p>
-<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">User
-Interface</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The Csound for
-Android user interface uses tabs for easy and swift changes of
-context, for example between editing and performing. The tabs are:</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">In
+addition, Csound for Android now includes Embeddable Common Lisp
+along with the nudruz and Common Music libraries to support
+algorithmic composition in Lisp.</p>
+<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+User Interface</h1>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+Csound for Android user interface uses tabs for easy and swift
+changes of context, for example between editing and performing. All
+tabs share the app’s builtin instance of Csound. This enables, for
+example, a piece to be written in HTML5 but utilize the builtin
+widgets, execute Common Lisp code, and so forth. The tabs are:</p>
 <ul>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Editor</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– Provides a built-in text editor based on CodeMirror, with find
-	and replace functionality.</span></span></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Editor</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
+	a built-in text editor based on CodeMirror, with find and replace
+	functionality.</span></span></span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Messages</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– Shows all diagnostic and informative messages printed by Csound.</span></span></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Messages</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Shows
+	all diagnostic and informative messages printed by Csound.</span></span></span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>HTML</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– Provides a built-in HTML5-enabled Web browser for the display of
-	custom user interfaces, computer graphics and animations, and so on.</span></span></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>HTML</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
+	a built-in HTML5-enabled Web browser for the display of custom user
+	interfaces, computer graphics and animations, and so on.</span></span></span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Widgets</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– Provides a predefined set of 5 sliders, 5 buttons, and a
-	trackpad that send updates to predefined Csound control channels.
-	These widgets are backwards compatible with previous versions of the
-	Csound for Android app.</span></span></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Widgets</b></i><span style="font-variant: normal"> –
+	</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
+	a predefined set of 5 sliders, 5 buttons, and a trackpad that send
+	updates to predefined Csound control channels. These widgets are
+	backwards compatible with previous versions of the Csound for
+	Android app.</span></span></span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Help</b></i></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Help</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– </span></span><span style="font-style: normal"><span style="font-weight: normal">Provides
+	an embedded browser for the </span></span><i><b>Csound Reference
+	Manual</b></i><span style="font-style: normal"><span style="font-weight: normal">.</span></span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>About</b></i></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>About</b></i><span style="font-style: normal"><span style="font-weight: normal">
+	– </span></span><span style="font-style: normal"><span style="font-weight: normal">Provides
+	an embedded browser for the Csound home page at <a href="http://csound.com/">http://csound.com</a>,
+	enabling users to explore many uses and features of Csound.</span></span></p>
 </ul>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The task menu of
-Csound for Android provides the following functions: 
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+task menu of Csound for Android provides the following functions: 
 </p>
 <ul>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>New</b></i>
-	– Creates a blank template CSD file in the root directory of the
-	user's storage for the user to edit. The CSD file will be remembered
-	and performed by Csound.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>New</b></i> – Creates a blank template Csound .csd file in
+	the root directory of the user's storage for the user to edit. The
+	.csd file will be remembered and performed by Csound.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Save
-	as...</b></i> <span style="font-variant: normal">– Saves the
-	current CSD </span><span style="font-variant: normal">or other</span><span style="font-variant: normal">
-	file </span><span style="font-variant: normal">being edited </span><span style="font-variant: normal">under
-	a new name.</span></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Open</b></i> – Opens a file for editing. The file can be a
+	Csound .csd file, an HTML5 .html file, a Lua .lua file, or a Common
+	Lisp .lisp file. Each of these languages has access to the same
+	instance of Csound that is exposed in the HTML tab or to the widgets
+	in the Widgets tab.</p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Save</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– Saves the current CSD or other file being edited to the user’s
-	storage.</span></span></p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Save as...</b></i> <span style="font-variant: normal">–
+	Saves the current .</span><span style="font-variant: normal">csd</span><span style="font-variant: normal">
+	or other file being edited under a new name.</span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Open </b></i><span style="font-variant: normal">–
-	O</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">pens
-	an existing CSD </span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">or
-	other</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">
-	file in the root directory of the user's storage.</span></span></span>
-	The user's storage filesystem can be navigated to find other files.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Save</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Saves
+	the current .</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">csd</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">
+	or other file being edited to the user’s storage.</span></span></span></p>
 	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Edit</b></i>
-	– Opens a text editor to edit the current CSD file. Be sure to
-	save the file before you perform it! I recommend the free, open
-	source <a href="https://play.google.com/store/apps/details?id=jp.sblo.pandora.jota&amp;hl=en">Jota</a>
-	text editor on smartphones and, though I haven't tried Jota on
-	tablets, it probably works well there as well.</p>
-	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><i><b>Start/Stop</b></i>
-	– If a CSD file has been loaded, starts running Csound; if Csound
-	is running, stops it. If the <font face="Courier New, monospace">&lt;CsOptions&gt;</font>
-	element of the CSD file contains <font face="Courier New, monospace">-odac</font>,
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<i><b>Run/Stop</b></i> – If Csound is not running, starts a
+	performance; if Csound is running, stops the performance. If the
+	file is an .html file, it is reloaded in the HTML tab which has
+	access to a Csound object encapsulating the app’s builtin instance
+	of Csound. If the file is a .lua file, it is executed by an embedded
+	LuaJIT runtime that has access to the app’s instance of Csound as
+	a light userdata. If the file is a .lisp file, it is executed by an
+	embedded Common Lisp runtime that has access to the app’s instance
+	of Csound as a native pointer. If the Csound options include <font face="Courier New, monospace">-odac</font><font face="Liberation Serif, serif">,
 	Csound's audio output will go to the device audio output. If the
-	element contains <font face="Courier New, monospace">-osoundfilename</font>,
-	Csound's audio output will go to the file <font face="Courier New, monospace">soundfilename</font>,
+	element contains </font><font face="Courier New, monospace">-osoundfilename</font><font face="Liberation Serif, serif">,
+	Csound's audio output will go to the file </font><font face="Courier New, monospace">soundfilename</font><font face="Liberation Serif, serif">,
 	which should be a valid Linux pathname in the user's storage
-	filesystem.</p>
+	filesystem.</font><font face="Courier New, monospace"> </font>
+	</p>
+	<li/>
+<p><font face="Liberation Serif, serif"><i><b>F</b></i><i><b>ind...
+	</b></i>– Search for a string of text in the editor.</font></p>
+	<li/>
+<p><font face="Liberation Serif, serif"><i><b>Replace…</b></i>
+	– Replace a string of text in the editor.</font></p>
 </ul>
-<p style="margin-top: 0.08in; margin-bottom: 0in">There are actually
-two types of widget area: one with pre-defined widgets, and one with
-user-defined widgets. 
-</p>
-<h2 class="western">Menu</h2>
-<p>The main menu (top right-hand button on the title bar) includes
-the following choices:</p>
 <ul>
 	<li/>
 <p><i><b>Examples</b></i> – Opens a submenu with various
 	built-in example pieces. These are saved in your device's external
 	public storage Music directory, and then run.</p>
 	<li/>
-<p><i><b>User guide</b></i> – Opens this basic user guide.</p>
+<p style="line-height: 115%"><i><b>User guide</b></i> –
+	Opens this basic user guide.</p>
 	<li/>
-<p><i><b>Csound help</b></i> – Opens a browser to show the
-	complete Csound Reference Manual online.</p>
-	<li/>
-<p>The <i><b>Settings</b></i> menu includes the following
-	choices. The values of the settings are saved on the device, and
-	restored at the beginning of the next session.</p>
+<p style="line-height: 115%"><i><b>Settings</b></i> –
+	Includes the following choices. The values of the settings are saved
+	on the device, and restored at the beginning of the next session.</p>
 	<ul>
 		<li/>
-<p><i><b>Plugins directory</b></i> – Sets the value of the
-		OPCODE6DIR64 environment variable.</p>
+<p style="line-height: 115%"><i><b>Plugins directory</b></i>
+		– Sets the value of the OPCODE6DIR64 environment variable.</p>
 		<li/>
-<p><i><b>Output directory</b></i> – Sets the value of the
-		SFDIR environment variable. 
+<p style="line-height: 115%"><i><b>Output directory</b></i> –
+		Sets the value of the SFDIR environment variable. 
 		</p>
 		<li/>
-<p><i><b>Samples directory</b></i> – Sets the value of the
-		SSDIR environment variable.</p>
+<p style="line-height: 115%"><i><b>Samples directory</b></i>
+		– Sets the value of the SSDIR environment variable.</p>
 		<li/>
-<p><i><b>Analysis directory</b></i> – Sets the value of the
-		SADIR environment variable.</p>
+<p style="line-height: 115%"><i><b>Analysis directory</b></i>
+		– Sets the value of the SADIR environment variable.</p>
 		<li/>
-<p><i><b>Include directory</b></i> – Sets the value of the
-		INCDIR environment variable.</p>
-		<li/>
-<p><i><b>Screen Layout </b></i>– Configures the high-level
-		layout of the Csound for Android screen, as follows:</p>
-		<ul>
-			<li/>
-<p><i><b>Message console</b></i> – Displays only a
-			scrolling console of Csound's diagnostic messages.</p>
-			<li/>
-<p><i><b>HTML</b></i> – Displays only HTML in Csound's
-			embedded Web browser (see <i><b>User-Defined Widgets</b></i>,
-			below).</p>
-			<li/>
-<p><i><b>HTML with message console</b></i> – Displays HTML
-			at the top and a small message console at the bottom.</p>
-			<li/>
-<p><i><b>Widgets</b></i> – Displays only the predefined
-			widgets (see below).</p>
-			<li/>
-<p><i><b>Widgets with message console</b></i> – Displays
-			predefined widgets and the top and a message console below.</p>
-		</ul>
+<p style="line-height: 115%"><i><b>Include directory</b></i>
+		– Sets the value of the INCDIR environment variable.</p>
 	</ul>
-	<li/>
-<p><i><b>About Csound </b></i>– Opens a browser to show the
-	official Csound Web page online. 
-	</p>
 </ul>
-<h2 class="western">Predefined Widgets</h2>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The widgets are
-assigned control channel names <font face="Courier New, monospace">slider1</font>
+<h2 class="western" style="line-height: 115%">Predefined Widgets</h2>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+predefined widgets on the <i><b>Widgets </b></i>tab are assigned
+control channel names <font face="Courier New, monospace">slider1</font>
 through <font face="Courier New, monospace">slider5</font>, <font face="Courier New, monospace">butt1</font>
 through <font face="Courier New, monospace">butt5</font>, <font face="Courier New, monospace">trackpad.x</font>,
 and <font face="Courier New, monospace">trackpad.y</font>. In
@@ -260,132 +261,125 @@ addition, the accelerometer on the Android device is available as
 <font face="Courier New, monospace">accelerometerY</font>, and
 <font face="Courier New, monospace">accelerometerZ</font>. 
 </p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The values of these
-widgets are normalized between 0 and 1, and can be read into Csound
-during performance using the <font face="Courier New, monospace">chnget</font>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+values of these widgets are normalized between 0 and 1, and can be
+read into Csound during performance using the <font face="Courier New, monospace">chnget</font>
 opcode, like this: 
 </p>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><font face="Courier New, monospace">kslider1_value
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><font face="Courier New, monospace">kslider1_value
 chnget “slider1”</font></p>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><br/>
-
-</p>
-<h2 class="western"><img src="Csound6_User_Guide_html_cca38a9f2ca7ad59.png" name="graphics1" align="left" hspace="19" vspace="19" width="297" height="586">
-  <br clear="left"/>
-</img>
-User-Defined
-Widgets</h2>
-<p style="margin-top: 0.08in; margin-bottom: 0in">User-defined
+<h2 class="western" style="line-height: 115%">User-Defined Widgets</h2>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">User-defined
 widgets are defined in an HTML file (Web page), or in a new <font face="Courier New, monospace">&lt;html&gt;</font>
 element of the CSD file. This can in principle contain any valid
 HTML5 code, including document elements, JavaScript, and styles.
 JavaScript event handlers can be attached to any elements, including
 range inputs (sliders). Such event handlers can call Java methods of
-tthe <font face="Courier New, monospace">CsoundObj</font> object
+the <font face="Courier New, monospace">CsoundOboe</font> object
 (<font face="Courier New, monospace">csound</font>), for example to
 get or set control channel values, or to send new score events to
 Csound.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The ability to send
-score events to Csound from JavaScript means that JavaScript can be
-used as a high-level programming language in the CSD file for the
-purposes of algorithmic composition, even interactive composition.
-All methods callable from <font face="Courier New, monospace">CsoundAppActivity</font>
-and <font face="Courier New, monospace">CsoundObj</font>are marked
-with the <font face="Courier New, monospace">@JavascriptInterface</font>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+ability to send score events to Csound from JavaScript means that
+JavaScript can be used as a high-level programming language in an
+.html file for the purposes of algorithmic composition, even
+interactive composition. All methods callable from <font face="Courier New, monospace">CsoundAppActivity</font>
+and <font face="Courier New, monospace">CsoundOboe</font><font face="Liberation Serif, serif">
+</font>are marked with the <font face="Courier New, monospace">@JavascriptInterface</font>
 attribute in the Csound for Android source code. For a basic example
 of a user-defined widget setup, see the <font face="Courier New, monospace">Drone-HTML5.csd</font>
 example file. Here is a snippet showing a slider's <font face="Courier New, monospace">onInput</font>
 event handler setting a Csound control channel:</p>
-<pre class="western" style="page-break-inside: avoid; page-break-before: auto; page-break-after: auto">&lt;script&gt;
+<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">
+&lt;script&gt;
 function gk_Reverb_FeedbackUpdate(value) {
 var numberValue = parseFloat(value)
 csoundApp.setControlChannel('gk_Reverb_Feedback', numberValue);
 }
-&lt;/script&gt;</pre><h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">
+&lt;/script&gt;</pre><h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 Examples</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The menu of the
-Csound app features a number of built-in examples. Selecting an
-example will cause its file or files to be copied to the app's
-external public storage Music directory and loaded into the app,
-ready to be performed or edited. Not all of the examples use the
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+menu of the Csound app features a number of built-in examples.
+Selecting an example will cause its file or files to be copied to the
+app's external public storage Music directory and loaded into the
+app, ready to be performed or edited. Not all of the examples use the
 widgets. The examples demonstrate not only some techniques for using
 the Csound6 Android app, but also a few of the many different ways of
 making music with Csound.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">When I first
-encountered the Csound app, I was very impressed. Now that I have
-been able to contribute to its development, I have come to realize
-that a high end smartphone, not to mention a tablet, is in every
-sense of the word a real computer. The limits to what can be
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">When
+I first encountered the Csound app, I was very impressed. Now that I
+have been able to contribute to its development, I have come to
+realize that a high end smartphone, not to mention a tablet, is in
+every sense of the word a real computer. The limits to what can be
 programmed on it are indefinable. On a high-end personal computer, it
 is easier to type, and Csound runs quite a bit faster; but there is
 no <i>essential</i> difference between running Csound on a computer
 and running it on a smartphone.</p>
-<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in">A
-Tutorial Example</h1>
-<p style="margin-top: 0.08in; margin-bottom: 0in">This example will
-take you through the process of creating a new Csound piece, step by
-step. Obviously, this piece is not going to reveal anything like the
-full power of Csound. It is only intended to get you to the point of
-being able to create, edit, and run a Csound piece that will actually
-make sound on your Android device – from scratch.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Before you get
-started, install the <a href="https://play.google.com/store/apps/details?id=jp.sblo.pandora.jota&amp;hl=en">Jota</a>
-text editor on your device. Other text editors might work with the
-Csound app, but this one is known to work.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Run the Csound6
-app...</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Press the <b>New</b>
-button. You should be presented with an input dialog asking you for a
-filename for your piece. Type in <font face="Courier New, monospace">toot.csd</font>,
+<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+A Tutorial Example</h1>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">This
+example will take you through the process of creating a new Csound
+piece, step by step. Obviously, this piece is not going to reveal
+anything like the full power of Csound. It is only intended to get
+you to the point of being able to create, edit, and run a Csound
+piece that will actually make sound on your Android device – from
+scratch.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Run
+the Csound app...</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Press
+the <b>New...</b> button. You should be presented with an input
+dialog asking you for a filename for your piece. Type in <font face="Courier New, monospace">toot.csd</font>,
 and press the <b>Ok</b> button. The file will be stored in the root
 directory of your user storage on your device. You can save the file
-to another place using Jota's <b>File</b> menu, if you like.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">The text editor
-should open with a “template” CSD file. Your job is to fill out
-the minimum to hear something.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Create a blank line
-between <font face="Courier New, monospace">&lt;CsOptions&gt;</font>
+to another place , if you like.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+text editor should now contain a “template” .csd file. Your job
+is to fill out the minimum to hear something.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Create
+a blank line between <font face="Courier New, monospace">&lt;CsOptions&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsOptions&gt;</font>,
 and type <font face="Courier New, monospace">-odac -d -m3</font>.
 This means send audio to the real-time output (<font face="Courier New, monospace">-odac</font>),
 do not display any function tables (<font face="Courier New, monospace">-d</font>),
 and log some informative messages during Csound's performance (<font face="Courier New, monospace">-m3</font>).</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Create a blank line
-between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Create
+a blank line between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsInstruments&gt;</font>
 and type the following text:</p>
-<pre class="western">sr = 44100
+<pre class="western" style="line-height: 115%">
+sr = 44100
 ksmps = 10
 nchnls = 1
 <font color="#000000"><font face="Courier New, monospace"><font size="2" style="font-size: 9pt">instr 1</font></font></font>
 asignal oscil 10000, 440
 <font face="Courier New, monospace"><font size="2" style="font-size: 9pt">out asignal</font></font>
-<font face="Courier New, monospace"><font size="2" style="font-size: 9pt">endin</font></font></pre><p style="margin-top: 0.08in; margin-bottom: 0in">
+<font face="Courier New, monospace"><font size="2" style="font-size: 9pt">endin</font></font></pre><p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 This is just about the simplest possible Csound orchestra. The
 orchestra header specifies an audio signal sampling rate of 44,100
 frames per second, with 10 audio frames per control signal sample,
 and one channel of audio output. The instrument is just a simple sine
 oscillator. It plays a loud tone at concert A.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Create a blank line
-between <font face="Courier New, monospace">&lt;CsScore&gt;</font>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Create
+a blank line between <font face="Courier New, monospace">&lt;CsScore&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsScore&gt;</font> and
 type:</p>
-<pre class="western" style="margin-top: 0.08in; margin-bottom: 0.08in">i1 0 5</pre><p style="margin-top: 0.08in; margin-bottom: 0in">
+<pre class="western" style="margin-top: 0.08in; margin-bottom: 0.08in; line-height: 115%">i1 0 5</pre><p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 This means play instrument 1 starting at time 0 for 5 seconds.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Press the text
-editor's <b>Save</b> button and then its <b>Quit</b> button.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">Press the Csound
-app's <b>Start</b> button. You should hear a loud sine tone for 5
-seconds.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">If you want to save
-your audio output to a soundfile named <font face="Courier New, monospace">test.wav</font>,
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Invoke
+the <b>Save</b> menu item.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">Press
+the Csound app's <b>Start</b> button. You should hear a loud sine
+tone for 5 seconds.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">If
+you want to save your audio output to a soundfile named <font face="Courier New, monospace">test.wav</font>,
 change <font face="Courier New, monospace">-odac</font> above to
 <font face="Courier New, monospace">-o/sdcard/test.wav</font>.</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in">That's it!</p>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><br/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">That's
+it!</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
 
 </p>
-<p style="margin-top: 0.08in; margin-bottom: 0in"><br/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
 
 </p>
 </body>
