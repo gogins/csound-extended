@@ -11,24 +11,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b127a74-9d17-4e14-b9bb-2279472fe603" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/directory_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/directory_up.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/file_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-ldpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-ldpi/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/menu.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/arrays.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/styles.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" afterDir="false" />
@@ -88,7 +70,7 @@
           <entry key="html" value="2" />
           <entry key="java" value="19" />
           <entry key="properties" value="1" />
-          <entry key="xml" value="25" />
+          <entry key="xml" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -98,7 +80,7 @@
           <entry key="HTML" value="2" />
           <entry key="JAVA" value="19" />
           <entry key="Properties" value="1" />
-          <entry key="XML" value="25" />
+          <entry key="XML" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -184,13 +166,15 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../CsoundAndroid/src/main/res/values/styles.xml">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="18" selection-start-line="18" selection-end-line="18" />
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/../CsoundAndroid/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor" />
+          <provider editor-type-id="android-manifest" />
         </entry>
       </file>
     </leaf>
@@ -266,6 +250,30 @@
       <pane id="AndroidView">
         <subPane>
           <expand>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundAndroid" type="feadf853:AndroidModuleNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundAndroid" type="feadf853:AndroidModuleNode" />
+              <item name="manifests" type="f94875db:AndroidManifestsGroupNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundAndroid" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundAndroid" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+            </path>
             <path>
               <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
@@ -484,7 +492,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.32982844" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.32982844" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Build Variants" order="4" side_tool="true" />
@@ -498,9 +506,9 @@
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="6" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Build" order="7" />
+      <window_info anchor="bottom" id="Build" order="7" visible="true" />
       <window_info anchor="bottom" id="Android Profiler" order="8" />
-      <window_info active="true" anchor="bottom" id="Find" order="9" visible="true" />
+      <window_info anchor="bottom" id="Find" order="9" />
       <window_info anchor="bottom" id="Messages" order="10" />
       <window_info anchor="right" id="Hierarchy" order="0" sideWeight="0.4991708" weight="0.32982844" />
       <window_info anchor="right" id="Preview" order="1" sideWeight="0.46600333" weight="0.099612616" />
@@ -700,6 +708,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
@@ -710,12 +725,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/../CsoundAndroid/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../CsoundAndroid/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+      <provider editor-type-id="android-manifest" />
     </entry>
   </component>
 </project>
