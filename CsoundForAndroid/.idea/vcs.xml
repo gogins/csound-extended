@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/ecl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/fluidsynth-android" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/liblo-android" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/libsndfile-android" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/link" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/link/modules/asio-standalone" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/luajit-2.0" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/oboe" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ndk-libraries/stk" vcs="Git" />
+  </component>
+</project>

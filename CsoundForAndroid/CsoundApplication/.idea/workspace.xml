@@ -1,0 +1,981 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bb96fff2-cd37-4db9-b03f-329b32bc13d1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CsoundApplication.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CsoundForAndroid/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_core_common_1_1_1_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_core_runtime_1_1_1_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_1_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_livedata_1_1_1_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_1_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_1_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_1_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_animated_vector_drawable_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_appcompat_v7_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_asynclayoutinflater_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_cardview_v7_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_collections_28_0_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_constraint_constraint_layout_1_1_3_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_constraint_constraint_layout_solver_1_1_3_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_coordinatorlayout_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_cursoradapter_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_customview_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_design_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_documentfile_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_drawerlayout_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_interpolator_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_loader_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_localbroadcastmanager_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_print_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_recyclerview_v7_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_slidingpanelayout_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_annotations_28_0_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_compat_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_core_ui_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_core_utils_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_fragment_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_media_compat_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_v4_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_vector_drawable_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_swiperefreshlayout_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_espresso_espresso_core_3_0_2_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_espresso_espresso_idling_resource_3_0_2_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_monitor_1_0_2_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_runner_1_0_2_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_transition_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_versionedparcelable_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_viewpager_28_0_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_Susmit_A_AndroidAceEditor_0_5_0_aar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_findbugs_jsr305_2_0_1_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_javawriter_2_1_1_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__javax_inject_javax_inject_1_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_12_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__net_sf_kxml_kxml2_2_3_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_integration_1_3_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_library_1_3_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/.idea/copyright/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundAndroid/CsoundAndroid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid/CsoundAndroid/CsoundAndroid.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/.idea/runConfigurations.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/CsoundApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/CsoundApplication.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/install_libs.sh" beforeDir="false" afterPath="$PROJECT_DIR$/install_libs.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Boulanger/trapped.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Boulanger/trapped.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/BuiltinChannels.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/BuiltinChannels.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/CloudStrata.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/CloudStrata.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/Drone-HTML5.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/Drone-HTML5.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/Drone-IV.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/Drone-IV.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/LindenmayerCanvas.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/LindenmayerCanvas.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/Message.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/Message.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/ModulateInput.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/ModulateInput.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/Poustinia.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/Poustinia.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/css/codemirror.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/css/codemirror.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/css/default.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/css/default.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/css/resizer.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/css/resizer.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Algebra.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Algebra.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Calculus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Calculus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ChordSpace.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ChordSpace.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ChordSpaceTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ChordSpaceTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/LinearCongruence.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/LinearCongruence.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ParametricLindenmayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ParametricLindenmayer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ParametricLindenmayer2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/ParametricLindenmayer2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Seives.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Seives.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Silencio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Silencio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Silencio.js.save" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Silencio.js.save" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Solve.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Solve.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Special.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Special.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/TendencyMasks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/TendencyMasks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/TrackballControls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/TrackballControls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Tween.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/Tween.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/algebrite.bundle-for-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/algebrite.bundle-for-browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/codemirror.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/codemirror.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/dat.gui.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/dat.gui.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/difflib.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/difflib.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/diffview.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/diffview.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/glsl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/glsl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/jquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/jquery.super-table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/jquery.super-table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/lzma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/lzma.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/lzma_worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/lzma_worker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/math.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/math.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/nerdamer.core.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/nerdamer.core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/numeric.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/numeric.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/sprintf.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/sprintf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/super-table.jquery.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/super-table.jquery.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/three.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/three.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/tinycolor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/js/tinycolor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Aeolus_Study.2.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Aeolus_Study.2.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Blue_Leaves.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Blue_Leaves.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordRifs.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordRifs.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpace.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpace.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V2_R48_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V2_R48_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V2_R60_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V2_R60_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V3_R48_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V3_R48_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V3_R60_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V3_R60_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V4_R48_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V4_R48_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V4_R60_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V4_R60_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V5_R48_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V5_R48_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V6_R48_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V6_R48_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V7_R48_g1_000000.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceGroup_V7_R48_g1_000000.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceLoad.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceLoad.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceTest.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceTest.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceTimes.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceTimes.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceView.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ChordSpaceView.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Chords.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Chords.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Lindenmayer.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Lindenmayer.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/LindenmayerClosures.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/LindenmayerClosures.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/LindenmayerPITV.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/LindenmayerPITV.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/LindenmayerPITVA.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/LindenmayerPITVA.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/MIDI.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/MIDI.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ScoreView.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ScoreView.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Silencio.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Silencio.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/SilencioTest.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/SilencioTest.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Som.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Som.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Study.4.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Study.4.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Yellow_Leaves.3.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/Yellow_Leaves.3.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/complex.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/complex.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ffi_rtcmix.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/ffi_rtcmix.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/fit.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/fit.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/inversion_tests.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/inversion_tests.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/lua_rtcmix.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/lua_rtcmix.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/lua_scoregen_silencio.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/lua_scoregen_silencio.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/matrix.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/matrix.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/metalua_serialize.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/lua/metalua_serialize.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Blower.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Blower.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Compressor.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Compressor.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/DelayedPlucked.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/DelayedPlucked.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Droner.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Droner.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMBell.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMBell.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMModerate.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMModerate.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMModerate2.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMModerate2.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMModulatedChorus.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FMModulatedChorus.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FM_Clang.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FM_Clang.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FilteredSines.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FilteredSines.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FluidAudio.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/FluidAudio.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Guitar.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Guitar.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Harpsichord.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Harpsichord.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/HeavyMetal.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/HeavyMetal.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/JackAudio.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/JackAudio.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/JackNote.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/JackNote.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/LeftReverberator.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/LeftReverberator.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/LivingstonGuitar.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/LivingstonGuitar.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/MasterOutput.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/MasterOutput.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Melody.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Melody.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/MonoReverberator.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/MonoReverberator.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoNoteFluidsynth.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoNoteFluidsynth.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoNotePianoteq.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoNotePianoteq.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoOutFluidsynth.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoOutFluidsynth.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoOutPianoteq.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/PianoOutPianoteq.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Plucked.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Plucked.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Reverb.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Reverb.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Reverberator.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Reverberator.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Rhodes.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Rhodes.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/RightReverberator.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/RightReverberator.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/STKBeeThree.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/STKBeeThree.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/STKBowed.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/STKBowed.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/STKPlucked.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/STKPlucked.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Soundfile.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Soundfile.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Spatialize.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Spatialize.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/SpatializedDrone.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/SpatializedDrone.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/ToneWheelOrgan.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/ToneWheelOrgan.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/TubularBell.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/TubularBell.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Xing.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/Xing.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/YiString.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/YiString.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/ZakianFlute.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/ZakianFlute.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/modular_csound.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/modular_csound.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/modular_csound.tex" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/modular_csound.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/module_system_example.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/module_system_example.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/patch_calibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/patches/patch_calibrator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/rtcmix/ffi_rtcmix.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/rtcmix/ffi_rtcmix.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Gogins/silencio/rtcmix/ffi_rtinstrument.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Gogins/silencio/rtcmix/ffi_rtinstrument.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Khosravi/partikkel.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Khosravi/partikkel.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/Kung/xanadu.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/Kung/xanadu.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/i.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/i.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/ii.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/ii.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/iii.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/iii.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/iv.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/iv.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/ix.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/ix.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/v.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/v.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/vi.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/vi.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/vii.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/vii.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6AndroidExamples/McCurdy/viii.csd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6AndroidExamples/McCurdy/viii.csd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6_User_Guide.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6_User_Guide.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/Csound6_User_Guide_html_773f6605.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide_html_773f6605.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/comment/comment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/comment/comment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/comment/continuecomment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/comment/continuecomment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/dialog/dialog.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/dialog/dialog.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/dialog/dialog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/dialog/dialog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/display/autorefresh.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/autorefresh.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/display/fullscreen.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/fullscreen.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/display/fullscreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/fullscreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/display/panel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/panel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/display/placeholder.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/placeholder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/display/rulers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/rulers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/edit/closebrackets.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/closebrackets.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/edit/closetag.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/closetag.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/edit/continuelist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/continuelist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/edit/matchbrackets.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/matchbrackets.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/edit/matchtags.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/matchtags.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/edit/trailingspace.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/trailingspace.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/brace-fold.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/brace-fold.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/comment-fold.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/comment-fold.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/foldcode.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/foldcode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/foldgutter.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/foldgutter.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/foldgutter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/foldgutter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/indent-fold.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/indent-fold.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/markdown-fold.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/markdown-fold.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/fold/xml-fold.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/xml-fold.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/anyword-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/anyword-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/css-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/css-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/html-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/html-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/javascript-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/javascript-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/show-hint.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/show-hint.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/show-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/show-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/sql-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/sql-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/hint/xml-hint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/xml-hint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/coffeescript-lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/coffeescript-lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/css-lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/css-lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/html-lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/html-lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/javascript-lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/javascript-lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/json-lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/json-lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/lint.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/lint.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/lint/yaml-lint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/yaml-lint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/merge/merge.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/merge/merge.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/merge/merge.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/merge/merge.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/mode/loadmode.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/loadmode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/mode/multiplex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/multiplex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/mode/multiplex_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/multiplex_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/mode/overlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/overlay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/mode/simple.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/simple.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/runmode/colorize.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/colorize.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/runmode/runmode-standalone.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/runmode-standalone.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/runmode/runmode.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/runmode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/runmode/runmode.node.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/runmode.node.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/scroll/annotatescrollbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/annotatescrollbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/scroll/scrollpastend.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/scrollpastend.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/scroll/simplescrollbars.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/simplescrollbars.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/scroll/simplescrollbars.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/simplescrollbars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/search/jump-to-line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/jump-to-line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/search/match-highlighter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/match-highlighter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/search/matchesonscrollbar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/matchesonscrollbar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/search/matchesonscrollbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/matchesonscrollbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/search/search.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/search.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/search/searchcursor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/searchcursor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/selection/active-line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/selection/active-line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/selection/mark-selection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/selection/mark-selection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/selection/selection-pointer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/selection/selection-pointer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/tern/tern.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/tern/tern.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/tern/tern.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/tern/tern.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/tern/worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/tern/worker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/addon/wrap/hardwrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/addon/wrap/hardwrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/keymap/emacs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/keymap/emacs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/keymap/sublime.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/keymap/sublime.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/keymap/vim.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/keymap/vim.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/lib/codemirror.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/lib/codemirror.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/lib/codemirror.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/lib/codemirror.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/apl/apl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/apl/apl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/apl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/apl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/asciiarmor/asciiarmor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asciiarmor/asciiarmor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/asciiarmor/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asciiarmor/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/asn.1/asn.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asn.1/asn.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/asn.1/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asn.1/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/asterisk/asterisk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asterisk/asterisk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/asterisk/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asterisk/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/brainfuck/brainfuck.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/brainfuck/brainfuck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/brainfuck/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/brainfuck/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clike/clike.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/clike.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clike/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clike/scala.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/scala.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clike/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clojure/clojure.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clojure/clojure.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clojure/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clojure/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/clojure/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clojure/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cmake/cmake.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cmake/cmake.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cmake/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cmake/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cobol/cobol.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cobol/cobol.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cobol/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cobol/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/coffeescript/coffeescript.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/coffeescript/coffeescript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/coffeescript/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/coffeescript/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/commonlisp/commonlisp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/commonlisp/commonlisp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/commonlisp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/commonlisp/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/crystal/crystal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/crystal/crystal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/crystal/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/crystal/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/css.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/css.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/gss.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/gss.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/gss_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/gss_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/less.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/less.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/less_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/less_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/scss.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/scss.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/scss_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/scss_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/css/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cypher/cypher.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cypher/cypher.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cypher/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cypher/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/cypher/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cypher/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/d/d.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/d/d.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/d/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/d/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/d/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/d/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dart/dart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dart/dart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dart/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dart/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/diff/diff.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/diff/diff.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/diff/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/diff/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/django/django.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/django/django.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/django/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/django/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dockerfile/dockerfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dockerfile/dockerfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dockerfile/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dockerfile/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dockerfile/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dockerfile/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dtd/dtd.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dtd/dtd.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dtd/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dtd/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dylan/dylan.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dylan/dylan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dylan/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dylan/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/dylan/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dylan/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ebnf/ebnf.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ebnf/ebnf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ebnf/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ebnf/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ecl/ecl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ecl/ecl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ecl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ecl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/eiffel/eiffel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/eiffel/eiffel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/eiffel/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/eiffel/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/elm/elm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/elm/elm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/elm/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/elm/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/erlang/erlang.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/erlang/erlang.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/erlang/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/erlang/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/factor/factor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/factor/factor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/factor/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/factor/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/fcl/fcl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fcl/fcl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/fcl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fcl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/forth/forth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/forth/forth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/forth/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/forth/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/fortran/fortran.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fortran/fortran.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/fortran/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fortran/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gas/gas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gas/gas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gas/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gas/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gfm/gfm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gfm/gfm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gfm/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gfm/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gfm/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gfm/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gherkin/gherkin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gherkin/gherkin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/gherkin/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gherkin/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/go/go.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/go/go.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/go/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/go/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/groovy/groovy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/groovy/groovy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/groovy/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/groovy/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haml/haml.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haml/haml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haml/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haml/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haml/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haml/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/handlebars/handlebars.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/handlebars/handlebars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/handlebars/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/handlebars/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haskell-literate/haskell-literate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell-literate/haskell-literate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haskell-literate/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell-literate/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haskell/haskell.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell/haskell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haskell/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haxe/haxe.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haxe/haxe.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/haxe/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haxe/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/htmlembedded/htmlembedded.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlembedded/htmlembedded.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/htmlembedded/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlembedded/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/htmlmixed/htmlmixed.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlmixed/htmlmixed.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/htmlmixed/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlmixed/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/http/http.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/http/http.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/http/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/http/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/idl/idl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/idl/idl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/idl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/idl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/javascript/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/javascript/javascript.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/javascript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/javascript/json-ld.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/json-ld.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/javascript/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/javascript/typescript.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/typescript.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/jinja2/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jinja2/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/jinja2/jinja2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jinja2/jinja2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/jsx/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jsx/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/jsx/jsx.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jsx/jsx.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/jsx/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jsx/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/julia/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/julia/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/julia/julia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/julia/julia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/livescript/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/livescript/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/livescript/livescript.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/livescript/livescript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/lua/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/lua/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/lua/lua.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/lua/lua.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/markdown/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/markdown/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/markdown/markdown.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/markdown/markdown.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/markdown/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/markdown/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mathematica/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mathematica/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mathematica/mathematica.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mathematica/mathematica.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mbox/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mbox/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mbox/mbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mbox/mbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/meta.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/meta.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mirc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mirc/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mirc/mirc.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mirc/mirc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mllike/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mllike/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mllike/mllike.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mllike/mllike.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/modelica/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/modelica/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/modelica/modelica.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/modelica/modelica.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mscgen/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mscgen/mscgen.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/mscgen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mscgen/mscgen_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/mscgen_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mscgen/msgenny_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/msgenny_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mscgen/xu_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/xu_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mumps/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mumps/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/mumps/mumps.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mumps/mumps.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/nginx/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nginx/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/nginx/nginx.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nginx/nginx.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/nsis/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nsis/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/nsis/nsis.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nsis/nsis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ntriples/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ntriples/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ntriples/ntriples.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ntriples/ntriples.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/octave/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/octave/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/octave/octave.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/octave/octave.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/oz/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/oz/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/oz/oz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/oz/oz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pascal/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pascal/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pascal/pascal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pascal/pascal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pegjs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pegjs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pegjs/pegjs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pegjs/pegjs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/perl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/perl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/perl/perl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/perl/perl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/php/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/php/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/php/php.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/php/php.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/php/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/php/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pig/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pig/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pig/pig.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pig/pig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/powershell/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/powershell/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/powershell/powershell.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/powershell/powershell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/powershell/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/powershell/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/properties/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/properties/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/properties/properties.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/properties/properties.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/protobuf/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/protobuf/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/protobuf/protobuf.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/protobuf/protobuf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pug/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pug/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/pug/pug.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pug/pug.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/puppet/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/puppet/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/puppet/puppet.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/puppet/puppet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/python/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/python/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/python/python.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/python/python.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/python/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/python/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/q/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/q/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/q/q.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/q/q.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/r/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/r/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/r/r.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/r/r.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rpm/changes/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rpm/changes/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rpm/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rpm/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rpm/rpm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rpm/rpm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rst/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rst/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rst/rst.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rst/rst.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ruby/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ruby/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ruby/ruby.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ruby/ruby.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ruby/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ruby/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rust/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rust/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rust/rust.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rust/rust.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/rust/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rust/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sas/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sas/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sas/sas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sas/sas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sass/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sass/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sass/sass.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sass/sass.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sass/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sass/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/scheme/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/scheme/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/scheme/scheme.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/scheme/scheme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/shell/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/shell/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/shell/shell.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/shell/shell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/shell/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/shell/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sieve/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sieve/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sieve/sieve.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sieve/sieve.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/slim/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/slim/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/slim/slim.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/slim/slim.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/slim/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/slim/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/smalltalk/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smalltalk/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/smalltalk/smalltalk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smalltalk/smalltalk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/smarty/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smarty/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/smarty/smarty.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smarty/smarty.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/solr/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/solr/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/solr/solr.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/solr/solr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/soy/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/soy/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/soy/soy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/soy/soy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/soy/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/soy/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sparql/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sparql/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sparql/sparql.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sparql/sparql.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/spreadsheet/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/spreadsheet/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/spreadsheet/spreadsheet.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/spreadsheet/spreadsheet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sql/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sql/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/sql/sql.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sql/sql.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/stex/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stex/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/stex/stex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stex/stex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/stex/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stex/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/stylus/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stylus/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/stylus/stylus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stylus/stylus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/swift/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/swift/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/swift/swift.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/swift/swift.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/swift/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/swift/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tcl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tcl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tcl/tcl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tcl/tcl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/textile/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/textile/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/textile/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/textile/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/textile/textile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/textile/textile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tiddlywiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiddlywiki/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tiddlywiki/tiddlywiki.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiddlywiki/tiddlywiki.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tiddlywiki/tiddlywiki.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiddlywiki/tiddlywiki.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiki/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tiki/tiki.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiki/tiki.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tiki/tiki.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiki/tiki.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/toml/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/toml/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/toml/toml.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/toml/toml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tornado/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tornado/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/tornado/tornado.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tornado/tornado.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/troff/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/troff/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/troff/troff.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/troff/troff.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ttcn-cfg/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn-cfg/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ttcn-cfg/ttcn-cfg.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn-cfg/ttcn-cfg.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ttcn/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/ttcn/ttcn.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn/ttcn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/turtle/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/turtle/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/turtle/turtle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/turtle/turtle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/twig/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/twig/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/twig/twig.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/twig/twig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vb/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vb/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vb/vb.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vb/vb.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vbscript/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vbscript/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vbscript/vbscript.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vbscript/vbscript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/velocity/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/velocity/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/velocity/velocity.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/velocity/velocity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/verilog/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/verilog/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/verilog/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/verilog/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/verilog/verilog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/verilog/verilog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vhdl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vhdl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vhdl/vhdl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vhdl/vhdl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vue/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vue/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/vue/vue.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vue/vue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/webidl/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/webidl/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/webidl/webidl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/webidl/webidl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/xml/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xml/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/xml/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xml/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/xml/xml.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xml/xml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/xquery/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xquery/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/xquery/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xquery/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/xquery/xquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xquery/xquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/yacas/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yacas/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/yacas/yacas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yacas/yacas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/yaml-frontmatter/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml-frontmatter/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/yaml-frontmatter/yaml-frontmatter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml-frontmatter/yaml-frontmatter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/yaml/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/yaml/yaml.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml/yaml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/z80/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/z80/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/mode/z80/z80.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/mode/z80/z80.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/codemirror.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/codemirror.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/Display.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/Display.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/focus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/focus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/gutters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/gutters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/highlight_worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/highlight_worker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/line_numbers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/line_numbers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/mode_state.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/mode_state.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/operations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/operations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/scroll_events.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/scroll_events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/scrollbars.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/scrollbars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/scrolling.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/scrolling.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/selection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/selection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/update_display.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/update_display.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/update_line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/update_line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/update_lines.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/update_lines.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/display/view_tracking.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/view_tracking.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/CodeMirror.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/CodeMirror.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/commands.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/commands.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/deleteNearSelection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/deleteNearSelection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/drop_events.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/drop_events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/fromTextArea.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/fromTextArea.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/global_events.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/global_events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/key_events.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/key_events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/legacy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/legacy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/methods.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/methods.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/mouse_events.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/mouse_events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/options.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/options.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/edit/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/ContentEditableInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/ContentEditableInput.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/TextareaInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/TextareaInput.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/indent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/indent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/keymap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/keymap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/keynames.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/keynames.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/input/movement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/movement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/line/highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/highlight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/line/line_data.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/line_data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/line/pos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/pos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/line/saw_special_spans.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/saw_special_spans.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/line/spans.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/spans.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/line/utils_line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/utils_line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/measurement/position_measurement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/measurement/position_measurement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/measurement/widgets.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/measurement/widgets.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/Doc.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/Doc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/change_measurement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/change_measurement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/changes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/document_data.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/document_data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/history.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/history.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/line_widget.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/line_widget.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/mark_text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/mark_text.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/selection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/selection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/model/selection_updates.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/selection_updates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/modes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/modes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/StringStream.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/StringStream.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/bidi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/bidi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/dom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/dom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/event.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/event.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/feature_detection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/feature_detection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/misc.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/misc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/src/util/operation_group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/operation_group.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/3024-day.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/3024-day.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/3024-night.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/3024-night.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/abcdef.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/abcdef.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/ambiance-mobile.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ambiance-mobile.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/ambiance.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ambiance.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/base16-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/base16-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/base16-light.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/base16-light.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/bespin.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/bespin.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/blackboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/blackboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/cobalt.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/cobalt.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/colorforth.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/colorforth.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/darcula.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/darcula.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/dracula.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/dracula.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/duotone-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/duotone-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/duotone-light.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/duotone-light.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/eclipse.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/eclipse.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/elegant.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/elegant.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/erlang-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/erlang-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/gruvbox-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/gruvbox-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/hopscotch.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/hopscotch.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/icecoder.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/icecoder.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/idea.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/idea.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/isotope.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/isotope.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/lesser-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/lesser-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/liquibyte.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/liquibyte.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/lucario.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/lucario.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/material.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/material.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/mbo.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/mbo.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/mdn-like.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/mdn-like.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/midnight.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/midnight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/monokai.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/monokai.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/neat.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/neat.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/neo.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/neo.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/night.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/night.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/nord.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/nord.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/oceanic-next.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/oceanic-next.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/panda-syntax.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/panda-syntax.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/paraiso-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/paraiso-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/paraiso-light.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/paraiso-light.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/pastel-on-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/pastel-on-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/railscasts.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/railscasts.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/rubyblue.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/rubyblue.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/seti.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/seti.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/shadowfox.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/shadowfox.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/solarized.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/solarized.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/ssms.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ssms.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/the-matrix.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/the-matrix.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/tomorrow-night-bright.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/tomorrow-night-bright.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/tomorrow-night-eighties.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/tomorrow-night-eighties.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/ttcn.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ttcn.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/twilight.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/twilight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/vibrant-ink.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/vibrant-ink.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/xq-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/xq-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/xq-light.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/xq-light.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/yeti.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/yeti.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror/theme/zenburn.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror/theme/zenburn.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/codemirror_editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/ahh.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/ahh.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/bassdrum.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/bassdrum.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/britestk.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/britestk.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/cowbell1.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/cowbell1.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/crashcym.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/crashcym.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/dope.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/dope.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/eee.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/eee.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/fwavblnk.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/fwavblnk.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/halfwave.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/halfwave.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/hihatcym.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/hihatcym.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/impuls10.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/impuls10.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/impuls20.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/impuls20.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/impuls40.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/impuls40.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/makefunc.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/makefunc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/makemidi.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/makemidi.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/makewavs.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/makewavs.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand1.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand1.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand10.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand10.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand11.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand11.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand12.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand12.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand2.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand2.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand3.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand3.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand4.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand4.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand5.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand5.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand6.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand6.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand7.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand7.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand8.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand8.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mand9.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mand9.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/mandpluk.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/mandpluk.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/marmstk1.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/marmstk1.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/ooo.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/ooo.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/peksblnk.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/peksblnk.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/ppksblnk.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/ppksblnk.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/ridecymb.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/ridecymb.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/silence.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/silence.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/sine.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/sine.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/sineblnk.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/sineblnk.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/sinewave.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/sinewave.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/snardrum.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/snardrum.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/snglpeak.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/snglpeak.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/tambourn.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/tambourn.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/tomhidrm.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/tomhidrm.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/tomlowdr.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/tomlowdr.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/tommiddr.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/tommiddr.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/assets/rawwaves/twopeaks.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/rawwaves/twopeaks.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6/CsoundService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6/SettingsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/SettingsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/drawable-hdpi/cs.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/drawable-hdpi/cs.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/drawable-ldpi/cs.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/drawable-ldpi/cs.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/drawable-mdpi/cs.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/drawable-mdpi/cs.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/layout/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/menu/menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/arrays.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/xml/filepaths.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/xml/filepaths.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundApplication/src/main/res/xml/settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/xml/settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid/CsoundForAndroid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid/CsoundForAndroid.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../ndk-libraries/fluidsynth-android" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ndk-libraries/liblo-android" beforeDir="false" afterPath="$PROJECT_DIR$/../ndk-libraries/liblo-android" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ndk-libraries/libsndfile-android" beforeDir="false" afterPath="$PROJECT_DIR$/../ndk-libraries/libsndfile-android" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../dependencies/cm2" beforeDir="false" afterPath="$PROJECT_DIR$/../../dependencies/cm2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../dependencies/examples" beforeDir="false" afterPath="$PROJECT_DIR$/../../dependencies/examples" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../dependencies/oboe" beforeDir="false" afterPath="$PROJECT_DIR$/../../dependencies/oboe" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="1601796523">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="gradle" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Groovy" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="gradle" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Groovy" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="287">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/build.gradle" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="67" />
+    <option name="y" value="114" />
+    <option name="width" value="1835" />
+    <option name="height" value="789" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane" />
+      <pane id="AndroidView">
+        <subPane>
+          <expand>
+            <path>
+              <item name="CsoundApplication" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CsoundApplication" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb96fff2-cd37-4db9-b03f-329b32bc13d1" name="Default Changelist" comment="" />
+      <created>1552812298963</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1552812298963</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.32982844" />
+      <window_info id="Structure" side_tool="true" />
+      <window_info id="Build Variants" side_tool="true" />
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info id="Captures" order="0" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TODO" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Build" visible="true" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Gradle" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Palette&#9;" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
