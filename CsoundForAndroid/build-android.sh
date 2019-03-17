@@ -148,9 +148,9 @@ cp -r CsoundAndroid/src/csnd6  CsoundForAndroid/CsoundAndroid/src/main/java/
 rm -rf CsoundAndroid/src/csnd6
 rm -rf CsoundForAndroid/CsoundAndroid/src/main/jniLibs
 cp -r CsoundAndroid/libs  CsoundForAndroid/CsoundAndroid/src/main/jniLibs
-cd CsoundForAndroid/CsoundApplication
+cd CsoundApplication
 bash install_libs.sh
 cd ..
-cd ..
+
 
 echo "Finished building all native libraries for Android."
