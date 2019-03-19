@@ -31,5 +31,8 @@ find $JNILIBS -name "*.so" -ls
 mkdir -p src/main/assets/samples/
 cp -f $CSOUND_SRC_ROOT/samples/* src/main/assets/samples
 
+mkdir -p src/main/assets/examples/examples/Gogins
+cp -rf ../../../silencio src/main/assets/examples/Gogins
+
 
 
