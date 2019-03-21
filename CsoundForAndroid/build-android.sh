@@ -150,7 +150,6 @@ rm -rf CsoundForAndroid/CsoundAndroid/src/main/jniLibs
 cp -r CsoundAndroid/libs  CsoundForAndroid/CsoundAndroid/src/main/jniLibs
 cd CsoundForAndroid/CsoundApplication
 bash install_libs.sh
-cp -rf ../
 cd ..
 cd ..
 

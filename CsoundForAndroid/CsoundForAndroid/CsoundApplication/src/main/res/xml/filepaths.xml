@@ -5,6 +5,7 @@
     <files-path name="my_assets" path="assets"/>
     <files-path path="rawwaves" name="rawwaves" />
     <files-path path="samples" name="samples" />
+    <files-path path="examples" name="examples" />
     <external-files-path name="my_external" path="."/>
     <external-files-path name="my_csd" path="csd/"/>
     <external-files-path name="my_html" path="html/"/>

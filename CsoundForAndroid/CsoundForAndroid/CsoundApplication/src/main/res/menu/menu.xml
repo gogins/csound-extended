@@ -59,7 +59,7 @@
             <item
                 android:id="@+id/itemScrims"
                 android:enabled="true"
-                android:title="Scrims"
+                android:title="Scrims, Michael Gogins"
                 android:titleCondensed="Scrims"
                 android:visible="true" />
         </menu>

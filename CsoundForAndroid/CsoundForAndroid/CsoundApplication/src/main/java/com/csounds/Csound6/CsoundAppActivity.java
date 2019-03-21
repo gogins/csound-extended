@@ -180,75 +180,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    final static String TARGET_BASE_PATH = "/sdcard/appname/voices/";
-
-    private void copyFilesToSdCard() {
-        copyFileOrDir(""); // copy all files in assets folder in my project
-    }
-
-    private void copyFileOrDir(String path) {
-        AssetManager assetManager = this.getAssets();
-        String assets[] = null;
-        try {
-            Log.i("Csound:", "copyFileOrDir() "+path);
-            assets = assetManager.list(path);
-            if (assets.length == 0) {
-                copyFile(path);
-            } else {
-                File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-                File outputFile = new File(externalStoragePublicDirectory, path);
-                String fullPath =  outputFile.getAbsolutePath();
-                Log.i("Csound:", "path="+fullPath);
-                File dir = new File(fullPath);
-                if (!dir.exists() && !path.startsWith("images") && !path.startsWith("sounds") && !path.startsWith("webkit"))
-                    if (!dir.mkdirs())
-                        Log.i("tag", "could not create dir "+fullPath);
-                for (int i = 0; i < assets.length; ++i) {
-                    String p;
-                    if (path.equals(""))
-                        p = "";
-                    else
-                        p = path + "/";
-                    if (!path.startsWith("images") && !path.startsWith("sounds") && !path.startsWith("webkit"))
-                        copyFileOrDir( p + assets[i]);
-                }
-            }
-        } catch (IOException ex) {
-            Log.e("tag", "I/O Exception", ex);
-        }
-    }
-
-    private void copyFile(String filename) {
-        AssetManager assetManager = this.getAssets();
-        InputStream in = null;
-        OutputStream out = null;
-        String newFileName = null;
-        try {
-            Log.i("Csound:", "copyFile() "+filename);
-            in = assetManager.open(filename);
-            if (filename.endsWith(".jpg")) { // extension was added to avoid compression on APK file
-                filename = filename.substring(0, filename.length() - 4);
-            }
-            File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            newFileName = new File(externalStoragePublicDirectory, filename).getAbsolutePath();
-            out = new FileOutputStream(newFileName);
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-            in.close();
-            in = null;
-            out.flush();
-            out.close();
-            out = null;
-        } catch (Exception e) {
-            Log.e("tag", "Exception in copyFile() of "+newFileName);
-            Log.e("tag", "Exception in copyFile() "+e.toString());
-        }
-
-    }
-
     // Copy the file indicated by fromAssetPath to
     // the public external storage music directory.
     // The asset directory becomes a subdirectory of the music directory.
@@ -298,6 +229,22 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         } catch (Exception e) {
             Log.w("Csound:", Log.getStackTraceString(e));
             Log.w("Csound:", e.getMessage());
+        }
+    }
+
+    private void copyAssetsRecursively(String path) {
+        try {
+            String[] files = getAssets().list(path);
+            if (files.length == 0) {
+                copyAsset(path);
+            } else {
+                for (int i = 0; i < files.length; i++) {
+                    String file = path + "/" + files[i];
+                    copyAssetsRecursively(file);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -521,6 +468,13 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             }
             case R.id.itemKoanI: {
                 outFile = copyAsset("examples/McCurdy/i.csd");
+                if (outFile != null) {
+                    LoadFile(outFile);
+                }
+                return true;
+            }
+            case R.id.itemScrims: {
+                outFile = copyAsset("examples/Gogins/Scrims.html");
                 if (outFile != null) {
                     LoadFile(outFile);
                 }
@@ -784,9 +738,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 postMessage(e.toString() + "\n");
             }
         }
-        //copyRawwaves();
-        copyFileOrDir("rawwaves");
-        copyFileOrDir("examples");
+        copyRawwaves();
+        copyAssetsRecursively("examples");
         csdTemplate = "<CsoundSynthesizer>\n" + "<CsLicense>\n"
                 + "</CsLicense>\n" + "<CsOptions>\n" + "</CsOptions>\n"
                 + "<CsInstruments>\n" + "</CsInstruments>\n" + "<CsScore>\n"
@@ -799,20 +752,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         editor_tab = findViewById(R.id.editor_tab);
         editor = findViewById(R.id.editor);
         registerForContextMenu(editor);
-
         editor_tab.setVisibility(View.VISIBLE);
-/*
-        editor_tab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ///performSearch();
-                    return true;
-                }
-                return false;
-            }
-        });
-*/
         html_tab = findViewById(R.id.html_tab);
         html_tab.setVisibility(View.GONE);
         messages_tab = findViewById((R.id.messages_tab));

@@ -797,6 +797,14 @@ public:
     virtual void message(const char *text){
         Message(text);
     }
+#if defined(SWIG)
+%proxycode %{
+    @JavascriptInterface
+    public void Message(String text) {
+        message(text);
+    }
+%}
+#endif
     virtual int perform(){
         return Perform();
     }
@@ -810,7 +818,10 @@ public:
         return PvsoutGet(value, name);
     }
     virtual int readScore(const char *str){
-        return ReadScore(str);
+        return CsoundThreaded::ReadScore(str);
+    }
+    virtual int ReadScore(const char *str){
+        return CsoundThreaded::ReadScore(str);
     }
     virtual void reset(){
         Reset();
