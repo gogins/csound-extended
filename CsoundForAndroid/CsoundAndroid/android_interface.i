@@ -20,7 +20,7 @@
 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-%module(directors="1") csnd
+%module(directors="1") csound_oboe
 
 %feature("director") CsoundCallbackWrapper;
 %feature("nodirector") Csound;

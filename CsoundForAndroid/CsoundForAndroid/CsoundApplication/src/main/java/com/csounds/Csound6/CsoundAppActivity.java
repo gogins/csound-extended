@@ -73,8 +73,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import csnd6.CsoundCallbackWrapper;
-import csnd6.CsoundOboe;
+import csnd.CsoundCallbackWrapper;
+import csnd.CsoundOboe;
 
 import static android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 
@@ -152,8 +152,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             Log.e("Csound: ", e.toString());
         }
         try {
-            result = csnd6.csnd
-                    .csoundInitialize(csnd6.csnd.CSOUNDINIT_NO_ATEXIT);
+            result = csnd.csound_oboeJNI
+                    .csoundInitialize(csnd.csound_oboeConstants.CSOUNDINIT_NO_ATEXIT);
         } catch (Throwable e) {
             Log.e("Csound: ", "csoundInitialize failed.\n"
                     + e);
@@ -290,14 +290,14 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             }
         }
         // This must be set before the Csound object is created.
-        csnd6.csndJNI.csoundSetGlobalEnv("OPCODE6DIR", OPCODE6DIR);
-        csnd6.csndJNI.csoundSetGlobalEnv("SFDIR", SFDIR);
-        csnd6.csndJNI.csoundSetGlobalEnv("SSDIR", SSDIR);
-        csnd6.csndJNI.csoundSetGlobalEnv("SADIR", SADIR);
-        csnd6.csndJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
+        csnd.csound_oboeJNI.csoundSetGlobalEnv("OPCODE6DIR", OPCODE6DIR);
+        csnd.csound_oboeJNI.csoundSetGlobalEnv("SFDIR", SFDIR);
+        csnd.csound_oboeJNI.csoundSetGlobalEnv("SSDIR", SSDIR);
+        csnd.csound_oboeJNI.csoundSetGlobalEnv("SADIR", SADIR);
+        csnd.csound_oboeJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
         String driver = PreferenceManager
                 .getDefaultSharedPreferences(this).getString("audioDriver", "");
-        csound_oboe = new csnd6.CsoundOboe();
+        csound_oboe = new CsoundOboe();
         oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
             @Override
             public void MessageCallback(int attr, String msg) {
@@ -329,7 +329,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             result = csound_oboe.performAndReset();
         }
         // Make sure this is still set after starting.
-        String getOPCODE6DIR = csnd6.csndJNI.csoundGetEnv(0,
+        String getOPCODE6DIR = csnd.csound_oboeJNI.csoundGetEnv(0,
                 "OPCODE6DIR");
         csound_oboe.message(
                 "OPCODE6DIR has been set to: " + getOPCODE6DIR
@@ -605,8 +605,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
 
     }
 
-    // TODO: This works if the .html file is loaded from the filesystem, but not if it is loaded
-    // as an example.
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void loadWebView() {
         try {

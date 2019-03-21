@@ -1881,7 +1881,7 @@ if (typeof console === 'undefined') {
             newPitch = octave + newPitch;
         }
         //var message = sprintf("chord: %s pitch: %s original pc: %s octave: %s new pc: %s new pitch: %s\n", chord, pitch, pitchClass, octave, closestPitchClass, newPitch);
-        //csound.message(message);
+        //csound.Message(message);
         return newPitch;
     };
 
@@ -1938,7 +1938,7 @@ if (typeof console === 'undefined') {
         }
         var message = sprintf('Conform to: %-20.20s from: %12.4f to: %12.4f notes: %5d.', chord.name(), parseFloat(start), parseFloat(end_), parseInt(s.data.length));
         if (typeof csound !== 'undefined') {
-            csound.message(message + '\n');
+            csound.Message(message + '\n');
         } else {
             console.log(message);
         }
@@ -1973,7 +1973,7 @@ if (typeof console === 'undefined') {
     ChordSpace.LSys.prototype = new Silencio.LSys();
 
     ChordSpace.LSys.prototype.generate = function(n) {
-        csound.message('ChordSpace.LSys.prototype.generate\n');
+        csound.Message('ChordSpace.LSys.prototype.generate\n');
         this.chordsForTimes = {};
         this.sentence = this.axiom.split(' ');
         for (var g = 0; g < n; g++) {
@@ -2044,7 +2044,7 @@ if (typeof console === 'undefined') {
                     t.tempo *= operand;
                 } else if (operation === '/') {
                     t.tempo /= operand;
-                    //csound.message('tempo:' + t.tempo + '\n');
+                    //csound.Message('tempo:' + t.tempo + '\n');
                 }
             }
         }
@@ -2079,7 +2079,7 @@ if (typeof console === 'undefined') {
             var chord = this.chordsForTimes[begin];
             ChordSpace.apply(this.score, chord, begin, end, false);
         }
-        csound.message(sprintf("Applied %5d chords to this score.\n", Object.keys(this.chordsForTimes).length));
+        csound.Message(sprintf("Applied %5d chords to this score.\n", Object.keys(this.chordsForTimes).length));
     };
 
     /**
