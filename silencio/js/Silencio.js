@@ -591,7 +591,6 @@ if (typeof console === 'undefined') {
         for (var i = 0; i < this.data.length; i++) {
             jscore += this.data[i].toIStatement();
         }
-        //console.log(jscore);
         csound.ReadScore(jscore);
     };
 

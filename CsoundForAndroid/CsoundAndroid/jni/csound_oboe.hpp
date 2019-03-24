@@ -533,6 +533,12 @@ public:
                     }
                 }
             }
+            // Handle incoming Csound events.
+            CsoundEvent *event = 0;
+            while (input_queue.try_pop(event)) {
+                (*event)(csound);
+                delete event;
+            }
             // Produce one kperiod of audio output to spout.
             csound_result = PerformKsmps();
             // If the Csound performance has finished, tell the Oboe driver
@@ -817,11 +823,8 @@ public:
     virtual int pvsoutGet(PVSDATEXT* value, const char *name){
         return PvsoutGet(value, name);
     }
-    virtual int readScore(const char *str){
-        return CsoundThreaded::ReadScore(str);
-    }
-    virtual int ReadScore(const char *str){
-        return CsoundThreaded::ReadScore(str);
+    virtual int readScore(const char *str) {
+        return ReadScore(str);
     }
     virtual void reset(){
         Reset();
