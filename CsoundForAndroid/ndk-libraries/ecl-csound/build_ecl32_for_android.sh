@@ -2,14 +2,14 @@
 
 cd ../ecl
 
-export ECL_TO_RUN=`pwd`/ecl32-android-host/bin/ecl
-
+export ECL_TO_RUN=`pwd`/ecl-android-host/bin/ecl
 
 export NDK_PATH=$ANDROID_NDK_ROOT
 export ANDROID_API=22 # Was 23
 export TOOLCHAIN_PATH=$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64
 export SYSROOT=${TOOLCHAIN_PATH}/sysroot
 export PATH=$TOOLCHAIN_PATH/bin:$PATH
+ls -ll $TOOLCHAIN_PATH/bin
 
 echo "Building Embeddable Common Lisp library for Android..."
 

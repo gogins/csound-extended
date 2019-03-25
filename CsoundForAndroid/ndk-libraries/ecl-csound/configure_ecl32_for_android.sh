@@ -9,7 +9,7 @@ echo "Building Embeddable Common Lisp host for Android..."
 # - x86_64 (64 bit architecture)
 
 cd ../ecl
-./configure ABI=32 CFLAGS="-m32 -g -O2" LDFLAGS="-m32 -g -O2" --prefix=`pwd`/ecl32-android-host --disable-longdouble
+./configure ABI=32 CFLAGS="-m32 -g -O2" LDFLAGS="-m32 -g -O2" --prefix=`pwd`/ecl-android-host --disable-longdouble
 make -j9
 make install
 rm -r build
