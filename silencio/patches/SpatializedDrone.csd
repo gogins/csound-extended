@@ -4,7 +4,7 @@ Copyright (C) 2013 by Michael Gogins.
 All rights reserved.
 </CsLicense>
 <CsOptions>
--odac -m3 -d
+-odac -m195 -d 
 </CsOptions>
 <CsInstruments>
 sr = 44100
@@ -12,9 +12,9 @@ ksmps = 100
 nchnls = 2
 0dbfs = 100000
 
-#define USE_SPATIALIZATION ##
+#define USE_SPATIALIZATION #1#
 
-#include "Spatialize.inc"
+#include "Spatialize1.inc"
 
 gk_BformatDecoder_SpeakerRig init 1
 gk_Spatialize_SpeakerRigRadius init 5.0
@@ -27,6 +27,7 @@ gk_LocalReverbByDistance_FrontWall init 0.9
 gk_LocalReverbByDistance_ReverbDecay init 0.6
 gk_LocalReverbByDistance_CutoffHz init 20000
 gk_LocalReverbByDistance_RandomDelayModulation init 1.0
+gk_Spatialize_Verbose init 0
 
 gkslider1 init 0
 gkslider2 init 0
@@ -277,7 +278,7 @@ absignal, asend Spatialize asignal, kx, ky, kz
 outleta "out", asend
 outletv "outbformat", absignal
 kelapsed timeinsts
-printks "Buzzer  i %7.2f t %7.2f [%7.2f] d %7.2f k %7.2 f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, p4, ihertz, p5, kx, ky, kz, downsamp(asignal)
+printks "Buzzer  i %7.2f t %7.2f [%7.2f] d %7.2f k %7.2f %7.2f v %7.2f kx %7.2f ky %7.2f kz %7.2f A %7.2f\n", 1.0, p1, p2, kelapsed, p3, p4, ihertz, p5, kx, ky, kz, downsamp(asignal)
 endin
 
 gk_Shiner_Attack init 10

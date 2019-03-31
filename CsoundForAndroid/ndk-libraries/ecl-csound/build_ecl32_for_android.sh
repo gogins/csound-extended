@@ -3,12 +3,14 @@
 cd ../ecl
 
 export ECL_TO_RUN=`pwd`/ecl-android-host/bin/ecl
+echo "ECL_TO_RUN=${ECL_TO_RUN}"
 
 export NDK_PATH=$ANDROID_NDK_ROOT
 export ANDROID_API=22 # Was 23
 export TOOLCHAIN_PATH=$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64
 export SYSROOT=${TOOLCHAIN_PATH}/sysroot
-export PATH=$TOOLCHAIN_PATH/bin:$PATH
+# Had to add "host" ECL to PATH.
+export PATH=$TOOLCHAIN_PATH/bin:`pwd`/ecl-android-host/bin:$PATH
 ls -ll $TOOLCHAIN_PATH/bin
 
 echo "Building Embeddable Common Lisp library for Android..."
