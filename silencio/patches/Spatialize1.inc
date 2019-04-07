@@ -294,7 +294,7 @@ isecondsPerMeter = 1.0 / i(gk_DopplerByDistance_Mach)
 imillisecondsPerMeter = isecondsPerMeter * 1000.0
 iglobalReverbSendDelayMilliseconds = i(gk_Spatialize_SpeakerRigRadius) * i(gk_LocalReverbByDistance_FrontWall) * imillisecondsPerMeter
 ; print iglobalReverbSendDelayMilliseconds
-aglobalReverbSendDelayed delay aglobalReverbSend, iglobalReverbSendDelayMilliseconds
+aglobalReverbSendDelayed vdelay aglobalReverbSend, iglobalReverbSendDelayMilliseconds, 1
 alocalReverbLeft, alocalReverbRight reverbsc	alocalReverbSend, alocalReverbSend, gk_LocalReverbByDistance_ReverbDecay, gk_LocalReverbByDistance_CutoffHz, sr, i(gk_LocalReverbByDistance_RandomDelayModulation), 1
 alocalReverbWet = ((alocalReverbLeft + alocalReverbRight) / 2.0) * gk_LocalReverbByDistance_Wet
 alocalReverbDry = kdry * asignal
