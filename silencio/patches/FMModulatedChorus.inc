@@ -40,7 +40,7 @@ i_modr_end = 2.2
 ishift = 4.0 / 12000
 ; convert parameter 5 to oct.
 ioct = i_midi_key
-akadsr linen 1.0, gi_FMModulatedChorus_attack, gi_FMModulatedChorus_release, 0.01
+akadsr linsegr 0, gi_FMModulatedChorus_attack, 1, i_sustain, 1, gi_FMModulatedChorus_release, 0
 akmodi linseg 0, gi_FMModulatedChorus_attack, 5, i_sustain, 2, gi_FMModulatedChorus_release, 0
 ; r moves from i_modr_start to i_modr_end in p3 secs.
 akmodr linseg i_modr_start, i_sustain, i_modr_end
