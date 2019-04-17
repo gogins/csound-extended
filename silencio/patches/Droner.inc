@@ -11,9 +11,6 @@ gk_Droner_partial10 init 0
 gk_Droner_level init 0
 gi_Droner_waveform init 0
 instr Droner
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -47,15 +44,18 @@ xtratim iattack + isustain + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 isine ftgenonce 0, 0, 65536, 10, 1, 0, .02
-if iwaveform == 0 then
+if iwaveform == 0 goto i_waveform_0
+if iwaveform == 1 goto i_waveform_1
+if iwaveform == 2 goto i_waveform_2
+i_waveform_0:
 asignal poscil3 1, ihertz, isine
-endif
-if iwaveform == 1 then
+goto i_waveform_endif
+i_waveform_1:
 asignal vco2 1, ihertz, 8 ; integrated saw
-endif
-if iwaveform == 2 then
+goto i_waveform_endif
+i_waveform_2:
 asignal vco2 1, ihertz, 12 ; triangle
-endif
+i_waveform_endif:
 asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
 a_signal = asignal
 i_attack = .002

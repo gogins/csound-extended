@@ -35,7 +35,7 @@ iwet                    =               p7
 igain 			        = 			    p4      
 ipitchmod 		        = 			    p5  
 itone 			        = 			    p6      		
-asignal 		        ainlet          "in"
+asignal 		        inleta          "in"
 afilt1 			        init 			0
 afilt2 			        init 			0
 afilt3 			        init 			0
@@ -111,8 +111,8 @@ afilt8  		        tone    		adel8 * igain, itone
 aout1 			        = 			    (afilt1 + afilt3 + afilt5 + afilt7)
 aout2 			        = 			    (afilt2 + afilt4 + afilt6 + afilt8)
                         ; To the master output.
-adry1                   =               ain1 * idry
-adry2                   =               ain2 * idry
+adry1                   =               asignal * idry
+adry2                   =               asignal * idry
 awet1                   =               aout1 * iwet
 awet2                   =               aout2 * iwet
                         outleta         "out", adry1 + awet1 + adry2 + awet2

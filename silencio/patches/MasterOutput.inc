@@ -16,9 +16,11 @@ outs aleft * k_gain * aenvelope, aright * k_gain * aenvelope
 ; We want something that will play on my phone.
 i_amplitude_adjustment = ampdbfs(-3) / 32767
 i_filename_length strlen gS_MasterOutput_filename
-if i_filename_length > 0 then
+if i_filename_length > 0 goto filename_exists
+goto filename_endif
+filename_exists:
 prints sprintf("Output filename: %s\n", gS_MasterOutput_filename)
 fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
-endif
+filename_endif:
 prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin

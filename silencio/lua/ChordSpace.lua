@@ -2918,11 +2918,7 @@ function ChordSpaceGroup:fromChord(chord, printme)
         end
     end
     local voicing = ChordSpace.voiceleading(op, chord)
-    -- V = self.indexesForVoicings[voicing:__hash()]
-    local V_ = indexForOctavewiseRevoicing(chord, range, printme);
-    if (V_ == -1) then
-        V_ = 0;
-    end
+    V = self.indexesForVoicings[voicing:__hash()]
     if printme then
         print('fromChord: voicing:  ', voicing, V)
         print('fromChord:           ', P, I, T, V)
