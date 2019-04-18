@@ -1,4 +1,4 @@
-                        instr Reverberator
+                        instr Reverb2
                         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                         ; Authors:  Sean Costello and J. Lato
                         ;           Adapted by Michael Gogins
@@ -110,10 +110,12 @@ afilt8  		        tone    		adel8 * igain, itone
                         ; sound system.
 aout1 			        = 			    (afilt1 + afilt3 + afilt5 + afilt7)
 aout2 			        = 			    (afilt2 + afilt4 + afilt6 + afilt8)
+asignal                 =               aout1 + aout2
                         ; To the master output.
 adry1                   =               asignal * idry
 adry2                   =               asignal * idry
-awet1                   =               aout1 * iwet
-awet2                   =               aout2 * iwet
+awet1                   =               asignal * iwet
+awet2                   =               asignal * iwet
+prints                  "Reverberator2  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                         outleta         "out", adry1 + awet1 + adry2 + awet2
                         endin
