@@ -117,7 +117,7 @@ end
 
 function LindenmayerPITV:initialize(voices, octaves, g)
     print('LindenmayerPITV:initialize...')
-    self.chordSpaceGroup:initialize(voices, octaves, g)
+    self.chordSpaceGroup:initialize(voices, octaves * ChordSpace.OCTAVE, g)
 end
 
 function LindenmayerPITV:operation_assign(y, x)

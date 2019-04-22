@@ -2190,6 +2190,7 @@ table.sort(ChordSpace.namesForChords)
 -- It may be necessary to set the chord to the low point to start.
 
 function ChordSpace.next(odometer, low, high, g)
+    --print(string.format("ChordSpace.next(%s, %f, %f, %f)", tostring(odometer), low, high, g))
     local voices = #odometer
     odometer[voices] = odometer[voices] + g
      -- "Carry."
@@ -2199,10 +2200,11 @@ function ChordSpace.next(odometer, low, high, g)
             odometer[voice - 1] = odometer[voice - 1] + g
         end
     end
+    local result = true
     if odometer[1] > high then
-        return false
+        result = false
     end
-    return true
+    return result
 end
 
 function ChordSpace.allOfEquivalenceClass(voices, equivalence, g)
@@ -2703,15 +2705,17 @@ function ChordSpaceGroup:new(o)
 end
 
 function ChordSpace.octavewiseRevoicings(chord, range)
+    print("ChordSpace.octavewiseRevoicings(" .. tostring(chord) .. ", " .. range ..")")
     range = range or ChordSpace.OCTAVE
-    local voices = #chord
     local odometer = chord:origin()
     -- Enumerate the permutations.
     -- iterator[1] is the most significant voice, and
     -- iterator[N] is the least significant voice.
     local voicings = 0
+    print(ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE))
     while ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE) == true do
         voicings = voicings + 1
+        print("voicings: " .. voicings)
     end
     return voicings
 end
@@ -2752,6 +2756,7 @@ function Chord:a(arpeggiation)
 end
 
 function ChordSpaceGroup:initialize(voices, range, g)
+    print("ChordSpaceGroup:initialize...")
     self.voices = voices or 3
     self.range = range or 60
     self.g = g or 1
@@ -2781,18 +2786,18 @@ end
 -- Loads the group if found, creates and saves it otherwise.
 
 function ChordSpace.createChordSpaceGroup(voices, range, g)
-    local filename = ChordSpace.createFilename(voices, range, 1)
-    local file, message, error = io.open(filename, 'r')
-    if file == nil then
-        print(string.format('File "%s" not found, creating...', filename))
+    --local filename = ChordSpace.createFilename(voices, range, 1)
+    --local file, message, error = io.open(filename, 'r')
+    --if file == nil then
+    --    print(string.format('File "%s" not found, creating...', filename))
         chordSpaceGroup = ChordSpaceGroup:new()
         chordSpaceGroup:initialize(voices, range, g)
-        chordSpaceGroup:save()
+    --    chordSpaceGroup:save()
         return chordSpaceGroup
-    else
-        print(string.format('Loading ChordSpaceGroup from file "%s"...', filename))
-        return ChordSpace.load(voices, range, g)
-    end
+    --else
+    --    print(string.format('Loading ChordSpaceGroup from file "%s"...', filename))
+    --    return ChordSpace.load(voices, range, g)
+    --end
 end
 
 function ChordSpace.load(voices, range, g)
