@@ -12,14 +12,9 @@ instr FMModulatedChorus
 //////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
-i_duration = p3
-; One of the envelopes in this instrument should be releasing, and use this:
-if p3 < 0 then
-i_sustain = 1000
-else
 i_sustain = p3
-endif
-xtratim gi_FMModulatedChorus_attack + gi_FMModulatedChorus_release
+p3 = p3 + gi_FMModulatedChorus_attack + gi_FMModulatedChorus_release
+i_duration = p3
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_FMModulatedChorus_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
@@ -29,7 +24,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 96
+i_level_correction = 87
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FMModulatedChorus_level)
