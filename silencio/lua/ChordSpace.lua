@@ -2715,7 +2715,6 @@ function ChordSpace.octavewiseRevoicings(chord, range)
     print(ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE))
     while ChordSpace.next(odometer, 0, range, ChordSpace.OCTAVE) == true do
         voicings = voicings + 1
-        print("voicings: " .. voicings)
     end
     return voicings
 end
