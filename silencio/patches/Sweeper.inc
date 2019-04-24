@@ -32,8 +32,8 @@ k_gain = ampdb(gk_Sweeper_level)
 
 iattack = i(gk_Sweeper_attack)
 irelease = i(gk_Sweeper_release)
-isustain = p3 - i(gk_Sweeper_attack)
-xtratim iattack + irelease
+isustain = p3
+p3 = iattack + isustain + irelease
 kenvelope transegr 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, irelease / 2.0, 1.5, i_amplitude / 2.0, irelease / 2.0, -1.5, 0
 ihertz = i_frequency
 icps = ihertz

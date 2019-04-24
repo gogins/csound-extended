@@ -6,13 +6,9 @@ aright inleta "inright"
 k_gain = ampdb(gk_MasterOutput_level)
 printks2 "Master gain: %f\n", k_gain
 iamp init 1
-iattack init .01
-idecay init 10
-isustain = 2400 - (iattack + idecay)
-aenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 aleft butterlp aleft, 18000
 aright butterlp aright, 18000
-outs aleft * k_gain * aenvelope, aright * k_gain * aenvelope
+outs aleft * k_gain, aright * k_gain
 ; We want something that will play on my phone.
 i_amplitude_adjustment = ampdbfs(-3) / 32767
 i_filename_length strlen gS_MasterOutput_filename

@@ -5,7 +5,7 @@ gi_ParametricEQ_Mode init 0
 instr ParametricEQ
 aleft inleta "inleft"
 aright inleta "inright"
-aleft pareq aleft, gk_ParametricEQ_Frequency, gk_ParametricEQ_Gain, gk_ParametricEQ_Q, gi_ParametricEQ_Mode
+aleft  pareq aleft,  gk_ParametricEQ_Frequency, gk_ParametricEQ_Gain, gk_ParametricEQ_Q, gi_ParametricEQ_Mode
 aright pareq aright, gk_ParametricEQ_Frequency, gk_ParametricEQ_Gain, gk_ParametricEQ_Q, gi_ParametricEQ_Mode
 outleta "outleft", aleft
 outleta "outright", aright

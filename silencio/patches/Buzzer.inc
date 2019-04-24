@@ -23,8 +23,8 @@ i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Buzzer_level)
 i_attack = i(gk_Buzzer_attack)
 i_release = i(gk_Buzzer_release)
-i_sustain = 1000
-xtratim i_attack + i_release
+i_sustain = p3
+p3 = i_attack + i_sustain + i_release
 
 a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
 a_signal buzz a_envelope, i_frequency, gk_Buzzer_harmonics, gi_Buzzer_sine
