@@ -26,7 +26,7 @@ cwd = os.getcwd()
 print 'cwd:                    ', cwd
 filepath = sys.argv[1]
 author = 'Michael Gogins'
-year = '2018'
+year = '2019'
 license = 'ASCAP'
 publisher = 'Irreducible Productions, ASCAP'
 notes = 'Electroacoustic Music'
