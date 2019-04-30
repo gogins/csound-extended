@@ -12,12 +12,12 @@ echo "Pulling from `pwd`..."
 git pull 
 git branch
 cd ../..
-cd csound
-echo "Pulling from `pwd`..."
-git checkout develop
-git pull 
-git branch
-cd ..
+#cd csound
+#echo "Pulling from `pwd`..."
+#git checkout develop
+#git pull 
+#git branch
+#cd ..
 cd examples
 git checkout master
 echo "Pulling from `pwd`..."
