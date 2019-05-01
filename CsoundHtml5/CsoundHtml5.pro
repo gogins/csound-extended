@@ -36,22 +36,23 @@ FORMS    += \
 RC_ICONS = cs.ico
 # For dynamic language support.
 linux {
-    CONFIG += link_pkgconfig
-    PKGCONFIG += python3
-    PKGCONFIG += luajit
+    CONFIG+=link_pkgconfig
+    PKGCONFIG+=python3
+    PKGCONFIG+=luajit
 }
 message("All Csound configuration is via CMake variable CSOUND_HOME.")
 message("These point to installation directories, not source directories.")
 linux:INCLUDEPATH += $$CSOUND_HOME/include/csound
-linux:INCLUDEPATH += $$CSOUND_HOME/H
 linux:INCLUDEPATH += $$CSOUND_HOME/H
 win32-msvc2015:INCLUDEPATH += $$CSOUND_HOME/include/csound
 INCLUDEPATH += .
 INCLUDEPATH += ../CsoundAC
 win32-msvc2015:CSOUND_LIB = $$CSOUND_HOME\\lib\\csound64.lib
 linux:CSOUND_LIB = $$CSOUND_HOME/lib/libcsound64.so
+linux:LIBS += -L/usr/lib/x86_64-linux-gnu
 LIBS += $$CSOUND_LIB
-linux:LIBS += /usr/lib/libecl.so
+linux:LIBS += -lecl
+linux:LIBS += -lluajit-5.1
 win32-msvc2015:LIBS += user32.lib
 linux:DEFINES += NDEBUG
 unix:QMAKE_CFLAGS += -Wno_unused_parameter

@@ -196,7 +196,7 @@ ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
     BUILD_IN_SOURCE "1"
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND nw-gyp rebuild --target=0.35.4
+    BUILD_COMMAND nw-gyp rebuild --target=0.35.5
     INSTALL_COMMAND "")
 install(FILES "${CMAKE_SOURCE_DIR}/csound.node/build/Release/csound.node"
     # PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ

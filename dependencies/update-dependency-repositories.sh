@@ -1,26 +1,26 @@
 #!/bin/bash
 echo "Pulling from submodule repositories..."
 cd cmask
-git checkout master
 echo "Pulling from `pwd`..."
+git checkout master
 git pull 
 git branch
 cd ..
-cd cope/cmcc
-git checkout master
+cd cope/david-cope-cmmc
 echo "Pulling from `pwd`..."
+git checkout master
 git pull 
 git branch
 cd ../..
-#cd csound
-#echo "Pulling from `pwd`..."
-#git checkout develop
-#git pull 
-#git branch
-#cd ..
-cd examples
-git checkout master
+cd csound
 echo "Pulling from `pwd`..."
+git checkout develop
+git pull 
+git branch
+cd ..
+cd examples
+echo "Pulling from `pwd`..."
+git checkout master
 git pull 
 git branch
 cd ..

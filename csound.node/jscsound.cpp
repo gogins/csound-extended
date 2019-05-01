@@ -29,10 +29,15 @@
 
 // Must do this on Windows: https://connect.microsoft.com/VisualStudio/feedback/details/811347/compiling-vc-12-0-with-has-exceptions-0-and-including-concrt-h-causes-a-compiler-error
 
+#include <v8.h>
+
+using namespace v8;
+
 #include <csound.h>
 #include <csound_threaded.hpp>
 #include <CsoundProducer.hpp>
 #include <cstdlib>
+#include <ecl/ecl.h>
 #include <fstream>
 #include <ios>
 #include <iostream>
@@ -41,9 +46,6 @@
 #include <string>
 #include <vector>
 #include <uv.h>
-#include <v8.h>
-
-using namespace v8; 
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
