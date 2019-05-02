@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.4.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -13,7 +13,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        CsoundForAndroid {
+        release {
             keyAlias 'CsoundApplication'
             keyPassword 'Barbe48tFrant0'
             storePassword 'macadoodles'
@@ -26,7 +26,7 @@ android {
         applicationId "com.csounds.Csound6"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 18
+        versionCode 19
         versionName '6.12.2'
         multiDexEnabled true
     }
@@ -34,7 +34,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.CsoundForAndroid
+            signingConfig signingConfigs.release
             debuggable false
         }
         debug {

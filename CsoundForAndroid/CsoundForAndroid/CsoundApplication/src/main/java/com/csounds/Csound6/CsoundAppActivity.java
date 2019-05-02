@@ -76,13 +76,13 @@ import java.util.List;
 import csnd.CsoundCallbackWrapper;
 import csnd.CsoundOboe;
 
+import static android.support.design.widget.TabLayout.*;
 import static android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
-
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 @SuppressWarnings("unused")
 public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObjListener,
-        CsoundObj.MessagePoster, */ TabLayout.OnTabSelectedListener,
+        CsoundObj.MessagePoster, */ OnTabSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener, ValueCallback<String>,
         OnRequestPermissionsResultCallback {
     String code = "";
@@ -261,6 +261,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void OnVisibilityChanged(boolean is_visible){
+
     }
 
     @Override
@@ -800,11 +804,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     // TODO Auto-generated method stub
                 }
-
                 public void onStartTrackingTouch(SeekBar seekBar) {
                     // TODO Auto-generated method stub
                 }
-
                 public void onProgressChanged(SeekBar seekBar, int progress,
                                               boolean fromUser) {
                     if (fromUser) {
@@ -940,26 +942,27 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        // NOTE: Fullscreen layout makes automatic resizing for soft keyboard quit working.
+//        decorView.setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                        // Set the content to appear under the system bars so that the
+//                        // content doesn't resize when the system bars hide and show.
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        // Hide the nav bar and status bar
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     // Shows the system bars by removing all the flags
     // except for the ones that make the content appear under the system bars.
     private void showSystemUI() {
         View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//        decorView.setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     static final int MY_REQUEST_DANGEROUS_PERMISSIONS = 2149;
@@ -1083,7 +1086,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     @Override
-    public void onTabSelected(TabLayout.Tab tab) {
+    public void onTabSelected(Tab tab) {
         String text = tab.getText().toString();
         if (text.contentEquals("Editor")) {
             editor_tab.setVisibility(View.VISIBLE);
@@ -1101,7 +1104,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
+    public void onTabUnselected(Tab tab) {
         String text = tab.getText().toString();
         if (text.contentEquals("Editor")) {
             editor_tab.setVisibility(View.GONE);
@@ -1119,7 +1122,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) {
+    public void onTabReselected(Tab tab) {
 
     }
 
