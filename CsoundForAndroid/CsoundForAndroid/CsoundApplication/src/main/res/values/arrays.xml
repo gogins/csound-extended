@@ -6,8 +6,8 @@
         <item>"2"</item>
     </string-array>
     <string-array name="audioDriverEntries">
-        <item>Automatic (app chooses optimal driver)</item>
-        <item>AAudio (lower latency on Oreo or later)</item>
+        <item>Automatic (app chooses optimal driver, prefers AAudio)</item>
         <item>OpenSL ES (input and output)</item>
+        <item>AAudio (lower latency on Oreo or later)</item>
     </string-array>
 </resources>

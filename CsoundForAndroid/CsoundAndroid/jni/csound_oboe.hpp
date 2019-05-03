@@ -637,7 +637,7 @@ public:
             }
             spout = GetSpout();
             spout_size = sizeof(MYFLT) * frames_per_kperiod * output_channel_count;
-            audio_stream_builder.setAudioApi(oboe::AudioApi::AAudio);
+            audio_stream_builder.setAudioApi(oboe_api_index);
             audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
             audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
             audio_stream_builder.setCallback(this);
