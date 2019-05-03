@@ -299,9 +299,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         csnd.csound_oboeJNI.csoundSetGlobalEnv("SSDIR", SSDIR);
         csnd.csound_oboeJNI.csoundSetGlobalEnv("SADIR", SADIR);
         csnd.csound_oboeJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
-        String driver = PreferenceManager
-                .getDefaultSharedPreferences(this).getString("audioDriver", "");
         csound_oboe = new CsoundOboe();
+        String driver_value = PreferenceManager
+                .getDefaultSharedPreferences(this).getString("audioDriver", "0");
+        int driver_index = Integer.parseInt(driver_value);
+        csound_oboe.setOboeApi(driver_index);
         oboe_callback_wrapper = new CsoundCallbackWrapper(csound_oboe.getCsound()) {
             @Override
             public void MessageCallback(int attr, String msg) {

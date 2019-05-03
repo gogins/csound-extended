@@ -464,6 +464,14 @@ public
 %{@JavascriptInterface
 public
 %}
+%javamethodmodifiers CsoundOboe::setOboeAudioApi(int value)
+%{@JavascriptInterface
+public
+%}
+%javamethodmodifiers CsoundOboe::getOboeAudioApi()
+%{@JavascriptInterface
+public
+%}
 #endif
 
 class PUBLIC CsoundOboe : public CsoundThreaded, public oboe::AudioStreamCallback
@@ -607,7 +615,7 @@ public:
                     spin = GetSpin();
                     input_channel_count = GetNchnlsInput();
                     spin_size = sizeof(MYFLT) * frames_per_kperiod * input_channel_count;
-                    audio_stream_builder.setAudioApi(oboe::AudioApi::AAudio);
+                    audio_stream_builder.setAudioApi(oboe_api_index);
                     audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
                     audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
                     audio_stream_builder.setCallback(this);
@@ -902,6 +910,12 @@ public:
     virtual void tableSet(int table, int index, double value){
         TableSet(table, index, (MYFLT) value);
     }
+    virtual void setOboeApi(int oboe_api_index_) {
+        oboe_api_index = (oboe::AudioApi) oboe_api_index_;
+    }
+    virtual int getOboeApi() const {
+        return (int) oboe_api_index;
+    }
 protected:
     int timeout_nanoseconds;
     uint32_t frames_per_kperiod;
@@ -920,6 +934,7 @@ protected:
     oboe::AudioStreamBuilder audio_stream_builder;
     concurrent_queue<float> audio_fifo;
     float zero_dbfs;
+    oboe::AudioApi oboe_api_index = oboe::AudioApi::Unspecified;
 };
 
 #endif  // __CSOUND_OBOE_HPP__
