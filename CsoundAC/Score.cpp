@@ -433,7 +433,8 @@ void Score::getScale(std::vector<Event> &score, int dimension, size_t beginAt, s
 }
 
 void Score::setScale(std::vector<Event> &score,
-                     int dimension, bool rescaleMinimum,
+                     int dimension, 
+                     bool rescaleMinimum,
                      bool rescaleRange,
                      size_t beginAt,
                      size_t endAt,
@@ -455,16 +456,21 @@ void Score::setScale(std::vector<Event> &score,
     } else {
         scale = targetRange / actualRange;
     }
+    System::debug("Score::setScale(): dimension: %2d begin: %9d begnAt end: %9d\n", dimension, beginAt, endAt);
     for( ; beginAt != endAt; ++beginAt) {
         Event &event = score[beginAt];
-        event[dimension] = event[dimension] - actualMinimum;
-        if(rescaleRange) {
-            event[dimension] = event[dimension] * scale;
-        }
-        if(rescaleMinimum) {
-            event[dimension] = event[dimension] + targetMinimum;
+        if (dimension == Event::PITCHES) {
+            event.conformToPitchClassSet();
         } else {
-            event[dimension] = event[dimension] + actualMinimum;
+            event[dimension] = event[dimension] - actualMinimum;
+            if(rescaleRange) {
+                event[dimension] = event[dimension] * scale;
+            }
+            if(rescaleMinimum) {
+                event[dimension] = event[dimension] + targetMinimum;
+            } else {
+                event[dimension] = event[dimension] + actualMinimum;
+            }
         }
     }
 }
