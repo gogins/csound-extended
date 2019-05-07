@@ -118,7 +118,38 @@ the build-linux directory. However, be warned that this installs the
 software in /usr/local. You will also first need to separately install 
 Csound.
 
+# Using a Local Build of Csound on Linux
+
+Before building csound-extended, be aware that you can use csound-extended 
+with your own local build of Csound from the Csound git repository.
+
+To do this, first build  **and install** csound-extended using the 
+instructions below, including **installing the official Csound packages.** 
+Run some pieces that use features you need to test your installation. 
+
+Then, clone the Csound Git repository from `https://github.com/csound/csound`, 
+and build Csound according to the instructions there. However, when running CMake, 
+change the value of the default CMake install prefix from `/usr/local` to `/usr`, 
+like this:
+```
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+```
+After that of course do the usual `sudo make install` for Csound.
+
+Finbally, re-run your tests to make sure the features you need are still 
+working and that the newer Csound is compatible with csound-extended. If not all 
+features you need work, e.g. the Python interfaces, do a local build and install 
+of csound-extended, i.e. without updating dependencies, and re-install your local 
+build of csound-extended over your existing installing, like this:
+```
+sudo apt install ./build-linux/csound-extended-dev-1.3.0-Linux.deb --reinstall
+``
+
+If ever need to revert to the original packaged version of Csound 
+normally used by csound-extended, simply reinstall the Csound packages.
+
 ## Building
+
 
 Currently, the supported platforms are Linux, Android, and WebAssembly. 
 The code is generally "cross-platform" in nature and this build system could 
