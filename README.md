@@ -143,7 +143,7 @@ of csound-extended, i.e. without updating dependencies, and re-install your loca
 build of csound-extended over your existing installing, like this:
 ```
 sudo apt install ./build-linux/csound-extended-dev-1.3.0-Linux.deb --reinstall
-``
+```
 
 If ever need to revert to the original packaged version of Csound 
 normally used by csound-extended, simply reinstall the Csound packages.
