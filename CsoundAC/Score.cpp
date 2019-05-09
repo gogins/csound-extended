@@ -460,6 +460,7 @@ void Score::setScale(std::vector<Event> &score,
     for( ; beginAt != endAt; ++beginAt) {
         Event &event = score[beginAt];
         if (dimension == Event::PITCHES) {
+            event.setPitches(targetMinimum);
             event.conformToPitchClassSet();
         } else {
             event[dimension] = event[dimension] - actualMinimum;

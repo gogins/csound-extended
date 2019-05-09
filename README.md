@@ -140,7 +140,7 @@ Finbally, re-run your tests to make sure the features you need are still
 working and that the newer Csound is compatible with csound-extended. If not all 
 features you need work, e.g. the Python interfaces, do a local build and install 
 of csound-extended, i.e. without updating dependencies, and re-install your local 
-build of csound-extended over your existing installing, like this:
+build of csound-extended over your existing installation, like this:
 ```
 sudo apt install ./build-linux/csound-extended-dev-1.3.0-Linux.deb --reinstall
 ```
