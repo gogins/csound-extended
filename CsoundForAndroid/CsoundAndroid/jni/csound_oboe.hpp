@@ -480,6 +480,7 @@ class PUBLIC CsoundOboe : public CsoundThreaded, public oboe::AudioStreamCallbac
 public:
     CsoundOboe()
     {
+        stabilized_callback = new oboe::StabilizedCallback(this);
         internal_reset();
     }
     virtual void internal_reset() {
@@ -595,7 +596,6 @@ public:
             }
             oboe::Result result;
             auto kr = GetKr();
-            microseconds_per_kperiod = 1000000 / kr;
             frames_per_kperiod = GetKsmps();
             input_channel_count = GetNchnlsInput();
             output_channel_count = GetNchnls();
@@ -613,7 +613,7 @@ public:
                     audio_stream_builder.setAudioApi(oboe_api_index);
                     audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
                     audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
-                    audio_stream_builder.setCallback(this);
+                    audio_stream_builder.setCallback(stabilized_callback);
                     audio_stream_builder.setSampleRate(GetSr());
                     audio_stream_builder.setFramesPerCallback(frames_per_kperiod);
                     audio_stream_builder.setChannelCount(input_channel_count);
@@ -634,7 +634,7 @@ public:
             audio_stream_builder.setAudioApi(oboe_api_index);
             audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
             audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
-            audio_stream_builder.setCallback(this);
+            audio_stream_builder.setCallback(stabilized_callback);
             audio_stream_builder.setSampleRate(GetSr());
             audio_stream_builder.setFramesPerCallback(frames_per_kperiod);           
             audio_stream_builder.setChannelCount(output_channel_count);
@@ -658,7 +658,7 @@ public:
             }
             auto frames_per_burst = audio_stream_out->getFramesPerBurst();
             Message("CsoundOboe::Start: Frames per burst: %6d.\n", frames_per_burst);
-            audio_stream_out->setBufferSizeInFrames(frames_per_burst * 4);
+            audio_stream_out->setBufferSizeInFrames(frames_per_burst * 2);
             audio_stream_out->start();
             oboe::AudioApi audioApi = audio_stream_out->getAudioApi();
             Message("CsoundOboe::Start: Oboe audio API is: %s.\n", audioApi == oboe::AudioApi::AAudio ? "AAudio" : "OpenSLES");
@@ -710,9 +710,9 @@ public:
                 for (int i = 0; i < frames_per_kperiod; i++) {
                     for (int j = 0; j < output_channel_count; j++) {
                         float sample = spout[i * output_channel_count + j];
-                        while (!audio_output_fifo.try_enqueue(sample)) {
-                            usleep(microseconds_per_kperiod);
-                        };
+                        //while (!audio_output_fifo.try_enqueue(sample)) {
+                        //};
+                        audio_output_fifo.enqueue(sample);
                     }
                 }
             }            
@@ -1002,7 +1002,7 @@ protected:
     moodycamel::ConcurrentQueue<float> audio_output_fifo = moodycamel::ConcurrentQueue<float>(1000000);
     int perform_ksmps_result = 0;
     std::thread oboe_performance_thread;
-    useconds_t microseconds_per_kperiod = 0;
+    oboe::StabilizedCallback *stabilized_callback = nullptr;
 };
 
 #endif  // __CSOUND_OBOE_HPP__

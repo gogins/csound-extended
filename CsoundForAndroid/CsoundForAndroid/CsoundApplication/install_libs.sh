@@ -23,8 +23,8 @@ rm -f $JNILIBS/x86_64/libsndfile.so
 rm -f $JNILIBS/x86_64/libc++_shared.so
 
 echo "These are the built and copied libs for the Csound for Android app:"
-find ../../CsoundAndroid/libs -name "*.so" -ls
 find $JNILIBS -name "*.so" -ls
+find ../../CsoundAndroid/libs -name "*.so" -ls
 
 # Also copy other resources used by Csound opcodes.
 

@@ -299,6 +299,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         csnd.csound_oboeJNI.csoundSetGlobalEnv("SSDIR", SSDIR);
         csnd.csound_oboeJNI.csoundSetGlobalEnv("SADIR", SADIR);
         csnd.csound_oboeJNI.csoundSetGlobalEnv("INCDIR", INCDIR);
+        int[] exclusive_cores = getExclusiveCores();
         csound_oboe = new CsoundOboe();
         String driver_value = PreferenceManager
                 .getDefaultSharedPreferences(this).getString("audioDriver", "0");
@@ -340,6 +341,24 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         csound_oboe.message(
                 "OPCODE6DIR has been set to: " + getOPCODE6DIR
                         + "\n");
+    }
+
+    // Obtain CPU cores which are reserved for the foreground app. The audio thread can be
+    // bound to these cores prevent it being migrated to slower or more contended
+    // core(s).
+    private int[] getExclusiveCores(){
+        int exclusiveCores[] = {};
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            Log.w("Csound", "getExclusiveCores() not supported. Only available on API " +
+                    Build.VERSION_CODES.N + "+");
+        } else {
+            try {
+                exclusiveCores = android.os.Process.getExclusiveCores();
+            } catch (RuntimeException e){
+                Log.w("Csound", "getExclusiveCores() is not supported on this device.");
+            }
+        }
+        return exclusiveCores;
     }
 
     public void stopRendering() {
