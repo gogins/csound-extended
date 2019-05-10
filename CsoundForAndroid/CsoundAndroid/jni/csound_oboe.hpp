@@ -53,6 +53,7 @@ import android.webkit.JavascriptInterface;
 #include "csound.hpp"
 #include "csound_threaded.hpp"
 #include <oboe/Oboe.h>
+#include "concurrentqueue.h"
 #endif
 
 /**
@@ -498,13 +499,20 @@ public:
     virtual ~CsoundOboe()
     {
     }
+    
+    void play() {
+    }
+    
     oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream,
             void *audio_data,
             int32_t frame_count)
     {
         int csound_result = 0;
+        if (!is_thread_affinity_set) {
+            setThreadAffinity();
+        }
         if (oboeStream->getDirection() == oboe::Direction::Input) {
-            // Enqueue input samples to the audio fifo.
+            // Enqueue input samples to the audio input fifo.
             if (is_playing == false) {
                 return oboe::DataCallbackResult::Stop;
             }
@@ -515,7 +523,7 @@ public:
                         for (int i = 0; i < frame_count; i++) {
                             for (int j = 0; j < input_channel_count; j++) {
                                 float sample = float_buffer[i * input_channel_count + j] * zero_dbfs;
-                                audio_fifo.push(sample);
+                                audio_input_fifo.enqueue(sample);
                             }
                         }
                     } else {
@@ -523,35 +531,14 @@ public:
                         for (int i = 0; i < frame_count; i++) {
                             for (int j = 0; j < input_channel_count; j++) {
                                 float sample = short_buffer[i * input_channel_count + j];
-                                audio_fifo.push(sample);
+                                audio_input_fifo.enqueue(sample);
                             }
                         }
                     }
                 }
             }
          } else {
-            // Dequeue input samples from the audio fifo.
-            // We don't block, but if no sample is pending, we use a zero.
-            if (input_channel_count > 0 && audio_stream_in) {
-                for (int i = 0; i < frames_per_kperiod; i++) {
-                    for (int j = 0; j < input_channel_count; j++) {
-                        float sample = 0;
-                        audio_fifo.try_pop(sample);
-                        spin[i * input_channel_count + j] = sample;
-                    }
-                }
-            }
-            // Handle incoming Csound events.
-            CsoundEvent *event = 0;
-            while (input_queue.try_pop(event)) {
-                (*event)(csound);
-                delete event;
-            }
-            // Produce one kperiod of audio output to spout.
-            csound_result = PerformKsmps();
-            // If the Csound performance has finished, tell the Oboe driver
-            // to stop.
-            if (csound_result) {
+            if (perform_ksmps_result) {
                 is_playing = false;
                 csound_result = Cleanup();
                 Reset();
@@ -564,14 +551,20 @@ public:
                 float_buffer = static_cast<float *>(audio_data);
                 for (int i = 0; i < frames_per_kperiod; i++) {
                     for (int j = 0; j < output_channel_count; j++) {
-                        float_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j] / zero_dbfs;
-                    }
+                        float sample = 0;
+                        if (audio_output_fifo.try_dequeue(sample)) {
+                            float_buffer[i * output_channel_count + j] = sample /  zero_dbfs;
+                        }
+                     }
                 }
             } else {
                 short_buffer = static_cast<int16_t *>(audio_data);
                 for (int i = 0; i < frames_per_kperiod; i++) {
                     for (int j = 0; j < output_channel_count; j++) {
-                        short_buffer[i * output_channel_count + j] = spout[i * output_channel_count + j];
+                        float sample = 0;
+                        if (audio_output_fifo.try_dequeue(sample)) {
+                            short_buffer[i * output_channel_count + j] = sample;
+                        }
                     }
                 }
             }
@@ -601,9 +594,12 @@ public:
                 return csound_result;
             }
             oboe::Result result;
+            auto kr = GetKr();
+            microseconds_per_kperiod = 1000000 / kr;
             frames_per_kperiod = GetKsmps();
             input_channel_count = GetNchnlsInput();
             output_channel_count = GetNchnls();
+            zero_dbfs = Get0dBFS();
             const char *input_name = GetInputName();
             if (input_name != nullptr) {
                 std::string input_name_string = input_name;
@@ -611,8 +607,7 @@ public:
                 if (position != std::string::npos) {
                     Message("CsoundOboe::Start: Creating Oboe input stream stream...\n");
                     float sample = 0;
-                    while(audio_fifo.try_pop(sample)) {};
-                    spin = GetSpin();
+                    while(audio_input_fifo.try_dequeue(sample)) {};
                     input_channel_count = GetNchnlsInput();
                     spin_size = sizeof(MYFLT) * frames_per_kperiod * input_channel_count;
                     audio_stream_builder.setAudioApi(oboe_api_index);
@@ -635,14 +630,13 @@ public:
                     Message("CsoundOboe::Start: Audio input stream format is: %s.\n", oboe::convertToText(oboe_audio_format));
                 }
             }
-            spout = GetSpout();
             spout_size = sizeof(MYFLT) * frames_per_kperiod * output_channel_count;
             audio_stream_builder.setAudioApi(oboe_api_index);
             audio_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
             audio_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
             audio_stream_builder.setCallback(this);
             audio_stream_builder.setSampleRate(GetSr());
-            audio_stream_builder.setFramesPerCallback(frames_per_kperiod);
+            audio_stream_builder.setFramesPerCallback(frames_per_kperiod);           
             audio_stream_builder.setChannelCount(output_channel_count);
             audio_stream_builder.setDirection(oboe::Direction::Output);
             result = audio_stream_builder.openStream(&audio_stream_out);
@@ -662,6 +656,9 @@ public:
                 audio_stream_in->start();
                 Message("CsoundOboe::Start: Started Oboe audio input stream...\n");
             }
+            auto frames_per_burst = audio_stream_out->getFramesPerBurst();
+            Message("CsoundOboe::Start: Frames per burst: %6d.\n", frames_per_burst);
+            audio_stream_out->setBufferSizeInFrames(frames_per_burst * 4);
             audio_stream_out->start();
             oboe::AudioApi audioApi = audio_stream_out->getAudioApi();
             Message("CsoundOboe::Start: Oboe audio API is: %s.\n", audioApi == oboe::AudioApi::AAudio ? "AAudio" : "OpenSLES");
@@ -670,6 +667,7 @@ public:
             if (latency) {
                 Message("CsoundOboe::Start: Output stream latency is: %9.4f milliseconds.\n", latency.value());
             }
+            oboe_performance_thread = std::thread(&CsoundOboe::OboePerform, this);
         } else {
             csound_result = Csound::Start();
             if (csound_result != 0) {
@@ -679,6 +677,46 @@ public:
             is_playing = true;
          }
         return 0;
+    }
+    virtual int OboePerform() {
+        Message("CsoundOboe::OboePerform.....\n");
+        // Loop in this thread as long as Csound is performing.
+        spin = GetSpin();
+        spout = GetSpout();
+        for (;;) {
+            // Handle incoming Csound events, which should already have been 
+            // dispatched and consumed.
+            CsoundEvent *event = 0;
+            while (event_input_fifo.try_dequeue(event)) {
+                (*event)(csound);
+                delete event;
+            }
+            if (audio_stream_in != nullptr) {
+                // Copy from audio input fifo to spin.
+                for (int i = 0; i < frames_per_kperiod; i++) {
+                    for (int j = 0; j < input_channel_count; j++) {
+                        float sample = 0;
+                        audio_input_fifo.try_dequeue(sample);
+                        spin[i * input_channel_count + j] = sample;
+                    }
+                }
+            }
+            perform_ksmps_result = PerformKsmps();
+            if (perform_ksmps_result) {
+                return perform_ksmps_result;
+            }
+            if (audio_stream_out != nullptr) {
+                // Copy from spout to audio output fifo.
+                for (int i = 0; i < frames_per_kperiod; i++) {
+                    for (int j = 0; j < output_channel_count; j++) {
+                        float sample = spout[i * output_channel_count + j];
+                        while (!audio_output_fifo.try_enqueue(sample)) {
+                            usleep(microseconds_per_kperiod);
+                        };
+                    }
+                }
+            }            
+        }
     }
     /**
      * When Oboe is driving the performance, this is a dummy;
@@ -697,7 +735,7 @@ public:
     }
     virtual int PerformAndReset()
     {
-        Message("CsoundOboe::Perform...\n");
+        Message("CsoundOboe::PerformAndReset...\n");
         if (audio_stream_out != nullptr) {
             return 0;
         }
@@ -916,6 +954,30 @@ public:
     virtual int getOboeApi() const {
         return (int) oboe_api_index;
     }
+    virtual void setThreadAffinity() {
+        pid_t current_thread_id = gettid();
+        cpu_set_t cpu_set;
+        CPU_ZERO(&cpu_set);
+        // If the callback cpu ids aren't specified, then bind to the current cpu.
+        if (cpu_ids.empty()) {
+            int current_cpu_id = sched_getcpu();
+            Message("Current CPU ID is %d.\n", current_cpu_id);
+            CPU_SET(current_cpu_id, &cpu_set);
+        } else {
+            for (size_t i = 0; i < cpu_ids.size(); i++) {
+                int cpu_id = cpu_ids.at(i);
+                Message("CPU ID %d added to cores set.\n", cpu_id);
+                CPU_SET(cpu_id, &cpu_set);
+            }
+        }
+        int result = sched_setaffinity(current_thread_id, sizeof(cpu_set_t), &cpu_set);
+        if (result == 0) {
+            Message("Thread affinity set.\n");
+        } else {
+            Message("Error setting thread affinity: %d.\n", result);
+        }
+        is_thread_affinity_set = true;
+    }    
 protected:
     int timeout_nanoseconds;
     uint32_t frames_per_kperiod;
@@ -932,9 +994,15 @@ protected:
     float *float_buffer;
     oboe::AudioFormat oboe_audio_format;
     oboe::AudioStreamBuilder audio_stream_builder;
-    concurrent_queue<float> audio_fifo;
     float zero_dbfs;
     oboe::AudioApi oboe_api_index = oboe::AudioApi::Unspecified;
+    bool is_thread_affinity_set = false;
+    std::vector<int> cpu_ids;
+    moodycamel::ConcurrentQueue<float> audio_input_fifo = moodycamel::ConcurrentQueue<float>(1000000);
+    moodycamel::ConcurrentQueue<float> audio_output_fifo = moodycamel::ConcurrentQueue<float>(1000000);
+    int perform_ksmps_result = 0;
+    std::thread oboe_performance_thread;
+    useconds_t microseconds_per_kperiod = 0;
 };
 
 #endif  // __CSOUND_OBOE_HPP__
