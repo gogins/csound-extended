@@ -5,7 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := oboe
 
 LOCAL_C_INCLUDES := $(NDK_MODULE_PATH)/oboe/src $(NDK_MODULE_PATH)/oboe/include 
-LOCAL_CFLAGS := -O3 
+LOCAL_CFLAGS := -Ofast 
 LOCAL_CPPFLAGS :=$(LOCAL_CFLAGS)
 LOCAL_CPPFLAGS += -std=c++11 -Wall -frtti -fexceptions
 LOCAL_LDFLAGS += -Wl,--export-dynamic
