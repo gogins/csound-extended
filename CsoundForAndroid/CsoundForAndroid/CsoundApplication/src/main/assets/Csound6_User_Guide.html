@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-03-17T06:14:00.839516198"/>
+	<meta name="changed" content="2019-05-10T20:23:19.379572726"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -33,7 +33,7 @@ Csound for Android
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <i><b>Michael Gogins</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-<i><b>16 March 2019</b></i></p>
+<i><b>10 May 2019</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <br/>
 
@@ -156,16 +156,14 @@ widgets, execute Common Lisp code, and so forth. The tabs are:</p>
 	Android app.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	<i><b>Help</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– </span></span><span style="font-style: normal"><span style="font-weight: normal">Provides
-	an embedded browser for the </span></span><i><b>Csound Reference
-	Manual</b></i><span style="font-style: normal"><span style="font-weight: normal">.</span></span></p>
+	<i><b>Help</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
+	an embedded browser for the </span></span></span><i><b>Csound
+	Reference Manual</b></i><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	<i><b>About</b></i><span style="font-style: normal"><span style="font-weight: normal">
-	– </span></span><span style="font-style: normal"><span style="font-weight: normal">Provides
+	<i><b>About</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
 	an embedded browser for the Csound home page at <a href="http://csound.com/">http://csound.com</a>,
-	enabling users to explore many uses and features of Csound.</span></span></p>
+	enabling users to explore many uses and features of Csound.</span></span></span></p>
 </ul>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 task menu of Csound for Android provides the following functions: 
@@ -186,13 +184,13 @@ task menu of Csound for Android provides the following functions:
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Save as...</b></i> <span style="font-variant: normal">–
-	Saves the current .</span><span style="font-variant: normal">csd</span><span style="font-variant: normal">
-	or other file being edited under a new name.</span></p>
+	Saves the current .csd or other file being edited under a new name.</span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Save</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Saves
-	the current .</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">csd</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">
-	or other file being edited to the user’s storage.</span></span></span></p>
+	the current .csd</span></span></span><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">or
+	other file being edited to the user’s storage.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Run/Stop</b></i> – If Csound is not running, starts a
@@ -206,11 +204,11 @@ task menu of Csound for Android provides the following functions:
 	element contains </font><font face="Courier New, monospace">-osoundfilename</font><font face="Liberation Serif, serif">,
 	Csound's audio output will go to the file </font><font face="Courier New, monospace">soundfilename</font><font face="Liberation Serif, serif">,
 	which should be a valid Linux pathname in the user's storage
-	filesystem.</font><font face="Courier New, monospace"> </font>
+	filesystem.</font> 
 	</p>
 	<li/>
-<p><font face="Liberation Serif, serif"><i><b>F</b></i><i><b>ind...
-	</b></i>– Search for a string of text in the editor.</font></p>
+<p><font face="Liberation Serif, serif"><i><b>Find... </b></i>–
+	Search for a string of text in the editor.</font></p>
 	<li/>
 <p><font face="Liberation Serif, serif"><i><b>Replace…</b></i>
 	– Replace a string of text in the editor.</font></p>
@@ -281,14 +279,13 @@ ability to send score events to Csound from JavaScript means that
 JavaScript can be used as a high-level programming language in an
 .html file for the purposes of algorithmic composition, even
 interactive composition. All methods callable from <font face="Courier New, monospace">CsoundAppActivity</font>
-and <font face="Courier New, monospace">CsoundOboe</font><font face="Liberation Serif, serif">
-</font>are marked with the <font face="Courier New, monospace">@JavascriptInterface</font>
+and <font face="Courier New, monospace">CsoundOboe</font> are marked
+with the <font face="Courier New, monospace">@JavascriptInterface</font>
 attribute in the Csound for Android source code. For a basic example
 of a user-defined widget setup, see the <font face="Courier New, monospace">Drone-HTML5.csd</font>
 example file. Here is a snippet showing a slider's <font face="Courier New, monospace">onInput</font>
 event handler setting a Csound control channel:</p>
-<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">
-&lt;script&gt;
+<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">&lt;script&gt;
 function gk_Reverb_FeedbackUpdate(value) {
 var numberValue = parseFloat(value)
 csoundApp.setControlChannel('gk_Reverb_Feedback', numberValue);
@@ -343,8 +340,7 @@ and log some informative messages during Csound's performance (<font face="Couri
 a blank line between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsInstruments&gt;</font>
 and type the following text:</p>
-<pre class="western" style="line-height: 115%">
-sr = 44100
+<pre class="western" style="line-height: 115%">sr = 44100
 ksmps = 10
 nchnls = 1
 <font color="#000000"><font face="Courier New, monospace"><font size="2" style="font-size: 9pt">instr 1</font></font></font>
@@ -373,6 +369,38 @@ change <font face="Courier New, monospace">-odac</font> above to
 <font face="Courier New, monospace">-o/sdcard/test.wav</font>.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">That's
 it!</p>
+<h1 class="western">Audio Performance Issues</h1>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
+Android operating system has only recently been given an audio driver
+layer, AAudio, that is even marginally adequate for musical use. Only
+recent devices support this, and even some of them have issues. The
+Oboe driver used by this app switches internally between AAudio and
+the older OpenSL ES audio driver to suit your device.</p>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">If
+you experiences glitches or low latency, try the following:</p>
+<ul>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	Look at the Csound messages to see which driver Oboe is using, and
+	use the <i><b>Settings</b></i>, <i><b>Audio drive</b></i>r choice to
+	set the other one.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	Experiment with Csound’s  <font face="Courier New, monospace">ksmps
+	</font><font face="Liberation Serif, serif">option in the orchestra
+	header.</font></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<font face="Liberation Serif, serif">Close all other apps on your
+	device, and clear all caches.</font></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<font face="Liberation Serif, serif">Turn on Airplane Mode.</font></p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	<font face="Liberation Serif, serif">Experiment with your device’s
+	Power Saving or Performance mode.</font></p>
+</ul>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
 
 </p>
