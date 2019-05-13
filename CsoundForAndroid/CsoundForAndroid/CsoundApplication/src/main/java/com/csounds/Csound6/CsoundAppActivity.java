@@ -395,7 +395,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 startActivityForResult(new_chooser, NEW_FILE_REQUEST);
                 return true;
             case R.id.action_open:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.setType("*/*");
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 Intent chooser = Intent.createChooser(intent, "Open file");
@@ -1021,6 +1021,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                                     Intent intent) {
         try {
             if (requestCode == NEW_FILE_REQUEST && intent != null) {
+                if (checkDangerousPermissions() == false) {
+                    return;
+                }
                 csound_uri_intent = intent;
                 csound_uri = intent.getData();
                 setEditorText(csdTemplate);
