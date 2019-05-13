@@ -11,6 +11,7 @@ package com.csounds.Csound6;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -60,6 +62,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -97,6 +100,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     CsoundOboe csound_oboe = null;
     ///File csound_file = null;
     Uri csound_uri = null;
+    Intent csound_uri_intent = null;
     Button pad = null;
     ArrayList<SeekBar> sliders = new ArrayList<SeekBar>();
     ArrayList<Button> buttons = new ArrayList<Button>();
@@ -329,7 +333,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
         if (csound_uri.toString().toLowerCase().endsWith(".csd")) {
             int result = 0;
-            ///getEditorText();
             String filepath = uriToFilepath(csound_uri);
             result = csound_oboe.compileCsdText(code);
             result = csound_oboe.start();
@@ -338,7 +341,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         // Make sure this is still set after starting.
         String getOPCODE6DIR = csnd.csound_oboeJNI.csoundGetEnv(0,
                 "OPCODE6DIR");
-        csound_oboe.message(
+        postMessage(
                 "OPCODE6DIR has been set to: " + getOPCODE6DIR
                         + "\n");
     }
@@ -399,12 +402,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 startActivityForResult(chooser, OPEN_FILE_REQUEST);
                 return true;
             case R.id.action_save:
-                getEditorText();
-                try {
-                    saveTextToUri(code, csound_uri);
-                } catch (Exception e) {
-
-                }
+                // Use this saved Intent to preserve write and truncate permissions
+                // on the file. This is a hack.
+                onActivityResult(SAVE_FILE_REQUEST, 0, csound_uri_intent);
                 return true;
             case R.id.action_save_as:
                 Intent save_as_intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -415,7 +415,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 return true;
             case R.id.action_render:
                 getEditorTextAndRun();
-                ///render();
                 return true;
             case R.id.action_find:
                 editor.evaluateJavascript("codemirror_editor.execCommand('find');", null);
@@ -613,23 +612,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         return code;
     }
 
-    /**
-     * Saves text to a file, normally from the code editor.
-     * @param code
-     * @param file
-     */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void saveTextFile(String code, File file) {
-        try {
-            if (checkDangerousPermissions() == false) {
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void loadWebView() {
         try {
@@ -684,7 +666,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
 
     private void LoadFile(File file) {
         Log.d("Csound:", file.getAbsolutePath());
-        ///csound_file = file;
         String code = loadTextFile(file);
         setEditorText(code);
         setTitle(file.getName());
@@ -1005,15 +986,25 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         }
     }
 
-    public void saveTextToUri(String text, Uri uri) throws java.io.FileNotFoundException,
-            java.io.IOException,
-            java.lang.NullPointerException {
-        OutputStream outputStream = getContentResolver().openOutputStream(uri);
-        outputStream.write(text.getBytes());
-        outputStream.close();
+    public void saveTextToUri(String text, Uri uri)  {
+        postMessage("saveTextToUri...\n");
+        try {
+            ContentResolver contentResolver = getContentResolver();
+            OutputStream outputStream = contentResolver.openOutputStream(uri, "rwt");
+            outputStream.write(code.getBytes());
+            outputStream.flush();
+            outputStream.close();
+        } catch (java.io.IOException e) {
+            Log.d("Csound", e.getMessage());
+            postMessage(e.getMessage());
+        } catch (java.lang.NullPointerException e) {
+            Log.d("Csound", e.getMessage());
+            postMessage(e.getMessage());
+        }
     }
 
-    public String loadTextFromUri(Uri uri) throws java.io.FileNotFoundException, java.io.IOException {
+    public String loadTextFromUri(Uri uri) throws java.io.IOException {
+        postMessage("loadTextFromUri...\n");
         InputStream inputStream = getContentResolver().openInputStream(uri);
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -1030,6 +1021,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                                     Intent intent) {
         try {
             if (requestCode == NEW_FILE_REQUEST && intent != null) {
+                csound_uri_intent = intent;
                 csound_uri = intent.getData();
                 setEditorText(csdTemplate);
                 saveTextToUri(csdTemplate, csound_uri);
@@ -1040,6 +1032,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 if (checkDangerousPermissions() == false) {
                     return;
                 }
+                csound_uri_intent = intent;
                 csound_uri = intent.getData();
                 getEditorText();
                 saveTextToUri(code, csound_uri);
@@ -1050,6 +1043,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 if (checkDangerousPermissions() == false) {
                     return;
                 }
+                csound_uri_intent = intent;
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
                 setEditorText(text);
@@ -1077,20 +1071,28 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         editor.evaluateJavascript("getCodeMirrorTextAndRun();", this);
     }
 
+    public void getEditorTextAndSave() {
+        Log.i("Csound:", "getEditorTextAndSave...");
+        editor.evaluateJavascript("getCodeMirrorTextAndSave();", this);
+    }
+
     @JavascriptInterface
     public void setCsoundText(String text) {
+        postMessage("setCsoundText...\n");
         Log.i("Csound:", "setCsoundText...");
         code = text;
     }
 
     @JavascriptInterface
     public void setCsoundTextAndRun(String text) {
+        postMessage("setCsoundTextAndRun...\n");
         Log.i("Csound:", "setCsoundTextAndRun...");
         code = text;
     }
 
     @JavascriptInterface
     public String getCsoundText() {
+        postMessage("getCsoundText...\n");
         return code;
     }
 
@@ -1151,6 +1153,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     public void onReceiveValue(String value) {
         if (value.contains("getCodeMirrorTextAndRun")) {
             render();
+        } else if (value.contains("getCodeMirrorTextAndSave")) {
+            saveTextToUri(code, csound_uri);
         }
     }
 

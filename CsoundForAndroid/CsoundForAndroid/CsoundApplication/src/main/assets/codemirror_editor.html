@@ -19,26 +19,47 @@
 <body height="100%">
 <script>
 var codemirror_editor = CodeMirror(document.body, {
-  mode:  "javascript",
-  lineNumbers: "true",
-  theme: "cobalt",
-  mode: "javascript",
+  mode:         "javascript",
+  lineNumbers:  "true",
+  theme:        "cobalt",
+  mode:         "javascript",
 });
 codemirror_editor.refresh();
 var setCodeMirrorText = function() {
-    var text = csoundApp.getCsoundText();
-    codemirror_editor.setValue(text);
-    return "setCodeMirrorText";
+    try {
+        var text = csoundApp.getCsoundText();
+        codemirror_editor.getDoc().setValue(text);
+        return 'setCodeMirrorText';
+    } catch (e) {
+        return e.description;
+    }
 };
 var getCodeMirrorText = function() {
-    var text = codemirror_editor.getValue();
-    csoundApp.setCsoundText(text);
-    return "getCodeMirrorText";
+    try {
+        var text = codemirror_editor.getDoc().getValue();
+        csoundApp.setCsoundText(text);
+        return 'getCodeMirrorText ' + text;
+    } catch (e) {
+        return e.description;
+    }
 }
 var getCodeMirrorTextAndRun = function() {
-    var text = codemirror_editor.getValue();
-    csoundApp.setCsoundText(text);
-    return 'getCodeMirrorTextAndRun';
+    try {
+        var text = codemirror_editor.getDoc().getValue();
+        csoundApp.setCsoundText(text);
+        return 'getCodeMirrorTextAndRun' + text;
+    } catch (e) {
+        return e.description;
+    }
+}
+var getCodeMirrorTextAndSave = function() {
+    try {
+        var text = codemirror_editor.getDoc().getValue();
+        csoundApp.setCsoundText(text);
+        return 'getCodeMirrorTextAndSave ' + text;
+    } catch (e) {
+        return e.description;
+    }
 }
 </script>
 </body>
