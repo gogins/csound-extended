@@ -120,37 +120,37 @@ ksmps = 200
 nchnls = 2
 0dbfs = 1500000
 
-connect "Blower", "outleft", "ReverbLeft", "inleft"
-connect "Blower", "outright", "ReverbRight", "inright"
-connect "Bower", "outleft", "ReverbLeft", "inleft"
-connect "Bower", "outright", "ReverbRight", "inright"
-connect "Buzzer", "outleft", "ReverbLeft", "inleft"
-connect "Buzzer", "outright", "ReverbRight", "inright"
-connect "Droner", "outleft", "ReverbLeft", "inleft"
-connect "Droner", "outright", "ReverbRight", "inright"
-connect "Harpsichord", "outleft", "Reverb2Left", "inleft"
-connect "Harpsichord", "outright", "Reverb2Right", "inright"
-connect "Phaser", "outleft", "ReverbLeft", "inleft"
-connect "Phaser", "outright", "ReverbRight", "inright"
-connect "Sweeper", "outleft", "ReverbLeft", "inleft"
-connect "Sweeper", "outright", "ReverbRight", "inright"
-connect "Shiner", "outleft", "ReverbLeft", "inleft"
-connect "Shiner", "outright", "ReverbRight", "inright"
-connect "YiString", "outleft", "ReverbLeft", "inleft"
-connect "YiString", "outright", "ReverbRight", "inright"
+connect "Blower", "outleft", "Reverb", "inleft"
+connect "Blower", "outright", "Reverb", "inright"
+connect "Bower", "outleft", "Reverb", "inleft"
+connect "Bower", "outright", "Reverb", "inright"
+connect "Buzzer", "outleft", "Reverb", "inleft"
+connect "Buzzer", "outright", "Reverb", "inright"
+connect "Droner", "outleft", "Reverb", "inleft"
+connect "Droner", "outright", "Reverb", "inright"
+connect "Harpsichord", "outleft", "Reverb2", "inleft"
+connect "Harpsichord", "outright", "Reverb2", "inright"
+connect "Phaser", "outleft", "Reverb", "inleft"
+connect "Phaser", "outright", "Reverb", "inright"
+connect "Sweeper", "outleft", "Reverb", "inleft"
+connect "Sweeper", "outright", "Reverb", "inright"
+connect "Shiner", "outleft", "Reverb", "inleft"
+connect "Shiner", "outright", "Reverb", "inright"
+connect "YiString", "outleft", "Reverb", "inleft"
+connect "YiString", "outright", "Reverb", "inright"
 connect "YiString", "chorusleft", "SolinaChorus", "inleft"
 connect "YiString", "chorusright", "SolinaChorus", "inright"
-connect "SolinaChorus", "outleft", "ReverbLeft", "inleft"
-connect "SolinaChorus", "outright", "ReverbRight", "inright"
-connect "ReverbLeft", "outleft", "MasterOutput", "inleft"
-connect "ReverbRight", "outright", "MasterOutput", "inright"
+connect "SolinaChorus", "outleft", "Reverb", "inleft"
+connect "SolinaChorus", "outright", "Reverb", "inright"
+connect "Reverb", "outleft", "MasterOutput", "inleft"
+connect "Reverb", "outright", "MasterOutput", "inright"
 connect "Reverb2Left", "outleft", "MasterOutput", "inleft"
 connect "Reverb2Right", "outright", "MasterOutput", "inright"
 
 alwayson "Controls"
 alwayson "SolinaChorus"
-alwayson "ReverbLeft"
-alwayson "ReverbRight"
+alwayson "Reverb"
+alwayson "Reverb"
 alwayson "Reverb2Left"
 alwayson "Reverb2Right"
 alwayson "ParametricEQ"
@@ -196,7 +196,7 @@ aharp2 	 balance apluck, aharp
 asignal	= (apluck + aharp2) * iamplitude * aenvelope * gk_Harpsichord_level
 adeclick linsegr 0, iattack, 1, isustain, 1, irelease, 0
 asignal = asignal * adeclick
-aleft, aright pan2 asignal, ipan
+aleft, aright pan2 asignal, p6
 kgain = ampdb(gk_Harpsichord_level)
 outleta "outleft", aleft * kgain
 outleta "outright", aright * kgain
@@ -303,7 +303,7 @@ ihertz = cpsmidinn(ikey)
 asignal = vco2(1, ihertz)
 asignal = moogladder(asignal, 6000, 0.1)
 asignal *= aenvelope
-aleft, aright pan2 asignal, ipan
+aleft, aright pan2 asignal, p6
 kgain = ampdb(gk_YiString_level)
 outleta "outleft", aleft * kgain * gk_YiString_reverb_send
 outleta "outright", aright * kgain * gk_YiString_reverb_send
@@ -354,7 +354,7 @@ isine ftgenonce 0, 0, 65536, 10, 1, 0, .02
 asignal poscil3 1, ihertz, isine
 asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
 asignal = asignal * kenvelope * 10
-aleft, aright pan2 asignal, ipan
+aleft, aright pan2 asignal, p6
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
@@ -453,7 +453,7 @@ asignal = asignal * 3
 ;asignal vco2 kenvelope, ihertz, 12
 ;asignal poscil3 kenvelope, ihertz, giharmonics
 ;asignal distort asignal, gk_DistortFactor * .4, giwaveshaping
-aleft, aright pan2 asignal, ipan
+aleft, aright pan2 asignal, p6
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
@@ -482,7 +482,7 @@ kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp
 ihertz = cpsmidinn(ikey)
 gk_Harmonics = 1 * 20
 asignal vco2 kenvelope * 4, ihertz, 12
-aleft, aright pan2 asignal, ipan
+aleft, aright pan2 asignal, p6
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 aleft = adamping * aleft
 aright = adamping * aright
@@ -639,47 +639,34 @@ endin
 gk_Reverb_Feedback init 0.975
 gk_Delay_Modulation init 0.875
 
-instr ReverbLeft
+gk_Reverb_feedback init 0.975
+gi_Reverb_delay_modulation init 0.875
+gk_Reverb_frequency_cutoff init 15000
+instr Reverb
 aleft init 0
-azero init 0
+aright init 0
 aleft inleta "inleft"
-aleft, aright reverbsc aleft, azero, gk_Reverb_Feedback, 15000.
-outleta "outleft", aleft
-;;;;;;;;;;;;;;;;;;;;i
-prints "ReverbLeft  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-instr ReverbRight
-aleft init 0
-azero init 0
 aright inleta "inright"
-aleft, aright reverbsc azero, aright, gk_Reverb_Feedback, 15000.0
+; aoutL, aoutR reverbsc ainL, ainR, kfblvl, kfco[, israte[, ipitchm[, iskip]]]
+aleft, aright reverbsc aleft, aright, gk_Reverb_feedback, gk_Reverb_frequency_cutoff, sr, gi_Reverb_delay_modulation
+outleta "outleft", aleft
 outleta "outright", aright
-;;;;;;;;;;;;;;;;;;;;i
-prints "ReverbRight i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+prints "Reverb         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
-gk_Reverb2_Feedback init 0.975
-gk_Delay2_Modulation init 0.875
-
-instr Reverb2Left
+gk_Reverb2_feedback init 0.975
+gi_Reverb2_delay_modulation init 0.875
+gk_Reverb2_frequency_cutoff init 15000
+instr Reverb2
 aleft init 0
-azero init 0
+aright init 0
 aleft inleta "inleft"
-aleft, aright reverbsc aleft, azero, gk_Reverb2_Feedback, 15000.
-outleta "outleft", aleft
-;;;;;;;;;;;;;;;;;;;;i
-prints "Reverb2Left i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
-endin
-
-instr Reverb2Right
-aleft init 0
-azero init 0
 aright inleta "inright"
-aleft, aright reverbsc azero, aright, gk_Reverb2_Feedback, 15000.0
+; aoutL, aoutR reverbsc ainL, ainR, kfblvl, kfco[, israte[, ipitchm[, iskip]]]
+aleft, aright reverbsc aleft, aright, gk_Reverb2_feedback, gk_Reverb2_frequency_cutoff, sr, gi_Reverb2_delay_modulation
+outleta "outleft", aleft
 outleta "outright", aright
-;;;;;;;;;;;;;;;;;;;;i
-prints "Reverb2Righ i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\n", p1, p2, p3, p4, p5, p7
+prints "Reverb2        i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 gk_CenterHz init 200
@@ -1092,8 +1079,8 @@ f 0 360
                 var point = subset[subset_point_index];
                 var instrument = rescaleX(point.x);
                 var key = rescaleY(point.y);
-                var pan = Math.random() * 2. - 1.;
-                score.add(0, Note_length, 144, instrument, key, 60, pan, pan, pan, 0, 0);
+                var pan = Math.random();
+                score.add(0, Note_length, 144, instrument, key, 60, pan, pan, pan, pan, 0);
                 score.temper();
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toCsoundScore();

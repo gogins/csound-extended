@@ -65,9 +65,9 @@ if (typeof console === 'undefined') {
        negative is 'NOTE OFF').
      5 MIDI key number from 0 to 127, 60 is middle C (a real number).
      6 MIDI velocity from 0 to 127, 80 is mezzo-forte (a real number).
-     7 x or pan, 0 is the origin.
-     8 y or height, 0 is the origin.
-     9 z or depth, 0 is the origin.
+     7 x or depth, 0 is the origin.
+     8 y or pan, 0 is the origin.
+     9 z or height, 0 is the origin.
     10 Phase, in radians.
     11 Homogeneity, normally always 1.
 
