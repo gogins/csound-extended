@@ -518,8 +518,8 @@ public:
      * buffers, that the input uses the same number of channels as the output, 
      * or that the Oboe input callbacks perfectly interleave with the Oboe 
      * output callbacks. The mechanism is simple: when Oboe has processed 
-     * all the frames in one Csound kperiod, PerformKsmps is called and the 
-     * Csound frame index is reset to zero.
+     * all the frames from one Csound kperiod, the Csound frame index is reset 
+     * to zero, and PerformKsmps is called again.
      */
     oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboe_stream,
             void *oboe_buffer,
@@ -583,9 +583,24 @@ public:
                 csound_frame_index++;
                 if (csound_frame_index >= frames_per_kperiod) {
                     csound_frame_index = 0;
+                    // Copied from CsoundThreaded::PerformRoutine.
+                    // Dispatch pending real-time events.
+                    CsoundEvent *event = 0;
+                    while (event_input_fifo.try_dequeue(event)) {
+                        (*event)(csound);
+                        delete event;
+                    }
+                    // Call any user-defined kperiod callback.
+                    if (kperiod_callback != nullptr) {
+                        kperiod_callback(csound, kperiod_callback_user_data);
+                    }
+                    // Compute the next low-level buffer of audio.
                     perform_ksmps_result = PerformKsmps();
-                    if (perform_ksmps_result) {
+                    // Shut down both Oboe and Csound if the Csound performance has ended.
+                    if (perform_ksmps_result != 0) {
+                        Message("CsoundOboe::onAudioReady: Csound::PerformKsmps ended with %d...\n", perform_ksmps_result);
                         is_playing = false;
+                        ClearQueue();
                         csound_result = Cleanup();
                         Reset();
                         oboe_stop_thread = std::thread(&CsoundOboe::oboeStopThreadRoutine, this);
@@ -596,6 +611,7 @@ public:
         }
         return oboe::DataCallbackResult::Continue;
     }
+    
     virtual int Start()
     {
         Message("CsoundOboe::Start...\n");

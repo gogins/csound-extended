@@ -22,6 +22,14 @@
             }
         </style>
     <script>
+        window.onerror = function(message_, source_, line_, column_, error_) {
+            var text = "window.onerror:";
+            text = text + "\nmessage: " + message_;
+            text = text + "\nsource: " + source_ + " line: " + line_ + " column: " + column_;
+            text = text + "\nerror: " + error_;
+            alert(text);
+            return false;
+        };
         function handleMessage(message) {
             var messages_textarea = document.getElementById("console");
             var existing = messages_textarea.value;
@@ -1084,8 +1092,8 @@ f 0 360
                 var point = subset[subset_point_index];
                 var instrument = rescaleX(point.x);
                 var key = rescaleY(point.y);
-                var pan = Math.random() * 2 - 1;
-                score.add(0, Note_length, 144, instrument, key, 60, pan, pan, 0, 0, 0);
+                var pan = Math.random() * 2. - 1.;
+                score.add(0, Note_length, 144, instrument, key, 60, pan, pan, pan, 0, 0);
                 score.temper();
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toCsoundScore();
@@ -1107,6 +1115,7 @@ f 0 360
                 setTimeout(createNote, 1000 / Notes_per_second);
             } catch (e) {
                 console.log(e.toString());
+                alert(e.toString());
             }
         }
         var parameters = {

@@ -402,8 +402,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 startActivityForResult(chooser, OPEN_FILE_REQUEST);
                 return true;
             case R.id.action_save:
-                // Use this saved Intent to preserve write and truncate permissions
-                // on the file. This is a hack.
+                // Use this Intent, saved from "Open..." or "New...", to
+                // preserve write and truncate permissions on the file. This
+                // is a hack.
                 onActivityResult(SAVE_FILE_REQUEST, 0, csound_uri_intent);
                 return true;
             case R.id.action_save_as:
