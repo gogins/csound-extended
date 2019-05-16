@@ -340,16 +340,30 @@ double Event::getKey(double tonesPerOctave) const
 std::string Event::toCsoundIStatement(double tonesPerOctave) const
 {
     char buffer[0x100];
+    /** 
+     * Csound dimensions now are:
+     * i_instrument = p1
+     * i_time = p2
+     * i_duration = p3
+     * i_midi_key = p4
+     * i_midi_velocity = p5
+     * k_space_front_to_back = p6 ; Ambisonic X
+     * k_space_left_to_right = p7 ; Ambisonic Y
+     * k_space_bottom_to_top = p8; Ambisonic Z
+     * i_phase = p9
+     * i_pitches = p10
+     * i_homogeneity = p11    
+     */
     sprintf(buffer, "i %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g\n",
             getInstrument(),
             getTime(),
             getDuration(),
             getKey(tonesPerOctave),
             getVelocity(),
-            getPhase(),
             getPan(),
             getDepth(),
             getHeight(),
+            getPhase(),
             getPitches(),
             (*this)[HOMOGENEITY]);
     return buffer;
@@ -370,10 +384,10 @@ std::string Event::toCsoundIStatementHeld(int tag, double tempering) const
             std::fabs(getDuration()) * -1.0,
             Conversions::octaveToMidi(octave, false),
             getVelocity(),
-            getPhase(),
-            getPan(),
             getDepth(),
+            getPan(),
             getHeight(),
+            getPhase(),
             getPitches(),
             (*this)[HOMOGENEITY]);
     return buffer;
@@ -394,10 +408,10 @@ std::string Event::toCsoundIStatementRelease(int tag, double tempering) const
             getDuration(),
             Conversions::octaveToMidi(octave, false),
             getVelocity(),
-            getPhase(),
-            getPan(),
             getDepth(),
+            getPan(),
             getHeight(),
+            getPhase(),
             getPitches(),
             (*this)[HOMOGENEITY]);
     return buffer;
@@ -406,7 +420,7 @@ std::string Event::toCsoundIStatementRelease(int tag, double tempering) const
 std::string Event::toString() const
 {
     char buffer[0x100];
-    sprintf(buffer, "t%8.3f d%8.3f s%3.0f i%6.2f k%6.2f v%6.2f x%5.2f pcs%8.2f",
+    sprintf(buffer, "t%8.3f d%8.3f s%3.0f i%6.2f k%6.2f v%6.2f y%5.2f pcs%8.2f",
             getTime(),
             getDuration(),
             getStatus(),

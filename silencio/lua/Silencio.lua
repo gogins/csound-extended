@@ -26,8 +26,8 @@ An event is a homogeneous vector with the following dimensions:
  4 MIDI channel (any real number >= 0, fractional part ties events).
  5 MIDI key number from 0 to 127, 60 is middle C (a real number).
  6 MIDI velocity from 0 to 127, 80 is mezzo-forte (a real number.
- 7 Pan, 0 is the origin.
- 8 Depth, 0 is the origin.
+ 7 Depth, 0 is the origin.
+ 8 Pan, 0 is the origin.
  9 Height, 0 is the origin.
 10 Phase, in radians.
 11 Homogeneity, normally always 1.
@@ -177,8 +177,8 @@ KEY         =  5
 PITCH       =  5
 VELOCITY    =  6
 LOUDNESS    =  6
-PAN         =  7
-DEPTH       =  8
+DEPTH       =  7
+PAN         =  8
 HEIGHT      =  9
 PHASE       = 10
 HOMOGENEITY = 11
@@ -190,8 +190,8 @@ dimensions[STATUS      ] = "Status"
 dimensions[INSTRUMENT  ] = "Instrument"
 dimensions[PITCH       ] = "Pitch"
 dimensions[LOUDNESS    ] = "Loudness"
-dimensions[PAN         ] = "Pan"
 dimensions[DEPTH       ] = "Depth"
+dimensions[PAN         ] = "Pan"
 dimensions[HEIGHT      ] = "Height"
 dimensions[PHASE       ] = "Phase"
 dimensions[HOMOGENEITY ] = "Homogeneity"
@@ -218,7 +218,7 @@ end
 -- Note that MIDI channels are zero-based, Csound instrument numbers are one-based.
 
 function Event:csoundIStatement()
-    local istatement = string.format("i %g %g %g %g %g %g %g %g %g %g %g", self[CHANNEL] + 1, self[TIME], self[DURATION], self[KEY], self[VELOCITY], self[PAN], self[DEPTH], self[HEIGHT], self[PHASE], self[STATUS], self[HOMOGENEITY])
+    local istatement = string.format("i %g %g %g %g %g %g %g %g %g %g %g", self[CHANNEL] + 1, self[TIME], self[DURATION], self[KEY], self[VELOCITY], self[DEPTH], self[PAN], self[HEIGHT], self[PHASE], self[STATUS], self[HOMOGENEITY])
     return istatement
 end
 
@@ -275,7 +275,7 @@ function Event:setOffTime(offTime)
 end
 
 function Event:__tostring()
-    return string.format('t %9.3f d %9.3f s %6.2f c %7.3f k %7.3f v %7.3f x %7.3f y %7.3f z %7.3f p %7.3f h %7.2f', self[TIME], self[DURATION], self[STATUS], self[CHANNEL], self[KEY], self[VELOCITY], self[PHASE], self[PAN], self[DEPTH], self[HEIGHT], self[HOMOGENEITY])
+    return string.format('t %9.3f d %9.3f s %6.2f c %7.3f k %7.3f v %7.3f x %7.3f y %7.3f z %7.3f p %7.3f h %7.2f', self[TIME], self[DURATION], self[STATUS], self[CHANNEL], self[KEY], self[VELOCITY], self[PHASE], self[DEPTH], self[PAN], self[HEIGHT], self[HOMOGENEITY])
 end
 
 Score = {}
