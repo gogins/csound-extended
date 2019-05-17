@@ -284,15 +284,16 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 return CsoundThreaded::Start();
             }
             virtual int PerformAndPostProcessRoutine() {
-                Message("Began CsoundProducer::PerformAndPostProcessRoutine()...\n");
+                Message("Began CsoundProducer::PerformAndPostProcessRoutine...\n");
                 auto result = CsoundThreaded::PerformAndResetRoutine();
                 auto output_filename = GetFilenameBase();
                 output_filename.append(".");
                 output_filename.append(output_type);
-                if (keep_running == true) {
+                //if (result == 0) {
+                    Message("Post-processing output file: %s.\n", output_filename.c_str());
                     PostProcess(tags, output_filename);
-                }
-                Message("Ended CsoundProducer::PerformAndPostProcessRoutine() with %d.\n", result);
+                //}
+                Message("Ended CsoundProducer::PerformAndPostProcessRoutine with %d.\n", result);
                 return result;
             }
             /**

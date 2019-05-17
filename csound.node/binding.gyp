@@ -1,14 +1,17 @@
 {
-    'dependencies': {
+    'dependencies': 
+    {
         'node-addon-api': '^1.3.0',
     },
-    'targets': [{
-        'target_name': 'csound',
-        'sources': 
+    'target_defaults': 
+    {
+       "cflags!": [ "-fno-exceptions" ],
+        "cflags_cc!": [ "-fno-exceptions" ],
+        "include_dirs": 
         [
-            'jscsound.cpp',
+            "<!@(node -p \"require('node-addon-api').include\")"
         ],
-        'conditions': 
+         'conditions': 
         [
             ['OS=="linux"',
                 {
@@ -46,5 +49,15 @@
                 }
             ]
         ]
-    }]
+    },
+    'targets': 
+    [
+        {
+            'target_name': 'csound',
+            'sources': 
+            [
+                'jscsound.cpp',
+            ],
+        },
+    ]
 }
