@@ -480,13 +480,14 @@ void uv_csound_message_callback(uv_async_t *handle)
 #else
     while (csound_messages_queue.try_pop(message)) {
 #endif
+        v8::Local<v8::Value> receiver;
         v8::Local<v8::Value> args[] = { v8::String::NewFromUtf8(isolate, message) };
         if (csound_message_callback.IsEmpty()) {
             auto local_function = v8::Local<v8::Function>::New(isolate, console_function(isolate));
-            local_function->Call(isolate->GetCurrentContext()->Global(), 1, args);
+            local_function->Call(isolate->GetCurrentContext(), receiver, 1, args);
         } else {
             auto local_csound_message_callback = v8::Local<v8::Function>::New(isolate, csound_message_callback);
-            local_csound_message_callback->Call(isolate->GetCurrentContext()->Global(), 1, args);
+            local_csound_message_callback->Call(isolate->GetCurrentContext(), receiver, 1, args);
         }
         std::free(message);
     }
