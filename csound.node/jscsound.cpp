@@ -31,8 +31,6 @@
 
 #include <v8.h>
 
-using namespace v8;
-
 #include <csound.h>
 #include <csound_threaded.hpp>
 #include <CsoundProducer.hpp>
@@ -52,81 +50,81 @@ using namespace v8;
 
 static csound::CsoundProducer csound_;
 static uv_async_t uv_csound_message_async;
-static Persistent<Function> csound_message_callback;
+static v8::Persistent<v8::Function> csound_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
 
-void cleanup(const FunctionCallbackInfo<Value>& args)
+void cleanup(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     int result = csound_.Cleanup();
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Compiles the CSD file.
  */
-void compileCsd(const FunctionCallbackInfo<Value>& args)
+void compileCsd(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     int result = 0;
     v8::String::Utf8Value csd_path(args[0]->ToString());
     result = csound_.CompileCsd(*csd_path);
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Compiles the CSD text.
  */
-void compileCsdText(const FunctionCallbackInfo<Value>& args)
+void compileCsdText(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     int result = 0;
     v8::String::Utf8Value csd(args[0]->ToString());
     result = csound_.CompileCsdText(*csd);
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Compiles the orchestra code.
  */
-void compileOrc(const FunctionCallbackInfo<Value>& args)
+void compileOrc(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value orchestraCode(args[0]->ToString());
     int result = csound_.CompileOrc(*orchestraCode);
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
-static Persistent<Function, CopyablePersistentTraits<Function>> console_function(Isolate *isolate)
+static v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>> console_function(v8::Isolate *isolate)
 {
-    static Persistent<Function, CopyablePersistentTraits<Function>> function;
+    static v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>> function;
     static bool initialized = false;
     if (initialized == false) {
         initialized = true;
-        auto code = String::NewFromUtf8(isolate, "(function(arg) {\n\
+        auto code = v8::String::NewFromUtf8(isolate, "(function(arg) {\n\
             console.log(arg);\n\
         })");
-        auto maybe_local_script = Script::Compile(isolate->GetCurrentContext(), code);
-        Local<Script> local_script;
+        auto maybe_local_script = v8::Script::Compile(isolate->GetCurrentContext(), code);
+        v8::Local<v8::Script> local_script;
         maybe_local_script.ToLocal(&local_script);
         auto maybe_local_result = local_script->Run(isolate->GetCurrentContext());
-        Local<Value> local_result;
+        v8::Local<v8::Value> local_result;
         maybe_local_result.ToLocal(&local_result);
-        Local<Function> local_function = Local<Function>::Cast(local_result);
+        v8::Local<v8::Function> local_function = v8::Local<v8::Function>::Cast(local_result);
         function.Reset(isolate, local_function);
     }
     return function;
 }
 
-void setMessageCallback(const FunctionCallbackInfo<Value>& args)
+void setMessageCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    csound_message_callback.Reset(isolate, Handle<Function>::Cast(args[0]));
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
+    csound_message_callback.Reset(isolate, v8::Handle<v8::Function>::Cast(args[0]));
 }
 
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
@@ -143,117 +141,117 @@ void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_l
  * Evaluates the orchestra code as an expression, and returns its value
  * as a number.
  */
-void evalCode(const FunctionCallbackInfo<Value>& args)
+void evalCode(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value orchestraCode(args[0]->ToString());
     double result = csound_.EvalCode(*orchestraCode);
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Returns the numerical value of the named Csound control channel.
  */
-void getControlChannel(const FunctionCallbackInfo<Value>& args)
+void getControlChannel(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value channelName(args[0]->ToString());
     int result = 0;
     double value = csound_.GetChannel(*channelName, &result);
-    args.GetReturnValue().Set(Number::New(isolate, value));
+    args.GetReturnValue().Set(v8::Number::New(isolate, value));
 }
 
 /**
  * Returns 1 if automatic Git commit is enabled, 0 otherwise.
  */
-void getDoGitCommit(const FunctionCallbackInfo<Value>& args)
+void getDoGitCommit(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     bool do_git_commit = csound_.GetDoGitCommit();
-    args.GetReturnValue().Set(Boolean::New(isolate, do_git_commit) );
+    args.GetReturnValue().Set(v8::Boolean::New(isolate, do_git_commit) );
 }
 
 /**
  * Returns the numerical value of the named Csound control channel.
  */
-void getMetadata(const FunctionCallbackInfo<Value>& args)
+void getMetadata(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value key(args[0]->ToString());
     int result = 0;
     auto value = csound_.GetMetadata(*key);
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, value.c_str()));
+    args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, value.c_str()));
 }
 
 /**
  * Returns the current number of sample frames per kperiod
  * in the current Csound performance.
  */
-void getKsmps(const FunctionCallbackInfo<Value>& args)
+void getKsmps(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     double value = csound_.GetKsmps();
-    args.GetReturnValue().Set(Number::New(isolate, value));
+    args.GetReturnValue().Set(v8::Number::New(isolate, value));
 }
 
 /**
  * Returns the number of audio output channels
  * in the current Csound performance.
  */
-void getNchnls(const FunctionCallbackInfo<Value>& args)
+void getNchnls(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     double value = csound_.GetNchnls();
-    args.GetReturnValue().Set(Number::New(isolate, value));
+    args.GetReturnValue().Set(v8::Number::New(isolate, value));
 }
 
 /**
  * Returns Csound's current sampling rate.
  */
-void getSr(const FunctionCallbackInfo<Value>& args)
+void getSr(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     double value = csound_.GetSr();
-    args.GetReturnValue().Set(Number::New(isolate, value));
+    args.GetReturnValue().Set(v8::Number::New(isolate, value));
 }
 
 /**
  * Returns the time in seconds from the beginning of performance.
  */
-void getScoreTime(const FunctionCallbackInfo<Value>& args)
+void getScoreTime(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     double value = csound_.GetScoreTime();
-    args.GetReturnValue().Set(Number::New(isolate, value));
+    args.GetReturnValue().Set(v8::Number::New(isolate, value));
 }
 
-void getVersion(const FunctionCallbackInfo<Value>& args)
+void getVersion(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     int version = csoundGetVersion();
-    args.GetReturnValue().Set(Number::New(isolate, version));
+    args.GetReturnValue().Set(v8::Number::New(isolate, version));
 }
 
 /**
  * This is provided so that the developer may verify that
  * the "csound" object exists in his or her JavaScript context.
  */
-void hello(const FunctionCallbackInfo<Value>& args)
+void hello(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     char buffer[0x100];
     std::sprintf(buffer, "Hello, world! This is Csound 0x%p.", csound_.GetCsound());
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, buffer));
+    args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, buffer));
 }
 
 /**
@@ -261,42 +259,42 @@ void hello(const FunctionCallbackInfo<Value>& args)
  * as a Csound score for immediate performance. The score is assumed
  * to be presorted.
  */
-void inputMessage(const FunctionCallbackInfo<Value>& args)
+void inputMessage(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value scoreLines(args[0]->ToString());
     csound_.InputMessage(*scoreLines);
-    args.GetReturnValue().Set(Number::New(isolate, 0));
+    args.GetReturnValue().Set(v8::Number::New(isolate, 0));
 }
 
 /**
  * Returns 1 if Csound is currently playing (synthesizing score
  * events, or 0 otherwise.
  */
-void isPlaying(const FunctionCallbackInfo<Value>& args)
+void isPlaying(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     bool playing = csound_.IsPlaying();
-    args.GetReturnValue().Set(Boolean::New(isolate, playing) );
+    args.GetReturnValue().Set(v8::Boolean::New(isolate, playing) );
 }
 
-void isScorePending(const FunctionCallbackInfo<Value>& args)
+void isScorePending(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     bool is_pending = csound_.IsScorePending();
-    args.GetReturnValue().Set(Boolean::New(isolate, is_pending));
+    args.GetReturnValue().Set(v8::Boolean::New(isolate, is_pending));
 }
 
 /**
  * Sends text as a message to Csound, for printing if printing is enabled.
  */
-void message(const FunctionCallbackInfo<Value>& args)
+void message(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value text(args[0]->ToString());
     csound_.Message(*text);
 }
@@ -311,42 +309,42 @@ void on_exit()
  * It is first necessary to call compileCsd(pathname) or compileOrc(text).
  * Returns the native handle of the performance thread.
  */
-void perform(const FunctionCallbackInfo<Value>& args)
+void perform(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     int result = csound_.PerformAndReset();
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
-void performAndPostProcess(const FunctionCallbackInfo<Value>& args)
+void performAndPostProcess(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     int result = csound_.PerformAndPostProcess();
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Evaluates the string of text, which may main contain multiple lines,
  * as a Csound score for immediate performance.
  */
-void readScore(const FunctionCallbackInfo<Value>& args)
+void readScore(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     int result = 0;
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value scoreLines(args[0]->ToString());
     csound_.ReadScore(*scoreLines);
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
-void reset(const FunctionCallbackInfo<Value>& args)
+void reset(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     csound_.Reset();
 }
 
-void rewindScore(const FunctionCallbackInfo<Value>& args)
+void rewindScore(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     csound_.RewindScore();
 }
@@ -354,14 +352,14 @@ void rewindScore(const FunctionCallbackInfo<Value>& args)
 /**
  * Runs arbitrary JavaScript code in the caller's context.
  */
-double run_javascript(Isolate *isolate, std::string code)
+double run_javascript(v8::Isolate *isolate, std::string code)
 {
-    Handle<String> source = String::NewFromUtf8(isolate, code.c_str());
-    auto script = Script::Compile(isolate->GetCurrentContext(), source);
-    Local<Script> local_script;
+    v8::Handle<v8::String> source = v8::String::NewFromUtf8(isolate, code.c_str());
+    auto script = v8::Script::Compile(isolate->GetCurrentContext(), source);
+    v8::Local<v8::Script> local_script;
     script.ToLocal(&local_script);
     auto result = local_script->Run(isolate->GetCurrentContext());
-    Local<Value> value;
+    v8::Local<v8::Value> value;
     result.ToLocal(&value);
     return value->NumberValue();
 }
@@ -372,11 +370,11 @@ double run_javascript(Isolate *isolate, std::string code)
  * is read from the length of the array, not from the Csound API
  * parameter.
  */
-void scoreEvent(const FunctionCallbackInfo<Value>& args)
+void scoreEvent(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     int result = 0;
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value javascript_opcode(args[0]->ToString());
     v8::Local<v8::Array> javascript_pfields = v8::Local<v8::Array>::Cast(args[1]);
     // There are lower-level ways of doing this, but they look complex and perhaps fragile.
@@ -387,34 +385,34 @@ void scoreEvent(const FunctionCallbackInfo<Value>& args)
         pfields.push_back(element->NumberValue());
     }
     csound_.ScoreEvent((*javascript_opcode)[0], pfields.data(), pfields.size());
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Sets the numerical value of the named Csound control channel.
  */
-void setControlChannel(const FunctionCallbackInfo<Value>& args)
+void setControlChannel(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value channelName(args[0]->ToString());
     v8::Local<v8::Number> v8_value = v8::Local<v8::Number>::Cast(args[1]);
     double value = v8_value->NumberValue();
     csound_.SetChannel(*channelName, value);
 }
 
-void setDoGitCommit(const FunctionCallbackInfo<Value>& args)
+void setDoGitCommit(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     bool do_git_commit = args[0]->BooleanValue();
     csound_.SetDoGitCommit(do_git_commit);
 }
 
-void setMetadata(const FunctionCallbackInfo<Value>& args)
+void setMetadata(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value key(args[0]->ToString());
     v8::String::Utf8Value value(args[1]->ToString());
     csound_.SetMetadata(*key, *value);
@@ -423,32 +421,32 @@ void setMetadata(const FunctionCallbackInfo<Value>& args)
 /**
  * Sets the value of one Csound option. Spaces are not permitted.
  */
-void setOption(const FunctionCallbackInfo<Value>& args)
+void setOption(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value option(args[0]->ToString());
     int result = csound_.SetOption(*option);
-    args.GetReturnValue().Set(Number::New(isolate, result));
+    args.GetReturnValue().Set(v8::Number::New(isolate, result));
 }
 
 /**
  * Sets the output filename, type, and format.
  */
-void setOutput(const FunctionCallbackInfo<Value>& args)
+void setOutput(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     v8::String::Utf8Value filename(args[0]->ToString());
     v8::String::Utf8Value type(args[1]->ToString());
     v8::String::Utf8Value format(args[2]->ToString());
     csound_.SetOutput(*filename, *type, *format);
 }
 
-void setScorePending(const FunctionCallbackInfo<Value>& args)
+void setScorePending(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     bool is_pending = args[0]->BooleanValue();
     csound_.SetScorePending(is_pending);
 }
@@ -456,7 +454,7 @@ void setScorePending(const FunctionCallbackInfo<Value>& args)
 /**
  * Starts the Csound performance.
  */
-void start(const FunctionCallbackInfo<Value>& args)
+void start(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     csound_.Start();
 }
@@ -464,7 +462,7 @@ void start(const FunctionCallbackInfo<Value>& args)
 /**
  * Stops any ongoing Csound performance.
  */
-void stop(const FunctionCallbackInfo<Value>& args)
+void stop(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     csound_.Stop();
     // Prevent the host from restarting Csound before it has finished
@@ -474,27 +472,27 @@ void stop(const FunctionCallbackInfo<Value>& args)
 
 void uv_csound_message_callback(uv_async_t *handle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
     char *message;
 #if defined(_MSC_VER)
     while (csound_messages_queue.try_pop(message)) {
 #else
     while (csound_messages_queue.try_pop(message)) {
 #endif
-        Local<v8::Value> args[] = { String::NewFromUtf8(isolate, message) };
+        v8::Local<v8::Value> args[] = { v8::String::NewFromUtf8(isolate, message) };
         if (csound_message_callback.IsEmpty()) {
-            auto local_function = Local<Function>::New(isolate, console_function(isolate));
+            auto local_function = v8::Local<v8::Function>::New(isolate, console_function(isolate));
             local_function->Call(isolate->GetCurrentContext()->Global(), 1, args);
         } else {
-            auto local_csound_message_callback = Local<Function>::New(isolate, csound_message_callback);
+            auto local_csound_message_callback = v8::Local<v8::Function>::New(isolate, csound_message_callback);
             local_csound_message_callback->Call(isolate->GetCurrentContext()->Global(), 1, args);
         }
         std::free(message);
     }
 }
 
-void init(Handle<Object> target)
+void init(v8::Handle<v8::Object> target)
 {
     csound_.SetMessageCallback(csoundMessageCallback_);
     // Keep these in alphabetical order.

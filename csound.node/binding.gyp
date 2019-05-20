@@ -56,8 +56,8 @@
             'target_name': 'csound',
             'sources': 
             [
-                'jscsound.cpp',
+               'jscsound.cpp',
             ],
         },
-    ]
+    ]    
 }
