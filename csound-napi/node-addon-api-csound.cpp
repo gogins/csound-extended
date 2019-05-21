@@ -229,7 +229,7 @@ void Stop(const Napi::CallbackInfo &info) {
 
 void SetMessageCallback(const Napi::CallbackInfo &info) {
     csound_message_callback = info[0].As<Napi::Function>();
-    std::fprintf(stderr, "csound_message_callback: %s", csound_message_callback.ToString().Utf8Value());
+    std::fprintf(stderr, "csound_message_callback: %s", csound_message_callback.ToString().Utf8Value().c_str());
     static Napi::FunctionReference persistent = Napi::Persistent(csound_message_callback);
 }
 
