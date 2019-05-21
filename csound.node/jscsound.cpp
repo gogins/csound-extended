@@ -365,7 +365,7 @@ double run_javascript(v8::Isolate *isolate, std::string code)
 }
 
 /**
- * Evaluates a singisle score event, sent as opcode and pfields,
+ * Evaluates a single score event, sent as opcode and pfields,
  * relative to the current performance time. The number of pfields
  * is read from the length of the array, not from the Csound API
  * parameter.
@@ -484,10 +484,10 @@ void uv_csound_message_callback(uv_async_t *handle)
         v8::Local<v8::Value> args[] = { v8::String::NewFromUtf8(isolate, message) };
         if (csound_message_callback.IsEmpty()) {
             auto local_function = v8::Local<v8::Function>::New(isolate, console_function(isolate));
-            local_function->Call(isolate->GetCurrentContext(), receiver, 1, args);
+            local_function->Call(isolate->GetCurrentContext()->Global(), 1, args);
         } else {
             auto local_csound_message_callback = v8::Local<v8::Function>::New(isolate, csound_message_callback);
-            local_csound_message_callback->Call(isolate->GetCurrentContext(), receiver, 1, args);
+            local_csound_message_callback->Call(isolate->GetCurrentContext()->Global(), 1, args);
         }
         std::free(message);
     }
