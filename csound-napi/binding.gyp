@@ -53,7 +53,7 @@
     'targets': 
     [
         {
-            'target_name': 'csound-napi',
+            'target_name': 'csound',
             'sources': 
             [
                 'node-addon-api-csound.cpp',

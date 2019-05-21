@@ -1,3 +1,7 @@
+/**
+ * Use the Node Addon API to isolate csound.node from changes in the
+ * underlying v8 engine API.
+ */
 #include <CsoundProducer.hpp>
 #include <ecl/ecl.h>
 
@@ -14,20 +18,15 @@
 #include <ios>
 #include <iostream>
 #include <memory>
-//#include <node.h>
 #include <string>
 #include <vector>
-#include <uv.h>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static csound::CsoundProducer csound_;
-static uv_async_t uv_csound_message_async;
-
 //https://github.com/nodejs/node-addon-api/issues/432
-static Napi::Reference<Napi::Function> csound_message_callback;
-
+static Napi::Function csound_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
 
 Napi::Number Cleanup(const Napi::CallbackInfo &info) {
@@ -116,7 +115,6 @@ Napi::Number GetVersion(const Napi::CallbackInfo &info) {
 }
 
 void InputMessage(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
     std::string text = info[0].As<Napi::String>().Utf8Value();
     csound_.InputMessage(text.c_str());
 }
@@ -134,14 +132,8 @@ Napi::Boolean IsScorePending(const Napi::CallbackInfo &info) {
 }
 
 void Message(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
     std::string text = info[0].As<Napi::String>().Utf8Value();
     csound_.Message(text.c_str());
-}
-
-void on_exit()
-{
-    uv_close((uv_handle_t *)&uv_csound_message_async, 0);
 }
 
 Napi::Number Perform(const Napi::CallbackInfo &info) {
@@ -192,144 +184,203 @@ Napi::Number ScoreEvent(const Napi::CallbackInfo &info)
 }
 
 void SetControlChannel(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
     std::string name = info[0].As<Napi::String>().Utf8Value();
     double value = info[1].As<Napi::Number>().DoubleValue();
     csound_.SetChannel(name.c_str(), value);
 }
 
 void SetDoGitCommit(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
     bool value = info[0].As<Napi::Boolean>().Value();
     csound_.SetDoGitCommit(value);
 }
 
-Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
+void SetMetadata(const Napi::CallbackInfo &info) {
+    std::string tag = info[0].As<Napi::String>().Utf8Value();
+    std::string value = info[1].As<Napi::String>().Utf8Value();
+    csound_.SetMetadata(tag.c_str(), value.c_str());
+}
 
+void SetOption(const Napi::CallbackInfo &info) {
+    std::string value = info[0].As<Napi::String>().Utf8Value();
+    csound_.SetOption(value.c_str());
+}
+
+void SetOutput(const Napi::CallbackInfo &info) {
+    std::string filename = info[0].As<Napi::String>().Utf8Value();
+    std::string type = info[0].As<Napi::String>().Utf8Value();
+    std::string format = info[0].As<Napi::String>().Utf8Value();
+    csound_.SetOutput(filename.c_str(), type.c_str(), format.c_str());
+}
+
+void SetScorePending(const Napi::CallbackInfo &info) {
+    bool value = info[0].As<Napi::Boolean>().Value();
+    csound_.SetScorePending(value);
+}
+
+Napi::Number Start(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int result = csound_.Start();
+    return Napi::Number::New(env, result);
+}
+
+void Stop(const Napi::CallbackInfo &info) {
+    csound_.Stop();
+}
+
+void SetMessageCallback(const Napi::CallbackInfo &info) {
+    csound_message_callback = info[0].As<Napi::Function>();
+    std::fprintf(stderr, "csound_message_callback: %s", csound_message_callback.ToString().Utf8Value());
+    static Napi::FunctionReference persistent = Napi::Persistent(csound_message_callback);
+}
+
+class MessageWorker : public Napi::AsyncWorker {
+public:
+    MessageWorker(Napi::Function& callback, std::string& message)
+        : Napi::AsyncWorker(callback), message(message) {}
+    ~MessageWorker() {}
+    // This code will be executed on the worker thread; no-op here.
+    void Execute() {
+    }
+    // This code will be executed on the main thread.
+    void OnOK() {
+        std::fprintf(stderr, "OnOK: message: %s", message.c_str());
+        Napi::HandleScope scope(Napi::Env());
+        Callback().Call({Env().Null(), Napi::String::New(Env(), message)});
+    }
+private:
+    std::string message;
+};
+
+void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
+{
+    char buffer[0x1000];
+    std::vsprintf(buffer, format, valist);
+    std::string message = buffer;
+    std::fprintf(stderr, "csoundMessageCallback: %s.", buffer);
+    MessageWorker *messageWorker = new MessageWorker(csound_message_callback, message);
+    std::fprintf(stderr, "messageWorker: %p.", messageWorker);
+    messageWorker->Queue();    
+}
+
+Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
+    std::printf("Napi Initialize...");
+    csound_.SetMessageCallback(csoundMessageCallback_);
     exports.Set(Napi::String::New(env, "Cleanup"),
                 Napi::Function::New(env, Cleanup));
     exports.Set(Napi::String::New(env, "cleanup"),
                 Napi::Function::New(env, Cleanup));
-
     exports.Set(Napi::String::New(env, "CompileCsd"),
                 Napi::Function::New(env, CompileCsd));
     exports.Set(Napi::String::New(env, "compileCsd"),
                 Napi::Function::New(env, CompileCsd));
-
     exports.Set(Napi::String::New(env, "CompileCsdText"),
                 Napi::Function::New(env, CompileCsdText));
     exports.Set(Napi::String::New(env, "compileCsdText"),
                 Napi::Function::New(env, CompileCsdText));
-
     exports.Set(Napi::String::New(env, "CompileOrc"),
                 Napi::Function::New(env, CompileOrc));
     exports.Set(Napi::String::New(env, "compileOrc"),
                 Napi::Function::New(env, CompileOrc));
-
     exports.Set(Napi::String::New(env, "EvalCode"),
                 Napi::Function::New(env, EvalCode));
     exports.Set(Napi::String::New(env, "evalCode"),
                 Napi::Function::New(env, EvalCode));
-
     exports.Set(Napi::String::New(env, "GetControlChannel"),
                 Napi::Function::New(env, GetControlChannel));
     exports.Set(Napi::String::New(env, "getControlChannel"),
                 Napi::Function::New(env, GetControlChannel));
-
     exports.Set(Napi::String::New(env, "GetKsmps"),
                 Napi::Function::New(env, GetKsmps));
     exports.Set(Napi::String::New(env, "getKsmps"),
                 Napi::Function::New(env, GetKsmps));
-
     exports.Set(Napi::String::New(env, "GetMetadata"),
                 Napi::Function::New(env, GetMetadata));
     exports.Set(Napi::String::New(env, "getMetadata"),
                 Napi::Function::New(env, GetMetadata));
-
     exports.Set(Napi::String::New(env, "GetNchnls"),
                 Napi::Function::New(env, GetNchnls));
     exports.Set(Napi::String::New(env, "getNchnls"),
                 Napi::Function::New(env, GetNchnls));
-
     exports.Set(Napi::String::New(env, "GetScoreTime"),
                 Napi::Function::New(env, GetScoreTime));
     exports.Set(Napi::String::New(env, "getScoreTime"),
                 Napi::Function::New(env, GetScoreTime));
-
     exports.Set(Napi::String::New(env, "GetSr"),
                 Napi::Function::New(env, GetSr));
     exports.Set(Napi::String::New(env, "getSr"),
                 Napi::Function::New(env, GetSr));
-
     exports.Set(Napi::String::New(env, "InputMessage"),
                 Napi::Function::New(env, InputMessage));
     exports.Set(Napi::String::New(env, "inputMessage"),
                 Napi::Function::New(env, InputMessage));
-
     exports.Set(Napi::String::New(env, "IsScorePending"),
                 Napi::Function::New(env, IsScorePending));
     exports.Set(Napi::String::New(env, "isScorePending"),
                 Napi::Function::New(env, IsScorePending));
-
     exports.Set(Napi::String::New(env, "Message"),
                 Napi::Function::New(env, Message));
     exports.Set(Napi::String::New(env, "message"),
                 Napi::Function::New(env, Message));
-
     exports.Set(Napi::String::New(env, "Perform"),
                 Napi::Function::New(env, Perform));
     exports.Set(Napi::String::New(env, "perform"),
                 Napi::Function::New(env, Perform));
-
     exports.Set(Napi::String::New(env, "PerformAndPostProcess"),
                 Napi::Function::New(env, PerformAndPostProcess));
     exports.Set(Napi::String::New(env, "performAndPostProcess"),
                 Napi::Function::New(env, PerformAndPostProcess));
-
     exports.Set(Napi::String::New(env, "ReadScore"),
                 Napi::Function::New(env, ReadScore));
     exports.Set(Napi::String::New(env, "readScore"),
                 Napi::Function::New(env, ReadScore));
-
     exports.Set(Napi::String::New(env, "Reset"),
                 Napi::Function::New(env, Reset));
     exports.Set(Napi::String::New(env, "reset"),
                 Napi::Function::New(env, Reset));
-
     exports.Set(Napi::String::New(env, "RewindScore"),
                 Napi::Function::New(env, RewindScore));
     exports.Set(Napi::String::New(env, "rewindScore"),
                 Napi::Function::New(env, RewindScore));
-
     exports.Set(Napi::String::New(env, "ScoreEvent"),
                 Napi::Function::New(env, ScoreEvent));
     exports.Set(Napi::String::New(env, "scoreEvent"),
                 Napi::Function::New(env, ScoreEvent));
-
     exports.Set(Napi::String::New(env, "SetControlChannel"),
                 Napi::Function::New(env, SetControlChannel));
     exports.Set(Napi::String::New(env, "setControlChannel"),
                 Napi::Function::New(env, SetControlChannel));
-
     exports.Set(Napi::String::New(env, "SetDoGitCommit"),
                 Napi::Function::New(env, SetDoGitCommit));
     exports.Set(Napi::String::New(env, "setDoGitCommit"),
                 Napi::Function::New(env, SetDoGitCommit));
-
     exports.Set(Napi::String::New(env, "SetMessageCallback"),
                 Napi::Function::New(env, SetMessageCallback));
     exports.Set(Napi::String::New(env, "setMessageCallback"),
                 Napi::Function::New(env, SetMessageCallback));
-
-    /*
-    NODE_SET_METHOD(target, "SetMessageCallback", setMessageCallback);
-    NODE_SET_METHOD(target, "SetMetadata", setMetadata);
-    NODE_SET_METHOD(target, "SetOption", setOption);
-    NODE_SET_METHOD(target, "SetOutput", setOutput);
-    NODE_SET_METHOD(target, "SetScorePending", setScorePending);
-    NODE_SET_METHOD(target, "Start", start);
-    NODE_SET_METHOD(target, "Stop", stop);
-    */
+    exports.Set(Napi::String::New(env, "SetMetadata"),
+                Napi::Function::New(env, SetMetadata));
+    exports.Set(Napi::String::New(env, "setMetadata"),
+                Napi::Function::New(env, SetMetadata));
+    exports.Set(Napi::String::New(env, "SetOption"),
+                Napi::Function::New(env, SetOption));
+    exports.Set(Napi::String::New(env, "setOption"),
+                Napi::Function::New(env, SetOption));
+    exports.Set(Napi::String::New(env, "SetOutput"),
+                Napi::Function::New(env, SetOutput));
+    exports.Set(Napi::String::New(env, "setOutput"),
+                Napi::Function::New(env, SetOutput));
+    exports.Set(Napi::String::New(env, "SetScorePendingOutput"),
+                Napi::Function::New(env, SetScorePending));
+    exports.Set(Napi::String::New(env, "setScorePending"),
+                Napi::Function::New(env, SetScorePending));
+    exports.Set(Napi::String::New(env, "Start"),
+                Napi::Function::New(env, Start));
+    exports.Set(Napi::String::New(env, "start"),
+                Napi::Function::New(env, Start));
+    exports.Set(Napi::String::New(env, "Stop"),
+                Napi::Function::New(env, Stop));
+    exports.Set(Napi::String::New(env, "stop"),
+                Napi::Function::New(env, Stop));
     return exports;
 }
 
