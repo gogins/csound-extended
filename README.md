@@ -124,7 +124,7 @@ Before building csound-extended, be aware that you can use csound-extended
 with your own local build of Csound from the Csound git repository.
 
 To do this, first build  **and install** csound-extended using the 
-instructions below, including **installing the official Csound packages.** 
+instructions below, which automatically **installs the official Csound packages.** 
 Run some pieces that use features you need to test your installation. 
 
 Then, clone the Csound Git repository from `https://github.com/csound/csound`, 
@@ -137,19 +137,24 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 After that of course do the usual `sudo make install` for Csound.
 
 Finbally, re-run your tests to make sure the features you need are still 
-working and that the newer Csound is compatible with csound-extended. If not all 
-features you need work, e.g. the Python interfaces, do a local build and install 
-of csound-extended, i.e. without updating dependencies, and re-install your local 
-build of csound-extended over your existing installation, like this:
+working and that the newer Csound is compatible with csound-extended. If not 
+all features you need work, e.g. the Python interfaces, do a local build and 
+install of csound-extended, **i.e. without updating dependencies** (`bash 
+build-linux.sh`), and re-install your local build of csound-extended over 
+your existing installation, like this:
 ```
-sudo apt install ./build-linux/csound-extended-dev-1.3.0-Linux.deb --reinstall
+sudo apt install ./build-linux/csound-extended-dev-1.3.1-Linux.deb --reinstall
 ```
 
 If ever need to revert to the original packaged version of Csound 
-normally used by csound-extended, simply reinstall the Csound packages.
+normally used by csound-extended, in your local Csound build directory, do this:
+```
+sudo xargs rm < install_manifest.txt
+```
+and then do a fresh build and installation of csound-extended **including 
+updating Csound** (`bash fresh-build-linux.sh`).
 
 ## Building
-
 
 Currently, the supported platforms are Linux, Android, and WebAssembly. 
 The code is generally "cross-platform" in nature and this build system could 
@@ -186,6 +191,9 @@ OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
 ```
 
+If csound.node fails to build, you may need to add the NPM bin directory to 
+your PATH variable so that CMake can find node-gyp.
+
 Change to your csound-extended repository and execute `fresh-build-linux.sh`, 
 which does the following:
 
@@ -199,11 +207,8 @@ Subsequently, you can perform these steps independently.
 
 To make clean, execute `bash clean-linux.sh`. 
 
-To install, change to build-linux and execute `sudo make install`.
-
-Add /usr/local/csound to your /etc/ld.so.conf file and run `sudo ldconfig`.
-
-### Building for Android
+To install, change to build-linux and execute `sudo install 
+./csound-extended-dev-1.3.1-Linux.deb --reinstall`.
 
 Please note, some NDK dependencies are built in their own subdirectories, 
 and some are built in OTHER subdirectories with their own makefiles that 

@@ -1,6 +1,6 @@
 /**
  * Use the Node Addon API to isolate csound.node from changes in the
- * underlying v8 engine API.
+ * underlying v8 API.
  */
  
 #pragma GCC diagnostic push
@@ -29,7 +29,6 @@
 #include <vector>
 
 static csound::CsoundProducer csound_;
-//static Napi::Function csound_message_callback;
 static Napi::FunctionReference persistent_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
 static uv_async_t uv_csound_message_async;
@@ -252,11 +251,6 @@ void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_l
     uv_async_send(&uv_csound_message_async);
 }
 
-void on_exit()
-{
-    uv_close((uv_handle_t *)&uv_csound_message_async, 0);
-}
-
 void uv_csound_message_callback(uv_async_t *handle)
 {
     char *message = nullptr;
@@ -267,6 +261,11 @@ void uv_csound_message_callback(uv_async_t *handle)
         persistent_message_callback.Call(args);
         std::free(message);
     }
+}
+
+void on_exit()
+{
+    uv_close((uv_handle_t *)&uv_csound_message_async, 0);
 }
 
 Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
