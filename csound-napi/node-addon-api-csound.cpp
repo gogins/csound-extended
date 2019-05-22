@@ -10,7 +10,6 @@
 #undef Null
 #endif
 
-#include <napi.h>
 #include <csound.h>
 #include <csound_threaded.hpp>
 #include <cstdlib>
@@ -18,7 +17,9 @@
 #include <ios>
 #include <iostream>
 #include <memory>
+#include <napi.h>
 #include <string>
+#include <uv.h>
 #include <vector>
 
 #pragma GCC diagnostic push
@@ -28,6 +29,7 @@ static csound::CsoundProducer csound_;
 //https://github.com/nodejs/node-addon-api/issues/432
 static Napi::Function csound_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
+static uv_async_t uv_csound_message_async;
 
 Napi::Number Cleanup(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
@@ -227,39 +229,43 @@ void Stop(const Napi::CallbackInfo &info) {
     csound_.Stop();
 }
 
+static Napi::FunctionReference persistent_callback;
+
 void SetMessageCallback(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
     csound_message_callback = info[0].As<Napi::Function>();
-    std::fprintf(stderr, "csound_message_callback: %s", csound_message_callback.ToString().Utf8Value().c_str());
-    static Napi::FunctionReference persistent = Napi::Persistent(csound_message_callback);
+    persistent_callback = Napi::Persistent(csound_message_callback);
+    persistent_callback.SuppressDestruct();
 }
 
-class MessageWorker : public Napi::AsyncWorker {
-public:
-    MessageWorker(Napi::Function& callback, std::string& message)
-        : Napi::AsyncWorker(callback), message(message) {}
-    ~MessageWorker() {}
-    // This code will be executed on the worker thread; no-op here.
-    void Execute() {
-    }
-    // This code will be executed on the main thread.
-    void OnOK() {
-        std::fprintf(stderr, "OnOK: message: %s", message.c_str());
-        Napi::HandleScope scope(Napi::Env());
-        Callback().Call({Env().Null(), Napi::String::New(Env(), message)});
-    }
-private:
-    std::string message;
-};
-
+/**
+ * As this will often be called from Csound's native performance thread, 
+ * it is not safe to call from here back into JavaScript. Hence, we enqueue 
+ * messages to be dequeued and dispatched from the main JavaScript thread.
+ */
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
 {
     char buffer[0x1000];
     std::vsprintf(buffer, format, valist);
-    std::string message = buffer;
-    std::fprintf(stderr, "csoundMessageCallback: %s.", buffer);
-    MessageWorker *messageWorker = new MessageWorker(csound_message_callback, message);
-    std::fprintf(stderr, "messageWorker: %p.", messageWorker);
-    messageWorker->Queue();    
+    csound_messages_queue.push(strdup(buffer));
+    uv_async_send(&uv_csound_message_async);
+}
+
+void on_exit()
+{
+    uv_close((uv_handle_t *)&uv_csound_message_async, 0);
+}
+
+void uv_csound_message_callback(uv_async_t *handle)
+{
+    char *message = nullptr;
+    while (csound_messages_queue.try_pop(message)) {
+        Napi::Env env = persistent_callback.Env();
+        Napi::HandleScope handle_scope(env);
+        std::vector<napi_value> args = {Napi::String::New(env, message)};
+        persistent_callback.Call(args);
+        std::free(message);
+    }
 }
 
 Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
@@ -381,6 +387,8 @@ Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
                 Napi::Function::New(env, Stop));
     exports.Set(Napi::String::New(env, "stop"),
                 Napi::Function::New(env, Stop));
+    uv_async_init(uv_default_loop(), &uv_csound_message_async, uv_csound_message_callback);
+    std::atexit(&on_exit);                
     return exports;
 }
 
