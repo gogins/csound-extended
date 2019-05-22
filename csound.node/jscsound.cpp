@@ -1,367 +1,171 @@
 /**
- * \page csoundnode csound.node
- *
- * A Node.js (and io.js and NW.js) binding for Csound. This interface should
- * mirror the Csound JavaScript interface in other environments. In csound.node, 
- * Csound has already been instantiated and initialized, and is named "csound" 
- * in the user'snJavaScript context.
- *
- * See jscsound.cpp for more information.
+ * Use the Node Addon API to isolate csound.node from changes in the
+ * underlying v8 engine API.
  */
- /*
- *
- * Copyright (C) 2015 by Michael Gogins.
- *
- * This software is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 
-// Must do this on Windows: https://connect.microsoft.com/VisualStudio/feedback/details/811347/compiling-vc-12-0-with-has-exceptions-0-and-including-concrt-h-causes-a-compiler-error
+#include <CsoundProducer.hpp>
+#include <ecl/ecl.h>
 
-#include <v8.h>
+// Null from ecl/cons.h conflicts with Null from napi.h.
+#ifdef Null
+#undef Null
+#endif
 
 #include <csound.h>
 #include <csound_threaded.hpp>
-#include <CsoundProducer.hpp>
 #include <cstdlib>
-#include <ecl/ecl.h>
 #include <fstream>
 #include <ios>
 #include <iostream>
 #include <memory>
-#include <node.h>
+#include <napi.h>
 #include <string>
-#include <vector>
 #include <uv.h>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <vector>
 
 static csound::CsoundProducer csound_;
-static uv_async_t uv_csound_message_async;
-static v8::Persistent<v8::Function> csound_message_callback;
+//static Napi::Function csound_message_callback;
+static Napi::FunctionReference persistent_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
+static uv_async_t uv_csound_message_async;
 
-void cleanup(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
+Napi::Number Cleanup(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
     int result = csound_.Cleanup();
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+    return Napi::Number::New(env, result);
 }
 
-/**
- * Compiles the CSD file.
- */
-void compileCsd(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
+Napi::Number CompileCsd(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string csd = info[0].As<Napi::String>().Utf8Value();
+    int result = csound_.CompileCsd(csd.c_str());
+    return Napi::Number::New(env, result);
+}
+
+Napi::Number CompileCsdText(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string csd = info[0].As<Napi::String>().Utf8Value();
+    int result = csound_.CompileCsdText(csd.c_str());
+    return Napi::Number::New(env, result);
+}
+
+Napi::Number CompileOrc(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string csd = info[0].As<Napi::String>().Utf8Value();
+    int result = csound_.CompileOrc(csd.c_str());
+    return Napi::Number::New(env, result);
+}
+
+Napi::Number EvalCode(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string code = info[0].As<Napi::String>().Utf8Value();
+    double value = csound_.EvalCode(code.c_str());
+    return Napi::Number::New(env, value);
+}
+
+Napi::Number GetControlChannel(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string name = info[0].As<Napi::String>().Utf8Value();
     int result = 0;
-    v8::String::Utf8Value csd_path(args[0]->ToString());
-    result = csound_.CompileCsd(*csd_path);
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+    double value = csound_.GetControlChannel(name.c_str(), &result);
+    return Napi::Number::New(env, value);
 }
 
-/**
- * Compiles the CSD text.
- */
-void compileCsdText(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    int result = 0;
-    v8::String::Utf8Value csd(args[0]->ToString());
-    result = csound_.CompileCsdText(*csd);
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+Napi::Boolean GetDoGitCommit(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    bool value = csound_.GetDoGitCommit();
+    return Napi::Boolean::New(env, value);
 }
 
-/**
- * Compiles the orchestra code.
- */
-void compileOrc(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value orchestraCode(args[0]->ToString());
-    int result = csound_.CompileOrc(*orchestraCode);
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+Napi::Number GetKsmps(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int value = csound_.GetKsmps();
+    return Napi::Number::New(env, value);
 }
 
-static v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>> console_function(v8::Isolate *isolate)
-{
-    static v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>> function;
-    static bool initialized = false;
-    if (initialized == false) {
-        initialized = true;
-        auto code = v8::String::NewFromUtf8(isolate, "(function(arg) {\n\
-            console.log(arg);\n\
-        })");
-        auto maybe_local_script = v8::Script::Compile(isolate->GetCurrentContext(), code);
-        v8::Local<v8::Script> local_script;
-        maybe_local_script.ToLocal(&local_script);
-        auto maybe_local_result = local_script->Run(isolate->GetCurrentContext());
-        v8::Local<v8::Value> local_result;
-        maybe_local_result.ToLocal(&local_result);
-        v8::Local<v8::Function> local_function = v8::Local<v8::Function>::Cast(local_result);
-        function.Reset(isolate, local_function);
-    }
-    return function;
+Napi::String GetMetadata(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    std::string tag = info[0].As<Napi::String>().Utf8Value();
+    std::string value = csound_.GetMetadata(tag.c_str());
+    return Napi::String::New(env, value);
 }
 
-void setMessageCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    csound_message_callback.Reset(isolate, v8::Handle<v8::Function>::Cast(args[0]));
+Napi::Number GetNchnls(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int value = csound_.GetNchnls();
+    return Napi::Number::New(env, value);
 }
 
-void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
-{
-    char buffer[0x1000];
-    std::vsprintf(buffer, format, valist);
-    // Actual data...
-    csound_messages_queue.push(strdup(buffer));
-    // ... and notification that data is ready.
-    uv_async_send(&uv_csound_message_async);
+Napi::Number GetScoreTime(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int value = csound_.GetScoreTime();
+    return Napi::Number::New(env, value);
 }
 
-/**
- * Evaluates the orchestra code as an expression, and returns its value
- * as a number.
- */
-void evalCode(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value orchestraCode(args[0]->ToString());
-    double result = csound_.EvalCode(*orchestraCode);
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+Napi::Number GetSr(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int value = csound_.GetSr();
+    return Napi::Number::New(env, value);
 }
 
-/**
- * Returns the numerical value of the named Csound control channel.
- */
-void getControlChannel(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value channelName(args[0]->ToString());
-    int result = 0;
-    double value = csound_.GetChannel(*channelName, &result);
-    args.GetReturnValue().Set(v8::Number::New(isolate, value));
+Napi::Number GetVersion(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int value = csound_.GetVersion();
+    return Napi::Number::New(env, value);
 }
 
-/**
- * Returns 1 if automatic Git commit is enabled, 0 otherwise.
- */
-void getDoGitCommit(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    bool do_git_commit = csound_.GetDoGitCommit();
-    args.GetReturnValue().Set(v8::Boolean::New(isolate, do_git_commit) );
+void InputMessage(const Napi::CallbackInfo &info) {
+    std::string text = info[0].As<Napi::String>().Utf8Value();
+    csound_.InputMessage(text.c_str());
 }
 
-/**
- * Returns the numerical value of the named Csound control channel.
- */
-void getMetadata(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value key(args[0]->ToString());
-    int result = 0;
-    auto value = csound_.GetMetadata(*key);
-    args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, value.c_str()));
+Napi::Boolean IsPlaying(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    bool value = csound_.IsPlaying();
+    return Napi::Boolean::New(env, value);
 }
 
-/**
- * Returns the current number of sample frames per kperiod
- * in the current Csound performance.
- */
-void getKsmps(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    double value = csound_.GetKsmps();
-    args.GetReturnValue().Set(v8::Number::New(isolate, value));
+Napi::Boolean IsScorePending(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    bool value = csound_.IsScorePending();
+    return Napi::Boolean::New(env, value);
 }
 
-/**
- * Returns the number of audio output channels
- * in the current Csound performance.
- */
-void getNchnls(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    double value = csound_.GetNchnls();
-    args.GetReturnValue().Set(v8::Number::New(isolate, value));
+void Message(const Napi::CallbackInfo &info) {
+    std::string text = info[0].As<Napi::String>().Utf8Value();
+    csound_.Message(text.c_str());
 }
 
-/**
- * Returns Csound's current sampling rate.
- */
-void getSr(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    double value = csound_.GetSr();
-    args.GetReturnValue().Set(v8::Number::New(isolate, value));
+Napi::Number Perform(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int result = csound_.Perform();
+    return Napi::Number::New(env, result);
 }
 
-/**
- * Returns the time in seconds from the beginning of performance.
- */
-void getScoreTime(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    double value = csound_.GetScoreTime();
-    args.GetReturnValue().Set(v8::Number::New(isolate, value));
-}
-
-void getVersion(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    int version = csoundGetVersion();
-    args.GetReturnValue().Set(v8::Number::New(isolate, version));
-}
-
-/**
- * This is provided so that the developer may verify that
- * the "csound" object exists in his or her JavaScript context.
- */
-void hello(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    char buffer[0x100];
-    std::sprintf(buffer, "Hello, world! This is Csound 0x%p.", csound_.GetCsound());
-    args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, buffer));
-}
-
-/**
- * Evaluates the string of text, which may main contain multiple lines,
- * as a Csound score for immediate performance. The score is assumed
- * to be presorted.
- */
-void inputMessage(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value scoreLines(args[0]->ToString());
-    csound_.InputMessage(*scoreLines);
-    args.GetReturnValue().Set(v8::Number::New(isolate, 0));
-}
-
-/**
- * Returns 1 if Csound is currently playing (synthesizing score
- * events, or 0 otherwise.
- */
-void isPlaying(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    bool playing = csound_.IsPlaying();
-    args.GetReturnValue().Set(v8::Boolean::New(isolate, playing) );
-}
-
-void isScorePending(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    bool is_pending = csound_.IsScorePending();
-    args.GetReturnValue().Set(v8::Boolean::New(isolate, is_pending));
-}
-
-/**
- * Sends text as a message to Csound, for printing if printing is enabled.
- */
-void message(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value text(args[0]->ToString());
-    csound_.Message(*text);
-}
-
-void on_exit()
-{
-    uv_close((uv_handle_t *)&uv_csound_message_async, 0);
-}
-
-/**
- * Begins performing the score and/or producing audio.
- * It is first necessary to call compileCsd(pathname) or compileOrc(text).
- * Returns the native handle of the performance thread.
- */
-void perform(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    int result = csound_.PerformAndReset();
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
-}
-
-void performAndPostProcess(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
+Napi::Number PerformAndPostProcess(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
     int result = csound_.PerformAndPostProcess();
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+    return Napi::Number::New(env, result);
 }
 
-/**
- * Evaluates the string of text, which may main contain multiple lines,
- * as a Csound score for immediate performance.
- */
-void readScore(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    int result = 0;
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value scoreLines(args[0]->ToString());
-    csound_.ReadScore(*scoreLines);
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+Napi::Number ReadScore(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string sco = info[0].As<Napi::String>().Utf8Value();
+    int result = csound_.ReadScore(sco.c_str());
+    return Napi::Number::New(env, result);
 }
 
-void reset(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
+void Reset(const Napi::CallbackInfo &info) {
     csound_.Reset();
 }
 
-void rewindScore(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
+void RewindScore(const Napi::CallbackInfo &info) {
     csound_.RewindScore();
-}
-
-/**
- * Runs arbitrary JavaScript code in the caller's context.
- */
-double run_javascript(v8::Isolate *isolate, std::string code)
-{
-    v8::Handle<v8::String> source = v8::String::NewFromUtf8(isolate, code.c_str());
-    auto script = v8::Script::Compile(isolate->GetCurrentContext(), source);
-    v8::Local<v8::Script> local_script;
-    script.ToLocal(&local_script);
-    auto result = local_script->Run(isolate->GetCurrentContext());
-    v8::Local<v8::Value> value;
-    result.ToLocal(&value);
-    return value->NumberValue();
 }
 
 /**
@@ -370,206 +174,223 @@ double run_javascript(v8::Isolate *isolate, std::string code)
  * is read from the length of the array, not from the Csound API
  * parameter.
  */
-void scoreEvent(const v8::FunctionCallbackInfo<v8::Value>& args)
+Napi::Number ScoreEvent(const Napi::CallbackInfo &info)
 {
-    int result = 0;
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value javascript_opcode(args[0]->ToString());
-    v8::Local<v8::Array> javascript_pfields = v8::Local<v8::Array>::Cast(args[1]);
-    // There are lower-level ways of doing this, but they look complex and perhaps fragile.
+    Napi::Env env = info.Env();
+    std::string opcode = info[0].As<Napi::String>().Utf8Value();
+    Napi::Array array = info[1].As<Napi::Array>();
     std::vector<MYFLT> pfields;
-    int javascript_pfields_count = javascript_pfields->Length();
-    for(int i = 0; i < javascript_pfields_count; i++) {
-        v8::Local<v8::Value> element = javascript_pfields->Get(i);
-        pfields.push_back(element->NumberValue());
+    for (int i = 0, n = array.Length(); i < n; ++i) {
+        Napi::Value value = array[i];
+        pfields.push_back(value.As<Napi::Number>().DoubleValue());
     }
-    csound_.ScoreEvent((*javascript_opcode)[0], pfields.data(), pfields.size());
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+    int result = csound_.ScoreEvent(opcode[0], pfields.data(), pfields.size());
+    return Napi::Number::New(env, result);
 }
 
-/**
- * Sets the numerical value of the named Csound control channel.
- */
-void setControlChannel(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value channelName(args[0]->ToString());
-    v8::Local<v8::Number> v8_value = v8::Local<v8::Number>::Cast(args[1]);
-    double value = v8_value->NumberValue();
-    csound_.SetChannel(*channelName, value);
+void SetControlChannel(const Napi::CallbackInfo &info) {
+    std::string name = info[0].As<Napi::String>().Utf8Value();
+    double value = info[1].As<Napi::Number>().DoubleValue();
+    csound_.SetChannel(name.c_str(), value);
 }
 
-void setDoGitCommit(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    bool do_git_commit = args[0]->BooleanValue();
-    csound_.SetDoGitCommit(do_git_commit);
+void SetDoGitCommit(const Napi::CallbackInfo &info) {
+    bool value = info[0].As<Napi::Boolean>().Value();
+    csound_.SetDoGitCommit(value);
 }
 
-void setMetadata(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value key(args[0]->ToString());
-    v8::String::Utf8Value value(args[1]->ToString());
-    csound_.SetMetadata(*key, *value);
+void SetMetadata(const Napi::CallbackInfo &info) {
+    std::string tag = info[0].As<Napi::String>().Utf8Value();
+    std::string value = info[1].As<Napi::String>().Utf8Value();
+    csound_.SetMetadata(tag.c_str(), value.c_str());
 }
 
-/**
- * Sets the value of one Csound option. Spaces are not permitted.
- */
-void setOption(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value option(args[0]->ToString());
-    int result = csound_.SetOption(*option);
-    args.GetReturnValue().Set(v8::Number::New(isolate, result));
+void SetOption(const Napi::CallbackInfo &info) {
+    std::string value = info[0].As<Napi::String>().Utf8Value();
+    csound_.SetOption(value.c_str());
 }
 
-/**
- * Sets the output filename, type, and format.
- */
-void setOutput(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    v8::String::Utf8Value filename(args[0]->ToString());
-    v8::String::Utf8Value type(args[1]->ToString());
-    v8::String::Utf8Value format(args[2]->ToString());
-    csound_.SetOutput(*filename, *type, *format);
+void SetOutput(const Napi::CallbackInfo &info) {
+    std::string filename = info[0].As<Napi::String>().Utf8Value();
+    std::string type = info[0].As<Napi::String>().Utf8Value();
+    std::string format = info[0].As<Napi::String>().Utf8Value();
+    csound_.SetOutput(filename.c_str(), type.c_str(), format.c_str());
 }
 
-void setScorePending(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    bool is_pending = args[0]->BooleanValue();
-    csound_.SetScorePending(is_pending);
+void SetScorePending(const Napi::CallbackInfo &info) {
+    bool value = info[0].As<Napi::Boolean>().Value();
+    csound_.SetScorePending(value);
 }
 
-/**
- * Starts the Csound performance.
- */
-void start(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
-    csound_.Start();
+Napi::Number Start(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    int result = csound_.Start();
+    return Napi::Number::New(env, result);
 }
 
-/**
- * Stops any ongoing Csound performance.
- */
-void stop(const v8::FunctionCallbackInfo<v8::Value>& args)
-{
+void Stop(const Napi::CallbackInfo &info) {
     csound_.Stop();
-    // Prevent the host from restarting Csound before it has finished
-    // stopping.
-    csound_.Join();
+}
+
+void SetMessageCallback(const Napi::CallbackInfo &info) {
+    Napi::Function csound_message_callback = info[0].As<Napi::Function>();
+    persistent_message_callback = Napi::Persistent(csound_message_callback);
+    persistent_message_callback.SuppressDestruct();
+}
+
+/**
+ * As this will often be called from Csound's native performance thread, 
+ * it is not safe to call from here back into JavaScript. Hence, we enqueue 
+ * messages to be dequeued and dispatched from the main JavaScript thread.
+ * Dispatching is implemented using libuv.
+ */
+void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
+{
+    char buffer[0x1000];
+    std::vsprintf(buffer, format, valist);
+    csound_messages_queue.push(strdup(buffer));
+    uv_async_send(&uv_csound_message_async);
+}
+
+void on_exit()
+{
+    uv_close((uv_handle_t *)&uv_csound_message_async, 0);
 }
 
 void uv_csound_message_callback(uv_async_t *handle)
 {
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
-    v8::HandleScope scope(isolate);
-    char *message;
-#if defined(_MSC_VER)
+    char *message = nullptr;
     while (csound_messages_queue.try_pop(message)) {
-#else
-    while (csound_messages_queue.try_pop(message)) {
-#endif
-        v8::Local<v8::Value> receiver;
-        v8::Local<v8::Value> args[] = { v8::String::NewFromUtf8(isolate, message) };
-        if (csound_message_callback.IsEmpty()) {
-            auto local_function = v8::Local<v8::Function>::New(isolate, console_function(isolate));
-            local_function->Call(isolate->GetCurrentContext()->Global(), 1, args);
-        } else {
-            auto local_csound_message_callback = v8::Local<v8::Function>::New(isolate, csound_message_callback);
-            local_csound_message_callback->Call(isolate->GetCurrentContext()->Global(), 1, args);
-        }
+        Napi::Env env = persistent_message_callback.Env();
+        Napi::HandleScope handle_scope(env);
+        std::vector<napi_value> args = {Napi::String::New(env, message)};
+        persistent_message_callback.Call(args);
         std::free(message);
     }
 }
 
-void init(v8::Handle<v8::Object> target)
-{
+Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
+    std::fprintf(stderr, "Initializing csound.node...\n");
     csound_.SetMessageCallback(csoundMessageCallback_);
-    // Keep these in alphabetical order.
-    NODE_SET_METHOD(target, "Cleanup", cleanup);
-    NODE_SET_METHOD(target, "CompileCsd", compileCsd);
-    NODE_SET_METHOD(target, "CompileCsdText", compileCsdText);
-    NODE_SET_METHOD(target, "CompileOrc", compileOrc);
-    NODE_SET_METHOD(target, "EvalCode", evalCode);
-    NODE_SET_METHOD(target, "GetControlChannel", getControlChannel);
-    NODE_SET_METHOD(target, "GetDoGitCommit", getDoGitCommit);
-    NODE_SET_METHOD(target, "GetKsmps", getKsmps);
-    NODE_SET_METHOD(target, "GetMetadata", getMetadata);
-    NODE_SET_METHOD(target, "GetNchnls", getNchnls);
-    NODE_SET_METHOD(target, "GetScoreTime", getScoreTime);
-    NODE_SET_METHOD(target, "GetSr", getSr);
-    NODE_SET_METHOD(target, "GetVersion", getVersion);
-    NODE_SET_METHOD(target, "Hello", hello);
-    NODE_SET_METHOD(target, "InputMessage", inputMessage);
-    NODE_SET_METHOD(target, "IsPlaying", isPlaying);
-    NODE_SET_METHOD(target, "IsScorePending", isScorePending);
-    NODE_SET_METHOD(target, "Message", message);
-    NODE_SET_METHOD(target, "Perform", perform);
-    NODE_SET_METHOD(target, "PerformAndPostProcess", performAndPostProcess);
-    NODE_SET_METHOD(target, "ReadScore", readScore);
-    NODE_SET_METHOD(target, "Reset", reset);
-    NODE_SET_METHOD(target, "RewindScore", rewindScore);
-    NODE_SET_METHOD(target, "ScoreEvent", scoreEvent);
-    NODE_SET_METHOD(target, "SetControlChannel", setControlChannel);
-    NODE_SET_METHOD(target, "SetDoGitCommit", setDoGitCommit);
-    NODE_SET_METHOD(target, "SetMessageCallback", setMessageCallback);
-    NODE_SET_METHOD(target, "SetMetadata", setMetadata);
-    NODE_SET_METHOD(target, "SetOption", setOption);
-    NODE_SET_METHOD(target, "SetOutput", setOutput);
-    NODE_SET_METHOD(target, "SetScorePending", setScorePending);
-    NODE_SET_METHOD(target, "Start", start);
-    NODE_SET_METHOD(target, "Stop", stop);
-    
-    NODE_SET_METHOD(target, "cleanup", cleanup);
-    NODE_SET_METHOD(target, "compileCsd", compileCsd);
-    NODE_SET_METHOD(target, "compileCsdText", compileCsdText);
-    NODE_SET_METHOD(target, "compileOrc", compileOrc);
-    NODE_SET_METHOD(target, "evalCode", evalCode);
-    NODE_SET_METHOD(target, "getControlChannel", getControlChannel);
-    NODE_SET_METHOD(target, "getDoGitCommit", getDoGitCommit);
-    NODE_SET_METHOD(target, "getKsmps", getKsmps);
-    NODE_SET_METHOD(target, "getMetadata", getMetadata);
-    NODE_SET_METHOD(target, "getNchnls", getNchnls);
-    NODE_SET_METHOD(target, "getScoreTime", getScoreTime);
-    NODE_SET_METHOD(target, "getSr", getSr);
-    NODE_SET_METHOD(target, "getVersion", getVersion);
-    NODE_SET_METHOD(target, "hello", hello);
-    NODE_SET_METHOD(target, "inputMessage", inputMessage);
-    NODE_SET_METHOD(target, "isPlaying", isPlaying);
-    NODE_SET_METHOD(target, "isScorePending", isScorePending);
-    NODE_SET_METHOD(target, "message", message);
-    NODE_SET_METHOD(target, "perform", perform);
-    NODE_SET_METHOD(target, "performAndPostProcess", performAndPostProcess);
-    NODE_SET_METHOD(target, "readScore", readScore);
-    NODE_SET_METHOD(target, "reset", reset);
-    NODE_SET_METHOD(target, "rewindScore", rewindScore);
-    NODE_SET_METHOD(target, "scoreEvent", scoreEvent);
-    NODE_SET_METHOD(target, "setDoGitCommit", setDoGitCommit);
-    NODE_SET_METHOD(target, "setControlChannel", setControlChannel);
-    NODE_SET_METHOD(target, "setMessageCallback", setMessageCallback);
-    NODE_SET_METHOD(target, "setMetadata", setMetadata);
-    NODE_SET_METHOD(target, "performAndPostProcess", performAndPostProcess);
-    NODE_SET_METHOD(target, "setOption", setOption);
-    NODE_SET_METHOD(target, "setOutput", setOutput);
-    NODE_SET_METHOD(target, "setScorePending", setScorePending);
-    NODE_SET_METHOD(target, "start", start);
-    NODE_SET_METHOD(target, "stop", stop);
-    
+    exports.Set(Napi::String::New(env, "Cleanup"),
+                Napi::Function::New(env, Cleanup));
+    exports.Set(Napi::String::New(env, "cleanup"),
+                Napi::Function::New(env, Cleanup));
+    exports.Set(Napi::String::New(env, "CompileCsd"),
+                Napi::Function::New(env, CompileCsd));
+    exports.Set(Napi::String::New(env, "compileCsd"),
+                Napi::Function::New(env, CompileCsd));
+    exports.Set(Napi::String::New(env, "CompileCsdText"),
+                Napi::Function::New(env, CompileCsdText));
+    exports.Set(Napi::String::New(env, "compileCsdText"),
+                Napi::Function::New(env, CompileCsdText));
+    exports.Set(Napi::String::New(env, "CompileOrc"),
+                Napi::Function::New(env, CompileOrc));
+    exports.Set(Napi::String::New(env, "compileOrc"),
+                Napi::Function::New(env, CompileOrc));
+    exports.Set(Napi::String::New(env, "EvalCode"),
+                Napi::Function::New(env, EvalCode));
+    exports.Set(Napi::String::New(env, "evalCode"),
+                Napi::Function::New(env, EvalCode));
+    exports.Set(Napi::String::New(env, "GetControlChannel"),
+                Napi::Function::New(env, GetControlChannel));
+    exports.Set(Napi::String::New(env, "getControlChannel"),
+                Napi::Function::New(env, GetControlChannel));
+    exports.Set(Napi::String::New(env, "GetKsmps"),
+                Napi::Function::New(env, GetKsmps));
+    exports.Set(Napi::String::New(env, "getKsmps"),
+                Napi::Function::New(env, GetKsmps));
+    exports.Set(Napi::String::New(env, "GetMetadata"),
+                Napi::Function::New(env, GetMetadata));
+    exports.Set(Napi::String::New(env, "getMetadata"),
+                Napi::Function::New(env, GetMetadata));
+    exports.Set(Napi::String::New(env, "GetNchnls"),
+                Napi::Function::New(env, GetNchnls));
+    exports.Set(Napi::String::New(env, "getNchnls"),
+                Napi::Function::New(env, GetNchnls));
+    exports.Set(Napi::String::New(env, "GetScoreTime"),
+                Napi::Function::New(env, GetScoreTime));
+    exports.Set(Napi::String::New(env, "getScoreTime"),
+                Napi::Function::New(env, GetScoreTime));
+    exports.Set(Napi::String::New(env, "GetSr"),
+                Napi::Function::New(env, GetSr));
+    exports.Set(Napi::String::New(env, "getSr"),
+                Napi::Function::New(env, GetSr));
+    exports.Set(Napi::String::New(env, "InputMessage"),
+                Napi::Function::New(env, InputMessage));
+    exports.Set(Napi::String::New(env, "inputMessage"),
+                Napi::Function::New(env, InputMessage));
+    exports.Set(Napi::String::New(env, "IsScorePending"),
+                Napi::Function::New(env, IsScorePending));
+    exports.Set(Napi::String::New(env, "isScorePending"),
+                Napi::Function::New(env, IsScorePending));
+    exports.Set(Napi::String::New(env, "Message"),
+                Napi::Function::New(env, Message));
+    exports.Set(Napi::String::New(env, "message"),
+                Napi::Function::New(env, Message));
+    exports.Set(Napi::String::New(env, "Perform"),
+                Napi::Function::New(env, Perform));
+    exports.Set(Napi::String::New(env, "perform"),
+                Napi::Function::New(env, Perform));
+    exports.Set(Napi::String::New(env, "PerformAndPostProcess"),
+                Napi::Function::New(env, PerformAndPostProcess));
+    exports.Set(Napi::String::New(env, "performAndPostProcess"),
+                Napi::Function::New(env, PerformAndPostProcess));
+    exports.Set(Napi::String::New(env, "ReadScore"),
+                Napi::Function::New(env, ReadScore));
+    exports.Set(Napi::String::New(env, "readScore"),
+                Napi::Function::New(env, ReadScore));
+    exports.Set(Napi::String::New(env, "Reset"),
+                Napi::Function::New(env, Reset));
+    exports.Set(Napi::String::New(env, "reset"),
+                Napi::Function::New(env, Reset));
+    exports.Set(Napi::String::New(env, "RewindScore"),
+                Napi::Function::New(env, RewindScore));
+    exports.Set(Napi::String::New(env, "rewindScore"),
+                Napi::Function::New(env, RewindScore));
+    exports.Set(Napi::String::New(env, "ScoreEvent"),
+                Napi::Function::New(env, ScoreEvent));
+    exports.Set(Napi::String::New(env, "scoreEvent"),
+                Napi::Function::New(env, ScoreEvent));
+    exports.Set(Napi::String::New(env, "SetControlChannel"),
+                Napi::Function::New(env, SetControlChannel));
+    exports.Set(Napi::String::New(env, "setControlChannel"),
+                Napi::Function::New(env, SetControlChannel));
+    exports.Set(Napi::String::New(env, "SetDoGitCommit"),
+                Napi::Function::New(env, SetDoGitCommit));
+    exports.Set(Napi::String::New(env, "setDoGitCommit"),
+                Napi::Function::New(env, SetDoGitCommit));
+    exports.Set(Napi::String::New(env, "SetMessageCallback"),
+                Napi::Function::New(env, SetMessageCallback));
+    exports.Set(Napi::String::New(env, "setMessageCallback"),
+                Napi::Function::New(env, SetMessageCallback));
+    exports.Set(Napi::String::New(env, "SetMetadata"),
+                Napi::Function::New(env, SetMetadata));
+    exports.Set(Napi::String::New(env, "setMetadata"),
+                Napi::Function::New(env, SetMetadata));
+    exports.Set(Napi::String::New(env, "SetOption"),
+                Napi::Function::New(env, SetOption));
+    exports.Set(Napi::String::New(env, "setOption"),
+                Napi::Function::New(env, SetOption));
+    exports.Set(Napi::String::New(env, "SetOutput"),
+                Napi::Function::New(env, SetOutput));
+    exports.Set(Napi::String::New(env, "setOutput"),
+                Napi::Function::New(env, SetOutput));
+    exports.Set(Napi::String::New(env, "SetScorePendingOutput"),
+                Napi::Function::New(env, SetScorePending));
+    exports.Set(Napi::String::New(env, "setScorePending"),
+                Napi::Function::New(env, SetScorePending));
+    exports.Set(Napi::String::New(env, "Start"),
+                Napi::Function::New(env, Start));
+    exports.Set(Napi::String::New(env, "start"),
+                Napi::Function::New(env, Start));
+    exports.Set(Napi::String::New(env, "Stop"),
+                Napi::Function::New(env, Stop));
+    exports.Set(Napi::String::New(env, "stop"),
+                Napi::Function::New(env, Stop));
     uv_async_init(uv_default_loop(), &uv_csound_message_async, uv_csound_message_callback);
-    std::atexit(&on_exit);
+    std::atexit(&on_exit);                
+    return exports;
 }
 
-NODE_MODULE(binding, init);
-
-#pragma GCC diagnostic pop
+NODE_API_MODULE(csound, Initialize)

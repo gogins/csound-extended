@@ -26,8 +26,8 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static csound::CsoundProducer csound_;
-//https://github.com/nodejs/node-addon-api/issues/432
-static Napi::Function csound_message_callback;
+//static Napi::Function csound_message_callback;
+static Napi::FunctionReference persistent_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
 static uv_async_t uv_csound_message_async;
 
@@ -229,19 +229,17 @@ void Stop(const Napi::CallbackInfo &info) {
     csound_.Stop();
 }
 
-static Napi::FunctionReference persistent_callback;
-
 void SetMessageCallback(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-    csound_message_callback = info[0].As<Napi::Function>();
-    persistent_callback = Napi::Persistent(csound_message_callback);
-    persistent_callback.SuppressDestruct();
+    Napi::Function csound_message_callback = info[0].As<Napi::Function>();
+    persistent_message_callback = Napi::Persistent(csound_message_callback);
+    persistent_message_callback.SuppressDestruct();
 }
 
 /**
  * As this will often be called from Csound's native performance thread, 
  * it is not safe to call from here back into JavaScript. Hence, we enqueue 
  * messages to be dequeued and dispatched from the main JavaScript thread.
+ * Dispatching is implemented using libuv.
  */
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
 {
@@ -260,16 +258,16 @@ void uv_csound_message_callback(uv_async_t *handle)
 {
     char *message = nullptr;
     while (csound_messages_queue.try_pop(message)) {
-        Napi::Env env = persistent_callback.Env();
+        Napi::Env env = persistent_message_callback.Env();
         Napi::HandleScope handle_scope(env);
         std::vector<napi_value> args = {Napi::String::New(env, message)};
-        persistent_callback.Call(args);
+        persistent_message_callback.Call(args);
         std::free(message);
     }
 }
 
 Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
-    std::printf("Napi Initialize...");
+    std::fprintf(stderr, "Initializing csound.node...\n");
     csound_.SetMessageCallback(csoundMessageCallback_);
     exports.Set(Napi::String::New(env, "Cleanup"),
                 Napi::Function::New(env, Cleanup));
