@@ -54,7 +54,7 @@ void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_l
     std::vsprintf(buffer, format, valist);
     std::printf("%s", buffer);
     EM_ASM_({
-        console.log(Pointer_stringify($0));
+        console.log(UTF8ToString($0));
     }, buffer);    
 }
 

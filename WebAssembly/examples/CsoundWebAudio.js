@@ -22,7 +22,6 @@ if (typeof console === 'undefined') {
     print = Module.print;
 } else print = function(message) {
     console.log(message);
-    Module.print(message);
 }
 
 var CsoundWebAudio = function() {

@@ -261,7 +261,7 @@ release, and generate a signed .apk.
 ### Building for WebAssembly
 
 To build for WebAssembly for the first time, change to the WebAssembly 
-subdirectory of this repository and execute `bash fresh-build.sh`,  which 
+subdirectory of this repository and execute `bash fresh-build.sh`, which 
 does the following:
 
 1.  Updates the Emscripten SDK.

@@ -169,7 +169,7 @@ var CsoundObj = function() {
 
     this.setOutputChannelCallback = function(callback) {
         function csoundCallback(csoundPtr, stringPtr, valuePtr, typePtr) {
-            var string = Pointer_stringify(stringPtr);
+            var string =  UTF8ToString(stringPtr);
             var value = getValue(valuePtr, 'float');
             callback(string, value);
         };
