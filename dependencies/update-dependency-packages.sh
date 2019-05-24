@@ -52,10 +52,6 @@ echo "Updating PortSMF..."
 sudo apt-get install libportsmf-dev
 echo "Updating libsox-dev..."
 sudo apt-get install libsox-dev
-echo "Updating qt5base-dev..."
-sudo apt-get install qt5base-dev
-echo "Updating qtwebengine5-dev..."
-sudo apt-get install qtwebengine5-dev
 echo "Updating gcc-aarch64-linux-gnu..."
 sudo apt-get install gcc-aarch64-linux-gnu
 echo "Updating linux-libc-dev:i386..."
@@ -66,5 +62,3 @@ sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5
 sudo apt-get update
 sudo apt-get install -y clang-5.0
 echo "Finished updating all Debian packages required for csound-extended."
-
-

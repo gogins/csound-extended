@@ -325,9 +325,6 @@ install(FILES "silencio/patches/README.md"
 install(FILES "silencio/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
     RENAME "README-SILENCIO.md")
-install(FILES "CsoundHtml5/README.md"
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
-    RENAME "README-CSOUNDHTML5.md")
 install(FILES "nudruz/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
     RENAME "README-NUDRUZ.md")
