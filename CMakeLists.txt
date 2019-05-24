@@ -183,15 +183,6 @@ add_custom_target(doxygen_reference
 
 add_subdirectory(Opcodes/cmask)
 add_subdirectory(CsoundAC)
-ExternalProject_Add(CsoundHtml5
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CsoundHtml5"
-    BUILD_IN_SOURCE "1"
-    CONFIGURE_COMMAND "qmake"
-    BUILD_COMMAND "make")
-install(FILES "${CMAKE_SOURCE_DIR}/CsoundHtml5/CsoundHtml5"
-    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-    DESTINATION "${EXECUTABLE_INSTALL_DIR}"
-    COMPONENT csound-html5)
 ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
     BUILD_IN_SOURCE "1"

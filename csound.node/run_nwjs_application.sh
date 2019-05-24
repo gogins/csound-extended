@@ -1,12 +1,12 @@
 #!/bin/bash
-# To create a command key binding in SciTE add the following lines to the 
+# To create a command key binding in SciTE add the following lines to the
 # user properties file:
 # command.go.$(file.patterns.html)=~/run_nwjs_application.sh $(FileNameExt) $(FileName) $(FileDir)
 # command.go.subsystem.$(file.patterns.html)=0
-# Similar customization could be done in other text editors. The purpose of this code is to 
+# Similar customization could be done in other text editors. The purpose of this code is to
 # automatically generate a NW.js application manifest for the current HTML file.
 echo ps -ef | fgrep "*.exe"
-killall -9 exe
+killall -q -9 exe
 echo Building package.json file...
 read -r -d '' json_format << EOM
 {
@@ -35,4 +35,3 @@ printf -v json_text "$json_format" $1 $2 $2
 echo "$json_text" | tee package.json
 # Change this if necessary to your nw pathname.
 ~/nwjs/nw --context-mixed $3
-
