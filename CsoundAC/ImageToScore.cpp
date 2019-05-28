@@ -376,7 +376,7 @@ void ImageToScore2::processImage(){
       source_image = sharpened_image;
   }
   if (do_erode) {
-      System::inform("Erode..\n");      
+      System::inform("Erode..\n");
       cv::Mat output_image;
       cv::Mat kernel = cv::getStructuringElement(kernel_shape, cv::Size(kernel_size, kernel_size));
       for (int i = 0; i < iterations; ++i) {
@@ -412,7 +412,7 @@ void ImageToScore2::processImage(){
   if (do_condense) {
       System::inform("Condense...\n");
       cv::Mat output_image;
-      cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count), 1);
+      cv::resize(source_image, output_image, cv::Size(source_image.cols, row_count), cv::INTER_AREA);
       System::inform("New size columns: %5d  rows: %5d\n", output_image.cols, output_image.rows);
       write_processed_file("Condense", output_image);
       source_image = output_image;
@@ -433,6 +433,7 @@ void ImageToScore2::pixel_to_event(int column, int row, const HSV &hsv, Event &e
     event_.setInstrument(instrument);
     double key = double(processed_image.rows - row) / processed_image.rows;
     key = key * score.scaleTargetRanges.getKey() + score.scaleTargetMinima.getKey();
+    key = std::round(key);
     event_.setKey(key);
     double velocity = double(hsv.v) / 255.;
     velocity = velocity * score.scaleTargetRanges.getVelocity() + score.scaleTargetMinima.getVelocity();
@@ -441,97 +442,92 @@ void ImageToScore2::pixel_to_event(int column, int row, const HSV &hsv, Event &e
 
 void ImageToScore2::generate() {
     System::inform("BEGAN ImageToScore2::generate()...\n");
+    // Processing the image before translating can reduce the number
+    // of salient notes.
     processImage();
-    // Now translate the processed image to notes. The width dimension of the
-    // image represents time, and the height dimension of the image represents
-    // pitch. The basic idea is that, along each row of pixels, if the value
-    // goes above a threshhold, a note is starting; if the value goes below that
+    // Translate a processed image to notes. The width dimension of the image
+    // represents time, and the height dimension of the image represents pitch.
+    // The basic idea is that, along each row of pixels, if the value goes above
+    // a threshhold, a note is starting; if the value goes below that
     // threshhold, the note is ending. It might be that too many notes are
     // created at a particular time. Therefore, the notes are ordered by
     // salience and only the most salient are retained. First of course we
     // translate to HSV, which seems to be the best color model for our
-    // purposes. Processing the image before translating can reduce the number
-    // of salient notes.
+    // purposes.
+    //
+    // In OpenCV, {0, 0} is the center of the upper left pixel.
     cv::cvtColor(processed_image, processed_image, cv::COLOR_BGR2HSV_FULL);
     Event startingEvent;
     Event endingEvent;
-    // Index is round(velocity * 1000 + channel).
-    std::map<int, Event> startingEvents;
-    // Index is round(key).
-    std::map<int, Event> pendingEvents;
+    Score startingEvents;
+    Score endingEvents;
     HSV prior_pixel;
     HSV current_pixel;
     HSV next_pixel;
-    std::set<csound::Event> unique_events;
+    auto note_less = [](const csound::Event &a, const csound::Event &b) {
+        if (a.getChannel() < b.getChannel()) {
+            return true;
+        }
+        if (a.getTime() < b.getTime()) {
+            return true;
+        }
+        if (a.getOffTime() < b.getOffTime()) {
+            return true;
+        }
+        if (a.getKeyNumber() < b.getKeyNumber()) {
+            return true;
+        }
+        return false;
+    };
+    auto unique_notes = std::set<csound::Event, decltype(note_less)>(note_less);
+    // No more than one note can start at the same time on the same row, even
+    // though several adjacent rows can be mapped to the same MIDI key.
+    std::map<int, csound::Event> pending_events;
     for (int column = 0; column < processed_image.cols; ++column) {
-        System::inform("Processing column %d...\n", int(column));
-        // Find starting events, i.e. an event based on a pixel whose value
-        // exceeds the threshhold but the prior pixel did not. We want to favor 
-        // the bass.
-        for (int row = processed_image.rows - 1;
-                row >= 0;
-                --row) {
+        System::debug("Processing column %d...\n", int(column));
+        // Find starting events, i.e. events based on pixels whose value
+        // exceeds the threshhold but the prior pixels did not.
+        for (int row = 0; row < processed_image.rows; ++row) {
             if (column == 0) {
                 prior_pixel.clear();
             } else {
                 prior_pixel = *processed_image.ptr<HSV>(row, column - 1);
             }
             current_pixel = *processed_image.ptr<HSV>(row, column);
+            if (column < processed_image.cols) {
+                next_pixel = *processed_image.ptr<HSV>(int(row), column + 1);
+            } else {
+                next_pixel.clear();
+            }
+            // A note is starting.
+            // Another way of doing this is, if the value increases.
             if (prior_pixel.v <= value_threshhold && current_pixel.v > value_threshhold) {
                 pixel_to_event(column, row, current_pixel, startingEvent);
-                System::debug("Starting event at   column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, startingEvent.toString().c_str());
-                int startingEventsIndex = int(startingEvent.getVelocityNumber() * 1000.0 + startingEvent.getChannel());
-                startingEvents[startingEventsIndex] = startingEvent;
-            }
-            // Insert starting events into the pending event list, in order of
-            // decreasing loudness, until the pending event list has no more than
-            // maximumCount events...
-            for (std::map<int, Event>::reverse_iterator startingEventsIterator = startingEvents.rbegin();
-                    startingEventsIterator != startingEvents.rend();
-                    ++startingEventsIterator) {
-                if (pendingEvents.size() < maximum_voice_count) {
-                    int pendingEventIndex = startingEventsIterator->second.getKeyNumber();
-                    // ...but do not interrupt an already playing event.
-                    if (pendingEvents.find(pendingEventIndex) == pendingEvents.end()) {
-                        System::debug("Pending event at    column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, startingEventsIterator->second.toString().c_str());
-                        pendingEvents[pendingEventIndex] = startingEventsIterator->second;
+                if (pending_events.find(row) == pending_events.end()) {
+                    if (System::getMessageLevel() >= System::DEBUGGING_LEVEL) {
+                      System::debug("Starting event at   column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, startingEvent.toString().c_str());
                     }
-                } else {
-                    break;
+                    pending_events[row] = startingEvent;
                 }
             }
-            // Remove ending events from the pending event list and insert them into
-            // the score.
-            for (int row = processed_image.rows - 1;
-                    row >= 0;
-                    --row) {
-                current_pixel = *processed_image.ptr<HSV>(int(row), column);
-                if (column < processed_image.cols) {
-                    next_pixel = *processed_image.ptr<HSV>(int(row), column + 1);
-                } else {
-                    next_pixel.clear();
-                }
-                if (current_pixel.v > value_threshhold && next_pixel.v <= value_threshhold) {
+            // A note is ending.
+            // Another way of doing this is, if the value decreases.
+            if (current_pixel.v > value_threshhold && next_pixel.v <= value_threshhold) {
+                if (pending_events.find(row) != pending_events.end()) {
+                    csound::Event new_note = pending_events[row];
+                    new_note.setOffTime(endingEvent.getOffTime());
+                    if (System::getMessageLevel() >= System::DEBUGGING_LEVEL) {
+                      System::debug("Ending event at     column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, new_note.toString().c_str());
+                    }
                     pixel_to_event(column, row, current_pixel, endingEvent);
-                    System::debug("Ending event at     column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, endingEvent.toString().c_str());
-                    int pendingEventIndex = endingEvent.getKeyNumber();
-                    if (pendingEvents.find(pendingEventIndex) != pendingEvents.end()) {
-                        Event event = pendingEvents[pendingEventIndex];
-                        event.setDuration(endingEvent.getTime() - event.getTime());
-                        if (event.getDuration() > 0.0) {
-                            //score.push_back(startingEvent);
-                            unique_events.insert(event);
-                            System::inform("Inserting event at column: %5d row: %5d             %s\n", column, row, event.toString().c_str());
-                            System::inform("Events pending:            %5d\n", pendingEvents.size());
-                            System::inform("Events inserted:           %5d\n", unique_events.size());
-                        }
-                    }
-                    pendingEvents.erase(pendingEventIndex);
+                    score.append(new_note);
+                    pending_events.erase(row);
                 }
             }
         }
-        score.clear();
-        std::copy(unique_events.begin(), unique_events.end(), std::back_inserter(score));
+        // TODO: Thin the score to remove less salient events, by tracking
+        // overlapping notes and sorting them by salience and clering less
+        // salient ones.
         score.sort();
     }
     System::inform("ENDED ImageToScore2::generate() with %d events.\n", score.size());
