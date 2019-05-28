@@ -487,6 +487,7 @@ void ImageToScore2::generate() {
         System::debug("Processing column %d...\n", int(column));
         // Find starting events, i.e. events based on pixels whose value
         // exceeds the threshhold but the prior pixels did not.
+        // The lowest note is row 0.
         for (int row = 0; row < processed_image.rows; ++row) {
             if (column == 0) {
                 prior_pixel.clear();
@@ -503,7 +504,7 @@ void ImageToScore2::generate() {
             // Another way of doing this is, if the value increases.
             if (prior_pixel.v <= value_threshhold && current_pixel.v > value_threshhold) {
                 pixel_to_event(column, row, current_pixel, startingEvent);
-                if (pending_events.find(row) == pending_events.end()) {
+                if (pending_events.find(row) == pending_events.end() && pending_events.size() < getMaximumVoiceCount()) {
                     if (System::getMessageLevel() >= System::DEBUGGING_LEVEL) {
                       System::debug("Starting event at   column: %5d row: %5d value: %5d  %s\n", column, row, current_pixel.v, startingEvent.toString().c_str());
                     }
