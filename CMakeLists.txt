@@ -261,9 +261,9 @@ set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev, libcsoundac6.0v5")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language
- and library Csound. Additional features include CsoundAC for algorithmic
- composition, the cmask opcode for algorithmic composition
- and granular synthesis, the LuaJIT opcodes, Common Music and nudruz libraries
+ and library Csound. Additional features include the CsoundAC library for
+ algorithmic composition, the cmask opcode for algorithmic composition
+ and granular synthesis, the LuaJIT opcodes, the Common Music and nudruz libraries
  for algorithmic composition, csound.node to run Csound in the JavaScript
  context of NW.js, csound-wasm to run Csound in the JavaScript context of Web
  browsers, and others.")

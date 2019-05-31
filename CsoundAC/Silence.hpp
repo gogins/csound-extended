@@ -20,22 +20,6 @@
 #ifndef SILENCE_H
 #define SILENCE_H
 
-/** \mainpage csoundextended csound-extended
- *
- * csound-extended is a repository and set of source and binary packages
- * to support the composition and production of electroacoustic music, using
- * Csound for audio synthesis and processing.
- *
- * This automatically generated reference documents the C, C++, and Java
- * interfaces within csound-extended. There are corresponding Lua and Python
- * interfaces for parts of the C++ interface.
- *
- * See the <a href="pages.html">Related Pages</a> for more information on the
- * components of csound-extended.
- *
- * Currently, csound-extended is maintained on 64-bit Linux but should be
- * to build and run on other platforms.
- */
  /**
  * \page csoundac CsoundAC
  *

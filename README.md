@@ -1,6 +1,7 @@
 # csound-extended
-
+<!--
 [![Github All Releases (total)](https://img.shields.io/github/downloads/gogins/csound-extended/total.svg)]()
+-->
 
 Michael Gogins<br>
 https://github.com/gogins<br>
@@ -22,23 +23,26 @@ and collected from older projects of mine. These extensions include:
 3.  A port of the algorithmic composition program CMask by Andre Bartetzki
     to WebAssembly and to a Linux Csound plugin opcode.
 
-4.  Csound for Android, almost all features of Csound in an Android app that
+4.  The Lua opcodes for running Lua code inside a Csound performance by means
+    of an embedded LuaJIT runtime.
+
+5.  Csound for Android, almost all features of Csound in an Android app that
     also integrates Csound with HTML5. Please note, dependencies of Csound
     for Android are fetched from the core Csound repository, and rebuilt
     using the Android NDK.
 
-5.  Csound for WebAssembly, almost all features of Csound as a WebAssembly
+6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly
     module that will run Csound from a JavaScript interface in any current
     Web browser. This version includes useful plugin opcodes statically
     linked. Some live examples run from
     [here](https://github.com/gogins/csound-extended/tree/develop/docs).
 
-6.  Silencio, a JavaScript algorithmic composition library designed to work
+7.  Silencio, a JavaScript algorithmic composition library designed to work
     with all Csound/HTML5 environments.
 
-7.  An online _playable_ version of the [_**Csound Reference Manual**_](https://gogins.github.io/csound-extended/html/indexframes.html).
+8.  An online _playable_ version of the [_**Csound Reference Manual**_](https://gogins.github.io/csound-extended/html/indexframes.html).
 
-8. nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
+9. nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
     hosted here with his permission. This is based upon and includes
     the Common Music library for algorithmic composition and the Fomus
     library for automatically notating generated scores.
