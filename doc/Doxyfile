@@ -58,7 +58,7 @@ PROJECT_LOGO           =
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = 
+OUTPUT_DIRECTORY       =
 
 # If the CREATE_SUBDIRS tag is set to YES then doxygen will create 4096 sub-
 # directories (in 2 levels) under the output directory of each output format and
@@ -705,7 +705,7 @@ CITE_BIB_FILES         =
 # messages are off.
 # The default value is: NO.
 
-QUIET                  = NO
+QUIET                  = YES
 
 # The WARNINGS tag can be used to turn on/off the warning messages that are
 # generated to standard error (stderr) by doxygen. If WARNINGS is set to YES
@@ -775,13 +775,14 @@ INPUT                  = ../CsoundAC \
                          ../dependencies/csound/H \
                          ../dependencies/csound/include \
                          ../dependencies/csound/interfaces \
-                         ../dependencies\cmask \
-                         ../CsoundHtml5 \
-                         ,./silencio/js \
+                         ../dependencies/cmask/source \
+                         ../silencio/js \
                          ../Opcodes/cmask \
+                         ../Opcodes/LuaCsound \
                          ../csound.node \
                          ../CsoundForAndroid/CsoundAndroid/jni \
-                         ../CsoundForAndroid/CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6
+                         ../CsoundForAndroid/CsoundForAndroid/CsoundApplication/src/main/java/com/csounds/Csound6 \
+                         .
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -2174,7 +2175,7 @@ DOT_NUM_THREADS        = 0
 # The default value is: Helvetica.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_FONTNAME           = FreeSans
+#DOT_FONTNAME           = FreeSans
 
 # The DOT_FONTSIZE tag can be used to set the size (in points) of the font of
 # dot graphs.

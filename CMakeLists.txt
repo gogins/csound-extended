@@ -86,7 +86,7 @@ option(BUILD_FLUID_OPCODES "Build the fluidsynth opcodes" ON)
 option(BUILD_FRAMEBUFFER_OPCODES "Build the framebuffer opcodes" ON)
 option(BUILD_IMAGE_OPCODES "Build the image opcodes" ON)
 option(BUILD_JACK_OPCODES "Build the Jack related opcodes" ON)
-option(BUILD_LINEAR_ALGEBRA_OPCODES "Build the Lua opcodes" ON)
+option(BUILD_LINEAR_ALGEBRA_OPCODES "Build the linear algebra opcodes" ON)
 option(BUILD_LUA_OPCODES "Build the Lua opcodes" ON)
 option(BUILD_OSC_OPCODES "Build the OSC Opcodes" ON)
 option(BUILD_P5GLOVE_OPCODES "Build the P5Glove opcodes" ON)
@@ -142,6 +142,38 @@ include_directories("${CSOUND_INCLUDE_DIR}/csound")
 
 # Copied from dependencies/csound/CMakeLists.txt:
 
+# Checks if dependencies for an enabled target are fulfilled.
+# If FAIL_MISSING is true and the dependencies are not fulfilled,
+# it will abort the cmake run.
+# If FAIL_MISSING is false, it will set the option to OFF.
+# If the target is not enabled, it will do nothing.
+# example: check_deps(BUILD_NEW_PARSER FLEX_EXECUTABLE BISON_EXECUTABLE)
+function(check_deps option)
+    if(${option})
+        set(i 1)
+        while( ${i} LESS ${ARGC} )
+            set(dep ${ARGV${i}})
+            if(NOT ${dep})
+                if(FAIL_MISSING)
+                    message(FATAL_ERROR
+                        "${option} is enabled, but ${dep}=\"${${dep}}\"")
+                else()
+                    message(STATUS "${dep}=\"${${dep}}\", so disabling ${option}")
+                    set(${option} OFF PARENT_SCOPE)
+                    # Set it in the local scope too
+                    set(${option} OFF)
+                endif()
+            endif()
+            math(EXPR i "${i}+1")
+        endwhile()
+    endif()
+    if(${option})
+        message(STATUS "${option} is enabled.")
+    else()
+        message(STATUS "${option} is disabled.")
+    endif()
+endfunction(check_deps)
+
 # Utility function to make plugins. All plugin targets should use this as it
 # sets up output directory set in top-level CmakeLists.txt
 # and adds the appropriate install target
@@ -182,6 +214,7 @@ add_custom_target(doxygen_reference
 # add_subdirectory(dependencies)
 
 add_subdirectory(Opcodes/cmask)
+add_subdirectory(Opcodes/LuaCsound)
 add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
@@ -210,7 +243,7 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask)
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask csound-luajit)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
@@ -230,9 +263,10 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language
  and library Csound. Additional features include CsoundAC for algorithmic
  composition, the cmask opcode for algorithmic composition
- and granular synthesis, Common Music and nudruz libraries for algorithmic
- composition,  csound.node to run Csound in the JavaScript context of NW.js,
- csound-wasm to run Csound  in the JavaScript context of Web browsers, and others.")
+ and granular synthesis, the LuaJIT opcodes, Common Music and nudruz libraries
+ for algorithmic composition, csound.node to run Csound in the JavaScript
+ context of NW.js, csound-wasm to run Csound in the JavaScript context of Web
+ browsers, and others.")
 set(CPACK_DEBIAN_PACKAGE_ENHANCES "csound, libsound64-dev, csound-python, csoundqt")
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS "ON")
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")

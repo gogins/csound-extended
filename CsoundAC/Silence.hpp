@@ -22,39 +22,39 @@
 
 /** \mainpage csoundextended csound-extended
  *
- * csound-extended is a repository and set of source and binary packages 
- * to support the composition and production of electroacoustic music, using 
- * Csound for audio synthesis and processing. 
- * 
- * This automatically generated reference documents the C, C++, and Java 
- * interfaces within csound-extended. There are corresponding Lua and Python 
+ * csound-extended is a repository and set of source and binary packages
+ * to support the composition and production of electroacoustic music, using
+ * Csound for audio synthesis and processing.
+ *
+ * This automatically generated reference documents the C, C++, and Java
+ * interfaces within csound-extended. There are corresponding Lua and Python
  * interfaces for parts of the C++ interface.
  *
- * See the <a href="pages.html">Related Pages</a> for more information on the 
+ * See the <a href="pages.html">Related Pages</a> for more information on the
  * components of csound-extended.
  *
- * Currently, csound-extended is maintained on 64-bit Linux but should be 
+ * Currently, csound-extended is maintained on 64-bit Linux but should be
  * to build and run on other platforms.
  */
- /** 
+ /**
  * \page csoundac CsoundAC
  *
- * CsoundAC is a C++ class library for algorithmic music 
- * composition with Csound. 
- * 
+ * CsoundAC is a C++ class library for algorithmic music
+ * composition with Csound.
+ *
  * CsoundAC has C++, Java, Python, and Lua interfaces.
  *
- * CsoundAC implements the idea of a "music graph," similar to a scene 
- * graph in 3-dimensional computer graphics. A composition is constructed 
- * by assembling a directed acyclic graph of Node objects, which may generate 
- * or transform Events that are collected in a Score. Each Node may have its 
- * own local transformation of coordinagte system. The music graph 
- * represents a model of a musical score. The Composition class provides 
- * an abstract base class for managing a music graph. The MusicModel class 
- * subclasses the Composition class to include the ability to store and 
- * run a Csound orchestra. 
- * 
- * See the <a href="namespacecsound.html">csound</a> 
+ * CsoundAC implements the idea of a "music graph," similar to a scene
+ * graph in 3-dimensional computer graphics. A composition is constructed
+ * by assembling a directed acyclic graph of Node objects, which may generate
+ * or transform Events that are collected in a Score. Each Node may have its
+ * own local transformation of coordinagte system. The music graph
+ * represents a model of a musical score. The Composition class provides
+ * an abstract base class for managing a music graph. The MusicModel class
+ * subclasses the Composition class to include the ability to store and
+ * run a Csound orchestra.
+ *
+ * See the <a href="namespacecsound.html">csound</a>
  * namespace for information about the classes in CsoundAC.
  */
  /**
@@ -84,9 +84,9 @@
  * software. Since then Csound has received numerous contributions
  * from researchers, programmers, and musicians from around the world.
  *
- * \section section_api_outline Outline of the API
+ * \section silence_section_api_outline Outline of the API
  *
- * \subsection section_api_apilist The Csound Application Programming Interfaces
+ * \subsection silence_section_api_apilist The Csound Application Programming Interfaces
  *
  * The Csound Application Programming Interface (API) reference is contained
  * herein.
@@ -128,7 +128,7 @@
  *     `include/OpcodeBase.hpp` (using the standard ++ allocator, for opcodes
  *     that do use standard C++ library collections).
  *
- * \section section_api_c_example Examples Using the Csound (host) API
+ * \section silence_section_api_c_example Examples Using the Csound (host) API
  *
  * The Csound command--line program is itself built using the Csound API.
  * Its code reads (in outline) as follows:
@@ -154,7 +154,7 @@
  * directly as a string. It can be compiled any number of times
  * before or during performance.
  *
- * \subsection s1 Using a CSD text
+ * \subsection silence_s1 Using a CSD text
  *
  * System options can be passed via the CSD text before the engine
  * is started. These are ignored in subsequent compilations.
@@ -193,7 +193,7 @@
  * }
  * \endcode
  *
- * \subsection s2 Using Csound code directly.
+ * \subsection silence_s2 Using Csound code directly.
  *
  * Options can be passed via csoundSetOption() before the engine starts.
  *
@@ -282,9 +282,9 @@
  * In general, plugins should ONLY access Csound functionality through the
  * API function pointers and public members of the #CSOUND_ structure.
  *
- * \section section_licenses License
+ * \section silence_section_licenses License
  *
- * \subsection section_csound_license Csound
+ * \subsection silence_section_csound_license Csound
  *
  * Copyright (C) 2001-2013 John ffitch, Michael Gogins, Victor Lazzarini,
  *                         Steven Yi, Istvan Varga, Andres Cabrera
