@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>Minimal Example using Csound for WebAssembly</title>
+    <script src="csound.js"></script>
+ </head>
+<body>
+    <script>
+    var handleMessage = function(message) {
+        var messages_textarea = document.getElementById("console");
+        var existing = messages_textarea.value;
+        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;
+    }
+    var moduleDidLoad = function() {
+        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
+        console.warn = handleMessage;
+    }
+    var onPlayClick = function() {
+        var csd = document.getElementById('csd').value;
+        csound.compileCsdText(csd);
+        csound.start();
+        csound.perform();
+    }
+    var onPlayStop = function() {
+        csound.stop();
+    }
+  </script>
+<h1>reshapearray</h1>
+<p>
+This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+</p>
+<p>
+<input type="button" value="Play" onclick="onPlayClick()"/>
+<input type="button" value="Stop" onclick="onPlayStop()"/>
+<p>
+<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<CsOptions>
+;-odac     ;;;realtime audio out
+
+</CsOptions>
+<CsInstruments>
+
+sr = 44100
+ksmps = 64
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+0dbfs  = 1
+
+; This is the example file for reshapearray
+
+/*
+
+reshapearray 
+
+  Reshape an array, maintaining the capacity of the array
+  (it does NOT resize the array).
+
+  You can reshape a 2D array to another array of equal capacity
+  of reshape a 1D array to a 2D array, or a 2D array to a 1D
+  array
+
+  reshapearray array[], inumrows, inumcols=0
+
+  works with i and k arrays, at i-time and k-time
+
+*/
+
+
+instr 1
+  ivalues[] fillarray 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+  printarray ivalues
+  reshapearray ivalues, 3, 4
+  printarray ivalues
+endin
+
+instr 2
+  kxs[][] init 3, 4
+  kxs fillarray   0,  1,  2,  3, \
+                 10, 11, 12, 13, \
+                 20, 21, 22, 23
+  reshapearray kxs, 4, 3
+  printarray kxs, 1, "", "kxs after"
+  turnoff
+endin
+
+</CsInstruments>
+
+<CsScore>
+i 1 0 0.01
+i 2 1 0.05
+</CsScore>
+
+</CsoundSynthesizer>
+</textarea>
+<h3>Csound Messages</h3>
+<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+</textarea>
+</body>
+</html>
