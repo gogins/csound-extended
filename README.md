@@ -1,5 +1,5 @@
 # csound-extended
-![GitHub All Releases (total)](https://img.shields.io/github/downloads/gogins/csound-extended/total.svg)
+![GitHub All Releases (total)](https://img.shields.io/github/downloads/gogins/csound-extended/total.svg)<br>
 Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
