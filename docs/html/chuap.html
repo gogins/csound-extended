@@ -39,19 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948066231376"></a>
+        <a id="idm40035"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in chua</p>
         <p>
       Simulates Chua's oscillator, an LRC oscillator with an active resistor, proved capable of bifurcation and chaotic attractors, with k-rate control of circuit elements.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948066189968"></a>
+        <a id="idm40039"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aI3, aV2, aV1 <span class="command"><strong>chuap</strong></span> kL, kR0, kC1, kG, kGa, kGb, kE, kC2, iI3, iV2, iV1, ktime_step</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948066187952"></a>
+        <a id="idm40043"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iI3</em></span> -- Initial current at G
@@ -64,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948066184592"></a>
+        <a id="idm40051"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kL</em></span> -- Inductor L
@@ -142,7 +143,7 @@
                 <p>This algorithm uses internal non linear feedback loops which causes audio result to depend on the orchestra
       sampling rate. For example, if you develop a project with <span class="emphasis"><em>sr</em></span>=48000Hz and if you want to produce
       an audio CD from it, you should record a file with <span class="emphasis"><em>sr</em></span>=48000Hz and then downsample the file to 44100Hz
-      using the <a class="link" href="srconv.html" title="srconv"><em class="citetitle">srconv</em></a> utility.</p>
+      using the <a class="link" href="src_conv.html" title="src_conv"><em class="citetitle">src_conv</em></a> utility.</p>
               </td>
             </tr>
           </table>
@@ -164,19 +165,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948066165936"></a>
+        <a id="idm40088"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the chuap opcode. It uses the file <a class="ulink" href="examples/chuap.csd.html" target="_top"> (click here to play) <em class="citetitle">chuap.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948066164080"></a>
+          <a id="idm40093"></a>
           <p class="title">
-            <strong>Example 126. Example of the chuap opcode.</strong>
+            <strong>Example 131. Example of the chuap opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947900690832"></a>
+              <a id="idm40095"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -243,7 +244,7 @@ a<span class="n">signal</span>       <span class="nb">balance</span> a<span clas
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948066162160"></a>
+        <a id="idm40405"></a>
         <h2>Credits</h2>
         <p>
       </p>

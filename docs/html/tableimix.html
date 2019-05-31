@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="tableikt.html" title="tableikt" />
-    <link rel="next" href="tableiw.html" title="tableiw" />
+    <link rel="next" href="tablekt.html" title="tablekt" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="tableikt.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="tableiw.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="tablekt.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948000833744"></a>
+        <a id="idm221160"></a>
         <h2>Description</h2>
         <p>
       Mixes two tables.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948000789472"></a>
+        <a id="idm221163"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tableimix</strong></span> idft, idoff, ilen, is1ft, is1off, is1g, is2ft, is2off, is2g</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948000787456"></a>
+        <a id="idm221167"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idft</em></span> -- Destination function table.
@@ -73,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948000780032"></a>
+        <a id="idm221184"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>tableimix</em></span> -- This opcode mixes from two tables, with separate gains into the destination table. Writing is done for <span class="emphasis"><em>ilen</em></span> locations, usually stepping forward through the table - if <span class="emphasis"><em>ilen</em></span> is positive. If it is negative, then the writing and reading order is backwards - towards lower indexes in the tables. This bi-directional option makes it easy to shift the contents of a table sideways by reading from it and writing back to it with a different offset.
@@ -95,20 +95,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948000770080"></a>
+        <a id="idm221203"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tableimix opcode. It uses the file <a class="ulink" href="examples/tableimix.csd.html" target="_top"> (click here to play) <em class="citetitle">tableimix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948000768224"></a>
+          <a id="idm221208"></a>
           <p class="title">
-            <strong>Example 980. Example of the tableimix opcode.</strong>
+            <strong>Example 1000. Example of the tableimix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947822197904"></a>
+              <a id="idm221215"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -151,7 +151,7 @@ a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948000763936"></a>
+        <a id="idm221330"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tablecopy.html" title="tablecopy"><em class="citetitle">tablecopy</em></a>,
@@ -162,7 +162,7 @@ a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948000758048"></a>
+        <a id="idm221343"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -190,14 +190,14 @@ a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.5<
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="tableiw.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="tablekt.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">tableikt </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> tableiw</td>
+          <td width="40%" align="right" valign="top"> tablekt</td>
         </tr>
       </table>
     </div>

@@ -38,8 +38,9 @@
       STKShakers is an instrument that simulates environmental sounds or collisions of multiple independent sound producing objects. </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003871472"></a>
+        <a id="idm213544"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in stkopd.</p>
         <p>
     STKShakers are a set of PhISEM and PhOLIES instruments: 
       PhISEM (Physically Informed Stochastic Event Modeling) is an algorithmic approach for simulating collisions of multiple independent sound producing objects. 
@@ -48,12 +49,12 @@ PhOLIES (Physically-Oriented Library of Imitated Environmental Sounds) there is 
 It simulates of breaking sticks, crunchy snow (or not), a wrench, sandpaper, and more..</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003866240"></a>
+        <a id="idm213549"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKShakers</strong></span> ifrequency, iamplitude, [kenerg, kv1[, kdecay, kv2[, kshake, kv3[, knum, kv4[, kres, kv5[, kinstr, kv6]]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948003802976"></a>
+        <a id="idm213553"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -63,7 +64,7 @@ It simulates of breaking sticks, crunchy snow (or not), a wrench, sandpaper, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003800672"></a>
+        <a id="idm213559"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kenerg</em></span> -- controller 2, shake energy. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>kdecay</em></span> -- controller 4, system decay. Value range of kv2 is 0-127.</p>
@@ -73,7 +74,7 @@ It simulates of breaking sticks, crunchy snow (or not), a wrench, sandpaper, and
         <p><span class="emphasis"><em>kinstr</em></span> -- controller 1071, instrument selection (Maraca = 0, Cabasa = 1, Sekere = 2, Guiro = 3, Water Drops = 4, Bamboo Chimes = 5, Tambourine = 6, Sleigh Bells = 7, Sticks = 8, Crunch = 9, Wrench = 10, Sand Paper = 11, Coke Can = 12, Next Mug = 13, Penny + Mug = 14, Nickle + Mug = 15, Dime + Mug = 16, Quarter + Mug = 17, Franc + Mug = 18, Peso + Mug = 19, Big Rocks = 20, Little Rocks = 21, Tuned Bamboo Chimes = 22). Value range of kv6 is 0-22.</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003794976"></a>
+        <a id="idm213573"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -99,20 +100,20 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948003790496"></a>
+        <a id="idm213582"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKShakers opcode. It uses the file <a class="ulink" href="examples/STKShakers.csd.html" target="_top"> (click here to play) <em class="citetitle">STKShakerscsd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm45948003788640"></a>
+          <a id="idm213587"></a>
           <p class="title">
-            <strong>Example 941. Example of the STKShakers opcode.</strong>
+            <strong>Example 961. Example of the STKShakers opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947825387760"></a>
+              <a id="idm213589"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -133,7 +134,7 @@ The order of the controller pair is arbitrary, as long as they are after <span c
 
 i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
 
-a<span class="n">sig</span>	<span class="nb">STKShakers</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">1071</span><span class="p">,</span> <span class="mi">5</span>
+a<span class="n">sig</span>	S<span class="n">TKShakers</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">1071</span><span class="p">,</span> <span class="mi">5</span>
 a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span> <span class="o">*</span><span class="mi">2</span>				<span class="c1">;amplify</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
@@ -154,7 +155,7 @@ a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003786720"></a>
+        <a id="idm213672"></a>
         <h2>Credits</h2>
         <p>
       </p>

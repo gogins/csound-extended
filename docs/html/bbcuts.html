@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="bbcutm.html" title="bbcutm" />
-    <link rel="next" href="betarand.html" title="betarand" />
+    <link rel="next" href="beadsynt.html" title="beadsynt" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="bbcutm.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="betarand.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="beadsynt.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948068917008"></a>
+        <a id="idm31262"></a>
         <h2>Description</h2>
         <p>
       The BreakBeat Cutter automatically generates cut-ups of a source audio stream in the style of drum and bass/jungle breakbeat manipulations.  There are two versions, for mono (<span class="emphasis"><em>bbcutm</em></span>) or stereo (<span class="emphasis"><em>bbcuts</em></span>) sources.  Whilst originally based on breakbeat cutting, the opcode can be applied to any type of source audio.
@@ -65,13 +65,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948068912016"></a>
+        <a id="idm31271"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1,a2 <span class="command"><strong>bbcuts</strong></span> asource1, asource2, ibps, isubdiv, ibarlength, iphrasebars, \
       inumrepeats [, istutterspeed] [, istutterchance] [, ienvchoice]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948068909696"></a>
+        <a id="idm31275"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ibps</em></span> -- Tempo to cut at, in beats per second.
@@ -99,28 +99,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948068901152"></a>
+        <a id="idm31293"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asource</em></span> -- The audio signal to be cut up. This version runs in real-time without knowledge of future audio.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948068899424"></a>
+        <a id="idm31297"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the bbcuts opcode. It uses the file <a class="ulink" href="examples/bbcuts.csd.html" target="_top"> (click here to play) <em class="citetitle">bbcuts.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948068897648"></a>
+          <a id="idm31302"></a>
           <p class="title">
-            <strong>Example 86. Example of the bbcuts opcode.</strong>
+            <strong>Example 88. Example of the bbcuts opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947904753264"></a>
+              <a id="idm31309"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -176,14 +176,14 @@ a<span class="n">left</span><span class="p">,</span> a<span class="n">right</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948068893360"></a>
+        <a id="idm31408"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="bbcutm.html" title="bbcutm"><em class="citetitle">bbcutm</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948068891312"></a>
+        <a id="idm31413"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -211,14 +211,14 @@ a<span class="n">left</span><span class="p">,</span> a<span class="n">right</spa
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="betarand.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="beadsynt.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">bbcutm </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> betarand</td>
+          <td width="40%" align="right" valign="top"> beadsynt</td>
         </tr>
       </table>
     </div>

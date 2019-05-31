@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948014108928"></a>
+        <a id="idm189053"></a>
         <h2>Description</h2>
         <p>
        Applies a forward Fast Fourier Transform to a real-value input 1-dimensional array. The output is another array 
@@ -50,12 +50,12 @@ position (kin[1] and kin[input_size+1] will be 0].
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948014104320"></a>
+        <a id="idm189056"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>rfft</strong></span> kin[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948014102112"></a>
+        <a id="idm189060"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- output array containing the transform. It will be created if it does not exist.
@@ -65,19 +65,19 @@ position (kin[1] and kin[input_size+1] will be 0].
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948014042560"></a>
+        <a id="idm189066"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the rfft opcode. It uses the file <a class="ulink" href="examples/rfft.csd.html" target="_top"> (click here to play) <em class="citetitle">rfft.csd</em></a>.</p>
         <div class="example">
-          <a id="idm45948014040672"></a>
+          <a id="idm189071"></a>
           <p class="title">
-            <strong>Example 835. Example of the rfft opcode.</strong>
+            <strong>Example 854. Example of the rfft opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947835005776"></a>
+              <a id="idm189078"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
@@ -88,6 +88,7 @@ position (kin[1] and kin[input_size+1] will be 0].
 <span class="nt">&lt;CsInstruments&gt;</span>
 <span class="c1">;ksmps needs to be an integer div of hopsize</span>
 <span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="vg">0dbfs</span><span class="o">=</span><span class="mi">1</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
@@ -105,7 +106,7 @@ position (kin[1] and kin[input_size+1] will be 0].
 
  a<span class="n">1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span> <span class="c1">; audio input</span>
  k<span class="n">s</span>  <span class="nb">expon</span>  <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1000</span>
- a<span class="n">sw</span> <span class="nb">vco2</span>  <span class="nb">k</span><span class="p">(</span>a<span class="n">1</span><span class="p">),</span> k<span class="n">s</span>
+ a<span class="n">sw</span> <span class="nb">vco2</span>  <span class="mf">0.15</span><span class="p">,</span> k<span class="n">s</span>
 
  <span class="cm">/* every hopsize samples */</span>
  <span class="k">if</span> k<span class="n">cnt</span> <span class="o">==</span> i<span class="n">hopsize</span> <span class="k">then</span>
@@ -117,7 +118,7 @@ position (kin[1] and kin[input_size+1] will be 0].
    k<span class="n">Prod</span><span class="p">[]</span> <span class="nb">cmplxprod</span> k<span class="n">Spec</span><span class="p">,</span> k<span class="n">Spec2</span>
 
    <span class="cm">/* IFFT + window */</span>
-   k<span class="n">Row</span><span class="p">[]</span> <span class="nb">rifft</span> k<span class="n">Prod</span>
+   k<span class="n">Row</span><span class="p">[]</span> <span class="nb">rifft</span> k<span class="n">Prod</span> <span class="o">+</span> k<span class="n">Spec</span>
    k<span class="n">Win</span> <span class="nb">window</span> k<span class="n">Row</span><span class="p">,</span> k<span class="n">row</span><span class="o">*</span>i<span class="n">hopsize</span>
    <span class="cm">/* place it on out buffer */</span>
    k<span class="n">Out</span> <span class="nb">setrow</span> k<span class="n">Win</span><span class="p">,</span> k<span class="n">row</span>
@@ -162,7 +163,7 @@ position (kin[1] and kin[input_size+1] will be 0].
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm45948014036512"></a>
+        <a id="idm189287"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>,
@@ -170,7 +171,7 @@ position (kin[1] and kin[input_size+1] will be 0].
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948014033504"></a>
+        <a id="idm189294"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,24 +39,30 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948024733856"></a>
+        <a id="idm160794"></a>
         <h2>Description</h2>
         <p>
-      Assigns a range of p-fields to ivariables.
+      Assigns a range of p-fields to ivariables, or i- or k-array.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948024660832"></a>
+        <a id="idm160797"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"> ivar1, ... <span class="command"><strong>passign</strong></span> [istart]</pre>
+        <pre class="synopsis"> ivar1, ... <span class="command"><strong>passign</strong></span> [istart][, iend</pre>
+        <pre class="synopsis"> iarray <span class="command"><strong>passign</strong></span> [istart][, iend</pre>
+        <pre class="synopsis"> karray <span class="command"><strong>passign</strong></span> [istart][, iend</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948024658768"></a>
+        <a id="idm160805"></a>
         <h2>Initialisation</h2>
         <p>
       The optional argument <span class="emphasis"><em>istart</em></span> gives the index of the first
       p-field to assign.  The default value is 1, corresponding to the
       instrument number.
+    </p>
+        <p>
+      The optional argument <span class="emphasis"><em>iend</em></span> gives the index of the last
+      p-field to assign.  The default value is 0, which means all.
     </p>
         <p>
       One of the variables can be a string variable, in which case it
@@ -65,7 +71,7 @@
   </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948024656464"></a>
+        <a id="idm160812"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>passign</em></span> transfers the instrument p-fields
@@ -73,28 +79,33 @@
       <span class="emphasis"><em>istart</em></span> argument.   There should not be more
       variables than p-fields, but there may be fewer.
     </p>
-      </div>
-      <div class="refsect1">
-        <a id="idm45948024654208"></a>
-        <h2>See Also</h2>
         <p>
-      <a class="link" href="assign.html" title="="><em class="citetitle">assign</em></a>,
+      <span class="emphasis"><em>passign</em></span> can transfer the instrument p-fields
+      to a one dimensional array, either an iarray or a karray.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948024652064"></a>
+        <a id="idm160819"></a>
+        <h2>See Also</h2>
+        <p>
+      <a class="link" href="assign.html" title="="><em class="citetitle">assign</em></a>,
+      <a class="link" href="pcount.html" title="pcount"><em class="citetitle">pcount</em></a>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm160826"></a>
         <h2>Example</h2>
         <p> 
       Here is an example of the passign opcode. It uses the file <a class="ulink" href="examples/passign.csd.html" target="_top"> (click here to play) <em class="citetitle">passign.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948024650288"></a>
+          <a id="idm160831"></a>
           <p class="title">
-            <strong>Example 669. A variant of toot8.csd that uses passign.</strong>
+            <strong>Example 686. A variant of toot8.csd that uses passign.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947847192736"></a>
+              <a id="idm160833"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -146,7 +157,7 @@ a<span class="n">rvbretrn</span> <span class="o">=</span>         a<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948024648352"></a>
+        <a id="idm160968"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -166,7 +177,7 @@ a<span class="n">rvbretrn</span> <span class="o">=</span>         a<span class="
         </table>
         <p>
     </p>
-        <p>New in version 5.12</p>
+        <p>New in version 5.12; end point and array version after 5.12</p>
         <p>
     </p>
       </div>

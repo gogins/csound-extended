@@ -39,38 +39,45 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047878928"></a>
+        <a id="idm91251"></a>
         <h2>Description</h2>
         <p>
       Load a set of previously-allocated tables from a file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047877744"></a>
+        <a id="idm91254"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>ftloadk</strong></span> "filename", ktrig, iflag, ifn1 [, ifn2] [...]</pre>
+        <pre class="synopsis"><span class="command"><strong>ftloadk</strong></span> Sfilename, ktrig, iflag, ifn1 [, ifn2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948047875584"></a>
+        <a id="idm91258"></a>
         <h2>Initialization</h2>
         <p>
-      <span class="emphasis"><em>"filename"</em></span> -- A quoted string containing the name of the file to load.
+      <span class="emphasis"><em>Sfilename</em></span> -- A string value denoting the
+      name of the file to load.
     </p>
         <p>
-      <span class="emphasis"><em>iflag</em></span> -- Type of the file to load/save. (0 = binary file, Non-zero = text file)
+      <span class="emphasis"><em>iflag</em></span> -- Type of the file to load/save. (0
+      = binary file, Non-zero = text file)
     </p>
         <p>
       <span class="emphasis"><em>ifn1, ifn2, ...</em></span> -- Numbers of tables to load.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047809504"></a>
+        <a id="idm91266"></a>
         <h2>Performance</h2>
         <p>
-      <span class="emphasis"><em>ktrig</em></span> -- The trigger signal. Load the file each time it is non-zero.
+      <span class="emphasis"><em>ktrig</em></span> -- The trigger signal. Load the file
+      each time it is non-zero.
     </p>
         <p>
-      <span class="emphasis"><em>ftloadk</em></span> loads a list of tables from a file. (The tables have to be already allocated though.) The file's format can be binary or text. Unlike <a class="link" href="ftload.html" title="ftload"><em class="citetitle">ftload</em></a>, the loading operation can be repeated numerous times within the same note by using a trigger signal. 
+      <span class="emphasis"><em>ftloadk</em></span> loads a list of tables from a
+      file. (The tables have to be already allocated though.) The
+      file's format can be binary or text. Unlike <a class="link" href="ftload.html" title="ftload"><em class="citetitle">ftload</em></a>, the
+      loading operation can be repeated numerous times within the same
+      note by using a trigger signal.
     </p>
         <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Warning: Warning">
@@ -83,7 +90,8 @@
             <tr>
               <td align="left" valign="top">
                 <p>
-        The file's format is not compatible with a WAV-file and is not endian-safe. 
+        The file's format is not compatible with a WAV-file and is not
+        endian-safe.
       </p>
               </td>
             </tr>
@@ -91,7 +99,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948047804528"></a>
+        <a id="idm91277"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftload.html" title="ftload"><em class="citetitle">ftload</em></a>,
@@ -100,7 +108,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047800496"></a>
+        <a id="idm91286"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.21</p>

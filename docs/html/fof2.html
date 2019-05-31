@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948049661856"></a>
+        <a id="idm84075"></a>
         <h2>Description</h2>
         <p>
       Audio output is a succession of sinusoid bursts initiated at frequency <span class="emphasis"><em>xfund</em></span> with a spectral peak at <span class="emphasis"><em>xform</em></span>. For <span class="emphasis"><em>xfund</em></span> above 25 Hz these bursts produce a speech-like formant with spectral characteristics determined by the k-input parameters. For lower fundamentals this generator provides a special form of granular synthesis.
@@ -49,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948049657792"></a>
+        <a id="idm84084"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>fof2</strong></span> xamp, xfund, xform, koct, kband, kris, kdur, kdec, iolaps, \
       ifna, ifnb, itotdur, kphs, kgliss [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948049655488"></a>
+        <a id="idm84088"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iolaps</em></span> -- number of preallocated spaces needed to hold overlapping burst data. Overlaps are frequency dependent, and the space required depends on the maximum value of <span class="emphasis"><em>xfund * kdur</em></span>. Can be over-estimated at no computation cost. Uses less than 50 bytes of memory per <span class="emphasis"><em>iolap</em></span>.
@@ -71,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948049646624"></a>
+        <a id="idm84107"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- peak amplitude of each sineburst, observed at the true end of its rise pattern. The rise may exceed this value given a large bandwidth (say, Q &lt; 10) and/or when the bursts are overlapping.
@@ -80,7 +80,7 @@
       <span class="emphasis"><em>xfund</em></span> -- the fundamental frequency (in Hertz) of the impulses that create new sinebursts.
     </p>
         <p>
-      <span class="emphasis"><em>xform</em></span> -- the formant frequency, i.e. freq of the sinusoid burst induced by each <span class="emphasis"><em>xfund</em></span> impulse. This frequency can be fixed for each burst or can vary continuously (see <span class="emphasis"><em>ifmode</em></span>).
+      <span class="emphasis"><em>xform</em></span> -- the formant frequency, i.e. freq of the sinusoid burst induced by each <span class="emphasis"><em>xfund</em></span> impulse. This frequency can be fixed for each burst or can vary continuously.
     </p>
         <p>
       <span class="emphasis"><em>koct</em></span> -- octaviation index, normally zero. If greater than zero, lowers the effective <span class="emphasis"><em>xfund</em></span> frequency by attenuating odd-numbered sinebursts. Whole numbers are full octaves, fractions transitional.
@@ -117,21 +117,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948049623968"></a>
+        <a id="idm84154"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fof2 opcode. It uses the file <a class="ulink" href="examples/fof2.csd.html" target="_top"> (click here to play) <em class="citetitle">fof2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948049622112"></a>
+          <a id="idm84159"></a>
           <p class="title">
-            <strong>Example 333. Example of the fof2 opcode.</strong>
+            <strong>Example 342. Example of the fof2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947882198752"></a>
+              <a id="idm84166"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -211,13 +211,13 @@ a<span class="n">out</span>    <span class="nb">fof2</span>    k<span class="n">
 
       </p>
         <div class="example">
-          <a id="idm45948049615776"></a>
+          <a id="idm84465"></a>
           <p class="title">
-            <strong>Example 334. Example of the fof2 opcode to produce vowel sounds.</strong>
+            <strong>Example 343. Example of the fof2 opcode to produce vowel sounds.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947881798768"></a>
+              <a id="idm84467"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -405,14 +405,14 @@ a<span class="n">env</span> <span class="nb">linen</span> <span class="mi">1</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948049613840"></a>
+        <a id="idm85875"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948049611824"></a>
+        <a id="idm85880"></a>
         <h2>Credits</h2>
         <p>
       </p>

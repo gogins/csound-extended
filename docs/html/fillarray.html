@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057041360"></a>
+        <a id="idm65019"></a>
         <h2>Description</h2>
         <p>
       Generate a vector (one-dimensional k-rate array) with a sequence
@@ -47,13 +47,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948056978320"></a>
+        <a id="idm65022"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">karray[] <span class="command"><strong>fillarray</strong></span> ival1, ival2,.....ivaln</pre>
         <pre class="synopsis">karray <span class="command"><strong>fillarray</strong></span> ival1, ival2,.....ivaln</pre>
+        <pre class="synopsis">karray <span class="command"><strong>fillarray</strong></span> kval1, kval2,.....kvaln</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948056974672"></a>
+        <a id="idm65030"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ival1,...ivaln</em></span> -- values to place in the vector.
@@ -65,20 +66,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948056972464"></a>
+        <a id="idm65035"></a>
+        <h2>Performance</h2>
+        <p>
+      In the third form the vector is regenerated at k-rate with values
+      <span class="emphasis"><em>kval1,..., kvaln</em></span>.
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm65039"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fillarray opcode. It uses the file <a class="ulink" href="examples/fillarray.csd.html" target="_top"> (click here to play) <em class="citetitle">fillarray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948056970688"></a>
+          <a id="idm65044"></a>
           <p class="title">
-            <strong>Example 275. Example of the fillarray opcode.</strong>
+            <strong>Example 283. Example of the fillarray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947889240512"></a>
+              <a id="idm65051"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -115,7 +124,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948056966400"></a>
+        <a id="idm65112"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>
@@ -123,7 +132,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948056963424"></a>
+        <a id="idm65119"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -141,6 +150,7 @@
         <p>
     </p>
         <p>New in version 6.00</p>
+        <p>Third, k-rate, form new in 6.12</p>
       </div>
     </div>
     <div class="navfooter">

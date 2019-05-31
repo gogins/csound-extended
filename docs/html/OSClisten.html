@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="OSCinit.html" title="OSCinit" />
+    <link rel="prev" href="OSCinitM.html" title="OSCinitM" />
     <link rel="next" href="OSCraw.html" title="OSCraw" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">OSClisten</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="OSCinit.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="OSCinitM.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="OSCraw.html">Next</a></td>
         </tr>
@@ -39,20 +39,22 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948027964048"></a>
+        <a id="idm151399"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in osc.</p>
         <p>
-      On each k-cycle looks to see if an OSC message has been send to
+      On each k-cycle looks to see if an OSC message has been sent to
       a given path of a given type.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948027922688"></a>
+        <a id="idm151403"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kans <span class="command"><strong>OSClisten</strong></span> ihandle, idest, itype [, xdata1, xdata2, ...]</pre>
+        <pre class="synopsis">kans, kdata[] <span class="command"><strong>OSClisten</strong></span> ihandle, idest, itype</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948027920576"></a>
+        <a id="idm151409"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span>
@@ -61,30 +63,31 @@
     </p>
         <p>
       <span class="emphasis"><em>idest</em></span>
-      -- a string that is the destination address.  This takes the
-      form of a file name with directories.  Csound uses this address
-      to decide if messages are meant for csound.
+      -- a string that is the destination address. This takes the
+      form of a path prefixed with a forward slash, with optional subdirectories
+      separated by forward slashes. Csound processes incoming messages that
+      match this address.
     </p>
         <p>
-      <span class="emphasis"><em>itype</em></span>
-      -- a string that indicates the types of the optional arguments
-      that are to be read.  The string can contain the characters
-      "acdfhisAG" which stand for audio, character, double, float, 64-bit integer,
-      32-bit integer, string, scalar array and f-table. All types other than 'asA' require a
-      k-rate variable; 's' requires a string variable, 'a' an audio
-      variable and 'A' an i- or k- rate array.  Fot type 'G' a variable
+      <span class="emphasis"><em>itype</em></span> -- a string that indicates the types
+      of the optional arguments that are to be read. The string can
+      contain the characters "acdfhisAG" which stand for audio,
+      character, double, float, 64-bit integer, 32-bit integer,
+      string, scalar array and f-table. All types other than 'asA'
+      require a k-rate variable; 's' requires a string variable, 'a' an audio
+      variable and 'A' an i- or k- rate array. For type 'G', a variable
       or constant can be used.
     </p>
         <p> A handler is inserted into the listener (see OSCinit) to
-      intercept messages of this pattern.
+      intercept messages that match this pattern.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948027916016"></a>
+        <a id="idm151418"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kans</em></span> -- set to 1 if a new message was
-      received, or zero if not. If multiple messages are received in
+      received, or 0 if not. If multiple messages are received in
       a single control period, the messages are buffered, and OSClisten
       can be called again until zero is returned.
     </p>
@@ -93,16 +96,29 @@
       are set to the incoming values, as interpretted by the
       <span class="emphasis"><em>itype</em></span> parameter.
       Note that although the <span class="emphasis"><em>xdata</em></span> variables are on
-      the right of an operation they are actually outputs, and so must be
-      variables of type a, ga, k, gk, S, gS, k[] and gk[] and may need to be declared with
-      init, or = in the case of string variables, before calling OSClisten.
+      the right of an operation, they are actually outputs, and so must be
+      variables of type a, ga, k, gk, S, gS, k[] and gk[] and may need
+      to be declared with init, or = in the case of string variables,
+      before calling OSClisten. 
+    </p>
+        <p>
+      Alternatively, if the message to be received is a series of values all of
+      the same scalar numeric type (e.g., one of "dfhi"), then the
+      return parameter <span class="emphasis"><em>kdata</em></span> may be used in place of
+      <span class="emphasis"><em>xdata</em></span> variables. <span class="emphasis"><em>kdata</em></span> must be an
+      array, it must be declared with init before calling OSClisten,
+      or used with the [] syntax.  It will be created to sufficient
+      size if it is other that a one dimensional array of size greater
+      or equal to length as the format string. If a message is received, this
+      array will be filled with the incoming values. See below for an example of
+      this usage.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948027912064"></a>
+        <a id="idm151430"></a>
         <h2>Example</h2>
         <p>
-      The example shows a pair of floating point numbers being received
+      This example shows a pair of floating point numbers being received
       on port 7770.
     </p>
         <div class="informalexample">
@@ -127,19 +143,45 @@ ex:
         </pre>
         </div>
         <p>
+        This example shows use of the alternate form of the opcode, where an
+        array is used to receive a list of scalar values. In this case, the
+        OSC sender is simulating a set of radio buttons (as is done, for
+        example by a Lemur "Switches" object set in this mode), where the
+        button that is set will have value 1.0 and all other buttons will have
+        value 0.0.
+      </p>
+        <div class="informalexample">
+          <pre class="programlisting">
+    gihandle <span class="opc">OSCinit</span> 7770
+    <span class="oblock">instr</span>   1
+      ; the UI object behind the OSC sender has 5 buttons arranged as radio buttons
+      kdata[] <span class="opc">init</span> 5
+  nxtmsg:
+      kk, kdata  <span class="opc">OSClisten</span> gihandle, "/foo/bar", "fffff"
+  if (kk <span class="opc">==</span> 0) goto ex
+      ; the only button with a non-zero value will be the one that is set,
+      ; so maxarray is used to get the index of that element
+      kmax, kidx <span class="opc">maxarray</span> kdata
+      <span class="opc">printks</span> "button %d (zero-based) is set\n", 0, kidx
+      <span class="opc">kgoto</span> nxtmsg
+  ex:
+    <span class="oblock">endin</span>
+          </pre>
+        </div>
+        <p>
       Below are two .csd files which demonstrate the usage of the OSC opcodes. They use the files <a class="ulink" href="examples/OSCmidisend.csd.html" target="_top"> (click here to play) <em class="citetitle">OSCmidisend.csd</em></a> and <a class="ulink" href="examples/OSCmidircv.csd.html" target="_top"> (click here to play) <em class="citetitle">OSCmidircv.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948027896864"></a>
+          <a id="idm151468"></a>
           <p class="title">
-            <strong>Example 630. Example of the OSC opcodes.</strong>
+            <strong>Example 647. Example of the OSC opcodes.</strong>
           </p>
           <div class="example-contents">
             <p>The following two .csd files demonstrate the usage of the OSC opcodes in csound. The first file, <a class="ulink" href="examples/OSCmidisend.csd.html" target="_top"> (click here to play) <em class="citetitle">OSCmidisend.csd</em></a>, transforms received real-time MIDI messages into OSC data. The second file, <a class="ulink" href="examples/OSCmidircv.csd.html" target="_top"> (click here to play) <em class="citetitle">OSCmidircv.csd</em></a>, can take these OSC messages, and intrepret them to generate sound from note messages, and store controller values. It will use controller number 7 to control volume. Note that these files are designed to be on the same machine, but if a different host address (in the IPADDRESS macro) is used, they can be separate machines on a network, or connected through the internet.</p>
             <p>CSD file to send OSC messages:</p>
             <div class="refsect1">
-              <a id="idm45947851109968"></a>
+              <a id="idm151476"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -182,7 +224,7 @@ ex:
             </div>
             <p>CSD file to receive OSC messages:</p>
             <div class="refsect1">
-              <a id="idm45947852021296"></a>
+              <a id="idm151554"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="c1">; network_recv.csd</span>
@@ -288,7 +330,7 @@ ex:
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948027890672"></a>
+        <a id="idm151898"></a>
         <h2>See Also</h2>
         <p>
         <a class="link" href="OSCsend.html" title="OSCsend"><em class="citetitle">OSCsend</em></a>,
@@ -297,7 +339,7 @@ ex:
         <p> More information on this opcode: <a class="ulink" href="http://www.youtube.com/watch?v=JX1C3TqP_9Y" target="_top"><em class="citetitle">http://www.youtube.com/watch?v=JX1C3TqP_9Y</em></a>  , made by Andrés Cabrera </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948027886272"></a>
+        <a id="idm151908"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -314,21 +356,32 @@ ex:
         </table>
         <p>
     </p>
-        <p>types aAG are new in Csound 6.07</p>
+        <p>
+      </p>
+        <table border="0" summary="Simple list" class="simplelist">
+          <tr>
+            <td>types aAG are new in Csound 6.07</td>
+          </tr>
+          <tr>
+            <td>the use an an array for outputs is new in Csound 6.12</td>
+          </tr>
+        </table>
+        <p>
+    </p>
       </div>
     </div>
     <div class="navfooter">
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="OSCinit.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="OSCinitM.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="OSCraw.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">OSCinit </td>
+          <td width="40%" align="left" valign="top">OSCinitM </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

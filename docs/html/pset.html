@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021027600"></a>
+        <a id="idm172029"></a>
         <h2>Description</h2>
         <p>
       Defines and initializes numeric arrays at orchestra load time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948020975696"></a>
+        <a id="idm172032"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>pset</strong></span> icon1 [, icon2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948020973648"></a>
+        <a id="idm172036"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>icon1, icon2, ...</em></span> -- preset values for a MIDI instrument
@@ -61,20 +61,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948020970672"></a>
+        <a id="idm172042"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pset opcode. It uses the file <a class="ulink" href="examples/pset.csd.html" target="_top"> (click here to play) <em class="citetitle">pset.csd</em></a>
       </p>
         <div class="example">
-          <a id="idm45948020968928"></a>
+          <a id="idm172047"></a>
           <p class="title">
-            <strong>Example 725. Example of the pset opcode.</strong>
+            <strong>Example 743. Example of the pset opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947844079600"></a>
+              <a id="idm172054"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -118,13 +118,13 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="nb">p5</
         <p>
       </p>
         <div class="example">
-          <a id="idm45948020963792"></a>
+          <a id="idm172132"></a>
           <p class="title">
-            <strong>Example 726. Second example of the pset opcode.</strong>
+            <strong>Example 744. Second example of the pset opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947844080448"></a>
+              <a id="idm172134"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -157,7 +157,7 @@ i<span class="n">frequency</span>  <span class="o">=</span> <span class="nb">cps
 i<span class="n">amplitude</span>  <span class="o">=</span> <span class="nb">p5</span><span class="o">*</span><span class="mf">.15</span>			<span class="c1">;lower volume</span>
 
 <span class="nb">print</span> <span class="nb">p1</span><span class="p">,</span> <span class="nb">p2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-a<span class="n">sig</span> <span class="nb">STKBandedWG</span> i<span class="n">frequency</span><span class="p">,</span> i<span class="n">amplitude</span>
+a<span class="n">sig</span> S<span class="n">TKBandedWG</span> i<span class="n">frequency</span><span class="p">,</span> i<span class="n">amplitude</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -175,7 +175,7 @@ a<span class="n">sig</span> <span class="nb">STKBandedWG</span> i<span class="n"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948020961872"></a>
+        <a id="idm172252"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="strset.html" title="strset"><em class="citetitle">strset</em></a>

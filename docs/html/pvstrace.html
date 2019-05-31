@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948017356656"></a>
+        <a id="idm181061"></a>
         <h2>Description</h2>
         <p>
       Process a PV stream by retaining only the N bins with the
@@ -47,15 +47,29 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948017355344"></a>
+        <a id="idm181064"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvstrace</strong></span> fsigin, kn </pre>
+        <pre class="synopsis">fsig, kBins[] <span class="command"><strong>pvstrace</strong></span> fsigin, kn[, isort] </pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948017353248"></a>
+        <a id="idm181070"></a>
+        <h2>Initialization </h2>
+        <p>
+      <span class="emphasis"><em>isort</em></span> -- if nonzero, sort the reported bins in kBins by
+      decreasing amplitude, optional (default 0, off).
+    </p>
+      </div>
+      <div class="refsect1">
+        <a id="idm181074"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
+    </p>
+        <p>
+      <span class="emphasis"><em>kBins[]</em></span> -- an array of size fftsize/2 + 1
+      values, whose first N values report the kn bin numbers retained
+      by pvstrace. Other locations are set to 0. It can be sorted or unsorted.
     </p>
         <p>
       <span class="emphasis"><em>fsigin</em></span> -- input pv stream
@@ -82,20 +96,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948017285488"></a>
+        <a id="idm181086"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the use of the <span class="emphasis"><em>pvstrace</em></span> opcode. It uses the file <a class="ulink" href="examples/pvstrace.csd.html" target="_top"> (click here to play) <em class="citetitle">pvstrace.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948017283184"></a>
+          <a id="idm181092"></a>
           <p class="title">
-            <strong>Example 782. Example of the <span class="emphasis"><em>pvstrace</em></span> opcode.</strong>
+            <strong>Example 800. Example of the <span class="emphasis"><em>pvstrace</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947838592272"></a>
+              <a id="idm181100"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,7 +156,7 @@ a<span class="n">tps</span>  <span class="nb">pvsynth</span>   <span class="n">f
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948017278464"></a>
+        <a id="idm181195"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -151,7 +165,7 @@ a<span class="n">tps</span>  <span class="nb">pvsynth</span>   <span class="n">f
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948017274496"></a>
+        <a id="idm181204"></a>
         <h2>Credits</h2>
         <p>
       </p>

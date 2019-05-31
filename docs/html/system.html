@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="syncphasor.html" title="syncphasor" />
-    <link rel="next" href="tb.html" title="tb" />
+    <link rel="next" href="tab.html" title="tab" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="syncphasor.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="tb.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="tab.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -40,8 +40,9 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001844160"></a>
+        <a id="idm218972"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in system_call.</p>
         <p>
       <span class="command"><strong>system</strong></span> and <span class="command"><strong>system_i</strong></span> call
     any external command understood by the operating system, similarly
@@ -52,13 +53,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001839776"></a>
+        <a id="idm218980"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ires <span class="command"><strong>system_i</strong></span> itrig, Scmd, [inowait]</pre>
         <pre class="synopsis">kres <span class="command"><strong>system</strong></span> ktrig, Scmd, [knowait]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948001836192"></a>
+        <a id="idm218986"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Scmd</em></span> -- command string
@@ -69,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001833456"></a>
+        <a id="idm218992"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig</em></span> -- if greater than zero and different
@@ -107,21 +108,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948001827648"></a>
+        <a id="idm219003"></a>
         <h2>Example</h2>
         <p>
       Here is an example of the system_i opcode. It uses the file <a class="ulink" href="examples/system.csd.html" target="_top"> (click here to play) <em class="citetitle">system.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948001825792"></a>
+          <a id="idm219008"></a>
           <p class="title">
-            <strong>Example 971. Example of the system opcode.</strong>
+            <strong>Example 991. Example of the system opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947824380416"></a>
+              <a id="idm219015"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -185,7 +186,7 @@ i<span class="n">res</span> <span class="nb">system_i</span> <span class="mi">1<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001821472"></a>
+        <a id="idm219079"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -212,14 +213,14 @@ i<span class="n">res</span> <span class="nb">system_i</span> <span class="mi">1<
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="tb.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="tab.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">syncphasor </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> tb</td>
+          <td width="40%" align="right" valign="top"> tab</td>
         </tr>
       </table>
     </div>

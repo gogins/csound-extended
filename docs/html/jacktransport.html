@@ -52,19 +52,20 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idm45948041322000"></a>
+        <a id="idm110276"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in jackTransport.</p>
         <p>
       Start/stop jack_transport and can optionally relocate the playback head.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948041320592"></a>
+        <a id="idm110280"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>jacktransport</strong></span> icommand [, ilocation]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948041257920"></a>
+        <a id="idm110284"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>icommand</em></span> -- 1 to start playing, 0 to stop.
@@ -87,19 +88,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948041254096"></a>
+        <a id="idm110292"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the jacktransport opcode. It uses the file <a class="ulink" href="examples/jacktransport.csd.html" target="_top"> (click here to play) <em class="citetitle">jacktransport.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948041252208"></a>
+          <a id="idm110297"></a>
           <p class="title">
-            <strong>Example 446. Simple example of the jacktransport opcode.</strong>
+            <strong>Example 460. Simple example of the jacktransport opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947870592480"></a>
+              <a id="idm110299"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
  
@@ -114,11 +115,11 @@
 
 
 	<span class="kd">instr</span> <span class="nf">1</span>
-<span class="nb">jacktransport</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span> 
+<span class="n">jacktransport</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span> 
 	<span class="kd">endin</span>
 
 	<span class="kd">instr</span> <span class="nf">2</span>
-<span class="nb">jacktransport</span> <span class="nb">p4</span> 
+<span class="n">jacktransport</span> <span class="nb">p4</span> 
 	<span class="kd">endin</span>
 
 
@@ -142,7 +143,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948041250272"></a>
+        <a id="idm110357"></a>
         <h2>Credits</h2>
         <table border="0" summary="Simple list" class="simplelist">
           <tr>

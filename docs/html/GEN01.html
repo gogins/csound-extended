@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940211296"></a>
+        <a id="idm264559"></a>
         <h2>Description</h2>
         <p>
       This subroutine transfers data from a soundfile into a function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940166688"></a>
+        <a id="idm264562"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span>#  time  size  1  filcod  skiptime  format  channel</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45947940164608"></a>
+        <a id="idm264566"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Ordinarily a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>); the maximum tablesize is 16777216 (2<sup>24</sup>) points. The allocation of table memory can be <span class="emphasis"><em>deferred</em></span> by setting this parameter to 0; the size allocated is then the number of points in the file (probably not a power-of-2), and the table is not usable by normal oscillators, but it is usable by a <a class="link" href="loscil.html" title="loscil"><em class="citetitle">loscil</em></a> unit. The soundfile can also be mono or stereo.
@@ -66,19 +66,41 @@
       <span class="emphasis"><em>channel</em></span> -- channel number to read in. 0 denotes read all channels.
     </p>
         <p>
-      <span class="emphasis"><em>format</em></span> -- specifies the audio data-file format:
+   <span class="emphasis"><em>format</em></span> -- if positive it is ignored, but if
+      negative specifies the audio format of a raw file.
         </p>
         <div class="literallayout">
           <p><br />
-1 - 8-bit signed character    4 - 16-bit short integers <br />
-2 - 8-bit A-law bytes         5 - 32-bit long integers <br />
-3 - 8-bit U-law bytes         6 - 32-bit floats<br />
-        </p>
+        -1 - 8-bit signed character<br />
+        -2 - 8-bit A-law bytes<br />
+        -3 - 8-bit U-law bytes<br />
+        -4 - 16-bit short integers<br />
+        -5 - 32-bit long integers<br />
+        -6 - 32-bit floats<br />
+        -7 - 8-bit unsigned character<br />
+        -8 - 24-bit integers<br />
+        -9 - 64-bit doubles</p>
         </div>
         <p>
     </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>This list is not the same as in <a class="link" href="diskin.html" title="diskin"><em class="citetitle">diskin2</em></a></p>
+              </td>
+            </tr>
+          </table>
+        </div>
         <p>
-      If <span class="emphasis"><em>format</em></span> = 0 the sample format is taken from the soundfile header, or by default from the CSound <a class="link" href="CommandFlags.html#FlagsMinusLowerO"><em class="citetitle">-o</em></a> command-line flag.
+      If <span class="emphasis"><em>format</em></span> = 0 the sample format is taken
+      from the soundfile header.
     </p>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
@@ -101,7 +123,7 @@
                     </li>
                     <li class="listitem">
                       <p>
-              If p4 is positive, the table will be post-normalized (rescaled to a maximum absolute value of 1 after generation). A negative p4 will cause rescaling to be skipped.
+              If p4 is positive, the table will be post-normalised (rescaled to a maximum absolute value of 1 after generation). A negative p4 will cause rescaling to be skipped.
             </p>
                     </li>
                     <li class="listitem">
@@ -119,19 +141,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45947940142944"></a>
+        <a id="idm264612"></a>
         <h2>Examples</h2>
         <p>
 	    Here is an example of the GEN01 routine. It uses the files <a class="ulink" href="examples/gen01.csd.html" target="_top"> (click here to play) <em class="citetitle">gen01.csd</em></a> and several sound files.
       </p>
         <div class="example">
-          <a id="idm45947940141040"></a>
+          <a id="idm264617"></a>
           <p class="title">
-            <strong>Example 1182. An example of the GEN01 routine.</strong>
+            <strong>Example 1196. An example of the GEN01 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947803547376"></a>
+              <a id="idm264619"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -218,9 +240,12 @@ a<span class="n">sig</span>  <span class="nb">tablei</span> a<span class="n">rea
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940128336"></a>
+        <a id="idm264771"></a>
         <h2>Credits</h2>
-        <p>September 2003. Thanks goes to Dr. Richard Boulanger for pointing out the references to the AIFF file format.</p>
+        <p>September 2003. Thanks goes to Dr. Richard Boulanger for
+    pointing out the references to the AIFF file format.</p>
+        <p>Revised in v6.11 and v6.12 to clarify status of headers and raw files,
+    and to add three more sample formats.</p>
       </div>
     </div>
     <div class="navfooter">

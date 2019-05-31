@@ -38,7 +38,7 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082427568"></a>Description</h3>
+              <h3 class="title"><a id="idm8280"></a>Description</h3>
             </div>
           </div>
         </div>
@@ -59,7 +59,15 @@
       <span class="emphasis"><em>#define</em></span> NAME(<span class="emphasis"><em>a' b' c'</em></span>) -- defines a macro with arguments. This can be used in more complex situations. The name of the macro must begin with a letter and can consist of any combination of letters and numbers. Within the replacement text, the arguments can be substituted by the form: $A.  In fact, the implementation defines the arguments as simple macros.  There may be up to 5 arguments, and the names may be any choice of letters.  Remember that case is significant in macro names.
     </p>
         <p>
-      <span class="emphasis"><em>$NAME.</em></span> --  calls a defined macro.  To use a macro, the name is used following a $ character.  The name is terminated by the first character which is neither a letter nor a number.  If it is necessary for the name not to terminate with a space, a period, which will be ignored, can be used to terminate the name.  The string, <span class="emphasis"><em>$NAME</em></span>., is replaced by the replacement text from the definition.  The replacement text can also include macro calls.
+      <span class="emphasis"><em>$NAME.</em></span> --  calls a defined macro.
+      To use a macro, the name is used following a $ character.
+      The name is terminated by the first character which is neither a
+      letter nor a number.  If it is necessary for the name not to
+      terminate with a space, a period, which will be ignored, can be
+      used to terminate the name.  The string,
+      <span class="emphasis"><em>$NAME</em></span>., is replaced by the
+      replacement text from the definition.  The replacement text can
+      also include macro calls. 
     </p>
         <p>
       <span class="emphasis"><em>#undef</em></span> NAME -- undefines a macro name. If a macro is no longer required, it can be undefined with <span class="emphasis"><em>#undef</em></span> NAME.
@@ -69,7 +77,7 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082348624"></a>Syntax</h3>
+              <h3 class="title"><a id="idm8309"></a>Syntax</h3>
             </div>
           </div>
         </div>
@@ -86,7 +94,7 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082342912"></a>Initialization</h3>
+              <h3 class="title"><a id="idm8319"></a>Initialization</h3>
             </div>
           </div>
         </div>
@@ -98,7 +106,7 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082341024"></a>Performance</h3>
+              <h3 class="title"><a id="idm8323"></a>Performance</h3>
             </div>
           </div>
         </div>
@@ -123,14 +131,14 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082335264"></a>Examples</h3>
+              <h3 class="title"><a id="idm8335"></a>Examples</h3>
             </div>
           </div>
         </div>
         <p>
       </p>
         <div class="example">
-          <a id="idm45948082334336"></a>
+          <a id="idm8338"></a>
           <p class="title">
             <strong>Example 1. Simple Macro</strong>
           </p>
@@ -176,7 +184,7 @@
         <p>
       </p>
         <div class="example">
-          <a id="idm45948082320080"></a>
+          <a id="idm8362"></a>
           <p class="title">
             <strong>Example 2. Macros with arguments</strong>
           </p>
@@ -210,7 +218,7 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082313184"></a>Credits</h3>
+              <h3 class="title"><a id="idm8374"></a>Credits</h3>
             </div>
           </div>
         </div>

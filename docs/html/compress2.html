@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065189152"></a>
+        <a id="idm43102"></a>
         <h2>Description</h2>
         <p> This unit functions as an audio
     compressor, limiter, expander, or noise gate, using either
@@ -66,12 +66,12 @@ corresponds to an amplitude of 0dbfs.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065112400"></a>
+        <a id="idm43114"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>compress2</strong></span> aasig, acsig, kthresh, kloknee, khiknee, kratio, katt, krel, ilook</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948065110176"></a>
+        <a id="idm43118"></a>
         <h2>Initialization</h2>
         <p>
 
@@ -85,7 +85,7 @@ corresponds to an amplitude of 0dbfs.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065107776"></a>
+        <a id="idm43123"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kthresh</em></span> -- sets the lowest decibel level that will be allowed through.  Normally -90 or less, but if higher the threshold will begin removing low-level signal energy such as background noise.
@@ -101,20 +101,20 @@ The actions of compress2 will depend on the parameter settings given.  A hard-kn
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065100832"></a>
+        <a id="idm43136"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the compress2 opcode. It uses the file <a class="ulink" href="examples/compress2.csd.html" target="_top"> (click here to play) <em class="citetitle">compress2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948065098976"></a>
+          <a id="idm43141"></a>
           <p class="title">
-            <strong>Example 144. Example of the compress2 opcode.</strong>
+            <strong>Example 149. Example of the compress2 opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947898949040"></a>
+              <a id="idm43143"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -150,7 +150,7 @@ a<span class="n">sig</span>   <span class="nb">diskin2</span> <span class="s">"b
   k<span class="n">att</span>    <span class="o">=</span> <span class="mf">0.1</span>
   k<span class="n">rel</span>    <span class="o">=</span> <span class="mf">.5</span>
   i<span class="n">look</span>   <span class="o">=</span> <span class="mf">.02</span>
-a<span class="n">sig</span>  <span class="nb">compress2</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">voice</span><span class="p">,</span> k<span class="n">thresh</span><span class="p">,</span> k<span class="n">loknee</span><span class="p">,</span> k<span class="n">hiknee</span><span class="p">,</span> k<span class="n">ratio</span><span class="p">,</span> k<span class="n">att</span><span class="p">,</span> k<span class="n">rel</span><span class="p">,</span> i<span class="n">look</span>	<span class="c1">; voice-activated compressor</span>
+a<span class="n">sig</span>  <span class="n">compress2</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">voice</span><span class="p">,</span> k<span class="n">thresh</span><span class="p">,</span> k<span class="n">loknee</span><span class="p">,</span> k<span class="n">hiknee</span><span class="p">,</span> k<span class="n">ratio</span><span class="p">,</span> k<span class="n">att</span><span class="p">,</span> k<span class="n">rel</span><span class="p">,</span> i<span class="n">look</span>	<span class="c1">; voice-activated compressor</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -173,7 +173,7 @@ a<span class="n">sig</span>  <span class="nb">compress2</span> a<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065097056"></a>
+        <a id="idm43257"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dam.html" title="dam"><em class="citetitle">dam</em></a>
@@ -183,7 +183,7 @@ a<span class="n">sig</span>  <span class="nb">compress2</span> a<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065093760"></a>
+        <a id="idm43265"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch after Barry L. Vercoe from Extended but
     with more common dB values, new in version 6.07.

@@ -39,32 +39,32 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947985771200"></a>
+        <a id="idm261303"></a>
         <h2>Description</h2>
         <p>
       Writes to a zk variable at k-rate with mixing.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947985769856"></a>
+        <a id="idm261306"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>zkwm</strong></span> ksig, kndx [, imix]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45947985767776"></a>
+        <a id="idm261310"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imix</em></span> (optional, default=1) -- indicates if mixing should occur.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947985706256"></a>
+        <a id="idm261314"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> -- value to be written to the zk location.
     </p>
         <p>
-      <span class="emphasis"><em>kndx</em></span> -- points to the zk or za location to which to write.
+      <span class="emphasis"><em>kndx</em></span> -- points to the zk location to which to write.
     </p>
         <p>
       <span class="emphasis"><em>zkwm</em></span> is a mixing opcode, it adds the signal to the current value of the variable. If no <span class="emphasis"><em>imix</em></span> is specified, mixing always occurs. <span class="emphasis"><em>imix</em></span> = 0 will cause overwriting like <span class="emphasis"><em>ziw</em></span>, <span class="emphasis"><em>zkw</em></span>, and <span class="emphasis"><em>zaw</em></span>. Any other value will cause mixing.
@@ -77,21 +77,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947985696608"></a>
+        <a id="idm261335"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the zkwm opcode. It uses the file <a class="ulink" href="examples/zkwm.csd.html" target="_top"> (click here to play) <em class="citetitle">zkwm.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45947985694832"></a>
+          <a id="idm261340"></a>
           <p class="title">
-            <strong>Example 1164. Example of the zkwm opcode.</strong>
+            <strong>Example 1178. Example of the zkwm opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947804432976"></a>
+              <a id="idm261347"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -176,7 +176,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947985690576"></a>
+        <a id="idm261472"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="zaw.html" title="zaw"><em class="citetitle">zaw</em></a>,
@@ -189,7 +189,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947985682960"></a>
+        <a id="idm261489"></a>
         <h2>Credits</h2>
         <p>
       </p>

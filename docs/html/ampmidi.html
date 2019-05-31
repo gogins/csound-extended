@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="ampdbfs.html" title="ampdbfs" />
-    <link rel="next" href="ampmidid.html" title="ampmidid" />
+    <link rel="next" href="ampmidicurve.html" title="ampmidicurve" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="ampdbfs.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="ampmidid.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="ampmidicurve.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948070969760"></a>
+        <a id="idm25268"></a>
         <h2>Description</h2>
         <p>
       Get the velocity of the current MIDI event.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948070968416"></a>
+        <a id="idm25271"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iamp <span class="command"><strong>ampmidi</strong></span> iscal [, ifn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948070966176"></a>
+        <a id="idm25275"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iscal</em></span> -- i-time scaling factor
@@ -61,28 +61,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948070917568"></a>
+        <a id="idm25281"></a>
         <h2>Performance</h2>
         <p>
       Get the velocity of the current MIDI event, optionally pass it through a normalized translation table, and return an amplitude value in the range 0 - <span class="emphasis"><em>iscal</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948070915728"></a>
+        <a id="idm25285"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ampmidi opcode. It uses the file <a class="ulink" href="examples/ampmidi.csd.html" target="_top"> (click here to play) <em class="citetitle">ampmidi.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948070913952"></a>
+          <a id="idm25290"></a>
           <p class="title">
             <strong>Example 54. Example of the ampmidi opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947906226592"></a>
+              <a id="idm25297"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -127,7 +127,7 @@ a<span class="n">sig</span>	<span class="nb">oscil</span> i<span class="n">amp</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948070909632"></a>
+        <a id="idm25357"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
@@ -144,7 +144,7 @@ a<span class="n">sig</span>	<span class="nb">oscil</span> i<span class="n">amp</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948070897920"></a>
+        <a id="idm25382"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -171,14 +171,14 @@ a<span class="n">sig</span>	<span class="nb">oscil</span> i<span class="n">amp</
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="ampmidid.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="ampmidicurve.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">ampdbfs </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> ampmidid</td>
+          <td width="40%" align="right" valign="top"> ampmidicurve</td>
         </tr>
       </table>
     </div>

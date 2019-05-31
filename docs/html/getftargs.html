@@ -39,26 +39,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948046492320"></a>
+        <a id="idm95292"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in getftargs.</p>
         <p>
       <span class="emphasis"><em>getftargs</em></span> writes the arguments used to create a function table to a string variable. <span class="emphasis"><em>getftargs</em></span> runs both at initialization and performance time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948046419248"></a>
+        <a id="idm95298"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">Sdst <span class="command"><strong>getftargs</strong></span> iftno, ktrig</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948046417072"></a>
+        <a id="idm95302"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifno</em></span> -- Number of the table whose arguments we want to request.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948046415472"></a>
+        <a id="idm95306"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>Sdst</em></span> -- output string variable.
@@ -68,20 +69,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948046412720"></a>
+        <a id="idm95312"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the getftargs opcode. It uses the file <a class="ulink" href="examples/getftargs.csd.html" target="_top"> (click here to play) <em class="citetitle">getftargs.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948046410864"></a>
+          <a id="idm95317"></a>
           <p class="title">
-            <strong>Example 385. Example of the getftargs opcode.</strong>
+            <strong>Example 397. Example of the getftargs opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947877426416"></a>
+              <a id="idm95324"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -99,7 +100,7 @@
 <span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-S<span class="n">args</span> <span class="nb">getftargs</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+S<span class="n">args</span> <span class="n">getftargs</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
 <span class="nb">puts</span> S<span class="n">args</span><span class="p">,</span> <span class="mi">1</span>
 <span class="kd">endin</span>
 
@@ -123,7 +124,7 @@ S<span class="n">args</span> <span class="nb">getftargs</span> <span class="mi">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948046405808"></a>
+        <a id="idm95387"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="ftgen.html" title="ftgen"><em class="citetitle">ftgen</em></a>,
@@ -132,7 +133,7 @@ S<span class="n">args</span> <span class="nb">getftargs</span> <span class="mi">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948046401808"></a>
+        <a id="idm95396"></a>
         <h2>Credits</h2>
         <p>Written by Guillermo Senna</p>
         <p>2016</p>

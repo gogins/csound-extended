@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948067045952"></a>
+        <a id="idm37892"></a>
         <h2>Description</h2>
         <p>
 	This opcode outputs a trigger signal that informs when any one
@@ -47,14 +47,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948067044384"></a>
+        <a id="idm37895"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktrig <span class="command"><strong>changed2</strong></span> kvar1 [, kvar2,..., kvarN]</pre>
         <pre class="synopsis">ktrig <span class="command"><strong>changed2</strong></span> karr[]</pre>
         <pre class="synopsis">ktrig <span class="command"><strong>changed2</strong></span> aarr[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948066995616"></a>
+        <a id="idm37903"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig</em></span> - Outputs a value of 1 when any of
@@ -72,7 +72,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948066991024"></a>
+        <a id="idm37913"></a>
         <h2>Examples</h2>
         <p>
       Here are two examples of the changed2 opcode. They use the files
@@ -81,13 +81,13 @@
 
       </p>
         <div class="example">
-          <a id="idm45948066988224"></a>
+          <a id="idm37920"></a>
           <p class="title">
-            <strong>Example 117. Example of the changed2 opcode.</strong>
+            <strong>Example 122. Example of the changed2 opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947900677824"></a>
+              <a id="idm37922"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,7 +107,7 @@
 
 k<span class="n">sig</span>  <span class="nb">oscil</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>
 k<span class="n">int</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>k<span class="n">sig</span><span class="p">)</span>
-k<span class="n">trig</span> <span class="nb">changed2</span> k<span class="n">int</span>
+k<span class="n">trig</span> <span class="n">changed2</span> k<span class="n">int</span>
       <span class="nb">printk</span> <span class="mf">0.2</span><span class="p">,</span> k<span class="n">int</span>
       <span class="nb">printk2</span> k<span class="n">trig</span>
 
@@ -160,13 +160,13 @@ k<span class="n">trig</span> <span class="nb">changed2</span> k<span class="n">i
         <p>
     </p>
         <div class="example">
-          <a id="idm45948066984416"></a>
+          <a id="idm37983"></a>
           <p class="title">
-            <strong>Example 118. Example of the changed2 opcode.</strong>
+            <strong>Example 123. Example of the changed2 opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947900860496"></a>
+              <a id="idm37985"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
@@ -178,7 +178,7 @@ gk<span class="n">Array</span><span class="p">[][]</span> <span class="nb">init<
 gk<span class="n">Array</span>     <span class="nb">array</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-k<span class="n">1</span> <span class="nb">changed2</span> gk<span class="n">Array</span>
+k<span class="n">1</span> <span class="n">changed2</span> gk<span class="n">Array</span>
 <span class="k">if</span> k<span class="n">1</span><span class="o">==</span><span class="mi">1</span> <span class="k">then</span>
     <span class="nb">printks</span> <span class="s">"An element in the array changed"</span><span class="p">,</span> <span class="mi">0</span>
 <span class="k">endif</span>
@@ -202,7 +202,7 @@ k<span class="n">1</span> <span class="nb">changed2</span> gk<span class="n">Arr
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm45948066982624"></a>
+        <a id="idm38050"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch.</p>
         <p>Example written by Andrés Cabrera.</p>

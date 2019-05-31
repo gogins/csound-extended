@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>K-Rate Vectors</title>
+    <title>Vectors and Arrays</title>
     <link rel="stylesheet" type="text/css" href="csound.css" />
     <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
@@ -16,7 +16,7 @@
     <div class="navheader">
       <table width="100%" summary="Navigation header">
         <tr>
-          <th colspan="3" align="center">K-Rate Vectors</th>
+          <th colspan="3" align="center">Vectors and Arrays</th>
         </tr>
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="OrchUDO.html">Prev</a> </td>
@@ -30,18 +30,27 @@
       <div class="titlepage">
         <div>
           <div>
-            <h2 class="title" style="clear: both"><a id="Orchtab"></a>K-Rate Vectors</h2>
+            <h2 class="title" style="clear: both"><a id="Orchtab"></a>Vectors and Arrays</h2>
           </div>
         </div>
       </div>
       <p>
-    Csound allows the declaration and deployment of one-dimensional
-    vectors or tables.  They are local to an instrument, and need to
-    be declared for size (with the <a class="link" href="init.html" title="init"><em class="citetitle">init</em></a> opcode.
-    Individual elements are read as part of any expression with square
-    brackets to give an index at k-rate.  Individual elements can be
-    assigned, and there are a number of opcodes to query and modify tables.
-
+    Vectors and arrays of i-rate, k-rate or a-rate values can be used
+    in many cases.  They are created by the <a class="link" href="init.html" title="init"><em class="citetitle">init</em></a> opcode and
+    others, and can be used in most arithmetic situations as well as
+    special array opcodes.
+  </p>
+      <p>
+    For a short time Csound had a more limited scheme of one dimensional
+    vectors at k-rate, but these are subsummed in the arrays, and
+    t-variables are deprecated.
+    
+    
+    
+    
+    
+    
+    
   </p>
     </div>
     <div class="navfooter">

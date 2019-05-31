@@ -46,7 +46,7 @@
           <li class="listitem">OPCODE6DIR: Defines the location of csound opcode plugins for the single precision float (32-bit) version.</li>
           <li class="listitem">OPCODE6DIR64: Defines the location of csound opcode plugins for the double precision float (64-bit) version.</li>
           <li class="listitem">SNAPDIR: Is used by the FLTK widget opcodes when loading and saving snapshots. </li>
-          <li class="listitem">CSOUNDRC: Defines the csound resource (or configuration) file. A full path and filename containing csound flags must be specified. This variable defaults to .csoundrc if not present.</li>
+          <li class="listitem">CSOUND6RC: Defines the csound resource (or configuration) file. A full path and filename containing csound flags must be specified. This variable defaults to .csound6rc if not present.</li>
           <li class="listitem">CSSTRNGS: In Csound 5.00 and later versions, the localisation of messages is controlled by two environment variables CSSTRNGS and CS_LANG, both of which are optional. CSSTRNGS points to a directory containing .xmg files.</li>
           <li class="listitem">CS_LANG: Selects a language for csound messages.</li>
           <li class="listitem">RAWWAVE_PATH: Is used by the STK opcodes to find the raw wave files. Only relevant if you are using STK wrapper opcodes like STKBowed or STKBrass.</li>
@@ -77,7 +77,6 @@
       <div class="itemizedlist">
         <ul class="itemizedlist" style="list-style-type: disc; ">
           <li class="listitem"><span class="emphasis"><em>PATH</em></span>: The directory containing csound executables should be listed in this variable.</li>
-          <li class="listitem"><span class="emphasis"><em>PYTHONPATH</em></span>: If you intend to use CsoundVST and python, the directory containing the _CsoundVST shared library and the CsoundVST.py file must be in your <span class="emphasis"><em>PYTHONPATH</em></span> environment variable (or the default path python searches in), so that the Python runtime knows how to load these files.</li>
           <li class="listitem"><span class="emphasis"><em>LADSPA_PATH and DSSI_PATH</em></span>: These environment variables are required if you are using the <span class="emphasis"><em>dssi4cs</em></span> (LADSPA and DSSI host) plug-in opcodes.</li>
           <li class="listitem"><span class="emphasis"><em>CSDOCDIR</em></span>: Specifies the directory where the html help files are located. Though not used by Csound directly, this environment variable can help front-ends and editors (which implement it) to find the csound manual.</li>
         </ul>
@@ -88,12 +87,12 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948085969328"></a>Setting environment variables</h3>
+              <h3 class="title"><a id="idm6625"></a>Setting environment variables</h3>
             </div>
           </div>
         </div>
-        <h4><a id="idm45948085968640"></a>On the command line</h4>
-        <p>You can set environment variables on the command line or the configuration file .csoundrc by using the command line flag --env:NAME=VALUE or --env:NAME+=VALUE, where NAME is the environment variable name, and VALUE is its value. See <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command-line Flags</em></a>
+        <h4><a id="idm6627"></a>On the command line</h4>
+        <p>You can set environment variables on the command line or the configuration file .csound6rc by using the command line flag --env:NAME=VALUE or --env:NAME+=VALUE, where NAME is the environment variable name, and VALUE is its value. See <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command-line Flags</em></a>
     </p>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note">
@@ -110,12 +109,12 @@
             </tr>
           </table>
         </div>
-        <h4><a id="idm45948085965392"></a>Windows</h4>
+        <h4><a id="idm6633"></a>Windows</h4>
         <p>To set a csound environment on Windows XP and 2000 go to Control Panel-&gt;System-&gt;Advanced and click on the button 'Environment Variables'. On other versions of Windows earlier than Windows XP and Windows 2000 you set environment variables in the autoexec.bat file. Go to 'My Computer', select C: drive, right click on autoexec.bat, and select 'Edit'. The statement format is: SET NAME=VALUE .
     </p>
-        <h4><a id="idm45948085964176"></a>Linux</h4>
+        <h4><a id="idm6635"></a>Linux</h4>
         <p>You can set environment variables on Linux in many ways. You can set them using the <span class="emphasis"><em>export</em></span> shell command, by setting them on .bashrc or similar files or by adding them to the /etc/profile file.</p>
-        <h4><a id="idm45948085962752"></a>Mac</h4>
+        <h4><a id="idm6638"></a>Mac</h4>
         <pre class="screen">~$ export OPCODE6DIR64=/Users/you/your/Csound6/build</pre>
         <p>in addition if the bash shell is the default, then it is usually easier to edit your .bashrc or /etc/profile.</p>
         <p>	  Note that if users choose one of the above methods, ie editing the .bashrc file then the environment variables are executed when a new shell is created. This can be problematic if your application implements a Quartz or Aqua interface and does not use the commandline.</p>

@@ -6,7 +6,11 @@ Licensed under the terms of the GNU Lesser Public License version 2
 
 This Python script creates a modified version of the Csound Reference Manual
 in which the example CSDs will play online in Google Chrome using the WebAssembly
-build of Csound. The target is the gogins.github.io GitHub repository.
+build of Csound. The target is the docs directory of the csound-extended repository.
+
+Customize the source and target directories, run this Python script, and then
+add the target directory to the csound-extended Git repository and push your
+changes.
 '''
 
 print __doc__
@@ -18,14 +22,17 @@ import os.path
 import shutil
 import traceback
 
-source_home = r'''D:\msys64\home\restore\manual'''
-source_home = r'''/home/mkg/csound/manual'''
+'''
+The usr must customize these variables. No additional configuration should be
+required.
+'''
+source_home = r'''/home/mkg/manual'''
+target_home = r'''/home/mkg/csound-extended/docs'''
+
 source_html_directory = os.path.join(source_home, 'html')
 source_examples_directory = os.path.join(source_html_directory, 'examples')
 
-target_home = r'''C:\Users\restore\gogins.github.io'''
-target_home = r'''/home/mkg/gogins.github.io'''
-target_html_directory = os.path.join(target_home, 'csound', 'html')
+target_html_directory = os.path.join(target_home, 'html')
 target_examples_directory = os.path.join(target_html_directory, 'examples')
 
 print 'source_home:', source_home
@@ -53,7 +60,7 @@ def format_playable_example(filename, text):
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + '\\n' + message;
-        messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+        messages_textarea.scrollTop = messages_textarea.scrollHeight;
     }
     var moduleDidLoad = function() {
         document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
@@ -132,4 +139,3 @@ for filename in source_pages:
                 source_page = source_file.read()
                 target_page = format_playable_example(source_filename, source_page)
                 target_file.write(target_page)
-

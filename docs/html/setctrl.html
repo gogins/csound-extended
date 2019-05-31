@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="seqtime.html" title="seqtime" />
+    <link rel="prev" href="setcol.html" title="setcol" />
     <link rel="next" href="setksmps.html" title="setksmps" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">setctrl</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="seqtime.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="setcol.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="setksmps.html">Next</a></td>
         </tr>
@@ -39,19 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948011204848"></a>
+        <a id="idm196658"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in control.</p>
         <p>
       Configurable slider controls for realtime user input. Requires Winsound or TCL/TK. <span class="emphasis"><em>setctrl</em></span> sets a slider to a specific value, or sets a minimum or maximum range.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948011202992"></a>
+        <a id="idm196663"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>setctrl</strong></span> inum, ival, itype</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948011200912"></a>
+        <a id="idm196667"></a>
         <h2>Initialization</h2>
         <p>
       Note that this opcode is not available on Windows due to the implimentation of pipes on that system 
@@ -85,28 +86,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948011193984"></a>
+        <a id="idm196685"></a>
         <h2>Performance</h2>
         <p>
       Calling <span class="emphasis"><em>setctrl</em></span> will create a new slider on the screen. There is no theoretical limit to the number of sliders. Windows and TCL/TK use only integers for slider values, so the values may need rescaling. GUIs usually pass values at a fairly slow rate, so it may be advisable to pass the output of control through <span class="emphasis"><em>port</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948011191616"></a>
+        <a id="idm196690"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the setctrl opcode. It uses the file <a class="ulink" href="examples/setctrl.csd.html" target="_top"> (click here to play) <em class="citetitle">setctrl.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948011189760"></a>
+          <a id="idm196695"></a>
           <p class="title">
-            <strong>Example 876. Example of the setctrl opcode.</strong>
+            <strong>Example 896. Example of the setctrl opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947833691328"></a>
+              <a id="idm196702"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -173,14 +174,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948011184656"></a>
+        <a id="idm196784"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="control.html" title="control"><em class="citetitle">control</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948011182512"></a>
+        <a id="idm196789"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -208,14 +209,14 @@
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="seqtime.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="setcol.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="setksmps.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">seqtime </td>
+          <td width="40%" align="left" valign="top">setcol </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

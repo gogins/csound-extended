@@ -39,20 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012314816"></a>
+        <a id="idm193595"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in scugens.</p>
         <p>
 	  Exponential lag with 60dB lag time. Port of Supercollider's Lag
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012313536"></a>
+        <a id="idm193599"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>sc_lag</strong></span> ain, klagtime [, initialvalue=0]</pre>
         <pre class="synopsis">kout <span class="command"><strong>sc_lag</strong></span> kin, klagtime [, initialvalue=0]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948012309488"></a>
+        <a id="idm193605"></a>
         <h2>Initialization</h2>
         <p>
 	  <span class="emphasis"><em>initialvalue</em></span> If given, sets the internal
@@ -60,7 +61,7 @@
 	</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012307824"></a>
+        <a id="idm193609"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> -- input signal
@@ -80,20 +81,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012303520"></a>
+        <a id="idm193618"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sc_lag opcode. It uses the file <a class="ulink" href="examples/sc_lag.csd.html" target="_top"> (click here to play) <em class="citetitle">sc_lag.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948012300400"></a>
+          <a id="idm193623"></a>
           <p class="title">
-            <strong>Example 860. Example of the sc_lag opcode.</strong>
+            <strong>Example 879. Example of the sc_lag opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947834645872"></a>
+              <a id="idm193630"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -108,15 +109,15 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; smooth a krate signal  </span>
   k<span class="n">x</span> <span class="o">=</span> <span class="nb">floor</span><span class="p">(</span><span class="nb">line</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-  k<span class="n">x2</span> <span class="o">=</span> <span class="nb">sc_lag</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  k<span class="n">x2</span> <span class="o">=</span> <span class="n">sc_lag</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
   <span class="nb">printk2</span> k<span class="n">x2</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
   <span class="c1">; smooth an audio signal</span>
   k<span class="n">midi</span> <span class="o">=</span> <span class="nb">floor</span><span class="p">(</span><span class="nb">line</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">72</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>
-  a<span class="n">freq</span> <span class="o">=</span> <span class="nb">upsamp</span><span class="p">(</span><span class="nb">mtof</span><span class="p">(</span>k<span class="n">midi</span><span class="p">))</span>
-  a<span class="n">freqsmooth</span> <span class="o">=</span> <span class="nb">sc_lag</span><span class="p">(</span>a<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  a<span class="n">freq</span> <span class="o">=</span> <span class="nb">upsamp</span><span class="p">(</span><span class="n">mtof</span><span class="p">(</span>k<span class="n">midi</span><span class="p">))</span>
+  a<span class="n">freqsmooth</span> <span class="o">=</span> <span class="n">sc_lag</span><span class="p">(</span>a<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
   a<span class="n">1</span> <span class="o">=</span> <span class="nb">oscili</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> a<span class="n">freq</span><span class="p">)</span>
   a<span class="n">2</span> <span class="o">=</span> <span class="nb">oscili</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> a<span class="n">freqsmooth</span><span class="p">)</span>
   <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">1</span>
@@ -138,7 +139,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012296272"></a>
+        <a id="idm193747"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sc_lagud.html" title="sc_lagud"><em class="citetitle">sc_lagud</em></a>, 
@@ -148,7 +149,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012291888"></a>
+        <a id="idm193756"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
       </div>

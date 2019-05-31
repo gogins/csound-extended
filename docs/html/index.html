@@ -34,7 +34,7 @@
             <h2 class="title"><a href="indexframes.html">Frames Version</a></h2>
           </div>          </div>
           <div>
-            <h2 class="subtitle">Version 6.10</h2>
+            <h2 class="subtitle">Version 6.12.0</h2>
           </div>
           <div>
             <div class="authorgroup">
@@ -91,7 +91,7 @@
               </dt>
               <dt>
                 <span class="section">
-                  <a href="PrefaceWhatsNew.html">What's new in Csound 6.10</a>
+                  <a href="PrefaceWhatsNew.html">What's new in Csound 6.12.0</a>
                 </span>
               </dt>
             </dl>
@@ -164,7 +164,7 @@
                   </dd>
                   <dt>
                     <span class="section">
-                      <a href="CommandUnifileParFile.html">Command Line Parameter File (.csoundrc)</a>
+                      <a href="CommandUnifileParFile.html">Command Line Parameter File (.csound6rc)</a>
                     </span>
                   </dt>
                   <dt>
@@ -319,7 +319,7 @@
                   </dt>
                   <dt>
                     <span class="section">
-                      <a href="Orchtab.html">K-Rate Vectors</a>
+                      <a href="Orchtab.html">Vectors and Arrays</a>
                     </span>
                   </dt>
                   <dt>
@@ -412,11 +412,6 @@
                   <dt>
                     <span class="section">
                       <a href="OviewFrontEnds.html#CommandCsoundAC">CsoundAC</a>
-                    </span>
-                  </dt>
-                  <dt>
-                    <span class="section">
-                      <a href="CommandCsoundVST.html">CsoundVST</a>
                     </span>
                   </dt>
                 </dl>
@@ -1028,11 +1023,6 @@
                       <a href="PluginTop.html#dssi4cs">DSSI and LADSPA for Csound</a>
                     </span>
                   </dt>
-                  <dt>
-                    <span class="section">
-                      <a href="vst4cs.html">VST for Csound</a>
-                    </span>
-                  </dt>
                 </dl>
               </dd>
               <dt>
@@ -1493,6 +1483,16 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="ampmidicurve.html">ampmidicurve</a>
+                    </span>
+                    <span class="refpurpose"> — 
+        Maps an input MIDI velocity number to an output gain factor with a
+        maximum value of 1, modifying the output gain by a dynamic range and a
+        shaping exponent.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="ampmidid.html">ampmidid</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -1628,6 +1628,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="balance2.html">balance2</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Adjust one audio signal according to the values of another.
+          </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="bamboo.html">bamboo</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -1657,6 +1665,22 @@
                     <span class="refpurpose"> — 
       Generates breakbeat-style cut-ups of a stereo audio stream.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="beadsynt.html">beadsynt</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Band-Enhanced Oscillator-Bank
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="beosc.html">beosc</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Band-Enhanced Oscillator
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -1728,7 +1752,15 @@
                       <a href="bpf.html">bpf</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Break point function with linear interpolation
+          Break point function with linear interpolation
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="bpfcos.html">bpfcos</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Break point function with cosine (easy-in/easy-out) interpolation
     </span>
                   </dt>
                   <dt>
@@ -1985,7 +2017,7 @@
                       <a href="chnclear.html">chnclear</a>
                     </span>
                     <span class="refpurpose"> — 
-      Clears an audio output channel of the named software bus.
+      Clears a number of audio output channel of the named software bus.
     </span>
                   </dt>
                   <dt>
@@ -2098,7 +2130,7 @@
                       <a href="cmp.html">cmp</a>
                     </span>
                     <span class="refpurpose"> — 
-      Compares two audio signals
+      Compares audio signals or arrays
     </span>
                   </dt>
                   <dt>
@@ -2518,6 +2550,14 @@
                     </span>
                     <span class="refpurpose"> — 
      Inverse Discrete Cosine Transform of a sample array (type-III DCT)
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="deinterleave.html">deinterleave</a>
+                    </span>
+                    <span class="refpurpose"> — 
+    Deinterleaves arrays by picking alternate data from its input.
     </span>
                   </dt>
                   <dt>
@@ -3042,6 +3082,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="faustdsp.html">faustdsp</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Instantiates a Faust program.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="faustctl.html">faustctl</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -3054,6 +3102,14 @@
                     </span>
                     <span class="refpurpose"> — 
       Compiles, Instantiates and runs a compiled Faust program.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="faustplay.html">faustplay</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Runs an instantiated Faust program.
     </span>
                   </dt>
                   <dt>
@@ -3133,7 +3189,7 @@
                       <a href="filevalid.html">filevalid</a>
                     </span>
                     <span class="refpurpose"> — 
-      Checks that a file can be used.
+      Checks that a file can be read.
     </span>
                   </dt>
                   <dt>
@@ -3787,6 +3843,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="fluidInfo.html">fluidInfo</a>
+                    </span>
+                    <span class="refpurpose"> — 
+       Retrieves program information from currently loaded soundfont. 
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="fluidLoad.html">fluidLoad</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4107,6 +4171,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="ftaudio.html">ftaudio</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Write a previously-allocated table to an audio file.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="ftchnls.html">ftchnls</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4207,7 +4279,15 @@
                       <a href="ftom.html">ftom</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Convert frequency to midi
+          Convert frequency to midi
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="ftprint.html">ftprint</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Print the contents of a table (for debugging)
     </span>
                   </dt>
                   <dt>
@@ -4233,6 +4313,14 @@
                     <span class="refpurpose"> — 
       Save a set of previously-allocated tables to a file.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="ftslice.html">ftslice</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Copy a slice from an f-table to another f-table
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -4366,6 +4454,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="getrowlin.html">getrowlin</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Copy a row from a 2D array or table, with interpolation between rows
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="getseed.html">getseed</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4474,7 +4570,7 @@
                       <a href="hilbert2.html">hilbert2</a>
                     </span>
                     <span class="refpurpose"> — 
-      A Hilbert rransformer.
+      A Hilbert transformer.
     </span>
                   </dt>
                   <dt>
@@ -4838,6 +4934,15 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="interleave.html">interleave</a>
+                    </span>
+                    <span class="refpurpose"> — 
+    Interleaves arrays into a a single one by placing the input data
+    in alternate positions.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="interp.html">interp</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -5130,7 +5235,15 @@
                       <a href="linlin.html">linlin</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Linear to linear interpolation
+          Linear to linear interpolation
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="lincos.html">lincos</a>
+                    </span>
+                    <span class="refpurpose"> — 
+	  Linear to cosine interpolation
     </span>
                   </dt>
                   <dt>
@@ -5423,7 +5536,9 @@
                       <a href="loscil3.html">loscil3</a>
                     </span>
                     <span class="refpurpose"> — 
-      Read sampled sound from a table using cubic interpolation.
+      Read sampled sound from a table using cubic interpolation. A version that outputs the exact
+      table position (phase) corresponding to the output sample is
+      provided as an alternative opcode.
     </span>
                   </dt>
                   <dt>
@@ -5976,8 +6091,9 @@
                       <a href="miditempo.html">miditempo</a>
                     </span>
                     <span class="refpurpose"> — 
-      Returns the current tempo at k-rate, of either the MIDI file (if available) or the score
-          </span>
+      Returns the current tempo at k-rate, of either the MIDI file (if
+      available) or the score.
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -6208,7 +6324,7 @@ Phase-locked vocoder processing.
                       <a href="mtof.html">mtof</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Convert a midi to frequency
+          Convert a midi to frequency
     </span>
                   </dt>
                   <dt>
@@ -6416,7 +6532,15 @@ Phase-locked vocoder processing.
                       <a href="ntom.html">ntom</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Convert note name to midi note number
+      Convert note name to midi note number
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="ntof.html">ntof</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Convert note name to frequency
     </span>
                   </dt>
                   <dt>
@@ -6425,6 +6549,14 @@ Phase-locked vocoder processing.
                     </span>
                     <span class="refpurpose"> — 
       Returns the number of a named instrument.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="nstrstr.html">nstrstr</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Returns the string of a named instr from its number.
     </span>
                   </dt>
                   <dt>
@@ -6597,11 +6729,36 @@ Phase-locked vocoder processing.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="OSCbundle.html">OSCbundle</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Sends data to other processes using the OSC protocol by packing
+      messages in a bundle.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="OSCcount.html">OSCcount</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Gives the Count of OSC messages currently unread.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="OSCinit.html">OSCinit</a>
                     </span>
                     <span class="refpurpose"> — 
       Start a listening process for OSC messages to a particular port.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="OSCinitM.html">OSCinitM</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Start a listening process for multicast OSC messages to a particular port.
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -7066,7 +7223,7 @@ Phase-locked vocoder processing.
                       <a href="pchtom.html">pchtom</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Convert pch to midi note number
+          Convert pch to midi note number
     </span>
                   </dt>
                   <dt>
@@ -7397,6 +7554,14 @@ Phase-locked vocoder processing.
                     <span class="refpurpose"> — 
       Prints at init-time using a printf() style syntax.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="printarray.html">printarray</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Print the contents of an array
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -8132,6 +8297,14 @@ Phase vocoder analysis processing with onset detection/processing.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="reshapearray.html">reshapearray</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Reshape an array, maintaining its capacity
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="reson.html">reson</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -8482,7 +8655,7 @@ pitch control and support for timescale-modified input
                       <a href="sc_phasor.html">sc_phasor</a>
                     </span>
                     <span class="refpurpose"> — 
-	  A resettable linear ramp between two levels
+          A resettable linear ramp between two levels
     </span>
                   </dt>
                   <dt>
@@ -8612,6 +8785,14 @@ pitch control and support for timescale-modified input
                     <span class="refpurpose"> — 
       Generates a trigger signal according to the values stored in a table.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="setcol.html">setcol</a>
+                    </span>
+                    <span class="refpurpose"> — 
+     Sets a given column of a 2-dimensional array from a vector.
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -9734,14 +9915,6 @@ Synchronous granular synthesis.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
-                      <a href="tb.html">tb</a>
-                    </span>
-                    <span class="refpurpose"> — 
-      Table Read Access inside expressions.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
                       <a href="tab.html">tab</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -9843,14 +10016,6 @@ Synchronous granular synthesis.
                     <span class="refpurpose"> — 
       Mixes two tables.
     </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="tableiw.html">tableiw</a>
-                    </span>
-                    <span class="refpurpose"> — 
-      Change the contents of existing function tables.
-          </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -9991,10 +10156,26 @@ Synchronous granular synthesis.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="tabrowlin.html">tabrowlin</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Copy a row from an f-table to another, interpolating between rows
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="tabsum.html">tabsum</a>
                     </span>
                     <span class="refpurpose"> — 
       Adding values in a range of a table.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="tab2array.html">tab2array</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Copy a slice from an f-table to an array
     </span>
                   </dt>
                   <dt>
@@ -10263,6 +10444,14 @@ Synchronous granular synthesis.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="trim.html">trim</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Adjust size o a one-dimensional array.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="trirand.html">trirand</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -10379,7 +10568,7 @@ Synchronous granular synthesis.
                     </span>
                     <span class="refpurpose"> — 
       truly random opcodes with controllable range.
-          </span>
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -10974,72 +11163,6 @@ Synchronous granular synthesis.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
-                      <a href="vstaudio.html">vstaudio, vstaudiog</a>
-                    </span>
-                    <span class="refpurpose"> — VST audio output.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstbankload.html">vstbankload</a>
-                    </span>
-                    <span class="refpurpose"> — 
-      Loads parameter banks to a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstedit.html">vstedit</a>
-                    </span>
-                    <span class="refpurpose"> — Opens the GUI editor window for a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstinit.html">vstinit</a>
-                    </span>
-                    <span class="refpurpose"> — Load a VST plugin into memory for use with the other vst4cs opcodes.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstinfo.html">vstinfo</a>
-                    </span>
-                    <span class="refpurpose"> — Displays the parameters and the programs of a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstmidiout.html">vstmidiout</a>
-                    </span>
-                    <span class="refpurpose"> — 
-      Sends MIDI information to a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstnote.html">vstnote</a>
-                    </span>
-                    <span class="refpurpose"> — Sends a MIDI note with definite duration to a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstparamset.html">vstparamset,vstparamget</a>
-                    </span>
-                    <span class="refpurpose"> — Used for parameter comunication to and from a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="vstprogset.html">vstprogset</a>
-                    </span>
-                    <span class="refpurpose"> — 
-      Loads parameter banks to a VST plugin.
-    </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
                       <a href="vsubv.html">vsubv</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -11416,7 +11539,7 @@ Synchronous granular synthesis.
                       <a href="xyscale.html">xyscale</a>
                     </span>
                     <span class="refpurpose"> — 
-	  2D linear interpolation 
+          2D linear interpolation 
     </span>
                   </dt>
                   <dt>
@@ -12945,6 +13068,22 @@ Synchronous granular synthesis.
                     </span>
                     <span class="refpurpose"> — 
       Initializes the stack.  Deprecated.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="tb.html">tb</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Table Read Access inside expressions.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="tableiw.html">tableiw</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Deprecated.
     </span>
                   </dt>
                   <dt>

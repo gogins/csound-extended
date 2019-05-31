@@ -420,6 +420,16 @@
         </p>
           </dd>
           <dt>
+            <a id="FlagsCatMinusMinussetsr"></a>
+            <span class="term">--set-system-sr<a id="IndexCatMinusMinussetsr" class="indexterm"></a></span>
+          </dt>
+          <dd>
+            <p>
+              sets sr to the system sr, requires previous -o dac.
+              If the audio does not support this request then -1 is reported.
+            </p>
+          </dd>
+          <dt>
             <a id="FlagsCatMinusRealtime"></a>
             <span class="term">--realtime<a id="IndexCatMinusRealtime" class="indexterm"></a></span>
           </dt>
@@ -508,14 +518,13 @@ csound5:output2             (playback right)</pre>
         </p>
         <dl class="variablelist">
           <dt>
-            <a id="FlagsCatMinusMinusDevices"></a>
-            <span class="term">--devices[=x]<a id="IndexCatMinusMinusDevices" class="indexterm"></a></span>
+            <a id="FlagsCatMinusAftzero"></a>
+            <span class="term">--aft-zero<a id="IndexCatMinusAftzero" class="indexterm"></a></span>
           </dt>
           <dd>
             <p>
-              list audio devices (x=out, output devices only; x=in,
-	      input; else input and output) and exit.
-            </p>
+          Use zero as initial value of after-touch.
+        </p>
           </dd>
           <dt>
             <a id="FlagsCatMinusUpperF"></a>
@@ -739,7 +748,7 @@ csound5:output2             (playback right)</pre>
                   <td align="left" valign="top">This option
           only works from the command line and not from .csound6rc or
           a CsOptions section of a  csd file.  It needs to be acted
-          upon before sound proper starts.  It is ignored in .csoundrc
+          upon before sound proper starts.  It is ignored in .csound6rc
         and CsOptions.</td>
                 </tr>
               </table>
@@ -1068,7 +1077,7 @@ csound5:output2             (playback right)</pre>
           </dd>
           <dt>
             <a id="FlagsCatDaemon"></a>
-            <span class="term">-d<a id="IndexCatDaemon" class="indexterm"></a></span>
+            <span class="term">-daemon<a id="IndexCatDaemon" class="indexterm"></a></span>
           </dt>
           <dd>
             <p>
@@ -1296,7 +1305,7 @@ csound5:output2             (playback right)</pre>
           <dd>
             <p>
           Reenables adding of directory of CSD/ORC/SCO to search paths,
-          if it has been disabled by a previous <a class="link" href="CommandFlags.html#FlagsMinusNoDefaultPaths"><em class="citetitle">--no-default-paths</em></a> (e.g. in <a class="link" href="CommandUnifileParFile.html" title="Command Line Parameter File (.csoundrc)"><em class="citetitle">.csoundrc</em></a>).
+          if it has been disabled by a previous <a class="link" href="CommandFlags.html#FlagsMinusNoDefaultPaths"><em class="citetitle">--no-default-paths</em></a> (e.g. in <a class="link" href="CommandUnifileParFile.html" title="Command Line Parameter File (.csound6rc)"><em class="citetitle">.csound6rc</em></a>).
         </p>
           </dd>
           <dt>
@@ -1451,12 +1460,13 @@ csound5:output2             (playback right)</pre>
         </p>
           </dd>
           <dt>
-            <a id="CatFlagsMinusMinusDevice"></a>
-            <span class="term">--devices<a id="IndexCatMinusMinusDevice" class="indexterm"></a></span>
+            <a id="FlagsCatMinusMinusDevices"></a>
+            <span class="term">--devices[=x]<a id="IndexCatMinusMinusDevices" class="indexterm"></a></span>
           </dt>
           <dd>
-            <p> Gives a list of available audio devices and then
-        exits.
+            <p>
+          List audio devices (x=out, output devices only; x=in,
+	        input; else input and output) and exit.
         </p>
           </dd>
           <dt>
@@ -1546,7 +1556,7 @@ csound5:output2             (playback right)</pre>
                   <td align="left" valign="top">This option
           only works from the command line and not from .csound6rc or
           a CsOptions section of a  csd file.  It needs to be acted
-          upon before sound proper starts.  It is ignored in .csoundrc
+          upon before sound proper starts.  It is ignored in .csound6rc
           and CsOptions.</td>
                 </tr>
               </table>

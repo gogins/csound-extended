@@ -39,25 +39,36 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940119424"></a>
+        <a id="idm264783"></a>
         <h2>Description</h2>
         <p>
       This subroutine transfers data from immediate pfields into a function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940074976"></a>
+        <a id="idm264786"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 2 v1 v2 v3 ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45947940072912"></a>
+        <a id="idm264790"></a>
         <h2>Initialization</h2>
         <p>
-      <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>). The maximum tablesize is 16777216 (2<sup>24</sup>) points.
+      <span class="emphasis"><em>size</em></span> -- number of points in the table.
+      
+      
+      The maximum tablesize is 16777216
+      (2<sup>24</sup>) points.
+      The value may be given as zero, in which case the number of values
+      decides the table length.
     </p>
         <p>
-      <span class="emphasis"><em>v1, v2, v3,</em></span> etc. -- values to be copied directly into the table space. The number of values is limited by the compile-time variable <span class="emphasis"><em>PMAX</em></span>, which controls the maximum pfields (currently 1000). The values copied may include the table guard point; any table locations not filled will contain zeros.
+      <span class="emphasis"><em>v1, v2, v3,</em></span> etc. -- values to be copied
+      directly into the table space.
+      
+      
+      
+      The values copied may include the table guard point; any table locations not filled will contain zeros.
     </p>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
@@ -70,7 +81,7 @@
             <tr>
               <td align="left" valign="top">
                 <p>
-        If p4 (the GEN routine number is positive, the table will be
+        If p4 (the GEN routine number) is positive, the table will be
         post-normalized (rescaled to a maximum absolute value of 1 after
         generation). A negative p4 will cause rescaling to be skipped. You will
         usually want to use -2 with this GEN function, so that your values are
@@ -82,21 +93,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45947940066112"></a>
+        <a id="idm264800"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the GEN02 routine. It uses the files <a class="ulink" href="examples/gen02.csd.html" target="_top"> (click here to play) <em class="citetitle">gen02.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45947940064336"></a>
+          <a id="idm264805"></a>
           <p class="title">
-            <strong>Example 1183. Example of the GEN02 routine.</strong>
+            <strong>Example 1197. Example of the GEN02 routine.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947807221200"></a>
+              <a id="idm264812"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -175,16 +186,18 @@ a<span class="n">sig</span> <span class="nb">poscil</span> k<span class="n">amp<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940049456"></a>
+        <a id="idm264951"></a>
         <h2>See Also</h2>
         <p>
        <a class="link" href="GEN17.html" title="GEN17"><em class="citetitle">GEN17</em></a>
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947940047312"></a>
+        <a id="idm264956"></a>
         <h2>Credits</h2>
-        <p>December 2002. Thanks to Rasmus Ekman, corrected the limit of the <span class="emphasis"><em>PMAX</em></span> variable.</p>
+        <p>December 2002. Thanks to Rasmus Ekman, corrected the limit
+    of the <span class="emphasis"><em>PMAX</em></span> variable.</p>
+        <p>Use of length zero new in version 6.12</p>
       </div>
     </div>
     <div class="navfooter">

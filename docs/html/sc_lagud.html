@@ -39,29 +39,30 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012323936"></a>
+        <a id="idm193769"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in scugens.</p>
         <p>
-	  Exponential lag with different smoothing time for up- and
-	  downgoing signals. Port of Supercollider's LagUD
+          Exponential lag with different smoothing time for up- and
+          downgoing signals. Port of Supercollider's LagUD
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012322624"></a>
+        <a id="idm193773"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>sc_lagud</strong></span> ain, klagup, klagdown</pre>
         <pre class="synopsis">kout <span class="command"><strong>sc_lagud</strong></span> kin, klagup, klagdown</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948012246016"></a>
+        <a id="idm193779"></a>
         <h2>Initialization</h2>
         <p>
-	  <span class="emphasis"><em>initialvalue</em></span> If given, sets the internal
-	  state. Default=0
-	</p>
+          <span class="emphasis"><em>initialvalue</em></span> If given, sets the internal
+          state. Default=0
+        </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012244352"></a>
+        <a id="idm193783"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> -- input signal
@@ -73,28 +74,28 @@
       <span class="emphasis"><em>klagdown</em></span> -- 60 dB lag time in seconds for the downgoing signal.
     </p>
         <p>
-	  This is essentially the same as sc_lag except that you can
-	  supply a different 60 dB time for when the signal goes up, from
-	  when the signal goes down. This is useful for smoothing out
-	  control signals, where "fade in" should be different from "fade
-	  out".
+          This is essentially the same as sc_lag except that you can
+          supply a different 60 dB time for when the signal goes up, from
+          when the signal goes down. This is useful for smoothing out
+          control signals, where "fade in" should be different from "fade
+          out".
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012240032"></a>
+        <a id="idm193792"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sc_lagud opcode. It uses the file <a class="ulink" href="examples/sc_lagud.csd.html" target="_top"> (click here to play) <em class="citetitle">sc_lagud.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948012236912"></a>
+          <a id="idm193797"></a>
           <p class="title">
-            <strong>Example 861. Example of the sc_lagud opcode.</strong>
+            <strong>Example 880. Example of the sc_lagud opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947834662912"></a>
+              <a id="idm193804"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -108,7 +109,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
   k<span class="n">x</span> <span class="o">=</span> <span class="nb">randh</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-  k<span class="n">x2</span> <span class="o">=</span> <span class="nb">sc_lagud</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  k<span class="n">x2</span> <span class="o">=</span> <span class="n">sc_lagud</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
   <span class="nb">printks</span> <span class="s">"x %f  x2 %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">x2</span>
 <span class="kd">endin</span>
 
@@ -116,10 +117,10 @@
   k<span class="n">midis</span><span class="p">[]</span> <span class="nb">array</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">60</span>
   i<span class="n">len</span> <span class="o">=</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">midis</span><span class="p">)</span>
   k<span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">linseg</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> i<span class="n">len</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> i<span class="n">len</span><span class="o">-</span><span class="mf">0.00000001</span><span class="p">))</span>
-  k<span class="n">midi</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span>k<span class="n">midis</span><span class="p">[</span>k<span class="n">idx</span><span class="p">])</span>
-  a<span class="n">freq</span> <span class="o">=</span> <span class="nb">sc_lagud</span><span class="p">(</span><span class="nb">a</span><span class="p">(</span>k<span class="n">midi</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  k<span class="n">midi</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">(</span>k<span class="n">midis</span><span class="p">[</span>k<span class="n">idx</span><span class="p">])</span>
+  a<span class="n">freq</span> <span class="o">=</span> <span class="n">sc_lagud</span><span class="p">(</span><span class="nb">a</span><span class="p">(</span>k<span class="n">midi</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
   a<span class="n">0</span> <span class="o">=</span> <span class="nb">oscili</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> a<span class="n">freq</span><span class="p">)</span>
-  k<span class="n">freq</span> <span class="o">=</span> <span class="nb">sc_lagud</span><span class="p">(</span>k<span class="n">midi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  k<span class="n">freq</span> <span class="o">=</span> <span class="n">sc_lagud</span><span class="p">(</span>k<span class="n">midi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
   a<span class="n">1</span> <span class="o">=</span> <span class="nb">oscili</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> k<span class="n">freq</span><span class="p">)</span>
   <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">0</span>
   <span class="nb">outch</span> <span class="mi">2</span><span class="p">,</span> a<span class="n">1</span>
@@ -140,17 +141,17 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012232784"></a>
+        <a id="idm193955"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sc_lag.html" title="sc_lag"><em class="citetitle">sc_lag</em></a>, 
-	  <a class="link" href="port.html" title="port"><em class="citetitle">port</em></a>, 
-	  <a class="link" href="portk.html" title="portk"><em class="citetitle">portk</em></a>
-	  
+          <a class="link" href="port.html" title="port"><em class="citetitle">port</em></a>, 
+          <a class="link" href="portk.html" title="portk"><em class="citetitle">portk</em></a>
+          
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948012228400"></a>
+        <a id="idm193964"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
       </div>

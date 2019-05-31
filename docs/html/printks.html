@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021390128"></a>
+        <a id="idm170973"></a>
         <h2>Description</h2>
         <p>
       Prints at k-rate using a printf() style syntax.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021388784"></a>
+        <a id="idm170976"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>printks</strong></span> "string", itime [, kval1] [, kval2] [...]</pre>
+        <pre class="synopsis"><span class="command"><strong>printks</strong></span> "string", itime [, xval1] [, xval2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948021320416"></a>
+        <a id="idm170980"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>"string"</em></span> -- the text string to be printed. Can be up to 8192 characters and must be in double quotes.
@@ -61,10 +61,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021317648"></a>
+        <a id="idm170986"></a>
         <h2>Performance</h2>
         <p>
-      <span class="emphasis"><em>kval1, kval2, ...</em></span> (optional) -- The k-rate values to be printed. These are specified in <span class="emphasis"><em><span class="quote">“<span class="quote">string</span>”</span></em></span> with the standard C value specifier (%f, %d, etc.) in the order given.
+      <span class="emphasis"><em>xval1, xval2, ...</em></span> (optional) -- The k-rate
+      values to be printed. These are specified in
+      <span class="emphasis"><em><span class="quote">“<span class="quote">string</span>”</span></em></span> with the standard C
+      value specifier (%f, %d, %s etc.) in the order given.
     </p>
         <p>
       In Csound version 4.23, you can use as many <span class="emphasis"><em>kval</em></span> variables as you like. In versions prior to 4.23, you must specify 4 and only 4 kvals (using 0 for unused kvals).
@@ -83,7 +86,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021307792"></a>
+        <a id="idm171005"></a>
         <h2>Print Output Formatting</h2>
         <p>
       All standard C language printf() control characters may be used. For example, if <span class="emphasis"><em>kval1</em></span> = 153.26789 then some common formatting options are:
@@ -183,21 +186,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948021285424"></a>
+        <a id="idm171056"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the printks opcode. It uses the file <a class="ulink" href="examples/printks.csd.html" target="_top"> (click here to play) <em class="citetitle">printks.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948021283568"></a>
+          <a id="idm171061"></a>
           <p class="title">
-            <strong>Example 720. Example of the printks opcode.</strong>
+            <strong>Example 737. Example of the printks opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947842571584"></a>
+              <a id="idm171068"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -259,7 +262,7 @@ kup = 79.933266, kdown = 13.872493
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021278176"></a>
+        <a id="idm171136"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="printk2.html" title="printk2"><em class="citetitle">printk2</em></a> and 
@@ -267,7 +270,7 @@ kup = 79.933266, kdown = 13.872493
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948021275056"></a>
+        <a id="idm171143"></a>
         <h2>Credits</h2>
         <p>
       </p>

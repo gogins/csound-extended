@@ -40,22 +40,31 @@
                 </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948073551856"></a>
+        <a id="idm18417"></a>
         <h2>Description</h2>
         <p>
       Includes an external file for processing.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948073550512"></a>
+        <a id="idm18420"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>#include</strong></span> <span class="quote">“<span class="quote">filename</span>”</span></pre>
+        <pre class="synopsis"><span class="command"><strong>#includestr</strong></span> <span class="quote">“<span class="quote">filename</span>”</span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948073548176"></a>
+        <a id="idm18428"></a>
         <h2>Performance</h2>
+        <p>#includestr is similar to #include except that the file
+    name must be delimited by a double quote character and the file
+    name is subjected to macro expansion.
+    </p>
         <p>
-      It is sometimes convenient to have the orchestra arranged in a number of files, for example with each instrument in a separate file.  This style is supported by the <span class="emphasis"><em>#include</em></span> facility which is part of the macro system.  A line containing the text
+      It is sometimes convenient to have the orchestra arranged in a
+      number of files, for example with each instrument in a separate
+      file.  This style is supported by the
+      <span class="emphasis"><em>#include</em></span> facility which is part of the
+      macro system.  A line containing the text 
 
       </p>
         <div class="informalexample">
@@ -64,10 +73,14 @@
         </div>
         <p>
 
-      where the character " can be replaced by any suitable character.  For most uses the double quote symbol will probably be the most convenient. The file name can include a full path.
+      where the character " can be replaced by any suitable
+      character in #include (but not in #includestr).  For
+      most uses the double quote symbol will probably be the most
+      convenient. The file name can include a full path.
     </p>
         <p>
-      This takes input from the named file until it ends, when input reverts to the previous input.
+      This takes input from the named file until it ends, when input
+      reverts to the previous input. 
       <span class="emphasis"><em>Note: </em></span>Csound versions prior to 4.19 had a limit of 20 on the depth of included files and macros.
     </p>
         <p>
@@ -99,14 +112,14 @@ $BASSOON(3)</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948073535760"></a>
+        <a id="idm18449"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the include opcode. It uses the file <a class="ulink" href="examples/include.csd.html" target="_top"> (click here to play) <em class="citetitle">include.csd</em></a>, and <a class="ulink" href="examples/table1.inc" target="_top"><em class="citetitle">table1.inc</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948073533136"></a>
+          <a id="idm18456"></a>
           <p class="title">
             <strong>Example 16. Example of the include opcode.</strong>
           </p>
@@ -119,7 +132,7 @@ $BASSOON(3)</pre>
 </pre>
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947908959408"></a>
+              <a id="idm18473"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -168,7 +181,7 @@ $BASSOON(3)</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948073528000"></a>
+        <a id="idm18533"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -186,6 +199,9 @@ $BASSOON(3)</pre>
             <td>April 1998</td>
           </tr>
         </table>
+        <p>
+      </p>
+        <p> #includestr new in version 6.12</p>
         <p>
     </p>
         <p>Example written by Kevin Conder.</p>

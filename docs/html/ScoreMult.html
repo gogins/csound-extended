@@ -38,7 +38,7 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082295312"></a>Description</h3>
+              <h3 class="title"><a id="idm8382"></a>Description</h3>
             </div>
           </div>
         </div>
@@ -50,17 +50,18 @@
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082294064"></a>Syntax</h3>
+              <h3 class="title"><a id="idm8385"></a>Syntax</h3>
             </div>
           </div>
         </div>
         <pre class="synopsis"><span class="command"><strong>#include</strong></span> "filename"</pre>
+        <pre class="synopsis"><span class="command"><strong>#includestr</strong></span> "filename"</pre>
       </div>
       <div class="simplesect">
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082292000"></a>Performance</h3>
+              <h3 class="title"><a id="idm8391"></a>Performance</h3>
             </div>
           </div>
         </div>
@@ -77,13 +78,20 @@
         </div>
         <p>
 
-      where the character <span class="emphasis"><em>"</em></span> can be replaced by any suitable character.  For most uses the double quote symbol will probably be the most convenient. The file name can include a full path.
+      where the character <span class="emphasis"><em>"</em></span> can be replaced
+      by any suitable character.  For most uses the double quote
+      symbol will probably be the most convenient. The file name can
+      include a full path. 
     </p>
         <p>
-      This takes input from the named file until it ends, when input reverts to the previous input.  There is currently a limit of 20 on the depth of included files and macros.
+      This takes input from the named file until it ends, when input
+      reverts to the previous input.  There is currently a limit of 20
+      on the depth of included files and macros. 
     </p>
         <p>
-      A suggested use of <span class="emphasis"><em>#include</em></span> would be to define a set of macros which are part of the composer's style.  It could also be used to provide repeated sections.
+      A suggested use of <span class="emphasis"><em>#include</em></span> would be to
+      define a set of macros which are part of the composer's style.
+      It could also be used to provide repeated sections. 
 
       </p>
         <div class="informalexample">
@@ -101,10 +109,18 @@
     </p>
       </div>
       <div class="simplesect">
+        <div class="titlepage"></div>
+        <p>
+      The form <span class="emphasis"><em>#includestr</em></span> is the same as #include
+      except the deliminator must be a double quote and the file name
+      may contain macro calls.
+    </p>
+      </div>
+      <div class="simplesect">
         <div class="titlepage">
           <div>
             <div>
-              <h3 class="title"><a id="idm45948082234336"></a>Credits</h3>
+              <h3 class="title"><a id="idm8422"></a>Credits</h3>
             </div>
           </div>
         </div>
@@ -112,7 +128,9 @@
         <p>University of Bath/Codemist Ltd.</p>
         <p>Bath, UK</p>
         <p>April, 1998 (New in Csound version 3.48)</p>
-        <p>Thanks to Luis Jure for pointing out the incorrect syntax in multiple file include statement.</p>
+        <p>Thanks to Luis Jure for pointing out the incorrect syntax
+    in multiple file include statement.</p>
+        <p>#includestr new in version 6.12</p>
       </div>
     </div>
     <div class="navfooter">

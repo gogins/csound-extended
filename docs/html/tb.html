@@ -8,9 +8,9 @@
     <link rel="stylesheet" type="text/css" href="syntax-highlighting.css" />
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
-    <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="system.html" title="system" />
-    <link rel="next" href="tab.html" title="tab" />
+    <link rel="up" href="DeprecatedTop.html" title="Deprecated Orchestra Opcodes and GEN Routines" />
+    <link rel="prev" href="stack.html" title="stack" />
+    <link rel="next" href="tableiw.html" title="tableiw" />
   </head>
   <body>
     <div class="navheader">
@@ -19,9 +19,9 @@
           <th colspan="3" align="center">tb</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="system.html">Prev</a> </td>
-          <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="tab.html">Next</a></td>
+          <td width="20%" align="left"><a accesskey="p" href="stack.html">Prev</a> </td>
+          <th width="60%" align="center">Deprecated Orchestra Opcodes and GEN Routines</th>
+          <td width="20%" align="right"> <a accesskey="n" href="tableiw.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -70,12 +70,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001740960"></a>
+        <a id="idm281263"></a>
         <h2>Description</h2>
+        <p>
+      </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top"> These opcodes have been largely superceded by the
+      functional form of the opcode tab</td>
+            </tr>
+          </table>
+        </div>
         <p>
     Allow to read tables in function fashion, to be used inside expressions.
 
-    At present time Csound only supports functions with a single input
+    At earlier times Csound only supported functions with a single input
     argument. However, to access table elements, user must provide two
     numbers, i.e. the number of table and the index of element. So, in
     order to allow to access a table element with a function, a
@@ -83,7 +99,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001739360"></a>
+        <a id="idm281267"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tb0_init</strong></span> ifn</pre>
         <pre class="synopsis"><span class="command"><strong>tb1_init</strong></span> ifn</pre>
@@ -135,7 +151,7 @@
         <pre class="synopsis">kout = <span class="command"><strong>tb15</strong></span>(kIndex)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948001674240"></a>
+        <a id="idm281365"></a>
         <h2>Performance</h2>
         <p>
       There are 16 different opcodes whose name is associated with a
@@ -167,7 +183,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948001664416"></a>
+        <a id="idm281381"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
       </div>
@@ -176,18 +192,18 @@
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="system.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="stack.html">Prev</a> </td>
           <td width="20%" align="center">
-            <a accesskey="u" href="OpcodesTop.html">Up</a>
+            <a accesskey="u" href="DeprecatedTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="tab.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="tableiw.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">system </td>
+          <td width="40%" align="left" valign="top">stack </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> tab</td>
+          <td width="40%" align="right" valign="top"> tableiw</td>
         </tr>
       </table>
     </div>

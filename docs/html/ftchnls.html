@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="freeverb.html" title="freeverb" />
+    <link rel="prev" href="ftaudio.html" title="ftaudio" />
     <link rel="next" href="ftconv.html" title="ftconv" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">ftchnls</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="freeverb.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="ftaudio.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="ftconv.html">Next</a></td>
         </tr>
@@ -39,40 +39,40 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948048407488"></a>
+        <a id="idm89487"></a>
         <h2>Description</h2>
         <p>
       Returns the number of channels in a stored function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948048344768"></a>
+        <a id="idm89490"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftchnls</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948048342736"></a>
+        <a id="idm89494"></a>
         <h2>Performance</h2>
         <p>
       Returns the number of channels of a <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a> table, determined from the header of the original file.  If the original file has no header or the table was not created by these GEN01, <span class="emphasis"><em>ftchnls</em></span> returns -1.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948048339952"></a>
+        <a id="idm89500"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftchnls opcode. It uses the files <a class="ulink" href="examples/ftchnls.csd.html" target="_top"> (click here to play) <em class="citetitle">ftchnls.csd</em></a>, <a class="ulink" href="examples/mary.wav" target="_top"><em class="citetitle">mary.wav</em></a>, and <a class="ulink" href="examples/kickroll.wav" target="_top"><em class="citetitle">kickroll.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948048336432"></a>
+          <a id="idm89509"></a>
           <p class="title">
-            <strong>Example 354. Example of the ftchnls opcode.</strong>
+            <strong>Example 364. Example of the ftchnls opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947879288608"></a>
+              <a id="idm89516"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -133,7 +133,7 @@ instr 1:  ichnls = 2.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948048330480"></a>
+        <a id="idm89634"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftlen.html" title="ftlen"><em class="citetitle">ftlen</em></a>,
@@ -143,7 +143,7 @@ instr 1:  ichnls = 2.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948048325488"></a>
+        <a id="idm89645"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -166,14 +166,14 @@ instr 1:  ichnls = 2.000
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="freeverb.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="ftaudio.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="ftconv.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">freeverb </td>
+          <td width="40%" align="left" valign="top">ftaudio </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

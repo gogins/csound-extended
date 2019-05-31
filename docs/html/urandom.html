@@ -36,11 +36,12 @@
         </h2>
         <p>urandom — 
       truly random opcodes with controllable range.
-          </p>
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947996208320"></a>
+        <a id="idm234433"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in urandom.</p>
         <p>
       Truly random opcodes with controllable range. These
       units are for Unix-like systems only and use /dev/urandom to construct
@@ -48,14 +49,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947996206848"></a>
+        <a id="idm234437"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ax <span class="command"><strong>urandom</strong></span> [imin, imax]</pre>
         <pre class="synopsis">ix <span class="command"><strong>urandom</strong></span> [imin, imax]</pre>
         <pre class="synopsis">kx <span class="command"><strong>urandom</strong></span> [imin, imax]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45947996156624"></a>
+        <a id="idm234445"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ix</em></span> -- i-rate output value.
@@ -89,7 +90,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45947996151216"></a>
+        <a id="idm234456"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ax</em></span> -- a-rate output value.
@@ -99,21 +100,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947996148656"></a>
+        <a id="idm234462"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the urandom opcode at a-rate. It uses the file <a class="ulink" href="examples/urandom.csd.html" target="_top"> (click here to play) <em class="citetitle">urandom.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45947996146784"></a>
+          <a id="idm234467"></a>
           <p class="title">
-            <strong>Example 1040. An example of the urandom opcode at a-rate.</strong>
+            <strong>Example 1063. An example of the urandom opcode at a-rate.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947820926272"></a>
+              <a id="idm234474"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -134,7 +135,7 @@
 <span class="c1">; Instrument #1.</span>
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Create random numbers at a-rate in the range -2 to 2</span>
-  a<span class="n">ur</span> <span class="nb">urandom</span>  <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span>
+  a<span class="n">ur</span> <span class="n">urandom</span>  <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span>
 
   <span class="c1">; Use the random numbers to choose a frequency.</span>
   a<span class="n">freq</span> <span class="o">=</span> a<span class="n">ur</span> <span class="o">*</span> <span class="mi">500</span> <span class="o">+</span> <span class="mi">100</span>
@@ -168,13 +169,13 @@
 
       </p>
         <div class="example">
-          <a id="idm45947996141424"></a>
+          <a id="idm234546"></a>
           <p class="title">
-            <strong>Example 1041. An example of the urandom opcode at k-rate.</strong>
+            <strong>Example 1064. An example of the urandom opcode at k-rate.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947818048416"></a>
+              <a id="idm234548"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -196,7 +197,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Create random numbers at k-rate in the range -1 to 1 </span>
   <span class="c1">; with a uniform distribution.</span>
-  k<span class="n">1</span> <span class="nb">urandom</span>
+  k<span class="n">1</span> <span class="n">urandom</span>
         
   <span class="nb">printks</span> <span class="s">"k1=%f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">1</span>
 <span class="kd">endin</span>
@@ -237,7 +238,7 @@ k1=-0.036276
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45947996138496"></a>
+        <a id="idm234599"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>New in version 5.13</p>

@@ -37,20 +37,20 @@
         <p>csound</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948088250720"></a>
+        <a id="idm4472"></a>
         <h2>Description</h2>
         <p>
         The <span class="emphasis"><em>csound</em></span> command executes Csound.
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948088249088"></a>
+        <a id="idm4476"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [orchname]  [scorename]</pre>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [csdfilename]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948088167904"></a>
+        <a id="idm4489"></a>
         <h2>Csound command line flags</h2>
         <p>
         Listed below are the command line flags available in Csound6 in alphabetical order. Various platform
@@ -123,6 +123,15 @@
             <dd>
               <p>
               Use a-law audio samples.
+            </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusAftzero"></a>
+              <span class="term">--aft-zero<a id="IndexMinusAftzero" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+              Use zero as initial value of after-touch.
             </p>
             </dd>
             <dt>
@@ -216,7 +225,7 @@
                     <td align="left" valign="top">This option
               only works from the command line and not from .csound6rc or
               a CsOptions section of a  csd file.  It needs to be acted
-              upon before sound proper starts.  It is ignored in .csoundrc
+              upon before sound proper starts.  It is ignored in .csound6rc
               and CsOptions.</td>
                   </tr>
                 </table>
@@ -226,20 +235,11 @@
             </dd>
             <dt>
               <a id="FlagsDaemon"></a>
-              <span class="term">-d<a id="IndexDaemon" class="indexterm"></a></span>
+              <span class="term">-daemon<a id="IndexDaemon" class="indexterm"></a></span>
             </dt>
             <dd>
               <p>
               Run in daemon mode: do not exit if CSD/orchestra is not given, is empty or does not compile.
-            </p>
-            </dd>
-            <dt>
-              <a id="FlagsMinusMinusDevice"></a>
-              <span class="term">--devices<a id="IndexMinusMinusDevice" class="indexterm"></a></span>
-            </dt>
-            <dd>
-              <p> Gives a list of available audio devices and then
-            exits.
             </p>
             </dd>
             <dt>
@@ -268,7 +268,7 @@
             <dd>
               <p>
               Reenables adding of directory of CSD/ORC/SCO to search paths,
-              if it has been disabled by a previous <a class="link" href="CommandFlags.html#FlagsMinusNoDefaultPaths"><em class="citetitle">--no-default-paths</em></a> (e.g. in <a class="link" href="CommandUnifileParFile.html" title="Command Line Parameter File (.csoundrc)"><em class="citetitle">.csoundrc</em></a>).
+              if it has been disabled by a previous <a class="link" href="CommandFlags.html#FlagsMinusNoDefaultPaths"><em class="citetitle">--no-default-paths</em></a> (e.g. in <a class="link" href="CommandUnifileParFile.html" title="Command Line Parameter File (.csound6rc)"><em class="citetitle">.csound6rc</em></a>).
             </p>
             </dd>
             <dt>
@@ -432,6 +432,16 @@
             <dd>
               <p>
               prints system sr and exits, requires previous -o dac.
+              If the audio does not support this request then -1 is reported.
+            </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusMinussetsr"></a>
+              <span class="term">--set-system-sr<a id="IndexMinusMinussetsr" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+              sets sr to the system sr, requires previous -o dac.
               If the audio does not support this request then -1 is reported.
             </p>
             </dd>
@@ -1107,7 +1117,7 @@
                     <td align="left" valign="top">This option only works from the command line and
               not from .csound6rc or a CsOptions section of a csd
               file.  It needs to be acted upon before sound proper
-              starts.  It is ignored in .csoundrc and
+              starts.  It is ignored in .csound6rc and
               CsOptions.</td>
                   </tr>
                 </table>

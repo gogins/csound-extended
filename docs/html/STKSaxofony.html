@@ -38,8 +38,9 @@
       STKSaxofony is a faux conical bore reed instrument.    </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003933136"></a>
+        <a id="idm213361"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in stkopd.</p>
         <p>
       STKSaxofony is a faux conical bore reed instrument.
       This opcode uses a "hybrid" digital waveguide instrument that can generate a variety of wind-like sounds. It has also been referred to as the "blowed string" model. 
@@ -48,12 +49,12 @@
       If the excitation is placed at the string mid-point, the sound is that of a clarinet. At points closer to the "bridge", the sound is closer to that of a saxophone.</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003931232"></a>
+        <a id="idm213365"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKSaxofony</strong></span> ifrequency, iamplitude, [kstiff, kv1[, kapert, kv2[, kblow, kv3[, knoise, kv4[, klfo, kv5[, klfodepth, kv6[, kbreath, kv7]]]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948003863696"></a>
+        <a id="idm213369"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -63,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003861328"></a>
+        <a id="idm213375"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kstiff</em></span> -- controller 2, stiffness of reed. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>kapert</em></span> -- controller 26, reed aperture. Value range of kv2 is 0-127.</p>
@@ -74,7 +75,7 @@
         <p><span class="emphasis"><em>kbreath</em></span> -- controller 128, breath pressure. Value range of kv7 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003855264"></a>
+        <a id="idm213391"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -100,20 +101,20 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm45948003850784"></a>
+        <a id="idm213400"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKSaxofony opcode. It uses the file <a class="ulink" href="examples/STKSaxofony.csd.html" target="_top"> (click here to play) <em class="citetitle">STKSaxofony.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm45948003848912"></a>
+          <a id="idm213405"></a>
           <p class="title">
-            <strong>Example 940. Example of the STKSaxofony opcode.</strong>
+            <strong>Example 960. Example of the STKSaxofony opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947828238544"></a>
+              <a id="idm213407"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -137,7 +138,7 @@ k<span class="n">v1</span>	<span class="o">=</span>	<span class="nb">p5</span>		
 k<span class="n">v3</span>	<span class="nb">line</span>	<span class="nb">p6</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p7</span>				<span class="c1">;blow position</span>
 k<span class="n">v6</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">127</span>				<span class="c1">;depth of low-frequency oscillator</span>
 
-a<span class="n">sig</span>	<span class="nb">STKSaxofony</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> k<span class="n">v3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">v6</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">100</span>
+a<span class="n">sig</span>	S<span class="n">TKSaxofony</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> k<span class="n">v3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">v6</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">100</span>
 a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span> <span class="o">*</span> <span class="mf">.5</span>				<span class="c1">;too loud</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
@@ -159,7 +160,7 @@ a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948003846992"></a>
+        <a id="idm213526"></a>
         <h2>Credits</h2>
         <p>
       </p>

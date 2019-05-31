@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="faustaudio.html" title="faustaudio" />
-    <link rel="next" href="faustctl.html" title="faustctl" />
+    <link rel="next" href="faustdsp.html" title="faustdsp" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="faustaudio.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="faustctl.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="faustdsp.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,43 +39,53 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057861904"></a>
+        <a id="idm62891"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in faustcsound.</p>
         <p>
       Faustcompile will compile a Faust program from a string, controlled by various arguments.
       Multi-line strings are accepted, using {{  }} to enclose the string.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057860528"></a>
+        <a id="idm62895"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>ihandle faustcompile</strong></span> Scode, Sargs </pre>
+        <pre class="synopsis"><span class="command"><strong>ihandle faustcompile</strong></span> Scode, Sargs[,iasync, istacksize]  </pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948057858480"></a>
+        <a id="idm62899"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">Scode</span>”</span></em></span> --  a string (in double-quotes or enclosed by {{ }}) containing a Faust program.
 </p>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">Sargs</span>”</span></em></span> --  a string (in double-quotes or enclosed by {{ }}) containing Faust compiler args.
+    </p>
+        <p>
+      <span class="emphasis"><em><span class="quote">“<span class="quote">iasync</span>”</span></em></span> -- run the code
+      asynchronously, non-blocking, (iasync=1), or
+      blocking mode (iasync=0). Defaults to 1.
+</p>
+        <p>
+      <span class="emphasis"><em><span class="quote">“<span class="quote">istacksize</span>”</span></em></span> --  size of
+      the compiler thread stack in MB (defaults to 1).
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057800272"></a>
+        <a id="idm62913"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the faustcompile opcode. It uses the file <a class="ulink" href="examples/faustcompile.csd.html" target="_top"> (click here to play) <em class="citetitle">faustcompile.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948057798544"></a>
+          <a id="idm62918"></a>
           <p class="title">
-            <strong>Example 263. Example of the faustcompile opcode.</strong>
+            <strong>Example 269. Example of the faustcompile opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947890204784"></a>
+              <a id="idm62925"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -102,7 +112,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057794256"></a>
+        <a id="idm62970"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini, 2013 </p>
       </div>
@@ -115,14 +125,14 @@
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="faustctl.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="faustdsp.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">faustaudio </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> faustctl</td>
+          <td width="40%" align="right" valign="top"> faustdsp</td>
         </tr>
       </table>
     </div>

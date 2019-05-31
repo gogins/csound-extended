@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948037677776"></a>
+        <a id="idm122485"></a>
         <h2>Description</h2>
         <p>
       Read sampled sound (up to 16 channels) from a table, with
@@ -47,14 +47,16 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948037633440"></a>
+        <a id="idm122488"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1 [, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9, ar10, ar11, ar12, ar13, ar14, \
       ar15, ar16] <span class="command"><strong>loscilx</strong></span> xamp, kcps, ifn \
-      [, iwsize, ibas, istrt, imod, ibeg, iend]</pre>
+    [, iwsize, ibas, istrt, imod, ibeg, iend]</pre>
+        <pre class="synopsis">ar[] <span class="command"><strong>loscilx</strong></span> xamp, kcps, ifn \
+    [, iwsize, ibas, istrt, imod, ibeg, iend]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948037631104"></a>
+        <a id="idm122494"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- function table number, typically
@@ -65,7 +67,7 @@
         <p>
       <span class="emphasis"><em>iwsize</em></span> (optional) -- window size used in interpolation.
       iwsize (optional, defaults to zero) -- interpolation window size, in samples. Can be one of the following:
-   	</p>
+      </p>
         <div class="itemizedlist">
           <ul class="itemizedlist" style="list-style-type: disc; ">
             <li class="listitem">
@@ -84,7 +86,7 @@
         </div>
         <p>
 
-	Zero or negative values select the default, which is cubic interpolation.
+      Zero or negative values select the default, which is cubic interpolation.
     </p>
         <p>
       <span class="emphasis"><em>ibas</em></span> (optional) -- base frequency in
@@ -116,10 +118,10 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948037615568"></a>
+        <a id="idm122527"></a>
         <h2>Performance</h2>
         <p>
-      <span class="emphasis"><em>ar1, ar2, ...</em></span> -- the output at audio-rate.
+      <span class="emphasis"><em>ar1, ar2, ... ar[]</em></span> -- the output at audio-rate.
       The number of outputs must match the number of channels in the
       sample file.
     </p>
@@ -159,7 +161,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948037604288"></a>
+        <a id="idm122551"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the loscilx opcode. It uses the files
@@ -167,9 +169,9 @@
       and <a class="ulink" href="examples/kickroll.wav" target="_top"><em class="citetitle">kickroll.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948037601568"></a>
+          <a id="idm122558"></a>
           <p class="title">
-            <strong>Example 493. Example of the loscilx opcode.</strong>
+            <strong>Example 508. Example of the loscilx opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time
@@ -177,7 +179,7 @@
         Flags</em></a> for more information on using command
         line flags.</p>
             <div class="refsect1">
-              <a id="idm45947864201360"></a>
+              <a id="idm122565"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -252,7 +254,7 @@ gi<span class="n">_sampleleft</span> <span class="nb">ftgen</span> <span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948037597200"></a>
+        <a id="idm122801"></a>
         <h2>See Also</h2>
         <p>
           <a class="link" href="loscil.html" title="loscil">
@@ -261,11 +263,12 @@ gi<span class="n">_sampleleft</span> <span class="nb">ftgen</span> <span class="
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948037595408"></a>
+        <a id="idm122806"></a>
         <h2>Credits</h2>
         <p>Written by Istvan Varga.</p>
         <p>2006</p>
         <p>New in Csound 5.03</p>
+        <p>Array version new in Csound 6.13 (February 2019)</p>
       </div>
     </div>
     <div class="navfooter">

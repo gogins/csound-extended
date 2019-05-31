@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="PrefaceTop.html" title="Preface" />
     <link rel="prev" href="PrefaceCopy.html" title="Copyright Notice" />
-    <link rel="next" href="PrefaceWhatsNew.html" title="What's new in Csound 6.10" />
+    <link rel="next" href="PrefaceWhatsNew.html" title="What's new in Csound 6.12.0" />
   </head>
   <body>
     <div class="navheader">
@@ -34,14 +34,14 @@
           </div>
         </div>
       </div>
-      <h3><a id="idm45948093488752"></a>Downloading</h3>
+      <h3><a id="idm180"></a>Downloading</h3>
       <p>
     In case you don't already have Csound (or have an older version) download the appropriate Csound version for your platform from the <a class="ulink" href="http://csound.github.io/download.html" target="_top"><em class="citetitle">Github Csound Download Page</em></a>. Installers for Windows have '.exe' extension and for Mac '.dmg'. If the installer's filename ends in '-d' it means the installer has been built with <span class="emphasis"><em>double</em></span> precision (64-bit) which provides higher quality output than the ordinary <span class="emphasis"><em>float</em></span> precision (32-bit). The float versions provide quicker output, which may be important if you're using Csound in a real-time setting. You can also download the sources and build them, but this requires more expertise (See the section <a class="link" href="BuildingCsound.html" title="Building Csound"><em class="citetitle">Building Csound</em></a>).
   </p>
       <p>
     It may also be useful to download the most recent version of this manual, which you will also find there.
   </p>
-      <h3><a id="idm45948093501376"></a>Running</h3>
+      <h3><a id="idm189"></a>Running</h3>
       <p>
     Csound can be run in different ways. Since Csound is a command line program (DOS in Windows terms), just clicking on the csound executable will have no effect. Csound must be called either from the computer's command line or from a front end. To use Csound from the command line, you must open a <span class="emphasis"><em>Terminal</em></span> (Command Prompt or DOS Prompt on Windows, or Terminal on MacOS). Using Csound from the command line can be difficult if you've never used a terminal, so you may want to try to use one of the front ends, either QuteCsound, which is included with the latest distributions, or another front end. A <a class="link" href="OviewFrontEnds.html" title="Front Ends"><em class="citetitle">front end</em></a> is a window-based (not necessarily Windows-based) program that assists running Csound. Most front ends include text editors with which you can edit csound files, and many include other useful features.
   </p>
@@ -95,10 +95,10 @@ csound oscil.csd</pre>
       <p>
     The example files are configured to run in real time by default, so with this command you should hear a two-second sine wave.
   </p>
-      <h3><a id="idm45948093424624"></a>Writing your own .csd files</h3>
+      <h3><a id="idm217"></a>Writing your own .csd files</h3>
       <p>A <span class="emphasis"><em>.csd</em></span> file looks like this (this file is <a class="ulink" href="examples/oscils.csd.html" target="_top"> (click here to play) <em class="citetitle">oscils.csd</em></a>):</p>
       <div class="refsect1">
-        <a id="idm45947912048480"></a>
+        <a id="idm222"></a>
         <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -137,7 +137,7 @@ a<span class="n">sig</span> <span class="nb">oscils</span> <span class="mf">.7</
     </p>
       <div class="itemizedlist">
         <ul class="itemizedlist" style="list-style-type: disc; ">
-          <li class="listitem"><span class="emphasis"><em>CsOptions</em></span> - Includes the <a class="link" href="CommandFlagsCategory.html" title="Command-line Flags (by Category)"><em class="citetitle">Command Line flags</em></a> specific to this particular file. These options can also be set using the <a class="link" href="CommandUnifileParFile.html" title="Command Line Parameter File (.csoundrc)"><em class="citetitle">.csoundrc</em></a> file, which you can edit in a text editor, or directly in the <a class="link" href="CommandDesc.html" title="Description of the command syntax"><em class="citetitle">command line</em></a>. Some front ends also provide ways to specify global or local options.
+          <li class="listitem"><span class="emphasis"><em>CsOptions</em></span> - Includes the <a class="link" href="CommandFlagsCategory.html" title="Command-line Flags (by Category)"><em class="citetitle">Command Line flags</em></a> specific to this particular file. These options can also be set using the <a class="link" href="CommandUnifileParFile.html" title="Command Line Parameter File (.csound6rc)"><em class="citetitle">.csound6rc</em></a> file, which you can edit in a text editor, or directly in the <a class="link" href="CommandDesc.html" title="Description of the command syntax"><em class="citetitle">command line</em></a>. Some front ends also provide ways to specify global or local options.
         </li>
           <li class="listitem">
           <span class="emphasis"><em>CsInstruments</em></span> - Contains the instruments or processes available in the file. Instruments are defined using the <a class="link" href="instr.html" title="instr"><em class="citetitle">instr</em></a> and <a class="link" href="endin.html" title="endin"><em class="citetitle">endin</em></a> opcodes. The <span class="emphasis"><em>CsInstruments</em></span> section also contains the <a class="link" href="OrchTop.html#OrchHeader" title="Orchestra Header Statements"><em class="citetitle">Orchestra Header</em></a>, which defines things like <a class="link" href="sr.html" title="sr"><em class="citetitle">sample rate</em></a>, the <a class="link" href="ksmps.html" title="ksmps"><em class="citetitle">number of  samples in a control period</em></a>, and the <a class="link" href="nchnls.html" title="nchnls"><em class="citetitle">number of output channels</em></a>.
@@ -170,7 +170,7 @@ a<span class="n">sig</span> <span class="nb">oscils</span> <span class="mf">.7</
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> What's new in Csound 6.10</td>
+          <td width="40%" align="right" valign="top"> What's new in Csound 6.12.0</td>
         </tr>
       </table>
     </div>

@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031282016"></a>
+        <a id="idm142242"></a>
         <h2>Description</h2>
         <p>
 	  Convert midi note number to string note name, with an accuracy
@@ -47,13 +47,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031280768"></a>
+        <a id="idm142245"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">Snote <span class="command"><strong>mton</strong></span> kmidi</pre>
         <pre class="synopsis">Snote <span class="command"><strong>mton</strong></span> imidi</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948031276752"></a>
+        <a id="idm142251"></a>
         <h2>Performance</h2>
         <p>
 	  <span class="emphasis"><em>kmidi</em></span> / <span class="emphasis"><em>imidi</em></span> -- Midi
@@ -67,7 +67,7 @@
 
 	  </p>
         <pre class="programlisting">
-		midi    note name
+		midi    note number
 		-------------------
 		60      4C
 		60.4    4C+40
@@ -81,19 +81,19 @@
 	</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031272256"></a>
+        <a id="idm142260"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mton opcode. It uses the file <a class="ulink" href="examples/mton-ntom.csd.html" target="_top"> (click here to play) <em class="citetitle">mton-ntom.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948031269200"></a>
+          <a id="idm142265"></a>
           <p class="title">
-            <strong>Example 585. Example of the ftom opcode.</strong>
+            <strong>Example 600. Example of the ftom opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947854817328"></a>
+              <a id="idm142267"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -102,36 +102,36 @@
 <span class="nt">&lt;CsInstruments&gt;</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-    S<span class="n">4</span> <span class="nb">mton</span> <span class="nb">ntom</span><span class="p">(</span><span class="s">"7D+63"</span><span class="p">)</span>
+    S<span class="n">4</span> <span class="n">mton</span> <span class="n">ntom</span><span class="p">(</span><span class="s">"7D+63"</span><span class="p">)</span>
     <span class="nb">puts</span> S<span class="n">4</span><span class="p">,</span> <span class="mi">1</span>
 
-    S<span class="n">1</span>  <span class="nb">mton</span> <span class="mi">60</span>
+    S<span class="n">1</span>  <span class="n">mton</span> <span class="mi">60</span>
     <span class="nb">puts</span> S<span class="n">1</span><span class="p">,</span> <span class="mi">1</span>
 
-    S<span class="n">2</span> <span class="nb">mton</span> <span class="nb">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">)</span>
+    S<span class="n">2</span> <span class="n">mton</span> <span class="n">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">)</span>
     <span class="nb">puts</span> S<span class="n">2</span><span class="p">,</span> <span class="mi">1</span>
 
-    S<span class="n">3</span> <span class="o">=</span> <span class="nb">mton</span><span class="p">(</span><span class="mf">48.25</span><span class="p">)</span>
+    S<span class="n">3</span> <span class="o">=</span> <span class="n">mton</span><span class="p">(</span><span class="mf">48.25</span><span class="p">)</span>
     <span class="nb">puts</span> S<span class="n">3</span><span class="p">,</span> <span class="mi">1</span>
 
-    k<span class="n">1</span> <span class="o">=</span> <span class="nb">ntom</span><span class="p">(</span><span class="s">"4C"</span><span class="p">)</span>
+    k<span class="n">1</span> <span class="o">=</span> <span class="n">ntom</span><span class="p">(</span><span class="s">"4C"</span><span class="p">)</span>
     <span class="nb">printk2</span> k<span class="n">1</span>
 
-    i<span class="n">2</span>  <span class="nb">ntom</span> <span class="s">"4E"</span>
+    i<span class="n">2</span>  <span class="n">ntom</span> <span class="s">"4E"</span>
     <span class="nb">print</span> i<span class="n">2</span>
 
-    S<span class="n">5</span> <span class="o">=</span> <span class="nb">mton</span><span class="p">(</span><span class="nb">ntom</span><span class="p">(</span><span class="s">"4G+"</span><span class="p">))</span>
+    S<span class="n">5</span> <span class="o">=</span> <span class="n">mton</span><span class="p">(</span><span class="n">ntom</span><span class="p">(</span><span class="s">"4G+"</span><span class="p">))</span>
     <span class="nb">puts</span> S<span class="n">5</span><span class="p">,</span> <span class="mi">1</span>
     
     <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
-    k<span class="n">1</span> <span class="o">=</span> <span class="nb">ntom</span><span class="p">(</span><span class="s">"4Eb-31"</span><span class="p">)</span>
+    k<span class="n">1</span> <span class="o">=</span> <span class="n">ntom</span><span class="p">(</span><span class="s">"4Eb-31"</span><span class="p">)</span>
     <span class="nb">printk2</span> k<span class="n">1</span>
-    i<span class="n">0</span>  <span class="nb">ntom</span> <span class="s">"4C+"</span>
+    i<span class="n">0</span>  <span class="n">ntom</span> <span class="s">"4C+"</span>
     <span class="nb">print</span> i<span class="n">0</span>
-    i<span class="n">1</span> <span class="o">=</span> <span class="nb">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4A"</span><span class="p">)</span>
+    i<span class="n">1</span> <span class="o">=</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4A"</span><span class="p">)</span>
     <span class="nb">print</span> i<span class="n">1</span>    
 	<span class="nb">turnoff</span>
 <span class="kd">endin</span>
@@ -152,7 +152,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031267440"></a>
+        <a id="idm142378"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpsmidinn.html" title="cpsmidinn"><em class="citetitle">cpsmidinn</em></a>, 
@@ -163,10 +163,9 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031262096"></a>
+        <a id="idm142389"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
-        <p>New in version 6.09</p>
       </div>
     </div>
     <div class="navfooter">

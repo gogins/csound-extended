@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="ftom.html" title="ftom" />
+    <link rel="prev" href="ftprint.html" title="ftprint" />
     <link rel="next" href="ftsave.html" title="ftsave" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">ftsamplebank</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="ftom.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="ftprint.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="ftsave.html">Next</a></td>
         </tr>
@@ -39,20 +39,22 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047658416"></a>
+        <a id="idm92009"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in ftsamplebank.</p>
         <p>
-      Reads a directory for sound files and loads them to a series of GEN01 function tables. 
+      Reads a directory for sound files and loads them to a series of
+      GEN01 function tables.  
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047592528"></a>
+        <a id="idm92013"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, iFirstTableNumber, iSkipTime, iFormat, iChannel,</pre>
         <pre class="synopsis">kNumberOfFile <span class="command"><strong>ftsamplebank</strong></span> SDirectory, kFirstTableNumber, kTrigger, kSkipTime, kFormat, kChannel,</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948047588992"></a>
+        <a id="idm92019"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>SDirectory</em></span> -- a string that identifies the directory to browse for files
@@ -86,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047579440"></a>
+        <a id="idm92039"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>iNumberOfFile</em></span> -- the number of tables that have been created
@@ -113,19 +115,19 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idm45948047575632"></a>
+        <a id="idm92048"></a>
         <h2>Example</h2>
         <p>
       This example shows ftsamplebank browsing for samples in a fixed location. It loads all samples it finds into GEN01 function tables and then playsa them back in a sequence, one every second. It uses the file <a class="ulink" href="examples/ftsamplebank.csd.html" target="_top"> (click here to play) <em class="citetitle">ftsamplebank.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948047573616"></a>
+          <a id="idm92053"></a>
           <p class="title">
-            <strong>Example 366. Example of the ftsamplebank opcode.</strong>
+            <strong>Example 377. Example of the ftsamplebank opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947877798064"></a>
+              <a id="idm92055"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,7 +144,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
    i<span class="n">FirstTableNumber</span> <span class="o">=</span> <span class="mi">60</span><span class="c1">;</span>
    i<span class="n">FileCount</span> <span class="nb">init</span> <span class="mi">0</span>
-   i<span class="n">NumberOfFiles</span> <span class="nb">ftsamplebank</span> <span class="s">"./examples/"</span><span class="p">,</span> i<span class="n">FirstTableNumber</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span>
+   i<span class="n">NumberOfFiles</span> <span class="n">ftsamplebank</span> <span class="s">"./examples/"</span><span class="p">,</span> i<span class="n">FirstTableNumber</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span>
 
    <span class="k">until</span> i<span class="n">FileCount</span><span class="o">&gt;=</span>i<span class="n">NumberOfFiles</span> <span class="k">do</span>
 	<span class="nb">event_i</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> i<span class="n">FileCount</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">FirstTableNumber</span><span class="o">+</span>i<span class="n">FileCount</span>
@@ -170,7 +172,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047571696"></a>
+        <a id="idm92144"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -190,14 +192,14 @@
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="ftom.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="ftprint.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="ftsave.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">ftom </td>
+          <td width="40%" align="left" valign="top">ftprint </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

@@ -35,51 +35,52 @@
           <span class="refentrytitle">filevalid</span>
         </h2>
         <p>filevalid — 
-      Checks that a file can be used.
+      Checks that a file can be read.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057103680"></a>
+        <a id="idm64887"></a>
         <h2>Description</h2>
         <p>
-      Returns 1 if the sound file is valid, or 0 if not.
+      Returns 1 if the sound file exists and is readable, or 0 if not.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057102496"></a>
+        <a id="idm64890"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>filevalid</strong></span> ifilcod</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948057100320"></a>
+        <a id="idm64894"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- sound file to be queried
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057030768"></a>
+        <a id="idm64898"></a>
         <h2>Performance</h2>
         <p>
-      <span class="emphasis"><em>filevalid</em></span> returns 1 if the sound file <span class="emphasis"><em>ifilcod</em></span> can be used.
+      <span class="emphasis"><em>filevalid</em></span> returns 1 if the sound file
+      <span class="emphasis"><em>ifilcod</em></span> can be read.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057028848"></a>
+        <a id="idm64903"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the filevalid opcode. It uses the file <a class="ulink" href="examples/filevalid.csd.html" target="_top"> (click here to play) <em class="citetitle">filevalid.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948057026992"></a>
+          <a id="idm64908"></a>
           <p class="title">
-            <strong>Example 274. Example of the filevalid opcode.</strong>
+            <strong>Example 282. Example of the filevalid opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947889371184"></a>
+              <a id="idm64915"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,7 +132,7 @@ Audiofile 'frox.wav' does not exist!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057021936"></a>
+        <a id="idm64989"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="filebit.html" title="filebit"><em class="citetitle">filebit</em></a>,
@@ -142,7 +143,7 @@ Audiofile 'frox.wav' does not exist!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948057016016"></a>
+        <a id="idm65002"></a>
         <h2>Credits</h2>
         <p>
       </p>

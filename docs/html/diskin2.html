@@ -41,7 +41,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060789120"></a>
+        <a id="idm54519"></a>
         <h2>Description</h2>
         <p>
 	Reads audio data from a file, and can alter its pitch using
@@ -49,12 +49,12 @@
 	convert the sample rate to match the orchestra sr
 	setting. <span class="emphasis"><em>diskin2</em></span> can also read
 	multichannel files with any number of channels in the range 1
-	to 24 in versions before 5.14, and 40 after. 
-	
+	to 24 in versions before 5.14, and 40 after.
+
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060787248"></a>
+        <a id="idm54523"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1[, a2[, ... aN]] <span class="command"><strong>diskin2</strong></span> ifilcod[, kpitch[, iskiptim \
       [, iwrap[, iformat[, iwsize[, ibufsize[, iskipinit]]]]]]]</pre>
@@ -63,7 +63,7 @@
         <p> (in the array output version, the number of output channels does not have an upper limit.)</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060783008"></a>
+        <a id="idm54530"></a>
         <h2>Initialization</h2>
         <p>
 	<span class="emphasis"><em>ifilcod</em></span>
@@ -137,48 +137,63 @@
    	</p>
         <p>
    	<span class="emphasis"><em>iformat</em></span>
-   	(optional, defaults to zero) -- sample format, for raw (headerless)
-   	files only. This parameter is ignored if the file has a header.
-   	Allowed values are:
+   	(optional, defaults to zero) -- sets raw and sample format for raw (headerless)
+   	files. This parameter must be zero if the file has a header.
+   	Allowed values for raw files are are:
 
 	</p>
         <div class="itemizedlist">
           <ul class="itemizedlist" style="list-style-type: disc; ">
             <li class="listitem">
-              <p>0: 16-bit short integers</p>
+              <p>1: 16-bit short integers</p>
             </li>
             <li class="listitem">
-              <p>1: 8-bit signed char (high-order 8 bits of a 16-bit integer)</p>
+              <p>2: 8-bit signed char (high-order 8 bits of a 16-bit integer)</p>
             </li>
             <li class="listitem">
-              <p>2: 8-bit A-law bytes</p>
+              <p>3: 8-bit A-law bytes</p>
             </li>
             <li class="listitem">
-              <p>3: 8-bit U-law bytes</p>
+              <p>4: 8-bit U-law bytes</p>
             </li>
             <li class="listitem">
-              <p>4: 16-bit short integers</p>
+              <p>5: 16-bit short integers</p>
             </li>
             <li class="listitem">
-              <p>5: 32-bit long integers</p>
+              <p>6: 32-bit long integers</p>
             </li>
             <li class="listitem">
-              <p>6: 32-bit floats</p>
+              <p>7: 32-bit floats</p>
             </li>
             <li class="listitem">
-              <p>7: 8-bit unsigned int</p>
+              <p>8: 8-bit unsigned int</p>
             </li>
             <li class="listitem">
-              <p>8: 24-bit int</p>
+              <p>9: 24-bit int</p>
             </li>
             <li class="listitem">
-              <p>9: 64-bit doubles</p>
+              <p>10: 64-bit doubles</p>
             </li>
           </ul>
         </div>
         <p>
 
 	</p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <table border="0" summary="Note">
+            <tr>
+              <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Note]" src="images/note.png" />
+              </td>
+              <th align="left">Note</th>
+            </tr>
+            <tr>
+              <td align="left" valign="top">
+                <p>This list is not the same as in <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a></p>
+              </td>
+            </tr>
+          </table>
+        </div>
         <p>
 	<span class="emphasis"><em>iwsize</em></span>
 	(optional, defaults to zero) -- interpolation window size, in samples.
@@ -248,7 +263,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060749328"></a>
+        <a id="idm54608"></a>
         <h2>Performance</h2>
         <p>
 	<span class="emphasis"><em>a1 ... a24</em></span>
@@ -302,20 +317,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060740192"></a>
+        <a id="idm54626"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the diskin2 opcode. It uses the file <a class="ulink" href="examples/diskin2.csd.html" target="_top"> (click here to play) <em class="citetitle">diskin2.csd</em></a>, <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948060737520"></a>
+          <a id="idm54633"></a>
           <p class="title">
-            <strong>Example 214. Example of the diskin2 opcode.</strong>
+            <strong>Example 220. Example of the diskin2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947893597072"></a>
+              <a id="idm54640"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -356,7 +371,7 @@ a<span class="n">1</span>     <span class="nb">diskin2</span> <span class="s">"b
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060733232"></a>
+        <a id="idm54704"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="in.html" title="in"><em class="citetitle">in</em></a>,
@@ -364,12 +379,12 @@ a<span class="n">1</span>     <span class="nb">diskin2</span> <span class="s">"b
       <a class="link" href="ino.html" title="ino"><em class="citetitle">ino</em></a>,
       <a class="link" href="inq.html" title="inq"><em class="citetitle">inq</em></a>,
       <a class="link" href="ins.html" title="ins"><em class="citetitle">ins</em></a>,
-      <a class="link" href="soundin.html" title="soundin"><em class="citetitle">soundin</em></a> and 
+      <a class="link" href="soundin.html" title="soundin"><em class="citetitle">soundin</em></a> and
       <a class="link" href="diskin.html" title="diskin"><em class="citetitle">diskin</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948060725744"></a>
+        <a id="idm54721"></a>
         <h2>Credits</h2>
         <p>
       </p>

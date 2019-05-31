@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="ftsavek.html" title="ftsavek" />
+    <link rel="prev" href="ftslice.html" title="ftslice" />
     <link rel="next" href="gain.html" title="gain" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">ftsr</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="ftsavek.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="ftslice.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="gain.html">Next</a></td>
         </tr>
@@ -39,39 +39,39 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047496272"></a>
+        <a id="idm92548"></a>
         <h2>Description</h2>
         <p>
       Returns the sampling-rate of a stored function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047494912"></a>
+        <a id="idm92551"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftsr</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948047492816"></a>
+        <a id="idm92555"></a>
         <h2>Performance</h2>
         <p>
       Returns the sampling-rate of a <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a> generated table. The sampling-rate is determined from the header of the original file. If the original file has no header or the table was not created by these GEN01, <span class="emphasis"><em>ftsr</em></span> returns 0. New in Csound version 3.49.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047426384"></a>
+        <a id="idm92561"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftsr opcode. It uses the file <a class="ulink" href="examples/ftsr.csd.html" target="_top"> (click here to play) <em class="citetitle">ftsr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948047424528"></a>
+          <a id="idm92566"></a>
           <p class="title">
-            <strong>Example 368. Example of the ftsr opcode.</strong>
+            <strong>Example 380. Example of the ftsr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947877796880"></a>
+              <a id="idm92573"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -126,7 +126,7 @@ sampling-rate of table number 4 = 44100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047419152"></a>
+        <a id="idm92683"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftchnls.html" title="ftchnls"><em class="citetitle">ftchnls</em></a>,
@@ -136,7 +136,7 @@ sampling-rate of table number 4 = 44100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948047414128"></a>
+        <a id="idm92694"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -159,14 +159,14 @@ sampling-rate of table number 4 = 44100
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="ftsavek.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="ftslice.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="gain.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">ftsavek </td>
+          <td width="40%" align="left" valign="top">ftslice </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>

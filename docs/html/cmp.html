@@ -35,47 +35,66 @@
           <span class="refentrytitle">cmp</span>
         </h2>
         <p>cmp — 
-      Compares two audio signals
+      Compares audio signals or arrays
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065713760"></a>
+        <a id="idm41573"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in emugens.</p>
         <p>
-	  Compares two audio signals using the standard math operators
+	  Compares audio signals or arrays, sample by sample or value by value
+      All comparison operations are possible: `&lt; `&lt;=, &gt;, &gt;=, ==, !=
+    </p>
+        <p>
+      An audio signal can be compared against another audio signal, or
+      against a scalar (i- or k-value)
 
 	  </p>
         <pre class="programlisting">
-		aout cmp aL, "&gt;", aR
+		aOut cmp aL, "&gt;", aR
+        aOut cmp aIn, "&gt;=", 0.5
+        aOut cmp aIn, "`&lt;=", kthreshold
 	  </pre>
         <p>
-	  
+    </p>
+        <p>
+      An array can be compared against another array, against a scalar,
+      or checked to be within the range of two scalars. All operations
+      are available for i- and k- arrays
+      </p>
+        <pre class="programlisting">
+        kOut[] cmp kIn[], "&gt;=", kx
+        kOut[] cmp kA[], "==", kB[]
+        kOut[] cmp 0.5, "`&lt;", kIn[], "`&lt;=", 1
+      </pre>
+        <p>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065649888"></a>
+        <a id="idm41581"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis">aout <span class="command"><strong>cmp</strong></span> aL, S_operator, aR</pre>
+        <pre class="synopsis">aout <span class="command"><strong>cmp</strong></span> a1, S_operator, a2</pre>
+        <pre class="synopsis">aout <span class="command"><strong>cmp</strong></span> a1, S_operator, kx</pre>
+        <pre class="synopsis">kOut[] <span class="command"><strong>cmp</strong></span> kA, S_operator, kB</pre>
+        <pre class="synopsis">kOut[] <span class="command"><strong>cmp</strong></span> k1, S_operator1, kIn[], S_operator2, k2</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948065647344"></a>
+        <a id="idm41591"></a>
         <h2>Initialization</h2>
         <p>
-	  <span class="emphasis"><em>S_operator</em></span> Math operator, one of "&gt;", "&gt;=", "`&lt;",
-	  "`&lt;=", "=="
-	</p>
+          <span class="emphasis"><em>S_operator</em></span> Math operator, one of "&gt;", "&gt;=", "`&lt;",
+          "`&lt;=", "=="
+        </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065645648"></a>
+        <a id="idm41595"></a>
         <h2>Performance</h2>
         <p>
-      <span class="emphasis"><em>aL</em></span> -- Left signal
+      <span class="emphasis"><em>a1</em></span> -- Left signal
     </p>
         <p>
-      <span class="emphasis"><em>aR</em></span> -- Right signal
-    </p>
-        <p>
-      <span class="emphasis"><em>kdur</em></span> -- Duration of the trigger in seconds.
+      <span class="emphasis"><em>a2</em></span> -- Right signal
     </p>
         <p>
 	  </p>
@@ -84,27 +103,25 @@
 		aout cmp aL, "&gt;=", aR
 		aout cmp aL, "`&lt;", aR
 		aout cmp aL, "`&lt;=", aR
-		aout cmp aL, "==", aR
-		
+		aout cmp aL, "==", aR		
 	  </pre>
         <p>
-	  
-    </p>
+	</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065640608"></a>
+        <a id="idm41603"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cmp opcode. It uses the file <a class="ulink" href="examples/cmp.csd.html" target="_top"> (click here to play) <em class="citetitle">cmp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948065637520"></a>
+          <a id="idm41608"></a>
           <p class="title">
-            <strong>Example 135. Example of the cmp opcode.</strong>
+            <strong>Example 140. Example of the cmp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947899063856"></a>
+              <a id="idm41610"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -113,36 +130,88 @@
 
 <span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
 <span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
-<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="vg">0dbfs</span> <span class="o">=</span> <span class="mf">1.0</span>
 
+<span class="c1">; this is the example file for 'cmp'</span>
+
+<span class="cm">/*
+
+cmp
+
+compare audio or arrays, value by value
+
+Audio:
+  * compare audio signals, sample by sample, against another signal or scalar
+  * compara audio singal, sample by sample, within a range:
+    aout cmp klo, "&lt;", ain, "&lt;=", khi
+
+Arrays:
+  * compare arrays value by value or against a scalar
+  * compare array value by value within a range:
+    kout[] = klo &lt; kin[] &lt;= khi   -&gt;   kout[] cmp klo, "&lt;", kin[], "&lt;=", khi
+
+aout cmp a1, Sop, a2                 : aout cmp ain, "&lt;", acmp
+aout cmp a1, Sop, kval               : aout cmp ain, "&gt;=", 0.1
+kout[] cmp k1[], Sop, k2[]           : kout[] cmp kxs, "&lt;", kys
+iout[] cmp i1[], Sop, i2[]           : iout[] cmp ixs, "&lt;", iys
+kout[] cmp k1[], Sop, k              : kout[] cmp kxs, "&lt;", 0.5
+iout[] cmp i1[], Sop, i              : iout[] cmp ixs, "&lt;", 0.5
+kout[] cmp klo, Sop, kx[], Sop, khi  : kout[] cmp 0, "&lt;", kxs, "&lt;=", 1
+iout[] cmp ilo, Sop, ix[], Sop, ihi  : iout[] cmp 0, "&lt;", ixs, "&lt;=", 1
+
+TODO: implement array operations for multidim. arrays
+      (at the time, array operations work only for 1D-arrays)
+
+*/</span>
+
+<span class="c1">; for audio operations, render this to a soundfile and open in an editor</span>
+<span class="c1">; to check the results</span>
+
 <span class="kd">instr</span> <span class="nf">1</span>
-    a<span class="n">0</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
-    a<span class="n">1</span> <span class="nb">linseg</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>
-    a<span class="n">out</span> <span class="nb">cmp</span> a<span class="n">0</span><span class="p">,</span> <span class="s">"&lt;"</span><span class="p">,</span> a<span class="n">1</span>
-    <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">0</span>
-	<span class="nb">outch</span> <span class="mi">2</span><span class="p">,</span> a<span class="n">1</span>
-    <span class="nb">outch</span> <span class="mi">3</span><span class="p">,</span> a<span class="n">out</span>
+  a<span class="n">0</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">1</span> <span class="nb">linseg</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>
+  a<span class="n">out1</span> <span class="n">cmp</span> a<span class="n">0</span><span class="p">,</span> <span class="s">"&lt;"</span><span class="p">,</span> a<span class="n">1</span>
+  a<span class="n">out2</span> <span class="n">cmp</span> a<span class="n">0</span><span class="p">,</span> <span class="s">"&lt;="</span><span class="p">,</span> <span class="mf">0.5</span>
+  a<span class="n">out3</span> <span class="n">cmp</span> a<span class="n">0</span><span class="p">,</span> <span class="s">"&gt;"</span><span class="p">,</span> <span class="mf">0.5</span>
+  <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">0</span>
+  <span class="nb">outch</span> <span class="mi">2</span><span class="p">,</span> a<span class="n">1</span>
+  <span class="nb">outch</span> <span class="mi">3</span><span class="p">,</span> a<span class="n">out1</span>
+  <span class="nb">outch</span> <span class="mi">4</span><span class="p">,</span> a<span class="n">out2</span>
+  <span class="nb">outch</span> <span class="mi">5</span><span class="p">,</span> a<span class="n">out3</span>
 <span class="kd">endin</span>
 
-<span class="kd">instr</span> <span class="nf">2</span>
-    a<span class="n">0</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
-    a<span class="n">out</span> <span class="nb">cmp</span> a<span class="n">0</span><span class="p">,</span> <span class="s">"&lt;="</span><span class="p">,</span> <span class="mf">0.5</span>
-    <span class="nb">outch</span> <span class="mi">4</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">instr</span> <span class="nf">4</span>
+  <span class="c1">; cmp with arrays</span>
+  i<span class="n">xs</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span>
+  i<span class="n">ys</span><span class="p">[]</span> <span class="n">cmp</span> i<span class="n">xs</span><span class="p">,</span> <span class="s">"&gt;="</span><span class="p">,</span> <span class="mi">3</span>
+  <span class="n">printarray</span> i<span class="n">ys</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"instr 4, iys"</span>
+  
+  k<span class="n">xs</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span>
+  k<span class="n">ys</span><span class="p">[]</span> <span class="n">cmp</span> k<span class="n">xs</span><span class="p">,</span> <span class="s">"&gt;="</span><span class="p">,</span> <span class="mi">3</span>
+  <span class="n">printarray</span> k<span class="n">ys</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"instr 4, kys"</span>
+  <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
-<span class="kd">instr</span> <span class="nf">3</span>
-    a<span class="n">0</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
-    a<span class="n">out</span> <span class="nb">cmp</span> a<span class="n">0</span><span class="p">,</span> <span class="s">"!="</span><span class="p">,</span> <span class="mf">0.5</span>
-    <span class="nb">outch</span> <span class="mi">5</span><span class="p">,</span> a<span class="n">out</span>
+<span class="kd">instr</span> <span class="nf">5</span>
+  <span class="c1">; range</span>
+  i<span class="n">xs</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span>
+  i<span class="n">ys</span><span class="p">[]</span> <span class="n">cmp</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"&lt;"</span><span class="p">,</span> i<span class="n">xs</span><span class="p">,</span> <span class="s">"&lt;="</span><span class="p">,</span> <span class="mi">4</span>
+  <span class="n">printarray</span> i<span class="n">ys</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"instr 5, iys"</span>
+
+  k<span class="n">xs</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span>
+  k<span class="n">ys</span><span class="p">[]</span> <span class="n">cmp</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"&lt;"</span><span class="p">,</span> k<span class="n">xs</span><span class="p">,</span> <span class="s">"&lt;="</span><span class="p">,</span> <span class="mi">4</span>
+  <span class="n">printarray</span> k<span class="n">ys</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"instr 5, kys"</span>
+  <span class="nb">turnoff</span>
 <span class="kd">endin</span>
+
+
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
-<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">2</span>
-<span class="nb">i</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">2</span>
-
+<span class="nb">i</span> <span class="mi">4</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">5</span> <span class="mi">0</span> <span class="mi">1</span>
 <span class="nt">&lt;/CsScore&gt;</span>
 <span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
@@ -153,15 +222,15 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065635760"></a>
+        <a id="idm41840"></a>
         <h2>See Also</h2>
         <p>
-	  <a class="link" href="max.html" title="max"><em class="citetitle">max</em></a>, 
-	  <a class="link" href="min.html" title="min"><em class="citetitle">min</em></a>, 
+          <a class="link" href="max.html" title="max"><em class="citetitle">max</em></a>, 
+          <a class="link" href="min.html" title="min"><em class="citetitle">min</em></a>, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948065632432"></a>
+        <a id="idm41847"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
       </div>

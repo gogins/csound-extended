@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031002656"></a>
+        <a id="idm143055"></a>
         <h2>Description</h2>
         <p>
 Mvclpf4 is an digital implementation of the 4th-order (24 dB/oct) Moog ladder filter
@@ -50,12 +50,12 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948030939584"></a>
+        <a id="idm143058"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig1,asig2,asig3,asig4 <span class="command"><strong>mvclpf4</strong></span> ain, xcf, xres[, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948030937632"></a>
+        <a id="idm143062"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> --initial disposition of internal
@@ -67,7 +67,7 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948030935696"></a>
+        <a id="idm143066"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig1</em></span> -- 6dB/oct low-pass response output.
@@ -95,20 +95,20 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948030928848"></a>
+        <a id="idm143082"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mvclpf4 opcode. It uses the file <a class="ulink" href="examples/mvclpf4.csd.html" target="_top"> (click here to play) <em class="citetitle">mvclpf4.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948030926992"></a>
+          <a id="idm143087"></a>
           <p class="title">
-            <strong>Example 592. Example of the mvclpf4 opcode.</strong>
+            <strong>Example 607. Example of the mvclpf4 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947854587248"></a>
+              <a id="idm143094"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -122,7 +122,7 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
  k<span class="n">env</span> <span class="nb">linen</span> <span class="nb">p4</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span><span class="mf">0.1</span>
  a<span class="n">in</span> <span class="nb">rand</span> k<span class="n">env</span> 
  k<span class="n">fr</span> <span class="nb">expon</span> <span class="mi">220</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1760</span>
- a<span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="nb">mvclpf4</span> a<span class="n">in</span><span class="p">,</span>k<span class="n">fr</span><span class="p">,</span><span class="mf">0.9</span>
+ a<span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>a<span class="n">sig</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">mvclpf4</span> a<span class="n">in</span><span class="p">,</span>k<span class="n">fr</span><span class="p">,</span><span class="mf">0.9</span>
   <span class="nb">out</span> a<span class="n">sig</span><span class="p">[</span><span class="nb">p5</span><span class="p">]</span>
 <span class="kd">endin</span>
 
@@ -142,7 +142,7 @@ mvclpf3 opcode with four outputs, for 6dB, 12dB, 18dB, and
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948030922704"></a>
+        <a id="idm143184"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948061157840"></a>
+        <a id="idm53692"></a>
         <h2>Description</h2>
         <p>
       Zero-delay feedback implementation of a 4 pole (24 dB/oct) diode low-pass filter. This filter design was originally used in the EMS VCS3 and was the resonant filter in the Roland TB-303. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948061153488"></a>
+        <a id="idm53695"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>diode_ladder</strong></span> ain, xcf, xk [, inlp, isaturation, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948061151248"></a>
+        <a id="idm53699"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> --initial disposition of internal data space.
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948061149264"></a>
+        <a id="idm53703"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- low-pass output signal.
@@ -83,19 +83,19 @@
       <span class="emphasis"><em>ksaturation</em></span> (optional, default=1) -- saturation amount to use for non-linear processing. Values &gt; 1 increase the steepness of the NLP curve.</p>
       </div>
       <div class="refsect1">
-        <a id="idm45948061084176"></a>
+        <a id="idm53717"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the diode_ladder opcode. It uses the file <a class="ulink" href="examples/diode_ladder.csd.html" target="_top"> (click here to play) <em class="citetitle">diode_ladder.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948061082384"></a>
+          <a id="idm53722"></a>
           <p class="title">
-            <strong>Example 210. Example of the diode_ladder opcode.</strong>
+            <strong>Example 216. Example of the diode_ladder opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947894245568"></a>
+              <a id="idm53724"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -125,7 +125,7 @@ gk<span class="n">cut</span> <span class="nb">init</span> <span class="mi">6000<
   a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
   a<span class="n">cut</span> <span class="o">=</span> <span class="nb">expon</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="nb">i</span><span class="p">(</span>gk<span class="n">cut</span><span class="p">),</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span> 
-  a<span class="n">out</span> <span class="o">=</span> <span class="n">diode_ladder</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">cut</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+  a<span class="n">out</span> <span class="o">=</span> <span class="n">diode_ladder</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">cut</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
   a<span class="n">out</span> <span class="o">*=</span> <span class="nb">expseg</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span> 
 
@@ -178,7 +178,7 @@ gi<span class="n">pat</span><span class="p">[</span><span class="mi">7</span><sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948061080464"></a>
+        <a id="idm53994"></a>
         <h2>References</h2>
         <p> This filter is based on the work of Will Pirkle that employs Vadim
       Zavalishin's work with bilinear tranforms to create topology-preserving
@@ -209,7 +209,7 @@ gi<span class="n">pat</span><span class="p">[</span><span class="mi">7</span><sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948061075040"></a>
+        <a id="idm54005"></a>
         <h2>Credits</h2>
         <p>
       </p>

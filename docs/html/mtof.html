@@ -35,49 +35,52 @@
           <span class="refentrytitle">mtof</span>
         </h2>
         <p>mtof — 
-	  Convert a midi to frequency
+          Convert a midi to frequency
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031379568"></a>
+        <a id="idm142028"></a>
         <h2>Description</h2>
+        <p>Plugin opcode in emugens.</p>
         <p>
-	  Convert a midi note number value to cycles per second, taking
-	  global value of A4 into account.
+          Convert a midi note number value to cycles per second, taking
+          global value of A4 into account.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031378256"></a>
+        <a id="idm142032"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ifreq <span class="command"><strong>mtof</strong></span> imidi</pre>
         <pre class="synopsis">kfreq <span class="command"><strong>mtof</strong></span> kmidi</pre>
+        <pre class="synopsis">ifreqs[] <span class="command"><strong>mtof</strong></span> imidis[]</pre>
+        <pre class="synopsis">kfreqs[] <span class="command"><strong>mtof</strong></span> kmidis[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948031333392"></a>
+        <a id="idm142042"></a>
         <h2>Performance</h2>
         <p>
-	  <span class="emphasis"><em>kmidi</em></span> / <span class="emphasis"><em>imidi</em></span> -- Midi
-	  note number
-	</p>
+          <span class="emphasis"><em>kmidi</em></span> / <span class="emphasis"><em>imidi</em></span> -- Midi
+          note number (also as array)
+        </p>
         <p>
       <span class="emphasis"><em>kfreq</em></span> / <span class="emphasis"><em>ifreq</em></span> --
-	  Frequency corresponding to midi note value
+          Frequency corresponding to midi note value. An array is returned if the input is an array
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031329824"></a>
+        <a id="idm142050"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mtof opcode. It uses the file <a class="ulink" href="examples/mtof-ftom.csd.html" target="_top"> (click here to play) <em class="citetitle">mtof-ftom.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm45948031326784"></a>
+          <a id="idm142055"></a>
           <p class="title">
-            <strong>Example 584. Example of the mtof opcode.</strong>
+            <strong>Example 599. Example of the mtof opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm45947855121760"></a>
+              <a id="idm142057"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -85,35 +88,49 @@
 <span class="nt">&lt;CsInstruments&gt;</span>
 
 <span class="vg">sr</span> <span class="o">=</span> <span class="mi">44100</span>
-<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
 <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="vg">0dbfs</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">A4</span> <span class="o">=</span> <span class="mi">440</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-    k<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span><span class="mi">69</span><span class="p">)</span>
-    <span class="nb">printks2</span> <span class="s">"midi 69   -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">freq</span>
+  k<span class="n">freq</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">(</span><span class="mi">69</span><span class="p">)</span>
+  <span class="nb">printks2</span> <span class="s">"midi 69   -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">freq</span>
+  
+  k<span class="n">midi</span> <span class="o">=</span> <span class="n">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">)</span>
+  <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
+  
+  k<span class="n">midi</span> <span class="o">=</span> <span class="n">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+  <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; %f rounded</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
+  
+  k<span class="n">freq</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">(</span>k<span class="n">midi</span><span class="p">)</span>
+  <span class="nb">printks</span> <span class="s">"midi %f -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">midi</span><span class="p">,</span> k<span class="n">freq</span>
+  
+  i<span class="n">midi</span> <span class="o">=</span> <span class="n">ftom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+  <span class="nb">print</span> i<span class="n">midi</span>
+  
+  i<span class="n">freq</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+  <span class="nb">print</span> i<span class="n">freq</span>
+  
+  <span class="nb">turnoff</span>
+<span class="kd">endin</span>
 
-    k<span class="n">midi</span> <span class="o">=</span> <span class="nb">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">)</span>
-    <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
-
-    k<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span>k<span class="n">midi</span><span class="p">)</span>
-    <span class="nb">printks</span> <span class="s">"midi %f -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">midi</span><span class="p">,</span> k<span class="n">freq</span>
-
-    i<span class="n">midi</span> <span class="o">=</span> <span class="nb">ftom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-    <span class="nb">print</span> i<span class="n">midi</span>
-
-    i<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-    <span class="nb">print</span> i<span class="n">freq</span>
-    
-
-    
-    <span class="nb">turnoff</span>
+<span class="kd">instr</span> <span class="nf">2</span>
+  i<span class="n">midis0</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">69</span>
+  i<span class="n">freqs0</span><span class="p">[]</span> <span class="n">mtof</span> i<span class="n">midis0</span>
+  <span class="n">printarray</span> i<span class="n">freqs0</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"ifreqs0"</span>
+  
+  k<span class="n">freqs</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">880</span>
+  k<span class="n">midis</span><span class="p">[]</span> <span class="n">ftom</span> k<span class="n">freqs</span>
+  <span class="nb">puts</span> <span class="s">"kfreqs"</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="n">printarray</span> k<span class="n">midis</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"%.2f"</span><span class="p">,</span> <span class="s">"kmidis"</span>
+  <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="nb">i</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span>
 <span class="nt">&lt;/CsScore&gt;</span>
 <span class="nt">&lt;/CsoundSynthesizer&gt;</span>
 </pre>
@@ -124,22 +141,22 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031325024"></a>
+        <a id="idm142216"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpsmidinn.html" title="cpsmidinn"><em class="citetitle">cpsmidinn</em></a>, 
-	  <a class="link" href="ftom.html" title="ftom"><em class="citetitle">ftom</em></a>,
-	  <a class="link" href="mton.html" title="mton"><em class="citetitle">mton</em></a>,
-	  <a class="link" href="ntom.html" title="ntom"><em class="citetitle">ntom</em></a>
-	  
-	  
+          <a class="link" href="ftom.html" title="ftom"><em class="citetitle">ftom</em></a>,
+          <a class="link" href="mton.html" title="mton"><em class="citetitle">mton</em></a>,
+          <a class="link" href="ntom.html" title="ntom"><em class="citetitle">ntom</em></a>
+          
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948031319568"></a>
+        <a id="idm142227"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
-        <p>New in version 6.09</p>
+        <p>New plugin in version 6.11</p>
+        <p>Array version new in 6.13</p>
       </div>
     </div>
     <div class="navfooter">

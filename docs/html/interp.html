@@ -9,7 +9,7 @@
     <meta name="generator" content="DocBook XSL Stylesheets V1.79.1" />
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
-    <link rel="prev" href="integ.html" title="integ" />
+    <link rel="prev" href="interleave.html" title="interleave" />
     <link rel="next" href="invalue.html" title="invalue" />
   </head>
   <body>
@@ -19,7 +19,7 @@
           <th colspan="3" align="center">interp</th>
         </tr>
         <tr>
-          <td width="20%" align="left"><a accesskey="p" href="integ.html">Prev</a> </td>
+          <td width="20%" align="left"><a accesskey="p" href="interleave.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
           <td width="20%" align="right"> <a accesskey="n" href="invalue.html">Next</a></td>
         </tr>
@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948042241072"></a>
+        <a id="idm109064"></a>
         <h2>Description</h2>
         <p>
       Converts a control signal to an audio signal using linear interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948042239664"></a>
+        <a id="idm109067"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>interp</strong></span> ksig [, iskip] [, imode]
     [, ivalue]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm45948042237472"></a>
+        <a id="idm109071"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- if non zero
@@ -63,9 +63,9 @@
 
       </p>
         <div class="example">
-          <a id="idm45948042171504"></a>
+          <a id="idm109079"></a>
           <p class="title">
-            <strong>Example 439. iskip=0, imode=0</strong>
+            <strong>Example 453. iskip=0, imode=0</strong>
           </p>
           <div class="example-contents">
             <div class="literallayout">
@@ -85,9 +85,9 @@
 
       </p>
         <div class="example">
-          <a id="idm45948042169568"></a>
+          <a id="idm109082"></a>
           <p class="title">
-            <strong>Example 440. iskip=1, imode=0</strong>
+            <strong>Example 454. iskip=1, imode=0</strong>
           </p>
           <div class="example-contents">
             <div class="literallayout">
@@ -108,9 +108,9 @@
 
       </p>
         <div class="example">
-          <a id="idm45948042167664"></a>
+          <a id="idm109085"></a>
           <p class="title">
-            <strong>Example 441. iskip=0, imode=1</strong>
+            <strong>Example 455. iskip=0, imode=1</strong>
           </p>
           <div class="example-contents">
             <div class="literallayout">
@@ -134,7 +134,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948042164544"></a>
+        <a id="idm109090"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> -- input k-rate signal.
@@ -144,21 +144,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948042161776"></a>
+        <a id="idm109096"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the interp opcode. It uses the file <a class="ulink" href="examples/interp.csd.html" target="_top"> (click here to play) <em class="citetitle">interp.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm45948042160000"></a>
+          <a id="idm109101"></a>
           <p class="title">
-            <strong>Example 442. Example of the interp opcode.</strong>
+            <strong>Example 456. Example of the interp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm45947870155472"></a>
+              <a id="idm109108"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -223,7 +223,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948042155712"></a>
+        <a id="idm109219"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diff.html" title="diff"><em class="citetitle">diff</em></a>,
@@ -235,7 +235,7 @@
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue10/CsoundRates.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue10/CsoundRates.html</em></a>  , written by Andrés Cabrera </p>
       </div>
       <div class="refsect1">
-        <a id="idm45948042148368"></a>
+        <a id="idm109235"></a>
         <h2>Credits</h2>
         <p>Updated November 2002, thanks to a note from both Rasmus Ekman and Istvan Varga.</p>
       </div>
@@ -244,14 +244,14 @@
       <hr />
       <table width="100%" summary="Navigation footer">
         <tr>
-          <td width="40%" align="left"><a accesskey="p" href="integ.html">Prev</a> </td>
+          <td width="40%" align="left"><a accesskey="p" href="interleave.html">Prev</a> </td>
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
           <td width="40%" align="right"> <a accesskey="n" href="invalue.html">Next</a></td>
         </tr>
         <tr>
-          <td width="40%" align="left" valign="top">integ </td>
+          <td width="40%" align="left" valign="top">interleave </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
