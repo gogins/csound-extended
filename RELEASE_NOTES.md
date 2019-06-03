@@ -31,11 +31,12 @@ Csound repository.
 
 5. Instructions for building csound-extended with the current version of Csound.
 
-7. Updated playable version of the Csound Reference Manual at
+7. Updated playable (run examples in Web browsers) version of the Csound
+Reference Manual at
 https://gogins.github.io/csound-extended/html/indexframes.html.
 
-8. Added CsoundProducer header-file-only class to integrate post-processing of
-pieces.
+8. Added CsoundProducer header-file-only class to integrate post-processing and
+tagging of pieces.
 
 9. Removal of CsoundHtml5 due to instability and overlapping functionality with
 both CsoundQt and csound.node.
