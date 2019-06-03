@@ -56,10 +56,12 @@ Module['postRun'] = [];
 var ENVIRONMENT_IS_WEB = false;
 var ENVIRONMENT_IS_WORKER = false;
 var ENVIRONMENT_IS_NODE = false;
+var ENVIRONMENT_HAS_NODE = false;
 var ENVIRONMENT_IS_SHELL = false;
 ENVIRONMENT_IS_WEB = typeof window === 'object';
 ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
-ENVIRONMENT_IS_NODE = typeof process === 'object' && typeof require === 'function' && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
+ENVIRONMENT_HAS_NODE = typeof process === 'object' && typeof require === 'function';
+ENVIRONMENT_IS_NODE = ENVIRONMENT_HAS_NODE && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
 ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
 
 if (Module['ENVIRONMENT']) {
@@ -1226,7 +1228,6 @@ function writeAsciiToMemory(str, buffer, dontAddNull) {
 
 
 function demangle(func) {
-  warnOnce('warning: build with  -s DEMANGLE_SUPPORT=1  to link in libcxxabi demangling');
   return func;
 }
 
@@ -2960,7 +2961,7 @@ function copyTempDouble(ptr) {
         // Buffer.alloc has been added with Buffer.from together, so check it instead
         return Buffer.alloc ? Buffer.from(arrayBuffer) : new Buffer(arrayBuffer);
       },mount:function (mount) {
-        assert(ENVIRONMENT_IS_NODE);
+        assert(ENVIRONMENT_HAS_NODE);
         return NODEFS.createNode(null, '/', NODEFS.getMode(mount.opts.root), 0);
       },createNode:function (parent, name, mode, dev) {
         if (!FS.isDir(mode) && !FS.isFile(mode) && !FS.isLink(mode)) {
@@ -8875,8 +8876,16 @@ function copyTempDouble(ptr) {
       return 0;
     }function _nanosleep(rqtp, rmtp) {
       // int nanosleep(const struct timespec  *rqtp, struct timespec *rmtp);
+      if (rqtp === 0) {
+        ___setErrNo(22);
+        return -1;
+      }
       var seconds = ((SAFE_HEAP_LOAD(((rqtp)|0), 4, 0))|0);
       var nanoseconds = ((SAFE_HEAP_LOAD((((rqtp)+(4))|0), 4, 0))|0);
+      if (nanoseconds < 0 || nanoseconds > 999999999 || seconds < 0) {
+        ___setErrNo(22);
+        return -1;
+      }
       if (rmtp !== 0) {
         SAFE_HEAP_STORE(((rmtp)|0), ((0)|0), 4);
         SAFE_HEAP_STORE((((rmtp)+(4))|0), ((0)|0), 4);
@@ -9579,7 +9588,7 @@ if (ENVIRONMENT_IS_NODE) {
     _emscripten_get_now = Date.now;
   };
 FS.staticInit();Module["FS_createFolder"] = FS.createFolder;Module["FS_createPath"] = FS.createPath;Module["FS_createDataFile"] = FS.createDataFile;Module["FS_createPreloadedFile"] = FS.createPreloadedFile;Module["FS_createLazyFile"] = FS.createLazyFile;Module["FS_createLink"] = FS.createLink;Module["FS_createDevice"] = FS.createDevice;Module["FS_unlink"] = FS.unlink;;
-if (ENVIRONMENT_IS_NODE) { var fs = require("fs"); var NODEJS_PATH = require("path"); NODEFS.staticInit(); };
+if (ENVIRONMENT_HAS_NODE) { var fs = require("fs"); var NODEJS_PATH = require("path"); NODEFS.staticInit(); };
 embind_init_charCodes();
 BindingError = Module['BindingError'] = extendError(Error, 'BindingError');;
 InternalError = Module['InternalError'] = extendError(Error, 'InternalError');;
@@ -10455,6 +10464,13 @@ asm["_malloc"] = function() {
   return real__malloc.apply(null, arguments);
 };
 
+var real__memalign = asm["_memalign"];
+asm["_memalign"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__memalign.apply(null, arguments);
+};
+
 var real__memmove = asm["_memmove"];
 asm["_memmove"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
@@ -10627,6 +10643,12 @@ var _malloc = Module["_malloc"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_malloc"].apply(null, arguments)
+};
+
+var _memalign = Module["_memalign"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_memalign"].apply(null, arguments)
 };
 
 var _memcpy = Module["_memcpy"] = function() {

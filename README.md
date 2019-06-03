@@ -8,7 +8,7 @@ http://michaelgogins.tumblr.com
 
 This repository contains various extensions to Csound that have been moved
 out of the core Csound Git repository at https://github.com/csound/csound,
-and collected from older projects of mine. These extensions include:
+or collected from older projects of mine. These extensions include:
 
 1.  CsoundAC, an algorithmic composition library designed to be used with
     Csound. Csound is written in C++ and has C++, Python, Java, and Lua
@@ -39,23 +39,23 @@ and collected from older projects of mine. These extensions include:
 
 8.  An online _playable_ version of the [_**Csound Reference Manual**_](https://gogins.github.io/csound-extended/html/indexframes.html).
 
-9. nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
+9.  nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
     hosted here with his permission. This is based upon and includes
     the Common Music library for algorithmic composition and the Fomus
     library for automatically notating generated scores.
 
-With regret I must announce that CsoundVST and the vst4cs opcodes are no
-longer maintained here. This is due to efforts by Steinberg to force
-developers to move to the VST3 SDK, which has a more restrictive license that
-I do not wish to work with. However, these are avaiable from me as freeware
-binaries from https://michaelgogins.tumblr.com/csound_extended.
+With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
+maintained here. This is due to efforts by Steinberg to force developers to move
+to the VST3 SDK, which has a more restrictive license that I do not wish to work
+with. **However, CsoundVST and the vst4cs opcodes are still avaiable from me as
+freeware binaries from https://michaelgogins.tumblr.com/csound_extended.**
 
 New extensions may be added by me in the future. If you would like to add your
 own extensions, enter an issue in this repository or submit a pull request.
 
-This repository uses the core Csound repository, and some other third-party
-dependencies, as Git submodules, packages, or direct source downloads. For
-each platform, there is one build system.
+This repository uses the core Csound packages, and some other third-party
+dependencies, as Git submodules, packages, or direct source downloads. For each
+platform, there is one build system.
 
 Please log any bug reports or requests for enhancements at
 https://github.com/gogins/csound-extended/issues.
@@ -68,21 +68,8 @@ as templates for new compositions are installed in the
 
 ## Changes
 
-The major change for version 1.0.0 is the creation of regular Debian packages.
-
-CsoundAC has gained the ability to run Common Lisp code for generating or
-modifying generated scores.
-
-CsoundAC has been refactored so that the csnd6 library interfaces for Lua
-and Python are not required. Most methods of CppSound have been exposed in the
-MusicModel class, e.g. CppSound::CompileCsdText is exposed as
-MusicModel::cppsoundCompileCsdText.
-
-CsoundForAndroid has been upgraded to target Android API version 26. It also
-has lost the LuaJIT opcodes because the Android NDK must now use clang, but
-LuaJIT cannot be built for Android with clang.
-
-See https://github.com/gogins/csound-extended/commits/develop for the commit log.
+See https://github.com/gogins/csound-extended/commits/develop for the commit
+log.
 
 ## Installation
 
@@ -118,29 +105,28 @@ Csound.
 Before building csound-extended, be aware that you can use csound-extended
 with your own local build of Csound from the Csound git repository.
 
-To do this, first build  **and install** csound-extended using the
-instructions below, which automatically **installs the official Csound packages.**
-Run some pieces that use features you need to test your installation.
+To do this, first build  **and install** csound-extended using the instructions
+below, which automatically **installs the official Csound packages.** Run some
+pieces that use features you need to test your installation.
 
 Then, clone the Csound Git repository from `https://github.com/csound/csound`,
-and build Csound according to the instructions there. However, when running CMake,
-change the value of the default CMake install prefix from `/usr/local` to `/usr`,
-like this:
+and build Csound according to the instructions there. However, when running
+CMake, change the value of the default CMake install prefix from `/usr/local` to
+`/usr`, like this:
 ```
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 ```
 After that of course do the usual `sudo make install` for Csound.
 
-Finbally, re-run your tests to make sure the features you need are still
-working and that the newer Csound is compatible with csound-extended. If not
-all features you need work, e.g. the Python interfaces, do a local build and
-install of csound-extended, **i.e. without updating dependencies** (`bash
-build-linux.sh`), and re-install your local build of csound-extended over
-your existing installation, like this:
+Finally, re-run your tests to make sure the features you need are still working
+and that the newer Csound is compatible with csound-extended. If not all
+features you need work, e.g. the Python interfaces, do a local build and install
+of csound-extended, **i.e. without updating dependencies** (`bash
+build-linux.sh`), and re-install your local build of csound-extended over your
+existing installation, like this:
+``` sudo apt install
+./build-linux/csound-extended-dev-1.3.1-Linux.deb --reinstall
 ```
-sudo apt install ./build-linux/csound-extended-dev-1.3.1-Linux.deb --reinstall
-```
-
 If ever need to revert to the original packaged version of Csound
 normally used by csound-extended, in your local Csound build directory, do this:
 ```
@@ -163,10 +149,6 @@ First clone the Git repository at https://github.com/gogins/csound-extended.
 
 ### Building on Linux
 
-Currently, building all of csound-extended requires Linux 17.10 (Artful
-Aardvark) or higher, as earlier releases of Linux do not have packages for
-the Qt WebEngine used by CsoundHtml5.
-
 The build script involves some user interaction for sudo or deletions.
 Otherwise, the build is highly automated. Many dependencies are local. All
 dependencies are fetched automatically. Most targets are built for release
@@ -186,7 +168,7 @@ OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
 ```
 
-If csound.node fails to build, you may need to add the NPM bin directory to
+If csound.node fails to build, you may also need to add the NPM bin directory to
 your PATH variable so that CMake can find node-gyp.
 
 Change to your csound-extended repository and execute `fresh-build-linux.sh`,
