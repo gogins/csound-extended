@@ -73,6 +73,8 @@ There are no major changes in this release.
 
 ### csound-vst package 1.0.2
 
+https://t.umblr.com/redirect?z=https%3A%2F%2Fwww.dropbox.com%2Fs%2Flns8ull4bbifjp7%2Fcsound-vst-1.0.0-Linux.deb%3Fdl%3D0&t=YWUzN2M1ZjA1MGJkYmJhM2U5YmFhMjUzOTNkYmI1ZjM4MjA5MzQ3NixUbU4zdWpESg%3D%3D&p=&m=0
+
 The csound-vst package includes both Csound as a VST 2 plugin, and opcodes for
 hosting VST plugins in Csound.
 
