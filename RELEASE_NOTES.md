@@ -20,25 +20,34 @@ cmask opcodes for Csound. Changes in this release include
 1. Changed from the v8 API to the Node Addon API for better maintainability of
 csound.node.
 
-2. Improved ImageToScore2 node in CsoundAC.
+2. New MCRM2 node in CsoundAC based on k-means clustering.
 
-3. Consistency of dimensions of notes across languages in csound-extended,
+3. Improved ImageToScore2 node in CsoundAC.
 
-3. The addition of the LuaJIT opcodes, which have been removed from the core
+4. Consistency of dimensions of notes across languages in csound-extended,
+
+5. The addition of the LuaJIT opcodes, which have been removed from the core
 Csound repository.
 
-4. Better Doxygen documentation.
+6. Better Doxygen documentation.
 
-5. Instructions for building csound-extended with the current version of Csound.
+7. Instructions for building csound-extended with the current version of Csound.
 
-7. Updated playable (run examples in Web browsers) version of the Csound
+8. Updated playable (run examples in Web browsers) version of the Csound
 Reference Manual at
 https://gogins.github.io/csound-extended/html/indexframes.html.
 
-8. Added CsoundProducer header-file-only class to integrate post-processing and
+9. Added CsoundProducer header-file-only class to integrate post-processing and
 tagging of pieces.
 
-9. Removal of CsoundHtml5 due to instability and overlapping functionality with
+10. Embeddable Common Lisp now embedded in CsoundProducer, enabling Common Lisp
+code e.g. from nudruz to run in CsoundAC and csound.node.
+
+11. Improved Csound patch library.
+
+12. Improved spatialization system in Csound patch library.
+
+13. Removal of CsoundHtml5 due to instability and overlapping functionality with
 both CsoundQt and csound.node.
 
 ### Csound for Android app release 19
@@ -53,9 +62,11 @@ opcodes. Changes in this release include:
 2. Improved tabbed user interface; it is not necessary to change settings to
 work with HTML, builtin widgets, or plain Csound.
 
-3. Corrected bug for "Save".
+3. Corrected bug for "Save" which now works.
 
-4. Built-in browser for the Csound Reference Manual.
+4. Oboe audio stream now stopped from a separate thread to prevent crashing.
+
+5. Built-in browser for the Csound Reference Manual.
 
 5. Restored user-configurable audio driver.
 
