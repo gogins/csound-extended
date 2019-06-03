@@ -66,7 +66,7 @@ work with HTML, builtin widgets, or plain Csound.
 
 https://github.com/gogins/csound-aeolus
 
-The csound-aeolus package provides Fons Adrianssen's wonderful Aeolus pipe organ
+The csound-aeolus package provides Fons Adriaensen's wonderful Aeolus pipe organ
 emulation as a Csound opcode.
 
 There are no major changes in this release.
