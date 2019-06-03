@@ -20,9 +20,11 @@ cmask opcodes for Csound. Changes in this release include
 1. Changed from the v8 API to the Node Addon API for better maintainability of
 csound.node.
 
-2. New MCRM2 node in CsoundAC based on k-means clustering.
+2. New KMeansMCRM node in CsoundAC that uses k-means clustering to translate IFS
+attractors to scores.
 
-3. Improved ImageToScore2 node in CsoundAC.
+3. Improved ImageToScore2 node in CsoundAC that enables some image processing
+before translation to a score.
 
 4. Consistency of dimensions of notes across languages in csound-extended,
 
