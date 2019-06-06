@@ -100,10 +100,22 @@ the build-linux directory. However, be warned that this installs the
 software in /usr/local. You will also first need to separately install
 Csound.
 
-# Using a Local Build of Csound on Linux
+## Building
 
-Before building csound-extended, be aware that you can use csound-extended
-with your own local build of Csound from the Csound git repository.
+Currently, the supported platforms are Linux, Android, and WebAssembly.
+The code is generally "cross-platform" in nature and this build system could
+be adapted to build for Windows or OS X.
+
+Please note, the Linux package for native code (CsoundAC etc.) is built using
+the Ubuntu system packages for Csound, whereas the Csound for Android app and
+the WebAssembly module are built from Csound source code cloned from GitHub.
+
+First clone the Git repository at https://github.com/gogins/csound-extended.
+
+### Using a Local Build of Csound on Linux
+
+Please be aware that you can use csound-extended with your own local build of
+Csound from the Csound git repository.
 
 To do this, first build  **and install** csound-extended using the instructions
 below, which automatically **installs the official Csound packages.** Run some
@@ -134,18 +146,6 @@ sudo xargs rm < install_manifest.txt
 ```
 and then do a fresh build and installation of csound-extended **including
 updating Csound** (`bash fresh-build-linux.sh`).
-
-## Building
-
-Currently, the supported platforms are Linux, Android, and WebAssembly.
-The code is generally "cross-platform" in nature and this build system could
-be adapted to build for Windows or OS X.
-
-Please note, the Linux package for native code (CsoundAC etc.) is built using
-the Ubuntu system packages for Csound, whereas the Csound for Android app and
-the WebAssembly module are built from Csound source code cloned from GitHub.
-
-First clone the Git repository at https://github.com/gogins/csound-extended.
 
 ### Building on Linux
 
