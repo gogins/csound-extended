@@ -128,7 +128,7 @@ CMake, change the value of the default CMake install prefix from `/usr/local` to
 ```
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 ```
-After that of course do the usual `sudo make install` for Csound.
+After that of course do the usual \make -j6` and `sudo make install` for Csound.
 
 Finally, re-run your tests to make sure the features you need are still working
 and that the newer Csound is compatible with csound-extended. If not all
@@ -139,7 +139,7 @@ existing installation, like this:
 ``` sudo apt install
 ./build-linux/csound-extended-dev-1.3.1-Linux.deb --reinstall
 ```
-If ever need to revert to the original packaged version of Csound
+If you ever need to revert to the original packaged version of Csound
 normally used by csound-extended, in your local Csound build directory, do this:
 ```
 sudo xargs rm < install_manifest.txt
