@@ -16,20 +16,22 @@ Requires Silencio.js and ChordSpace.js.
 
 (function() {
 
+var Generator = function() {
+
+}
+
 /**
  * Generates a score as a sequence of points in chord symmetry space as a
- * function of time. Because chord symmetry space is a discrete orbifold, the
- * transformations do not need to be contractive. However, as in a fractal
- * approximation function, the time of the point never folds, but always
- * divides. Any callable with the correct interface can be used as a
- * transformation. Note that any number of transformations may be applied at the
- * **same** time. 
+ * function of time, using a fractal interpolation function. Any callable with
+ * the correct interface can be used as a transformation. Time is always
+ * subdivided, never folded. Note that any number of transformations may be
+ * applied at the **same** time.
  */
 var generate = function(depth, iteration, time, chord, transformations, score) {
     iteration++;
     if (iteration >== depth) {
         var chord = to_chord(point);
-        score.insert(point.t, chord);
+        score.insert(time, chord);
     } else {
         for (var i = 0; i < transformations.length; ++i) {
             var transformation = transformation[i];
