@@ -2438,7 +2438,9 @@ if (typeof console === 'undefined') {
                 console.log('toChord:   revoicing: ' + revoicing);
             }
             A = A % this.countA;
-            ChordSpace.arrange(revoicing, A, instruments);
+            if (typeof this.instruments != 'undefined') {
+                ChordSpace.arrange(revoicing, A, instruments);
+            }
             return {'revoicing': revoicing, 'opti': optti, 'op': op};
         } catch (ex) {
             console.log(ex);
