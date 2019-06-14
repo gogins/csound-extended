@@ -10,10 +10,11 @@ Part of Silencio, an HTML5 algorithmic music composition library for Csound.
 
 This file implements the generation of scores by means of score graphs, which
 graph a sequence of points in a chord symmetry space as a function of time,
-using a fractal approximation. Any callable with the correct interface can be
-used as a transformation. Time is always subdivided, never folded.
+using a fractal approximation that acts like a Read-Bajraktarevic operator. Any
+callable with the correct interface can be used as a transformation. Time is
+always subdivided, never folded.
 
-Requires Silencio.js and ChordSpace.js.
+Requires Silencio.js and ChordSpace2.js.
 
 */
 
@@ -23,7 +24,11 @@ var ScoreGraphs = {};
 
 /**
  * Represents a point in a discrete orbifold of chord symmetries. The dimensions
- * are P, I, T, V, A.
+ * are P, I, T, V, A, or, set-class (OPTIC for N voices, clock group), inversion
+ * in the origin (I, clock group), transposition within a range (T, clock
+ * group), permutation of octavewise revoicings within a range (V, clock group),
+ * and k-permutation with repetition of instrument numbers for N voices (A,
+ * clock group).
  */
 ScoreGraphs.Point = function() {
     this.data = [0, 0, 0, 0, 0];
@@ -74,9 +79,10 @@ ScoreGraphs.Point.prototype.clone = function() {
     other.data = this.data.slice(0);
 }
 
-// A simple standard transformation. Note that a, b, c, and d are vector-valued
-// with one element for each of P, I, T, V, and A.
-
+/**
+ * A simple standard transformation. Note that a, b, c, and d are vector-valued
+ * with one element for each of P, I, T, V, and A.
+ */
 ScoreGraphs.BilinearTransformation = function(a, b, c, d) {
     this.a = a;
     this.b = b;
@@ -93,6 +99,11 @@ ScoreGraphs.BilinearTransformation.prototype.apply(time, point) {
     return new_point;
 };
 
+/**
+ * Initialize the ScoreGroup for N voices in a range of MIDI keys for a vector
+ * of I instrument numbers and a total duration of the score in seconds. g is
+ * the generator of transposition.
+ */
 ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, g_) {
     if (typeof g_ == "undefined") {
         this.g = 1;
@@ -130,21 +141,27 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
     this.time_0 = this.hutchinson_operator.values()[0];
     this.time_N = this.hutchinson_operator.values()[this.hutchinson_operator.size() - 1];
     this.interval = time_N - time_0;
-    var time_step = interval / this.time_steps;
-    // Map the operator over the time interval.
+    this.time_step = interval / this.time_steps;
+    // Map the operator over the time interval. This is similar to computing the
+    // attractor of an IFS with the deterministic algorithm.
     for (var i = 0; i < this.time_steps; i++) {
         iteration = 0;
-        var time = time_1 + i * time_step;
+        var time = time_0 + i * time_step;
         var point = new Point();
         this.iterate(depth, iteration, time, point);
     }
     this.score.tieOverlaps();
 }
 
-// TODO: Add characteristic function to implement local iterated function
-// systems.
-
-ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point) {
+/**
+ * Compute the score graph as a fractal approximation of the graph of {P, I, T,
+ * V, A} as a function of time. At each iteration, the domain is re-partitioned
+ * and the ranges of the sub-domains are contracted.
+ *
+ * TODO: Add characteristic function to implement **local** iterated function
+ * systems.
+ */
+ ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point) {
     iteration++;
     if (iteration >== depth) {
         // Translate the particular value of chord symmetry to an actual chord,
@@ -155,7 +172,7 @@ ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, poin
         ChordSpace.insert(this.score, time, chord);
     } else {
         // Subdivide the domain (time) and contract the range (the chord
-        // symmetry space).
+        // symmetry space) of each sub-domain.
         var time_prior_i = time_0;
         for (var [time_i, transformation] of this.hutchinson_operator) {
             time = time_prior_i + ((time_i - time_prior_i) / (time_N - time_0)) * (time - time_0);
