@@ -2386,7 +2386,7 @@ if (typeof console === 'undefined') {
      * A is the index of k-permutations with repetition of instruments for
      * voices, instruments is an array of instrument numbers.
      */
-    ChordSpace.prototype.arrange = function(chord, A, instruments) {
+    ChordSpace.arrange = function(chord, A, instruments) {
         arrangement = arrangementForIndex(instruments, A);
         for (var voice = 0; voice < chord.size(); i++) {
             chord.setChannel(voice, arrangement[voice]);

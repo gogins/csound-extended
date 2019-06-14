@@ -67,8 +67,31 @@ ScoreGraphs.Point = function() {
             this.data[4] = value;
         }
     });
+};
 
+ScoreGraphs.Point.prototype.clone = function() {
+    other = new Point();
+    other.data = this.data.slice(0);
 }
+
+// A simple standard transformation. Note that a, b, c, and d are vector-valued
+// with one element for each of P, I, T, V, and A.
+
+ScoreGraphs.BilinearTransformation = function(a, b, c, d) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+    this.d = d;
+};
+
+ScoreGraphs.BilinearTransformation.prototype.apply(time, point) {
+    new_point = point.clone();
+    for (var i = 0; i < 5; i++) {
+        var y = this.a[i] + this.b[i] * t + this.c[i] * point.data[i] + this.d[i] * t * point.data[i];
+        new_point.data[i] = y;
+    }
+    return new_point;
+};
 
 ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, g_) {
     if (typeof g_ == "undefined") {
@@ -104,32 +127,44 @@ ScoreGraphs.ScoreGraph.prototype.add_transformation = function(time, callable) {
 ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
     // Sort the transformations in the operator by time.
     this.hutchinson_operator = new Map([...this.hutchinson_operator.entries()].sort());
-    var time_1 = this.hutchinson_operator.values()[0];
-    var time_N = this.hutchinson_operator.values()[this.hutchinson_operator.size() - 1];
-    var interval = time_N - time_1;
+    this.time_0 = this.hutchinson_operator.values()[0];
+    this.time_N = this.hutchinson_operator.values()[this.hutchinson_operator.size() - 1];
+    this.interval = time_N - time_0;
     var time_step = interval / this.time_steps;
     // Map the operator over the time interval.
     for (var i = 0; i < this.time_steps; i++) {
         iteration = 0;
         var time = time_1 + i * time_step;
         var point = new Point();
-        this.iterate(depth, iteration, time, point, this.hutchinson_operator, this.chord_space, this.score);
+        this.iterate(depth, iteration, time, point);
     }
     this.score.tieOverlaps();
 }
 
-ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point, hutchinson_operator, chord_space, score) {
+// TODO: Add characteristic function to implement local iterated function
+// systems.
+
+ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point) {
     iteration++;
     if (iteration >== depth) {
-        var chord = chord_space.toChord(point.P, point.I, point.T, point.V);
-        ChordSpace.insert(score, time, chord);
+        // Translate the particular value of chord symmetry to an actual chord,
+        // which includes octavewise revoicing and arrangement.
+        var chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A);
+        // Insert the notes from the chord into the score at this particular time.
+        chord.setDuration(this.time_step);
+        ChordSpace.insert(this.score, time, chord);
     } else {
-        for (var [time, transformation] of hutchinson_operator) {
-
+        // Subdivide the domain (time) and contract the range (the chord
+        // symmetry space).
+        var time_prior_i = time_0;
+        for (var [time_i, transformation] of this.hutchinson_operator) {
+            time = time_prior_i + ((time_i - time_prior_i) / (time_N - time_0)) * (time - time_0);
+            time_prior_i = time_i;
+            point = transformation.apply(time, point);
+            // Recurse...
+            this.iterate(depth, iteration, time, point);
         }
-
     }
-
 }
 
 // Node: Export function
