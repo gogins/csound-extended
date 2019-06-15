@@ -77,7 +77,7 @@ ScoreGraphs.Point = function() {
 ScoreGraphs.Point.prototype.clone = function() {
     other = new Point();
     other.data = this.data.slice(0);
-}
+};
 
 /**
  * A simple standard transformation. Note that a, b, c, and d are vector-valued
@@ -90,7 +90,7 @@ ScoreGraphs.BilinearTransformation = function(a, b, c, d) {
     this.d = d;
 };
 
-ScoreGraphs.BilinearTransformation.prototype.apply(time, point) {
+ScoreGraphs.BilinearTransformation.prototype.apply = function(time, point) {
     new_point = point.clone();
     for (var i = 0; i < 5; i++) {
         var y = this.a[i] + this.b[i] * t + this.c[i] * point.data[i] + this.d[i] * t * point.data[i];
@@ -119,7 +119,7 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
     this.chord_space.initialize(this.voices, this.range, this.g);
     this.score = Silencio.Score();
     this.hutchinson_operator = new Map();
-}
+};
 
 /**
  * Adds a transformation (the callable) to the Hutchinson operator for this
@@ -128,7 +128,7 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
  */
 ScoreGraphs.ScoreGraph.prototype.add_transformation = function(time, callable) {
     this.hutchinson_operator.set(time, callable);
-}
+};
 
 /**
  * Recursively computes the score graph, translates the points to chords,
@@ -151,7 +151,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
         this.iterate(depth, iteration, time, point);
     }
     this.score.tieOverlaps();
-}
+};
 
 /**
  * Compute the score graph as a fractal approximation of the graph of {P, I, T,
@@ -162,7 +162,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
  * systems.
  */
  ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point) {
-    iteration++;
+    iteration = iteration + 1;
     if (iteration >== depth) {
         // Translate the particular value of chord symmetry to an actual chord,
         // which includes octavewise revoicing and arrangement.
@@ -182,7 +182,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
             this.iterate(depth, iteration, time, point);
         }
     }
-}
+};
 
 // Node: Export function
 if (typeof module !== "undefined" && module.exports) {
