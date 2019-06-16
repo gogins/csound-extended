@@ -115,9 +115,9 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
     this.bass = bass_;
     this.instruments = instruments_;
     this.duration = duration_;
-    this.chord_space = ChordSpace.ChordSpaceGroup();
+    this.chord_space = new ChordSpace.ChordSpaceGroup();
     this.chord_space.initialize(this.voices, this.range, this.g);
-    this.score = Silencio.Score();
+    this.score = new Silencio.Score();
     this.hutchinson_operator = new Map();
 };
 
@@ -163,7 +163,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
  */
  ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point) {
     iteration = iteration + 1;
-    if (iteration >== depth) {
+    if (iteration >= depth) {
         // Translate the particular value of chord symmetry to an actual chord,
         // which includes octavewise revoicing and arrangement.
         var chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A);
