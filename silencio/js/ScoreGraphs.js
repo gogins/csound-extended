@@ -132,6 +132,22 @@ ScoreGraphs.ScoreGraph.prototype.add_transformation = function(time, callable) {
     this.hutchinson_operator.set(time, callable);
 };
 
+ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
+
+};
+
+ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
+    for (let [time, point] of this.score_graph) {
+        let chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A).revoicing;
+        chord.setDuration(this.time_step);
+        ChordSpace.insert(this.score, chord, time);
+    }
+    this.score.tieOverlaps();
+    if (true) {
+        console.log(this.score.toCsoundScore());
+    }
+}
+
 /**
  * Recursively computes the score graph, translates the points to chords,
  * translates the chords to notes, adds them to the score, ties overlapping
@@ -156,9 +172,9 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
         this.iterate(depth, iteration, time, point);
     }
     // Rescale the score graph to the bounds of {P, I, T, V, A}.
+    this.rescale_score_graph();
     // Translate each Point in the score graph to a Chord and insert it into the
-    // Score.
-    this.score.tieOverlaps();
+    this.translate_score_graph_to_score();
 };
 
 /**
