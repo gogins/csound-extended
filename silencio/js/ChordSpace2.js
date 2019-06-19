@@ -2444,7 +2444,7 @@ if (typeof console === 'undefined') {
             return {'revoicing': revoicing, 'opti': optti, 'op': op};
         } catch (ex) {
             console.log(ex);
-            throw x;
+            throw ex;
         }
     };
 

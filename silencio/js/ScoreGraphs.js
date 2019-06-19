@@ -31,6 +31,7 @@ var ScoreGraphs = {};
  * clock group).
  */
 ScoreGraphs.Point = function() {
+    this.time = 0;
     this.data = [0, 0, 0, 0, 0];
     Object.defineProperty(this, "P", {
         get: function() {
@@ -81,21 +82,50 @@ ScoreGraphs.Point.prototype.clone = function() {
 };
 
 /**
- * A simple standard transformation. Note that a, b, c, and d are vector-valued
- * with one element for each of P, I, T, V, and A.
+ * A simple standard transformation. Note that X is a scalar for time and both Y
+ * and the scaling factors s are vector values with one element for each of {P,
+ * I, T, V, A}. All transformations must have the X and Y properties.
  */
-ScoreGraphs.BilinearTransformation = function(a, b, c, d) {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-    this.d = d;
+ScoreGraphs.BilinearTransformation = function(X, Y, s) {
+    this.X = X;
+    this.Y = Y;
+    this.s = s;
 };
 
-ScoreGraphs.BilinearTransformation.prototype.apply = function(transformations, time, point) {
+/**
+ * Implements Equation 6.5 of "Bilinear Fractal Interpolation and Box Dimension"
+ * by Barnsley and Massopust (2013). Note that x is time and y is location in
+ * the range. The IFS transformations are calculated from the interpolation
+ * points of the score graph. In theory, these points could be the chords of an
+ * existing piece of music.
+ */
+ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operator, n, point) {
+    let x = point.time;
+    let y = point.data;
+    let N = hutchinson_operator.length;
+    let X_0 = hutchinson_operator[0].X;
+    let Y_0 = hutchinson_operator[0].Y;
+    let s_0 = hutchinson_operator[0].s;
+    let X_N = hutchinson_operator[N - 1].X;
+    let Y_N = hutchinson_operator[N - 1].Y;
+    let s_N = hutchinson_operator[N - 1].s;
+    let X_n = hutchinson_operator[n].X;
+    let Y_n = hutchinson_operator[n].Y;
+    let s_n = hutchinson_operator[n].s;
+    if (n == 0) {
+        var X_n_prior = 0;
+        var Y_n_prior = [0, 0, 0, 0, 0];
+        var s_n_prior = [0, 0, 0, 0, 0];
+    } else {
+        var X_n_prior = hutchinson_operator[n - 1].X;
+        var Y_n_prior = hutchinson_operator[n - 1].Y;
+        var s_n_prior = hutchinson_operator[n - 1].s;
+    }
     let new_point = point.clone();
     for (let i = 0; i < 5; i++) {
-        let y = this.a[i] + this.b[i] * time + this.c[i] * point.data[i] + this.d[i] * time * point.data[i];
-        new_point.data[i] = y;
+        new_point.time = X_n_prior + ((X_n - X_n_prior) / (X_N - X_0)) * (x - X_0);
+        let y_i = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) + (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) * (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
+        new_point.data[i] = y_i;
     }
     return new_point;
 };
@@ -118,29 +148,69 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
     this.duration = duration_;
     this.chord_space = new ChordSpace.ChordSpaceGroup();
     this.chord_space.initialize(this.voices, this.range, this.g);
-    this.hutchinson_operator = new Map();
-    this.score_graph = new Map();
+    this.hutchinson_operator = [];
+    this.score_graph = [];
     this.score = new Silencio.Score();
 };
 
 /**
  * Adds a transformation (the callable) to the Hutchinson operator for this
- * score graph. The callable takes a Point and returns a Point. The
- * transformation should be contractive. There are no other restrictions.
+ * score graph. The callable signature takes a point and returns a new point and
+ * has the following signature:
+ * point = callable(hutchinson_operator, transformation_index, time, point)
+ * Note also that the callable must have a scalar X property for time and a
+ * vector Y property for values for {P, I, T, V, A}.
  */
-ScoreGraphs.ScoreGraph.prototype.add_transformation = function(time, callable) {
-    this.hutchinson_operator.set(time, callable);
+ScoreGraphs.ScoreGraph.prototype.add_transformation = function(callable) {
+    this.hutchinson_operator.push(callable);
 };
 
+/**
+ * Rescales the computed score graph to fit just within the hypercube defined by
+ * the minima and maxima of {P, I, T, V, A}. Time is not affected.
+ */
 ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
-
+    let minima = [...this.score_graph[0].data];
+    let maxima = [...minima];
+    let actual_ranges = [0,0,0,0,0];
+    let target_ranges = [0,0,0,0,0];
+    target_ranges[0] = this.chord_space.countP;
+    target_ranges[1] = this.chord_space.countI;
+    target_ranges[2] = this.chord_space.countT;
+    target_ranges[3] = this.chord_space.countV;
+    target_ranges[4] = this.chord_space.countA;
+    // Find the existing minima and maxima.
+    for (let i = 0; i < this.score_graph.length; i++) {
+        let point = this.score_graph[i];
+        for (let j = 0; j < 5; j++) {
+            if (minima[j] > point.data[j]) {
+                minima[j] = point.data[j];
+            }
+            if (maxima[j] < point.data[j]) {
+                maxima[j] = point.data[j];
+            }
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        actual_ranges[i] = maxima[i] - minima[i];
+    }
+    // Rescale the score graph to the to minima and maxima of {P, I, T, V, A}.
+    for (let i = 0; i < this.score_graph.length; i++) {
+        let point = this.score_graph[i];
+        for (let j = 0; j < 5; j++) {
+            // Move to origin (here, the target minimum is always 0):
+            point.data[j] = point.data[j] - minima[j];
+            // Rescale: value = value * target_range / actual_range.
+            point.data[j] = point.data[j] * (target_ranges[j] / actual_ranges[j]);
+        }
+    }
 };
 
 ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
-    for (let [time, point] of this.score_graph) {
+    for (let point of this.score_graph) {
         let chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A).revoicing;
         chord.setDuration(this.time_step);
-        ChordSpace.insert(this.score, chord, time);
+        ChordSpace.insert(this.score, chord, point.time);
     }
     this.score.tieOverlaps();
     if (true) {
@@ -155,21 +225,20 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
  */
 ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
     // Sort the transformations in the operator by time.
-    this.hutchinson_operator = new Map([...this.hutchinson_operator.entries()].sort());
-    this.transformations = Array.from(this.hutchinson_operator.entries());
-    this.time_0 = this.transformations[0][0];
-    this.time_N = this.transformations[this.hutchinson_operator.size - 1][0];
+    this.hutchinson_operator.sort(function(a, b){ return a.X - b.X});
+    this.time_0 = this.hutchinson_operator[0].X;
+    this.time_N = this.hutchinson_operator[this.hutchinson_operator.length - 1].X;
     let interval = this.time_N - this.time_0;
     this.time_step = interval / time_steps;
-    this.score_graph.clear();
+    this.score_graph.length = 0;
     this.score.clear();
     // Map the operator over the time interval. This is similar to computing the
     // attractor of an IFS with the deterministic algorithm.
     for (let i = 0; i < time_steps; i++) {
         iteration = 0;
-        let time = this.time_0 + i * this.time_step;
         let point = new ScoreGraphs.Point();
-        this.iterate(depth, iteration, time, point);
+        point.time = this.time_0 + i * this.time_step;
+        this.iterate(depth, iteration, point);
     }
     // Rescale the score graph to the bounds of {P, I, T, V, A}.
     this.rescale_score_graph();
@@ -185,24 +254,15 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
  * TODO: Add characteristic function to implement **local** iterated function
  * systems.
  */
- ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, time, point) {
+ ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, point) {
     iteration = iteration + 1;
     if (iteration >= depth) {
-        this.score_graph.set(time, point);
+        this.score_graph.push(point);
     } else {
-        // Subdivide the domain (time) and contract the range (the chord
-        // symmetry space) of each sub-domain.
-        let time_prior_i = this.time_0;
-        for (let [time_i, transformation] of this.hutchinson_operator) {
-            time = time_prior_i + ((time_i - time_prior_i) / (this.time_N - this.time_0)) * (time - this.time_0);
-            time_prior_i = time_i;
-            // The entire Hutchinson operator is passed into the invocation of
-            // each transformation that belongs to the operator. This is
-            // necessary for properly subdividing and rescaling the domain and
-            // range for each transformation.
-            point = transformation.apply(this.transformations, time, point);
-            // Recurse...
-            this.iterate(depth, iteration, time, point);
+        for (let transformation_i = 0; transformation_i < this.hutchinson_operator.length; transformation_i++) {
+            let transformation = this.hutchinson_operator[transformation_i];
+            point = transformation.apply(this.hutchinson_operator, transformation_i, point);
+            this.iterate(depth, iteration, point);
         }
     }
 };
