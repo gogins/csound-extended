@@ -174,6 +174,7 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
     let maxima = [...minima];
     let actual_ranges = [0,0,0,0,0];
     let target_ranges = [0,0,0,0,0];
+    let scale_factors = [000,0,0,0];
     target_ranges[0] = this.chord_space.countP;
     target_ranges[1] = this.chord_space.countI;
     target_ranges[2] = this.chord_space.countT;
@@ -193,6 +194,11 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
     }
     for (i = 0; i < 5; i++) {
         actual_ranges[i] = maxima[i] - minima[i];
+        if(actual_ranges[i] == 0.0) {
+            scale_factors[i] = 1;
+        } else {
+            scale_factors[i] = target_ranges[i] / actual_ranges[i];
+        }
     }
     // Rescale the score graph to the to minima and maxima of {P, I, T, V, A}.
     for (let i = 0; i < this.score_graph.length; i++) {
@@ -201,18 +207,28 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
             // Move to origin (here, the target minimum is always 0):
             point.data[j] = point.data[j] - minima[j];
             // Rescale: value = value * target_range / actual_range.
-            point.data[j] = point.data[j] * (target_ranges[j] / actual_ranges[j]);
+            // In order to generate chords from the chord space group, the
+            // values must be integers.
+            point.data[j] = Math.round(point.data[j] * scale_factors[j]);
         }
     }
 };
 
 ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
-    for (let point of this.score_graph) {
+    for (let i = 0; i < this.score_graph.length; i++) {
+        let point = this.score_graph[i];
         let chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A).revoicing;
         chord.setDuration(this.time_step);
+        // A nominal velocity so tieing overlaps will work.
+        chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
     }
     this.score.tieOverlaps();
+    for (let i = 0; i < this.score_graph.length; i++) {
+        let key = this.score_graph[i].key;
+        this.score_graph[i].key = this.bass + key;
+    }
+    this.score.setDuration(this.duration);
     if (true) {
         console.log(this.score.toCsoundScore());
     }
