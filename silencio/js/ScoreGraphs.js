@@ -113,17 +113,18 @@ ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operato
     let Y_n = hutchinson_operator[n].Y;
     let s_n = hutchinson_operator[n].s;
     if (n == 0) {
-        var X_n_prior = 0;
-        var Y_n_prior = [0, 0, 0, 0, 0];
-        var s_n_prior = [0, 0, 0, 0, 0];
+        var X_n_prior = 0.;
+        var Y_n_prior = [0., 0., 0., 0., 0.];
+        var s_n_prior = [0., 0., 0., 0., 0.];
     } else {
         var X_n_prior = hutchinson_operator[n - 1].X;
         var Y_n_prior = hutchinson_operator[n - 1].Y;
         var s_n_prior = hutchinson_operator[n - 1].s;
     }
     let new_point = point.clone();
+    new_point.time = X_n_prior + (((X_n - X_n_prior) / (X_N - X_0)) * (x - X_0));
+    csound.message("  new_point.time: " + new_point.time + "\n")
     for (let i = 0; i < 5; i++) {
-        new_point.time = X_n_prior + ((X_n - X_n_prior) / (X_N - X_0)) * (x - X_0);
         let y_i = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) + (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) * (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
         new_point.data[i] = y_i;
     }
@@ -254,6 +255,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
         iteration = 0;
         let point = new ScoreGraphs.Point();
         point.time = this.time_0 + i * this.time_step;
+        csound.message("point.time: " + point.time + "\n");
         this.iterate(depth, iteration, point);
     }
     // Rescale the score graph to the bounds of {P, I, T, V, A}.
