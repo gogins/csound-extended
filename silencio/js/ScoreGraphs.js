@@ -77,6 +77,7 @@ ScoreGraphs.Point = function() {
 
 ScoreGraphs.Point.prototype.clone = function() {
     let other = new ScoreGraphs.Point();
+    other.time = this.time;
     other.data = [...this.data];
     return other;
 };
@@ -220,14 +221,17 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         let point = this.score_graph[i];
         let chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A).revoicing;
         chord.setDuration(this.time_step);
-        // A nominal velocity so tieing overlaps will work.
+        // A nominal velocity so that tieing overlaps will work.
         chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
     }
     this.score.tieOverlaps();
-    for (let i = 0; i < this.score_graph.length; i++) {
-        let key = this.score_graph[i].key;
-        this.score_graph[i].key = this.bass + key;
+    for (let i = 0; i < this.score.size(); i++) {
+        let note = this.score.data[i];
+        let key = note.key;
+        note.key = this.bass + key;
+        let channel = note.channel;
+        note.channel = 1 + channel;
     }
     this.score.setDuration(this.duration);
     if (true) {
@@ -272,14 +276,14 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
  * TODO: Add characteristic function to implement **local** iterated function
  * systems.
  */
- ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, point) {
+ ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, point_) {
     iteration = iteration + 1;
     if (iteration >= depth) {
         this.score_graph.push(point);
     } else {
         for (let transformation_i = 0; transformation_i < this.hutchinson_operator.length; transformation_i++) {
             let transformation = this.hutchinson_operator[transformation_i];
-            point = transformation.apply(this.hutchinson_operator, transformation_i, point);
+            point = transformation.apply(this.hutchinson_operator, transformation_i, point_);
             this.iterate(depth, iteration, point);
         }
     }
