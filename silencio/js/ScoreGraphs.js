@@ -82,9 +82,14 @@ ScoreGraphs.Point.prototype.clone = function() {
     return other;
 };
 
+ScoreGraphs.Point.prototype.to_string = function() {
+    let text = sprintf("Point: t: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", this.time, this.P, this.I, this.T, this.V, this.A);
+    return text;
+}
+
 /**
  * A simple standard transformation. Note that X is a scalar for time and both Y
- * and the scaling factors s are vector values with one element for each of {P,
+ *%9.4f  and the scaling factors s are vector values with one element for each of {P,
  * I, T, V, A}. All transformations must have the X and Y properties.
  */
 ScoreGraphs.BilinearTransformation = function(X, Y, s) {
@@ -103,32 +108,25 @@ ScoreGraphs.BilinearTransformation = function(X, Y, s) {
 ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operator, n, point) {
     let x = point.time;
     let y = point.data;
-    let N = hutchinson_operator.length;
+    let N = hutchinson_operator.length - 1;
     let X_0 = hutchinson_operator[0].X;
     let Y_0 = hutchinson_operator[0].Y;
     let s_0 = hutchinson_operator[0].s;
-    let X_N = hutchinson_operator[N - 1].X;
-    let Y_N = hutchinson_operator[N - 1].Y;
-    let s_N = hutchinson_operator[N - 1].s;
+    let X_N = hutchinson_operator[N].X;
+    let Y_N = hutchinson_operator[N].Y;
+    let s_N = hutchinson_operator[N].s;
+    let X_n_prior = hutchinson_operator[n - 1].X;
+    let Y_n_prior = hutchinson_operator[n - 1].Y;
+    let s_n_prior = hutchinson_operator[n - 1].s;
     let X_n = hutchinson_operator[n].X;
     let Y_n = hutchinson_operator[n].Y;
     let s_n = hutchinson_operator[n].s;
-    if (n == 0) {
-        var X_n_prior = 0.;
-        var Y_n_prior = [0., 0., 0., 0., 0.];
-        var s_n_prior = [0., 0., 0., 0., 0.];
-    } else {
-        var X_n_prior = hutchinson_operator[n - 1].X;
-        var Y_n_prior = hutchinson_operator[n - 1].Y;
-        var s_n_prior = hutchinson_operator[n - 1].s;
-    }
     let new_point = point.clone();
     new_point.time = X_n_prior + (((X_n - X_n_prior) / (X_N - X_0)) * (x - X_0));
-    csound.message("  new_point.time: " + new_point.time + "\n")
     for (let i = 0; i < 5; i++) {
-        let y_i = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) + (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) * (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
-        new_point.data[i] = y_i;
+        new_point.data[i] = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) + (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) * (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
     }
+    csound.message("new_point: " + new_point.to_string() + "\n")
     return new_point;
 };
 
@@ -137,7 +135,12 @@ ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operato
  * of I instrument numbers and a total duration of the score in seconds. g is
  * the generator of transposition.
  */
-ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, g_) {
+ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, g_) {
+    if (typeof tie_overlaps_ == "undefined") {
+        this.tie_overlaps = true;
+    } else {
+        this.tie_overlaps = tie_overlaps_;
+    }
     if (typeof g_ == "undefined") {
         this.g = 1;
     } else {
@@ -158,10 +161,10 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
 /**
  * Adds a transformation (the callable) to the Hutchinson operator for this
  * score graph. The callable signature takes a point and returns a new point and
- * has the following signature:
- * point = callable(hutchinson_operator, transformation_index, time, point)
- * Note also that the callable must have a scalar X property for time and a
- * vector Y property for values for {P, I, T, V, A}.
+ * has the following signature: point = callable(hutchinson_operator,
+ * data_point_index, time, point) Note also that the callable must have a
+ * scalar X property for time and a vector Y property for values for {P, I, T,
+ * V, A}. These represent a point on the graph of the score function.
  */
 ScoreGraphs.ScoreGraph.prototype.add_transformation = function(callable) {
     this.hutchinson_operator.push(callable);
@@ -176,7 +179,7 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
     let maxima = [...minima];
     let actual_ranges = [0,0,0,0,0];
     let target_ranges = [0,0,0,0,0];
-    let scale_factors = [000,0,0,0];
+    let scale_factors = [0,0,0,0,0];
     target_ranges[0] = this.chord_space.countP;
     target_ranges[1] = this.chord_space.countI;
     target_ranges[2] = this.chord_space.countT;
@@ -217,15 +220,20 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
 };
 
 ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
+    this.score_graph.sort(function(a, b) {return a.time - b.time});
     for (let i = 0; i < this.score_graph.length; i++) {
         let point = this.score_graph[i];
+        csound.message(point.to_string());
         let chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A).revoicing;
+        csound.message("chord: " + chord.toString() + "\n");
         chord.setDuration(this.time_step);
         // A nominal velocity so that tieing overlaps will work.
         chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
     }
-    this.score.tieOverlaps();
+    if (this.tie_overlaps == true) {
+        this.score.tieOverlaps();
+    }
     for (let i = 0; i < this.score.size(); i++) {
         let note = this.score.data[i];
         let key = note.key;
@@ -263,7 +271,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
         this.iterate(depth, iteration, point);
     }
     // Rescale the score graph to the bounds of {P, I, T, V, A}.
-    this.rescale_score_graph();
+    //this.rescale_score_graph();
     // Translate each Point in the score graph to a Chord and insert it into the
     this.translate_score_graph_to_score();
 };
@@ -279,13 +287,13 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
  ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, point_) {
     iteration = iteration + 1;
     if (iteration >= depth) {
-        this.score_graph.push(point);
-    } else {
-        for (let transformation_i = 0; transformation_i < this.hutchinson_operator.length; transformation_i++) {
-            let transformation = this.hutchinson_operator[transformation_i];
-            point = transformation.apply(this.hutchinson_operator, transformation_i, point_);
-            this.iterate(depth, iteration, point);
-        }
+        this.score_graph.push(point_.clone());
+        return;
+    }
+    for (let data_point_index = 1; data_point_index < this.hutchinson_operator.length; data_point_index++) {
+        let transformation = this.hutchinson_operator[data_point_index];
+        let point = transformation.apply(this.hutchinson_operator, data_point_index, point_);
+        this.iterate(depth, iteration, point);
     }
 };
 
