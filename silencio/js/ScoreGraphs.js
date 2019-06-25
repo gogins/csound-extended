@@ -124,9 +124,10 @@ ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operato
     let new_point = point.clone();
     new_point.time = X_n_prior + (((X_n - X_n_prior) / (X_N - X_0)) * (x - X_0));
     for (let i = 0; i < 5; i++) {
-        new_point.data[i] = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) + (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) * (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
+        new_point.data[i] = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) +
+        (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) *
+        (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
     }
-    csound.message("new_point: " + new_point.to_string() + "\n")
     return new_point;
 };
 
@@ -135,11 +136,16 @@ ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operato
  * of I instrument numbers and a total duration of the score in seconds. g is
  * the generator of transposition.
  */
-ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, g_) {
+ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {
         this.tie_overlaps = tie_overlaps_;
+    }
+    if (typeof rescale_ == "undefined") {
+        this.rescale = false;
+    } else {
+        this.rescale = rescale_;
     }
     if (typeof g_ == "undefined") {
         this.g = 1;
@@ -219,18 +225,33 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
     }
 };
 
+ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
+    let note_set = new Silencio.ValueSet(function(a) {return a.toString()});
+    for (let i = 0; i < this.score.size(); i++) {
+        note_set.add(this.score.data[i]);
+    }
+    this.score.clear();
+    this.score.data = [...note_set.values()];
+}
+
 ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
     this.score_graph.sort(function(a, b) {return a.time - b.time});
     for (let i = 0; i < this.score_graph.length; i++) {
         let point = this.score_graph[i];
-        csound.message(point.to_string());
-        let chord = this.chord_space.toChord(point.P, point.I, point.T, point.V, point.A).revoicing;
-        csound.message("chord: " + chord.toString() + "\n");
+        let P = Math.round(point.P);
+        let I = Math.round(point.I);
+        let T = Math.round(point.T);
+        let V = Math.round(point.V);
+        let A = Math.round(point.A);
+        let chord = this.chord_space.toChord(P, I, T, V, A).revoicing;
+        csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
+        csound.message(        "         chord:   " + chord.toString() + "\n");
         chord.setDuration(this.time_step);
         // A nominal velocity so that tieing overlaps will work.
         chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
     }
+    this.remove_duplicate_notes();
     if (this.tie_overlaps == true) {
         this.score.tieOverlaps();
     }
@@ -242,9 +263,6 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         note.channel = 1 + channel;
     }
     this.score.setDuration(this.duration);
-    if (true) {
-        console.log(this.score.toCsoundScore());
-    }
 }
 
 /**
@@ -267,12 +285,11 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
         iteration = 0;
         let point = new ScoreGraphs.Point();
         point.time = this.time_0 + i * this.time_step;
-        csound.message("point.time: " + point.time + "\n");
         this.iterate(depth, iteration, point);
     }
-    // Rescale the score graph to the bounds of {P, I, T, V, A}.
-    //this.rescale_score_graph();
-    // Translate each Point in the score graph to a Chord and insert it into the
+    if (this.rescale == true) {
+        this.rescale_score_graph();
+    }
     this.translate_score_graph_to_score();
 };
 

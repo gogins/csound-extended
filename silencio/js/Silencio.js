@@ -36,9 +36,9 @@ Web browser's JavaScript context. To use Silencio in blue:
 
 /**
  * /page Silencio
- * 
- * Silencio is a port to JavaScript of parts of CsoundAC, and has taken on a 
- * life of its own, particularly for the production of interfactive pieces 
+ *
+ * Silencio is a port to JavaScript of parts of CsoundAC, and has taken on a
+ * life of its own, particularly for the production of interfactive pieces
  * with user interfaces, and visual music.
  *
  */
@@ -241,8 +241,8 @@ if (typeof console === 'undefined') {
     }
 
     function Event() {
-        // ID collisions should be rare. IDs will be used e.g. 
-        // in tieing notes or in working around Csound quirks 
+        // ID collisions should be rare. IDs will be used e.g.
+        // in tieing notes or in working around Csound quirks
         // with indefinite notes.
         this.id = Math.random() / 2.0;
         this.data = [0, 0, 144, 0, 0, 0, 0, 0, 0, 0, 1];
@@ -405,7 +405,7 @@ if (typeof console === 'undefined') {
     };
 
     /**
-     * For turning an event off; the default is with immediate effect, 
+     * For turning an event off; the default is with immediate effect,
      * otherwise at the scheduled time.
      */
     Event.prototype.toDStatement = function(scheduled) {
@@ -444,7 +444,7 @@ if (typeof console === 'undefined') {
 
     Event.prototype.clone = function(clone_chord) {
         if (typeof clone_chord === 'undefined') {
-            clone_chord = false; 
+            clone_chord = false;
         }
         other = new Event();
         other.data = this.data.slice(0);
@@ -1489,8 +1489,9 @@ if (typeof console === 'undefined') {
         this.map.size = count;
     };
 
-    ValueSet.prototype.add = function(value) {
-        this.map.set(this.make_key(value), value);
+    ValueSet.prototype.add = function(value_) {
+        let key_ = this.make_key(value_);
+        this.map.set(key_, value_);
         return this;
     };
 
