@@ -2387,7 +2387,7 @@ if (typeof console === 'undefined') {
      * voices, instruments is an array of instrument numbers.
      */
     ChordSpace.arrange = function(chord, A, instruments) {
-        arrangement = arrangementForIndex(instruments, this.voices, A);
+        let arrangement = arrangementForIndex(instruments, chord.size(), A);
         for (var voice = 0; voice < chord.size(); voice++) {
             chord.channel[voice] = arrangement[voice];
         }
