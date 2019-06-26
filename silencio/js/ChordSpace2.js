@@ -2387,9 +2387,9 @@ if (typeof console === 'undefined') {
      * voices, instruments is an array of instrument numbers.
      */
     ChordSpace.arrange = function(chord, A, instruments) {
-        arrangement = arrangementForIndex(instruments, A);
-        for (var voice = 0; voice < chord.size(); i++) {
-            chord.setChannel(voice, arrangement[voice]);
+        arrangement = arrangementForIndex(instruments, this.voices, A);
+        for (var voice = 0; voice < chord.size(); voice++) {
+            chord.channel[voice] = arrangement[voice];
         }
     }
 
@@ -2439,7 +2439,7 @@ if (typeof console === 'undefined') {
             }
             A = A % this.countA;
             if (typeof this.instruments != 'undefined') {
-                ChordSpace.arrange(revoicing, A, instruments);
+                ChordSpace.arrange(revoicing, A, this.instruments);
             }
             return {'revoicing': revoicing, 'opti': optti, 'op': op};
         } catch (ex) {
@@ -2609,6 +2609,7 @@ if (typeof console === 'undefined') {
         console.log("ChordSpaceGroup.prototype.initialize...");
         this.voices = typeof voices !== 'undefined' ? voices : 3;
         this.range = typeof range !== 'undefined' ? range : 60;
+        this.instruments = typeof instruments !== 'undefined' ? instruments : [1];
         this.g = typeof g !== 'undefined' ? g : 1;
         this.countP = 0;
         this.countI = 2;
@@ -2616,11 +2617,7 @@ if (typeof console === 'undefined') {
         var chord = new ChordSpace.Chord();
         chord.resize(voices);
         this.countV = ChordSpace.octavewiseRevoicings(chord, this.range);
-        if (typeof this.instruments != 'undefined') {
-            this.countA = math.pow(this.instruments.length, this.voices);
-        } else {
-            this.countA = 1;
-        }
+        this.countA = Math.pow(this.instruments.length, this.voices);
         this.indexesForOptis = {};
         var result = ChordSpace.allOfEquivalenceClass(voices, 'OPTTI');
         this.optisForIndexes = result.array;

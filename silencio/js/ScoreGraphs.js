@@ -158,7 +158,7 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
     this.instruments = instruments_;
     this.duration = duration_;
     this.chord_space = new ChordSpace.ChordSpaceGroup();
-    this.chord_space.initialize(this.voices, this.range, this.g);
+    this.chord_space.initialize(this.voices, this.range, this.instruments, this.g);
     this.hutchinson_operator = [];
     this.score_graph = [];
     this.score = new Silencio.Score();
@@ -270,7 +270,7 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
     }
     this.remove_duplicate_notes();
     if (this.tie_overlaps == true) {
-        this.score.tieOverlaps();
+        this.score.tieOverlaps(true);
     }
     for (let i = 0; i < this.score.size(); i++) {
         let note = this.score.data[i];
