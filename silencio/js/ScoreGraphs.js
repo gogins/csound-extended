@@ -226,26 +226,43 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
 };
 
 ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
+    csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
     let note_set = new Silencio.ValueSet(function(a) {return a.toString()});
     for (let i = 0; i < this.score.size(); i++) {
         note_set.add(this.score.data[i]);
     }
     this.score.clear();
     this.score.data = [...note_set.values()];
+    csound.message(sprintf("After removing duplicate notes:  %6d\n", this.score.size()));
 }
 
 ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
     this.score_graph.sort(function(a, b) {return a.time - b.time});
+    this.time_step = 0;
+    let point = null;
+    let prior_point = null;
+    let timestep_count = 0;
+    let timestep_sum = 0;
+    for (let i = 1; i < this.score_graph.length; i++) {
+        prior_point = this.score_graph[i - 1];
+        point = this.score_graph[i];
+        let delta_time = point.time - prior_point.time;
+        if (delta_time != 0) {
+            timestep_sum = timestep_sum + delta_time;
+            timestep_count = timestep_count + 1;
+        }
+    }
+    this.time_step = timestep_sum / timestep_count;
     for (let i = 0; i < this.score_graph.length; i++) {
-        let point = this.score_graph[i];
+        point = this.score_graph[i];
         let P = Math.round(point.P);
         let I = Math.round(point.I);
         let T = Math.round(point.T);
         let V = Math.round(point.V);
         let A = Math.round(point.A);
         let chord = this.chord_space.toChord(P, I, T, V, A).revoicing;
-        csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
-        csound.message(        "         chord:   " + chord.toString() + "\n");
+        // csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
+        // csound.message(        "         chord:   " + chord.toString() + "\n");
         chord.setDuration(this.time_step);
         // A nominal velocity so that tieing overlaps will work.
         chord.setVelocity(80);
