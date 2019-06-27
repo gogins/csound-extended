@@ -679,35 +679,44 @@ if (typeof console === 'undefined') {
         var laterEvent;
         var earlierI;
         var earlierEvent;
+        let temporary_score = [];
         // Get rid of notes that will not sound.
-        for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
-            laterEvent = this.data[laterI];
-            if (laterEvent.status === 144) {
-                if ((laterEvent.duration <= 0) || (laterEvent.velocity <= 0)) {
-                    this.data.splice(laterI, 1);
-                }
+        /*
+        0 Time in seconds from start of performance.
+        1 Duration in seconds, -1 is "indefinite."
+        2 MIDI status (only the most significant nybble, e.g. 144 for 'NOTE ON').
+        3 MIDI channel (any real number, fractional part ties events,
+          negative is 'NOTE OFF').
+        4 MIDI key number from 0 to 127, 60 is middle C (a real number).
+        5 MIDI velocity from 0 to 127, 80 is mezzo-forte (a real number).
+       */
+        for (let event of this.data) {
+            if (event.data[1] > 0 && event.data[5] > 0) {
+                temporary_score.push(event)
             }
         }
-        for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
-            laterEvent = this.data[laterI];
-            if (laterEvent.status === 144) {
+        for (laterI = temporary_score.length - 1; laterI >= 0; laterI--) {
+            laterEvent = temporary_score[laterI];
+            if (laterEvent.data[2] === 144) {
                 for (earlierI = laterI - 1; earlierI >= 0; earlierI--) {
-                    earlierEvent = this.data[earlierI];
-                    if (earlierEvent.status === 144) {
+                    earlierEvent = temporary_score[earlierI];
+                    if (earlierEvent.data[2] === 144) {
                         var overlaps = false;
+                        let earlier_event_end = earlierEvent.data[0] + earlierEvent.data[1];
+                        let later_event_end = laterEvent.data[0] + laterEvent.data[1];
                         if (tieExact) {
-                            overlaps = ge_epsilon(earlierEvent.end, laterEvent.time);
+                            overlaps = ge_epsilon(earlier_event_end, laterEvent.data[0]);
                         } else {
-                            overlaps = gt_epsilon(earlierEvent.end, laterEvent.time);
+                            overlaps = gt_epsilon(earlier_event_end, laterEvent.data[0]);
                         }
                         if (overlaps === true) {
-                            if ((Math.floor(earlierEvent.channel) === Math.floor(laterEvent.channel)) &&
-                                (Math.round(earlierEvent.key) === Math.round(laterEvent.key))) {
+                            if ((Math.floor(earlierEvent.data[3]) === Math.floor(laterEvent.data[3])) &&
+                                (Math.round(earlierEvent.data[4]) === Math.round(laterEvent.data[4]))) {
                                 //console.log('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
                                 //console.log('    to: ' + laterI + ' ' + laterEvent.toString());
-                                earlierEvent.end = laterEvent.end;
-                                laterEvent.duration = 0;
-                                laterEvent.velocity = 0;
+                                earlierEvent.data[2] = later_event_end - earlierEvent.data[0];
+                                laterEvent.data[2] = 0;
+                                laterEvent.data[5] = 0;
                                 //console.log('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
                                 break;
                             }
@@ -717,12 +726,10 @@ if (typeof console === 'undefined') {
             }
         }
         // Get rid of notes that will not sound (again).
-        for (laterI = this.data.length - 1; laterI >= 0; laterI--) {
-            laterEvent = this.data[laterI];
-            if (laterEvent.status === 144) {
-                if ((laterEvent.duration <= 0) || (laterEvent.velocity <= 0)) {
-                    this.data.splice(laterI, 1);
-                }
+        this.clear();
+        for (let event of temporary_score) {
+            if (event.data[1] > 0 && event.data[5] > 0) {
+                this.append(event)
             }
         }
         csound.Message("After tieing: " + this.data.length + "\n");
