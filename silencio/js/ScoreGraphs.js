@@ -101,9 +101,9 @@ ScoreGraphs.BilinearTransformation = function(X, Y, s) {
 /**
  * Implements Equation 6.5 of "Bilinear Fractal Interpolation and Box Dimension"
  * by Barnsley and Massopust (2013). Note that x is time and y is location in
- * the range. The IFS transformations are calculated from the interpolation
- * points of the score graph. In theory, these points could be the chords of an
- * existing piece of music.
+ * the range. The IFS transformations, which are bilinear transforms, are
+ * calculated from the interpolation points of the score graph. In theory, these
+ * points could be the chords of an existing piece of music.
  */
 ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operator, n, point) {
     let x = point.time;
@@ -132,7 +132,7 @@ ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operato
 };
 
 /**
- * Initialize the ScoreGroup for N voices in a range of MIDI keys for a vector
+ * Initialize the ScoreGraph for N voices in a range of MIDI keys for a vector
  * of I instrument numbers and a total duration of the score in seconds. g is
  * the generator of transposition.
  */
@@ -168,7 +168,7 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
  * Adds a transformation (the callable) to the Hutchinson operator for this
  * score graph. The callable signature takes a point and returns a new point and
  * has the following signature: point = callable(hutchinson_operator,
- * data_point_index, time, point) Note also that the callable must have a
+ * data_point_index, time, point). Note also that the callable must have a
  * scalar X property for time and a vector Y property for values for {P, I, T,
  * V, A}. These represent a point on the graph of the score function.
  */
@@ -274,10 +274,10 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
     }
     for (let i = 0; i < this.score.size(); i++) {
         let note = this.score.data[i];
-        let key = note.key;
-        note.key = this.bass + key;
-        let channel = note.channel;
-        note.channel = 1 + channel;
+        let key = note.data[4];
+        note.data[4] = this.bass + key;
+        let channel = note.data[3];
+        note.data[3] = 1 + channel;
     }
     this.score.setDuration(this.duration);
 }
