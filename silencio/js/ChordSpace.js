@@ -1271,9 +1271,9 @@ if (typeof console === 'undefined') {
     };
     Chord.prototype.iseOPTTI = function() {
         var result = this.iseRPTTI(ChordSpace.OCTAVE);
-        if (result === true) {
-            console.log('Chord.prototype.iseOPTTI: ' + this + ' ' + result);
-        }
+        //if (result === true) {
+        //    console.log('Chord.prototype.iseOPTTI: ' + this + ' ' + result);
+        //}
         return result;
     };
 
@@ -2578,6 +2578,7 @@ if (typeof console === 'undefined') {
             console.log(sprintf('ChordSpaceGroup.countI: %8d', this.countI));
             console.log(sprintf('ChordSpaceGroup.countT: %8d', this.countT));
             console.log(sprintf('ChordSpaceGroup.countV: %8d', this.countV));
+            console.log(sprintf('ChordSpaceGroup.countA: %8d', this.countA));
         }
         var index;
         var voicing_index;

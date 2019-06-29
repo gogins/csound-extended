@@ -263,7 +263,7 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         let chord = this.chord_space.toChord(P, I, T, V, A).revoicing;
         // csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
         // csound.message(        "         chord:   " + chord.toString() + "\n");
-        chord.setDuration(this.time_step);
+        chord.setDuration(this.time_step * this.duration_scale_factor);
         // A nominal velocity so that tieing overlaps will work.
         chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
@@ -287,8 +287,13 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
  * translates the chords to notes, adds them to the score, ties overlapping
  * notes in the score, and rescales the score.
  */
-ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps) {
+ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration_scale_factor) {
     // Sort the transformations in the operator by time.
+    if (typeof duration_scale_factor == 'undefined') {
+        this.duration_scale_factor = 1;
+    } else {
+        this.duration_scale_factor = duration_scale_factor;
+    }
     this.hutchinson_operator.sort(function(a, b){ return a.X - b.X});
     this.time_0 = this.hutchinson_operator[0].X;
     this.time_N = this.hutchinson_operator[this.hutchinson_operator.length - 1].X;

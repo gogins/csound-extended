@@ -714,8 +714,8 @@ if (typeof console === 'undefined') {
                                 (Math.round(earlierEvent.data[4]) === Math.round(laterEvent.data[4]))) {
                                 //console.log('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
                                 //console.log('    to: ' + laterI + ' ' + laterEvent.toString());
-                                earlierEvent.data[2] = later_event_end - earlierEvent.data[0];
-                                laterEvent.data[2] = 0;
+                                earlierEvent.data[1] = later_event_end - earlierEvent.data[0];
+                                laterEvent.data[1] = 0;
                                 laterEvent.data[5] = 0;
                                 //console.log('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
                                 break;
