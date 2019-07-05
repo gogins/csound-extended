@@ -715,7 +715,7 @@ PUBLIC int csoundModuleDestroy(CSOUND *csound) {
     delete lua_states_for_threads;
     lua_states_for_threads = nullptr;
     csound->UnlockMutex(lua_states_mutex);
-    csound->DestroyMutex(lua_states_mutex);
+    //csound->DestroyMutex(lua_states_mutex);
     lua_states_mutex = 0;
   }
   void *reference_keys_mutex = 0;
@@ -732,7 +732,7 @@ PUBLIC int csoundModuleDestroy(CSOUND *csound) {
         luaReferenceKeys = nullptr;
     }
     csound->UnlockMutex(reference_keys_mutex);
-    csound->DestroyMutex(reference_keys_mutex);
+    //csound->DestroyMutex(reference_keys_mutex);
     reference_keys_mutex = 0;
   }
   return OK;

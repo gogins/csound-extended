@@ -280,6 +280,10 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         note.data[3] = 1 + channel;
     }
     this.score.setDuration(this.duration);
+    for (let i = 0; i < this.score.size(); i++) {
+        let note = this.score.data[i];
+        note.data[0] = note.data[0] + 2;
+    }
 }
 
 /**
@@ -309,6 +313,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration
         point.time = this.time_0 + i * this.time_step;
         this.iterate(depth, iteration, point);
     }
+    csound.message("Generated " + this.score_graph.length + " points.\n");
     if (this.rescale == true) {
         this.rescale_score_graph();
     }

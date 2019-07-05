@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-05-10T20:23:19.379572726"/>
+	<meta name="changed" content="2019-07-03T12:13:03.695538273"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -33,7 +33,7 @@ Csound for Android
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <i><b>Michael Gogins</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-<i><b>10 May 2019</b></i></p>
+<i><b>3 July 2019</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <br/>
 
@@ -66,32 +66,28 @@ version of Csound for Android features many changes and improvements:</p>
 	and performing.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	The <i><b>Csound Reference Manual</b></i> appears in its own tab.</p>
-	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The <i><b>Csound Reference Manual</b></i> appears in its own tab.<!-- <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	Embeddable Common Lisp is available, as well as the nudruz and
 	Common Music libraries, to support algorithmic composition in Common
-	Lisp.</p>
-	<li/>
-<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	Lisp.</p> --><!-- <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The software repository and build system have been simplified.
 	Csound for Android and all native libraries and other dependencies
-	are built directly from Android Studio.</p>
+	are built directly from Android Studio.</p> --></p>
 </ul>
 <h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 Introduction</h1>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Csound for Android app is an Android version of Csound, an audio and
 music synthesis and processing language of great power, created by
-Barry Vercoe in 1984, maintained with complete backward compatibility
-since then, and widely used and taught for the creation of
-electroacoustic and computer music. Desite its age, Csound continues
-to be actively developed. It has many advanced features for sound
-synthesis including user-designable instruments, an easy to learn
-programming language with a type system, several phase vocoders,
-several sample players, a plethora of digital oscillators, filters,
-and envelope generators, and transparent multi-threading for high
-performance on multi-core systems.</p>
+Barry Vercoe in 1984, maintained with almost complete backward
+compatibility since then, and widely used and taught for the creation
+of electroacoustic and computer music. Desite its age, Csound
+continues to be actively developed. It has many advanced features for
+sound synthesis including user-designable instruments, an easy to
+learn programming language with a type system, several phase
+vocoders, several sample players, a plethora of digital oscillators,
+filters, and envelope generators, and transparent multi-threading for
+high performance on multi-core systems.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Csound for Android app is by Victor Lazzarini, Steven Yi, Michael
 Gogins, and others. The app contains virtually all of Csound,
@@ -119,18 +115,18 @@ including some of the more frequently used plugin opcodes:</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The Doppler opcode.</p>
 </ul>
-<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">In
+<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+<!-- <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">In
 addition, Csound for Android now includes Embeddable Common Lisp
 along with the nudruz and Common Music libraries to support
-algorithmic composition in Lisp.</p>
-<h1 class="western" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-User Interface</h1>
+algorithmic composition in Lisp.</p> -->User
+Interface</h1>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Csound for Android user interface uses tabs for easy and swift
 changes of context, for example between editing and performing. All
 tabs share the app’s builtin instance of Csound. This enables, for
 example, a piece to be written in HTML5 but utilize the builtin
-widgets, execute Common Lisp code, and so forth. The tabs are:</p>
+widgets, and so forth. The tabs are:</p>
 <ul>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
@@ -177,10 +173,9 @@ task menu of Csound for Android provides the following functions:
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Open</b></i> – Opens a file for editing. The file can be a
-	Csound .csd file, an HTML5 .html file, or a Common Lisp .lisp file.
-	Each of these languages has access to the same instance of Csound
-	that is exposed in the HTML tab or to the widgets in the Widgets
-	tab.</p>
+	Csound .csd file, or an HTML5 .html file. Each of these languages
+	has access to the same instance of Csound that is exposed in the
+	HTML tab or to the widgets in the Widgets tab.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Save as...</b></i> <span style="font-variant: normal">–
@@ -197,9 +192,7 @@ task menu of Csound for Android provides the following functions:
 	performance; if Csound is running, stops the performance. If the
 	file is an .html file, it is reloaded in the HTML tab which has
 	access to a Csound object encapsulating the app’s builtin instance
-	of Csound. If the file is a .lisp file, it is executed by an
-	embedded Common Lisp runtime that has access to the app’s instance
-	of Csound as a native pointer. If the Csound options include <font face="Courier New, monospace">-odac</font><font face="Liberation Serif, serif">,
+	of Csound. If the Csound options include <font face="Courier New, monospace">-odac</font><font face="Liberation Serif, serif">,
 	Csound's audio output will go to the device audio output. If the
 	element contains </font><font face="Courier New, monospace">-osoundfilename</font><font face="Liberation Serif, serif">,
 	Csound's audio output will go to the file </font><font face="Courier New, monospace">soundfilename</font><font face="Liberation Serif, serif">,
@@ -224,7 +217,11 @@ task menu of Csound for Android provides the following functions:
 	<li/>
 <p style="line-height: 115%"><i><b>Settings</b></i> –
 	Includes the following choices. The values of the settings are saved
-	on the device, and restored at the beginning of the next session.</p>
+	on the device, and restored at the beginning of the next session.
+	Please note, it may be necessary to provide the full path to the
+	Csound app’s public data directory as the value of each directory,
+	or as the first part of each directory. This information is printed
+	by the Csound app in the Messages pane when it first starts.</p>
 	<ul>
 		<li/>
 <p style="line-height: 115%"><i><b>Plugins directory</b></i>
@@ -285,7 +282,8 @@ attribute in the Csound for Android source code. For a basic example
 of a user-defined widget setup, see the <font face="Courier New, monospace">Drone-HTML5.csd</font>
 example file. Here is a snippet showing a slider's <font face="Courier New, monospace">onInput</font>
 event handler setting a Csound control channel:</p>
-<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">&lt;script&gt;
+<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-after: auto"><br/>
+&lt;script&gt;
 function gk_Reverb_FeedbackUpdate(value) {
 var numberValue = parseFloat(value)
 csoundApp.setControlChannel('gk_Reverb_Feedback', numberValue);
@@ -340,7 +338,8 @@ and log some informative messages during Csound's performance (<font face="Couri
 a blank line between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsInstruments&gt;</font>
 and type the following text:</p>
-<pre class="western" style="line-height: 115%">sr = 44100
+<pre class="western" style="line-height: 115%"><br/>
+sr = 44100
 ksmps = 10
 nchnls = 1
 <font color="#000000"><font face="Courier New, monospace"><font size="2" style="font-size: 9pt">instr 1</font></font></font>
@@ -386,7 +385,7 @@ you experiences glitches or low latency, try the following:</p>
 	set the other one.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	Experiment with Csound’s  <font face="Courier New, monospace">ksmps
+	Experiment with Csound’s <font face="Courier New, monospace">ksmps
 	</font><font face="Liberation Serif, serif">option in the orchestra
 	header.</font></p>
 	<li/>

@@ -61,7 +61,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
+import com.csounds.Csound6.BuildConfig;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -282,6 +282,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     public void startRendering() {
         messageTextView.setText("");
         File file = new File(OPCODE6DIR);
+        String getOPCODE6DIR = csnd.csound_oboeJNI.csoundGetEnv(0,
+                "OPCODE6DIR");
+        postMessage(
+                "OPCODE6DIR: " + getOPCODE6DIR
+                        + "\n");
         File[] files = file.listFiles();
         CsoundAppActivity.this
                 .postMessage("Loading Csound plugins:\n");
@@ -338,12 +343,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             result = csound_oboe.start();
             result = csound_oboe.performAndReset();
         }
-        // Make sure this is still set after starting.
-        String getOPCODE6DIR = csnd.csound_oboeJNI.csoundGetEnv(0,
-                "OPCODE6DIR");
-        postMessage(
-                "OPCODE6DIR has been set to: " + getOPCODE6DIR
-                        + "\n");
     }
 
     // Obtain CPU cores which are reserved for the foreground app. The audio thread can be
@@ -897,6 +896,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             int microseconds = 1000000 / 20;
             sensorManager.registerListener(motionListener, sensor, microseconds);
         }
+        // Log some useful information for the user.
+        postMessage("This is the Csound for Android app version code: " +  BuildConfig.VERSION_CODE + "\n");
+        postMessage( "The Csound native library version is: " + csnd.csound_oboeJNI.csoundGetVersion() + "\n");
+        postMessage(
+                "The public data directory for this app is: " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).toString() + "\n");
     }
 
     @Override

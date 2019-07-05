@@ -49,7 +49,7 @@ if (typeof console === 'undefined') {
     var console = {};
     console.debug = print;
     console.warn = print;
-    console.log = print;
+    console.info = print;
 }
 
 (function() {
@@ -88,17 +88,17 @@ if (typeof console === 'undefined') {
                 filepath = fs.realpathSync(filepath);
                 filepath = filepath + '.json';
             }
-            console.log('loading from filepath: ' + filepath);
+            console.info('loading from filepath: ' + filepath);
             var json = fs.readFileSync(filepath);
-            console.log('json: ' + json);
+            console.info('json: ' + json);
             if (toObject === true) {
                 var parsed_object = JSON.parse(json);
-                console.log('parsed object: ' + parsed_object);
+                console.info('parsed object: ' + parsed_object);
                 return parsed_object;
             }
             return json;
         } catch (err) {
-            console.log(err.message);
+            console.info(err.message);
             return null;
         }
     };
@@ -129,12 +129,12 @@ if (typeof console === 'undefined') {
                 filepath = fs.realpathSync(filepath);
                 filepath = filepath + '.json';
             }
-            console.log('json: ' + json);
-            console.log('saving to filepath: ' + filepath);
+            console.info('json: ' + json);
+            console.info('saving to filepath: ' + filepath);
             fs.writeFileSync(filepath, json);
             return true;
         } catch (err) {
-            console.log(err.message);
+            console.info(err.message);
             return false;
         }
     };
@@ -150,10 +150,10 @@ if (typeof console === 'undefined') {
     var restoreDatGuiJson = function(default_parameters_json) {
         var parameters_filesystem_json = Silencio.restoreFromLocalFile(false);
         if (parameters_filesystem_json !== null && parameters_filesystem_json !== 'null') {
-            console.log('Restored dat.gui parameters from local filesystem: ' + parameters_filesystem_json);
+            console.info('Restored dat.gui parameters from local filesystem: ' + parameters_filesystem_json);
             return JSON.parse(parameters_filesystem_json);
         } else {
-            console.log('Restored dat.gui parameters from default: ' + default_parameters_json);
+            console.info('Restored dat.gui parameters from default: ' + default_parameters_json);
             return default_parameters_json;
         }
     };
@@ -165,11 +165,11 @@ if (typeof console === 'undefined') {
     var saveDatGuiJson = function(gui) {
         try {
             var json = gui.getSaveObject();
-            console.log('typeof json:' + (typeof json));
+            console.info('typeof json:' + (typeof json));
             saveToLocalFile(true, json);
             return true;
         } catch (err) {
-            console.log(err.message);
+            console.info(err.message);
             return false;
         }
     };
@@ -606,7 +606,7 @@ if (typeof console === 'undefined') {
         for (var i = 0; i < this.data.length; i++) {
             jscore += this.data[i].toDStatement();
         }
-        //console.log(jscore);
+        //console.info(jscore);
         csound.ReadScore(jscore);
     };
 
@@ -712,12 +712,12 @@ if (typeof console === 'undefined') {
                         if (overlaps === true) {
                             if ((Math.floor(earlierEvent.data[3]) === Math.floor(laterEvent.data[3])) &&
                                 (Math.round(earlierEvent.data[4]) === Math.round(laterEvent.data[4]))) {
-                                //console.log('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
-                                //console.log('    to: ' + laterI + ' ' + laterEvent.toString());
+                                //console.info('Tieing: ' + earlierI + ' ' + earlierEvent.toString());
+                                //console.info('    to: ' + laterI + ' ' + laterEvent.toString());
                                 earlierEvent.data[1] = later_event_end - earlierEvent.data[0];
                                 laterEvent.data[1] = 0;
                                 laterEvent.data[5] = 0;
-                                //console.log('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
+                                //console.info('Result: ' + earlierI + ' ' +  earlierEvent.toString() + '\n');
                                 break;
                             }
                         }
@@ -788,7 +788,7 @@ if (typeof console === 'undefined') {
             context.moveTo(x1, y);
             context.lineTo(x2, y);
             context.stroke();
-            //console.log(this.data[i].toString() + ' x1: ' + x1 + ' x2: ' + x2 + ' y: ' + y + ' hsv: ' + hsv + '.');
+            //console.info(this.data[i].toString() + ' x1: ' + x1 + ' x2: ' + x2 + ' y: ' + y + ' hsv: ' + hsv + '.');
         }
         return context;
     };
@@ -1067,7 +1067,7 @@ if (typeof console === 'undefined') {
             var filepath = window.location.pathname.slice(1);
             filepath = fs.realpathSync(filepath);
             filepath = filepath + '.fms';
-            console.log('saving to filepath: ' + filepath);
+            console.info('saving to filepath: ' + filepath);
             this.sort();
             this.findScales();
             lines = [];
@@ -1114,7 +1114,7 @@ if (typeof console === 'undefined') {
             fs.close(fd);
             return true;
         } catch (err) {
-            console.log(err.message);
+            console.info(err.message);
             return false;
         }
     };
@@ -1397,7 +1397,7 @@ if (typeof console === 'undefined') {
 
     function Recurrent(generators, transitions, depth, index, cursor, score) {
         depth = depth - 1;
-        //print(string.format('Recurrent(depth: %d  index: %d  cursor: %s)', depth, index, cursor:__tostring()))
+        //console.info(string.format('Recurrent(depth: %d  index: %d  cursor: %s)', depth, index, cursor:__tostring()))
         if (depth === 0) {
             return;
         }
@@ -1527,8 +1527,8 @@ if (typeof console === 'undefined') {
     };
 
     if (typeof navigator !== 'undefined') {
-        console.log('browser:  ' + navigator.appName);
-        console.log('platform: ' + navigator.platform);
+        console.info('browser:  ' + navigator.appName);
+        console.info('platform: ' + navigator.platform);
     }
 
     var Silencio = {
