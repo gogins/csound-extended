@@ -2462,11 +2462,11 @@ if (typeof console === 'undefined') {
             }
             L = L % this.countL;
             if (typeof this.dynamics != 'undefined') {
-                ChordSpace.arrange_dynamics(revoicing, A, this.dynamics);
+                ChordSpace.arrange_dynamics(revoicing, L, this.dynamics);
             }
             D = D % this.countD;
             if (typeof this.durations != 'undefined') {
-                ChordSpace.arrange_durations(revoicing, A, this.durations);
+                ChordSpace.arrange_durations(revoicing, D, this.durations);
             }
             return {'revoicing': revoicing, 'opti': optti, 'op': op};
         } catch (ex) {

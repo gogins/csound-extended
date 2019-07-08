@@ -163,7 +163,7 @@ ScoreGraphs.BilinearTransformation.prototype.apply = function(hutchinson_operato
     let s_n = hutchinson_operator[n].s;
     let new_point = point.clone();
     new_point.time = X_n_prior + (((X_n - X_n_prior) / (X_N - X_0)) * (x - X_0));
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
         new_point.data[i] = Y_n_prior[i] + ((Y_n[i] - Y_n_prior[i]) / (X_N - X_0)) * (x - X_0) +
         (s_n_prior[i] + ((s_n[i] - s_n_prior[i]) / (X_N - X_0))) *
         (y[i] - Y_0[i] - ((Y_N[i] - Y_0[i]) / (X_N - X_0)) * (x - X_0));
@@ -312,6 +312,10 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         // csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
         // csound.message(        "         chord:   " + chord.toString() + "\n");
         //chord.setDuration(this.time_step * this.duration_scale_factor);
+        for (let voice = 0; voice < chord.size(); voice++) {
+            let duration = this.time_step * this.duration_scale_factor * chord.duration[voice];
+            chord.duration[voice] = duration;
+        }
         // A nominal velocity so that tieing overlaps will work.
         //chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
