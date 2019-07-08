@@ -2277,31 +2277,28 @@ if (typeof console === 'undefined') {
         return odometer;
     };
 
-    ChordSpace.createChordSpaceGroup = function(voices, range, instruments, g) {
+    ChordSpace.createChordSpaceGroup = function(voices, range, instruments, dynamics, durations, g) {
         var chordSpaceGroup = new ChordSpaceGroup();
-        chordSpaceGroup.initialize(voices, range, instruments, g);
+        chordSpaceGroup.initialize(voices, range, instruments, dynamics, durations, g);
         return chordSpaceGroup;
     };
 
-    var arrangementForIndex = function (instruments, voice_count, index) {
-        var intBase = instruments.length,
+    var kpermutationForIndex = function(elements, voice_count, index) {
+        var intBase = elements.length,
             intSetSize = Math.pow(intBase, voice_count),
             lastIndex = intSetSize - 1; // zero-based
-
         if (intBase < 1 || index > lastIndex) return undefined;
-
         var baseElements = unfoldr(function (m) {
                 var v = m.new,
                     d = Math.floor(v / intBase);
                 return {
                     valid: d > 0,
-                    value: instruments[v % intBase],
+                    value: elements[v % intBase],
                     new: d
                 };
             }, index),
             intZeros = voice_count - baseElements.length;
-
-        return intZeros > 0 ? replicate(intZeros, instruments[0])
+        return intZeros > 0 ? replicate(intZeros, elements[0])
             .concat(baseElements) : baseElements;
     };
 
@@ -2309,19 +2306,19 @@ if (typeof console === 'undefined') {
 
     // unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
     var unfoldr = function (mf, v) {
-        var instruments = [];
+        var elements = [];
         return [until(function (m) {
                 return !m.valid;
             }, function (m) {
                 var m2 = mf(m);
-                return m2.valid && (instruments = [m2.value].concat(instruments)), m2;
+                return m2.valid && (elements = [m2.value].concat(elements)), m2;
             }, {
                 valid: true,
                 value: v,
                 new: v
             })
             .value
-        ].concat(instruments);
+        ].concat(elements);
     };
 
     // until :: (a -> Bool) -> (a -> a) -> a -> a
@@ -2360,9 +2357,9 @@ if (typeof console === 'undefined') {
         }
 
         var intArgs = f.length,
-            go = function (instruments) {
-                return instruments.length >= intArgs ? f.apply(null, instruments) : function () {
-                    return go(instruments.concat([].slice.apply(arguments)));
+            go = function (elements) {
+                return elements.length >= intArgs ? f.apply(null, elements) : function () {
+                    return go(elements.concat([].slice.apply(arguments)));
                 };
             };
         return go([].slice.call(args, 1));
@@ -2380,16 +2377,38 @@ if (typeof console === 'undefined') {
     // TEST
     // Just items 30 to 35 in the (zero-indexed) series:
     console.info(range(30, 35)
-        .map(curry(arrangementForIndex)([1, 2, 3, 4, 5], 4)));
+        .map(curry(kpermutationForIndex)([1, 2, 3, 4, 5], 4)));
 
     /**
      * A is the index of k-permutations with repetition of instruments for
      * voices, instruments is an array of instrument numbers.
      */
-    ChordSpace.arrange = function(chord, A, instruments) {
-        let arrangement = arrangementForIndex(instruments, chord.size(), A);
+    ChordSpace.arrange_instruments = function(chord, A, instruments) {
+        let arrangement = kpermutationForIndex(instruments, chord.size(), A);
         for (var voice = 0; voice < chord.size(); voice++) {
             chord.channel[voice] = arrangement[voice];
+        }
+    }
+
+    /**
+     * A is the index of k-permutations with repetition of instruments for
+     * voices, instruments is an array of instrument numbers.
+     */
+    ChordSpace.arrange_dynamics = function(chord, L, dynamics) {
+        let arrangement = kpermutationForIndex(dynamics, chord.size(), L);
+        for (var voice = 0; voice < chord.size(); voice++) {
+            chord.velocity[voice] = arrangement[voice];
+        }
+    }
+
+    /**
+     * A is the index of k-permutations with repetition of note durations for
+     * voices, instruments is an array of instrument numbers.
+     */
+    ChordSpace.arrange_durations = function(chord, D, durations) {
+        let arrangement = kpermutationForIndex(durations, chord.size(), D);
+        for (var voice = 0; voice < chord.size(); voice++) {
+            chord.duration[voice] = arrangement[voice];
         }
     }
 
@@ -2401,7 +2420,7 @@ if (typeof console === 'undefined') {
      * invariant under some T, there may be more than one PITV to get the same
      * chord
      */
-    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, A, printme) {
+    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, A, L, D, printme) {
         try {
             printme = typeof printme !== 'undefined' ? printme : false;
             P = P % this.countP;
@@ -2439,7 +2458,15 @@ if (typeof console === 'undefined') {
             }
             A = A % this.countA;
             if (typeof this.instruments != 'undefined') {
-                ChordSpace.arrange(revoicing, A, this.instruments);
+                ChordSpace.arrange_instruments(revoicing, A, this.instruments);
+            }
+            L = L % this.countL;
+            if (typeof this.dynamics != 'undefined') {
+                ChordSpace.arrange_dynamics(revoicing, A, this.dynamics);
+            }
+            D = D % this.countD;
+            if (typeof this.durations != 'undefined') {
+                ChordSpace.arrange_durations(revoicing, A, this.durations);
             }
             return {'revoicing': revoicing, 'opti': optti, 'op': op};
         } catch (ex) {
@@ -2515,6 +2542,7 @@ if (typeof console === 'undefined') {
             console.info('fromChord: voicing:  ' + voicing + ' ' + V);
             console.info('fromChord:           ' + P + ' ' + I + ' ' + T + ' ' + V);
         }
+        // TODO: return {'P': P, 'I': I, 'T': T, 'V': V, 'A': A, 'L': L, 'D': D};
         return {'P': P, 'I': I, 'T': T, 'V': V};
     };
 
@@ -2579,6 +2607,8 @@ if (typeof console === 'undefined') {
             console.info(sprintf('ChordSpaceGroup.countT: %8d\n', this.countT));
             console.info(sprintf('ChordSpaceGroup.countV: %8d\n', this.countV));
             console.info(sprintf('ChordSpaceGroup.countA: %8d\n', this.countA));
+            console.info(sprintf('ChordSpaceGroup.countL: %8d\n', this.countL));
+            console.info(sprintf('ChordSpaceGroup.countD: %8d\n', this.countD));
         }
         var index;
         var voicing_index;
@@ -2605,13 +2635,24 @@ if (typeof console === 'undefined') {
      * transposition, instruments is an array of instrument numbers from which
      * to select an arrangement, and range is the size of chord space.
      */
-    ChordSpaceGroup.prototype.initialize = function(voices, range, instruments, g) {
+    ChordSpaceGroup.prototype.initialize = function(voices, range, instruments, dynamics, durations, g) {
         var began = performance.now();
         console.info("ChordSpaceGroup.prototype.initialize...");
         this.voices = typeof voices !== 'undefined' ? voices : 3;
         this.range = typeof range !== 'undefined' ? range : 60;
         this.instruments = typeof instruments !== 'undefined' ? instruments : [1];
         this.g = typeof g !== 'undefined' ? g : 1;
+        if (typeof dynamics !== 'undefined') {
+            this.dynamics = dynamics;
+        } else {
+            this.dynamics = [0, 1, 2, 3];
+        };
+        if (typeof durations !== 'undefined') {
+            this.durations = durations;
+        } else {
+            // These are sixteenth notes (subdivisions of the nominal beat).
+            this.durations = [0, 1/4, 2/4, 3/4, 1];
+        };
         this.countP = 0;
         this.countI = 2;
         this.countT = ChordSpace.OCTAVE / this.g;
@@ -2619,6 +2660,8 @@ if (typeof console === 'undefined') {
         chord.resize(voices);
         this.countV = ChordSpace.octavewiseRevoicings(chord, this.range);
         this.countA = Math.pow(this.instruments.length, this.voices);
+        this.countL = Math.pow(this.dynamics.length, this.voices);
+        this.countD = Math.pow(this.durations.length, this.voices);
         this.indexesForOptis = {};
         var result = ChordSpace.allOfEquivalenceClass(voices, 'OPTTI');
         this.optisForIndexes = result.array;

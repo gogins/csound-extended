@@ -24,15 +24,20 @@ var ScoreGraphs = {};
 
 /**
  * Represents a point in a discrete orbifold of chord symmetries. The dimensions
- * are P, I, T, V, A, or, set-class (OPTIC for N voices, clock group), inversion
- * in the origin (I, clock group), transposition within a range (T, clock
- * group), permutation of octavewise revoicings within a range (V, clock group),
- * and k-permutation with repetition of instrument numbers for N voices (A,
- * clock group).
+ * are P, I, T, V, A, L, D or, set-class (OPTIC for N voices, clock group),
+ * inversion in the origin (I, clock group), transposition within a range (T,
+ * clock group), permutation of octavewise revoicings within a range (V, clock
+ * group), k-permutation with repetition of instrument numbers for N voices (A,
+ * clock group), k-permutation with repetition of dynamic levels or loudness for
+ * N voices (L, clock group),  and k-permutation with repitition of note
+ * durection for N voices (D, clock group).
  */
 ScoreGraphs.Point = function() {
     this.time = 0;
-    this.data = [0, 0, 0, 0, 0];
+    this.data = [0, 0, 0, 0, 0, 0, 0];
+    /**
+     * Chord set-type.
+     */
     Object.defineProperty(this, "P", {
         get: function() {
             return this.data[0];
@@ -41,6 +46,9 @@ ScoreGraphs.Point = function() {
             this.data[0] = value;
         }
     });
+    /**
+     * Chord inversion in the origin.
+     */
     Object.defineProperty(this, "I", {
         get: function() {
             return this.data[1];
@@ -49,6 +57,9 @@ ScoreGraphs.Point = function() {
             this.data[1] = value;
         }
     });
+    /**
+     * Chord transposition of pitch-classes.
+     */
     Object.defineProperty(this, "T", {
         get: function() {
             return this.data[2];
@@ -57,6 +68,9 @@ ScoreGraphs.Point = function() {
             this.data[2] = value;
         }
     });
+    /**
+     * Permutation of octavewise revoicings of chord pitch-classes.
+     */
     Object.defineProperty(this, "V", {
         get: function() {
             return this.data[3];
@@ -65,12 +79,38 @@ ScoreGraphs.Point = function() {
             this.data[3] = value;
         }
     });
+    /**
+     * K-permutation with repetition of arrangements of instruments for chord
+     * voices.
+     */
     Object.defineProperty(this, "A", {
         get: function() {
             return this.data[4];
         },
         set: function(value) {
             this.data[4] = value;
+        }
+    });
+    /**
+     * K-permutation with repetition of dynamic levels for chord voices.
+     */
+    Object.defineProperty(this, "L", {
+        get: function() {
+            return this.data[5];
+        },
+        set: function(value) {
+            this.data[5] = value;
+        }
+    });
+    /**
+     * K-permutation with repetition of note durations for chord voices.
+     */
+    Object.defineProperty(this, "D", {
+        get: function() {
+            return this.data[6];
+        },
+        set: function(value) {
+            this.data[6] = value;
         }
     });
 };
@@ -83,13 +123,13 @@ ScoreGraphs.Point.prototype.clone = function() {
 };
 
 ScoreGraphs.Point.prototype.to_string = function() {
-    let text = sprintf("Point: t: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", this.time, this.P, this.I, this.T, this.V, this.A);
+    let text = sprintf("Point: t: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f L: %9.4f D: %9.4f\n", this.time, this.P, this.I, this.T, this.V, this.A, this.L, this.D);
     return text;
 }
 
 /**
  * A simple standard transformation. Note that X is a scalar for time and both Y
- *%9.4f  and the scaling factors s are vector values with one element for each of {P,
+ * and the scaling factors s are vector values with one element for each of {P,
  * I, T, V, A}. All transformations must have the X and Y properties.
  */
 ScoreGraphs.BilinearTransformation = function(X, Y, s) {
@@ -157,8 +197,11 @@ ScoreGraphs.ScoreGraph = function(voices_, range_, bass_, instruments_, duration
     this.bass = bass_;
     this.instruments = instruments_;
     this.duration = duration_;
+    this.dynamics = [0, 1, 2, 3];
+    this.durations = [0, 1/4, 2/4, 3/4, 1];
+    this.g = 1;
     this.chord_space = new ChordSpace.ChordSpaceGroup();
-    this.chord_space.initialize(this.voices, this.range, this.instruments, this.g);
+    this.chord_space.initialize(this.voices, this.range, this.instruments, this.dynamics, this.durations, 1);
     this.hutchinson_operator = [];
     this.score_graph = [];
     this.score = new Silencio.Score();
@@ -183,18 +226,20 @@ ScoreGraphs.ScoreGraph.prototype.add_transformation = function(callable) {
 ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
     let minima = [...this.score_graph[0].data];
     let maxima = [...minima];
-    let actual_ranges = [0,0,0,0,0];
-    let target_ranges = [0,0,0,0,0];
-    let scale_factors = [0,0,0,0,0];
+    let actual_ranges = [0,0,0,0,0,0,0];
+    let target_ranges = [0,0,0,0,0,0,0];
+    let scale_factors = [0,0,0,0,0,0,0];
     target_ranges[0] = this.chord_space.countP;
     target_ranges[1] = this.chord_space.countI;
     target_ranges[2] = this.chord_space.countT;
     target_ranges[3] = this.chord_space.countV;
     target_ranges[4] = this.chord_space.countA;
+    target_ranges[5] = this.chord_space.countL;
+    target_ranges[6] = this.chord_space.countD;
     // Find the existing minima and maxima.
     for (let i = 0; i < this.score_graph.length; i++) {
         let point = this.score_graph[i];
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < 7; j++) {
             if (minima[j] > point.data[j]) {
                 minima[j] = point.data[j];
             }
@@ -203,7 +248,7 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
             }
         }
     }
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 7; i++) {
         actual_ranges[i] = maxima[i] - minima[i];
         if(actual_ranges[i] == 0.0) {
             scale_factors[i] = 1;
@@ -211,10 +256,11 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
             scale_factors[i] = target_ranges[i] / actual_ranges[i];
         }
     }
-    // Rescale the score graph to the to minima and maxima of {P, I, T, V, A}.
+    // Rescale the score graph to the to minima and maxima of
+    // {P, I, T, V, A, L, D}.
     for (let i = 0; i < this.score_graph.length; i++) {
         let point = this.score_graph[i];
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < 7; j++) {
             // Move to origin (here, the target minimum is always 0):
             point.data[j] = point.data[j] - minima[j];
             // Rescale: value = value * target_range / actual_range.
@@ -260,12 +306,14 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         let T = Math.round(point.T);
         let V = Math.round(point.V);
         let A = Math.round(point.A);
-        let chord = this.chord_space.toChord(P, I, T, V, A).revoicing;
+        let L = Math.round(point.L);
+        let D = Math.round(point.D);
+        let chord = this.chord_space.toChord(P, I, T, V, A, L, D).revoicing;
         // csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
         // csound.message(        "         chord:   " + chord.toString() + "\n");
-        chord.setDuration(this.time_step * this.duration_scale_factor);
+        //chord.setDuration(this.time_step * this.duration_scale_factor);
         // A nominal velocity so that tieing overlaps will work.
-        chord.setVelocity(80);
+        //chord.setVelocity(80);
         ChordSpace.insert(this.score, chord, point.time);
     }
     this.remove_duplicate_notes();
