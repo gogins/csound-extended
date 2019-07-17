@@ -9,4 +9,5 @@ wget "http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip"
 #tar xvf gmm-5.1.tar.gz
 #rm *.zip*
 #rm *.gz*
+sudo -k
 echo "Finished updating all direct downloads required for csound-extended."

@@ -84,6 +84,7 @@ git checkout master
 git pull
 git branch
 cd ..
+sudo -k
 echo "Finished pulling from submodule repositories."
 echo "Back in `pwd`."
 git branch
