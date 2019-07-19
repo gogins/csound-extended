@@ -78,7 +78,8 @@ ScoreGraphs2.ScoreGraph = function(voices_, range_, bass_, instruments_, duratio
  * Adds a transformation (the callable) to the Hutchinson operator for this
  * score graph. The callable signature takes a Point and returns a new Point and
  * has the following signature: point = callable(hutchinson_operator,
- * depth, iteration, begin_time, end_time, point).
+ * depth, iteration, begin_time, end_time, point). In addition, the callable has
+ * a scalar X property that represents time.
  */
 ScoreGraphs.ScoreGraph.prototype.add_transformation = function(callable, iteration, segment) {
     let depth_map = this.hutchinson_operator.get(segment);
