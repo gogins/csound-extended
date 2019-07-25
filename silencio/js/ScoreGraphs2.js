@@ -75,19 +75,19 @@ ScoreGraphs2.ScoreGraph = function(voices_, range_, bass_, instruments_, duratio
 };
 
 /**
- * Adds a transformation (the callable) to the Hutchinson operator for this
- * score graph. The callable signature takes a Point and returns a new Point and
- * has the following signature: point = callable(hutchinson_operator,
- * depth, iteration, begin_time, end_time, point). In addition, the callable has
- * a scalar X property that represents time.
+ * Adds a transformation at a depth and segment to the Hutchinson operator. The
+ * transformation has an apply function that takes a Point and returns a new
+ * Point and has the following signature: point = apply(hutchinson_operator,
+ * depth, iteration, begin_time, end_time, point). In addition, the
+ * transformation has a scalar X property that represents time.
  */
-ScoreGraphs.ScoreGraph.prototype.add_transformation = function(callable, iteration, segment) {
-    let depth_map = this.hutchinson_operator.get(segment);
-    if (typeof depth_map === 'undefined') {
-        depth_map = new Map();
-        this.hutchinson_operator[iteration] = depth_map;
+ScoreGraphs.ScoreGraph.prototype.add_transformation = function(transformation, depth, segment) {
+    let transformations = this.hutchinson_operator.get(depth);
+    if (typeof transformations === 'undefined') {
+        transformations = [];
+        this.hutchinson_operator[depth] = transformations;
     }
-    this.hutchinson_operator[iteration][segment] = callable;
+    this.hutchinson_operator[iteration][segment] = transformation;
 };
 
 ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
@@ -102,9 +102,9 @@ ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
 }
 
 /**
- * Recursively computes the score graph, translates the points to chords,
- * translates the chords to notes, adds them to the score, ties overlapping
- * notes in the score, and rescales the score.
+ * Recursively computes the score graph, translates the points to notes, adds
+ * them to the score, ties overlapping notes in the score, and rescales the
+ * score.
  */
 ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration_scale_factor) {
     // Sort the transformations in the operator by time.
@@ -113,7 +113,11 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration
     } else {
         this.duration_scale_factor = duration_scale_factor;
     }
-    this.hutchinson_operator.sort(function(a, b){ return a.X - b.X});
+    let n = this.hutchinson_operator.size();
+    for (let d = 0; d < n; d++) {
+        let transformations = this.hutchinson_operator[d];
+        transformations.sort(function(a, b){ return a.X - b.X});
+    }
     this.time_0 = this.hutchinson_operator[0].X;
     this.time_N = this.hutchinson_operator[this.hutchinson_operator.length - 1].X;
     let interval = this.time_N - this.time_0;
@@ -136,12 +140,11 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration
 };
 
 /**
- * Compute the score graph as a fractal approximation of the graph of {P, I, T,
- * V, A} as a function of time. At each iteration, the domain is re-partitioned
- * and the ranges of the sub-domains are contracted.
+ * Compute the score graph. At each iteration, the domain is re-partitioned
+ * and the ranges of the sub-domains are computed.
  *
- * TODO: Add characteristic function to implement **local** iterated function
- * systems.
+ * TODO: Add characteristic
+ * function to implement **local** iterated function systems.
  */
  ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, point_) {
     iteration = iteration + 1;
@@ -149,6 +152,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration
         this.score_graph.push(point_.clone());
         return;
     }
+    // Look up transformations by depth and by slot. If there are no transformations at a depth, use the prior depth.
     for (let data_point_index = 1; data_point_index < this.hutchinson_operator.length; data_point_index++) {
         let transformation = this.hutchinson_operator[data_point_index];
         let point = transformation.apply(this.hutchinson_operator, data_point_index, point_);
