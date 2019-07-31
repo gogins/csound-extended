@@ -1,5 +1,5 @@
 /**
-S C O R E   G R A P H S  2
+H A R M O N Y   I F S
 
 Copyright (C) 2016 by Michael Gogins
 
@@ -8,11 +8,9 @@ GNU Lesser General Public License
 
 Part of Silencio, an HTML5 algorithmic music composition library for Csound.
 
-This file implements the generation of scores by means of score graphs, which
-graph a sequence of points as a function of time, using a fractal approximation
-that acts like a Read-Bajraktarevic operator. Any callable with the correct
-interface can be used as a transformation. Time is always subdivided, never
-folded. The points actually consist of a note with an  associated chord.
+This file implements the generation of scores by means of iterated function
+systems in a score space that has a harmony subspace in which time is subdivided
+such that harmony is a linear progression of time.
 
 Requires Silencio.js and ChordSpace.js.
 
@@ -20,25 +18,25 @@ Requires Silencio.js and ChordSpace.js.
 
 (function() {
 
-var ScoreGraphs2 = {};
+var HarmonyIFS = {};
 
 /**
  * Represents a point in a time line. The point consists of a note with an
  * associated chord.
  */
-ScoreGraphs2.Point = function() {
+HarmonyIFS.Point = function() {
     this.note = new Silencio.Event();
     this.chord = new ChordSpace.Chord();
 };
 
-ScoreGraphs2.Point.prototype.clone = function() {
-    let other = new ScoreGraphs2.Point();
+HarmonyIFS.Point.prototype.clone = function() {
+    let other = new HarmonyIFS.Point();
     other.note = this.note.clone();
     other.chord = this.chord.clone();
     return other;
 };
 
-ScoreGraphs.Point2.prototype.to_string = function() {
+HarmonyIFS.Point.prototype.to_string = function() {
     let text = sprintf("Point: note: %s\nchord: %s\n\n", this.event.toString(), this.chord.information());
     return text;
 }
@@ -48,7 +46,7 @@ ScoreGraphs.Point2.prototype.to_string = function() {
  * of I instrument numbers and a total duration of the score in seconds. g is
  * the generator of transposition.
  */
-ScoreGraphs2.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, rescale_, g_) {
+HarmonyIFS.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {

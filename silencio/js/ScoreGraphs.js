@@ -14,7 +14,7 @@ using a fractal approximation that acts like a Read-Bajraktarevic operator. Any
 callable with the correct interface can be used as a transformation. Time is
 always subdivided, never folded.
 
-Requires Silencio.js and ChordSpace2.js.
+Requires Silencio.js and ChordSpace.js.
 
 */
 
