@@ -5,6 +5,7 @@ cd dependencies
 ./update-dependency-packages.sh
 ./update-dependency-submodules.sh
 ./update-dependency-repositories.sh
+./update-dependency-cdns.sh
 ./patch-dependency-sources.sh
 ls -ll
 cd ..
