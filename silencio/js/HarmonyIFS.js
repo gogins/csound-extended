@@ -12,7 +12,7 @@ This file implements the generation of scores by means of iterated function
 systems in a score space that has a harmony subspace in which time is subdivided
 such that harmony is a linear progression of time.
 
-Requires Silencio.js and ChordSpace.js.
+Requires Silencio.js, numeric.js, and ChordSpace.js.
 
 */
 
@@ -42,11 +42,11 @@ HarmonyIFS.Point.prototype.to_string = function() {
 }
 
 /**
- * Initialize the ScoreGraph for N voices in a range of MIDI keys for a vector
+ * Initialize the ScoreAttractor for N voices in a range of MIDI keys for a vector
  * of I instrument numbers and a total duration of the score in seconds. g is
  * the generator of transposition.
  */
-HarmonyIFS.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, rescale_, g_) {
+HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {
@@ -79,7 +79,7 @@ HarmonyIFS.ScoreGraph = function(voices_, range_, bass_, instruments_, duration_
  * depth, iteration, begin_time, end_time, point). In addition, the
  * transformation has a scalar X property that represents time.
  */
-ScoreGraphs.ScoreGraph.prototype.add_transformation = function(transformation, depth, segment) {
+ScoreGraphs.ScoreAttractor.prototype.add_transformation = function(transformation, depth, segment) {
     let transformations = this.hutchinson_operator.get(depth);
     if (typeof transformations === 'undefined') {
         transformations = [];
@@ -88,7 +88,7 @@ ScoreGraphs.ScoreGraph.prototype.add_transformation = function(transformation, d
     this.hutchinson_operator[iteration][segment] = transformation;
 };
 
-ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
+ScoreGraphs.ScoreAttractor.prototype.remove_duplicate_notes = function() {
     csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
     let note_set = new Silencio.ValueSet(function(a) {return a.toString()});
     for (let i = 0; i < this.score.size(); i++) {
@@ -104,7 +104,7 @@ ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
  * them to the score, ties overlapping notes in the score, and rescales the
  * score.
  */
-ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration_scale_factor) {
+ScoreGraphs.ScoreAttractor.prototype.generate = function(depth, time_steps, duration_scale_factor) {
     // Sort the transformations in the operator by time.
     if (typeof duration_scale_factor == 'undefined') {
         this.duration_scale_factor = 1;
@@ -144,7 +144,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration
  * TODO: Add characteristic
  * function to implement **local** iterated function systems.
  */
- ScoreGraphs.ScoreGraph.prototype.iterate = function(depth, iteration, point_) {
+ ScoreGraphs.ScoreAttractor.prototype.iterate = function(depth, iteration, point_) {
     iteration = iteration + 1;
     if (iteration >= depth) {
         this.score_graph.push(point_.clone());
