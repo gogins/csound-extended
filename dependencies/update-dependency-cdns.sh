@@ -7,7 +7,7 @@ wget --backups=1 "https://cdn.jsdelivr.net/npm/algebrite@1/dist/algebrite.bundle
 # <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
 wget --backups=1 "https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"
 # <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.6/build/dat.gui.min.js"></script>
-wget --backups=1 "https://cdn.jsdelivr.net/npm/dat.gui@0.7.6/build/dat.gui.min.js"
+wget --backups=1 "https://cdn.jsdelivr.net/npm/dat.gui@0.7.6/build/dat.gui.js"
 # <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.js"></script>
 wget --backups=1 "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.js"
 # <script src="https://cdn.jsdelivr.net/npm/super-table@1/jquery.super-table.js"></script>
@@ -26,6 +26,8 @@ wget --backups=1 "https://cdn.jsdelivr.net/npm/sprintf-js@1/src/sprintf.js"
 wget --backups=1 "https://cdn.jsdelivr.net/npm/three@0.107.0/build/three.js"
 # https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.1/tinycolor.js
 wget --backups=1 https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.1/tinycolor.js
+# <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.js"> </script>
+wget --backups=1 "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.js"
 ls -ll *.js 
 cd ../../dependencies
 echo "Finished updating all JavaScript dependencies that come from CDNs."
