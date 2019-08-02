@@ -26,10 +26,6 @@ wget --backups=1 "https://cdn.jsdelivr.net/npm/sprintf-js@1/src/sprintf.js"
 wget --backups=1 "https://cdn.jsdelivr.net/npm/three@0.107.0/build/three.js"
 # https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.1/tinycolor.js
 wget --backups=1 https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.1/tinycolor.js
-#
-wget --backups=1 
-#
-wget --backups=1 
 ls -ll *.js 
 cd ../../dependencies
 echo "Finished updating all JavaScript dependencies that come from CDNs."
