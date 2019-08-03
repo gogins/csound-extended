@@ -4,7 +4,7 @@ H A R M O N Y   I F S
 Copyright (C) 2016 by Michael Gogins
 
 This software is licensed under the terms of the
-GNU Lesser General Public License
+GNU Lesser General Public License version 2.1.
 
 Part of Silencio, an HTML5 algorithmic music composition library for Csound.
 
@@ -12,8 +12,10 @@ This file implements the generation of scores by means of iterated function
 systems in a score space that has a harmony subspace in which time is subdivided
 such that harmony is a linear progression of time.
 
-Requires Silencio.js, numeric.js, and ChordSpace.js.
+Requires Silencio.js, ChordSpace.js, and tf.js (TensorFlow.js).
 
+Dimensions used herein are: {t time, P set-class, I inversion in the origin, T
+pitch-class transposition, MIDI key, MIDI velocity, MIDI channel}.
 */
 
 (function() {
@@ -21,32 +23,58 @@ Requires Silencio.js, numeric.js, and ChordSpace.js.
 var HarmonyIFS = {};
 
 /**
- * Represents a point in a time line. The point consists of a note with an
- * associated chord.
+ * Represents a point in a time line. The point consists of a homogeneous vector
+ * with dimensions {t, P, I, T, k, v, i}. The point will be translated to a
+ * note whose pitch matches the chord defined by P, I, and T.
  */
 HarmonyIFS.Point = function() {
-    this.note = new Silencio.Event();
-    this.chord = new ChordSpace.Chord();
+    this.data = tf.tensor1d([0, 0, 0, 0, 0, 0, 0, 1 ], 'float32');
 };
 
 HarmonyIFS.Point.prototype.clone = function() {
     let other = new HarmonyIFS.Point();
-    other.note = this.note.clone();
-    other.chord = this.chord.clone();
+    other.data = this.data.clone();
     return other;
 };
 
 HarmonyIFS.Point.prototype.to_string = function() {
-    let text = sprintf("Point: note: %s\nchord: %s\n\n", this.event.toString(), this.chord.information());
+    let text = sprintf("Point:\n%s\n", this.data.toString(true));
     return text;
 }
 
 /**
- * Initialize the ScoreAttractor for N voices in a range of MIDI keys for a vector
- * of I instrument numbers and a total duration of the score in seconds. g is
- * the generator of transposition.
+ * Represents an interpolation point for a fractal interpolation function,
+ * with elements t, P, I, T, and s.
  */
-HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, duration_, tie_overlaps_, rescale_, g_) {
+HarmonyIFS.InterpolationPoint = function(t, P, I, T, s) {
+    this.t = t;
+    this.P = P;
+    this.I = I;
+    this.T = T;
+    this.s = s;
+};
+
+HarmonyIFS.InterpolationPoint.prototype.clone = function() {
+    let other = new HarmonyIFS.InterpolationPoint();
+    other.t = this.t;
+    other.P = this.P;
+    other.I = this.I;
+    other.T = this.T;
+    other.s = this.s;
+    return other;
+};
+
+HarmonyIFS.Point.InterpolationPoint.to_string = function() {
+    let text = sprintf("InterpolationPoint:\nt: %9.4f P: %9.4f I: %9.4f T: %9.4f s: %9.4f\n", this.t, this.P, this.I, this.T, this.s);
+    return text;
+}
+
+/**
+ * Initialize the ScoreAttractor for N voices in a range of MIDI keys for a
+ * vector of I instrument numbers and a note duration in seconds. g is the
+ * generator of transposition.
+ */
+HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, note_duration_, tie_overlaps_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {
@@ -66,29 +94,51 @@ HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, durat
     this.range = range_;
     this.bass = bass_;
     this.instruments = instruments_;
-    this.duration = duration_;
+    this.note_duration = note_duration_;
+    this.interpolation_points = new Map();
     this.hutchinson_operator = new Map();
     this.score_graph = [];
     this.score = new Silencio.Score();
 };
 
 /**
- * Adds a transformation at a depth and segment to the Hutchinson operator. The
- * transformation has an apply function that takes a Point and returns a new
- * Point and has the following signature: point = apply(hutchinson_operator,
- * depth, iteration, begin_time, end_time, point). In addition, the
- * transformation has a scalar X property that represents time.
+ * Adds an interpolation point at a depth and segment to the Hutchinson
+ * operator. Once all of the interpolation points have been added, The
+ * parameters t, P, I, T, and s will be used to derive shear transformation
+ * matrices for a Hutchinson operator. The transformation matrices may be
+ * further modified if the shear elements are not changed.
  */
-ScoreGraphs.ScoreAttractor.prototype.add_transformation = function(transformation, depth, segment) {
+HarmonyIFS.ScoreAttractor.prototype.add_interpolation_point = function(t, P, I, T, s, depth, segment) {
+    let points = this.interpolation_points.get(depth);
+    if (typeof transformations === 'undefined') {
+        points = [];
+        this.interpolation_points[depth] = transformations;
+    }
+    return transformation;
+};
+
+/**
+ * For each interpolation point, computes a corresponding shear transformation,
+ * according to Polychronis Manousopoulos, Vasileios Drakopoulos, and Theoharis
+ * Theoharis. “Curve Fitting by Fractal Interpolation”. In: Transactions on
+ * Computational Science 1 (Jan. 2008), pp. 85–103. doi:
+ * 10.1007/978-3-540-79299-4_4.
+ */
+HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() {
+
+}
+
+HarmonyIFS.ScoreAttractor.prototype.get_transformation = function(depth, segment) {
     let transformations = this.hutchinson_operator.get(depth);
     if (typeof transformations === 'undefined') {
         transformations = [];
-        this.hutchinson_operator[depth] = transformations;
+        this.interpolation_points[depth] = transformations;
     }
-    this.hutchinson_operator[iteration][segment] = transformation;
-};
+    return transformation;
 
-ScoreGraphs.ScoreAttractor.prototype.remove_duplicate_notes = function() {
+}
+
+HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
     csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
     let note_set = new Silencio.ValueSet(function(a) {return a.toString()});
     for (let i = 0; i < this.score.size(); i++) {
@@ -104,7 +154,7 @@ ScoreGraphs.ScoreAttractor.prototype.remove_duplicate_notes = function() {
  * them to the score, ties overlapping notes in the score, and rescales the
  * score.
  */
-ScoreGraphs.ScoreAttractor.prototype.generate = function(depth, time_steps, duration_scale_factor) {
+HarmonyIFS.ScoreAttractor.prototype.generate = function(depth, time_steps, duration_scale_factor) {
     // Sort the transformations in the operator by time.
     if (typeof duration_scale_factor == 'undefined') {
         this.duration_scale_factor = 1;
@@ -144,7 +194,7 @@ ScoreGraphs.ScoreAttractor.prototype.generate = function(depth, time_steps, dura
  * TODO: Add characteristic
  * function to implement **local** iterated function systems.
  */
- ScoreGraphs.ScoreAttractor.prototype.iterate = function(depth, iteration, point_) {
+ HarmonyIFS.ScoreAttractor.prototype.iterate = function(depth, iteration, point_) {
     iteration = iteration + 1;
     if (iteration >= depth) {
         this.score_graph.push(point_.clone());
@@ -160,15 +210,15 @@ ScoreGraphs.ScoreAttractor.prototype.generate = function(depth, time_steps, dura
 
 // Node: Export function
 if (typeof module !== "undefined" && module.exports) {
-    module.exports = ScoreGraphs;
+    module.exports = HarmonyIFS;
 }
 // AMD/requirejs: Define the module
 else if (typeof define === 'function' && define.amd) {
-    define(function () {return ScoreGraphs;});
+    define(function () {return HarmonyIFS;});
 }
 // Browser: Expose to window
 else {
-    window.ScoreGraphs = ScoreGraphs;
+    window.HarmonyIFS = HarmonyIFS;
 }
 
 })();
