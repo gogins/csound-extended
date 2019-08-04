@@ -29,7 +29,7 @@ var HarmonyIFS = {};
  * I, and T.
  */
 HarmonyIFS.Point = function() {
-    this.data = tf.tensor1d([0, 0, 0, 0, 0, 0, 0, 1 ], 'float32');
+    this.data = numeric.transpose([0, 0, 0, 0, 0, 0, 0, 1]);
 };
 
 HarmonyIFS.Point.prototype.clone = function() {
@@ -45,10 +45,11 @@ HarmonyIFS.Point.prototype.to_string = function() {
 
 /**
  * Represents an interpolation point for a fractal interpolation function in the
- * time-harmony subspace of the score space, with dimensions t, P, I, T, and s.
+ * time-harmony subspace of the score space, with dimensions t, P, I, T, s_P,
+ * s_I, and s_T.
  */
-HarmonyIFS.InterpolationPoint = function(t, P, I, T, s) {
-    this.data = [t, P, I, T, s];
+HarmonyIFS.InterpolationPoint = function(t, P, I, T, s_P, s_I, s_T) {
+    this.data = [t, P, I, T, s_P, s_I, s_T];
     /**
      * Time.
      */
@@ -96,12 +97,34 @@ HarmonyIFS.InterpolationPoint = function(t, P, I, T, s) {
     /**
      * Scaling factor in the range.
      */
-    Object.defineProperty(this, "s", {
+    Object.defineProperty(this, "s_P", {
         get: function() {
             return this.data[4];
         },
         set: function(value) {
             this.data[4] = value;
+        }
+    });
+    /**
+     * Scaling factor in the range.
+     */
+    Object.defineProperty(this, "s_I", {
+        get: function() {
+            return this.data[5];
+        },
+        set: function(value) {
+            this.data[5] = value;
+        }
+    });
+    /**
+     * Scaling factor in the range.
+     */
+    Object.defineProperty(this, "s_T", {
+        get: function() {
+            return this.data[6];
+        },
+        set: function(value) {
+            this.data[6] = value;
         }
     });
 };
@@ -113,8 +136,10 @@ HarmonyIFS.InterpolationPoint.prototype.clone = function() {
 };
 
 HarmonyIFS.InterpolationPoint.prototype.to_string = function() {
-    let text = sprintf("InterpolationPoint:\nt: %9.4f P: %9.4f I: %9.4f T: %9.4f s: %9.4f\n", this.data[0], this.data[1], this.data[2], this.data[3], this.data[4]);
-    return text;
+  let text = sprintf("InterpolationPoint:\nt: %9.4f P: %9.4f I: %9.4f T: %9.4f s_P: %9.4f
+s_I: %9.4f s_T: %9.4f\n", this.data[0], this.data[1], this.data[2],
+this.data[3], this.data[4], this.data[5], this.data[6]);
+  return text;
 }
 
 /**
@@ -178,11 +203,15 @@ HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() 
     for (let i = 1; i < this.interpolaion_points.length; i++) {
         let point_i_1 = this.interpolations_points[i - 1];
         let point_i = this.interpolation_points[i];
+        // t or time dimension.
         transformation[0][0] = (point_i.t - point_i_1.t) / (point_N.t - point_0.t);
         transformation[0][7] = (point_N.t * point_i_1.t - point_0.t * point_i.t) / (point_N.t - point_0.t);
-        transformation[1][0] = (point_i.P - point_i_1.P) - point_
-        transformation[1][1]
-        transformation[1][7]
+        // P or set-class dimension.
+        transformation[1][0] = (point_i.P - point_i_1.P) - point_i.s_P * (point_N.P - point_0.P) / (point_N.t - point_0.t);
+        transformation[1][1] = point_i.s_P;
+        transformation[1][7] = (point_N.t * point_i_1.P - point_0.t * point_i.P) - point_i.s_P * (point_i.t * point_0.P 
+        // I or inversion dimension.
+        // T or transposition dimension.
 
 
 
