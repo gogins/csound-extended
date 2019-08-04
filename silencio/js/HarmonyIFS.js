@@ -8,14 +8,14 @@ GNU Lesser General Public License version 2.1.
 
 Part of Silencio, an HTML5 algorithmic music composition library for Csound.
 
-This file implements the generation of scores by means of iterated function
-systems in a score space that has a harmony subspace in which time is subdivided
-such that harmony is a linear progression of time.
+This file implements the generation of scores as the attractors of iterated
+function systems in a score space that has a harmony subspace in which time is
+subdivided such that harmony is a linear progression of time.
 
 Requires Silencio.js, ChordSpace.js, and tf.js (TensorFlow.js).
 
 Dimensions used herein are: {t time, P set-class, I inversion in the origin, T
-pitch-class transposition, MIDI key, MIDI velocity, MIDI channel}.
+pitch-class transposition, k MIDI key, v MIDI velocity, i MIDI channel}.
 */
 
 (function() {
@@ -24,8 +24,9 @@ var HarmonyIFS = {};
 
 /**
  * Represents a point in a time line. The point consists of a homogeneous vector
- * with dimensions {t, P, I, T, k, v, i}. The point will be translated to a
- * note whose pitch matches the chord defined by P, I, and T.
+ * with dimensions {t, P, I, T, k, v, i, 1}. At rendering time, the point will be
+ * translated to that pitch which most closely matches the chord defined by P,
+ * I, and T.
  */
 HarmonyIFS.Point = function() {
     this.data = tf.tensor1d([0, 0, 0, 0, 0, 0, 0, 1 ], 'float32');
@@ -43,29 +44,76 @@ HarmonyIFS.Point.prototype.to_string = function() {
 }
 
 /**
- * Represents an interpolation point for a fractal interpolation function,
- * with elements t, P, I, T, and s.
+ * Represents an interpolation point for a fractal interpolation function in the
+ * time-harmony subspace of the score space, with dimensions t, P, I, T, and s.
  */
 HarmonyIFS.InterpolationPoint = function(t, P, I, T, s) {
-    this.t = t;
-    this.P = P;
-    this.I = I;
-    this.T = T;
-    this.s = s;
+    this.data = [t, P, I, T, s];
+    /**
+     * Time.
+     */
+    Object.defineProperty(this, "t", {
+        get: function() {
+            return this.data[0];
+        },
+        set: function(value) {
+            this.data[0] = value;
+        }
+    });
+    /**
+     * Set-class.
+     */
+    Object.defineProperty(this, "P", {
+        get: function() {
+            return this.data[1];
+        },
+        set: function(value) {
+            this.data[1] = value;
+        }
+    });
+    /**
+     * Inversion in the origin.
+     */
+    Object.defineProperty(this, "I", {
+        get: function() {
+            return this.data[2];
+        },
+        set: function(value) {
+            this.data[2] = value;
+        }
+    });
+    /**
+     * Transposition by semitone.
+     */
+    Object.defineProperty(this, "T", {
+        get: function() {
+            return this.data[3];
+        },
+        set: function(value) {
+            this.data[3] = value;
+        }
+    });
+    /**
+     * Scaling factor in the range.
+     */
+    Object.defineProperty(this, "s", {
+        get: function() {
+            return this.data[4];
+        },
+        set: function(value) {
+            this.data[4] = value;
+        }
+    });
 };
 
 HarmonyIFS.InterpolationPoint.prototype.clone = function() {
     let other = new HarmonyIFS.InterpolationPoint();
-    other.t = this.t;
-    other.P = this.P;
-    other.I = this.I;
-    other.T = this.T;
-    other.s = this.s;
+    other.data = this.slice(0);
     return other;
 };
 
-HarmonyIFS.Point.InterpolationPoint.to_string = function() {
-    let text = sprintf("InterpolationPoint:\nt: %9.4f P: %9.4f I: %9.4f T: %9.4f s: %9.4f\n", this.t, this.P, this.I, this.T, this.s);
+HarmonyIFS.InterpolationPoint.prototype.to_string = function() {
+    let text = sprintf("InterpolationPoint:\nt: %9.4f P: %9.4f I: %9.4f T: %9.4f s: %9.4f\n", this.data[0], this.data[1], this.data[2], this.data[3], this.data[4]);
     return text;
 }
 
@@ -95,46 +143,50 @@ HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, note_
     this.bass = bass_;
     this.instruments = instruments_;
     this.note_duration = note_duration_;
-    this.interpolation_points = new Map();
-    this.hutchinson_operator = new Map();
+    this.interpolation_points = [];
+    this.hutchinson_operator = [];
     this.score_graph = [];
     this.score = new Silencio.Score();
 };
 
 /**
- * Adds an interpolation point at a depth and segment to the Hutchinson
- * operator. Once all of the interpolation points have been added, The
- * parameters t, P, I, T, and s will be used to derive shear transformation
- * matrices for a Hutchinson operator. The transformation matrices may be
- * further modified if the shear elements are not changed.
+ * Adds an interpolation point to the Hutchinson operator. Once all of the
+ * interpolation points have been added, the elements on dimensions t, P, I, T,
+ * and s will be used to derive shear transformation matrices for a Hutchinson
+ * operator.
  */
-HarmonyIFS.ScoreAttractor.prototype.add_interpolation_point = function(t, P, I, T, s, depth, segment) {
-    let points = this.interpolation_points.get(depth);
-    if (typeof transformations === 'undefined') {
-        points = [];
-        this.interpolation_points[depth] = transformations;
-    }
-    return transformation;
+HarmonyIFS.ScoreAttractor.prototype.add_interpolation_point = function(t, P, I, T, s, segment) {
+    let interolation_point = new HarmonyIFS.InterpolationPoint(t, P, I, T s);
+    this.interpolation_points.push(interpolation_point)
+    return interpolation_point;
 };
 
 /**
- * For each interpolation point, computes a corresponding shear transformation,
- * according to Polychronis Manousopoulos, Vasileios Drakopoulos, and Theoharis
- * Theoharis. “Curve Fitting by Fractal Interpolation”. In: Transactions on
- * Computational Science 1 (Jan. 2008), pp. 85–103. doi:
- * 10.1007/978-3-540-79299-4_4.
+ * Interpolation points are sorted by time and the corresponding shear
+ * transformations are computed, according to Polychronis Manousopoulos,
+ * Vasileios Drakopoulos, and Theoharis Theoharis. “Curve Fitting by Fractal
+ * Interpolation”. In: Transactions on Computational Science 1 (Jan. 2008), pp.
+ * 85–103. doi: 10.1007/978-3-540-79299-4_4. Once this function has been called,
+ * the non-shear elements of the transformation matrices may be modified in any
+ * way as long as the Hutchinson operator remains contractive.
  */
 HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() {
+    this.interpolation.points.sort(function(a, b) { return a.data[0] < b.data[0];});
+    let transformation = numeric.identity(8)
+    let point_0 = this.interpolation_points[0];
+    let point_N = this.interpolation_points[this.interpolation_points.length - 1];
+    for (let i = 1; i < this.interpolaion_points.length; i++) {
+        let point_i_1 = this.interpolations_points[i - 1];
+        let point_i = this.interpolation_points[i];
+        transformation[0][0] = (point_i.t - point_i_1.t) / (point_N.t - point_0.t);
+        transformation[0][7] = (point_N.t * point_i_1.t - point_0.t * point_i.t) / (point_N.t - point_0.t);
+        transformation[1][0] = (point_i.P - point_i_1.P) - point_
+        transformation[1][1]
+        transformation[1][7]
 
-}
 
-HarmonyIFS.ScoreAttractor.prototype.get_transformation = function(depth, segment) {
-    let transformations = this.hutchinson_operator.get(depth);
-    if (typeof transformations === 'undefined') {
-        transformations = [];
-        this.interpolation_points[depth] = transformations;
+
     }
-    return transformation;
 
 }
 
