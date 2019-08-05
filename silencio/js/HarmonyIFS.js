@@ -43,6 +43,19 @@ HarmonyIFS.Point.prototype.to_string = function() {
     return text;
 }
 
+HarmonyIFS.Point.prototype.to_note(chord_space) {
+    // ChordSpaceGroup.prototype.toChord = function(P, I, T, V, A, L, D, printme) {
+    let chord = chord_space.toChord(this.P, this.I, this.T, 0, 0, 0, 0);
+    let note = new Silencio.Event();
+    note.status = 144;
+    note.time = this.t;
+    note.key = this.k;
+    note.velocity = this.v;
+    note.channel = this.i;
+    note = chord_space.conformToChord(note, chord, false);
+    return note;
+}
+
 /**
  * Represents an interpolation point for a fractal interpolation function in the
  * time-harmony subspace of the score space, with dimensions t, P, I, T, s_P,
@@ -147,7 +160,7 @@ this.data[3], this.data[4], this.data[5], this.data[6]);
  * vector of I instrument numbers and a note duration in seconds. g is the
  * generator of transposition.
  */
-HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, note_duration_, tie_overlaps_, rescale_, g_) {
+HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, dynamics_, durations_, tie_overlaps_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {
@@ -167,7 +180,9 @@ HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, note_
     this.range = range_;
     this.bass = bass_;
     this.instruments = instruments_;
-    this.note_duration = note_duration_;
+    this.dynamics = dynamics_;
+    this.durations = durations_;
+    this.chord_space_group = ChordSpace.createChordSpaceGroup(this.voices, this.range, this.instruments, this.dynamics, this.durations);
     this.interpolation_points = [];
     this.hutchinson_operator = [];
     this.score_graph = [];
@@ -207,16 +222,19 @@ HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() 
         transformation[0][0] = (point_i.t - point_i_1.t) / (point_N.t - point_0.t);
         transformation[0][7] = (point_N.t * point_i_1.t - point_0.t * point_i.t) / (point_N.t - point_0.t);
         // P or set-class dimension.
-        transformation[1][0] = (point_i.P - point_i_1.P) - point_i.s_P * (point_N.P - point_0.P) / (point_N.t - point_0.t);
+        transformation[1][0] = (point_i.I - point_i_1.P) - point_i.s_P * (point_N.P - point_0.P)) / (point_N.t - point_0.t);
         transformation[1][1] = point_i.s_P;
-        transformation[1][7] = (point_N.t * point_i_1.P - point_0.t * point_i.P) - point_i.s_P * (point_i.t * point_0.P 
+        transformation[1][7] = ((point_N.t * point_i_1.P - point_0.t * point_i.P) - point_i.s_P * (point_i.t * point_0.P - point_0.t * point_N.P)) / (point_N.t - point_0.t);
         // I or inversion dimension.
+        transformation[2][2] = (point_i.I - point_i_1.I) - point_i.s_I * (point_N.I - point_0.I)) / (point_N.t - point_0.t);
+        transformation[2][3] = point_i.s_I;
+        transformation[2][7] = ((point_N.t * point_i_1.I - point_0.t * point_i.I) - point_i.s_I * (point_i.t * point_0.I - point_0.t * point_N.I)) / (point_N.t - point_0.t);
         // T or transposition dimension.
-
-
-
+        transformation[3][2] = (point_i.T - point_i_1.T) - point_i.s_T * (point_N.T - point_0.T)) / (point_N.t - point_0.t);
+        transformation[3][4] = point_i.s_T;
+        transformation[3][7] = ((point_N.t * point_i_1.T - point_0.t * point_i.T) - point_i.s_T * (point_i.t * point_0.T - point_0.t * point_N.T)) / (point_N.t - point_0.t);
     }
-
+    this.hutchinson_operator.push(transformation);
 }
 
 HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
@@ -235,59 +253,39 @@ HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
  * them to the score, ties overlapping notes in the score, and rescales the
  * score.
  */
-HarmonyIFS.ScoreAttractor.prototype.generate = function(depth, time_steps, duration_scale_factor) {
-    // Sort the transformations in the operator by time.
-    if (typeof duration_scale_factor == 'undefined') {
-        this.duration_scale_factor = 1;
-    } else {
-        this.duration_scale_factor = duration_scale_factor;
-    }
-    let n = this.hutchinson_operator.size();
-    for (let d = 0; d < n; d++) {
-        let transformations = this.hutchinson_operator[d];
-        transformations.sort(function(a, b){ return a.X - b.X});
-    }
-    this.time_0 = this.hutchinson_operator[0].X;
-    this.time_N = this.hutchinson_operator[this.hutchinson_operator.length - 1].X;
-    let interval = this.time_N - this.time_0;
-    this.time_step = interval / time_steps;
-    this.score_graph.length = 0;
-    this.score.clear();
-    // Map the operator over the time interval. This is similar to computing the
-    // attractor of an IFS with the deterministic algorithm.
-    for (let i = 0; i < time_steps; i++) {
-        iteration = 0;
-        let point = new ScoreGraphs.Point();
-        point.time = this.time_0 + i * this.time_step;
-        this.iterate(depth, iteration, point);
-    }
+HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
     csound.message("Generated " + this.score_graph.length + " points.\n");
+    let iteration = 0;
+    // This point should be within the bounds of the attractor.
+    let initial_point = new HarmonyIFS.Point();
+    this.iterate(this.depth, iteration, initial_point);
     if (this.rescale == true) {
         this.rescale_score_graph();
     }
-    this.translate_score_graph_to_score();
+    this.translate_score_attractor_to_score();
 };
 
 /**
- * Compute the score graph. At each iteration, the domain is re-partitioned
- * and the ranges of the sub-domains are computed.
- *
- * TODO: Add characteristic
- * function to implement **local** iterated function systems.
+ * Compute the score attractor.
  */
- HarmonyIFS.ScoreAttractor.prototype.iterate = function(depth, iteration, point_) {
+ HarmonyIFS.ScoreAttractor.prototype.iterate = function(depth, iteration, point) {
     iteration = iteration + 1;
     if (iteration >= depth) {
-        this.score_graph.push(point_.clone());
+        let note = point.to_note();
+        this.score.add(note);
         return;
     }
-    // Look up transformations by depth and by slot. If there are no transformations at a depth, use the prior depth.
-    for (let data_point_index = 1; data_point_index < this.hutchinson_operator.length; data_point_index++) {
-        let transformation = this.hutchinson_operator[data_point_index];
-        let point = transformation.apply(this.hutchinson_operator, data_point_index, point_);
-        this.iterate(depth, iteration, point);
+    for (let i = 0; i < hutchinson_operator.length; i++) {
+        let transformation = this.hutchinson_operator[i];
+        let new_point = numeric.dot(transformation, point);
+        this.iterate(depth, iteration, new_point);
     }
 };
+
+/**
+ * Process the initial score attractor to the final score.
+ */
+HarmonyIFS.ScoreAttractor
 
 // Node: Export function
 if (typeof module !== "undefined" && module.exports) {
