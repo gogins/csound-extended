@@ -240,6 +240,10 @@ if (typeof console === 'undefined') {
         return false;
     }
 
+    function modulo(a, n) {
+        return ((a % n) + n) % n;
+    }
+
     function Event() {
         // ID collisions should be rare. IDs will be used e.g.
         // in tieing notes or in working around Csound quirks
@@ -450,6 +454,8 @@ if (typeof console === 'undefined') {
         other.data = this.data.slice(0);
         other.id = this.id;
         if (clone_chord === true) {
+            other.chord = this.chord.clone();
+        } else {
             other.chord = this.chord;
         }
         return other;
@@ -1537,6 +1543,7 @@ if (typeof console === 'undefined') {
         lt_epsilon: lt_epsilon,
         ge_epsilon: ge_epsilon,
         le_epsilon: le_epsilon,
+        modulo: modulo,
         Event: Event,
         Score: Score,
         Turtle: Turtle,

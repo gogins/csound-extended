@@ -2423,9 +2423,9 @@ if (typeof console === 'undefined') {
     ChordSpaceGroup.prototype.toChord = function(P, I, T, V, A, L, D, printme) {
         try {
             printme = typeof printme !== 'undefined' ? printme : false;
-            P = P % this.countP;
-            I = I % 2;
-            T = T % ChordSpace.OCTAVE;
+            P = Silencio.modulo(P, this.countP);
+            I = Silencio.modulo(I, 2);
+            T = Silencio.modulo(T, ChordSpace.OCTAVE);
             V = V % this.countV;
             if (printme) {
                 console.info(sprintf('toChord:             %s %s %s %s', P, I, T, V));
@@ -2451,20 +2451,20 @@ if (typeof console === 'undefined') {
             if (printme) {
                 console.info('toChord:   op:        ' + op);
             }
-            V = V % this.countV;
+            V = Silencio.modulo(V, this.countV);
             var revoicing = ChordSpace.octavewiseRevoicing(op, V, this.range);
             if (printme) {
                 console.info('toChord:   revoicing: ' + revoicing);
             }
-            A = A % this.countA;
+            A = Silencio.modulo(A, this.countA);
             if (typeof this.instruments != 'undefined') {
                 ChordSpace.arrange_instruments(revoicing, A, this.instruments);
             }
-            L = L % this.countL;
+            L = Silencio.modulo(L, this.countL);
             if (typeof this.dynamics != 'undefined') {
                 ChordSpace.arrange_dynamics(revoicing, L, this.dynamics);
             }
-            D = D % this.countD;
+            D = Silencio.modulo(D, this.countD);
             if (typeof this.durations != 'undefined') {
                 ChordSpace.arrange_durations(revoicing, D, this.durations);
             }
