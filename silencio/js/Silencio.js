@@ -651,10 +651,10 @@ if (typeof console === 'undefined') {
         if (currentRange === 0) {
             currentRange = 1;
         }
-        var rescale = range / currentRange;
         if (typeof range === 'undefined') {
-            rescale = 1;
+            range = 1;
         }
+        var rescale = range / currentRange;
         var translate = minimum;
         for (var i = 0; i < this.data.length; i++) {
             var value = this.data[i].data[dimension];

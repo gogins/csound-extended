@@ -260,6 +260,9 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
     let iteration = 0;
     // This point should be within the bounds of the attractor.
     let initial_point = new HarmonyIFS.Point();
+    initial_point.d = .25;
+    initial_point.v = 60;
+    initial_point.i = 1;
     this.iterate(depth, iteration, initial_point.data);
     csound.message(sprintf("Generated %d points.\n", this.score.size()));
     ///if (this.rescale == true) {
@@ -289,8 +292,8 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
  * rescale certain dimensions, and to conform pitches to chords.
  */
 HarmonyIFS.ScoreAttractor.prototype.translate_score_attractor_to_score = function() {
-    this.score.setScale(Event.TIME, 0);
-    this.score.setScale(Event.KEY, this.bass, this.range);
+    this.score.setScale(Silencio.Event.TIME, 0);
+    this.score.setScale(Silencio.Event.KEY, this.bass, this.range);
     this.score.temper();
     for (let i = 0; i < this.score.size(); i++) {
         let pitch = this.score.data[i].key;
