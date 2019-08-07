@@ -376,6 +376,9 @@ if (typeof console === 'undefined') {
         for (var i = 0; i < this.data.length; i++) {
             text = text.concat(' ', this.data[i].toFixed(6));
         }
+        if (this.chord !== null && typeof this.chord !== 'undefined') {
+            text = text.concat(' ', this.chord.name());
+        }
         text = text.concat('\n');
         return text;
     };

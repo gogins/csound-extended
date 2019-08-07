@@ -30,7 +30,84 @@ var HarmonyIFS = {};
  */
 HarmonyIFS.Point = function() {
     // It seems a vector in numeric.js must be a matrix of 1 row or 1 column.
-    this.data = numeric.transpose([[0, 0, 0, 0, 0, 0, 0, 1]]);
+    this.data = [0, 0, 0, 0, 0, 0, 0, 1];
+    /**
+     * Time.
+     */
+    Object.defineProperty(this, "t", {
+        get: function() {
+            return this.data[0];
+        },
+        set: function(value) {
+            this.data[0] = value;
+        }
+    });
+    /**
+     * Index of set-class.
+     */
+    Object.defineProperty(this, "P", {
+        get: function() {
+            return this.data[1];
+        },
+        set: function(value) {
+            this.data[1] = value;
+        }
+    });
+    /**
+     * Index of inversion in the origin.
+     */
+    Object.defineProperty(this, "I", {
+        get: function() {
+            return this.data[2];
+        },
+        set: function(value) {
+            this.data[2] = value;
+        }
+    });
+    /**
+     * Index of transposition by semitone.
+     */
+    Object.defineProperty(this, "T", {
+        get: function() {
+            return this.data[3];
+        },
+        set: function(value) {
+            this.data[3] = value;
+        }
+    });
+    /**
+     * Pitch as MIDI key number.
+     */
+    Object.defineProperty(this, "k", {
+        get: function() {
+            return this.data[4];
+        },
+        set: function(value) {
+            this.data[4] = value;
+        }
+    });
+    /**
+     * Loudness as MIDI velocity.
+     */
+    Object.defineProperty(this, "v", {
+        get: function() {
+            return this.data[5];
+        },
+        set: function(value) {
+            this.data[5] = value;
+        }
+    });
+    /**
+     * Instrument as MIDI channel.
+     */
+    Object.defineProperty(this, "i", {
+        get: function() {
+            return this.data[6];
+        },
+        set: function(value) {
+            this.data[6] = value;
+        }
+    });
 };
 
 HarmonyIFS.Point.prototype.clone = function() {
@@ -171,7 +248,7 @@ HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, dynam
     this.chord_space_group = ChordSpace.createChordSpaceGroup(this.voices, this.range, this.instruments, this.dynamics, this.durations);
     this.interpolation_points = [];
     this.hutchinson_operator = [];
-    this.score_graph = [];
+    this.note_duration = 0.01;
     this.score = new Silencio.Score();
 };
 
@@ -199,27 +276,28 @@ HarmonyIFS.ScoreAttractor.prototype.add_interpolation_point = function(t, P, I, 
  */
 HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() {
     this.interpolation_points.sort(function(a, b) { return a.data[0] - b.data[0];});
-    let transformation = numeric.identity(8)
-    let point_0 = this.interpolation_points[0];
-    let point_N = this.interpolation_points[this.interpolation_points.length - 1];
+    let p_0 = this.interpolation_points[0];
+    let p_N = this.interpolation_points[this.interpolation_points.length - 1];
+    this.hutchinson_operator.length = 0;
     for (let i = 1; i < this.interpolation_points.length; i++) {
-        let point_i_1 = this.interpolation_points[i - 1];
-        let point_i = this.interpolation_points[i];
+        let p_i_1 = this.interpolation_points[i - 1];
+        let p_i = this.interpolation_points[i];
+        let transformation = numeric.identity(8)
         // t or time dimension.
-        transformation[0][0] = (point_i.t - point_i_1.t) / (point_N.t - point_0.t);
-        transformation[0][7] = (point_N.t * point_i_1.t - point_0.t * point_i.t) / (point_N.t - point_0.t);
+        transformation[0][0] = (p_i.t - p_i_1.t) / (p_N.t - p_0.t);
+        transformation[0][7] = ((p_N.t * p_i_1.t) - (p_0.t * p_i.t)) / (p_N.t - p_0.t);
         // P or set-class dimension.
-        transformation[1][0] = ((point_i.I - point_i_1.P) - point_i.s_P * (point_N.P - point_0.P)) / (point_N.t - point_0.t);
-        transformation[1][1] = point_i.s_P;
-        transformation[1][7] = ((point_N.t * point_i_1.P - point_0.t * point_i.P) - point_i.s_P * (point_i.t * point_0.P - point_0.t * point_N.P)) / (point_N.t - point_0.t);
+        transformation[1][0] = ((p_i.I - p_i_1.P) / (p_N.t - p_0.t)) - (p_i.s_P * ((p_N.P - p_0.P) / (p_N.t - p_0.t)));
+        transformation[1][1] = p_i.s_P;
+        transformation[1][7] = (p_N.t * p_i_1.P - p_0.t * p_i.P) / (p_N.t - p_0.t) - p_i.s_P * (p_i.t * p_0.P - p_0.t * p_N.P) / (p_N.t - p_0.t);
         // I or inversion dimension.
-        transformation[2][1] = ((point_i.I - point_i_1.I) - point_i.s_I * (point_N.I - point_0.I)) / (point_N.t - point_0.t);
-        transformation[2][2] = point_i.s_I;
-        transformation[2][7] = ((point_N.t * point_i_1.I - point_0.t * point_i.I) - point_i.s_I * (point_i.t * point_0.I - point_0.t * point_N.I)) / (point_N.t - point_0.t);
+        transformation[2][1] = (p_i.I - p_i_1.I) / (p_N.t - p_0.t) - p_i.s_I * (p_N.I - p_0.I) / (p_N.t - p_0.t);
+        transformation[2][2] = p_i.s_I;
+        transformation[2][7] = (p_N.t * p_i_1.I - p_0.t * p_i.I) / (p_N.t - p_0.t) - p_i.s_I * (p_i.t * p_0.I - p_0.t * p_N.I) / (p_N.t - p_0.t);
         // T or transposition dimension.
-        transformation[3][2] = ((point_i.T - point_i_1.T) - point_i.s_T * (point_N.T - point_0.T)) / (point_N.t - point_0.t);
-        transformation[3][3] = point_i.s_T;
-        transformation[3][7] = ((point_N.t * point_i_1.T - point_0.t * point_i.T) - point_i.s_T * (point_i.t * point_0.T - point_0.t * point_N.T)) / (point_N.t - point_0.t);
+        transformation[3][2] = (p_i.T - p_i_1.T) / (p_N.t - p_0.t) - p_i.s_T * (p_N.T - p_0.T) / (p_N.t - p_0.t);
+        transformation[3][3] = p_i.s_T;
+        transformation[3][7] = (p_N.t * p_i_1.T - p_0.t * p_i.T) / (p_N.t - p_0.t) - p_i.s_T * (p_i.t * p_0.T - p_0.t * p_N.T) / (p_N.t - p_0.t);
         this.hutchinson_operator.push(transformation);
     }
 }
@@ -227,21 +305,28 @@ HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() 
 HarmonyIFS.ScoreAttractor.prototype.point_to_note = function(point) {
     let note = new Silencio.Event();
     note.status = 144;
-    note.time = point[0][0];
-    this.duration = this.note_duration;
-    let P = Math.round(point[1][0]);
-    let I = Math.round(point[2][0]);
-    let T = Math.round(point[3][0]);
+    note.time = point[0];
+    note.duration = this.note_duration;
+    let P = Math.round(point[1]);
+    let I = Math.round(point[2]);
+    let T = Math.round(point[3]);
     note.chord = this.chord_space_group.toChord(P, I, T, 0, 0, 0, 0).op;
-    note.key = point[4][0];
-    note.velocity = point[5][0];
-    note.channel = point[6][0];
+    note.key = point[4];
+    note.velocity = point[5];
+    note.channel = point[6];
     return note;
 }
 
 HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
+    let make_key = function(a) {
+        if (a.chord !== null && typeof a.chord !== 'undefined') {
+            return sprintf("%s--%s", a.toString(), a.chord.toString());
+        } else {
+            return a.toString();
+        }
+    }
     csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
-    let note_set = new Silencio.ValueSet(function(a) {return a.toString()});
+    let note_set = new Silencio.ValueSet(make_key);
     for (let i = 0; i < this.score.size(); i++) {
         note_set.add(this.score.data[i]);
     }
@@ -256,19 +341,31 @@ HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
  * score.
  */
 HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
+    console.log("Generating ScoreAttractor...");
     this.score.clear();
     let iteration = 0;
     // This point should be within the bounds of the attractor.
     let initial_point = new HarmonyIFS.Point();
-    initial_point.d = .25;
+    initial_point.k = 36;
     initial_point.v = 60;
     initial_point.i = 1;
+    // We wrote the code for column vectors, which is more common in the
+    // literature and easier to read, but numeric.js only works with row
+    // vectors.
+    this.transposed_hutchinson_operator = [];
+    for (let i = 0; i < this.hutchinson_operator.length; i++) {
+        let transformation = this.hutchinson_operator[i];
+        let transposed_transformation = numeric.transpose(transformation);
+        this.transposed_hutchinson_operator.push(transposed_transformation);
+    }
     this.iterate(depth, iteration, initial_point.data);
     csound.message(sprintf("Generated %d points.\n", this.score.size()));
+    console.log(this.score.toString());
     ///if (this.rescale == true) {
     ///    this.rescale_score_graph();
     ///}
     this.translate_score_attractor_to_score();
+    console.log("Finished generating ScoreAttractor.");
 };
 
 /**
@@ -282,8 +379,9 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
         return;
     }
     for (let i = 0; i < this.hutchinson_operator.length; i++) {
-        let transformation = this.hutchinson_operator[i];
-        let new_point = numeric.dot(transformation, point);
+        let transposed_transformation = this.transposed_hutchinson_operator[i];
+        // Remember, we are using row vectors.
+        let new_point = numeric.dotVM(point, transposed_transformation);
         this.iterate(depth, iteration, new_point);
     }
 };
@@ -292,6 +390,7 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
  * rescale certain dimensions, and to conform pitches to chords.
  */
 HarmonyIFS.ScoreAttractor.prototype.translate_score_attractor_to_score = function() {
+    console.log("Translating ScoreAttractor to final score...");
     this.score.setScale(Silencio.Event.TIME, 0);
     this.score.setScale(Silencio.Event.KEY, this.bass, this.range);
     this.score.temper();
@@ -300,7 +399,11 @@ HarmonyIFS.ScoreAttractor.prototype.translate_score_attractor_to_score = functio
         let new_pitch = ChordSpace.conformPitchToChord(pitch, this.score.data[i].chord, false);
         this.score.data[i].key = new_pitch;
     }
+    console.log(this.score.toString());
+    console.log("Removing duplicate notes...");
     this.remove_duplicate_notes();
+    console.log(this.score.toString());
+    console.log("Finished translating ScoreAttractor to final score.")
 }
 
 /**
