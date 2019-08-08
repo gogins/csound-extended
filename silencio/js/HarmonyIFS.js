@@ -29,7 +29,7 @@ var HarmonyIFS = {};
  * by P, I, and T.
  */
 HarmonyIFS.Point = function() {
-    // It seems a vector in numeric.js must be a matrix of 1 row or 1 column.
+    // It seems a vector in numeric.js is treated as a row vector.
     this.data = [0, 0, 0, 0, 0, 0, 0, 1];
     /**
      * Time.
@@ -223,7 +223,7 @@ HarmonyIFS.InterpolationPoint.prototype.to_string = function() {
  * vector of I instrument numbers and a note duration in seconds. g is the
  * generator of transposition.
  */
-HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, note_duration_, rescale_, g_) {
+HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, note_duration_, tie_overlaps_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {
@@ -284,17 +284,17 @@ HarmonyIFS.ScoreAttractor.prototype.initialize_hutchinson_operator = function() 
         transformation[0][0] = (p_i.t - p_i_1.t) / (p_N.t - p_0.t);
         transformation[0][7] = ((p_N.t * p_i_1.t) - (p_0.t * p_i.t)) / (p_N.t - p_0.t);
         // P or set-class dimension.
-        transformation[1][0] = ((p_i.I - p_i_1.P) / (p_N.t - p_0.t)) - (p_i.s_P * ((p_N.P - p_0.P) / (p_N.t - p_0.t)));
+        transformation[1][0] = ((p_i.P - p_i_1.P) / (p_N.t - p_0.t)) - (p_i.s_P * ((p_N.P - p_0.P) / (p_N.t - p_0.t)));
         transformation[1][1] = p_i.s_P;
-        transformation[1][7] = (p_N.t * p_i_1.P - p_0.t * p_i.P) / (p_N.t - p_0.t) - p_i.s_P * (p_i.t * p_0.P - p_0.t * p_N.P) / (p_N.t - p_0.t);
+        transformation[1][7] = (((p_N.t * p_i_1.P) - (p_0.t * p_i.P)) / (p_N.t - p_0.t)) - (p_i.s_P * (((p_i.t * p_0.P) - (p_0.t * p_N.P)) / (p_N.t - p_0.t)));
         // I or inversion dimension.
-        transformation[2][1] = (p_i.I - p_i_1.I) / (p_N.t - p_0.t) - p_i.s_I * (p_N.I - p_0.I) / (p_N.t - p_0.t);
+        transformation[2][0] = ((p_i.I - p_i_1.I) / (p_N.t - p_0.t)) - (p_i.s_I * ((p_N.I - p_0.I) / (p_N.t - p_0.t)));
         transformation[2][2] = p_i.s_I;
-        transformation[2][7] = (p_N.t * p_i_1.I - p_0.t * p_i.I) / (p_N.t - p_0.t) - p_i.s_I * (p_i.t * p_0.I - p_0.t * p_N.I) / (p_N.t - p_0.t);
+        transformation[2][7] = (((p_N.t * p_i_1.I) - (p_0.t * p_i.I)) / (p_N.t - p_0.t)) - (p_i.s_I * (((p_i.t * p_0.I) - (p_0.t * p_N.I)) / (p_N.t - p_0.t)));
         // T or transposition dimension.
-        transformation[3][2] = (p_i.T - p_i_1.T) / (p_N.t - p_0.t) - p_i.s_T * (p_N.T - p_0.T) / (p_N.t - p_0.t);
+        transformation[3][0] = ((p_i.T - p_i_1.T) / (p_N.t - p_0.t)) - (p_i.s_T * ((p_N.T - p_0.T) / (p_N.t - p_0.t)));
         transformation[3][3] = p_i.s_T;
-        transformation[3][7] = (p_N.t * p_i_1.T - p_0.t * p_i.T) / (p_N.t - p_0.t) - p_i.s_T * (p_i.t * p_0.T - p_0.t * p_N.T) / (p_N.t - p_0.t);
+        transformation[3][7] = (((p_N.t * p_i_1.T) - (p_0.t * p_i.T)) / (p_N.t - p_0.t)) - (p_i.s_T * (((p_i.t * p_0.T) - (p_0.t * p_N.T)) / (p_N.t - p_0.t)));
         this.hutchinson_operator.push(transformation);
     }
 }
@@ -316,12 +316,8 @@ HarmonyIFS.ScoreAttractor.prototype.point_to_note = function(point) {
 
 HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
     let make_key = function(a) {
-        if (a.chord !== null && typeof a.chord !== 'undefined') {
-            return sprintf("%s--%s", a.toString(), a.chord.toString());
-        } else {
-            return a.toString();
-        }
-    }
+        return a.toString();
+    };
     csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
     let note_set = new Silencio.ValueSet(make_key);
     for (let i = 0; i < this.score.size(); i++) {
@@ -372,6 +368,8 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
     iteration = iteration + 1;
     if (iteration >= depth) {
         let note = this.point_to_note(point);
+        let text = sprintf("depth: %3d iteration: %3d point: %s note: %s\n", depth, iteration, point.toString(), note.toString());
+        console.info(text);
         this.score.append(note);
         return;
     }
@@ -403,11 +401,6 @@ HarmonyIFS.ScoreAttractor.prototype.translate_score_attractor_to_score = functio
     console.log(this.score.toString());
     console.log("Finished translating ScoreAttractor to final score.")
 }
-
-/**
- * Process the initial score attractor to the final score.
- */
-HarmonyIFS.ScoreAttractor
 
 // Node: Export function
 if (typeof module !== "undefined" && module.exports) {
