@@ -223,7 +223,7 @@ HarmonyIFS.InterpolationPoint.prototype.to_string = function() {
  * vector of I instrument numbers and a note duration in seconds. g is the
  * generator of transposition.
  */
-HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, dynamics_, durations_, tie_overlaps_, rescale_, g_) {
+HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, note_duration_, rescale_, g_) {
     if (typeof tie_overlaps_ == "undefined") {
         this.tie_overlaps = true;
     } else {
@@ -242,13 +242,10 @@ HarmonyIFS.ScoreAttractor = function(voices_, range_, bass_, instruments_, dynam
     this.voices = voices_;
     this.range = range_;
     this.bass = bass_;
-    this.instruments = instruments_;
-    this.dynamics = dynamics_;
-    this.durations = durations_;
-    this.chord_space_group = ChordSpace.createChordSpaceGroup(this.voices, this.range, this.instruments, this.dynamics, this.durations);
+    this.chord_space_group = ChordSpace.createChordSpaceGroup(this.voices, this.range);
     this.interpolation_points = [];
     this.hutchinson_operator = [];
-    this.note_duration = 0.01;
+    this.note_duration = note_duration_;
     this.score = new Silencio.Score();
 };
 
@@ -402,6 +399,7 @@ HarmonyIFS.ScoreAttractor.prototype.translate_score_attractor_to_score = functio
     console.log(this.score.toString());
     console.log("Removing duplicate notes...");
     this.remove_duplicate_notes();
+    this.score.tieOverlaps(true);
     console.log(this.score.toString());
     console.log("Finished translating ScoreAttractor to final score.")
 }
