@@ -368,8 +368,8 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
     iteration = iteration + 1;
     if (iteration >= depth) {
         let note = this.point_to_note(point);
-        let text = sprintf("depth: %3d iteration: %3d point: %s note: %s\n", depth, iteration, point.toString(), note.toString());
-        console.info(text);
+        //let text = sprintf("depth: %3d iteration: %3d point: %s note: %s\n", depth, iteration, point.toString(), note.toString());
+        //console.info(text);
         this.score.append(note);
         return;
     }
