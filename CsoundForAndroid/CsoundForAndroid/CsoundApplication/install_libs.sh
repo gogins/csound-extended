@@ -33,6 +33,7 @@ cp -f $CSOUND_SRC_ROOT/samples/* src/main/assets/samples
 
 mkdir -p src/main/assets/examples/examples/Gogins
 cp -rf ../../../silencio src/main/assets/examples/Gogins
+cp -4f ../../../test-examples/csound/oblivion-gm.csd src/main/assets/examples/Gogins
 
 
 
