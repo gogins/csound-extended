@@ -771,6 +771,10 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         sliders.add((SeekBar) findViewById(R.id.seekBar3));
         sliders.add((SeekBar) findViewById(R.id.seekBar4));
         sliders.add((SeekBar) findViewById(R.id.seekBar5));
+        sliders.add((SeekBar) findViewById(R.id.seekBar6));
+        sliders.add((SeekBar) findViewById(R.id.seekBar7));
+        sliders.add((SeekBar) findViewById(R.id.seekBar8));
+        sliders.add((SeekBar) findViewById(R.id.seekBar9));
         buttons.add((Button) findViewById(R.id.button1));
         buttons.add((Button) findViewById(R.id.button2));
         buttons.add((Button) findViewById(R.id.button3));
@@ -799,7 +803,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         editor.loadUrl("file:///android_asset/codemirror_editor.html");
         editor.setBackgroundColor(0);
         // Add slider handlers.
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 9; i++) {
             SeekBar seekBar = sliders.get(i);
             final String channelName = "slider" + (i + 1);
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
