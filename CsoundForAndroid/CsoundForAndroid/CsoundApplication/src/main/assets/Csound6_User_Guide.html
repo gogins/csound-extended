@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-07-03T12:13:03.695538273"/>
+	<meta name="changed" content="2019-08-16T10:16:55.425603820"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -33,7 +33,7 @@ Csound for Android
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <i><b>Michael Gogins</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-<i><b>3 July 2019</b></i></p>
+<i><b>16 August 2019</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <br/>
 
@@ -245,10 +245,11 @@ task menu of Csound for Android provides the following functions:
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 predefined widgets on the <i><b>Widgets </b></i>tab are assigned
 control channel names <font face="Courier New, monospace">slider1</font>
-through <font face="Courier New, monospace">slider5</font>, <font face="Courier New, monospace">butt1</font>
-through <font face="Courier New, monospace">butt5</font>, <font face="Courier New, monospace">trackpad.x</font>,
-and <font face="Courier New, monospace">trackpad.y</font>. In
-addition, the accelerometer on the Android device is available as
+through <font face="Courier New, monospace">slider</font><font face="Courier New, monospace">9</font>,
+<font face="Courier New, monospace">butt1</font> through <font face="Courier New, monospace">butt5</font>,
+<font face="Courier New, monospace">trackpad.x</font>, and
+<font face="Courier New, monospace">trackpad.y</font>. In addition,
+the accelerometer on the Android device is available as
 <font face="Courier New, monospace">accelerometerX</font>,
 <font face="Courier New, monospace">accelerometerY</font>, and
 <font face="Courier New, monospace">accelerometerZ</font>. 
@@ -282,7 +283,7 @@ attribute in the Csound for Android source code. For a basic example
 of a user-defined widget setup, see the <font face="Courier New, monospace">Drone-HTML5.csd</font>
 example file. Here is a snippet showing a slider's <font face="Courier New, monospace">onInput</font>
 event handler setting a Csound control channel:</p>
-<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-after: auto"><br/>
+<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">
 &lt;script&gt;
 function gk_Reverb_FeedbackUpdate(value) {
 var numberValue = parseFloat(value)
@@ -338,7 +339,7 @@ and log some informative messages during Csound's performance (<font face="Couri
 a blank line between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsInstruments&gt;</font>
 and type the following text:</p>
-<pre class="western" style="line-height: 115%"><br/>
+<pre class="western" style="line-height: 115%">
 sr = 44100
 ksmps = 10
 nchnls = 1
@@ -368,13 +369,14 @@ change <font face="Courier New, monospace">-odac</font> above to
 <font face="Courier New, monospace">-o/sdcard/test.wav</font>.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">That's
 it!</p>
-<h1 class="western">Audio Performance Issues</h1>
+<h1 class="western">Issues and Workarounds</h1>
+<h2 class="western">Audio Performance</h2>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Android operating system has only recently been given an audio driver
 layer, AAudio, that is even marginally adequate for musical use. Only
 recent devices support this, and even some of them have issues. The
-Oboe driver used by this app switches internally between AAudio and
-the older OpenSL ES audio driver to suit your device.</p>
+Oboe driver used by this app can be configured by the user for either
+AAudio or the older OpenSL ES audio driver to suit your device.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">If
 you experiences glitches or low latency, try the following:</p>
 <ul>
@@ -400,6 +402,21 @@ you experiences glitches or low latency, try the following:</p>
 	<font face="Liberation Serif, serif">Experiment with your device’s
 	Power Saving or Performance mode.</font></p>
 </ul>
+<h2 class="western">File System</h2>
+<p>The Android operating system has new and sometimes awkward
+security restrictions on how applications can read and write files on
+your device. Applications are required to specify any storage
+directories on which the user might write files. 
+</p>
+<p>For the Csound for Android app, the default public storage
+directory is <font face="Courier New, monospace">Music</font>, which
+on many devices is <font face="Courier New, monospace"><span style="font-style: normal">/storage/emulated/0/Music</span></font><span style="font-style: normal">.
+If your pieces cannot read or write some file, such as a SoundFont,
+sample soundfile, include file, or anything else, try putting
+everything in this directory. Subdirectories of this should also
+work. On startup, you can look at the </span><i><b>Messages</b></i><span style="font-style: normal">
+pane to see what Csound is actually using for the public data
+directory.</span></p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
 
 </p>

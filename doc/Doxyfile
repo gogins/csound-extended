@@ -777,7 +777,6 @@ INPUT                  = ../README.md \
                          ../dependencies/csound/include \
                          ../dependencies/csound/interfaces \
                          ../dependencies/cmask/source \
-                         ../silencio/js \
                          ../Opcodes/cmask \
                          ../Opcodes/LuaCsound \
                          ../csound.node \

@@ -134,9 +134,11 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
     private WebView editor = null;
     private LinearLayout editor_tab = null;
     private TextView messageTextView = null;
+    private TextView messageTextViewSmall = null;
     private WebView html_tab = null;
     private TableLayout widgets_tab = null;
     private ScrollView messages_tab = null;
+    private ScrollView messageTextViewSmallScrollView = null;
     private WebView help_tab = null;
     private WebView portal_tab = null;
     private MenuItem renderItem = null;
@@ -281,6 +283,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
 
     public void startRendering() {
         messageTextView.setText("");
+        messageTextViewSmall.setText("");
         File file = new File(OPCODE6DIR);
         String getOPCODE6DIR = csnd.csound_oboeJNI.csoundGetEnv(0,
                 "OPCODE6DIR");
@@ -504,6 +507,13 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 }
                 return true;
             }
+            case R.id.itemOblivion: {
+                outFile = copyAsset("examples/Gogins/oblivion-gm.csd");
+                if (outFile != null) {
+                    LoadFile(outFile);
+                }
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -530,12 +540,15 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             public void run() {
                 if (doClear == true) {
                     messageTextView.setText("");
+                    messageTextViewSmall.setText("");
                 }
                 if (message == null) {
                     return;
                 }
                 messageTextView.append(message);
                 messages_tab.fullScroll(ScrollView.FOCUS_DOWN);
+                messageTextViewSmall.append(message);
+                messageTextViewSmallScrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 // Send Csound messages to the WebView's console.log function.
                 // This should happen when and only when a newline appears.
                 for (int i = 0, n = message.length(); i < n; i++) {
@@ -743,6 +756,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             }
         }
         copyRawwaves();
+        copyAssetsRecursively("samples");
         copyAssetsRecursively("examples");
         csdTemplate = "<CsoundSynthesizer>\n" + "<CsLicense>\n"
                 + "</CsLicense>\n" + "<CsOptions>\n" + "</CsOptions>\n"
@@ -766,6 +780,8 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         portal_tab = findViewById(R.id.portal_tab);
         portal_tab.setVisibility(View.GONE);
         messageTextView = findViewById(R.id.messageTextView);
+        messageTextViewSmall = findViewById(R.id.messageTextViewSmall);
+        messageTextViewSmallScrollView = findViewById(R.id.messageTextSmallScroll);
         sliders.add((SeekBar) findViewById(R.id.seekBar1));
         sliders.add((SeekBar) findViewById(R.id.seekBar2));
         sliders.add((SeekBar) findViewById(R.id.seekBar3));
