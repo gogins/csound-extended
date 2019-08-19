@@ -272,14 +272,14 @@ ScoreGraphs.ScoreGraph.prototype.rescale_score_graph = function() {
 };
 
 ScoreGraphs.ScoreGraph.prototype.remove_duplicate_notes = function() {
-    csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
+    console.info(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
     let note_set = new Silencio.ValueSet(function(a) {return a.toString()});
     for (let i = 0; i < this.score.size(); i++) {
         note_set.add(this.score.data[i]);
     }
     this.score.clear();
     this.score.data = [...note_set.values()];
-    csound.message(sprintf("After removing duplicate notes:  %6d\n", this.score.size()));
+    console.info(sprintf("After removing duplicate notes:  %6d\n", this.score.size()));
 }
 
 ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
@@ -309,8 +309,8 @@ ScoreGraphs.ScoreGraph.prototype.translate_score_graph_to_score = function() {
         let L = Math.round(point.L);
         let D = Math.round(point.D);
         let chord = this.chord_space.toChord(P, I, T, V, A, L, D).revoicing;
-        // csound.message(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
-        // csound.message(        "         chord:   " + chord.toString() + "\n");
+        // console.info(sprintf("point:   time: %9.4f P: %9.4f I: %9.4f T: %9.4f V: %9.4f A: %9.4f\n", point.time, P, I, T, V, A));
+        // console.info(        "         chord:   " + chord.toString() + "\n");
         //chord.setDuration(this.time_step * this.duration_scale_factor);
         for (let voice = 0; voice < chord.size(); voice++) {
             let duration = this.time_step * this.duration_scale_factor * chord.duration[voice];
@@ -365,7 +365,7 @@ ScoreGraphs.ScoreGraph.prototype.generate = function(depth, time_steps, duration
         point.time = this.time_0 + i * this.time_step;
         this.iterate(depth, iteration, point);
     }
-    csound.message("Generated " + this.score_graph.length + " points.\n");
+    console.info("Generated " + this.score_graph.length + " points.\n");
     if (this.rescale == true) {
         this.rescale_score_graph();
     }

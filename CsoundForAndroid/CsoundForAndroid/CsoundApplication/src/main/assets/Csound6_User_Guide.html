@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-08-16T10:16:55.425603820"/>
+	<meta name="changed" content="2019-08-18T20:24:22.692202629"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -245,11 +245,10 @@ task menu of Csound for Android provides the following functions:
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 predefined widgets on the <i><b>Widgets </b></i>tab are assigned
 control channel names <font face="Courier New, monospace">slider1</font>
-through <font face="Courier New, monospace">slider</font><font face="Courier New, monospace">9</font>,
-<font face="Courier New, monospace">butt1</font> through <font face="Courier New, monospace">butt5</font>,
-<font face="Courier New, monospace">trackpad.x</font>, and
-<font face="Courier New, monospace">trackpad.y</font>. In addition,
-the accelerometer on the Android device is available as
+through <font face="Courier New, monospace">slider9</font>, <font face="Courier New, monospace">butt1</font>
+through <font face="Courier New, monospace">butt5</font>, <font face="Courier New, monospace">trackpad.x</font>,
+and <font face="Courier New, monospace">trackpad.y</font>. In
+addition, the accelerometer on the Android device is available as
 <font face="Courier New, monospace">accelerometerX</font>,
 <font face="Courier New, monospace">accelerometerY</font>, and
 <font face="Courier New, monospace">accelerometerZ</font>. 
@@ -261,6 +260,10 @@ opcode, like this:
 </p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><font face="Courier New, monospace">kslider1_value
 chnget “slider1”</font></p>
+<p style="margin-top: 0.04in">The buttons send 1 when pressed, and 0
+when released. The trackpad sends the x and y positions whenever the
+user is moving his or her finger on the trackpad. The positions are
+remembered when the the finger is removed.</p>
 <h2 class="western" style="line-height: 115%">User-Defined Widgets</h2>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">User-defined
 widgets are defined in an HTML file (Web page), or in a new <font face="Courier New, monospace">&lt;html&gt;</font>
@@ -283,8 +286,7 @@ attribute in the Csound for Android source code. For a basic example
 of a user-defined widget setup, see the <font face="Courier New, monospace">Drone-HTML5.csd</font>
 example file. Here is a snippet showing a slider's <font face="Courier New, monospace">onInput</font>
 event handler setting a Csound control channel:</p>
-<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">
-&lt;script&gt;
+<pre class="western" style="line-height: 115%; page-break-inside: avoid; page-break-before: auto; page-break-after: auto">&lt;script&gt;
 function gk_Reverb_FeedbackUpdate(value) {
 var numberValue = parseFloat(value)
 csoundApp.setControlChannel('gk_Reverb_Feedback', numberValue);
@@ -339,8 +341,7 @@ and log some informative messages during Csound's performance (<font face="Couri
 a blank line between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsInstruments&gt;</font>
 and type the following text:</p>
-<pre class="western" style="line-height: 115%">
-sr = 44100
+<pre class="western" style="line-height: 115%">sr = 44100
 ksmps = 10
 nchnls = 1
 <font color="#000000"><font face="Courier New, monospace"><font size="2" style="font-size: 9pt">instr 1</font></font></font>
@@ -410,15 +411,17 @@ directories on which the user might write files.
 </p>
 <p>For the Csound for Android app, the default public storage
 directory is <font face="Courier New, monospace">Music</font>, which
-on many devices is <font face="Courier New, monospace"><span style="font-style: normal">/storage/emulated/0/Music</span></font><span style="font-style: normal">.
+on many devices is <span style="font-variant: normal"><font face="Courier New, monospace"><span style="font-style: normal">/storage/emulated/0/Music</span></font></span><span style="font-variant: normal"><span style="font-style: normal">.
 If your pieces cannot read or write some file, such as a SoundFont,
 sample soundfile, include file, or anything else, try putting
 everything in this directory. Subdirectories of this should also
-work. On startup, you can look at the </span><i><b>Messages</b></i><span style="font-style: normal">
-pane to see what Csound is actually using for the public data
-directory.</span></p>
-<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><br/>
-
-</p>
+work. On startup, you can look at the </span></span><i><b>Messages</b></i><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">pane
+to see what Csound is actually using for the public data directory.</span></span></p>
+<h2 class="western">Screen Sizes</h2>
+<p>The sizes of fonts and widgets in the Csound for Android app can
+be configured to some extent in the device’s Android settings,
+namely in the <i><b>Settings</b></i>, <i><b>Display</b></i>, <i><b>Font
+size and style</b></i> section and <i><b>Screen zoom</b></i> section.</p>
 </body>
 </html>

@@ -318,14 +318,14 @@ HarmonyIFS.ScoreAttractor.prototype.remove_duplicate_notes = function() {
     let make_key = function(a) {
         return a.toString();
     };
-    csound.message(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
+    console.info(sprintf("Before removing duplicate notes: %6d\n", this.score.size()));
     let note_set = new Silencio.ValueSet(make_key);
     for (let i = 0; i < this.score.size(); i++) {
         note_set.add(this.score.data[i]);
     }
     this.score.clear();
     this.score.data = [...note_set.values()];
-    csound.message(sprintf("After removing duplicate notes:  %6d\n", this.score.size()));
+    console.info(sprintf("After removing duplicate notes:  %6d\n", this.score.size()));
 }
 
 /**
@@ -352,8 +352,8 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
         this.transposed_hutchinson_operator.push(transposed_transformation);
     }
     this.iterate(depth, iteration, initial_point.data);
-    csound.message(sprintf("Generated %d points.\n", this.score.size()));
-    console.log(this.score.toString());
+    console.info(sprintf("Generated %d points.\n", this.score.size()));
+    //console.log(this.score.toString());
     ///if (this.rescale == true) {
     ///    this.rescale_score_graph();
     ///}

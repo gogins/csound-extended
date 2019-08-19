@@ -846,13 +846,23 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         for (int i = 0; i < 5; i++) {
             Button button = buttons.get(i);
             final String channelName = "butt" + (i + 1);
-            button.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    synchronized (this) {
-                        if (csound_oboe != null) {
-                            csound_oboe.setChannel(channelName, 1.0);
+            button.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        synchronized (this) {
+                            if (csound_oboe != null) {
+                                csound_oboe.setChannel(channelName, 1);
+                            }
                         }
-                    }
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        synchronized (this) {
+                            if (csound_oboe != null) {
+                                csound_oboe.setChannel(channelName, 0);
+                            }
+                        }
+                     }
+                    return true;
                 }
             });
         }
@@ -877,14 +887,14 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                     case MotionEvent.ACTION_MOVE:
                         break;
                 }
-                if (selected == true) {
+                if (pad.isPressed() == true) {
                     xpos = event.getX() / v.getWidth();
                     ypos = 1. - (event.getY() / v.getHeight());
-                }
-                synchronized (this) {
-                    if (csound_oboe != null) {
-                        csound_oboe.setChannel("trackpad.x", xpos);
-                        csound_oboe.setChannel("trackpad.y", ypos);
+                    synchronized (this) {
+                        if (csound_oboe != null) {
+                            csound_oboe.setChannel("trackpad.x", xpos);
+                            csound_oboe.setChannel("trackpad.y", ypos);
+                        }
                     }
                 }
                 return true;
