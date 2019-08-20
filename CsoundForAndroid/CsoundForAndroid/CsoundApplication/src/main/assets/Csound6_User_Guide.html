@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-08-18T20:24:22.692202629"/>
+	<meta name="changed" content="2019-08-19T20:59:04.585585460"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -33,7 +33,7 @@ Csound for Android
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <i><b>Michael Gogins</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-<i><b>16 August 2019</b></i></p>
+<i><b>19 August 2019</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <br/>
 
@@ -64,6 +64,9 @@ version of Csound for Android features many changes and improvements:</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The user interface is tabbed for instantly switching between editing
 	and performing.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	There are now 9 built-in sliders.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The <i><b>Csound Reference Manual</b></i> appears in its own tab.<!-- <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
@@ -146,10 +149,10 @@ widgets, and so forth. The tabs are:</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Widgets</b></i><span style="font-variant: normal"> –
 	</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
-	a predefined set of 5 sliders, 5 buttons, and a trackpad that send
-	updates to predefined Csound control channels. These widgets are
-	backwards compatible with previous versions of the Csound for
-	Android app.</span></span></span></p>
+	a predefined set of </span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">9</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">
+	sliders, 5 buttons, and a trackpad that send updates to predefined
+	Csound control channels. These widgets are backwards compatible with
+	previous versions of the Csound for Android app.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Help</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
@@ -261,9 +264,10 @@ opcode, like this:
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%"><font face="Courier New, monospace">kslider1_value
 chnget “slider1”</font></p>
 <p style="margin-top: 0.04in">The buttons send 1 when pressed, and 0
-when released. The trackpad sends the x and y positions whenever the
-user is moving his or her finger on the trackpad. The positions are
-remembered when the the finger is removed.</p>
+when released. The trackpad sends the <font face="Courier New, monospace">x</font>
+and <font face="Courier New, monospace">y</font> positions whenever
+the user is moving his or her finger on the trackpad. These positions
+are remembered when the the finger is removed.</p>
 <h2 class="western" style="line-height: 115%">User-Defined Widgets</h2>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">User-defined
 widgets are defined in an HTML file (Web page), or in a new <font face="Courier New, monospace">&lt;html&gt;</font>
