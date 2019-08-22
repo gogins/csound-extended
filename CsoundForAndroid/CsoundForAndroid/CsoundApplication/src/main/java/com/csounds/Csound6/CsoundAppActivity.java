@@ -419,12 +419,6 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             case R.id.action_render:
                 getEditorTextAndRun();
                 return true;
-            case R.id.action_find:
-                editor.evaluateJavascript("codemirror_editor.execCommand('find');", null);
-                return true;
-            case R.id.action_replace:
-                editor.evaluateJavascript("codemirror_editor.execCommand('replace');", null);
-                return true;
             case R.id.itemGuide:
                 File user_guide = copyAsset("Csound6_User_Guide.pdf");
                 Uri uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, user_guide);
@@ -679,8 +673,14 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
 
     private void LoadFile(File file) {
         Log.d("Csound:", file.getAbsolutePath());
+        String pathname = file.getPath();
+        String extension = "";
+        int i = pathname.lastIndexOf('.');
+        if (i >= 0) {
+            extension = pathname.substring(i+1);
+        }
         String code = loadTextFile(file);
-        setEditorText(code);
+        setEditorText(code, extension);
         setTitle(file.getName());
         csound_uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID, file);
         loadWebView();
@@ -1061,7 +1061,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 }
                 csound_uri_intent = intent;
                 csound_uri = intent.getData();
-                setEditorText(csdTemplate);
+                setEditorText(csdTemplate, "csd");
                 saveTextToUri(csdTemplate, csound_uri);
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1084,7 +1084,13 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
                 csound_uri_intent = intent;
                 csound_uri = intent.getData();
                 String text = loadTextFromUri(csound_uri);
-                setEditorText(text);
+                String pathname = csound_uri.getPath();
+                String extension = "";
+                int i = pathname.lastIndexOf('.');
+                if (i >= 0) {
+                    extension = pathname.substring(i+1);
+                }
+                setEditorText(text, extension);
                 loadWebView();
                 String title = uriToFilename(csound_uri);
                 setTitle(title);
@@ -1093,10 +1099,15 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
             Log.e("Csound:", e.toString());
         }
     }
-    public void setEditorText(String text) {
+    public void setEditorText(String text, String extension) {
         Log.i("Csound:", "setEditorText...");
         code = text;
-        editor.evaluateJavascript("setCodeMirrorText();", this);
+        String mode = "ace/mode/csound_document";
+        if (extension.compareToIgnoreCase("html") == 0) {
+            mode = "ace/mode/html";
+        }
+        String snippet = "setCodeMirrorText(\"" + mode + "\");";
+        editor.evaluateJavascript(snippet, this);
     }
 
     public void getEditorText() {

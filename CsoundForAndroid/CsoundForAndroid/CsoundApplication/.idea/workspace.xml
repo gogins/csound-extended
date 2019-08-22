@@ -1,29 +1,512 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="bb96fff2-cd37-4db9-b03f-329b32bc13d1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_databinding_adapters_3_2_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_databinding_baseLibrary_3_2_0_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_databinding_library_3_2_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_ahmadaghazadeh_CodeEditor_1_0_17_aar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CsoundAndroid/CsoundAndroid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundAndroid/CsoundAndroid.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CsoundApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CsoundApplication.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/comment/comment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/comment/continuecomment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/dialog/dialog.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/dialog/dialog.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/autorefresh.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/fullscreen.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/fullscreen.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/panel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/placeholder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/display/rulers.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/closebrackets.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/closetag.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/continuelist.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/matchbrackets.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/matchtags.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/edit/trailingspace.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/brace-fold.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/comment-fold.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/foldcode.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/foldgutter.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/foldgutter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/indent-fold.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/markdown-fold.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/fold/xml-fold.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/anyword-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/css-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/html-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/javascript-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/show-hint.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/show-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/sql-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/hint/xml-hint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/coffeescript-lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/css-lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/html-lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/javascript-lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/json-lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/lint.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/lint/yaml-lint.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/merge/merge.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/merge/merge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/loadmode.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/multiplex.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/multiplex_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/overlay.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/mode/simple.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/colorize.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/runmode-standalone.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/runmode.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/runmode/runmode.node.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/annotatescrollbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/scrollpastend.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/simplescrollbars.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/scroll/simplescrollbars.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/jump-to-line.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/match-highlighter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/matchesonscrollbar.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/matchesonscrollbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/search.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/search/searchcursor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/selection/active-line.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/selection/mark-selection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/selection/selection-pointer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/tern/tern.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/tern/tern.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/tern/worker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/addon/wrap/hardwrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/keymap/emacs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/keymap/sublime.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/keymap/vim.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/lib/codemirror.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/lib/codemirror.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/apl/apl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/apl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asciiarmor/asciiarmor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asciiarmor/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asn.1/asn.1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asn.1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asterisk/asterisk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/asterisk/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/brainfuck/brainfuck.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/brainfuck/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/clike.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/scala.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clike/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clojure/clojure.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clojure/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/clojure/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cmake/cmake.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cmake/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cobol/cobol.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cobol/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/coffeescript/coffeescript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/coffeescript/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/commonlisp/commonlisp.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/commonlisp/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/crystal/crystal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/crystal/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/css.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/gss.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/gss_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/less.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/less_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/scss.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/scss_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/css/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cypher/cypher.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cypher/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/cypher/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/d/d.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/d/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/d/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dart/dart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dart/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/diff/diff.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/diff/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/django/django.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/django/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dockerfile/dockerfile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dockerfile/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dockerfile/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dtd/dtd.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dtd/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dylan/dylan.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dylan/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/dylan/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ebnf/ebnf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ebnf/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ecl/ecl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ecl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/eiffel/eiffel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/eiffel/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/elm/elm.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/elm/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/erlang/erlang.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/erlang/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/factor/factor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/factor/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fcl/fcl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fcl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/forth/forth.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/forth/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fortran/fortran.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/fortran/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gas/gas.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gas/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gfm/gfm.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gfm/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gfm/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gherkin/gherkin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/gherkin/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/go/go.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/go/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/groovy/groovy.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/groovy/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haml/haml.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haml/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haml/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/handlebars/handlebars.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/handlebars/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell-literate/haskell-literate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell-literate/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell/haskell.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haskell/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haxe/haxe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/haxe/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlembedded/htmlembedded.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlembedded/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlmixed/htmlmixed.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/htmlmixed/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/http/http.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/http/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/idl/idl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/idl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/javascript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/json-ld.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/javascript/typescript.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jinja2/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jinja2/jinja2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jsx/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jsx/jsx.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/jsx/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/julia/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/julia/julia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/livescript/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/livescript/livescript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/lua/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/lua/lua.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/markdown/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/markdown/markdown.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/markdown/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mathematica/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mathematica/mathematica.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mbox/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mbox/mbox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/meta.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mirc/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mirc/mirc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mllike/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mllike/mllike.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/modelica/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/modelica/modelica.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/mscgen.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/mscgen_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/msgenny_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mscgen/xu_test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mumps/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/mumps/mumps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nginx/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nginx/nginx.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nsis/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/nsis/nsis.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ntriples/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ntriples/ntriples.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/octave/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/octave/octave.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/oz/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/oz/oz.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pascal/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pascal/pascal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pegjs/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pegjs/pegjs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/perl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/perl/perl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/php/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/php/php.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/php/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pig/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pig/pig.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/powershell/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/powershell/powershell.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/powershell/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/properties/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/properties/properties.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/protobuf/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/protobuf/protobuf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pug/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/pug/pug.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/puppet/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/puppet/puppet.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/python/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/python/python.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/python/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/q/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/q/q.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/r/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/r/r.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rpm/changes/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rpm/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rpm/rpm.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rst/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rst/rst.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ruby/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ruby/ruby.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ruby/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rust/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rust/rust.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/rust/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sas/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sas/sas.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sass/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sass/sass.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sass/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/scheme/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/scheme/scheme.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/shell/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/shell/shell.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/shell/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sieve/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sieve/sieve.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/slim/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/slim/slim.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/slim/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smalltalk/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smalltalk/smalltalk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smarty/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/smarty/smarty.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/solr/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/solr/solr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/soy/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/soy/soy.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/soy/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sparql/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sparql/sparql.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/spreadsheet/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/spreadsheet/spreadsheet.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sql/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/sql/sql.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stex/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stex/stex.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stex/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stylus/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/stylus/stylus.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/swift/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/swift/swift.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/swift/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tcl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tcl/tcl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/textile/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/textile/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/textile/textile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiddlywiki/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiddlywiki/tiddlywiki.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiddlywiki/tiddlywiki.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiki/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiki/tiki.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tiki/tiki.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/toml/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/toml/toml.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tornado/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/tornado/tornado.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/troff/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/troff/troff.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn-cfg/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn-cfg/ttcn-cfg.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/ttcn/ttcn.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/turtle/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/turtle/turtle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/twig/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/twig/twig.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vb/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vb/vb.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vbscript/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vbscript/vbscript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/velocity/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/velocity/velocity.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/verilog/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/verilog/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/verilog/verilog.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vhdl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vhdl/vhdl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vue/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/vue/vue.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/webidl/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/webidl/webidl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xml/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xml/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xml/xml.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xquery/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xquery/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/xquery/xquery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yacas/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yacas/yacas.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml-frontmatter/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml-frontmatter/yaml-frontmatter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/yaml/yaml.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/z80/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/mode/z80/z80.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/codemirror.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/Display.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/focus.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/gutters.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/highlight_worker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/line_numbers.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/mode_state.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/operations.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/scroll_events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/scrollbars.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/scrolling.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/selection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/update_display.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/update_line.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/update_lines.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/display/view_tracking.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/CodeMirror.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/commands.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/deleteNearSelection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/drop_events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/fromTextArea.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/global_events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/key_events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/legacy.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/methods.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/mouse_events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/options.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/edit/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/ContentEditableInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/TextareaInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/indent.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/input.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/keymap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/keynames.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/input/movement.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/highlight.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/line_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/pos.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/saw_special_spans.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/spans.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/line/utils_line.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/measurement/position_measurement.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/measurement/widgets.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/Doc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/change_measurement.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/changes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/document_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/history.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/line_widget.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/mark_text.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/selection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/model/selection_updates.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/modes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/StringStream.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/bidi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/dom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/event.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/feature_detection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/misc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/src/util/operation_group.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/3024-day.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/3024-night.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/abcdef.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ambiance-mobile.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ambiance.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/base16-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/base16-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/bespin.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/blackboard.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/cobalt.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/colorforth.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/darcula.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/dracula.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/duotone-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/duotone-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/eclipse.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/elegant.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/erlang-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/gruvbox-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/hopscotch.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/icecoder.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/idea.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/isotope.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/lesser-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/liquibyte.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/lucario.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/material.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/mbo.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/mdn-like.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/midnight.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/monokai.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/neat.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/neo.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/night.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/nord.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/oceanic-next.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/panda-syntax.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/paraiso-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/paraiso-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/pastel-on-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/railscasts.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/rubyblue.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/seti.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/shadowfox.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/solarized.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ssms.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/the-matrix.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/tomorrow-night-bright.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/tomorrow-night-eighties.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/ttcn.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/twilight.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/vibrant-ink.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/xq-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/xq-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/yeti.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror/theme/zenburn.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/menu.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CsoundForAndroid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ndk-libraries/oboe" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/oboe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ndk-libraries/stk" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/stk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../dependencies/cm2" beforeDir="false" afterPath="$PROJECT_DIR$/../../../dependencies/cm2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../dependencies/csound" beforeDir="false" afterPath="$PROJECT_DIR$/../../../dependencies/csound" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../dependencies/update-dependency-cdns.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../../../dependencies/update-dependency-cdns.sh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,15 +524,72 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="54" selection-start-line="54" selection-end-line="54" />
+            <state relative-caret-position="151">
+              <caret line="421" selection-start-line="421" selection-end-line="421" />
+              <folding>
+                <element signature="e#0#298#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/assets/codemirror_editor.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="3" column="43" selection-start-line="3" selection-start-column="43" selection-end-line="3" selection-end-column="43" />
+              <folding>
+                <element signature="e#183#216#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="227">
+              <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer2" />
+        </entry>
+      </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="resourceFile" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>startRendering</find>
+      <find>initEdi</find>
+      <find>editor</find>
+      <find>editor.</find>
+      <find>registerfor</find>
+      <find>inflate</find>
+      <find>onNew</find>
+      <find>onactivit</find>
+      <find>oncreateopt</find>
+      <find>searchservice</find>
+      <find>contextmenu</find>
+      <find>oncont</find>
+      <find>search</find>
+      <find>onsearch</find>
+      <find>onCreateOP</find>
+      <find>onCrate</find>
+      <find>componentName</find>
+      <find>setEd</find>
+      <find>setEditorText</find>
+      <find>loadWeb</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
@@ -58,6 +598,15 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CodeModel.java" />
+        <option value="$PROJECT_DIR$/src/main/res/xml/searcheable.xml" />
+        <option value="$PROJECT_DIR$/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/main/res/xml/searchable.xml" />
+        <option value="$PROJECT_DIR$/src/main/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" />
+        <option value="$PROJECT_DIR$/src/main/res/menu/menu.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" />
       </list>
     </option>
   </component>
@@ -67,30 +616,55 @@
     <option name="width" value="1835" />
     <option name="height" value="789" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
             <path>
               <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
-              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="assets" type="edd41e36:AndroidSourceTypeNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="menu" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
+    <property name="device.picker.selection" value="ce031933c5d2b18c1e7e" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../CsoundForAndroid" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
@@ -147,7 +721,7 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CsoundApplication" type="AndroidRunConfigurationType" factoryName="Android App">
+    <configuration name="CsoundApplication" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="CsoundApplication" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
@@ -162,7 +736,7 @@
       <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
       <option name="FORCE_STOP_RUNNING_APP" value="true" />
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="true" />
       <option name="PREFERRED_AVD" value="" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
@@ -207,6 +781,7 @@
       </method>
     </configuration>
     <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <properties />
       <listeners />
@@ -232,34 +807,210 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Resources Explorer" />
+      <window_info anchor="top" id="Logcat" order="0" side_tool="true" visible="true" weight="0.061503418" />
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.33370227" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.15384616" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
       <window_info id="Designer" order="5" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Logcat" />
-      <window_info anchor="bottom" id="Android Profiler" show_stripe_button="false" />
+      <window_info id="Resources Explorer" order="8" />
       <window_info anchor="bottom" id="Version Control" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" order="1" />
       <window_info anchor="bottom" id="Terminal" order="2" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Build" order="4" visible="true" weight="0.32963374" />
-      <window_info anchor="right" id="Device File Explorer" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Build" order="4" visible="true" weight="0.32915717" />
+      <window_info anchor="bottom" id="Android Profiler" order="5" />
+      <window_info anchor="bottom" id="Run" order="6" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.32915717" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Gradle" order="1" />
       <window_info anchor="right" id="Theme Preview" order="2" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info anchor="right" id="Device File Explorer" order="4" side_tool="true" />
+      <window_info anchor="right" id="Preview" order="5" />
     </layout>
+    <layout-to-restore>
+      <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.15384616" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Build Variants" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info id="Resources Explorer" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="0" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TODO" order="1" />
+      <window_info anchor="bottom" id="Terminal" order="2" />
+      <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Build" order="4" weight="0.32963374" />
+      <window_info anchor="bottom" id="Logcat" order="5" weight="0.39400667" />
+      <window_info anchor="bottom" id="Android Profiler" order="6" />
+      <window_info anchor="bottom" id="Run" order="7" />
+      <window_info active="true" anchor="bottom" id="Debug" order="8" visible="true" weight="0.32963374" />
+      <window_info anchor="right" id="Capture Analysis" order="0" />
+      <window_info anchor="right" id="Gradle" order="1" />
+      <window_info anchor="right" id="Theme Preview" order="2" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info anchor="right" id="Device File Explorer" order="4" side_tool="true" />
+      <window_info anchor="right" id="Preview" order="5" />
+    </layout-to-restore>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
+          <line>976</line>
+          <properties />
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
+          <line>1057</line>
+          <properties />
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
+          <line>928</line>
+          <properties />
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
+          <line>1093</line>
+          <properties />
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java</url>
+          <line>332</line>
+          <properties />
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/build/generated/source/buildConfig/androidTest/debug/com/csounds/Csound6/test/BuildConfig.java" />
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
+        <state relative-caret-position="541">
           <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/drawable-ldpi/cs.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-28/android/app/ActivityThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51876">
+          <caret line="3116" selection-start-line="3116" selection-end-line="3116" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build/generated/source/buildConfig/debug/com/csounds/Csound6/BuildConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-28/android/content/Intent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143874">
+          <caret line="8113" selection-start-line="8113" selection-end-line="8113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/36c8cda10859292cd04fa30a63f21130/jars/classes.jar!/android/support/v7/app/ToolbarActionBar.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5004">
+          <caret line="362" selection-start-line="362" selection-end-line="362" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-28/android/os/Looper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3492">
+          <caret line="216" selection-start-line="216" selection-end-line="216" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/xml/searchable.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+          <folding>
+            <element signature="e#128#146#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="702">
+          <caret line="39" column="16" selection-start-line="39" selection-start-column="16" selection-end-line="39" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="29" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CodeModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/assets/codemirror_editor.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="3" column="43" selection-start-line="3" selection-start-column="43" selection-end-line="3" selection-end-column="43" />
+          <folding>
+            <element signature="e#183#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="421" selection-start-line="421" selection-end-line="421" />
+          <folding>
+            <element signature="e#0#298#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

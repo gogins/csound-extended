@@ -22,14 +22,6 @@
         android:title="Run"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_find"
-        android:title="Find..."
-        app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_replace"
-        android:title="Replace..."
-        app:showAsAction="ifRoom"/>
-    <item
         android:title="Examples" android:enabled="true" android:visible="true">
         <menu>
             <item android:id="@+id/itemTrapped" android:visible="true" android:titleCondensed="Trapped in Convert" android:title="Trapped in Convert, Richard Boulanger" android:enabled="true"/>
