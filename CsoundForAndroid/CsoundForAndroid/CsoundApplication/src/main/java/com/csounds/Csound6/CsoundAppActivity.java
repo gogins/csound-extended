@@ -816,7 +816,7 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         editor.getSettings().setDisplayZoomControls(false);
         editor.setWebViewClient(new CsoundWebViewClient());
         editor.addJavascriptInterface(this, "csoundApp");
-        editor.loadUrl("file:///android_asset/codemirror_editor.html");
+        editor.loadUrl("file:///android_asset/embedded_editor.html");
         editor.setBackgroundColor(0);
         // Add slider handlers.
         for (int i = 0; i < 9; i++) {
@@ -1106,23 +1106,23 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
         if (extension.compareToIgnoreCase("html") == 0) {
             mode = "ace/mode/html";
         }
-        String snippet = "setCodeMirrorText(\"" + mode + "\");";
+        String snippet = "setEmbeddedEditorText(\"" + mode + "\");";
         editor.evaluateJavascript(snippet, this);
     }
 
     public void getEditorText() {
         Log.i("Csound:", "getEditorText...");
-        editor.evaluateJavascript("getCodeMirrorText();", this);
+        editor.evaluateJavascript("getEmbeddedEditorText();", this);
     }
 
     public void getEditorTextAndRun() {
         Log.i("Csound:", "getEditorTextAndRun...");
-        editor.evaluateJavascript("getCodeMirrorTextAndRun();", this);
+        editor.evaluateJavascript("getEmbeddedEditorTextAndRun();", this);
     }
 
     public void getEditorTextAndSave() {
         Log.i("Csound:", "getEditorTextAndSave...");
-        editor.evaluateJavascript("getCodeMirrorTextAndSave();", this);
+        editor.evaluateJavascript("getEmbeddedEditorTextAndSave();", this);
     }
 
     @JavascriptInterface
@@ -1200,9 +1200,9 @@ public class CsoundAppActivity extends AppCompatActivity implements /* CsoundObj
 
     @Override
     public void onReceiveValue(String value) {
-        if (value.contains("getCodeMirrorTextAndRun")) {
+        if (value.contains("getEmbeddedEditorTextAndRun")) {
             render();
-        } else if (value.contains("getCodeMirrorTextAndSave")) {
+        } else if (value.contains("getEmbeddedEditorTextAndSave")) {
             saveTextToUri(code, csound_uri);
         }
     }

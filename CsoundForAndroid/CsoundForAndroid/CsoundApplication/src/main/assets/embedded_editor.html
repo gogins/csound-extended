@@ -12,40 +12,40 @@
     editor.session.setMode("ace/mode/csound_document");
     editor.setTheme("ace/theme/cobalt");
 
-var setCodeMirrorText = function(mode) {
+var setEmbeddedEditorText = function(mode) {
     try {
         var text = csoundApp.getCsoundText();
         editor.session.setMode(mode);
         editor.setValue(text);
         editor.clearSelection();
-        return 'setCodeMirrorText';
+        return 'setEmbeddedEditorText';
     } catch (e) {
         return e.description;
     }
 };
-var getCodeMirrorText = function() {
+var getEmbeddedEditorText = function() {
     try {
         var text = editor.getValue();
         csoundApp.setCsoundText(text);
-        return 'getCodeMirrorText ' + text;
+        return 'getEmbeddedEditorText ' + text;
     } catch (e) {
         return e.description;
     }
 }
-var getCodeMirrorTextAndRun = function() {
+var getEmbeddedEditorTextAndRun = function() {
     try {
         var text = editor.getValue();
         csoundApp.setCsoundText(text);
-        return 'getCodeMirrorTextAndRun' + text;
+        return 'getEmbeddedEditorTextAndRun' + text;
     } catch (e) {
         return e.description;
     }
 }
-var getCodeMirrorTextAndSave = function() {
+var getEmbeddedEditorTextAndSave = function() {
     try {
         var text = codemirror_editor.getDoc().getValue();
         csoundApp.setCsoundText(text);
-        return 'getCodeMirrorTextAndSave ' + text;
+        return 'getEmbeddedEditorTextAndSave ' + text;
     } catch (e) {
         return e.description;
     }

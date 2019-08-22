@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-08-19T20:59:04.585585460"/>
+	<meta name="changed" content="2019-08-22T14:29:58.891197245"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -33,7 +33,7 @@ Csound for Android
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <i><b>Michael Gogins</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-<i><b>19 August 2019</b></i></p>
+<i><b>22 August 2019</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <br/>
 
@@ -58,8 +58,9 @@ version of Csound for Android features many changes and improvements:</p>
 	CsoundOboe C++ class.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	The app now has a built-in text editor based on CodeMirror. The
-	editor includes find and replace functions.</p>
+	The app now has a built-in text editor based on Ace, replacing
+	CodeMirror. The editor includes find and replace functions. The
+	editor now has specific modes for .csd files and .html files.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The user interface is tabbed for instantly switching between editing
@@ -133,9 +134,11 @@ widgets, and so forth. The tabs are:</p>
 <ul>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	<i><b>Editor</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
-	a built-in text editor based on CodeMirror, with find and replace
-	functionality.</span></span></span></p>
+	<i><b>Editor</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><font size="3" style="font-size: 12pt"><span style="font-style: normal"><span style="font-weight: normal">Provides
+	a built-in text editor based on </span></span></font></span><span style="font-variant: normal"><font size="3" style="font-size: 12pt"><span style="font-style: normal"><span style="font-weight: normal">Ace</span></span></font></span><span style="font-variant: normal"><font size="3" style="font-size: 12pt"><span style="font-style: normal"><span style="font-weight: normal">,
+	with find and replace functionalit</span></span></font></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">y.
+	</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Press
+	Ctrl-F to invoke the find and replace dialog.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Messages</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Shows
@@ -149,9 +152,10 @@ widgets, and so forth. The tabs are:</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Widgets</b></i><span style="font-variant: normal"> –
 	</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Provides
-	a predefined set of </span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">9</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">
-	sliders, 5 buttons, and a trackpad that send updates to predefined
-	Csound control channels. These widgets are backwards compatible with
+	a predefined set of 9</span></span></span><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">sliders,
+	5 buttons, and a trackpad that send updates to predefined Csound
+	control channels. These widgets are backwards compatible with
 	previous versions of the Csound for Android app.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
@@ -202,18 +206,13 @@ task menu of Csound for Android provides the following functions:
 	which should be a valid Linux pathname in the user's storage
 	filesystem.</font> 
 	</p>
-	<li/>
-<p><font face="Liberation Serif, serif"><i><b>Find... </b></i>–
-	Search for a string of text in the editor.</font></p>
-	<li/>
-<p><font face="Liberation Serif, serif"><i><b>Replace…</b></i>
-	– Replace a string of text in the editor.</font></p>
 </ul>
 <ul>
 	<li/>
-<p><i><b>Examples</b></i> – Opens a submenu with various
-	built-in example pieces. These are saved in your device's external
-	public storage Music directory, and then run.</p>
+<p style="margin-top: 0.04in; margin-bottom: 0.12in"><i><b>Examples</b></i>
+	– Opens a submenu with various built-in example pieces. These are
+	saved in your device's external public storage Music directory, and
+	then run.</p>
 	<li/>
 <p style="line-height: 115%"><i><b>User guide</b></i> –
 	Opens this basic user guide.</p>
