@@ -54,15 +54,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb96fff2-cd37-4db9-b03f-329b32bc13d1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../CsoundAndroid/CsoundAndroid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundAndroid/CsoundAndroid.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CsoundApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CsoundApplication.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/Csound6_User_Guide.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/codemirror_editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/embedded_editor.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CsoundForAndroid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CsoundForAndroid.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/examples/Gogins/Message.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/examples/Gogins/Message.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/examples/Gogins/Scrims.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/examples/Gogins/Scrims.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/fluidsynth-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/liblo-android" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" beforeDir="false" afterPath="$PROJECT_DIR$/../../ndk-libraries/libsndfile-android" afterDir="false" />
@@ -149,7 +144,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13356">
+            <state relative-caret-position="13230">
               <caret line="818" column="54" selection-start-line="818" selection-start-column="54" selection-end-line="818" selection-end-column="54" />
               <folding>
                 <element signature="e#0#298#0" expanded="true" />
@@ -172,9 +167,47 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/assets/examples/Gogins/Scrims.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="40" selection-start-line="40" selection-end-line="40" />
+              <folding>
+                <element signature="e#1709#1734#0" expanded="true" />
+                <element signature="e#3153#3196#0" expanded="true" />
+                <element signature="e#3232#3362#0" expanded="true" />
+                <element signature="e#3440#3474#0" expanded="true" />
+                <element signature="e#3550#3575#0" expanded="true" />
+                <element signature="e#3621#3657#0" expanded="true" />
+                <element signature="e#3727#3761#0" expanded="true" />
+                <element signature="e#3950#4008#0" expanded="true" />
+                <element signature="e#4118#4157#0" expanded="true" />
+                <element signature="e#4251#4290#0" expanded="true" />
+                <element signature="e#4376#4415#0" expanded="true" />
+                <element signature="e#4501#4540#0" expanded="true" />
+                <element signature="e#4635#4674#0" expanded="true" />
+                <element signature="e#4768#4807#0" expanded="true" />
+                <element signature="e#5035#5181#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/assets/examples/Gogins/Message.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="78" column="41" selection-start-line="78" selection-start-column="41" selection-end-line="78" selection-end-column="41" />
+              <folding>
+                <element signature="e#6999#7025#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -184,12 +217,12 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu.xml">
-          <provider editor-type-id="android-designer2" />
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="414">
               <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
             </state>
           </provider>
+          <provider editor-type-id="android-designer2" />
         </entry>
       </file>
     </leaf>
@@ -217,6 +250,8 @@
         <option value="$PROJECT_DIR$/src/main/res/menu/menu.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java" />
         <option value="$PROJECT_DIR$/src/main/assets/embedded_editor.html" />
+        <option value="$PROJECT_DIR$/src/main/assets/examples/Gogins/Message.html" />
+        <option value="$PROJECT_DIR$/src/main/assets/examples/Gogins/Scrims.html" />
       </list>
     </option>
   </component>
@@ -234,6 +269,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane" />
       <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
@@ -244,6 +280,24 @@
             </path>
             <path>
               <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="assets" type="edd41e36:AndroidSourceTypeNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="assets" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="examples" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
+              <item name="CsoundApplication" type="feadf853:AndroidModuleNode" />
+              <item name="assets" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="examples" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="Gogins" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CsoundForAndroid" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
             </path>
           </expand>
@@ -251,7 +305,6 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -407,30 +460,31 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Capture Tool" />
-      <window_info content_ui="combo" id="Project" sideWeight="0.49834436" visible="true" weight="0.32982844" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" id="Build Variants" sideWeight="0.50165564" side_tool="true" visible="true" weight="0.32982844" />
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="Resources Explorer" />
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Run" />
-      <window_info anchor="bottom" id="Logcat" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Debug" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Build" visible="true" weight="0.32963374" />
-      <window_info anchor="bottom" id="Android Profiler" />
-      <window_info anchor="right" id="Device File Explorer" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Gradle" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49503312" visible="true" weight="0.32982844" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Build Variants" order="3" sideWeight="0.5049669" side_tool="true" visible="true" weight="0.32982844" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Designer" order="5" />
+      <window_info id="Resources Explorer" order="6" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info id="Favorites" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Run" order="0" />
+      <window_info anchor="bottom" id="Logcat" order="1" />
+      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="Android Profiler" order="3" />
+      <window_info anchor="bottom" id="Debug" order="4" />
+      <window_info anchor="bottom" id="Terminal" order="5" />
+      <window_info anchor="bottom" id="Event Log" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Build" order="8" visible="true" weight="0.32963374" />
+      <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" order="1" />
+      <window_info anchor="right" id="Gradle" order="2" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
     </layout>
     <layout-to-restore>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
@@ -462,7 +516,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/java/com/csounds/Csound6/CsoundAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13356">
+        <state relative-caret-position="13230">
           <caret line="818" column="54" selection-start-line="818" selection-start-column="54" selection-end-line="818" selection-end-column="54" />
           <folding>
             <element signature="e#0#298#0" expanded="true" />
@@ -477,22 +531,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/local.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/assets/examples/Gogins/Message.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="78" column="41" selection-start-line="78" selection-start-column="41" selection-end-line="78" selection-end-column="41" />
+          <folding>
+            <element signature="e#6999#7025#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/assets/examples/Gogins/Scrims.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
+          <folding>
+            <element signature="e#1709#1734#0" expanded="true" />
+            <element signature="e#3153#3196#0" expanded="true" />
+            <element signature="e#3232#3362#0" expanded="true" />
+            <element signature="e#3440#3474#0" expanded="true" />
+            <element signature="e#3550#3575#0" expanded="true" />
+            <element signature="e#3621#3657#0" expanded="true" />
+            <element signature="e#3727#3761#0" expanded="true" />
+            <element signature="e#3950#4008#0" expanded="true" />
+            <element signature="e#4118#4157#0" expanded="true" />
+            <element signature="e#4251#4290#0" expanded="true" />
+            <element signature="e#4376#4415#0" expanded="true" />
+            <element signature="e#4501#4540#0" expanded="true" />
+            <element signature="e#4635#4674#0" expanded="true" />
+            <element signature="e#4768#4807#0" expanded="true" />
+            <element signature="e#5035#5181#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>

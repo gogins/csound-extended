@@ -82,7 +82,12 @@
             messages_textarea.value = existing + message;
             messages_textarea.scrollTop = messages_textarea.scrollHeight;   
         };
-        // These are the ways Csound can be instantiated in the JavaScript context:
+    </script>
+</head>
+<body style="background-color:CadetBlue">
+    <script>
+        // These are the ways Csound can be instantiated in the JavaScript context.
+        // This code should run in the HTML body.
         if (typeof csound !== 'undefined') {
             // (1) Injected (e.g. by Csound for Android or CsoundQt).
             csound.message("\nCsound already exists in the JavaScript context: version " + csound.getVersion());
@@ -91,7 +96,7 @@
             try {
                 var csound = require('csound.node');
                 csound.setMessageCallback(handleMessage);
-                csound.message('\ncsound.node has been loaded: version ' + csound.getVersion());
+                csound.message('\ncsound.node has been loaded: version ' + csound.getVersion() + '\n');
             // (3) By csound.js in WebAssembly.
             } catch (err) {
                 console.warn(err.message);
@@ -100,15 +105,12 @@
                 var script = document.createElement('script');
                 script.src = "/csound.js";
                 script.type = 'text/javascript';
-                head.appendChild(script);        
+                head.appendChild(script);
                 var moduleDidLoad = function() {
                     csound.message("\nCsound for WebAssembly has been loaded; Csound functions may now be called.");
                 }
             }
         }
-    </script>
-</head>
-<body style="background-color:CadetBlue">
     </script>
     <h1>Message from Another Planet, version 3</h1>
     <h3>Adapted for Csound with HTML5 by Michael Gogins, from "Message from Another Planet" by Jacob Joaquin</h3>
