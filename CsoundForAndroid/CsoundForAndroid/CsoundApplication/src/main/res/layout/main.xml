@@ -316,11 +316,12 @@
     <ScrollView
         android:id="@+id/messages_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="#000000">
         <TextView
             android:id="@+id/messageTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:padding="5dp"
             android:textColor="#00ff00"

@@ -4,7 +4,7 @@
 </CsOptions>
 <CsInstruments>
 sr = 48000
-ksmps = 500
+ksmps = 512
 nchnls = 2
 
 instr 1 ; Bergeman 1

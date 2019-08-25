@@ -85,9 +85,8 @@
     </script>
 </head>
 <body style="background-color:CadetBlue">
-    <script>
-        // These are the ways Csound can be instantiated in the JavaScript context.
-        // This code should run in the HTML body.
+<script>
+        // These are the ways Csound can be instantiated in a JavaScript context.
         if (typeof csound !== 'undefined') {
             // (1) Injected (e.g. by Csound for Android or CsoundQt).
             csound.message("\nCsound already exists in the JavaScript context: version " + csound.getVersion());
@@ -99,15 +98,19 @@
                 csound.message('\ncsound.node has been loaded: version ' + csound.getVersion() + '\n');
             // (3) By csound.js in WebAssembly.
             } catch (err) {
-                console.warn(err.message);
-                console.info("Trying to load Csound for WebAssembly...");
-                var head = document.getElementsByTagName('head')[0];
-                var script = document.createElement('script');
-                script.src = "/csound.js";
-                script.type = 'text/javascript';
-                head.appendChild(script);
-                var moduleDidLoad = function() {
-                    csound.message("\nCsound for WebAssembly has been loaded; Csound functions may now be called.");
+                try {
+                    console.warn(err.message);
+                    console.info("Trying to load Csound for WebAssembly...");
+                    var head = document.getElementsByTagName('head')[0];
+                    var script = document.createElement('script');
+                    script.src = "/csound.js";
+                    script.type = 'text/javascript';
+                    head.appendChild(script);
+                    var moduleDidLoad = function() {
+                        csound.message("\nCsound for WebAssembly has been loaded; Csound functions may now be called.");
+                    }
+                } catch (err1) {
+                    console.warn(err1.message);
                 }
             }
         }
@@ -185,7 +188,7 @@ https://setiathome.berkeley.edu/
 </CsOptions>
 <CsInstruments>
 sr              =           48000
-ksmps           =           240
+ksmps           =           128
 nchnls          =           2
 
 alwayson "controls"

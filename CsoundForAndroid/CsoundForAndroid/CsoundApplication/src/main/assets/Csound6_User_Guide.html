@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="created" content="2013-06-11T00:00:00.020113632"/>
-	<meta name="changed" content="2019-08-22T14:29:58.891197245"/>
+	<meta name="changed" content="2019-08-23T11:12:38.769596728"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
@@ -33,7 +33,7 @@ Csound for Android
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <i><b>Michael Gogins</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-<i><b>22 August 2019</b></i></p>
+<i><b>23 August 2019</b></i></p>
 <p align="center" style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 <br/>
 
@@ -52,10 +52,18 @@ version of Csound for Android features many changes and improvements:</p>
 	The app is now built for 64 bit CPU architecture.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
-	Audio input and output now are implemented using Google’s Oboe
-	library, which encapsulates differences between audio drivers on
-	different Android platforms. Oboe is integrated with Csound in a new
-	CsoundOboe C++ class.</p>
+	The included FluidSynth opcodes have been updated to work on 64 bit
+	CPU architectures.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	A wider selection of plugin opcodes is now included.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	Audio input and output are now implemented using the current version
+	of Google’s Oboe library, which encapsulates differences between
+	audio drivers on different Android platforms. Oboe is integrated
+	with Csound in a new CsoundOboe C++ class. The current version of
+	Oboe seems to perform with fewer dropouts.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The app now has a built-in text editor based on Ace, replacing
@@ -68,6 +76,10 @@ version of Csound for Android features many changes and improvements:</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	There are now 9 built-in sliders.</p>
+	<li/>
+<p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
+	The <i><b>User Guide</b></i> has been updated with information about
+	issues and workarounds.</p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	The <i><b>Csound Reference Manual</b></i> appears in its own tab.<!-- <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
@@ -85,17 +97,19 @@ Csound for Android app is an Android version of Csound, an audio and
 music synthesis and processing language of great power, created by
 Barry Vercoe in 1984, maintained with almost complete backward
 compatibility since then, and widely used and taught for the creation
-of electroacoustic and computer music. Desite its age, Csound
+of electroacoustic and computer music. Despite its age, Csound
 continues to be actively developed. It has many advanced features for
 sound synthesis including user-designable instruments, an easy to
-learn programming language with a type system, several phase
-vocoders, several sample players, a plethora of digital oscillators,
-filters, and envelope generators, and transparent multi-threading for
-high performance on multi-core systems.</p>
+learn programming language, several phase vocoders, several sample
+players, a plethora of digital oscillators, filters, and envelope
+generators, and transparent multi-threading for higher performance of
+some types of pieces on multi-core systems.</p>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Csound for Android app is by Victor Lazzarini, Steven Yi, Michael
-Gogins, and others. The app contains virtually all of Csound,
-including some of the more frequently used plugin opcodes:</p>
+Gogins, and others, and is currently maintained by Michael Gogins in
+the <a href="https://github.com/gogins/csound-extended">csound-extended</a>
+repository. The app contains virtually all of Csound, including many
+of the more frequently used plugin opcodes:</p>
 <ul>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
@@ -128,17 +142,16 @@ Interface</h1>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">The
 Csound for Android user interface uses tabs for easy and swift
 changes of context, for example between editing and performing. All
-tabs share the app’s builtin instance of Csound. This enables, for
+tabs share the same builtin instance of Csound. This enables, for
 example, a piece to be written in HTML5 but utilize the builtin
 widgets, and so forth. The tabs are:</p>
 <ul>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Editor</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><font size="3" style="font-size: 12pt"><span style="font-style: normal"><span style="font-weight: normal">Provides
-	a built-in text editor based on </span></span></font></span><span style="font-variant: normal"><font size="3" style="font-size: 12pt"><span style="font-style: normal"><span style="font-weight: normal">Ace</span></span></font></span><span style="font-variant: normal"><font size="3" style="font-size: 12pt"><span style="font-style: normal"><span style="font-weight: normal">,
-	with find and replace functionalit</span></span></font></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">y.
-	</span></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Press
-	Ctrl-F to invoke the find and replace dialog.</span></span></span></p>
+	a built-in text editor based on Ace, with find and replace
+	functionalit</span></span></font></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">y.
+	Press Ctrl-F to invoke the find and replace dialog.</span></span></span></p>
 	<li/>
 <p style="margin-top: 0.08in; margin-bottom: 0in; line-height: 115%">
 	<i><b>Messages</b></i><span style="font-variant: normal"> – </span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">Shows
@@ -344,7 +357,7 @@ and log some informative messages during Csound's performance (<font face="Couri
 a blank line between <font face="Courier New, monospace">&lt;CsInstruments&gt;</font>
 and <font face="Courier New, monospace">&lt;/CsInstruments&gt;</font>
 and type the following text:</p>
-<pre class="western" style="line-height: 115%">sr = 44100
+<pre class="western" style="margin-top: 0.04in; line-height: 115%">sr = 44100
 ksmps = 10
 nchnls = 1
 <font color="#000000"><font face="Courier New, monospace"><font size="2" style="font-size: 9pt">instr 1</font></font></font>
@@ -426,5 +439,15 @@ to see what Csound is actually using for the public data directory.</span></span
 be configured to some extent in the device’s Android settings,
 namely in the <i><b>Settings</b></i>, <i><b>Display</b></i>, <i><b>Font
 size and style</b></i> section and <i><b>Screen zoom</b></i> section.</p>
+<h2 class="western">HTML Pieces</h2>
+<p>When an HTML example loads, the app may briefly display a popup
+message about a missing <font face="Courier New, monospace">csound.js</font>
+file. This message can be ignored and should not recur. The piece
+should render properly anyway.</p>
+<p>If the HTML for the piece is not rendered correctly, it may help
+to exit the app and reload the piece.</p>
+<p>In general, for HTML pieces, it is necessary to click on the <i><b>Run</b></i>
+button, as for any other Csound piece, before Csound is instantiated
+in the JavaScript context and can render the piece.</p>
 </body>
 </html>
