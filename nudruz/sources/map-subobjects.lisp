@@ -2,7 +2,7 @@
 
 (set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)
 
-(defmethod map-subobjects (fn container &key key recurse test type)
+(defun map-subobjects (fn container &key key recurse test type)
   (let ((test (if type (lambda (x) (typep x type)) test)))
     (if key
         (if test
@@ -30,7 +30,7 @@
                   (funcall fn o)))))
     (values)))
 
-(defmethod map-subcontainers (fn container &key key recurse)
+(defun map-subcontainers (fn container &key key recurse)
   (if key
       (dolist (o (subobjects container))
         (when (typep o <container>) (funcall fn (funcall key o)))
