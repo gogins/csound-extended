@@ -6,8 +6,8 @@
  * It features real and complex numbers, units, matrices, a large set of
  * mathematical functions, and a flexible expression parser.
  *
- * @version 6.0.4
- * @date    2019-08-05
+ * @version 6.1.0
+ * @date    2019-08-17
  *
  * @license
  * Copyright (C) 2013-2019 Jos de Jong <wjosdejong@gmail.com>
@@ -41862,6 +41862,9 @@ var latexFunctions = {
   combinations: {
     2: "\\binom{${args[0]}}{${args[1]}}"
   },
+  combinationsWithRep: {
+    2: "\\left(\\!\\!{\\binom{${args[0]}}{${args[1]}}}\\!\\!\\right)"
+  },
   factorial: {
     1: "\\left(${args[0]}\\right)".concat(latexOperators['factorial'])
   },
@@ -50877,7 +50880,7 @@ var permutationsDocs = {
   syntax: ['permutations(n)', 'permutations(n, k)'],
   description: 'Compute the number of permutations of n items taken k at a time',
   examples: ['permutations(5)', 'permutations(5, 3)'],
-  seealso: ['combinations', 'factorial']
+  seealso: ['combinations', 'combinationsWithRep', 'factorial']
 };
 // CONCATENATED MODULE: ./src/expression/embeddedDocs/function/probability/multinomial.js
 var multinomialDocs = {
@@ -50913,7 +50916,7 @@ var factorialDocs = {
   syntax: ['n!', 'factorial(n)'],
   description: 'Compute the factorial of a value',
   examples: ['5!', '5 * 4 * 3 * 2 * 1', '3!'],
-  seealso: ['combinations', 'permutations', 'gamma']
+  seealso: ['combinations', 'combinationsWithRep', 'permutations', 'gamma']
 };
 // CONCATENATED MODULE: ./src/expression/embeddedDocs/function/probability/combinations.js
 var combinationsDocs = {
@@ -50922,7 +50925,16 @@ var combinationsDocs = {
   syntax: ['combinations(n, k)'],
   description: 'Compute the number of combinations of n items taken k at a time',
   examples: ['combinations(7, 5)'],
-  seealso: ['permutations', 'factorial']
+  seealso: ['combinationsWithRep', 'permutations', 'factorial']
+};
+// CONCATENATED MODULE: ./src/expression/embeddedDocs/function/probability/combinationsWithRep.js
+var combinationsWithRepDocs = {
+  name: 'combinationsWithRep',
+  category: 'Probability',
+  syntax: ['combinationsWithRep(n, k)'],
+  description: 'Compute the number of combinations of n items taken k at a time with replacements.',
+  examples: ['combinationsWithRep(7, 5)'],
+  seealso: ['combinations', 'permutations', 'factorial']
 };
 // CONCATENATED MODULE: ./src/expression/embeddedDocs/function/matrix/zeros.js
 var zerosDocs = {
@@ -52302,6 +52314,7 @@ var rowDocs = {
 
 
 
+
 var embeddedDocs = {
   // construction functions
   bignumber: bignumberDocs,
@@ -52653,6 +52666,7 @@ var embeddedDocs = {
   zeros: zerosDocs,
   // functions - probability
   combinations: combinationsDocs,
+  combinationsWithRep: combinationsWithRepDocs,
   // distribution: distributionDocs,
   factorial: factorialDocs,
   gamma: gammaDocs,
@@ -55122,7 +55136,7 @@ Object(factory["a" /* factory */])(combinations_name, combinations_dependencies,
    *
    * See also:
    *
-   *    permutations, factorial
+   *    combinationsWithRep, permutations, factorial
    *
    * @param {number | BigNumber} n    Total number of objects in the set
    * @param {number | BigNumber} k    Number of objects in the subset
@@ -55163,6 +55177,90 @@ Object(factory["a" /* factory */])(combinations_name, combinations_dependencies,
  */
 
 function isPositiveInteger(n) {
+  return n.isInteger() && n.gte(0);
+}
+// CONCATENATED MODULE: ./src/function/probability/combinationsWithRep.js
+
+
+
+var combinationsWithRep_name = 'combinationsWithRep';
+var combinationsWithRep_dependencies = ['typed'];
+var createCombinationsWithRep =
+/* #__PURE__ */
+Object(factory["a" /* factory */])(combinationsWithRep_name, combinationsWithRep_dependencies, function (_ref) {
+  var typed = _ref.typed;
+
+  /**
+   * Compute the number of ways of picking `k` unordered outcomes from `n`
+   * possibilities, allowing individual outcomes to be repeated more than once.
+   *
+   * CombinationsWithRep only takes integer arguments.
+   * The following condition must be enforced: k <= n + k -1.
+   *
+   * Syntax:
+   *
+   *     math.combinationsWithRep(n, k)
+   *
+   * Examples:
+   *
+   *    math.combinationsWithRep(7, 5) // returns 462
+   *
+   * See also:
+   *
+   *    combinations, permutations, factorial
+   *
+   * @param {number | BigNumber} n    Total number of objects in the set
+   * @param {number | BigNumber} k    Number of objects in the subset
+   * @return {number | BigNumber}     Number of possible combinations with replacement.
+   */
+  return typed(combinationsWithRep_name, {
+    'number, number': function numberNumber(n, k) {
+      if (!Object(utils_number["i" /* isInteger */])(n) || n < 0) {
+        throw new TypeError('Positive integer value expected in function combinationsWithRep');
+      }
+
+      if (!Object(utils_number["i" /* isInteger */])(k) || k < 0) {
+        throw new TypeError('Positive integer value expected in function combinationsWithRep');
+      }
+
+      if (n < 1) {
+        throw new TypeError('k must be less than or equal to n + k - 1');
+      }
+
+      var prodrange = product_product(n, n + k - 1);
+      return prodrange / product_product(1, k);
+    },
+    'BigNumber, BigNumber': function BigNumberBigNumber(n, k) {
+      var BigNumber = n.constructor;
+      var result, i;
+      var one = new BigNumber(1);
+
+      if (!combinationsWithRep_isPositiveInteger(n) || !combinationsWithRep_isPositiveInteger(k)) {
+        throw new TypeError('Positive integer value expected in function combinationsWithRep');
+      }
+
+      if (n.lt(one)) {
+        throw new TypeError('k must be less than or equal to n + k - 1 in function combinationsWithRep');
+      }
+
+      var max = n.minus(one);
+      result = one;
+
+      for (i = one; i.lte(k); i = i.plus(1)) {
+        result = result.times(max.plus(i)).dividedBy(i);
+      }
+
+      return result;
+    }
+  });
+});
+/**
+ * Test whether BigNumber n is a positive integer
+ * @param {BigNumber} n
+ * @returns {boolean} isPositiveInteger
+ */
+
+function combinationsWithRep_isPositiveInteger(n) {
   return n.isInteger() && n.gte(0);
 }
 // CONCATENATED MODULE: ./src/plain/number/probability.js
@@ -55370,7 +55468,7 @@ Object(factory["a" /* factory */])(factorial_name, factorial_dependencies, funct
    *
    * See also:
    *
-   *    combinations, gamma, permutations
+   *    combinations, combinationsWithRep, gamma, permutations
    *
    * @param {number | BigNumber | Array | Matrix} n   An integer number
    * @return {number | BigNumber | Array | Matrix}    The factorial of `n`
@@ -55567,7 +55665,7 @@ Object(factory["a" /* factory */])(permutations_name, permutations_dependencies,
    *
    * See also:
    *
-   *    combinations, factorial
+   *    combinations, combinationsWithRep, factorial
    *
    * @param {number | BigNumber} n   The number of objects in total
    * @param {number | BigNumber} [k] The number of objects in the subset
@@ -59323,7 +59421,7 @@ Object(factory["a" /* factory */])(reviver_name, reviver_dependencies, function 
   };
 });
 // CONCATENATED MODULE: ./src/version.js
-var version = '6.0.4'; // Note: This file is automatically generated when building math.js.
+var version = '6.1.0'; // Note: This file is automatically generated when building math.js.
 // Changes made in this file will be overwritten.
 // CONCATENATED MODULE: ./src/plain/number/constants.js
 var constants_pi = Math.PI;
@@ -60723,6 +60821,7 @@ Object(factory["a" /* factory */])(variance_transform_name, variance_transform_d
 /* concated harmony reexport createQuantileSeq */__webpack_require__.d(__webpack_exports__, "createQuantileSeq", function() { return createQuantileSeq; });
 /* concated harmony reexport createStd */__webpack_require__.d(__webpack_exports__, "createStd", function() { return createStd; });
 /* concated harmony reexport createCombinations */__webpack_require__.d(__webpack_exports__, "createCombinations", function() { return createCombinations; });
+/* concated harmony reexport createCombinationsWithRep */__webpack_require__.d(__webpack_exports__, "createCombinationsWithRep", function() { return createCombinationsWithRep; });
 /* concated harmony reexport createGamma */__webpack_require__.d(__webpack_exports__, "createGamma", function() { return createGamma; });
 /* concated harmony reexport createFactorial */__webpack_require__.d(__webpack_exports__, "createFactorial", function() { return createFactorial; });
 /* concated harmony reexport createKldivergence */__webpack_require__.d(__webpack_exports__, "createKldivergence", function() { return createKldivergence; });
@@ -60824,6 +60923,7 @@ Object(factory["a" /* factory */])(variance_transform_name, variance_transform_d
 /* concated harmony reexport createStdTransform */__webpack_require__.d(__webpack_exports__, "createStdTransform", function() { return createStdTransform; });
 /* concated harmony reexport createSumTransform */__webpack_require__.d(__webpack_exports__, "createSumTransform", function() { return createSumTransform; });
 /* concated harmony reexport createVarianceTransform */__webpack_require__.d(__webpack_exports__, "createVarianceTransform", function() { return createVarianceTransform; });
+
 
 
 

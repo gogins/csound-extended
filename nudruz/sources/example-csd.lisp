@@ -2,7 +2,9 @@
 ;; csound.lisp or sb-csound.lisp foreign function interfaces for Csound.
 
 (in-package :cm)
- 
+
+(set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)
+
 (defparameter csd-text #>qqq><CsoundSynthesizer>
 <CsOptions>
 -m0 --m-dB=1 -+msg_color -d -o dac

@@ -246,3 +246,9 @@ does the following:
 2.  Builds Csound for WebAssembly.
 
 4.  Creates a release package.
+
+### Building csound.node
+
+Just make sure that your PATH environment variable puts the global npm and 
+node-gyp binaries ahead of the emsdk ones.
+
