@@ -5,6 +5,7 @@
 ;;;
 
 (require :asdf)    
+(require :cl-heredoc)
 #+sbcl
 (require 'sb-introspect)
 ;;; Turn off all those zillions of SBCL warnings.
@@ -39,6 +40,8 @@
   :components  
   (;; MKG: The strategy here is to comment out demos etc. or anything else that makes a noise,
    ;; also maybe other things that won't load, and reorder by dependency if necessary.
+  (:file "nudruz-csound") 
+  (:file "example-csd") 
   (:file "vendor")
   (:file "data/besthex")
   (:file "data/chords")
@@ -100,6 +103,5 @@
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
   (:file "withclocc")
-  (:file "example-csd") 
 ))
 
