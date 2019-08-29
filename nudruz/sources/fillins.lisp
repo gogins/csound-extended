@@ -1,6 +1,9 @@
 (in-package :cm)
 
-(set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)
+;; This file adds features that were missing for various reasons in Common 
+;; Music or in Drew Krause's code.
+
+; Missing from Vinjar's Common Music code.
 
 (defun map-subobjects (fn container &key key recurse test type)
   (let ((test (if type (lambda (x) (typep x type)) test)))
@@ -30,6 +33,8 @@
                   (funcall fn o)))))
     (values)))
 
+; Missing from Vinjar's Common Music code.
+
 (defun map-subcontainers (fn container &key key recurse)
   (if key
       (dolist (o (subobjects container))
@@ -40,5 +45,13 @@
         (when (typep o <container>) (funcall fn o))
         (if recurse
             (map-subcontainers fn o :key key :recurse recurse))))
-  (values))
+    (values))
+  
+; Fill-in from the clmath package if clocc's cllib is not available.
+
+(if (not (boundp 'gen-poisson-variate))
+    (defun gen-poisson-variate (lambda_ &optional (*random-state* *random-state*)) 
+        (clmath:poisson-random-number lambda_)))
+
+
 

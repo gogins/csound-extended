@@ -29,8 +29,8 @@
     "bordeaux-threads"
     "cffi"
     "cl-heredoc"
+    "clmath"
     "csound"
-    "cm2"
     "fomus"
     "rsm-mod"
     "screamer"
@@ -42,6 +42,7 @@
    ;; also maybe other things that won't load, and reorder by dependency if necessary.
   (:file "nudruz-csound") 
   (:file "example-csd") 
+  (:file "fillins")
   (:file "vendor")
   (:file "data/besthex")
   (:file "data/chords")
@@ -75,7 +76,6 @@
   (:file "mathieugrp")
   ;; MKG: Not using, no more Csound support in CM2. (:file "midi2cs")
   ;; MKG: Not using, no more Csound support in CM2. (:file "midi2csound")
-  (:file "map-subobjects")
   (:file "midi-import")
   (:file "modes")
   ;; MKG: Not using. (:file "modes-todo")
