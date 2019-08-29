@@ -16,9 +16,9 @@
             (map-subobjects #'(lambda (x) (push x starts)) mytrack :key #'object-time :type 'midi)
         ))
         (progn
-            (map-subobjects #'(lambda (x) (push x pits)) mytrack :key #'midi-keynum :type 'midi)
-            (map-subobjects #'(lambda (x) (push x durs)) mytrack :key #'midi-duration :type 'midi)
-            (map-subobjects #'(lambda (x) (push x starts)) mytrack :key #'object-time :type 'midi)
+            (map-subobjects #'(lambda (x) (push x pits)) mytracks :key #'midi-keynum :type 'midi)
+            (map-subobjects #'(lambda (x) (push x durs)) mytracks :key #'midi-duration :type 'midi)
+            (map-subobjects #'(lambda (x) (push x starts)) mytracks :key #'object-time :type 'midi)
         ))
     (list 
         (first (combine-pits (nreverse pits) (nreverse starts)))

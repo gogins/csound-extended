@@ -1553,19 +1553,19 @@
 	(blister blist))
     (loop 
         until (and (eop? alistcyc) 
-                   (or (null? blister)
+                   (or (null blister)
                        (not (member-if
                              (lambda (x) (consn-p x (car blister) consvec)) 
                              (flatten alist)))))
       for next-a = (next alistcyc)
       collect 
       (cond ((numberp next-a)
-             (cond ((null? blister) next-a)
+             (cond ((null blister) next-a)
                    ((consn-p next-a (car blister) consvec) 
                     (list next-a (pop blister)))
                    (t next-a)))
             ((listp next-a)
-             (cond ((null? blister) next-a)
+             (cond ((null blister) next-a)
                    ((member-if (lambda (x)
                                  (consn-p x (car blister) consvec))
                                next-a)
@@ -1573,7 +1573,7 @@
                    (t next-a)))
             ((eql next-a 'r)
              (if fill-rests
-               (if (null? blister) 'r (pop blister)) 'r))))))
+               (if (null blister) 'r (pop blister)) 'r))))))
 
 ;; SELF-STRETTO -- recursive self-consmatch
 ;; added February 2006
@@ -1597,7 +1597,7 @@
       (cond 
         ((eql next-a 'r)
          (if fill-rests
-           (if (null? blister) 'r (pop blister)) 'r))
+           (if (null blister) 'r (pop blister)) 'r))
         ((trichord-p next-a (car blister) trich)
          (push (pop blister) next-a))
         (t next-a)))))
