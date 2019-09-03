@@ -2,7 +2,6 @@
 ;;; ASDF 3.1 compliant system definition file for Drew Krause's nudruz codebase.
 ;;;
 ;;; Michael Gogins
-;;;
 
 (require :asdf)    
 (require :cl-heredoc)
@@ -30,6 +29,7 @@
     "cffi"
     "cl-heredoc"
     "clmath"
+    "cm2"
     "csound"
     "fomus"
     "rsm-mod"
@@ -103,5 +103,6 @@
   (:file "transforms")
   ;; MKG: Example, not using. (:file "tsp-dk") 
   (:file "withclocc")
+  (:file "package")
 ))
 

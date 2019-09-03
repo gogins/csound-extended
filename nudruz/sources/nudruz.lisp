@@ -17,6 +17,7 @@
 ;; FLATTEN -- removes all nesting in list
 ;; "thank you Paul Graham!"
 (defun flatten (x)
+"Removes all nesting in list X (thank you Paul Graham!)."
   (labels ((rec (x acc)
              (cond ((null x) acc)
                    ((atom x) (cons x acc))

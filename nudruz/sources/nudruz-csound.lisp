@@ -1,4 +1,4 @@
-    ; C O M M O N   M U S I C   C F F I   I N T E R F A C E   T O   C S O U N D
+; C O M M O N   M U S I C   C F F I   I N T E R F A C E   T O   C S O U N D
 ;
 ; Copyright (C) 2016 Michael Gogins
 ;
@@ -28,14 +28,12 @@
 (set-dispatch-macro-character #\# #\> #'cl-heredoc:read-heredoc)
 
 (defun event-to-istatement (event channel-offset velocity-scale arrangement)
-"
-Translates a Common Music MIDI channel event to a Csound score event
+"Translates a Common Music MIDI channel event to a Csound score event
 (i-statement), which is terminated with a newline. An offset, which may
 be any number, is added to the MIDI channel number. After that, if the 
 arrangement parameter is not nil, the existing event is remapped to a new 
 instrument number and the velocity is modified. MIDI events that are 
-not channel events are included, but as comments.
-"
+not channel events are included, but as comments."
     (let 
         ((insno)
         (midikey)
@@ -58,31 +56,27 @@ not channel events are included, but as comments.
 (export 'event-to-istatement)
 
 (defun replace-all (string part replacement &key (test #'char=))
-"
-Replaces all occurences of the string 'part' in 'string' with 'replacement',
-using 'test' for character equality.
-"
-  (with-output-to-string (out)
-    (loop with part-length = (length part)
-          for old-pos = 0 then (+ pos part-length)
-          for pos = (search part string
-                            :start2 old-pos
-                            :test test)
-          do (write-string string out
-                           :start old-pos
-                           :end (or pos (length string)))
-          when pos do (write-string replacement out)
-          while pos)))
+"Replaces all occurences of the string 'part' in 'string' with 'replacement',
+using 'test' for character equality."
+    (with-output-to-string (out)
+        (loop with part-length = (length part)
+              for old-pos = 0 then (+ pos part-length)
+              for pos = (search part string
+                                :start2 old-pos
+                                :test test)
+              do (write-string string out
+                               :start old-pos
+                               :end (or pos (length string)))
+                when pos do (write-string replacement out)
+                while pos)))
           
 (defun seq-to-sco (seq &optional (channel-offset 1) (velocity-scale 127) &key (arrangement nil))
-"
-Translates all MIDI channel events in a Common Music 'seq' object to Csound sco text,
+"Translates all MIDI channel events in a Common Music SEQ object to Csound sco text,
 with an optional channel offset and velocity scaling. The arrangement 
 parameter, if passed, is used to reassign the instrument numbers and 
 add to/subtract from the MIDI velocities in the sequence. The arrangement 
 consists of a hashtable mapping original Csound instrument numbers 
-to a list '(new-inso add-velocity pan).
-"
+to a list '(new-inso add-velocity pan)."
     (let 
         ((score-list (list))
         (score-text "")
@@ -98,24 +92,20 @@ to a list '(new-inso add-velocity pan).
 )
 
 (defun csd-to-file (name content)
-"
-Writes the contents of a CSD to a file, replacing the file if it exists.
-"
-  (with-open-file (stream name 
+    "Writes the contents of a CSD to a file, replacing the file if it exists."
+    (with-open-file (stream name 
                            :direction :output
                            :if-exists :supersede
                            :if-does-not-exist :create )
-  (write-line content stream)))
+    (write-line content stream)))
   
   
 (defun seq-to-lilypond (sequence filename fomus-parts partids-for-channels voices-for-channels &key (title nil)(subtitle nil)(composer nil))
-"
-Attempts to translate MIDI events in the sequence to a Lilypond score using 
+"Attempts to translate MIDI events in the sequence to a Lilypond score using 
 Fomus (but does not always succeed). MIDI channels must be assigned to 
 Lilypond part IDs and Lilypond voices in the hashtables. If the :voice 
 parameter is a list, it should contain as many voices for the corresponding 
-channel as there actually are in that channel.
-"
+channel as there actually are in that channel."
     (let 
         ((fomus-events (list)))
         (progn 
@@ -144,10 +134,8 @@ channel as there actually are in that channel.
 )
 
 (defun seq-to-midifile (sequence filename)
-"
-Writes a sequence containing MIDI events to a MIDI file, replacing the file if 
-it exists.
-"
+"Writes a sequence containing MIDI events to a MIDI file, replacing the file if 
+it exists."
     (events sequence filename :play nil)
 )
 
@@ -187,8 +175,7 @@ it exists.
     
 (defun render-with-csd (seq csd &key (channel-offset 1)(velocity-scale 127)
     (csound-instance nil)(csd-filename "temp-csd.csd")(arrangement nil))
-"
-Given a Common Music 'seq', translates each of its MIDI events into a Csound 
+"Given a Common Music 'seq', translates each of its MIDI events into a Csound 
 'i' statement, optionally offsetting the channel number and/or rescaling MIDI 
 velocity, then renders the resulting score using the Csound 'csd'. The 
 generated score is appended to the <CsScore> element of `csd`. It is 
@@ -205,8 +192,7 @@ e.g.
 (csoundSetControlChannel csound 'mychannel' myvalue)
 (bt:join-thread my-thread)
 
-A copy of the .csd file that is rendered is saved for archival purposes.
-"
+A copy of the .csd file that is rendered is saved for archival purposes."
     (let
         ((score-list (list))
         (cs 0)
@@ -251,12 +237,10 @@ A copy of the .csd file that is rendered is saved for archival purposes.
 )   
 
 (defun midifile-to-seq (midi-filename)
-"
-Import a standard midi file to a Common Music seq object such that notes
+"Import a standard midi file to a Common Music seq object such that notes
 are not CM::MIDI-EVENT binary objects, but rather regular CM::MIDI objects 
-that can be processed in Common Music.
-"
-    (let 
+that can be processed in Common Music."
+(let 
         ((raw-seq)
         (cooked-seq))
         (setf raw-seq (import-events midi-filename :tracks true :meta-exclude true))
@@ -266,10 +250,8 @@ that can be processed in Common Music.
 )
     
 (defun cope-events-to-seq (cope-events)
-"
-Translates an event list produced by David Cope's 'Computer Models of Musical 
-Creativity' software into a CM::SEQ object.
-"
+"Translates an event list produced by David Cope's 'Computer Models of Musical 
+Creativity' software into a CM::SEQ object."
     (let 
         ((midi-events))
         (defun cope-event-to-midi-event (event)
