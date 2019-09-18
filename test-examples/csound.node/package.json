@@ -1,13 +1,13 @@
 {
-  "main": "Scrims_node.html",
-  "name": "Scrims_node",
+  "main": "Message.html",
+  "name": "Message",
   "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Scrims_node",
+    "title": "Message",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,

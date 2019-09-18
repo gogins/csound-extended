@@ -311,6 +311,10 @@ Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
                 Napi::Function::New(env, GetScoreTime));
     exports.Set(Napi::String::New(env, "getScoreTime"),
                 Napi::Function::New(env, GetScoreTime));
+    exports.Set(Napi::String::New(env, "GetVersion"),
+                Napi::Function::New(env, GetVersion));
+    exports.Set(Napi::String::New(env, "getVersion"),
+                Napi::Function::New(env, GetVersion));
     exports.Set(Napi::String::New(env, "GetSr"),
                 Napi::Function::New(env, GetSr));
     exports.Set(Napi::String::New(env, "getSr"),
