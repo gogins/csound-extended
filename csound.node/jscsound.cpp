@@ -253,6 +253,9 @@ void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_l
 
 void uv_csound_message_callback(uv_async_t *handle)
 {
+    if (persistent_message_callback.IsEmpty()) {
+        return;
+    }
     char *message = nullptr;
     while (csound_messages_queue.try_pop(message)) {
         Napi::Env env = persistent_message_callback.Env();
@@ -270,6 +273,8 @@ void on_exit()
 
 Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
     std::fprintf(stderr, "Initializing csound.node...\n");
+    uv_async_init(uv_default_loop(), &uv_csound_message_async, uv_csound_message_callback);
+    std::atexit(&on_exit);                
     csound_.SetMessageCallback(csoundMessageCallback_);
     exports.Set(Napi::String::New(env, "Cleanup"),
                 Napi::Function::New(env, Cleanup));
@@ -391,8 +396,6 @@ Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
                 Napi::Function::New(env, Stop));
     exports.Set(Napi::String::New(env, "stop"),
                 Napi::Function::New(env, Stop));
-    uv_async_init(uv_default_loop(), &uv_csound_message_async, uv_csound_message_callback);
-    std::atexit(&on_exit);                
     return exports;
 }
 

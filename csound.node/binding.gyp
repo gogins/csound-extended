@@ -16,7 +16,7 @@
             ['OS=="linux"',
                 {
                     'cflags': [
-                        '-std=c++11',
+                        '-std=c++14',
                         '-fno-exceptions',
                         '-Wno-deprecated-declarations',
                         '-fPIC',

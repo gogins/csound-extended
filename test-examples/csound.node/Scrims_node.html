@@ -21,6 +21,8 @@
                 background-coor:transparent;
             }
         </style>
+    </head>
+    <body style="background:black;">
         <script>
         try {
             var csound = require('csound.node');
@@ -38,8 +40,6 @@
             console.log(err.message);
         }
     </script>
-    </head>
-    <body style="background:black;">
          <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;cursor:none;"/>
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt;cursor:none;">
             <col width=300px>
@@ -1262,9 +1262,9 @@ endin
                 //csound.setOption('-j3');
                 csound.setOption('--nodisplays');
                 csound.setOption('-odac');
-                    csound.compileOrc(document.getElementById('orc').value);
-                    csound.readScore('f 0 360\n');
-                    csound.start();
+                csound.compileOrc(document.getElementById('orc').value);
+                csound.readScore('f 0 360\n');
+                csound.start();
                 csound.perform();
                 start_time_seconds = new Date().getTime() / 1000.0;
                 ///startTime = csound.getScoreTime();
