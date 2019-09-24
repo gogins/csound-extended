@@ -1,7 +1,8 @@
 (in-package :cm)
 
 ;; This file adds features that were missing for various reasons in Common 
-;; Music or in Drew Krause's code.
+;; Music or in Drew Krause's code, or that I have thought worth adding 
+;; without breaking the framework of Drew's or Common Music's code.
 
 (defun map-subobjects (fn container &key key recurse test type)
 "Maps FN to subobjects of CONTAINER, optionally recursively, optionally only 
@@ -56,6 +57,15 @@ This function is used in the NUDRUZ system and used to be found in the CLOCC
 system, but as CLOCC lacks a good out of the box experience, CLOCC functions 
 will be replaced by other fill-ins as they are identified."
         (clmath:poisson-random-number lambda_)))
+        
+(defgeneric duration-seconds (sequence) 
+    (:documentation "Returns the duration of the sequence in seconds.")
+    )
+
+(defmethod duration-seconds ((sequence seq)) 
+  (reduce #'max (mapcar #'(lambda (e) (+ (object-time e)(midi-duration e))) 
+  (subobjects sequence :class 'midi))))
+
 
 
 
