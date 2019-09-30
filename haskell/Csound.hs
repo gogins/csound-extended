@@ -12,16 +12,23 @@ POSIX systems. The module includes a play function for rendering Euterpea Music
 objects.
 -}
 
-{-# LANGUAGE DataKinds, ExtendedDefaultRules, TemplateHaskell, ForeignFunctionInterface #-}
+{-# LANGUAGE DataKinds, ExtendedDefaultRules, ForeignFunctionInterface #-}
 module Csound where
 -- import Euterpea
-import Control.Exception
-import Control.DeepSeq
+-- import Control.Exception
+-- import Control.DeepSeq
 import System.Info
 import Foreign
 import Foreign.C.Types
 import System.Posix.DynamicLinker
-import System.Posix.DynamicLinker.Template
+
+main :: IO ()
+main = do
+    libCsound <- dlopen "libcsound64.so" [RTLD_GLOBAL]
+    print libCsound
+    
+
+
 
 {-- 
 First we define a subset of the Csound API for Haskell. The functions that we 
@@ -33,13 +40,6 @@ Usage: Load the Csound shared library, create an instance of Csound,
 and pass that instance to all other Csound functions.
 --}
 
-data Csound = Csound {
-    libHandle :: DL,
-    csoundCreate :: Ptr () -> Ptr ()
-    }
-    
---csoundModifier :: String -> String
---    csoundModifier = (++ "")    
     
 {--
 foreign import ccall "csoundCleanup" xxx :: xxx -> IO xxx
@@ -74,12 +74,6 @@ foreign import ccall "csoundSetScorePending
 foreign import ccall "csoundStart
 foreign import ccall "csoundStop
 --}
-
-
-
-
-$(makeDynamicLinker ''Csound CCall 'id)
-
 
 {--
 Next we create Csound player for Euterpea.
