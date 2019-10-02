@@ -91,6 +91,7 @@ Prelude> import HSoM.Examples.MUIExamples2
 Prelude HSoM.Examples.MUIExamples2> bifurcate
 ```
 This tests Jazkell:
+```
 cd
 cd Jazzkell/examples
 mkg@bodhimandala:~/Jazzkell/examples$ ghci
