@@ -108,18 +108,3 @@ cd
 cd csound-extended/haskell
 cabal install
 ```
-
-
-
-
-
-
-
-
-
-## Building
-
-Please see the main README.md for csound-extended.
-
-For this extension, change to this directory and execute `cabal install`.
-
