@@ -12,32 +12,58 @@ POSIX systems. The module includes a play function for rendering Euterpea Music
 objects.
 -}
 
-{-# LANGUAGE DataKinds, ExtendedDefaultRules, ForeignFunctionInterface #-}
-module Csound where
--- import Euterpea
--- import Control.Exception
--- import Control.DeepSeq
-import System.Info
+{-# LANGUAGE DataKinds, EmptyDataDecls, ExtendedDefaultRules, ForeignFunctionInterface #-}
+module Csound (libCsound) where
+import Euterpea
+import Control.Exception
+import Control.DeepSeq
+import Data.Typeable
 import Foreign
 import Foreign.C.Types
+import Foreign.Ptr
+import System.IO.Unsafe
+import System.Info
 import System.Posix.DynamicLinker
 
-main :: IO ()
-main = do
-    libCsound <- dlopen "libcsound64.so" [RTLD_GLOBAL]
-    print libCsound
-    
+-- Dynamically load the Csound shared library. We assume that it is built for 
+-- 64 bit CPU architecture.
+
+libCsound :: DL
+libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
+
+-- Follow this pattern for the other Csound API functions.
+-- 'unsafePerformIO' in effect removes the 'IO' qualifier from the return 
+-- value. We don't plan to change such values so I think that's OK.
+-- We use an implicit type cast of unsigned long int (64 bits) for pointers.
+
+csoundCreateAddress = unsafePerformIO $ dlsym libCsound "csoundCreate"
+type CsoundCreate = CULong -> IO CULong
+
+-- 'unsafe' is unsafe but I think OK here and should quite speed things up.
+-- The 'ccall "dynamic"' but tells Haskell to dereference the function pointer 
+-- and turn it into a Haskell function with the proper signature.
+
+foreign import ccall unsafe "dynamic" csoundCreateWrapper :: (FunPtr CsoundCreate) -> CsoundCreate
+csoundCreate :: CsoundCreate
+csoundCreate = csoundCreateWrapper csoundCreateAddress
 
 
 
 {-- 
 First we define a subset of the Csound API for Haskell. The functions that we 
 need to call are more or less the same as the ones in csound.node. We will 
-pass only ints, doubles, and strings to Csound. Some strings will be 
-multi-line literals, which can be implemented in Haskell using quasiquotes.
+pass only an opaque Csound pointer, ints, doubles, and strings to Csound. 
+Some strings will be multi-line literals, which can be implemented in Haskell 
+using quasiquotes.
 
 Usage: Load the Csound shared library, create an instance of Csound, 
 and pass that instance to all other Csound functions.
+
+See https://stackoverflow.com/questions/25093052/calling-a-c-function-in-haskell-comparing-to-python
+https://www.schoolofhaskell.com/user/icelandj/dynamically-link-against-library-in-ghci
+https://stackoverflow.com/questions/997738/haskell-ffi-calling-funptrs
+https://rosettacode.org/wiki/Call_a_function_in_a_shared_library#Haskell
+https://stackoverflow.com/questions/15203847/calling-a-c-function-that-is-referenced-by-a-c-pointer-to-that-function-with-has
 --}
 
     
