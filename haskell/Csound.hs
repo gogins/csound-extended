@@ -55,10 +55,12 @@ csoundCreate :: CsoundCreate
 csoundCreate = csoundCreateWrapper csoundCreateAddress
 
 csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
-type CsoundCompileCsdText = CULong -> CString -> IO CULong
-foreign import ccall unsafe "dynamic" csoundCompileCsdTextWrapper :: (FunPtr CsoundCompileCsdText) -> CsoundCompileCsdText
-csoundCompileCsdText :: CsoundCompileCsdText
-csoundCompileCsdText = csoundCompileCsdTextWrapper csoundCompileCsdTextAddress
+type CsoundCompileCsdTextC = CULong -> CString -> IO CULong
+foreign import ccall unsafe "dynamic" csoundCompileCsdTextWrapper :: (FunPtr CsoundCompileCsdTextC) -> CsoundCompileCsdTextC
+csoundCompileCsdTextC :: CsoundCompileCsdTextC
+csoundCompileCsdTextC = csoundCompileCsdTextWrapper csoundCompileCsdTextAddress
+--type CsoundCompileCsdText = CULong -> String -> IO CULong
+csoundCompileCsdText csound csd = withCString csd $ \ccsd -> csoundCompileCsdTextC csound ccsd
 
 csoundPerformAddress = unsafePerformIO $ dlsym libCsound "csoundPerform"
 type CsoundPerform = CULong -> IO CULong

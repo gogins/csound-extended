@@ -258,9 +258,7 @@ main = do
     print instance2
     -- Demonstrates that instance2 is what other languages would consider a variable.
     print instance2
-    ccsd <- newCString csd
-    print ccsd
-    result <- csoundCompileCsdText instance1 ccsd
+    result <- csoundCompileCsdText instance1 csd
     print "csoundCompileCsdText: "
     result <- csoundStart instance1
     print "csoundStart:"
