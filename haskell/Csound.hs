@@ -12,18 +12,25 @@ POSIX systems. The module includes a play function for rendering Euterpea Music
 objects.
 -}
 
-{-# LANGUAGE DataKinds, EmptyDataDecls, ExtendedDefaultRules, ForeignFunctionInterface #-}
-module Csound (libCsound) where
+{-# LANGUAGE DataKinds, QuasiQuotes, EmptyDataDecls, ExtendedDefaultRules, ForeignFunctionInterface #-}
+module Csound (libCsound, 
+    csoundCreate,
+    csoundCompileCsdText,
+    csoundPerform,
+    csoundStart
+    ) where
 import Euterpea
 import Control.Exception
 import Control.DeepSeq
 import Data.Typeable
 import Foreign
+import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Ptr
 import System.IO.Unsafe
 import System.Info
 import System.Posix.DynamicLinker
+import Text.RawString.QQ
 
 -- Dynamically load the Csound shared library. We assume that it is built for 
 -- 64 bit CPU architecture.
@@ -39,14 +46,31 @@ libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
 csoundCreateAddress = unsafePerformIO $ dlsym libCsound "csoundCreate"
 type CsoundCreate = CULong -> IO CULong
 
--- 'unsafe' is unsafe but I think OK here and should quite speed things up.
--- The 'ccall "dynamic"' but tells Haskell to dereference the function pointer 
--- and turn it into a Haskell function with the proper signature.
+-- 'unsafe' _is_ unsafe but, I think OK here and should quite speed things up.
+-- The 'ccall "dynamic"' tells Haskell how to bind the address of a foreign 
+-- function to a Haskell function of the declared type.
 
 foreign import ccall unsafe "dynamic" csoundCreateWrapper :: (FunPtr CsoundCreate) -> CsoundCreate
 csoundCreate :: CsoundCreate
 csoundCreate = csoundCreateWrapper csoundCreateAddress
 
+csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
+type CsoundCompileCsdText = CULong -> CString -> IO CULong
+foreign import ccall unsafe "dynamic" csoundCompileCsdTextWrapper :: (FunPtr CsoundCompileCsdText) -> CsoundCompileCsdText
+csoundCompileCsdText :: CsoundCompileCsdText
+csoundCompileCsdText = csoundCompileCsdTextWrapper csoundCompileCsdTextAddress
+
+csoundPerformAddress = unsafePerformIO $ dlsym libCsound "csoundPerform"
+type CsoundPerform = CULong -> IO CULong
+foreign import ccall unsafe "dynamic" csoundPerformWrapper :: (FunPtr CsoundPerform) -> CsoundPerform
+csoundPerform :: CsoundPerform
+csoundPerform = csoundPerformWrapper csoundPerformAddress
+
+csoundStartAddress = unsafePerformIO $ dlsym libCsound "csoundStart"
+type CsoundStart = CULong -> IO CULong
+foreign import ccall unsafe "dynamic" csoundStartWrapper :: (FunPtr CsoundStart) -> CsoundStart
+csoundStart :: CsoundStart
+csoundStart = csoundStartWrapper csoundStartAddress
 
 
 {-- 

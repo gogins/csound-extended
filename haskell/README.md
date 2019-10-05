@@ -37,18 +37,7 @@ steps, look at the Euterpea installation instructions and see if my
 instructions still make sense.
 
 ```
-# Update all installed Linux packages.
-sudo apt update
-sudo apt upgrade
-
-# Remove any previous systemwide installation of Haskell and its helpers.
-sudo apt remove haskell-platform
-sudo apt remove ghc
-sudo apt autoremove
-
-# Also, search in /usr/local and /usr for any Haskell components left behind
-# by the uninstallation and manually remove them.
-
+#!/bin/bash
 # Remove any previous local installation of the Haskell platform.
 cd
 rm -rf .ghcup
@@ -64,26 +53,24 @@ curl https://get-ghcup.haskell.org -sSf | sh
 cabal v2-update
 
 # Install the following packages:
-cabal install Euterpea
-cabal install HSoM
-cabal install Kulitta
+cabal install Euterpea --reinstall --force-reinstalls --allow-newer --lib
+cabal install HSoM --reinstall --force-reinstalls --allow-newer --lib
+cabal install Kulitta --reinstall --force-reinstalls --allow-newer --lib
 
 # Clone the Jazzkell repository into your home directory and install the 
 # current version of Jazzkell.
 cd
 git clone https://github.com/donya/Jazzkell.git
 cd Jazzkell
-cabal install
+cabal install --reinstall --force-reinstalls --allow-newer --lib
 
 # Start up Timidity in the background as a synthesis server for Haskell.
 timidity -iA -Os &
 ```
 Test your installation by running a few examples, choosing the appropriate 
-MIDI device for Timidity for Euterpea.  
-
-
-This tests the Haskell School of Music, the MUI graphical user interface 
-library provided by Euterpea, and Euterpea itself:
+MIDI device for Timidity for Euterpea. The following tests the Haskell School 
+of Music, the MUI graphical user interface library provided by Euterpea, and 
+Euterpea itself:
 ```
 mkg@bodhimandala:~/Kulitta/Examples$ ghci
 GHCi, version 8.6.5: http://www.haskell.org/ghc/  :? for help
