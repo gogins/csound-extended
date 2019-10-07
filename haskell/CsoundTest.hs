@@ -1,8 +1,11 @@
 {-# LANGUAGE QuasiQuotes #-}
 
+import Control.Concurrent
 import Csound
 import Foreign.C.String
+import System.Exit
 import System.IO.Unsafe
+import Text.Printf
 import Text.RawString.QQ
 
 csd :: String
@@ -251,19 +254,23 @@ e
 |]
 
 main = do
-    print libCsound
-    instance1 <- csoundCreate 0
-    instance2 <- csoundCreate 0
-    print instance1
-    print instance2
-    -- Demonstrates that instance2 is what other languages would consider a variable.
-    print instance2
-    result <- csoundCompileCsdText instance1 csd
-    print "csoundCompileCsdText: "
-    result <- csoundStart instance1
-    print "csoundStart:"
-    print result
-    result <- csoundPerform instance1
-    print "csoundPerform:"
-    print result
-    
+    printf "Main thread:" 
+    myThreadId
+    thread <- forkIO $ do
+        printf "Csound thread:" 
+        myThreadId
+        printf "libCsound:" 
+        print libCsound
+        csound <- csoundCreate 0
+        printf "csound: %d\n" csound
+        result <- csoundCompileCsdText csound csd
+        result <- csoundStart csound
+        printf "csoundCompileCsdText: %d\n" result
+        result <- csoundPerform csound
+        printf "csoundCompileCsdText: %d\n" result
+        csoundStop csound
+        printf "csoundStop\n"
+        csoundDestroy csound
+        printf "csoundDestroy\n"
+    printf "Done.\n"
+    exitWith ExitSuccess     

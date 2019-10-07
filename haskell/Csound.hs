@@ -14,12 +14,21 @@ objects.
 
 {-# LANGUAGE DataKinds, QuasiQuotes, EmptyDataDecls, ExtendedDefaultRules, ForeignFunctionInterface #-}
 module Csound (libCsound, 
-    csoundCreate,
     csoundCompileCsdText,
+    csoundCreate,
+    csoundDestroy,
     csoundPerform,
-    csoundStart
+    csoundReadScore,
+    csoundSetControlChannel,
+    csoundSetOption,
+    csoundStart,
+    csoundStop,
+    --playCsound
     ) where
-import Euterpea
+--import Euterpea
+--import Euterpea.Music.Note.Music
+--import Euterpea.Music.Note.MoreMusic
+--import Euterpea.Music.Note.Performance
 import Control.Exception
 import Control.DeepSeq
 import Data.Typeable
@@ -44,7 +53,7 @@ libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
 -- We use an implicit type cast of unsigned long int (64 bits) for pointers.
 
 csoundCreateAddress = unsafePerformIO $ dlsym libCsound "csoundCreate"
-type CsoundCreate = CULong -> IO CULong
+type CsoundCreate = Word64 -> IO Word64
 
 -- 'unsafe' _is_ unsafe but, I think OK here and should quite speed things up.
 -- The 'ccall "dynamic"' tells Haskell how to bind the address of a foreign 
@@ -55,25 +64,56 @@ csoundCreate :: CsoundCreate
 csoundCreate = csoundCreateWrapper csoundCreateAddress
 
 csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
-type CsoundCompileCsdTextC = CULong -> CString -> IO CULong
+type CsoundCompileCsdTextC = Word64 -> CString -> IO Word64
 foreign import ccall unsafe "dynamic" csoundCompileCsdTextWrapper :: (FunPtr CsoundCompileCsdTextC) -> CsoundCompileCsdTextC
 csoundCompileCsdTextC :: CsoundCompileCsdTextC
 csoundCompileCsdTextC = csoundCompileCsdTextWrapper csoundCompileCsdTextAddress
---type CsoundCompileCsdText = CULong -> String -> IO CULong
 csoundCompileCsdText csound csd = withCString csd $ \ccsd -> csoundCompileCsdTextC csound ccsd
 
 csoundPerformAddress = unsafePerformIO $ dlsym libCsound "csoundPerform"
-type CsoundPerform = CULong -> IO CULong
+type CsoundPerform = Word64 -> IO Word64
 foreign import ccall unsafe "dynamic" csoundPerformWrapper :: (FunPtr CsoundPerform) -> CsoundPerform
 csoundPerform :: CsoundPerform
 csoundPerform = csoundPerformWrapper csoundPerformAddress
 
 csoundStartAddress = unsafePerformIO $ dlsym libCsound "csoundStart"
-type CsoundStart = CULong -> IO CULong
+type CsoundStart = Word64 -> IO Word64
 foreign import ccall unsafe "dynamic" csoundStartWrapper :: (FunPtr CsoundStart) -> CsoundStart
 csoundStart :: CsoundStart
 csoundStart = csoundStartWrapper csoundStartAddress
 
+csoundSetOptionAddress = unsafePerformIO $ dlsym libCsound "csoundSetOption"
+type CsoundSetOptionC = Word64 -> CString -> IO Word64
+foreign import ccall unsafe "dynamic" csoundSetOptionWrapper :: (FunPtr CsoundSetOptionC) -> CsoundSetOptionC
+csoundSetOptionC :: CsoundSetOptionC
+csoundSetOptionC = csoundSetOptionWrapper csoundSetOptionAddress
+csoundSetOption csound option = withCString option $ \coption -> csoundSetOptionC csound coption
+
+csoundStopAddress = unsafePerformIO $ dlsym libCsound "csoundStop"
+type CsoundStop = Word64 -> IO Word64
+foreign import ccall unsafe "dynamic" csoundStopWrapper :: (FunPtr CsoundStop) -> CsoundStop
+csoundStop :: CsoundStop
+csoundStop = csoundStopWrapper csoundStopAddress
+
+csoundReadScoreAddress = unsafePerformIO $ dlsym libCsound "csoundReadScore"
+type CsoundReadScoreC = Word64 -> CString -> IO Word64
+foreign import ccall unsafe "dynamic" csoundReadScoreWrapper :: (FunPtr CsoundReadScoreC) -> CsoundReadScoreC
+csoundReadScoreC :: CsoundReadScoreC
+csoundReadScoreC = csoundReadScoreWrapper csoundReadScoreAddress
+csoundReadScore csound score = withCString score $ \cscore -> csoundReadScoreC csound cscore
+
+csoundSetControlChannelAddress = unsafePerformIO $ dlsym libCsound "csoundSetControlChannel"
+type CsoundSetControlChannelC = Word64 -> CString -> Double -> IO ()
+foreign import ccall unsafe "dynamic" csoundSetControlChannelWrapper :: (FunPtr CsoundSetControlChannelC) -> CsoundSetControlChannelC
+csoundSetControlChannelC :: CsoundSetControlChannelC
+csoundSetControlChannelC = csoundSetControlChannelWrapper csoundSetControlChannelAddress
+csoundSetControlChannel csound name value = withCString name $ \cname -> csoundSetControlChannelC csound cname value
+
+csoundDestroyAddress = unsafePerformIO $ dlsym libCsound "csoundDestroy"
+type CsoundDestroy = Word64 -> IO Word64
+foreign import ccall unsafe "dynamic" csoundDestroyWrapper :: (FunPtr CsoundDestroy) -> CsoundDestroy
+csoundDestroy :: CsoundDestroy
+csoundDestroy = csoundDestroyWrapper csoundDestroyAddress
 
 {-- 
 First we define a subset of the Csound API for Haskell. The functions that we 
@@ -90,151 +130,68 @@ https://www.schoolofhaskell.com/user/icelandj/dynamically-link-against-library-i
 https://stackoverflow.com/questions/997738/haskell-ffi-calling-funptrs
 https://rosettacode.org/wiki/Call_a_function_in_a_shared_library#Haskell
 https://stackoverflow.com/questions/15203847/calling-a-c-function-that-is-referenced-by-a-c-pointer-to-that-function-with-has
---}
 
+csoundCleanup
+csoundCompileCsd
+csoundCompileCsdText
+csoundCompileOrc
+csoundCreate
+csoundDestroy
+csoundEvalCode
+csoundGetControlChannel
+csoundGetKsmps
+csoundGetMetadata
+csoundGetNchnls
+csoundGetScoreTime
+csoundGetVersion
+csoundGetSr
+csoundInputMessage
+csoundIsScorePending
+csoundMessage
+csoundPerform
+csoundPerformAndPostProcess
+csoundReadScore
+csoundReset
+csoundRewindScore
+csoundScoreEvent
+csoundSetControlChannel
+csoundSetMessageCallback
+csoundSetMetadata
+csoundSetOption
+csoundSetOutput
+csoundSetScorePending
+csoundStart
+csoundStop
+
+Next we create a Csound play function for Euterpea.
+
+The pattern for play functions is:
+
+> playStrict :: (Performable a, NFData a) => PlayParams -> Music a -> IO ()
+> playStrict p m = m `deepseq`
+>     let x = toMidi (fst $ perfDur (pmap p) (ctxt p) m) defUpm 
+>     in  x `deepseq` playM' (devID p) x
+
+Note, deepseq performs a deep traversal of the structure m, here a Music.
+NFData is simply the class of fully evaluatable types.
+
+Here, rather than send to a MIDI device in real time, we will write i statements 
+to a Csound score, and perform that score using the csd and options. Csound sorts 
+the score.
+
+toIStatement :: Event a -> IO (String)
+toIStatement e = do 
+    lyne <- printf "i s% 9.4f% 9.4f% 9.4f% 9.4f%%\n" (eInstName e) (eTime e) (eDurT e) (ePitch e) (eVol e)
+    print lyne
+
+-- E.g. playCsound music csdText [options]
+playCsound :: (Performable a, NFData a) => Music a -> String -> [String] -> IO ()
+playCsound csd music = music `deepseq`
+    -- first in tuple, of that performance duration with perfmap of p, context of p, default user patch map.
+    let i_statement = toIStatement (fst $ perfDur (pmap p) (ctxt p) m) defUpm 
+    in i_statement `deepseq` print' x
+    -- Append i to a list.
+    -- return the concatenation of the list.
     
-{--
-foreign import ccall "csoundCleanup" xxx :: xxx -> IO xxx
-foreign import ccall "csoundCompileCsd
-foreign import ccall "csoundCompileCsdText
-foreign import ccall "csoundCompileOrc
-foreign import ccall "csoundCreate
-foreign import ccall "csoundDestroy
-foreign import ccall "csoundEvalCode
-foreign import ccall "csoundGetControlChannel
-foreign import ccall "csoundGetKsmps
-foreign import ccall "csoundGetMetadata
-foreign import ccall "csoundGetNchnls
-foreign import ccall "csoundGetScoreTime
-foreign import ccall "csoundGetVersion
-foreign import ccall "csoundGetSr
-foreign import ccall "csoundInputMessage
-foreign import ccall "csoundIsScorePending
-foreign import ccall "csoundMessage
-foreign import ccall "csoundPerform
-foreign import ccall "csoundPerformAndPostProcess
-foreign import ccall "csoundReadScore
-foreign import ccall "csoundReset
-foreign import ccall "csoundRewindScore
-foreign import ccall "csoundScoreEvent
-foreign import ccall "csoundSetControlChannel
-foreign import ccall "csoundSetMessageCallback
-foreign import ccall "csoundSetMetadata
-foreign import ccall "csoundSetOption
-foreign import ccall "csoundSetOutput
-foreign import ccall "csoundSetScorePending
-foreign import ccall "csoundStart
-foreign import ccall "csoundStop
 --}
 
-{--
-Next we create Csound player for Euterpea.
-
-The IStatement type takes a note duration (Dur), a pitch number (AbsPitch), 
-and a volume from 0-127 (Volume) and returns a Vivid synthesizer. The 
-VInstr type mirrors the Instr type used in Euterpea's offline sound 
-synthesis.
-
-> type Params = [Double]
-> type VInstr = Dur -> AbsPitch -> Volume -> Params -> SynthDef '["gate", "fadeSecs"]
-
-> data ReleaseType = 
->     FixedDuration -- sound duration unaffected by note duration (percussive, frees itself)
->     | Internal -- sound duration handled within synth def with envelopes (frees itself)
->     | External -- fade out and free expected to be handled externally to synth def
->     deriving (Eq, Show, Ord, Enum)
-
-> data SynthInfo = SynthInfo {
->     synthDef :: VInstr, -- sound generation functionforeign import ccall "csound
->     releaseTime :: Dur, -- what is the expected release time after note offforeign import ccall "csound?
->     releaseType :: ReleaseType -- does the sound depend on note durationforeign import ccall "csound? 
->     }
-
-> toSynth :: SynthInfo -> AbsPitch -> Volume -> Params -> SynthDef '["gate", "fadeSecs"]
-> toSynth e ap v p = (synthDef e) (releaseTime e) ap v pforeign import ccall "csound
-
-Notes on ReleaseType:
-- Synthesizers using FixedDuration are expected to NOT free themselves via envelopes. 
-  They will be freed by the playback algorithm. Freeing internally with envelopes 
-
-Lookup table type for synthesizers by an Instrumentname. Note that the 
-durDependent field should be True for sounds with a sustain region. 
-Percussive sounds with no sustain that are primarily release-based should 
-have durDependent=False to avoid excessive cycles being spent on the sound.
-
-> type SynthTable = [(InstrumentName, SynthInfo)]
-
-A default sound to use if no other synthesizer is defined. The 
-default sound is a sine wave at a given note's frequency with 
-a maximum amplitude of 0.3. The note's duration is ignored, 
-meaning that the SynthInfo will have a releaseType of FixedDuration.
-
-> defaultSound :: VInstr
-> defaultSound _ ap _ _ = sd (1 ::I "gate", 0 ::I "fadeSecs") $ do
->    s <- 0.3 ~* sinOsc (freq_ $ midiCPS ap)
->    e <- envGen (env 1.0 [(0.0,0.25)] Curve_Linear) FreeEnclosing
->    out 0 [s ~* e, s ~* e]
-
-> defaultSynth = SynthInfo defaultSound 0.25 FixedDuration
-
-Playback functions for sending to Vivid synths. Sequentially infinite foreign import ccall "csound
-Euterpea values are permitted and Ctrl+C then Enter will exit out of the 
-cycle.
-   
-> playV :: (ToMusic1 a) => SynthTable -> Music a -> IO ()
-> playV t m = onException (playMEvs t 0 $ perform m) cmdPeriod
-
-Euterpea's PlayParams can also be used to provide a customized performance
-algorithm. The playVC function allows use of the strict parameter in the
-PlayParams datatype. The playVS function is just a shorthand way of doing this.
-
-> instance NFData MEvent where
->     rnf (MEvent t i ap d v params) = 
->         rnf t `seq` rnf i `seq` rnf ap `seq` rnf d `seq` rnf v `seq` rnf params
-
-> playVC :: (ToMusic1 a) => SynthTable -> PlayParams -> Music a -> IO ()
-> playVC t pp m = 
->     let x = (perfAlg pp . toMusic1) m
->     in  if strict pp then deepseq x $ onException (playMEvs t 0 x) cmdPeriod
->         else onException (playMEvs t 0 x) cmdPeriod
-    
-> playVS :: (ToMusic1 a) => SynthTable -> Music a -> IO ()
-> playVS t = playVC t defParams{strict=True}
-
-Supporting definitions for handling of MEvents in the functions above.
-
-> playEvent :: VividAction m => SynthTable -> MEvent -> m()
-> playEvent insts me = 
->     let x = lookup (eInst me) insts
->         eSyn = maybe defaultSynth id x
->         sd = toSynth eSyn (ePitch me) (eVol me) (eParams me)
->         waitTime = if releaseType eSyn == Internal then eDur me + releaseTime eSyn else
->                    if releaseType eSyn == External then eDur me else releaseTime eSyn
->     in  if releaseType eSyn == External then do
->             s0 <- synth sd ()
->             wait $ fromRational waitTime
->             set s0 (fromRational (releaseTime eSyn) :: I "fadeSecs")
->             release s0
->             wait $ releaseTime eSyn
->         else do -- for fixed and internal release cases
->             s0 <- synth sd ()
->             wait (fromRational waitTime)
->             -- Note: call to free removed. Synth defs are expected to do this themselves now.
-     
-> playMEvs :: VividAction m => SynthTable -> PTime -> [MEvent] -> m ()
-> playMEvs insts cTime [] = return ()
-> playMEvs insts cTime [me] = fork $ do
->     wait $ fromRational (eTime me - cTime)
->     playEvent insts me
-> playMEvs insts cTime (me1:me2:mevs) = do
->     wait $ fromRational (eTime me1 - cTime)
->     fork $ playEvent insts me1 
->     playMEvs insts (eTime me1) (me2:mevs)
-
-Writing to a WAV file
-
-> writeWavV :: (ToMusic1 a) => FilePath -> SynthTable -> Music a -> IO ()
-> writeWavV outFile t m = 
->     if os == "mingw32" then writeNRTWin outFile (playMEvs t 0 $ perform m)
->     else writeNRT outFile (playMEvs t 0 $ perform m)
---}
