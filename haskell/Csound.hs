@@ -1,3 +1,7 @@
+{-# LANGUAGE DataKinds, QuasiQuotes, EmptyDataDecls, ExtendedDefaultRules, ForeignFunctionInterface #-}
+{-# OPTIONS -XFlexibleInstances #-}
+{-# OPTIONS -XTypeSynonymInstances #-}
+
 {-|
 Module      : Csound
 Description : Haskell FFI interface to Csound, including play for Euterpea.
@@ -12,7 +16,6 @@ POSIX systems. The module includes a play function for rendering Euterpea Music
 objects.
 -}
 
-{-# LANGUAGE DataKinds, QuasiQuotes, EmptyDataDecls, ExtendedDefaultRules, ForeignFunctionInterface #-}
 module Csound (libCsound, 
     csoundCompileCsdText,
     csoundCreate,
@@ -23,12 +26,8 @@ module Csound (libCsound,
     csoundSetOption,
     csoundStart,
     csoundStop,
-    --playCsound
+    playCsound
     ) where
---import Euterpea
---import Euterpea.Music.Note.Music
---import Euterpea.Music.Note.MoreMusic
---import Euterpea.Music.Note.Performance
 import Control.Exception
 import Control.DeepSeq
 import Data.Typeable
@@ -39,7 +38,14 @@ import Foreign.Ptr
 import System.IO.Unsafe
 import System.Info
 import System.Posix.DynamicLinker
+import Text.Printf
 import Text.RawString.QQ
+import Euterpea
+import Euterpea.Music
+-- These should also be imported by the above line but are not.
+-- import Euterpea.Music.Note.Music
+-- import Euterpea.Music.Note.MoreMusic
+-- import Euterpea.Music.Note.Performance
 
 -- Dynamically load the Csound shared library. We assume that it is built for 
 -- 64 bit CPU architecture.
@@ -179,19 +185,17 @@ Here, rather than send to a MIDI device in real time, we will write i statements
 to a Csound score, and perform that score using the csd and options. Csound sorts 
 the score.
 
-toIStatement :: Event a -> IO (String)
+-- E.g. playCsound music csdText [options]
+
+toIStatement :: MEvent -> IO String
 toIStatement e = do 
     lyne <- printf "i s% 9.4f% 9.4f% 9.4f% 9.4f%%\n" (eInstName e) (eTime e) (eDurT e) (ePitch e) (eVol e)
     print lyne
-
--- E.g. playCsound music csdText [options]
-playCsound :: (Performable a, NFData a) => Music a -> String -> [String] -> IO ()
-playCsound csd music = music `deepseq`
-    -- first in tuple, of that performance duration with perfmap of p, context of p, default user patch map.
-    let i_statement = toIStatement (fst $ perfDur (pmap p) (ctxt p) m) defUpm 
-    in i_statement `deepseq` print' x
-    -- Append i to a list.
-    -- return the concatenation of the list.
-    
 --}
 
+-- Getting clearer! -- I must take into account the difference between finite 
+-- and infinite Performances.
+
+playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Performance
+playCsound m csd = perform m
+    
