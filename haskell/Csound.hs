@@ -194,7 +194,12 @@ toIStatement e = do
 --}
 
 -- Getting clearer! -- I must take into account the difference between finite 
--- and infinite Performances.
+-- and infinite Performances. Finite Performances can be added to the <CsScore> element. 
+-- Infinite performances can be enqueued for ReadScore, in blocking chunks.
+-- Sample MEvent: MEvent {eTime = 143 % 1, eInst = Celesta, ePitch = 63, eDur = 1 % 7, eVol = 44, eParams = []}
+-- Trying to figure out what % is for. Got it, the "percent operator" in Data.Ratio returns 
+-- an irreducible fraction.
+-- It's fine for now if the instrument names in Csound must match those in the Performance.
 
 playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Performance
 playCsound m csd = perform m
