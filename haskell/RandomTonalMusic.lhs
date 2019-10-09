@@ -5,6 +5,7 @@ Donya Quick
 > import Euterpea
 > import System.Random
 > import Csound
+> import Text.RawString.QQ
 
 The theme of this example is going to be stochastic selection
 from lists of items, since this is a key part of controlling 
@@ -60,4 +61,4 @@ it a few times on some computers).
 > duet = tempo 1.75 (instrument Celesta mel1 :=: instrument AcousticBass mel2)
 > main = play duet
 
-
+>

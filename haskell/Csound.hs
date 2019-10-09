@@ -4,7 +4,7 @@
 
 {-|
 Module      : Csound
-Description : Haskell FFI interface to Csound, including play for Euterpea.
+Description : Haskell FFI interface to Csound, including a playCsound function for Euterpea.
 Copyright   : (c) Michael Gogins, 2019.
 License     : LGPL-v2.1
 Maintainer  : michael.gogins@gmail.com
@@ -12,8 +12,8 @@ Stability   : experimental
 Portability : POSIX
 
 This module implements a dynamic FFI binding to the core of the Csound API on
-POSIX systems. The module includes a play function for rendering Euterpea Music 
-objects.
+POSIX systems. The module includes a playCsound function for rendering Euterpea Music 
+objects using Csound with an embedded Csound orchestra in a separate thread.
 -}
 
 module Csound (libCsound, 
@@ -26,8 +26,10 @@ module Csound (libCsound,
     csoundSetOption,
     csoundStart,
     csoundStop,
-    playCsound
+    playCsound,
+    csd
     ) where
+import Control.Concurrent
 import Control.Exception
 import Control.DeepSeq
 import Data.Typeable
@@ -42,29 +44,21 @@ import Text.Printf
 import Text.RawString.QQ
 import Euterpea
 import Euterpea.Music
--- These should also be imported by the above line but are not.
--- import Euterpea.Music.Note.Music
--- import Euterpea.Music.Note.MoreMusic
--- import Euterpea.Music.Note.Performance
 
--- Dynamically load the Csound shared library. We assume that it is built for 
--- 64 bit CPU architecture.
-
+{-|
+Handle to the Csound shared library, which is assumed to be built for 64 bit 
+CPU architecture, and is dynamically loaded here.
+-}
 libCsound :: DL
 libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
 
--- Follow this pattern for the other Csound API functions.
--- 'unsafePerformIO' in effect removes the 'IO' qualifier from the return 
--- value. We don't plan to change such values so I think that's OK.
--- We use an implicit type cast of unsigned long int (64 bits) for pointers.
-
 csoundCreateAddress = unsafePerformIO $ dlsym libCsound "csoundCreate"
+{-|
+Creates a new instance of Csound and returns a handle to it. The first 
+parameter may be a pointer or handle to user data, which Csound will store 
+and pass to callbacks.
+-}
 type CsoundCreate = Word64 -> IO Word64
-
--- 'unsafe' _is_ unsafe but, I think OK here and should quite speed things up.
--- The 'ccall "dynamic"' tells Haskell how to bind the address of a foreign 
--- function to a Haskell function of the declared type.
-
 foreign import ccall unsafe "dynamic" csoundCreateWrapper :: (FunPtr CsoundCreate) -> CsoundCreate
 csoundCreate :: CsoundCreate
 csoundCreate = csoundCreateWrapper csoundCreateAddress
@@ -74,17 +68,30 @@ type CsoundCompileCsdTextC = Word64 -> CString -> IO Word64
 foreign import ccall unsafe "dynamic" csoundCompileCsdTextWrapper :: (FunPtr CsoundCompileCsdTextC) -> CsoundCompileCsdTextC
 csoundCompileCsdTextC :: CsoundCompileCsdTextC
 csoundCompileCsdTextC = csoundCompileCsdTextWrapper csoundCompileCsdTextAddress
+{-|
+Compiles a String containing Csound code in the form of a CSD file, and 
+returns the result.
+-}
 csoundCompileCsdText csound csd = withCString csd $ \ccsd -> csoundCompileCsdTextC csound ccsd
 
 csoundPerformAddress = unsafePerformIO $ dlsym libCsound "csoundPerform"
 type CsoundPerform = Word64 -> IO Word64
 foreign import ccall unsafe "dynamic" csoundPerformWrapper :: (FunPtr CsoundPerform) -> CsoundPerform
+{-|
+After an orchestra has been compiled and csoundStart has been called, 
+actually runs the Csound performance, which may be infinite or finite in 
+duration.
+-}
 csoundPerform :: CsoundPerform
 csoundPerform = csoundPerformWrapper csoundPerformAddress
 
 csoundStartAddress = unsafePerformIO $ dlsym libCsound "csoundStart"
 type CsoundStart = Word64 -> IO Word64
 foreign import ccall unsafe "dynamic" csoundStartWrapper :: (FunPtr CsoundStart) -> CsoundStart
+{-|
+After a Csound orchestra has been compiled, opens input and output devices and files 
+and otherwise initializes all resources required for the actual performance.
+-}
 csoundStart :: CsoundStart
 csoundStart = csoundStartWrapper csoundStartAddress
 
@@ -93,11 +100,19 @@ type CsoundSetOptionC = Word64 -> CString -> IO Word64
 foreign import ccall unsafe "dynamic" csoundSetOptionWrapper :: (FunPtr CsoundSetOptionC) -> CsoundSetOptionC
 csoundSetOptionC :: CsoundSetOptionC
 csoundSetOptionC = csoundSetOptionWrapper csoundSetOptionAddress
+{-|
+Sets a Csound option, before starting a performance. The option may include 
+a flag and a value, but may not include any spaces, e.g. "-ofilename" not 
+"-o filename".
+-}
 csoundSetOption csound option = withCString option $ \coption -> csoundSetOptionC csound coption
 
 csoundStopAddress = unsafePerformIO $ dlsym libCsound "csoundStop"
 type CsoundStop = Word64 -> IO Word64
 foreign import ccall unsafe "dynamic" csoundStopWrapper :: (FunPtr CsoundStop) -> CsoundStop
+{-|
+Stops an ongoing Csound performance.
+-}
 csoundStop :: CsoundStop
 csoundStop = csoundStopWrapper csoundStopAddress
 
@@ -106,6 +121,10 @@ type CsoundReadScoreC = Word64 -> CString -> IO Word64
 foreign import ccall unsafe "dynamic" csoundReadScoreWrapper :: (FunPtr CsoundReadScoreC) -> CsoundReadScoreC
 csoundReadScoreC :: CsoundReadScoreC
 csoundReadScoreC = csoundReadScoreWrapper csoundReadScoreAddress
+{-|
+Sends a Csound score event or events, in the format of one or more lines of a 
+Csound score file, to an ongoing Csound performance.
+-}
 csoundReadScore csound score = withCString score $ \cscore -> csoundReadScoreC csound cscore
 
 csoundSetControlChannelAddress = unsafePerformIO $ dlsym libCsound "csoundSetControlChannel"
@@ -113,11 +132,18 @@ type CsoundSetControlChannelC = Word64 -> CString -> Double -> IO ()
 foreign import ccall unsafe "dynamic" csoundSetControlChannelWrapper :: (FunPtr CsoundSetControlChannelC) -> CsoundSetControlChannelC
 csoundSetControlChannelC :: CsoundSetControlChannelC
 csoundSetControlChannelC = csoundSetControlChannelWrapper csoundSetControlChannelAddress
+{-|
+Sends a Csound k-rate control value to the indicated Csound control channel during an 
+ongoing Csound performance.
+-}
 csoundSetControlChannel csound name value = withCString name $ \cname -> csoundSetControlChannelC csound cname value
 
 csoundDestroyAddress = unsafePerformIO $ dlsym libCsound "csoundDestroy"
 type CsoundDestroy = Word64 -> IO Word64
 foreign import ccall unsafe "dynamic" csoundDestroyWrapper :: (FunPtr CsoundDestroy) -> CsoundDestroy
+{-|
+Destroys an instance of Csound.
+-}
 csoundDestroy :: CsoundDestroy
 csoundDestroy = csoundDestroyWrapper csoundDestroyAddress
 
@@ -171,36 +197,176 @@ csoundStop
 
 Next we create a Csound play function for Euterpea.
 
-The pattern for play functions is:
-
-> playStrict :: (Performable a, NFData a) => PlayParams -> Music a -> IO ()
-> playStrict p m = m `deepseq`
->     let x = toMidi (fst $ perfDur (pmap p) (ctxt p) m) defUpm 
->     in  x `deepseq` playM' (devID p) x
-
-Note, deepseq performs a deep traversal of the structure m, here a Music.
-NFData is simply the class of fully evaluatable types.
-
-Here, rather than send to a MIDI device in real time, we will write i statements 
-to a Csound score, and perform that score using the csd and options. Csound sorts 
-the score.
-
--- E.g. playCsound music csdText [options]
-
-toIStatement :: MEvent -> IO String
-toIStatement e = do 
-    lyne <- printf "i s% 9.4f% 9.4f% 9.4f% 9.4f%%\n" (eInstName e) (eTime e) (eDurT e) (ePitch e) (eVol e)
-    print lyne
 --}
 
--- Getting clearer! -- I must take into account the difference between finite 
--- and infinite Performances. Finite Performances can be added to the <CsScore> element. 
--- Infinite performances can be enqueued for ReadScore, in blocking chunks.
--- Sample MEvent: MEvent {eTime = 143 % 1, eInst = Celesta, ePitch = 63, eDur = 1 % 7, eVol = 44, eParams = []}
--- Trying to figure out what % is for. Got it, the "percent operator" in Data.Ratio returns 
--- an irreducible fraction.
--- It's fine for now if the instrument names in Csound must match those in the Performance.
+{-|
+Performs a Csound orchestra, as a String in the format of a CSD file, in a 
+separate thread. The performance may run in real time or render a soundfile, 
+and may be infinite or finite in duration. Csound API functions, such as to 
+schedule events or set control channel values, may be called during the 
+performance. The CSD must be configured to run Csound for the required 
+duration.
+-}
+performCsdTextThreaded :: String -> Word64 -> IO Word64
+performCsdTextThreaded csd userdata = do 
+    printf "Calling thread:" 
+    myThreadId 
+    csound <- csoundCreate userdata 
+    printf "csound: %d\n" csound 
+    thread <- forkIO $ do 
+        printf "Csound thread:" 
+        myThreadId 
+        printf "libCsound:" 
+        print libCsound 
+        result <- csoundCompileCsdText csound csd 
+        printf "csoundCompileCsdText: %d\n" result 
+        result <- csoundStart csound 
+        printf "csoundStart: %d\n" result 
+        result <- csoundPerform csound 
+        printf "csoundPerform: %d\n" result 
+        csoundStop csound 
+        printf "csoundStop\n" 
+        csoundDestroy csound 
+        printf "csoundDestroy\n" 
+    printf "Done.\n"
+    return csound
 
-playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Performance
-playCsound m csd = perform m
+{-|
+Translates a Euterpea MIDI event to a Csound score event ("i statement") with 
+pfields MIDI channel + 1, onset in seconds, duration in seconds, MIDI key, and 
+MIDI velocity.
+-}
+toIStatement :: MEvent -> String
+toIStatement e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n" 
+    ((toGM $ eInst e) + 1)
+    (fromRational $ eTime e) 
+    (fromRational $ eDur e) 
+    (ePitch e) 
+    (eVol e)
     
+{-|
+Sends a Euterpea MIDI event to an instance of Csound that is performing in a 
+separate thread.
+-}
+toCsound :: Word64 -> MEvent -> IO Word64
+toCsound csound mevent = csoundReadScore csound (toIStatement mevent)
+
+{-|
+Performs a Euterpea Music value in a separate thread, using Csound, with a 
+Csound orchestra in a String with the format of a Csound CSD file. An optional 
+user data handle or pointer may be passed to Csound.
+-}
+playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Word64 -> [IO Word64]
+playCsound m csd userdata = do 
+    csound <- performCsdTextThreaded csd userdata
+    results <- map (\mevent -> toCsound csound mevent) $ perform m
+    return results
+    
+csd :: String
+csd = [r|
+<CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac 
+; For Non-realtime ouput leave only the line below:
+; -o madsr.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+/* Written by Michael Gogins */
+; Initialize the global variables.
+sr = 44100
+ksmps = 100
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+
+; Connect up the instruments to create a signal flow graph.
+
+connect "SimpleSine",   "leftout",     "Reverberator",     	"leftin"
+connect "SimpleSine",   "rightout",    "Reverberator",     	"rightin"
+
+connect "Moogy",        "leftout",     "Reverberator",     	"leftin"
+connect "Moogy",        "rightout",    "Reverberator",     	"rightin"
+
+connect "Reverberator", "leftout",     "Compressor",       	"leftin"
+connect "Reverberator", "rightout",    "Compressor",       	"rightin"
+
+connect "Compressor",   "leftout",     "Soundfile",       	"leftin"
+connect "Compressor",   "rightout",    "Soundfile",       	"rightin"
+
+; Turn on the "effect" units in the signal flow graph.
+
+alwayson "Reverberator", 0.91, 12000
+alwayson "Compressor"
+alwayson "Soundfile"
+
+instr SimpleSine
+  ihz = cpsmidinn(p4)
+  iamplitude = ampdb(p5)
+  print ihz, iamplitude
+  ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
+  isine ftgenonce 0, 0, 4096, 10, 1
+  a1 oscili iamplitude, ihz, isine
+  aenv madsr 0.05, 0.1, 0.5, 0.2
+  asignal = a1 * aenv
+  ; Stereo audio outlet to be routed in the orchestra header.
+  outleta "leftout", asignal * 0.25
+  outleta "rightout", asignal * 0.75
+endin
+
+instr Moogy
+  ihz = cpsmidinn(p4)
+  iamplitude = ampdb(p5)
+  ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
+  isine ftgenonce 0, 0, 4096, 10, 1
+  asignal vco iamplitude, ihz, 1, 0.5, isine
+  kfco line 200, p3, 2000
+  krez init 0.9
+  asignal moogvcf asignal, kfco, krez, 100000
+  ; Stereo audio outlet to be routed in the orchestra header.
+  outleta "leftout", asignal * 0.75
+  outleta "rightout", asignal * 0.25
+endin
+
+instr Reverberator
+  ; Stereo input.
+  aleftin inleta "leftin"
+  arightin inleta "rightin"
+  idelay = p4
+  icutoff = p5
+  aleftout, arightout reverbsc aleftin, arightin, idelay, icutoff
+  ; Stereo output.
+  outleta "leftout", aleftout
+  outleta "rightout", arightout 
+endin
+
+instr Compressor
+  ; Stereo input.
+  aleftin inleta "leftin"
+  arightin inleta "rightin"
+  kthreshold = 25000
+  icomp1 = 0.5
+  icomp2 = 0.763
+  irtime = 0.1
+  iftime = 0.1
+  aleftout dam aleftin, kthreshold, icomp1, icomp2, irtime, iftime
+  arightout dam arightin, kthreshold, icomp1, icomp2, irtime, iftime
+  ; Stereo output.
+  outleta "leftout", aleftout 
+  outleta "rightout", arightout 
+endin
+
+instr Soundfile
+  ; Stereo input.
+  aleftin inleta "leftin"
+  arightin inleta "rightin"
+  outs aleftin, arightin
+endin
+
+</CsInstruments>
+<CsScore>
+; Run for 6 minutes.
+f 0 360
+</CsScore>
+</CsoundSynthesizer>
+|]

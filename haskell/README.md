@@ -33,7 +33,7 @@ of Music, Kulitta, and Jazzkell.
 
 To do this so that everything works can be tricky. A recent version of all 
 software is advisable. Here is what worked for me. Before you carry out these 
-steps, look at the Euterpea installation instructions and see if my 
+steps, look at the Euterpea installation instructions and see if these  
 instructions still make sense.
 
 ```
