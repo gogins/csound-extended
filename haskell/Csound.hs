@@ -14,6 +14,9 @@ Portability : POSIX
 This module implements a dynamic FFI binding to the core of the Csound API on
 POSIX systems. The module includes a playCsound function for rendering Euterpea Music 
 objects using Csound with an embedded Csound orchestra in a separate thread.
+
+This module assumes that all binaries are built for 64 bit CPU architecture, including 
+ghc and Csound.
 -}
 
 module Csound (libCsound, 
@@ -26,12 +29,16 @@ module Csound (libCsound,
     csoundSetOption,
     csoundStart,
     csoundStop,
+    toIStatement,
+    performCsdTextThreaded,
+    toCsound,
     playCsound,
     csd
     ) where
 import Control.Concurrent
-import Control.Exception
 import Control.DeepSeq
+import Control.Exception
+import Control.Parallel 
 import Data.Typeable
 import Foreign
 import Foreign.C.String
@@ -40,10 +47,123 @@ import Foreign.Ptr
 import System.IO.Unsafe
 import System.Info
 import System.Posix.DynamicLinker
+import System.Random
 import Text.Printf
 import Text.RawString.QQ
 import Euterpea
 import Euterpea.Music
+
+csd :: String
+{-
+Sample CSD String that can be used to test or demonstrate the API.
+-}
+csd = [r|
+<CsoundSynthesizer>
+<CsOptions>
+; Select audio/midi flags here according to platform
+; Audio out   Audio in    No messages
+-odac 
+; For Non-realtime ouput leave only the line below:
+; -o madsr.wav -W ;;; for file output any platform
+</CsOptions>
+<CsInstruments>
+
+/* Written by Michael Gogins */
+; Initialize the global variables.
+sr = 44100
+ksmps = 100
+nchnls = 2 ; Changed for WebAssembly output from: = 2
+
+; Connect up the instruments to create a signal flow graph.
+
+connect "SimpleSine",   "leftout",     "Reverberator",     	"leftin"
+connect "SimpleSine",   "rightout",    "Reverberator",     	"rightin"
+
+connect "Moogy",        "leftout",     "Reverberator",     	"leftin"
+connect "Moogy",        "rightout",    "Reverberator",     	"rightin"
+
+connect "Reverberator", "leftout",     "Compressor",       	"leftin"
+connect "Reverberator", "rightout",    "Compressor",       	"rightin"
+
+connect "Compressor",   "leftout",     "Soundfile",       	"leftin"
+connect "Compressor",   "rightout",    "Soundfile",       	"rightin"
+
+; Turn on the "effect" units in the signal flow graph.
+
+alwayson "Reverberator", 0.91, 12000
+alwayson "Compressor"
+alwayson "Soundfile"
+
+instr SimpleSine, 9
+  ihz = cpsmidinn(p4)
+  iamplitude = ampdb(p5)
+  print ihz, iamplitude
+  ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
+  isine ftgenonce 0, 0, 4096, 10, 1
+  a1 oscili iamplitude, ihz, isine
+  aenv madsr 0.05, 0.1, 0.5, 0.2
+  asignal = a1 * aenv
+  ; Stereo audio outlet to be routed in the orchestra header.
+  outleta "leftout", asignal * 0.25
+  outleta "rightout", asignal * 0.75
+endin
+
+instr Moogy, 33
+  ihz = cpsmidinn(p4)
+  iamplitude = ampdb(p5)
+  ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
+  isine ftgenonce 0, 0, 4096, 10, 1
+  asignal vco iamplitude, ihz, 1, 0.5, isine
+  kfco line 200, p3, 2000
+  krez init 0.9
+  asignal moogvcf asignal, kfco, krez, 100000
+  ; Stereo audio outlet to be routed in the orchestra header.
+  outleta "leftout", asignal * 0.75
+  outleta "rightout", asignal * 0.25
+endin
+
+instr Reverberator
+  ; Stereo input.
+  aleftin inleta "leftin"
+  arightin inleta "rightin"
+  idelay = p4
+  icutoff = p5
+  aleftout, arightout reverbsc aleftin, arightin, idelay, icutoff
+  ; Stereo output.
+  outleta "leftout", aleftout
+  outleta "rightout", arightout 
+endin
+
+instr Compressor
+  ; Stereo input.
+  aleftin inleta "leftin"
+  arightin inleta "rightin"
+  kthreshold = 25000
+  icomp1 = 0.5
+  icomp2 = 0.763
+  irtime = 0.1
+  iftime = 0.1
+  aleftout dam aleftin, kthreshold, icomp1, icomp2, irtime, iftime
+  arightout dam arightin, kthreshold, icomp1, icomp2, irtime, iftime
+  ; Stereo output.
+  outleta "leftout", aleftout 
+  outleta "rightout", arightout 
+endin
+
+instr Soundfile
+  ; Stereo input.
+  aleftin inleta "leftin"
+  arightin inleta "rightin"
+  outs aleftin, arightin
+endin
+
+</CsInstruments>
+<CsScore>
+; Run for 6 minutes.
+f 0 360
+</CsScore>
+</CsoundSynthesizer>
+|]
 
 {-|
 Handle to the Csound shared library, which is assumed to be built for 64 bit 
@@ -53,14 +173,14 @@ libCsound :: DL
 libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
 
 csoundCreateAddress = unsafePerformIO $ dlsym libCsound "csoundCreate"
+type CsoundCreate = Word64 -> IO Word64
+foreign import ccall unsafe "dynamic" csoundCreateWrapper :: (FunPtr CsoundCreate) -> CsoundCreate
 {-|
 Creates a new instance of Csound and returns a handle to it. The first 
 parameter may be a pointer or handle to user data, which Csound will store 
 and pass to callbacks.
 -}
-type CsoundCreate = Word64 -> IO Word64
-foreign import ccall unsafe "dynamic" csoundCreateWrapper :: (FunPtr CsoundCreate) -> CsoundCreate
-csoundCreate :: CsoundCreate
+csoundCreate :: Word64 -> IO Word64
 csoundCreate = csoundCreateWrapper csoundCreateAddress
 
 csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
@@ -201,11 +321,13 @@ Next we create a Csound play function for Euterpea.
 
 {-|
 Performs a Csound orchestra, as a String in the format of a CSD file, in a 
-separate thread. The performance may run in real time or render a soundfile, 
-and may be infinite or finite in duration. Csound API functions, such as to 
-schedule events or set control channel values, may be called during the 
-performance. The CSD must be configured to run Csound for the required 
-duration.
+separate thread. The performance may run in real time or render a soundfile
+off-line, and may be infinite or finite in duration. The CSD must be 
+configured to run Csound for the required duration. This function creates a 
+new instance of Csound and, with it, compiles the CSD text before starting the 
+performance thread, so that once this function returns, it is safe to call 
+csoundReadScore, csoundSetControlChannelValue, and other performance-time 
+functions.
 -}
 performCsdTextThreaded :: String -> Word64 -> IO Word64
 performCsdTextThreaded csd userdata = do 
@@ -213,13 +335,13 @@ performCsdTextThreaded csd userdata = do
     myThreadId 
     csound <- csoundCreate userdata 
     printf "csound: %d\n" csound 
+    result <- csoundCompileCsdText csound csd 
+    printf "csoundCompileCsdText: %d\n" result 
     thread <- forkIO $ do 
         printf "Csound thread:" 
         myThreadId 
         printf "libCsound:" 
         print libCsound 
-        result <- csoundCompileCsdText csound csd 
-        printf "csoundCompileCsdText: %d\n" result 
         result <- csoundStart csound 
         printf "csoundStart: %d\n" result 
         result <- csoundPerform csound 
@@ -232,9 +354,9 @@ performCsdTextThreaded csd userdata = do
     return csound
 
 {-|
-Translates a Euterpea MIDI event to a Csound score event ("i statement") with 
-pfields MIDI channel + 1, onset in seconds, duration in seconds, MIDI key, and 
-MIDI velocity.
+Translates a Euterpea MIDI event to a Csound score event String ("i 
+statement") with pfields MIDI channel + 1, onset in seconds, duration in 
+seconds, MIDI key, and MIDI velocity.
 -}
 toIStatement :: MEvent -> String
 toIStatement e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n" 
@@ -252,121 +374,15 @@ toCsound :: Word64 -> MEvent -> IO Word64
 toCsound csound mevent = csoundReadScore csound (toIStatement mevent)
 
 {-|
-Performs a Euterpea Music value in a separate thread, using Csound, with a 
-Csound orchestra in a String with the format of a Csound CSD file. An optional 
-user data handle or pointer may be passed to Csound.
+Performs a Euterpea Music value in a separate thread, using Csound with a 
+Csound orchestra passed as a String in the format of a Csound CSD file. The 
+user data handle or pointer, which may have a value of 0, is passed to Csound,
+when then passes that user data to Csound callbacks. The performance may be 
+infinite or finite in duration, and may occur in real time or off-line.
 -}
-playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Word64 -> [IO Word64]
+playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Word64 -> IO [Word64]
 playCsound m csd userdata = do 
     csound <- performCsdTextThreaded csd userdata
-    results <- map (\mevent -> toCsound csound mevent) $ perform m
+    results <- (mapM (\mevent -> (toCsound csound mevent)) (perform m))
     return results
     
-csd :: String
-csd = [r|
-<CsoundSynthesizer>
-<CsOptions>
-; Select audio/midi flags here according to platform
-; Audio out   Audio in    No messages
--odac 
-; For Non-realtime ouput leave only the line below:
-; -o madsr.wav -W ;;; for file output any platform
-</CsOptions>
-<CsInstruments>
-
-/* Written by Michael Gogins */
-; Initialize the global variables.
-sr = 44100
-ksmps = 100
-nchnls = 2 ; Changed for WebAssembly output from: = 2
-
-; Connect up the instruments to create a signal flow graph.
-
-connect "SimpleSine",   "leftout",     "Reverberator",     	"leftin"
-connect "SimpleSine",   "rightout",    "Reverberator",     	"rightin"
-
-connect "Moogy",        "leftout",     "Reverberator",     	"leftin"
-connect "Moogy",        "rightout",    "Reverberator",     	"rightin"
-
-connect "Reverberator", "leftout",     "Compressor",       	"leftin"
-connect "Reverberator", "rightout",    "Compressor",       	"rightin"
-
-connect "Compressor",   "leftout",     "Soundfile",       	"leftin"
-connect "Compressor",   "rightout",    "Soundfile",       	"rightin"
-
-; Turn on the "effect" units in the signal flow graph.
-
-alwayson "Reverberator", 0.91, 12000
-alwayson "Compressor"
-alwayson "Soundfile"
-
-instr SimpleSine
-  ihz = cpsmidinn(p4)
-  iamplitude = ampdb(p5)
-  print ihz, iamplitude
-  ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
-  isine ftgenonce 0, 0, 4096, 10, 1
-  a1 oscili iamplitude, ihz, isine
-  aenv madsr 0.05, 0.1, 0.5, 0.2
-  asignal = a1 * aenv
-  ; Stereo audio outlet to be routed in the orchestra header.
-  outleta "leftout", asignal * 0.25
-  outleta "rightout", asignal * 0.75
-endin
-
-instr Moogy
-  ihz = cpsmidinn(p4)
-  iamplitude = ampdb(p5)
-  ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
-  isine ftgenonce 0, 0, 4096, 10, 1
-  asignal vco iamplitude, ihz, 1, 0.5, isine
-  kfco line 200, p3, 2000
-  krez init 0.9
-  asignal moogvcf asignal, kfco, krez, 100000
-  ; Stereo audio outlet to be routed in the orchestra header.
-  outleta "leftout", asignal * 0.75
-  outleta "rightout", asignal * 0.25
-endin
-
-instr Reverberator
-  ; Stereo input.
-  aleftin inleta "leftin"
-  arightin inleta "rightin"
-  idelay = p4
-  icutoff = p5
-  aleftout, arightout reverbsc aleftin, arightin, idelay, icutoff
-  ; Stereo output.
-  outleta "leftout", aleftout
-  outleta "rightout", arightout 
-endin
-
-instr Compressor
-  ; Stereo input.
-  aleftin inleta "leftin"
-  arightin inleta "rightin"
-  kthreshold = 25000
-  icomp1 = 0.5
-  icomp2 = 0.763
-  irtime = 0.1
-  iftime = 0.1
-  aleftout dam aleftin, kthreshold, icomp1, icomp2, irtime, iftime
-  arightout dam arightin, kthreshold, icomp1, icomp2, irtime, iftime
-  ; Stereo output.
-  outleta "leftout", aleftout 
-  outleta "rightout", arightout 
-endin
-
-instr Soundfile
-  ; Stereo input.
-  aleftin inleta "leftin"
-  arightin inleta "rightin"
-  outs aleftin, arightin
-endin
-
-</CsInstruments>
-<CsScore>
-; Run for 6 minutes.
-f 0 360
-</CsScore>
-</CsoundSynthesizer>
-|]
