@@ -4,7 +4,7 @@
 
 {-|
 Module      : Csound
-Description : Haskell FFI interface to Csound, including a playCsound function for Euterpea.
+Description : Haskell foreign function interface to Csound, including a playCsound function for Euterpea.
 Copyright   : (c) Michael Gogins, 2019.
 License     : LGPL-v2.1
 Maintainer  : michael.gogins@gmail.com
@@ -12,11 +12,18 @@ Stability   : experimental
 Portability : POSIX
 
 This module implements a dynamic FFI binding to the core of the Csound API on
-POSIX systems. The module includes a playCsound function for rendering Euterpea Music 
-objects using Csound with an embedded Csound orchestra in a separate thread.
+POSIX systems. The module includes a playCsound function for rendering 
+Euterpea Music values in a separate thread, using Csound with an embedded 
+Csound orchestra.
 
-This module assumes that all binaries are built for 64 bit CPU architecture, including 
-ghc and Csound.
+This module assumes that all binaries, including ghc and Csound, are built for 
+64 bit CPU architecture.
+
+These functions have exactly the same names, and exactly the same semantics, as 
+the corresponding functions in the Csound API. See 
+<https://raw.githubusercontent.com/csound/csound/develop/include/csound.h csound.h> 
+or the API documentation at https://csound.com/docs/api/index.html for more 
+information. Only some of the Csound API is exposed to Haskell.
 -}
 
 module Csound (libCsound, 
@@ -38,7 +45,7 @@ module Csound (libCsound,
 import Control.Concurrent
 import Control.DeepSeq
 import Control.Exception
-import Control.Parallel 
+-- import Control.Parallel 
 import Data.Typeable
 import Foreign
 import Foreign.C.String
@@ -53,16 +60,16 @@ import Text.RawString.QQ
 import Euterpea
 import Euterpea.Music
 
-csd :: String
 {-
 Sample CSD String that can be used to test or demonstrate the API.
 -}
+csd :: String
 csd = [r|
 <CsoundSynthesizer>
 <CsOptions>
 ; Select audio/midi flags here according to platform
 ; Audio out   Audio in    No messages
--odac 
+-odac -m195 -d
 ; For Non-realtime ouput leave only the line below:
 ; -o madsr.wav -W ;;; for file output any platform
 </CsOptions>
@@ -70,9 +77,10 @@ csd = [r|
 
 /* Written by Michael Gogins */
 ; Initialize the global variables.
-sr = 44100
-ksmps = 100
-nchnls = 2 ; Changed for WebAssembly output from: = 2
+sr = 48000
+ksmps = 128
+nchnls = 2
+0dbfs = 10000000
 
 ; Connect up the instruments to create a signal flow graph.
 
@@ -90,7 +98,7 @@ connect "Compressor",   "rightout",    "Soundfile",       	"rightin"
 
 ; Turn on the "effect" units in the signal flow graph.
 
-alwayson "Reverberator", 0.91, 12000
+alwayson "Reverberator", 0.8, 12000
 alwayson "Compressor"
 alwayson "Soundfile"
 
@@ -180,7 +188,8 @@ Creates a new instance of Csound and returns a handle to it. The first
 parameter may be a pointer or handle to user data, which Csound will store 
 and pass to callbacks.
 -}
-csoundCreate :: Word64 -> IO Word64
+csoundCreate :: Word64     -- ^ User data, a pointer or handle, may be 0.
+             -> IO Word64  -- ^ A new instance of csound.
 csoundCreate = csoundCreateWrapper csoundCreateAddress
 
 csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
@@ -189,9 +198,14 @@ foreign import ccall unsafe "dynamic" csoundCompileCsdTextWrapper :: (FunPtr Cso
 csoundCompileCsdTextC :: CsoundCompileCsdTextC
 csoundCompileCsdTextC = csoundCompileCsdTextWrapper csoundCompileCsdTextAddress
 {-|
-Compiles a String containing Csound code in the form of a CSD file, and 
+Compiles a String containing Csound code in the format of a CSD file, and 
 returns the result.
 -}
+csoundCompileCsdText :: Word64      -- ^ An instance of Csound.
+                     -> String      -- ^ Csound orchestra, in the format of a Csound Structured Data file. 
+                                    --   The \<CsScore\> element can be empty, except for an "f 0 \<duration\>" 
+                                    --   statement to ensure Csound performs for the intended duration. 
+                     -> IO Word64   -- ^ 0 for success, or an error code for failure.
 csoundCompileCsdText csound csd = withCString csd $ \ccsd -> csoundCompileCsdTextC csound ccsd
 
 csoundPerformAddress = unsafePerformIO $ dlsym libCsound "csoundPerform"
@@ -202,7 +216,10 @@ After an orchestra has been compiled and csoundStart has been called,
 actually runs the Csound performance, which may be infinite or finite in 
 duration.
 -}
-csoundPerform :: CsoundPerform
+csoundPerform :: Word64    -- ^ An instance of Csound. Before calling this function,
+                           --   the orchestra must be compiled (e.g. with csoundCompileCsdText)
+                           --   and csoundStart must be called.
+              -> IO Word64 -- ^ 0 for success, or an error code for failure.
 csoundPerform = csoundPerformWrapper csoundPerformAddress
 
 csoundStartAddress = unsafePerformIO $ dlsym libCsound "csoundStart"
@@ -212,7 +229,8 @@ foreign import ccall unsafe "dynamic" csoundStartWrapper :: (FunPtr CsoundStart)
 After a Csound orchestra has been compiled, opens input and output devices and files 
 and otherwise initializes all resources required for the actual performance.
 -}
-csoundStart :: CsoundStart
+csoundStart :: Word64    -- ^ An instance of Csound.
+            -> IO Word64 -- ^ 0 for success, or an error code for failure.
 csoundStart = csoundStartWrapper csoundStartAddress
 
 csoundSetOptionAddress = unsafePerformIO $ dlsym libCsound "csoundSetOption"
@@ -225,6 +243,10 @@ Sets a Csound option, before starting a performance. The option may include
 a flag and a value, but may not include any spaces, e.g. "-ofilename" not 
 "-o filename".
 -}
+csoundSetOption :: Word64    -- ^ An instance of Csound. This function should be called before 
+                             --   calling csoundStart.
+                -> String    -- ^ An option and its value, if any, in a single token without spaces.
+                -> IO Word64 -- ^ 0 for success, or an error code for failure.
 csoundSetOption csound option = withCString option $ \coption -> csoundSetOptionC csound coption
 
 csoundStopAddress = unsafePerformIO $ dlsym libCsound "csoundStop"
@@ -233,7 +255,8 @@ foreign import ccall unsafe "dynamic" csoundStopWrapper :: (FunPtr CsoundStop) -
 {-|
 Stops an ongoing Csound performance.
 -}
-csoundStop :: CsoundStop
+csoundStop :: Word64    -- ^ An instance of Csound.
+           -> IO Word64 -- ^ 0 for success, or an error code for failure.
 csoundStop = csoundStopWrapper csoundStopAddress
 
 csoundReadScoreAddress = unsafePerformIO $ dlsym libCsound "csoundReadScore"
@@ -245,6 +268,11 @@ csoundReadScoreC = csoundReadScoreWrapper csoundReadScoreAddress
 Sends a Csound score event or events, in the format of one or more lines of a 
 Csound score file, to an ongoing Csound performance.
 -}
+csoundReadScore :: Word64    -- ^ An instance of Csound.
+                -> String    -- ^ One or more lines, separated by '\\n', of Csound "i" statements.
+                             --   Score expressions are not permitted. p2, the time of performance, 
+                             --   is counted from the time this function is called.
+                -> IO Word64 -- ^ 0 for success, or an error code for failure.
 csoundReadScore csound score = withCString score $ \cscore -> csoundReadScoreC csound cscore
 
 csoundSetControlChannelAddress = unsafePerformIO $ dlsym libCsound "csoundSetControlChannel"
@@ -256,6 +284,7 @@ csoundSetControlChannelC = csoundSetControlChannelWrapper csoundSetControlChanne
 Sends a Csound k-rate control value to the indicated Csound control channel during an 
 ongoing Csound performance.
 -}
+csoundSetControlChannel :: Word64 -> String -> Double -> IO ()
 csoundSetControlChannel csound name value = withCString name $ \cname -> csoundSetControlChannelC csound cname value
 
 csoundDestroyAddress = unsafePerformIO $ dlsym libCsound "csoundDestroy"
@@ -264,7 +293,8 @@ foreign import ccall unsafe "dynamic" csoundDestroyWrapper :: (FunPtr CsoundDest
 {-|
 Destroys an instance of Csound.
 -}
-csoundDestroy :: CsoundDestroy
+csoundDestroy :: Word64    -- ^ An instance of csound.
+              -> IO Word64 -- ^ 0 for success, or an error code for failture.
 csoundDestroy = csoundDestroyWrapper csoundDestroyAddress
 
 {-- 
@@ -326,24 +356,32 @@ off-line, and may be infinite or finite in duration. The CSD must be
 configured to run Csound for the required duration. This function creates a 
 new instance of Csound and, with it, compiles the CSD text before starting the 
 performance thread, so that once this function returns, it is safe to call 
-csoundReadScore, csoundSetControlChannelValue, and other performance-time 
+csoundReadScore, csoundSetControlChannelValue, or other performance-time 
 functions.
 -}
-performCsdTextThreaded :: String -> Word64 -> IO Word64
+performCsdTextThreaded :: String    -- ^ Contains a Csound orchestra in the format 
+                                    --   of a Csound Structured Data file.
+                       -> Word64    -- ^ User data in the form of a handle or pointer,
+                                    --   which may be 0. Csound will in turn pass this 
+                                    --   to certain Csound callbacks.
+                                    
+                       -> IO Word64 -- ^ A new instance of Csound, which has been used 
+                                    --   to compile the orchestra and start the Csound
+                                    --   performance.
 performCsdTextThreaded csd userdata = do 
     printf "Calling thread:" 
     myThreadId 
     csound <- csoundCreate userdata 
     printf "csound: %d\n" csound 
-    result <- csoundCompileCsdText csound csd 
-    printf "csoundCompileCsdText: %d\n" result 
+    compiled <- csoundCompileCsdText csound csd 
+    printf "csoundCompileCsdText: %d\n" compiled 
+    started <- csoundStart csound 
+    printf "csoundStart: %d\n" started 
     thread <- forkIO $ do 
         printf "Csound thread:" 
         myThreadId 
         printf "libCsound:" 
         print libCsound 
-        result <- csoundStart csound 
-        printf "csoundStart: %d\n" result 
         result <- csoundPerform csound 
         printf "csoundPerform: %d\n" result 
         csoundStop csound 
@@ -358,7 +396,8 @@ Translates a Euterpea MIDI event to a Csound score event String ("i
 statement") with pfields MIDI channel + 1, onset in seconds, duration in 
 seconds, MIDI key, and MIDI velocity.
 -}
-toIStatement :: MEvent -> String
+toIStatement :: MEvent -- ^ Euterpea MEvent (MIDI Event).
+             -> String -- ^ Csound "i" statement.
 toIStatement e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n" 
     ((toGM $ eInst e) + 1)
     (fromRational $ eTime e) 
@@ -370,7 +409,9 @@ toIStatement e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n"
 Sends a Euterpea MIDI event to an instance of Csound that is performing in a 
 separate thread.
 -}
-toCsound :: Word64 -> MEvent -> IO Word64
+toCsound :: Word64    -- ^ Actively performing instance of Csound.
+         -> MEvent    -- ^ Euterpea MIDI event.
+         -> IO Word64 -- ^ 0 for success, or an error code for failure.
 toCsound csound mevent = csoundReadScore csound (toIStatement mevent)
 
 {-|
@@ -380,9 +421,13 @@ user data handle or pointer, which may have a value of 0, is passed to Csound,
 when then passes that user data to Csound callbacks. The performance may be 
 infinite or finite in duration, and may occur in real time or off-line.
 -}
-playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a -> String -> Word64 -> IO [Word64]
+playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a 
+                                                                -> String      -- ^ Csound orchestra in the format of a Csound 
+                                                                               --   Structured Data File.
+                                                                -> Word64      -- ^ User data (handle or pointer) to pass to Csound.
+                                                                -> IO [Word64] -- ^ List of results from sending MEvents to Csound.
 playCsound m csd userdata = do 
     csound <- performCsdTextThreaded csd userdata
-    results <- (mapM (\mevent -> (toCsound csound mevent)) (perform m))
+    results <- csound `deepseq` (mapM (\mevent -> (toCsound csound mevent)) (perform m))
     return results
     
