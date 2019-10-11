@@ -97,13 +97,15 @@ connect "Compressor",   "rightout",    "Soundfile",       	"rightin"
 
 ; Turn on the "effect" units in the signal flow graph.
 
-alwayson "Reverberator", 0.8, 12000
+alwayson "Reverberator", 0.85, 12000
 alwayson "Compressor"
 alwayson "Soundfile"
 
 instr SimpleSine, 9
   ihz = cpsmidinn(p4)
-  iamplitude = ampdb(p5)
+  iamplitude = ampdb(p5) * 10
+  igain ampmidicurve p5, .2, 9
+  iamplitude = iamplitude * igain
   print ihz, iamplitude
   ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
   isine ftgenonce 0, 0, 4096, 10, 1
@@ -118,11 +120,13 @@ endin
 instr Moogy, 33
   ihz = cpsmidinn(p4)
   iamplitude = ampdb(p5)
+  igain ampmidicurve p5, .2, 9
+  iamplitude = iamplitude * igain
   ; Use ftgenonce instead of ftgen, ftgentmp, or f statement.
   isine ftgenonce 0, 0, 4096, 10, 1
   asignal vco iamplitude, ihz, 1, 0.5, isine
   kfco line 200, p3, 2000
-  krez init 0.9
+  krez line .9, p3, .5 ;init 0.9
   asignal moogvcf asignal, kfco, krez, 100000
   ; Stereo audio outlet to be routed in the orchestra header.
   outleta "leftout", asignal * 0.75
@@ -246,7 +250,7 @@ csoundSetControlChannelC = csoundSetControlChannelWrapper csoundSetControlChanne
 Sends a Csound k-rate control value to the indicated Csound control channel during an 
 ongoing Csound performance.
 -}
-csoundSetControlChannel :: Word64 -- ^ An instance of Csound,
+csoundSetControlChannel :: Word64 -- ^ An instance of Csound.
                         -> String -- ^ The name of the control channel.
                         -> Double -- ^ The value of the named channel. Channels retain their values 
                                   --   until a channel is called with a new value.

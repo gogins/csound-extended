@@ -43,6 +43,11 @@ or collected from older projects of mine. These extensions include:
     hosted here with his permission. This is based upon and includes
     the Common Music library for algorithmic composition and the Fomus
     library for automatically notating generated scores.
+    
+10. A foreign function interface to the Csound shared library for the Haskell 
+    programming language and the Euterpea package for algorithmic composition, 
+    in the haskell directory. This is a dynamic FFI and does not require to be 
+    pre-built in order to be used.
 
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move
