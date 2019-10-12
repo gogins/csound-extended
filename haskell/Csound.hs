@@ -43,9 +43,11 @@ module Csound (libCsound,
     csd,
     module CsoundVST
     ) where
+-- import Codec.Midi
 import Control.Concurrent
 import Control.DeepSeq
 import Control.Exception
+import Data.Maybe
 import Data.Typeable
 import Foreign
 import Foreign.C.String
@@ -196,8 +198,9 @@ returns the result.
 -}
 csoundCompileCsdText :: Word64      -- ^ An instance of Csound.
                      -> String      -- ^ Csound orchestra, in the format of a Csound Structured Data file. 
-                                    --   The \<CsScore\> element can be empty, except for an "f 0 \<duration\>" 
-                                    --   statement to ensure Csound performs for the intended duration. 
+                                    --   The \<CsScore\> element may be empty, although an "f 0 \<duration\>" 
+                                    --   statement may be needed to ensure that Csound performs for the 
+                                    --   intended duration. 
                      -> IO Word64   -- ^ 0 for success, or an error code for failure.
 csoundCompileCsdText csound csd = withCString csd $ \ccsd -> csoundCompileCsdTextC csound ccsd
 
@@ -352,24 +355,27 @@ Performs a Euterpea Music value in a separate thread, using Csound with a
 Csound orchestra passed as a String in the format of a Csound CSD file. The 
 user data handle or pointer, which may have a value of 0, is passed to Csound,
 which then passes that user data to Csound callbacks. The performance may be 
-infinite or finite in duration, and may occur in real time or off-line.
+infinite or finite in duration, and may occur in real time or off-line. It 
+is necessary to supply a map to assign Csound instrument numbers to 
+Euterpea instrument names.
 -}
-playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) => Music a        -- ^ A Euterpea 'Music' value. This may be of 
-                                                                               --   either infinite or finite duration. The Euterpea
-                                                                               --   context and patch maps are not passed to Csound.
-                                                                -> String      -- ^ Csound orchestra in the format of a Csound 
-                                                                               --   Structured Data File. N.B.: Euterpea will 
-                                                                               --   usually assign a MIDI channel to a General 
-                                                                               --   MIDI instrument name. Csound will use the 
-                                                                               --   MIDI channel number + 1 as the Csound instrument 
-                                                                               --   number. The user should look 
-                                                                               --   at these in order to assign Csound instrument 
-                                                                               --   numbers in the Csound orchestra.
-                                                                -> Word64      -- ^ User data (handle or pointer) to pass to Csound.
-                                                                -> IO [Word64] -- ^ List of results from sending 'MEvent's to Csound.
-playCsound m csd userdata = do 
-    csound <- performCsdTextThreaded csd userdata
-    results <- csound `deepseq` (mapM (\mevent -> (toCsound csound mevent)) (perform m))
+playCsound :: (Show a, ToMusic1 a, Control.DeepSeq.NFData a) 
+            => Music a      -- ^ A Euterpea 'Music' value. This may be of 
+                            --   either infinite or finite duration.
+            -> [(InstrumentName, Integer)] -- ^ A 'List' of (InstrumentName, MidiChannel) 
+                            --   pairs that maps Euterpea instrument names 
+                            --   (which may be custom names) to zero-based 
+                            --   MIDI channel numbers. This is used to assign 
+                            --   Csound instrument numbers from the CSD to 
+                            --   Euterpea instrument names.
+            -> String       -- ^ Csound orchestra in the format of a Csound 
+                            --   Structured Data File. 
+            -> Word64       -- ^ User data (handle or pointer) to pass to Csound; 
+                            --   may be 0.
+            -> IO [Word64]  -- ^ List of results from sending 'MEvent's to Csound.
+playCsound music patchmap orchestra userdata = do 
+    csound <- performCsdTextThreaded orchestra userdata
+    results <- csound `deepseq` (mapM (\mevent -> (toCsound csound patchmap mevent)) (perform music))
     return results
     
 {-|
@@ -377,10 +383,13 @@ Translates a Euterpea MIDI event to a Csound score event String ("i
 statement") with pfields MIDI channel + 1, onset in seconds, duration in 
 seconds, MIDI key, and MIDI velocity.
 -}
-toIStatement :: MEvent -- ^ Euterpea 'MEvent' (MIDI Event).
+toIStatement :: [(InstrumentName, Integer)] -- ^ Simple map that assigns MIDI channel numbers 
+                       --   to Euterpea InstrumentNames. Only Instruments used in the 
+                       --   performance need to be mapped.
+             -> MEvent -- ^ Euterpea 'MEvent' (MIDI Event).
              -> String -- ^ Csound "i" statement.
-toIStatement e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n" 
-    ((toGM $ eInst e) + 1)
+toIStatement patchmap e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n" 
+    (fromMaybe 0 (lookup (eInst e) patchmap) + 1)
     (fromRational $ eTime e) 
     (fromRational $ eDur e) 
     (ePitch e) 
@@ -390,8 +399,11 @@ toIStatement e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n"
 Sends a Euterpea MIDI event to an instance of Csound that is performing in a 
 separate thread.
 -}
-toCsound :: Word64    -- ^ Actively performing instance of Csound.
-         -> MEvent    -- ^ Euterpea MIDI event.
-         -> IO Word64 -- ^ 0 for success, or an error code for failure.
-toCsound csound mevent = csoundReadScore csound (toIStatement mevent)
+toCsound :: Word64          -- ^ Actively performing instance of Csound.
+         -> [(InstrumentName, Integer)] -- ^ Simple map that assigns MIDI channel numbers 
+                       --   to Euterpea InstrumentNames. Only Instruments used in the 
+                       --   performance need to be mapped.
+         -> MEvent          -- ^ Euterpea MIDI event.
+         -> IO Word64       -- ^ 0 for success, or an error code for failure.
+toCsound csound patchmap mevent = csoundReadScore csound (toIStatement patchmap mevent)
 

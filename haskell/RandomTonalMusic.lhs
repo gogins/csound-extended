@@ -59,4 +59,4 @@ it a few times on some computers).
 > mel1 = randomMel pitches1 [qn,en,en,en] 40 (mkStdGen 500)
 > mel2 = randomMel pitches2 [hn,qn,qn,qn] 20 (mkStdGen 501)
 > duet = tempo 1.75 (instrument Celesta mel1 :=: instrument AcousticBass mel2)
-> main = playCsound duet csoundVST 0
+> main = playCsound duet [(Celesta, 9), (AcousticBass, 12)] csoundVST 0
