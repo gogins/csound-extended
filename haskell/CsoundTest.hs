@@ -8,9 +8,9 @@ import System.IO.Unsafe
 import Text.Printf
 import Text.RawString.QQ
 
-csd :: String
+orchestra :: String
 
-csd = [r|
+orchestra = [r|
 <CsoundSynthesizer>
 <CsOptions>
 -d -R -W -Z -f -o dac
@@ -263,7 +263,7 @@ main = do
         print libCsound
         csound <- csoundCreate 0
         printf "csound: %d\n" csound
-        result <- csoundCompileCsdText csound csd
+        result <- csoundCompileCsdText csound orchestra
         result <- csoundStart csound
         printf "csoundCompileCsdText: %d\n" result
         result <- csoundPerform csound

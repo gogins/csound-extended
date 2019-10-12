@@ -40,7 +40,8 @@ module Csound (libCsound,
     toCsound,
     performCsdTextThreaded,
     playCsound,
-    csd
+    csd,
+    module CsoundVST
     ) where
 import Control.Concurrent
 import Control.DeepSeq
@@ -58,6 +59,7 @@ import Text.Printf
 import Text.RawString.QQ
 import Euterpea
 import Euterpea.Music
+import CsoundVST
 
 {-
 Sample CSD String that can be used to test or demonstrate the API.
