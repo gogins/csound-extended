@@ -95,3 +95,8 @@ cd
 cd csound-extended/haskell
 cabal install
 ```
+
+To generate reference documentation, execute:
+```
+haddock Csound --html
+

@@ -10,7 +10,7 @@ csoundVST = [r|
 ; VST plugin performance:
 ; -f -h -+rtmidi=null -M0 -d -n -m195 --midi-key=4 --midi-velocity=5
 ; Standalone performance:
---0dbfs=1000000 -odac -+rtmidi=virtual -M0 -d -m195 --midi-key=4 --midi-velocity=5
+--0dbfs=10000000 -odac -+rtmidi=virtual -M0 -d -m195 --midi-key=4 --midi-velocity=5
 </CsOptions>
 <CsLicense>
 

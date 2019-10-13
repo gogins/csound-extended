@@ -14,7 +14,7 @@ Portability : POSIX
 This module implements a dynamic FFI binding to the core of the Csound API on
 POSIX systems. The module includes a playCsound function for rendering 
 Euterpea Music values in a separate thread, using Csound with an embedded 
-Csound orchestra.
+Csound orchestra. A fairly large sample orchestra is included as CsoundVST.hs.
 
 This module assumes that all binaries, including ghc and Csound, are built for 
 64 bit CPU architecture.
@@ -43,7 +43,6 @@ module Csound (libCsound,
     csd,
     module CsoundVST
     ) where
--- import Codec.Midi
 import Control.Concurrent
 import Control.DeepSeq
 import Control.Exception
@@ -186,6 +185,12 @@ CPU architecture, and is dynamically loaded here.
 -}
 libCsound :: DL
 libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
+
+{-| 
+For builtin Euterpea InstrumentNames, assigns a zero-based MIDI channel number,
+a stereo pan in [0, 1], and a gain correction (1 is no change of level).
+-}
+--type CsoundPatchMap :: [(InstrumentName, Int, Double, Double)]
 
 csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
 type CsoundCompileCsdTextC = Word64 -> CString -> IO Word64
@@ -388,7 +393,7 @@ toIStatement :: [(InstrumentName, Integer)] -- ^ Simple map that assigns MIDI ch
                        --   performance need to be mapped.
              -> MEvent -- ^ Euterpea 'MEvent' (MIDI Event).
              -> String -- ^ Csound "i" statement.
-toIStatement patchmap e = printf "i %3d %9.4f %9.4f %3d %3d 0 0\n" 
+toIStatement patchmap e = printf "i %3d %9.4f %9.4f %3d %3d 0 0.5\n" 
     (fromMaybe 0 (lookup (eInst e) patchmap) + 1)
     (fromRational $ eTime e) 
     (fromRational $ eDur e) 
