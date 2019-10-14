@@ -27,6 +27,7 @@ information. Only some of the Csound API is exposed to Haskell.
 -}
 
 module Csound (libCsound, 
+    CsoundPatchMap,
     csoundCompileCsdText,
     csoundCreate,
     csoundDestroy,
@@ -187,11 +188,9 @@ CPU architecture, and is dynamically loaded here.
 libCsound :: DL
 libCsound = unsafePerformIO $ dlopen "libcsound64.so" [RTLD_LAZY, RTLD_GLOBAL]
 
-{-| 
-For builtin Euterpea InstrumentNames, assigns a zero-based MIDI channel 
-number, a gain correction in decibels (0.0 is no change), and stereo pan in 
-[0, 1].
--}
+-- | For builtin Euterpea InstrumentNames, assigns a zero-based MIDI channel 
+--   number, a gain correction in decibels (0.0 is no change), and a stereo 
+--   pan in [0, 1].
 type CsoundPatchMap = [(InstrumentName, (Integer, Double, Double))]
 
 csoundCompileCsdTextAddress = unsafePerformIO $ dlsym libCsound "csoundCompileCsdText"
