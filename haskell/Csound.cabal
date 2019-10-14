@@ -28,12 +28,13 @@ library
         CsoundVST
     build-depends: 
         base >= 4, 
+        Cabal >= 1.9.2,
         deepseq, 
-        random, 
         Euterpea >= 2.0.0,
+        tuple,
+        random, 
         raw-strings-qq >= 1.0.0,
-        unix >= 2.7.0.0,
-        Cabal >= 1.9.2
+        unix >= 2.7.0.0
     other-extensions: 
         DataKinds, 
         QuasiQuotes, 

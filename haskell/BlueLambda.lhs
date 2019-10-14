@@ -33,4 +33,4 @@ which makes for a cleaner sound on some synthesizers:
 >             else e1 : eventMerge (e2:es)
 >     eventMerge e = e
 
-> main = playCsound x4' [(AcousticGrandPiano, 23)] csoundVST 0
+> main = playCsound x4' [(AcousticGrandPiano, (23, 0.0, 0.5))] csoundVST 0
