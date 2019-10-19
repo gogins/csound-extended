@@ -13,11 +13,11 @@
  '+primary-disposition+ 
  :title "Primary Disposition" 
  :instrument-palette +slippery-chicken-standard-instrument-palette+ 
- :ensemble '(((flt (flute :midi-channel 1))
-              (clr (b-flat-clarinet :midi-channel 2))
-              (vln-one (violin :midi-channel 3)) 
-              (vla (viola :midi-channel 4)) 
-              (cel (cello :midi-channel 5))))
+ :ensemble '(((flt (flute :midi-channel 57))
+              (clr (b-flat-clarinet :midi-channel 42))
+              (vln-one (violin :midi-channel 51)) 
+              (vla (viola :midi-channel 51)) 
+              (cel (cello :midi-channel 53))))
  :staff-groupings '(2 3)
  :tempo-map '((1 (q 84)))
  :set-palette '((set1 ((fs2 b2 d4 a4 d5 e5 a5 d6))) 

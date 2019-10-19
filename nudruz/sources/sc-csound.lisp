@@ -32,8 +32,11 @@
 ;;; that contain chords, the event's amplitude slot
 ;;; will be used for all pitches unless each individual pitch object in the
 ;;; chord has its amplitude slot set to a number (in which case the event's
-;;; amplitude slot will be ignored.)  Csound output options must be set in the 
-;;; csd text.
+;;; amplitude slot will be ignored0. Csound output options must be set in the 
+;;; csd text. If the :csound argument is used, the indicated instance of 
+;;; Csound will be used in the performance. It then becomes possible to run 
+;;; the performance in a separate thread of execution and pass channel values 
+;;; to Csound using the Csound API.
 ;;; 
 ;;; ARGUMENTS
 ;;; - A slippery-chicken object.
@@ -41,7 +44,10 @@
 ;;; 
 ;;; OPTIONAL ARGUMENTS
 ;;; keyword arguments:
-;;; ; - :voices. NIL or a list of player IDs indicating which of the players'
+;;; - :csound-object. An existing instance of Csound, e.g. obtained by first calling 
+;;;   csound:csoundCreate If not specified, a new instance of Csound is created 
+;;;   within this function.
+;;; - :voices. NIL or a list of player IDs indicating which of the players'
 ;;;   parts are to be included in the resulting MIDI file. If NIL, all players'
 ;;;   parts will be included. Default = NIL.
 ;;; - :players. A synonym for voices. This is the preferred keyword as it aligns
@@ -81,53 +87,11 @@
 ;;; RETURN VALUE
 ;;; Returns the Common Music sequence object containing the music.
 ;;; 
-;;; EXAMPLE
-#|
-;;; An example with some typical values for the keyword arguments. ;
-(let ((mini
-       (make-slippery-chicken
-        '+mini+
-        :ensemble '(((cl (b-flat-clarinet :midi-channel 1))
-                     (hn (french-horn :midi-channel 2))
-                     (vc (cello :midi-channel 3))))
-        :set-palette '((1 ((f3 g3 a3 b3 c4 d4 e4 f4 g4 a4 b4 c5))))
-        :set-map '((1 (1 1 1 1 1 1 1))
-                   (2 (1 1 1 1 1 1 1))
-                   (3 (1 1 1 1 1 1 1)))
-        :rthm-seq-palette '((1 ((((4 4) h (q) e (s) s))
-                                :pitch-seq-palette ((1 2 3))))
-                            (2 ((((4 4) (q) e (s) s h))
-                                :pitch-seq-palette ((1 2 3))))
-                            (3 ((((4 4) e (s) s h (q)))
-                                :pitch-seq-palette ((2 3 3))))
-                            (4 ((((4 4) (s) s h (q) e))
-                                :pitch-seq-palette ((3 1 2)))))
-        :rthm-seq-map '((1 ((cl (1 2 1 2 1 2 1))
-                            (hn (1 2 1 2 1 2 1))
-                            (vc (1 2 1 2 1 2 1))))
-                        (2 ((cl (3 4 3 4 3 4 3))
-                            (hn (3 4 3 4 3 4 3))
-                            (vc (3 4 3 4 3 4 3))))
-                        (3 ((cl (1 2 1 2 1 2 1))
-                            (hn (1 2 1 2 1 2 1))
-                            (vc (1 2 1 2 1 2 1))))))))
-  (midi-play mini 
-             :midi-file "/tmp/md-test.mid"
-             :voices '(cl vc)
-             :start-section 2))
-
-;;; An example that passes a (lambda) function to :force-velocity. Usually, by
-;;; default, event amplitudes between 0.0 and 1.0 will map onto MIDI velocities
-;;; of 0 to 127. Here we map them to velocities of 0 to 100 instead.
-(midi-play +jitterbug+ :force-velocity
-           #'(lambda (event)
-               (floor (* (amplitude event) 100))))
-
-|#
 ;;; SYNOPSIS
 #+cm-2
 (defmethod csound-play ((sc slippery-chicken) csd
                       &key 
+                        (csound-object)
                         ;; no subsection refs: use from-sequence instead
                         (start-section 1) 
                         ;; these voices are used to get the actual sequence
@@ -152,6 +116,13 @@
                         ;; notes  
                         (force-velocity nil))
 ;;; ****
+    (unless csound-object
+        (progn
+            (setq result (csound:csoundInitialize 3))
+            (setq csound-object (csound:csoundCreate (cffi:null-pointer)))
+            (format t "csoundCreate: ~S.~%" csound-object)
+        ))
+    ; Not sure why, but cffi:with-foreign-string doesn't seem to work.
   (when update-amplitudes ; MDE Mon Jun 13 12:32:30 2016 
     (update-amplitudes sc)
     (handle-hairpins sc))
@@ -238,7 +209,7 @@
                                              (first voices) 
                                              (1- from-sequence))))
                         force-velocity)
-    (cm::render-with-csd csound-seq csd)
+    (cm::render-with-csd csound-seq csd :csound-instance csound-object)
     csound-seq))
 
 
