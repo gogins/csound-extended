@@ -14,6 +14,8 @@ nchnls 	   = 2
 0dbfs 	   = 1
 
 	   JackoInit		"default", "csound"
+;       iresult system_i 1, {{sleep 10
+;       }}
 
 	   ; To use ALSA midi ports, use "jackd -Xseq"
 	   ; and use "jack_lsp -A -c" or aliases from JackInfo,
@@ -91,11 +93,10 @@ aright 	   JackoAudioIn 	"rightin"
 
 </CsInstruments>
 <CsScore>
-f 0 30
+f 0 32
 i 1 1 30 60 60
 i 1 2 30 64 60
 i 1 3 30 71 60
-e 2
 </CsScore>
 </CsoundSynthesizer>
 

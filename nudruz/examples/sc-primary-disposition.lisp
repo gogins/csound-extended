@@ -4,7 +4,6 @@
 (load "/home/mkg/slipchick/slippery-chicken/all.lsp")
 (load "/home/mkg/csound-extended/nudruz/sources/nudruz-csound.lisp")
 (load "/home/mkg/csound-extended/nudruz/sources/sc-csound.lisp")
-(load "/home/mkg/csound-extended/nudruz/sources/example-csd.lisp")
 (in-package :sc)
 
 (in-scale :chromatic)
@@ -14,10 +13,10 @@
  :title "Primary Disposition" 
  :instrument-palette +slippery-chicken-standard-instrument-palette+ 
  :ensemble '(((flt (flute :midi-channel 57))
-              (clr (b-flat-clarinet :midi-channel 42))
-              (vln-one (violin :midi-channel 51)) 
-              (vla (viola :midi-channel 51)) 
-              (cel (cello :midi-channel 53))))
+              (clr (b-flat-clarinet :midi-channel 57))
+              (vln-one (violin :midi-channel 8)) 
+              (vla (viola :midi-channel 57)) 
+              (cel (cello :midi-channel 19))))
  :staff-groupings '(2 3)
  :tempo-map '((1 (q 84)))
  :set-palette '((set1 ((fs2 b2 d4 a4 d5 e5 a5 d6))) 
@@ -28,8 +27,8 @@
             (2 (set2 set2 set3 set2 set3 set2 set3)) 
             (3 (set3 set2 set4 set2 set4 set3 set4 set4 set2 set3 set4))
             (4 (set4 set1 set4 set1 set4 set1 set1)))   
- :set-limits-high '((vla (0 b4 80 b4))
-                    (cel (0 f4 80 f4)))
+ :set-limits-high '((vla (0 b4 74 b4))
+                    (cel (0 f4 74 f4)))
  :rthm-seq-palette
  '((seq1 ((((4 4) - 16 16 8 - { 5 - 20 10 20 20 - } { 3 3 6 } )   
            ( - s s s s - (s) - s s s - - +e. s - q))   
