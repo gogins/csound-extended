@@ -15,6 +15,7 @@ achieve more diverse textures (in Music AbsPitch, the volumes
 are all constant). 
 
 > module Hypnotize where
+> import Csound
 > import Jazzkell
 > import Jazzkell.Utils
 > import Euterpea
@@ -253,4 +254,12 @@ Given a scale and a pitch space, pick a chord of concrete pitches.
 >     let (g1, chordPCs) = pickChordPCs2 scale g
 >         allPossibleChords = allPitchCombos pSpace chordPCs 
 >     in  choose g allPossibleChords
+
+hypnotize = tempo 0.6 $ hypnotize120bpm -- slow it down to a better pace
+
+> main = playCsound hypnotize [(AcousticGrandPiano, (42, 40.0, 0.5)),
+>                              (Celesta, (56, 30.0, 0.5)),
+>                              (AcousticBass, (2, -10.0, 0.75))] csoundVST 0
+
+
 
