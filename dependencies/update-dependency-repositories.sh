@@ -1,5 +1,11 @@
 #!/bin/bash
 echo "Pulling from submodule repositories..."
+cd bformdec2
+echo "Pulling from `pwd`..."
+git checkout master
+git pull 
+git branch
+cd ..
 cd cmask
 echo "Pulling from `pwd`..."
 git checkout master

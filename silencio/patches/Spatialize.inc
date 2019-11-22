@@ -56,11 +56,14 @@ In the orchestra header:
 gk_BformatDecoder_SpeakerRig init 5
 
 alwayson SpatialReverb
-alwayson Bformat3Decoder
+alwayson BformatDecoder
 
 connect "SpatializingInstrument", "out", "SpatialReverb", "in"
-connect "SpatializingInstrument", "outbformat", "Bformat3Decoder", "inbformat"
-connect "SpatialReverb", "outbformat", "Bformat3Decoder", "inbformat"
+connect "SpatializingInstrument", "outbformat", "BformatDecoder", "inbformat"
+connect "SpatialReverb", "outbformat", "BformatDecoder", "inbformat"
+
+Note that BformatDecoder2 can be substituted for BeformatDecoder, it uses 
+the improved bformdec2 opcode.
 
 instr SpatializingInstrument
 absignal[] init 16
@@ -77,16 +80,11 @@ TODO
 -- Upgrade demonstration piece with jspline spatial trajectories
    and algorithmically generated percussive notes.
 
--- Plug in and test early reflections code.
-
 -- Test with rigs 2 through 5.
 
--- See if babo can be adapted for spatial reverb.
+-- Replace bformdec1 with bformdec2.
 
 -- Upgrade panning with arbitrary measured speaker positions.
-
--- Try spat3d for global reverb and early reflections (not doing,
-   as not periphonic).
 
 }}
 
@@ -158,7 +156,7 @@ endop
 ; Zero distance blows this up.
 opcode LowpassByDistance, a, ak
 asignal, kdistance xin
-afiltered butterlp asignal, 22000 * sqrt(1.0 / kdistance)
+afiltered butterlp asignal, 22000 * sqrt(1.0 / kdistance) + .000001
 abalanced balance afiltered, asignal
 xout abalanced
 endop
@@ -279,6 +277,7 @@ gk_LocalReverbByDistance_FrontWall init 0.9
 gk_LocalReverbByDistance_ReverbDecay init 0.6
 gk_LocalReverbByDistance_CutoffHz init sr
 gk_LocalReverbByDistance_RandomDelayModulation init 1.0
+
 opcode LocalReverbByDistance, aa, ak
 ; Re-implemented from Dodge and Jerse.
 asignal, kdistanceMeters xin
@@ -293,14 +292,16 @@ isecondsPerMeter = 1.0 / i(gk_DopplerByDistance_Mach)
 imillisecondsPerMeter = isecondsPerMeter * 1000.0
 iglobalReverbSendDelayMilliseconds = i(gk_Spatialize_SpeakerRigRadius) * i(gk_LocalReverbByDistance_FrontWall) * imillisecondsPerMeter
 ; print iglobalReverbSendDelayMilliseconds
-aglobalReverbSendDelayed delay aglobalReverbSend, iglobalReverbSendDelayMilliseconds
+aglobalReverbSendDelayed vdelay aglobalReverbSend, iglobalReverbSendDelayMilliseconds, 1
 alocalReverbLeft, alocalReverbRight reverbsc	alocalReverbSend, alocalReverbSend, gk_LocalReverbByDistance_ReverbDecay, gk_LocalReverbByDistance_CutoffHz, sr, i(gk_LocalReverbByDistance_RandomDelayModulation), 1
 alocalReverbWet = ((alocalReverbLeft + alocalReverbRight) / 2.0) * gk_LocalReverbByDistance_Wet
 alocalReverbDry = kdry * asignal
 alocalReverberatedSignal = alocalReverbDry + alocalReverbWet
-if gk_Spatialize_Verbose != 0 then
+if gk_Spatialize_Verbose!= 0 goto gk_Spatialize_Verbose_0
+goto gk_Spatialize_Verbose_not_0
+gk_Spatialize_Verbose_0:
 printks "LocalReverbByDistance asignal: %9.4f klocalAttentuaton: %9.4f iglobalReverbSendDelayMilliseconds: %9.4f kglobalAttenuation: %9.4f alocalReverberatedSignal: %9.4f aglobalReverbSend: %9.4f\n", 0.5, asignal, klocalAttenuation, iglobalReverbSendDelayMilliseconds, kglobalAttenuation, alocalReverberatedSignal, aglobalReverbSendDelayed
-endif
+gk_Spatialize_Verbose_not_0:
 xout alocalReverberatedSignal, aglobalReverbSendDelayed
 endop
 
@@ -322,36 +323,61 @@ gk_EarlyReflection_highdamp init 15000
 gk_EarlyReflection_lfboost init 1
 opcode DiffuseEarlyReflection, a[], akkki
 asignal, kx, ky, kz, iwhichwall xin
-if iwhichwall == 1 then
+
+if iwhichwall == 1 goto iwhichwall_1
+ goto iwhichwall_1_else
+ iwhichwall_1:
  krefx = gk_EarlyReflection_FrontWall
-else
+ goto iwhichwall_1_endif
+iwhichwall_1_else:
  krefx = kx
-endif
-if iwhichwall == 2 then
+iwhichwall_1_endif:
+
+if iwhichwall == 2 goto iwhichwall_2
+ goto iwhichwall_2_else
+ iwhichwall_2:
  krefx = -gk_EarlyReflection_FrontWall
-else
+ goto iwhichwall_2_endif
+iwhichwall_2_else:
  krefx = kx
-endif
-if iwhichwall == 3 then
+iwhichwall_2_endif:
+
+if iwhichwall == 3 goto iwhichwall_3
+ goto iwhichwall_3_else
+ iwhichwall_3:
  kfefy = gk_EarlyReflection_SideWall
-else
+ goto iwhichwall_3_endif
+iwhichwall_3_else:
  krefy = ky
-endif
-if iwhichwall == 4 then
+iwhichwall_3_endif:
+
+if iwhichwall == 4 goto iwhichwall_4
+ goto iwhichwall_4_else
+ iwhichwall_4:
  krefy = -gk_EarlyReflection_SideWall
-else
+ goto iwhichwall_4_endif
+iwhichwall_4_else:
  krefy = ky
-endif
-if iwhichwall == 5 then
+iwhichwall_4_endif:
+
+if iwhichwall == 5 goto iwhichwall_5
+goto iwhichwall_5_else
+iwhichwall_5:
  krefz = gk_EarlyReflection_Ceiling
-else
+ goto iwhichwall_5_endif
+iwhichwall_5_else:
  krefz = kz
-endif
-if iwhichwall == 6 then
+iwhichwall_5_endif:
+
+if iwhichwall == 6 goto iwhichwall_6
+goto iwhichwall_6_else
+iwhichwall_6:
  krefz = -gk_EarlyReflection_Ceiling
-else
+ goto iwhichwall_6_endif
+iwhichwall_6_else:
  krefz = kz
-endif
+iwhichwall_6_endif:
+
 kA, kE, kD CartesianToPolar kx, ky, kz
 kAref, kEref, kDref CartesianToPolar krefx, krefy, krefz
 kDdiff = sqrt((kx - krefx)^2 + (ky-krefy)^2 + (kz - krefz)^2)
@@ -510,36 +536,60 @@ krefx = (iwhichwall = 1 ? gk_EarlyReflection_FrontWall : (kx / ksum) * abs(iwhic
 krefx = (iwhichwall = 2 ? -gk_EarlyReflection_FrontWall : (kx / ksum) * abs(iwhichwall))
 krefy = (ky / ksum) * abs(iwhichwall)
 krefz = (kz / ksum) * abs(iwhichwall)
-if iwhichwall == 1 then
+
+if iwhichwall == 1 goto iwhichwall_1
+ goto iwhichwall_1_else
+ iwhichwall_1:
  krefx = gk_EarlyReflection_FrontWall
-else
+ goto iwhichwall_1_endif
+iwhichwall_1_else:
  krefx = kx
-endif
-if iwhichwall == 2 then
+iwhichwall_1_endif:
+
+if iwhichwall == 2 goto iwhichwall_2
+ goto iwhichwall_2_else
+ iwhichwall_2:
  krefx = -gk_EarlyReflection_FrontWall
-else
+ goto iwhichwall_2_endif
+iwhichwall_2_else:
  krefx = kx
-endif
-if iwhichwall == 3 then
+iwhichwall_2_endif:
+
+if iwhichwall == 3 goto iwhichwall_3
+ goto iwhichwall_3_else
+ iwhichwall_3:
  kfefy = gk_EarlyReflection_SideWall
-else
+ goto iwhichwall_3_endif
+iwhichwall_3_else:
  krefy = ky
-endif
-if iwhichwall == 4 then
+iwhichwall_3_endif:
+
+if iwhichwall == 4 goto iwhichwall_4
+ goto iwhichwall_4_else
+ iwhichwall_4:
  krefy = -gk_EarlyReflection_SideWall
-else
+ goto iwhichwall_4_endif
+iwhichwall_4_else:
  krefy = ky
-endif
-if iwhichwall == 5 then
+iwhichwall_4_endif:
+
+if iwhichwall == 5 goto iwhichwall_5
+goto iwhichwall_5_else
+iwhichwall_5:
  krefz = gk_EarlyReflection_Ceiling
-else
+ goto iwhichwall_5_endif
+iwhichwall_5_else:
  krefz = kz
-endif
-if iwhichwall == 6 then
+iwhichwall_5_endif:
+
+if iwhichwall == 6 goto iwhichwall_6
+goto iwhichwall_6_else
+iwhichwall_6:
  krefz = -gk_EarlyReflection_Ceiling
-else
+ goto iwhichwall_6_endif
+iwhichwall_6_else:
  krefz = kz
-endif
+iwhichwall_6_endif:
 ; Prevent zero to prevent division by zero error (NaN) later.
 krefx = (krefx < 0.001 && krefx > -0.001 ? 0.001 : krefx)
 krefy = (krefy < 0.001 && krefy > -0.001 ? 0.001 : krefy)
@@ -705,21 +755,31 @@ endop
 
 opcode Spatialize, a[]a, akkk
 asignal, kx, ky, kz xin
+kdistance init 0
+afilteredSignal init 0
 kazimuth, kelevation, kdistance CartesianToPolarDegrees kx, ky, kz
 adoppleredSignal DopplerByDistance asignal, kdistance
 afilteredSignal LowpassByDistance adoppleredSignal, kdistance
+adistanceCuedSignal init 0
+aglobalReverbSend init 0
 abspatializedSignal[] init 16
 asend init 0
+adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
+if gk_BformatDecoder_SpeakerRig == 0 goto SpeakerRig_0
+if gk_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_1
+if gk_BformatDecoder_SpeakerRig >  1 goto SpeakerRig_other
+SpeakerRig_0:
 ; Use only minimal distance cues for plain stereo.
-if gk_BformatDecoder_SpeakerRig == 0 then
- abspatializedSignal bformenc1 afilteredSignal, kazimuth, kelevation
- asend = afilteredSignal
-elseif gk_BformatDecoder_SpeakerRig == 1 then
- adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
+abspatializedSignal bformenc1 afilteredSignal, kazimuth, kelevation
+asend = afilteredSignal
+goto SpeakerRig_endif
+SpeakerRig_1:
+;; adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
  abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
  asend = aglobalReverbSend
-else
- adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
+goto SpeakerRig_endif
+SpeakerRig_other:
+ ;;adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
  abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
  abdiffuseEarlyReflectionsSignal[] init 16
  abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
@@ -758,7 +818,7 @@ else
  abspatializedSignal[14] = abspatializedSignal[14] + abspecularEarlyReflectionsSignal[14]
  abspatializedSignal[15] = abspatializedSignal[15] + abspecularEarlyReflectionsSignal[15]
  asend = aglobalReverbSend
-endif
+SpeakerRig_endif:
 xout abspatializedSignal, asend
 endop
 
@@ -801,7 +861,9 @@ afilt12 init 0
 ; prime numbers that will give roughly the
 ; same delay times for the new sampling rate.
 ; Or adjust to taste.
-if sr == 41000 then
+if sr == 41000 goto sr_41000
+goto sr_48000
+sr_41000:
 idel1 = (1237.000/sr)
 idel2 = (1381.000/sr)
 idel3 = (1609.000/sr)
@@ -814,7 +876,11 @@ idel9 = (1889.000/sr)
 idel10 = (1693.000/sr)
 idel11 = (1453.000/sr)
 idel12 = (1291.000/sr)
-elseif sr == 48000 then
+goto sr_endif
+sr_48000:
+if sr == 48000 goto sr_48000_1
+goto sr_endif
+sr_48000_1:
 idel1 = (1361.000/sr)
 idel2 = (1499.000/sr)
 idel3 = (1753.000/sr)
@@ -827,7 +893,7 @@ idel9 = (2053.000/sr)
 idel10 = (1693.000/sr)
 idel11 = (1847.000/sr)
 idel12 = (1409.000/sr)
-endif
+sr_endif:
 ; k1-k8 are used to add random pitch modulation to the
 ; delay lines. Helps eliminate metallic overtones
 ; in the reverb sound.
@@ -1066,10 +1132,12 @@ aboutput[13] = aboutput[13] + abreverberated[13]
 aboutput[14] = aboutput[14] + abreverberated[14]
 aboutput[15] = aboutput[15] + abreverberated[15]
 outletv "outbformat", aboutput
-if gk_Spatialize_Verbose != 0 then
+if gk_Spatialize_Verbose != 0 goto gk_Spatialize_Verbose_not_0
+goto gk_Spatialize_Verbose_0
+gk_Spatialize_Verbose_not_0:
 kelapsed timeinsts
 printks "SpatialReverb i %5.2f t %5.2f [%5.2f] d %5.2f c %9.2f in %5.2f A[0] %5.2f\n", 1.0, p1, p2, kelapsed, p3, gk_SpatialReverb_CutoffHz, downsamp(arevsig), downsamp(aboutput[0])
-endif
+gk_Spatialize_Verbose_0:
 endin
 
 gk_SpatialReverb_Gain init 0.2
@@ -1374,11 +1442,13 @@ aboutput[13] = aboutput[13] + abreverberated12[13]
 aboutput[14] = aboutput[14] + abreverberated12[14]
 aboutput[15] = aboutput[15] + abreverberated12[15]
 outletv "outbformat", aboutput
-if gk_Spatialize_Verbose != 0 then
+if gk_Spatialize_Verbose != 0 goto gk_Spatialize_Verbose_not_0
+goto gk_Spatialize_Verbose_0
+gk_Spatialize_Verbose_not_0:
 aoutput sum aboutput[0], aboutput[1], aboutput[2], aboutput[3], aboutput[4], aboutput[5], aboutput[6], aboutput[7], aboutput[8], aboutput[9], aboutput[10], aboutput[11], aboutput[12], aboutput[13], aboutput[14], aboutput[15]
 kelapsed timeinsts
 printks "SpatialReverb i %5.2f t %5.2f [%5.2f] d %5.2f c %9.2f in %5.2f A %5.2f\n", 1.0, p1, p2, kelapsed, p3, kcutoff, asignal, aoutput
-endif
+gk_Spatialize_Verbose_0:
 endin
 
 gk_Bformat2DecodeBinaural_krelcoef init 1
@@ -1460,7 +1530,9 @@ achnl_9 = achnl_co_9 * krelcoef + achnl_sh_9 * (1 - krelcoef) ; ratio between co
 achnl_10 = achnl_co_10 * krelcoef + achnl_sh_10 * (1 - krelcoef) ; ratio between controlled opposites and spherical harmonic coefficients
 achnl_11 = achnl_co_11 * krelcoef + achnl_sh_11 * (1 - krelcoef) ; ratio between controlled opposites and spherical harmonic coefficients
 achnl_12 = achnl_co_12 * krelcoef + achnl_sh_12 * (1 - krelcoef) ; ratio between controlled opposites and spherical harmonic coefficients
-if isr == 44100 then
+if isr == 44100 goto isr_44100
+goto isr_48000
+isr_44100:
 aleft_1, aright1 hrtfstat achnl_1, 1, 89.99, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
 aleft_2, aright2 hrtfstat achnl_2, -1, -89.99, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
 aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
@@ -1473,8 +1545,11 @@ aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-44100-left.dat", "hrtf-44
 aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
 aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
 aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-44100-left.dat", "hrtf-44100-right.dat", 8.8, 44100
-else
-if isr == 48000 then
+goto isr_endif
+isr_48000:
+if isr == 48000 goto isr_48000_1
+goto isr_96000
+isr_48000_1:
 aleft_1, aright_1 hrtfstat achnl_1, 1, 89.99, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
 aleft_2, aright_2 hrtfstat achnl_2, -1, -89.99, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
 aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
@@ -1487,8 +1562,10 @@ aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-48000-left.dat", "hrtf-48
 aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
 aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
 aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-48000-left.dat", "hrtf-48000-right.dat", 8.8, 48000
-else
-if isr == 96000 then
+isr_96000:
+if isr == 96000 goto isr_96000_1
+goto isr_endif
+isr_96000_1:
 aleft_1, aright_1 hrtfstat achnl_1, 1, 89.99, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
 aleft_2, aright_2 hrtfstat achnl_2, -1, -89.99, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
 aleft_3, aright_3 hrtfstat achnl_3, -36, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
@@ -1501,12 +1578,13 @@ aleft_9, aright_9 hrtfstat achnl_9, 108, 26.565, "hrtf-96000-left.dat", "hrtf-96
 aleft_10, aright_10 hrtfstat achnl_10, -72, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
 aleft_11, aright_11 hrtfstat achnl_11, 180, 26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
 aleft_12, aright_12 hrtfstat achnl_12, 0, -26.565, "hrtf-96000-left.dat", "hrtf-96000-right.dat", 8.8, 96000
-else
-printks "Sampling rate = %f is not handled by Bformat2DecodeBinaural.", 1, sr
-exitnow
-endif
-endif
-endif
+;else
+;printks "Sampling rate = %f is not handled by Bformat2DecodeBinaural.", 1, sr
+;exitnow
+;endif
+;endif
+;endif
+isr_endif:
 prints "Loaded HRTF data.\n"
 ; Inter-aural time delay (seconds)
 aleft_1 delay aleft_1, 0.00028986
@@ -1548,26 +1626,41 @@ kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
 asignal[] init nchnls
 absignal[] init 16
 absignal[] inletv "inbformat"
-if irig == 0 then
+if irig == 0 goto irig_0
+goto irig_1
+irig_0:
  asignal bformdec1 1, absignal
-elseif irig == 1 then
+ goto irig_endif
+irig_1:
+if irig == 1 goto irig_1_1
+goto irig_2
+irig_1_1:
  asignal Bformat2DecodeBinaural, absignal, sr
  asignal[0] = asignal[0] * kmasterlevel
  asignal[1] = asignal[1] * kmasterlevel
-elseif irig == 2 then
+goto irig_endif
+irig_2:
+if irig == 2 goto irig_2_1
+goto irig_3
+irig_2_1:
  asignal bformdec1 2, absignal
  asignal[0] = asignal[0] * kmasterlevel
  asignal[1] = asignal[1] * kmasterlevel
  asignal[2] = asignal[2] * kmasterlevel
  asignal[3] = asignal[3] * kmasterlevel
-elseif irig == 3 then
+ goto irig_endif
+irig_3:
+if irig == 3 goto irig_3_1
+goto irig_else
+irig_3_1:
  asignal bformdec1 3, absignal
  asignal[0] = asignal[0] * kmasterlevel
  asignal[1] = asignal[1] * kmasterlevel
  asignal[2] = asignal[2] * kmasterlevel
  asignal[3] = asignal[3] * kmasterlevel
  asignal[4] = asignal[4] * kmasterlevel
-else
+ goto irig_endif
+irig_else:
  asignal bformdec1 irig, absignal
  asignal[0] = asignal[0] * kmasterlevel
  asignal[1] = asignal[1] * kmasterlevel
@@ -1577,6 +1670,49 @@ else
  asignal[5] = asignal[5] * kmasterlevel
  asignal[6] = asignal[6] * kmasterlevel
  asignal[7] = asignal[7] * kmasterlevel
-endif
+irig_endif:
+out asignal
+endin
+
+/*
+1. Stereo - L(90), R(-90); this is an M+S style stereo decode.
+2. Quad - FL(45), BL(135), BR(-135), FR(-45). This is a first-order decode.
+3. 5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not actually use the angles above for their speaker arrays and a good decode for DVD etc can be achieved using the Quad configuration to feed L, R, BL and BR (leaving C silent).
+4. Octagon - FFL(22.5), FLL(67.5), BLL(112.5), BBL(157.5), BBR(-157.5), BRR(-112.5), FRR(-67.5), FFR(-22.5). This is a first-, second- or third-order decode, depending on the number of input channels.
+5. Cube - FLD(45,-35.26), FLU(45,35.26), BLD(135,-35.26), BLU(135,35.26), BRD(-135,-35.26), BRU(-135,35.26), FRD(-45,-35.26), FRU(-45,35.26). This is a first-order decode.
+6. Hexagon - FL(30), L(90) BL(150), BR(-150), R(-90), FR(-30). This is a first- or second- order decode.
+21. 2D binaural configuration. This first decodes to a octagon configuration and then applies HRTF filters.
+31. 3D binaural configuration. This first decodes to a dodecahedron configuration and then applies HRTF filters.
+*/
+gi_BformatDecoder2_SpeakerRig init 31
+/*
+0. Dual decoder (velocity and energy decoders using dual-band splitting).
+1. Velocity decoder.
+2. Energy decoder.
+*/
+gi_BformatDecoder2_Decoder init 1
+/*
+Radius of speaker rig in meters.
+*/
+gi_BformatDecoder2_Distance init 4
+/*
+Only effective for dual decoder.
+*/
+gi_BformatDecoder2_SplitHz init 400
+/*
+0. Energy
+1. RMS
+2. Amplitude
+*/
+gi_BformatDecoder2_DecoderMix init 1
+gS_BformatDecoder2_LeftFile init "hrtf-96000-left.dat"
+gS_BformatDecoder2_RightFile init "hrtf-96000-right.dat"
+instr BformatDecoder2
+kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
+asignal[] init nchnls
+absignal[] init 16
+absignal[] inletv "inbformat"
+// aout[] bformdec2 isetup, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
+asignal bformdec2 gi_BformatDecoder2_SpeakerRig, absignal, gi_BformatDecoder2_Decoder, gi_BformatDecoder2_Distance, gi_BformatDecoder2_SplitHz, gi_BformatDecoder2_DecoderMix, gS_BformatDecoder2_LeftFile, gS_BformatDecoder2_RightFile
 out asignal
 endin
