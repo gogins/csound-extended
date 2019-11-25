@@ -1690,11 +1690,11 @@ gi_BformatDecoder2_SpeakerRig init 31
 1. Velocity decoder.
 2. Energy decoder.
 */
-gi_BformatDecoder2_Decoder init 1
+gi_BformatDecoder2_Decoder init 0
 /*
 Radius of speaker rig in meters.
 */
-gi_BformatDecoder2_Distance init 4
+gi_BformatDecoder2_Distance init 1
 /*
 Only effective for dual decoder.
 */
@@ -1704,15 +1704,18 @@ gi_BformatDecoder2_SplitHz init 400
 1. RMS
 2. Amplitude
 */
-gi_BformatDecoder2_DecoderMix init 1
+gi_BformatDecoder2_DecoderMix init 0
 gS_BformatDecoder2_LeftFile init "hrtf-96000-left.dat"
 gS_BformatDecoder2_RightFile init "hrtf-96000-right.dat"
+gk_BformatDecoder2_MasterLevel init 0
 instr BformatDecoder2
-kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
+kmasterlevel = pow(10, gk_BformatDecoder2_MasterLevel / 20)
 asignal[] init nchnls
+aoutsignal[] init nchnls
 absignal[] init 16
 absignal[] inletv "inbformat"
 // aout[] bformdec2 isetup, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
 asignal bformdec2 gi_BformatDecoder2_SpeakerRig, absignal, gi_BformatDecoder2_Decoder, gi_BformatDecoder2_Distance, gi_BformatDecoder2_SplitHz, gi_BformatDecoder2_DecoderMix, gS_BformatDecoder2_LeftFile, gS_BformatDecoder2_RightFile
-out asignal
+aoutsignal = asignal * kmasterlevel
+out aoutsignal
 endin

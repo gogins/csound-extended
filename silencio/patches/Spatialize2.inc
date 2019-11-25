@@ -21,19 +21,6 @@ and the sink is an instr inlet.
 
 The available apeaker rigs are:
 
-bformdec1
-
- 0 Ambisonic stereo with minimal distance cues
-   (possibly the best choice for efficiency in live performance).
- 1 Ambisonic binaural with HRTF decoding (periphonic, a suitable choice
-   for checking in stereophonic studio work).
- 2 Ambisonic quadraphonic.
- 3 Ambisonic pentaphonic or 5.0 (might work for 5.1, omit .1)
- 4 Ambisonic octaphonic.
- 5 Ambisonic cubic (periphonic, probably the best choice for concerts).
- 
-bformdec2
- 
  1 Stereo - L(90), R(-90); this is an M+S style stereo decode.
  2 Quad - FL(45), BL(135), BR(-135), FR(-45). This is a first-order decode.
  3 5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not actually use the angles above for their speaker arrays and a good decode for DVD etc can be achieved using the Quad configuration to feed L, R, BL and BR (leaving C silent).
@@ -66,14 +53,14 @@ USAGE
 
 In the orchestra header:
 
-gk_BformatDecoder_SpeakerRig init 5
+gi_BformatDecoder_SpeakerRig init 31
 
 alwayson SpatialReverb
-alwayson Bformat3Decoder
+alwayson BformatDecoder
 
 connect "SpatializingInstrument", "out", "SpatialReverb", "in"
-connect "SpatializingInstrument", "outbformat", "Bformat3Decoder", "inbformat"
-connect "SpatialReverb", "outbformat", "Bformat3Decoder", "inbformat"
+connect "SpatializingInstrument", "outbformat", "BformatDecoder", "inbformat"
+connect "SpatialReverb", "outbformat", "BformatDecoder", "inbformat"
 
 instr SpatializingInstrument
 absignal[] init 16
@@ -85,22 +72,6 @@ outleta "out", asend
 outletv "outbformat", absignal
 endin
 
-TODO
-
--- Upgrade demonstration piece with jspline spatial trajectories
-   and algorithmically generated percussive notes.
-
--- Plug in and test early reflections code.
-
--- Test with rigs 2 through 5.
-
--- See if babo can be adapted for spatial reverb.
-
--- Upgrade panning with arbitrary measured speaker positions.
-
--- Try spat3d for global reverb and early reflections (not doing,
-   as not periphonic).
-
 }}
 
 ;prints gShelp
@@ -108,7 +79,7 @@ TODO
 ; Global parameters that can be re-defined in the orchestra header.
 
 gk_Spatialize_Verbose init 0
-gk_BformatDecoder_SpeakerRig init 5
+gi_BformatDecoder_SpeakerRig init 31
 gk_Spatialize_SpeakerRigRadius init 5.0
 
 opcode CartesianToPolar, kkk, kkk
@@ -780,18 +751,12 @@ aglobalReverbSend init 0
 abspatializedSignal[] init 16
 asend init 0
 adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
-if gk_BformatDecoder_SpeakerRig == 0 goto SpeakerRig_0
-if gk_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_1
-if gk_BformatDecoder_SpeakerRig >  1 goto SpeakerRig_other
+if gi_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_0
+if gi_BformatDecoder_SpeakerRig >  1 goto SpeakerRig_other
 SpeakerRig_0:
 ; Use only minimal distance cues for plain stereo.
 abspatializedSignal bformenc1 afilteredSignal, kazimuth, kelevation
 asend = afilteredSignal
-goto SpeakerRig_endif
-SpeakerRig_1:
-;; adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
- abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
- asend = aglobalReverbSend
 goto SpeakerRig_endif
 SpeakerRig_other:
  ;;adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
@@ -1635,59 +1600,6 @@ xout asignal
 endop
 
 gk_BformatDecoder_MasterLevel init 0.0
-instr BformatDecoder
-irig init i(gk_BformatDecoder_SpeakerRig)
-kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
-asignal[] init nchnls
-absignal[] init 16
-absignal[] inletv "inbformat"
-if irig == 0 goto irig_0
-goto irig_1
-irig_0:
- asignal bformdec1 1, absignal
- goto irig_endif
-irig_1:
-if irig == 1 goto irig_1_1
-goto irig_2
-irig_1_1:
- asignal Bformat2DecodeBinaural, absignal, sr
- asignal[0] = asignal[0] * kmasterlevel
- asignal[1] = asignal[1] * kmasterlevel
-goto irig_endif
-irig_2:
-if irig == 2 goto irig_2_1
-goto irig_3
-irig_2_1:
- asignal bformdec1 2, absignal
- asignal[0] = asignal[0] * kmasterlevel
- asignal[1] = asignal[1] * kmasterlevel
- asignal[2] = asignal[2] * kmasterlevel
- asignal[3] = asignal[3] * kmasterlevel
- goto irig_endif
-irig_3:
-if irig == 3 goto irig_3_1
-goto irig_else
-irig_3_1:
- asignal bformdec1 3, absignal
- asignal[0] = asignal[0] * kmasterlevel
- asignal[1] = asignal[1] * kmasterlevel
- asignal[2] = asignal[2] * kmasterlevel
- asignal[3] = asignal[3] * kmasterlevel
- asignal[4] = asignal[4] * kmasterlevel
- goto irig_endif
-irig_else:
- asignal bformdec1 irig, absignal
- asignal[0] = asignal[0] * kmasterlevel
- asignal[1] = asignal[1] * kmasterlevel
- asignal[2] = asignal[2] * kmasterlevel
- asignal[3] = asignal[3] * kmasterlevel
- asignal[4] = asignal[4] * kmasterlevel
- asignal[5] = asignal[5] * kmasterlevel
- asignal[6] = asignal[6] * kmasterlevel
- asignal[7] = asignal[7] * kmasterlevel
-irig_endif:
-out asignal
-endin
 
 /*
 1. Stereo - L(90), R(-90); this is an M+S style stereo decode.
@@ -1699,38 +1611,38 @@ endin
 21. 2D binaural configuration. This first decodes to a octagon configuration and then applies HRTF filters.
 31. 3D binaural configuration. This first decodes to a dodecahedron configuration and then applies HRTF filters.
 */
-gi_BformatDecoder2_SpeakerRig init 31
+gi_BformatDecoder_SpeakerRig init 31
 /*
 0. Dual decoder (velocity and energy decoders using dual-band splitting).
 1. Velocity decoder.
 2. Energy decoder.
 */
-gi_BformatDecoder2_Decoder init 0
+gi_BformatDecoder_Decoder init 0
 /*
 Radius of speaker rig in meters.
 */
-gi_BformatDecoder2_Distance init 1
+gi_BformatDecoder_Distance init 1
 /*
 Only effective for dual decoder.
 */
-gi_BformatDecoder2_SplitHz init 400
+gi_BformatDecoder_SplitHz init 400
 /*
 0. Energy
 1. RMS
 2. Amplitude
 */
-gi_BformatDecoder2_DecoderMix init 0
-gS_BformatDecoder2_LeftFile init "hrtf-96000-left.dat"
-gS_BformatDecoder2_RightFile init "hrtf-96000-right.dat"
-gk_BformatDecoder2_MasterLevel init 0
-instr BformatDecoder2
-kmasterlevel = pow(10, gk_BformatDecoder2_MasterLevel / 20)
+gi_BformatDecoder_DecoderMix init 0
+gS_BformatDecoder_LeftFile init "hrtf-96000-left.dat"
+gS_BformatDecoder_RightFile init "hrtf-96000-right.dat"
+gk_BformatDecoder_MasterLevel init 0
+instr BformatDecoder
+kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
 asignal[] init nchnls
 aoutsignal[] init nchnls
 absignal[] init 16
 absignal[] inletv "inbformat"
-// aout[] bformdec2 isetup, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
-asignal bformdec2 gi_BformatDecoder2_SpeakerRig, absignal, gi_BformatDecoder2_Decoder, gi_BformatDecoder2_Distance, gi_BformatDecoder2_SplitHz, gi_BformatDecoder2_DecoderMix, gS_BformatDecoder2_LeftFile, gS_BformatDecoder2_RightFile
+// aout[] bformdec2 gi_Bform, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
+asignal bformdec2 gi_BformatDecoder_SpeakerRig, absignal, gi_BformatDecoder_Decoder, gi_BformatDecoder_Distance, gi_BformatDecoder_SplitHz, gi_BformatDecoder_DecoderMix, gS_BformatDecoder_LeftFile, gS_BformatDecoder_RightFile
 aoutsignal = asignal * kmasterlevel
 out aoutsignal
 endin
