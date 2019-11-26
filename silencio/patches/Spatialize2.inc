@@ -751,7 +751,8 @@ aglobalReverbSend init 0
 abspatializedSignal[] init 16
 asend init 0
 adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
-if gi_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_0
+/// if gi_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_0
+if gi_BformatDecoder_SpeakerRig == 31 goto SpeakerRig_0
 if gi_BformatDecoder_SpeakerRig >  1 goto SpeakerRig_other
 SpeakerRig_0:
 ; Use only minimal distance cues for plain stereo.
@@ -759,45 +760,46 @@ abspatializedSignal bformenc1 afilteredSignal, kazimuth, kelevation
 asend = afilteredSignal
 goto SpeakerRig_endif
 SpeakerRig_other:
- ;;adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
+ adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
  abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
- abdiffuseEarlyReflectionsSignal[] init 16
- abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
- abspatializedSignal[ 0] = abspatializedSignal[ 0] + abdiffuseEarlyReflectionsSignal[ 0]
- abspatializedSignal[ 1] = abspatializedSignal[ 1] + abdiffuseEarlyReflectionsSignal[ 1]
- abspatializedSignal[ 2] = abspatializedSignal[ 2] + abdiffuseEarlyReflectionsSignal[ 2]
- abspatializedSignal[ 3] = abspatializedSignal[ 3] + abdiffuseEarlyReflectionsSignal[ 3]
- abspatializedSignal[ 4] = abspatializedSignal[ 4] + abdiffuseEarlyReflectionsSignal[ 4]
- abspatializedSignal[ 5] = abspatializedSignal[ 5] + abdiffuseEarlyReflectionsSignal[ 5]
- abspatializedSignal[ 6] = abspatializedSignal[ 6] + abdiffuseEarlyReflectionsSignal[ 6]
- abspatializedSignal[ 7] = abspatializedSignal[ 7] + abdiffuseEarlyReflectionsSignal[ 7]
- abspatializedSignal[ 8] = abspatializedSignal[ 8] + abdiffuseEarlyReflectionsSignal[ 8]
- abspatializedSignal[ 9] = abspatializedSignal[ 9] + abdiffuseEarlyReflectionsSignal[ 9]
- abspatializedSignal[10] = abspatializedSignal[10] + abdiffuseEarlyReflectionsSignal[10]
- abspatializedSignal[11] = abspatializedSignal[11] + abdiffuseEarlyReflectionsSignal[11]
- abspatializedSignal[12] = abspatializedSignal[12] + abdiffuseEarlyReflectionsSignal[12]
- abspatializedSignal[13] = abspatializedSignal[13] + abdiffuseEarlyReflectionsSignal[13]
- abspatializedSignal[14] = abspatializedSignal[14] + abdiffuseEarlyReflectionsSignal[14]
- abspatializedSignal[15] = abspatializedSignal[15] + abdiffuseEarlyReflectionsSignal[15]
- abspecularEarlyReflectionsSignal[] init 16
- abspecularEarlyReflectionsSignal SpecularEarlyReflections afilteredSignal, kx, ky, kz
- abspatializedSignal[ 0] = abspatializedSignal[ 0] + abspecularEarlyReflectionsSignal[ 0]
- abspatializedSignal[ 1] = abspatializedSignal[ 1] + abspecularEarlyReflectionsSignal[ 1]
- abspatializedSignal[ 2] = abspatializedSignal[ 2] + abspecularEarlyReflectionsSignal[ 2]
- abspatializedSignal[ 3] = abspatializedSignal[ 3] + abspecularEarlyReflectionsSignal[ 3]
- abspatializedSignal[ 4] = abspatializedSignal[ 4] + abspecularEarlyReflectionsSignal[ 4]
- abspatializedSignal[ 5] = abspatializedSignal[ 5] + abspecularEarlyReflectionsSignal[ 5]
- abspatializedSignal[ 6] = abspatializedSignal[ 6] + abspecularEarlyReflectionsSignal[ 6]
- abspatializedSignal[ 7] = abspatializedSignal[ 7] + abspecularEarlyReflectionsSignal[ 7]
- abspatializedSignal[ 8] = abspatializedSignal[ 8] + abspecularEarlyReflectionsSignal[ 8]
- abspatializedSignal[ 9] = abspatializedSignal[ 9] + abspecularEarlyReflectionsSignal[ 9]
- abspatializedSignal[10] = abspatializedSignal[10] + abspecularEarlyReflectionsSignal[10]
- abspatializedSignal[11] = abspatializedSignal[11] + abspecularEarlyReflectionsSignal[11]
- abspatializedSignal[12] = abspatializedSignal[12] + abspecularEarlyReflectionsSignal[12]
- abspatializedSignal[13] = abspatializedSignal[13] + abspecularEarlyReflectionsSignal[13]
- abspatializedSignal[14] = abspatializedSignal[14] + abspecularEarlyReflectionsSignal[14]
- abspatializedSignal[15] = abspatializedSignal[15] + abspecularEarlyReflectionsSignal[15]
- asend = aglobalReverbSend
+ /// abspatializedSignal bformenc1 asignal, kazimuth, kelevation
+ ; abdiffuseEarlyReflectionsSignal[] init 16
+ ; abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
+ ; abspatializedSignal[ 0] = abspatializedSignal[ 0] + abdiffuseEarlyReflectionsSignal[ 0]
+ ; abspatializedSignal[ 1] = abspatializedSignal[ 1] + abdiffuseEarlyReflectionsSignal[ 1]
+ ; abspatializedSignal[ 2] = abspatializedSignal[ 2] + abdiffuseEarlyReflectionsSignal[ 2]
+ ; abspatializedSignal[ 3] = abspatializedSignal[ 3] + abdiffuseEarlyReflectionsSignal[ 3]
+ ; abspatializedSignal[ 4] = abspatializedSignal[ 4] + abdiffuseEarlyReflectionsSignal[ 4]
+ ; abspatializedSignal[ 5] = abspatializedSignal[ 5] + abdiffuseEarlyReflectionsSignal[ 5]
+ ; abspatializedSignal[ 6] = abspatializedSignal[ 6] + abdiffuseEarlyReflectionsSignal[ 6]
+ ; abspatializedSignal[ 7] = abspatializedSignal[ 7] + abdiffuseEarlyReflectionsSignal[ 7]
+ ; abspatializedSignal[ 8] = abspatializedSignal[ 8] + abdiffuseEarlyReflectionsSignal[ 8]
+ ; abspatializedSignal[ 9] = abspatializedSignal[ 9] + abdiffuseEarlyReflectionsSignal[ 9]
+ ; abspatializedSignal[10] = abspatializedSignal[10] + abdiffuseEarlyReflectionsSignal[10]
+ ; abspatializedSignal[11] = abspatializedSignal[11] + abdiffuseEarlyReflectionsSignal[11]
+ ; abspatializedSignal[12] = abspatializedSignal[12] + abdiffuseEarlyReflectionsSignal[12]
+ ; abspatializedSignal[13] = abspatializedSignal[13] + abdiffuseEarlyReflectionsSignal[13]
+ ; abspatializedSignal[14] = abspatializedSignal[14] + abdiffuseEarlyReflectionsSignal[14]
+ ; abspatializedSignal[15] = abspatializedSignal[15] + abdiffuseEarlyReflectionsSignal[15]
+ ; abspecularEarlyReflectionsSignal[] init 16
+ ; abspecularEarlyReflectionsSignal SpecularEarlyReflections afilteredSignal, kx, ky, kz
+ ; abspatializedSignal[ 0] = abspatializedSignal[ 0] + abspecularEarlyReflectionsSignal[ 0]
+ ; abspatializedSignal[ 1] = abspatializedSignal[ 1] + abspecularEarlyReflectionsSignal[ 1]
+ ; abspatializedSignal[ 2] = abspatializedSignal[ 2] + abspecularEarlyReflectionsSignal[ 2]
+ ; abspatializedSignal[ 3] = abspatializedSignal[ 3] + abspecularEarlyReflectionsSignal[ 3]
+ ; abspatializedSignal[ 4] = abspatializedSignal[ 4] + abspecularEarlyReflectionsSignal[ 4]
+ ; abspatializedSignal[ 5] = abspatializedSignal[ 5] + abspecularEarlyReflectionsSignal[ 5]
+ ; abspatializedSignal[ 6] = abspatializedSignal[ 6] + abspecularEarlyReflectionsSignal[ 6]
+ ; abspatializedSignal[ 7] = abspatializedSignal[ 7] + abspecularEarlyReflectionsSignal[ 7]
+ ; abspatializedSignal[ 8] = abspatializedSignal[ 8] + abspecularEarlyReflectionsSignal[ 8]
+ ; abspatializedSignal[ 9] = abspatializedSignal[ 9] + abspecularEarlyReflectionsSignal[ 9]
+ ; abspatializedSignal[10] = abspatializedSignal[10] + abspecularEarlyReflectionsSignal[10]
+ ; abspatializedSignal[11] = abspatializedSignal[11] + abspecularEarlyReflectionsSignal[11]
+ ; abspatializedSignal[12] = abspatializedSignal[12] + abspecularEarlyReflectionsSignal[12]
+ ; abspatializedSignal[13] = abspatializedSignal[13] + abspecularEarlyReflectionsSignal[13]
+ ; abspatializedSignal[14] = abspatializedSignal[14] + abspecularEarlyReflectionsSignal[14]
+ ; abspatializedSignal[15] = abspatializedSignal[15] + abspecularEarlyReflectionsSignal[15]
+ ; asend = aglobalReverbSend
 SpeakerRig_endif:
 xout abspatializedSignal, asend
 endop
@@ -1643,7 +1645,60 @@ absignal[] init 16
 absignal[] inletv "inbformat"
 // aout[] bformdec2 gi_Bform, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
 asignal bformdec2 gi_BformatDecoder_SpeakerRig, absignal, gi_BformatDecoder_Decoder, gi_BformatDecoder_Distance, gi_BformatDecoder_SplitHz, gi_BformatDecoder_DecoderMix, gS_BformatDecoder_LeftFile, gS_BformatDecoder_RightFile
-aoutsignal = asignal * kmasterlevel
-out aoutsignal
+// 1 Stereo - L(90), R(-90); this is an M+S style stereo decode.
+//21 2D binaural configuration. This first decodes to a octagon configuration and then applies HRTF filters.
+//31 3D binaural configuration. This first decodes to a dodecahedron configuration and then applies HRTF filters.
+if (gi_BformatDecoder_SpeakerRig == 1) goto channels_2
+if (gi_BformatDecoder_SpeakerRig == 21) goto channels_2
+if (gi_BformatDecoder_SpeakerRig == 31) goto channels_2
+// 2 Quad - FL(45), BL(135), BR(-135), FR(-45). This is a first-order decode.
+if (gi_BformatDecoder_SpeakerRig == 2) goto channels_4
+// 3 5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not actually use the angles above for their speaker arrays and a good decode for DVD etc can be achieved using the Quad configuration to feed L, R, BL and BR (leaving C silent).
+if (gi_BformatDecoder_SpeakerRig == 3) goto channels_5
+// 6 Hexagon - FL(30), L(90) BL(150), BR(-150), R(-90), FR(-30). This is a first- or second- order decode.
+if (gi_BformatDecoder_SpeakerRig == 6) goto channels_6
+// 4 Octagon - FFL(22.5), FLL(67.5), BLL(112.5), BBL(157.5), BBR(-157.5), BRR(-112.5), FRR(-67.5), FFR(-22.5). This is a first-, second- or third-order decode, depending on the number of input channels.
+// 5 Cube - FLD(45,-35.26), FLU(45,35.26), BLD(135,-35.26), BLU(135,35.26), BRD(-135,-35.26), BRU(-135,35.26), FRD(-45,-35.26), FRU(-45,35.26). This is a first-order decode.
+if (gi_BformatDecoder_SpeakerRig == 4) goto channels_8
+if (gi_BformatDecoder_SpeakerRig == 5) goto channels_8
+prints "Invalid value of gi_BformatDecoder_SpeakerRig.\n"
+exitnow -1
+channels_2:
+aoutsignal[0] dcblock2 asignal[0]
+aoutsignal[1] dcblock2 asignal[1]
+goto channels_end
+channels_4:
+aoutsignal[0] dcblock2 asignal[0]
+aoutsignal[1] dcblock2 asignal[1]
+aoutsignal[2] dcblock2 asignal[2]
+aoutsignal[3] dcblock2 asignal[3]
+goto channels_end
+channels_5:
+aoutsignal[0] dcblock2 asignal[0]
+aoutsignal[1] dcblock2 asignal[1]
+aoutsignal[2] dcblock2 asignal[2]
+aoutsignal[3] dcblock2 asignal[3]
+aoutsignal[4] dcblock2 asignal[4]
+goto channels_end
+channels_6:
+aoutsignal[0] dcblock2 asignal[0]
+aoutsignal[1] dcblock2 asignal[1]
+aoutsignal[2] dcblock2 asignal[2]
+aoutsignal[3] dcblock2 asignal[3]
+aoutsignal[4] dcblock2 asignal[4]
+aoutsignal[5] dcblock2 asignal[5]
+goto channels_end
+channels_8:
+aoutsignal[0] dcblock2 asignal[0]
+aoutsignal[1] dcblock2 asignal[1]
+aoutsignal[2] dcblock2 asignal[2]
+aoutsignal[3] dcblock2 asignal[3]
+aoutsignal[4] dcblock2 asignal[4]
+aoutsignal[5] dcblock2 asignal[5]
+aoutsignal[6] dcblock2 asignal[6]
+goto channels_end
+channels_end:
+asignal = aoutsignal * kmasterlevel
+out asignal
 endin
 
