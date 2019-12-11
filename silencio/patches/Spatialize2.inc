@@ -408,107 +408,17 @@ absignal[] init 16
 abreflectedSignal[] init 16
 ; Bounce the signal off each of the walls.
 abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 1
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 2
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 3
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 4
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 5
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 6
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 xout absignal
 endop
 
@@ -635,107 +545,17 @@ afilteredSignal tone asignal, gk_EarlyReflection_highdamp
 absignal[] init 16
 abreflectedSignal[] init 16
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 1, kdiff1
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 2, kdiff2
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 3, kdiff3
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 4, kdiff4
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 5, kdiff5
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 6, kdiff6
-absignal[ 0] = absignal[ 0] + abreflectedSignal[ 0]
-absignal[ 1] = absignal[ 1] + abreflectedSignal[ 1]
-absignal[ 2] = absignal[ 2] + abreflectedSignal[ 2]
-absignal[ 3] = absignal[ 3] + abreflectedSignal[ 3]
-absignal[ 4] = absignal[ 4] + abreflectedSignal[ 4]
-absignal[ 5] = absignal[ 5] + abreflectedSignal[ 5]
-absignal[ 6] = absignal[ 6] + abreflectedSignal[ 6]
-absignal[ 7] = absignal[ 7] + abreflectedSignal[ 7]
-absignal[ 8] = absignal[ 8] + abreflectedSignal[ 8]
-absignal[ 9] = absignal[ 9] + abreflectedSignal[ 9]
-absignal[10] = absignal[10] + abreflectedSignal[10]
-absignal[11] = absignal[11] + abreflectedSignal[11]
-absignal[12] = absignal[12] + abreflectedSignal[12]
-absignal[13] = absignal[13] + abreflectedSignal[13]
-absignal[14] = absignal[14] + abreflectedSignal[14]
-absignal[15] = absignal[15] + abreflectedSignal[15]
+absignal = absignal + abreflectedSignal
 xout absignal
 endop
 
@@ -751,55 +571,22 @@ aglobalReverbSend init 0
 abspatializedSignal[] init 16
 asend init 0
 adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
-/// if gi_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_0
-if gi_BformatDecoder_SpeakerRig == 31 goto SpeakerRig_0
-if gi_BformatDecoder_SpeakerRig >  1 goto SpeakerRig_other
-SpeakerRig_0:
-; Use only minimal distance cues for plain stereo.
+; Use only minimal distance cues for plain stereo.sS
+if gi_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_1
+goto SpeakerRig_other
+SpeakerRig_1:
 abspatializedSignal bformenc1 afilteredSignal, kazimuth, kelevation
 asend = afilteredSignal
 goto SpeakerRig_endif
 SpeakerRig_other:
- adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
  abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
- /// abspatializedSignal bformenc1 asignal, kazimuth, kelevation
- ; abdiffuseEarlyReflectionsSignal[] init 16
- ; abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
- ; abspatializedSignal[ 0] = abspatializedSignal[ 0] + abdiffuseEarlyReflectionsSignal[ 0]
- ; abspatializedSignal[ 1] = abspatializedSignal[ 1] + abdiffuseEarlyReflectionsSignal[ 1]
- ; abspatializedSignal[ 2] = abspatializedSignal[ 2] + abdiffuseEarlyReflectionsSignal[ 2]
- ; abspatializedSignal[ 3] = abspatializedSignal[ 3] + abdiffuseEarlyReflectionsSignal[ 3]
- ; abspatializedSignal[ 4] = abspatializedSignal[ 4] + abdiffuseEarlyReflectionsSignal[ 4]
- ; abspatializedSignal[ 5] = abspatializedSignal[ 5] + abdiffuseEarlyReflectionsSignal[ 5]
- ; abspatializedSignal[ 6] = abspatializedSignal[ 6] + abdiffuseEarlyReflectionsSignal[ 6]
- ; abspatializedSignal[ 7] = abspatializedSignal[ 7] + abdiffuseEarlyReflectionsSignal[ 7]
- ; abspatializedSignal[ 8] = abspatializedSignal[ 8] + abdiffuseEarlyReflectionsSignal[ 8]
- ; abspatializedSignal[ 9] = abspatializedSignal[ 9] + abdiffuseEarlyReflectionsSignal[ 9]
- ; abspatializedSignal[10] = abspatializedSignal[10] + abdiffuseEarlyReflectionsSignal[10]
- ; abspatializedSignal[11] = abspatializedSignal[11] + abdiffuseEarlyReflectionsSignal[11]
- ; abspatializedSignal[12] = abspatializedSignal[12] + abdiffuseEarlyReflectionsSignal[12]
- ; abspatializedSignal[13] = abspatializedSignal[13] + abdiffuseEarlyReflectionsSignal[13]
- ; abspatializedSignal[14] = abspatializedSignal[14] + abdiffuseEarlyReflectionsSignal[14]
- ; abspatializedSignal[15] = abspatializedSignal[15] + abdiffuseEarlyReflectionsSignal[15]
- ; abspecularEarlyReflectionsSignal[] init 16
- ; abspecularEarlyReflectionsSignal SpecularEarlyReflections afilteredSignal, kx, ky, kz
- ; abspatializedSignal[ 0] = abspatializedSignal[ 0] + abspecularEarlyReflectionsSignal[ 0]
- ; abspatializedSignal[ 1] = abspatializedSignal[ 1] + abspecularEarlyReflectionsSignal[ 1]
- ; abspatializedSignal[ 2] = abspatializedSignal[ 2] + abspecularEarlyReflectionsSignal[ 2]
- ; abspatializedSignal[ 3] = abspatializedSignal[ 3] + abspecularEarlyReflectionsSignal[ 3]
- ; abspatializedSignal[ 4] = abspatializedSignal[ 4] + abspecularEarlyReflectionsSignal[ 4]
- ; abspatializedSignal[ 5] = abspatializedSignal[ 5] + abspecularEarlyReflectionsSignal[ 5]
- ; abspatializedSignal[ 6] = abspatializedSignal[ 6] + abspecularEarlyReflectionsSignal[ 6]
- ; abspatializedSignal[ 7] = abspatializedSignal[ 7] + abspecularEarlyReflectionsSignal[ 7]
- ; abspatializedSignal[ 8] = abspatializedSignal[ 8] + abspecularEarlyReflectionsSignal[ 8]
- ; abspatializedSignal[ 9] = abspatializedSignal[ 9] + abspecularEarlyReflectionsSignal[ 9]
- ; abspatializedSignal[10] = abspatializedSignal[10] + abspecularEarlyReflectionsSignal[10]
- ; abspatializedSignal[11] = abspatializedSignal[11] + abspecularEarlyReflectionsSignal[11]
- ; abspatializedSignal[12] = abspatializedSignal[12] + abspecularEarlyReflectionsSignal[12]
- ; abspatializedSignal[13] = abspatializedSignal[13] + abspecularEarlyReflectionsSignal[13]
- ; abspatializedSignal[14] = abspatializedSignal[14] + abspecularEarlyReflectionsSignal[14]
- ; abspatializedSignal[15] = abspatializedSignal[15] + abspecularEarlyReflectionsSignal[15]
- ; asend = aglobalReverbSend
+ abdiffuseEarlyReflectionsSignal[] init 16
+ abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
+ abspatializedSignal = abspatializedSignal + abdiffuseEarlyReflectionsSignal
+ abspecularEarlyReflectionsSignal[] init 16
+ abspecularEarlyReflectionsSignal SpecularEarlyReflections afilteredSignal, kx, ky, kz
+ abspatializedSignal = abspatializedSignal + abspecularEarlyReflectionsSignal
+ asend = aglobalReverbSend
 SpeakerRig_endif:
 xout abspatializedSignal, asend
 endop
@@ -1623,7 +1410,7 @@ gi_BformatDecoder_Decoder init 0
 /*
 Radius of speaker rig in meters.
 */
-gi_BformatDecoder_Distance init 1
+gi_BformatDecoder_Distance init 10
 /*
 Only effective for dual decoder.
 */
@@ -1696,6 +1483,7 @@ aoutsignal[3] dcblock2 asignal[3]
 aoutsignal[4] dcblock2 asignal[4]
 aoutsignal[5] dcblock2 asignal[5]
 aoutsignal[6] dcblock2 asignal[6]
+aoutsignal[7] dcblock2 asignal[7]
 goto channels_end
 channels_end:
 asignal = aoutsignal * kmasterlevel

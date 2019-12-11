@@ -3,7 +3,7 @@ echo "Starting completely fresh build based on Csound, for release package..."
 git branch
 git pull
 bash update-dependencies.sh
-cd dependendecies
+cd dependencies
 bash update-csound-dependency-packages.sh
 cd ..
 bash clean-linux.sh
