@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # Copyright (c) 2012 The Chromium Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -302,7 +302,7 @@ def main(args):
 
   # Serve until the client tells us to stop. When it does, it will give us an
   # errorcode.
-  print 'Serving %s on %s...' % (options.serve_dir, server.GetURL(''))
+  print('Serving %s on %s...' % (options.serve_dir, server.GetURL('')))
   return server.ServeForever()
 
 if __name__ == '__main__':
