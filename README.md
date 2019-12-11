@@ -176,7 +176,7 @@ RAWWAVE_PATH=/home/mkg/stk/rawwaves
 If csound.node fails to build, you may also need to add the NPM bin directory to
 your PATH variable so that CMake can find node-gyp.
 
-Change to your csound-extended repository and execute `fresh-build-linux.sh`,
+Change to your csound-extended repository and execute `fresh-build-linux-release.sh`,
 which does the following:
 
 1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever
