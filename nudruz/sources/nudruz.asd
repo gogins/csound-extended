@@ -28,7 +28,6 @@
     "bordeaux-threads"
     "cffi"
     "cl-heredoc"
-    "clmath"
     "cm2"
     "csound"
     "fomus"

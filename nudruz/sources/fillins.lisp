@@ -49,15 +49,45 @@ defined in Vinjar's release of Common Music 2."
         (if recurse
             (map-subcontainers fn o :key key :recurse recurse))))
     (values))
+    
+(defun gen-poisson-variate (mean &optional (*random-state* *random-state*))
+  "Generate a pseudo-random number from a Poisson distribution
+with mean M:
+
+               K   - M
+              M  %E
+       P(K) = --------
+                 K!
+
+ MEAN       = Mean (M) of the distribution, M >= 0
+ STATE      = random state to use.
+
+ The output is an integer.
+"
+  (declare (type (double-float 0d0) mean))
+  (let ((threshold 30d0))
+    (cond ((< mean threshold)
+	   ;; Direct generation
+	   (let ((limit (exp (- mean))))
+	     (do ((prod (random 1d0))
+		  (n 1 (+ n 1)))
+		 ((<= prod limit)
+		  (- n 1))
+	       (declare (fixnum n)
+			(type (double-float 0d0) prod))
+	       (setf prod (* prod (random 1d0))))))
+	  (t
+	   ;; Indirect generation
+	   (let* ((alpha #.(coerce 7/8 'double-float)) ; Suggested value
+		  (order (floor (* alpha mean)))
+		  (x (gen-gamma-variate (dfloat order))))
+	     (declare (fixnum order))
+	     (if (< x mean)
+		 (+ order (gen-poisson-variate (- mean x)))
+		 (gen-binomial-variate (1- order)
+				       (/ mean x))))))))
   
-(if (not (boundp 'gen-poisson-variate))
-    (defun gen-poisson-variate (lambda_ &optional (*random-state* *random-state*)) 
-"Returns a random sample from the CLMATH:POISSON-RANDOM-NUMBER function. 
-This function is used in the NUDRUZ system and used to be found in the CLOCC 
-system, but as CLOCC lacks a good out of the box experience, CLOCC functions 
-will be replaced by other fill-ins as they are identified."
-        (clmath:poisson-random-number lambda_)))
-        
+
 (defgeneric duration-seconds (sequence) 
     (:documentation "Returns the duration of the sequence in seconds.")
     )
