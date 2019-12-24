@@ -3,11 +3,11 @@
 
 /**
  * This header file only library declares and defines a system for creatng
- * fixed audio signal flow graphs in C++, e.g. to use for writing Csound 
- * plugin opcodes. The objective is to be as efficient as possible. Efficiency
- * comes from compiling the order of processing into a fixed list, and
- * processing each Node's block of sample frames before moving to another Node.
- * This also enables simplicity.
+ * fixed-topology audio signal flow graphs in C++, e.g. to use for writing 
+ * Csound plugin opcodes. The objective is to be as efficient as possible. 
+ * Efficiency comes from compiling the order of processing into a fixed list, 
+ * and processing each Node's block of sample frames before moving to the 
+ * next Node. This also enables simplicity.
  */
 
 #include <Eigen/Core>
@@ -15,6 +15,8 @@ USING_PART_OF_NAMESPACE_EIGEN
 #include <vector>
 
 namespace silence {
+    
+const double PI = 3.141592653589793238463;    
 
 /**
  * Base class for nodes in a fixed audio signal flow graph.
@@ -82,7 +84,7 @@ struct Node {
 
 /**
  * Contains, compiles, and runs a fixed-topology audio signal flow graph
- * of Nodes. All outlet to inlet connections must first have been defined.
+ * of Nodes. All outlet-to-inlet connections must first have been defined.
  * Note that inlet -> self -> outlet, so outlet is a no-op though it helps
  * determine the order of processing, which is done in this order:
  * (1) The entire graph is compiled into a tick list.
@@ -110,7 +112,7 @@ struct Graph {
         root_node = root;
         std::vector<Node *> initial_tick_list;
         root_node->compile(initial_tick_list);
-        // Simply omit later references to redundant Nodes.
+        // Simply omit later instances of redundant Node references.
         tick_list.clear();
         foreach(Node * node in initial_tick_list) {
             if (tick_list.find(node) == tick_list.end()) {
@@ -119,7 +121,7 @@ struct Graph {
         }
         // Compute each node's initial state from its initial independent variables.
         foreach (Node *node in tick_list) {
-            node->initialize(frames_per_second, frames_per_block, channels_per_frame)
+            node->initialize(frames_per_second, frames_per_block, channels_per_frame);
         }
     }
     virtual void process(int frames_per_second, int frames_per_block, int channels_per_frame) {
@@ -154,12 +156,65 @@ struct AudioInlet : AudioOutlet {
 /**
  * Parametric equalizer.
  */
-struct ParametricFilter {
+struct ParametricEqualizer {
     AudioInlet inlet;
     AudioOutlet outlet;
+    typedef enum {
+        LOWPASS = 1,
+        HIGHPASS,
+        BANDPASS,
+    } FILTER_TYPE;
+    FILTER_TYPE filter_type = LOWPASS;
+    double omega;
+    double K;
+    double b0;
+    double b1;
+    double b2;
+    double a0;
+    double a1;
+    double a2;
+    double kc;
+    double V;
+    double Q;
     ParametricFilter() {
         add_input(&inlet);
         outlet.add_input(this);
+    };
+    virtual void initialize(int frames_per_second, int frames_per_block, int channels_per_frame) {
+        if (filter_type == LOWPASS) {
+            omega = 2.* PI * kc / frames_per_second;
+            K = std::tan(omega / 2.);
+            b0 = 1. + std::sqrt(2. * V) * K + V * K^2.;
+            b1 = 2. * (V * K^2 - 1.);
+            b2 = 1. - std::sqrt(2. * V) * K + V * K^2.;
+            a0 = 1. + K / Q + K^2.;
+            a1 = 2. * (K^2. - 1.);
+            a2 = 1. - K / Q + K^2.;
+        } else if (filter_type == HIGHPASS) {
+            omega = 2 * PI * kc / frames_per_second;
+            K = std::tan((PI - omega) / 2.);
+            b0 = 1. + std::sqrt(2. * V) * K + V * K^2.;
+            b1 = -2. * (V * K^2. - 1.);
+            b2 = 1. - std::sqrt(2. * V) * K + V * K^2.;
+            a0 = 1. + K / Q + K^2.;
+            a1 = -2. * (K^2. - 1.);
+            a2 = 1. - K / Q + K^2.;
+        } else if (filter_type == BANDPASS) {
+            omega = 2. * PI * kc / frames_per_second;
+            K = std::tan(omega / 2.);
+            b0 = 1. + V * K / 2. + K^2.;
+            b1 = 2. * (K^2. - 1.);
+            b2 = 1. - V * K / 2. + K^2.;
+            a0 = 1. + K / Q + K^2.;
+            a1 = 2. * (K^2. - 1.);
+            a2 = 1 - K/Q + K^2
+        proces
+    virtual void process(int frames_per_second, int frames_per_block, int channels_per_frame) {
+        for (int channel = 0; channel < channels_per_frame; ++channel) {
+            for (int frame = 0; frame < frames_per_block; ++frame) {
+                outlet.value(channel, frame) = inlet.value(channel, frame);
+            }
+        }
     };
 };
 
@@ -174,7 +229,7 @@ struct Equalizer {
     ParametricFilter eq4;
     ParametricFilter eq5;
     ParametricFilter eq6;
-    ParametricFilter eq7;
+    proceseq7;
     ParametricFilter eq8;
     ParametricFilter eq9;
     ParametricFilter eq10;
@@ -223,8 +278,18 @@ struct RandomDelay : Node {
 };
 
 struct MeshEQ : Node {
-    
-}
+    AudioInlet upInlet;
+    AudioInlet leftInlet;
+    AudioInlet rightInlet;
+    AudioInlet downInlet;
+    AudioOutlet upOutlet;
+    AudioOutlet leftOutlet;
+    AudioOutlet rightOutlet;
+    AudioOutlet downOutlet;
+    MeshEQ() {
+        
+    }
+};
 
 
 };

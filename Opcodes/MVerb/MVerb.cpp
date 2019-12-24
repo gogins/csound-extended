@@ -21,6 +21,11 @@
     02110-1301 USA
  */
 #include "OpcodeBase.hpp"
+#include <Gamma/Gamma.h>
+#include <Gamma/Analysis.h>
+#include <Gamma/Filter.h>
+#include <Gamma/Delay.h>
+#include <Gamma/Scheduler.h>
 
 using namespace csound;
 
@@ -41,62 +46,34 @@ using namespace csound;
  * opcode meshEQ,aaaa,aaaaak ;4 audio outs and 5 audio ins one k-rate in for FB value, use for boundary nodes
  * opcode randomdel,a,a
  *
+ * This opcode requires the Gamma library for audio signal processing.
+ *
  */
  
-/**
- * The UnitGenerator class represents one node in a fixed signal flow graph.
- * Initialization and ticking are done depth-first, at each node 
- * delegating to a node-local version of the function, one block per tick. 
- * Processing is performed in the node_tick function, one frame per tick.
- */
-struct UnitGenerator {
-    std::vector<double> input;
-    std::vector<double> output;
-    std::vector<UnitGenerator *> sources;
-    virtual void add_source(UnitGenerator &source) {
-        sources.push_back(&source);
-    };
-    virtual void graph_initialize(int frames_per_sample, int frames_per_second) {
-        input.resize(frames_per_sample);
-        output.resize(frames_per_sample);
-        for (UnitGenerator *source : sources) {
-            source->graph_initialize(frames_per_sample, frames_per_second);
-        }
-        node_initialize(frames_per_sample, frames_per_second);
-    };
-    virtual void node_initialize(int frames_per_sample, int frames_per_second) {
-    };
-    virtual void graph_tick(int frames_per_sample, int frames_per_second) {
-        for (UnitGenerator *source : sources) {
-            source->graph_tick(frames_per_sample, frames_per_second);
-        }
-        for (frame = 0; frame < frames_per_sample; ++frame) {
-            node_tick(output[frame], input[frame], frames_per_second);
-        }
-    };
-    virtual void node_tick(double &out, double &in, int frames_per_second) {
-        out = in;
-    };
- };
-struct ParametricEqualizer : UnitGenerator {
-};
-struct Equalizer : UnitGenerator {
-    ParametricEqualizer bands[10];
-    for (int i = 0; i < 10; ++i) {
-        add_source(&bands[i]);
-    }
-};
-struct RandomDelayLine : UnitGenerator {
-};
-struct MultitapDelayLine : UnitGenerator {
-};
-struct ScatteringJunction : UnitGenerator {
-};
-struct Preset {
-    
+struct Balance : gam::
+    gam::EnvFollow rms_source;
+    gam::EnvFollow rms_comparator;
 };
 
-struct ScatteringJunction {
+struct EQ {
+    gam::Biquad<> pareq;
+};
+
+struct MeshEQ {
+    gam::Comb<> delay_up;
+    gam::Comb<> delay_right;
+    gam::Comb<> delay_down;
+    gam::Comb<> delay_left;
+    Balance balance;
+    gam::BlockDC<> dcblock;
+};
+
+
+struct RandomDelay {
+    gam::Comb delay;
+};
+
+struct Preset {
     
 };
 
@@ -104,16 +81,25 @@ class MVerb  : public OpcodeBase<MVerb>
 {
 public:
   // Outputs.
-  audio_output;
   // Inputs.
-  audio_input;
   // State.
-  ScatteringJunction xxx;
+  gam::Scheduler scheduler;
   MYFLT onedrms;
   MYFLT dbfs;
   MVerb() {}
   int init(CSOUND *csound)
   {
+      // Order of processing:
+      // 25 Random delays
+      // 25 Multitap delays
+      // 5 MeshEQs each with
+      //    4 Variable delays
+      //    4 EQs
+      //        10 Biquad filters
+      //        2 DCBlock
+      //        2 Balance
+      // 2 DCBlock
+      
       return OK;
   }
   int kontrol(CSOUND *csound)
@@ -127,14 +113,14 @@ extern "C" {
   PUBLIC int csoundModuleInit_mverb(CSOUND *csound)
   {
       int status = csound->AppendOpcode(csound,
-                                        (char*)"ampmidid.k",
-                                        sizeof(KAMPMIDID),
+                                        (char*)"MVerb",
+                                        sizeof(MVerb),
                                         0,
                                         3,
                                         (char*)"k",
                                         (char*)"kio",
-                                        (int(*)(CSOUND*,void*)) KAMPMIDID::init_,
-                                        (int(*)(CSOUND*,void*)) KAMPMIDID::kontrol_,
+                                        (int(*)(CSOUND*,void*)) MVerb::init_,
+                                        (int(*)(CSOUND*,void*)) MVerb::kontrol_,
                                         (int (*)(CSOUND*,void*)) 0);
       return status;
   }
