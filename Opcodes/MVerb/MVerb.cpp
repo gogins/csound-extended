@@ -27,7 +27,7 @@
 #include <cmath>
 
 /**
- * Implements Jon Christopher Nelsons MVerb opcode in C++.
+ * Implements Jon Christopher Nelson's MVerb opcode in C++.
  * 
  * MVerb is a plugin that is based on a modified five-by-five 2D waveguide 
  * mesh developed in Csound within the Cabbage framework. MVerb is highly 
@@ -36,10 +36,6 @@
  * simulation of metallic plates or cymbals. The plugin incorporates a 10-band
  * parametric EQ for timbral control and delay randomization to create more 
  * unusual effects.
- *
- * opcode EQ,a,a ;1 audio out, 1 audio in ;get k-rate data through chnget arguments
- * opcode meshEQ,aaaa,aaaaak ;4 audio outs and 5 audio ins one k-rate in for FB value, use for boundary nodes
- * opcode randomdel,a,a
  *
  * This opcode requires the Gamma library for audio signal processing.
  *
@@ -151,9 +147,9 @@ static std::map<std::string, Preset> &presets() {
         presets_["Comby 1"] = {8, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, .99, 1, 3.85, .9, 1, 1};
         presets_["Comby 2"] = {9, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, 275, .995, 1, 2.85, .9, 1, 1};
         presets_["Octaves"] = {10, 320, 80, 320, 80, 2560, 640, 40, 2560, 10240, 80, 2560, 640, 160, 1280, 160, 640, 5120, 320, 40, 10240, 1280, 40, 5120, 320, 160, .995, 1, 70, .9, 1, 2};
-        presets_["Tritones"] = {};
-        presets_["Big Dark"] = {};
-        presets_["Metallic"] = {};
+        presets_["Tritones"] = {11, 369.99, 92.5, 370, 185, 65.41, 32.7, 261.63, 46.25, 261.63, 1046.5, 739.99, 1479.98, 130.81, 65.41, 23.13, 92.5, 46.25, 130.81, 185, 32.7, 65.41, 130.81, 523.25, 184.99, 92.5, .975, 1, 90, .9, 1, 3};
+        presets_["Big Dark"] = {12, 41, 3.84, 50.28, 2.38, 19.71, 3.83, 83.27, 16.93, 27.95, 4.33, 88.41, 39.93, 95.02, 93.99, 84.19, 3.38, 79.5, 69.39, 32.79, 8.32, 97.16, 3.23, 28.84, 8.46, 71.69, .96, 1, 4, .5, 10, 2};
+        presets_["Metallic"] = {13, 361.6, 66.9, 679.5, 251.6, 395.3, 166.4, 123.9, 314.6, 262.5, 182.9, 245.4, 40.4, 435.5, 253.9, 350.5, 527.1, 628.3, 365.2, 71.6, 699.6, 684.8, 560.1, 408.4, 55.4, 190, .995, 1, 35, .9, 3, 3};
         presets_["Weird 1"] = {};
         presets_["Weird 2"] = {};
         presets_["Weird 3"] = {};
@@ -210,6 +206,12 @@ struct EqualizerPreset {
     MYFLT gain[10];
 };
 
+struct MasterPreset {
+    Preset preset;
+    EarlyReturnPreset earlyReturnPreset;
+    EqualizerPreset equalizerPreset;
+};
+
 static std::map<std::string, EqualizerPreset> &equalizerPresets() {
     static bool initialized = false;
     static std::map<std::string, EqualizerPreset> presets_;
@@ -230,17 +232,96 @@ static std::map<std::string, EqualizerPreset> &equalizerPresets() {
     return presets_;
 };
 
+/*
+opcode randomdel,a,a
+adel xin
+krand chnget "random"
+krslow chnget "rslow"
+krfast chnget "rfast"
+krmax chnget "rmax"
+if krand=1 then
+atime randomi krslow,krfast,krfast  ;calculate random cps
+adelayA randi krmax,atime   ;calculate value changes expressed as 0-.95
+adel=adel+(adel*adelayA)
+else
+xout adel
+endif
+endop
+*/
+
+
+struct RandomizeDelay {
+    Preset preset;
+    void initialize(CSOUND *csound, Preset preset_) {
+    };
+    void process(CSOUND *csound);
+    
+};
+
 struct Multitaps {
-    gam::Multitap<> multitap[25];
+    gam::Delay<> delay;
+    std::vector<MYFLT> times;
+    std::vector<MYFLT> gains;
+    int tap_count = 0;
+    MasterPreset master_preset;
+    void initialize(CSOUND *csound, const std::vector<MYFLT> &parameters, MasterPreset master_preset_) {
+        master_preset = master_preset_;
+        MYFLT maximum_delay = 0;
+        for (int i = 0, n = parameters.size(); i < n; ) {
+            if (maximum_delay < parameters[i]) {
+                maximum_delay = parameters[i];
+            }
+            times.push_back(parameters[i]);
+            ++i;
+            gains.push_back(parameters[i]);
+            ++i;
+            ++tap_count;
+        }
+        delay.delay(maximum_delay + .1);
+    }
+    virtual MYFLT operator () (MYFLT in) {
+        delay(in);
+        MYFLT result = 0;
+        for (int tap = 0; tap < tap_count; ++tap) {
+            result += (delay.read(times[tap]) * gains[tap] * master_preset.preset.ERamp);
+        }
+        return result;        
+    }
 };
 
-struct MeshNode {
-    
-    
+struct MeshEQ {
+    gam::Delay<> delay[4];
+    Equalizer equalizer[4];
+    void initialize(CSOUND *csound, MasterPreset masterPreset_) {
+        delay[0].maxDelay(1.);
+        delay[1].maxDelay(1.);
+        delay[2].maxDelay(1.);
+        delay[3].maxDelay(1.);
+        equalizer[0].initialize(csound, masterPreset_);
+    };
+    void operator () (
+        /* Outputs: */
+        MYFLT &aUout, MYFLT &aRout, MYFLT &aDout, MYFLT &aLout, 
+        /* Inputs: */ 
+        MYFLT aUin, MYFLT aRin, MYFLT aDin, MYFLT aLin, MYFLT adel, MYFLT kFB) {
+            MYFLT afactor = (aUin + aRin + aDin + aLin) * -.5;
+            delay[0](aUin + afactor);
+            aUout = delay[0].read(adel);
+            delay[1](aRin + afactor);
+            aRout = delay[1].read(adel);
+            delay[2](aDin + afactor);
+            aDout = delay[2].read(adel);
+            delay[3](aLin + afactor);
+            aLout = delay[3].read(adel);
+            aUout = equalizer[0](aUout) * kFB;
+            aUout = equalizer[1](aUout) * kFB;
+            aUout = equalizer[2](aUout) * kFB;
+            aUout = equalizer[3](aUout) * kFB;
+    };
 };
-
+  
 // The order of processing is:
-// 25 multitap delays.
+// 2 multitap delays.
 // 25 mesh nodes, each with:
 //      4 variable delays, with randomized delay times.
 //      4 equalizers, each with:
@@ -251,29 +332,144 @@ struct MeshNode {
 
 struct MVerb {
     bool initialized = false;
-    Preset preset;
-    EarlyReturnPreset earlyReturnPreset;
-    EqualizerPreset equalizerPreset;
+    CSOUND *csound = nullptr;
+    MasterPreset master_preset;
     MYFLT left_in = 0;
     MYFLT right_in = 0;
     MYFLT left_out = 0;
     MYFLT right_out = 0;
+    Multitaps multitaps_left;
+    Multitaps multitaps_right;
+    int frames_per_second = 0;
+    MYFLT seconds_per_frame = 0;
+    int frames_per_block = 0;
+    MYFLT aAU = 0.;
+    MYFLT aAR = 0.;   
+    MYFLT aAD = 0.; 
+    MYFLT aAL = 0.;
+    MYFLT aBU = 0.;
+    MYFLT aBR = 0.;   
+    MYFLT aBD = 0.; 
+    MYFLT aBL = 0.;
+    MYFLT aCU = 0.;
+    MYFLT aCR = 0.;   
+    MYFLT aCD = 0.; 
+    MYFLT aCL = 0.;
+    MYFLT aDU = 0.;
+    MYFLT aDR = 0.;   
+    MYFLT aDD = 0.; 
+    MYFLT aDL = 0.;
+    MYFLT aEU = 0.;
+    MYFLT aER = 0.;   
+    MYFLT aED = 0.; 
+    MYFLT aEL = 0.;
+    MYFLT aFU = 0.;
+    MYFLT aFR = 0.;   
+    MYFLT aFD = 0.; 
+    MYFLT aFL = 0.;
+    MYFLT aGU = 0.;
+    MYFLT aGR = 0.;   
+    MYFLT aGD = 0.; 
+    MYFLT aGL = 0.;
+    MYFLT aHU = 0.;
+    MYFLT aHR = 0.;   
+    MYFLT aHD = 0.; 
+aHL = 0.;
+aIU = 0.;
+aIR = 0.;   
+aID = 0.; 
+aIL = 0.;
+aJU = 0.;
+aJR = 0.;   
+aJD = 0.; 
+aJL = 0.;
+aKU = 0.;
+aKR = 0.;   
+aKD = 0.; 
+aKL = 0.;
+aLU = 0.;
+aLR = 0.;   
+aLD = 0.; 
+aLL = 0.;
+aMU = 0.;
+aMR = 0.;   
+aMD = 0.; 
+aML = 0.;
+aNU = 0.;
+aNR = 0.;   
+aND = 0.; 
+aNL = 0.;
+aOU = 0.;
+aOR = 0.;   
+aOD = 0.; 
+aOL = 0.;
+aPU = 0.;
+aPR = 0.;   
+aPD = 0.; 
+aPL = 0.;
+aQU = 0.;
+aQR = 0.;   
+aQD = 0.; 
+aQL = 0.;
+aRU = 0.;
+aRR = 0.;   
+aRD = 0.; 
+aRL = 0.;
+aSU = 0.;
+aSR = 0.;   
+aSD = 0.; 
+aSL = 0.;
+aTU = 0.;
+aTR = 0.;   
+aTD = 0.; 
+aTL = 0.;
+aUU = 0.;
+aUR = 0.;   
+aUD = 0.; 
+aUL = 0.;
+aVU = 0.;
+aVR = 0.;   
+aVD = 0.; 
+aVL = 0.;
+aWU = 0.;
+aWR = 0.;   
+aWD = 0.; 
+aWL = 0.;
+aXU = 0.;
+aXR = 0.;   
+aXD = 0.; 
+aXL = 0.;
+aYU = 0.;
+aYR = 0.;   
+aYD = 0.; 
+aYL = 0.;
+
     
-    void initialize(CSOUND *csound) {
+    void initialize(CSOUND *csound_) {
         if (initialized == false) {
+            initialized = true;
+            csound = csound_;
+            frames_per_second = csound->GetSr(csound);
+            seconds_per_frame = 1.0 / MYFLT(frames_per_second);
+            frames_per_block = csound->GetKsmps(csound);
+            gam::sampleRate(frames_per_second);
         };
     };
     void set_preset(const char *name) {
-        preset = presets()[name];
+        master_preset.preset = presets()[name];
     };
     void set_early_return_preset(const char *name) {
-        earlyReturnPreset = earlyReturnPresets()[name];
+        master_preset.earlyReturnPreset = earlyReturnPresets()[name];
+        multitaps_left.initialize(csound, master_preset.earlyReturnPreset.taps_left, master_preset);
+        multitaps_right.initialize(csound, master_preset.earlyReturnPreset.taps_right, master_preset);
     };
     void set_equalizer_preset(const char *name) {
-        equalizerPreset = equalizerPresets()[name];
+        master_preset.equalizerPreset = equalizerPresets()[name];
     };
     void process(CSOUND *csound) {
-        
+        MYFLT out_left = multitap_left(*left_in);
+        MYFLT out_right = multitap_right(*right_in);
+         
     };
     void control(CSOUND *csound, const char *parameter, MYFLT value) {
     };
