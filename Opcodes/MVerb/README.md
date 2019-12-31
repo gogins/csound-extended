@@ -21,8 +21,13 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset [[, Sparameter, xvalue ],..
 
 *Spreset* -- Name of a built-in preset, one of: "Small Hall", "Medium Hall", 
             "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", 
-            "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench"
-"Small Hall", "Medium Hall", "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench".
+            "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", 
+            "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", 
+            "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", 
+            "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", 
+            "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", 
+            "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", 
+            "Frying Pan", "Squeak", "Trellace", "Monkey Wrench".
 
 The order of initialization is:
 
@@ -42,8 +47,8 @@ The order of initialization is:
 *aintright* - Right channel of the input signal.
 
 *[[, Sparameter, xvalue ],...]* -- Any number of the following control 
-parameters, as *name, value* pairs. These are real-valued unless they are 
-strings.
+                                   parameters, as *name, value* pairs. These 
+                                   are real-valued unless they are strings.
 
 - *mix* -- Fraction of the output signal that is not processed.
 - *res1* -- Resonant frequency of node 1 in the mesh.
