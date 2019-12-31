@@ -24,9 +24,13 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
 
 - Default
 
- 
+The order of initialization is:
 
- 
+1. Default values of preset fields.
+2. User choice of preset.
+3. Default value of non-preset "control channels" (opcode parameters).
+4. User-defined opcode parameters (see below).
+
 ## Performance
 
 *aoutleft* - Left channel of the output signal.
@@ -49,21 +53,14 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
  1. 2 DC blockers for the stereo input signal.
  2. 2 multitap delays for early reflections.
  3. 25 mesh nodes for the reverb, each with:
-  4. 4 variable delays, with optionally randomized delay times.
-  5. 4 equalizers, each with:
-   6. 10 parametric equalizers (biquad filters).
-   7. 1 level balancer.
-   8. 1 DC blocker.
+    4. 4 variable delays, with optionally randomized delay times.
+    5. 4 equalizers, each with:
+       6. 10 parametric equalizers (biquad filters).
+       7. 1 level balancer.
+       8. 1 DC blocker.
  9. 2 DC blockers for the stereo output signal.
 
- The order of initialization is:
-
- 1. Default values of preset fields.
- 2. User choice of preset.
- 3. Default value of non-preset "control channels" (opcode parameters).
- 4. User-defined opcode parameters.
-    
-
+ 
 
 ## Credits
 
@@ -71,3 +68,10 @@ Jon Christopher Nelson wrote the original Cabbage VST plugin.
 
 Michael Gogins adapted Nelson's plugin as a Csound plugin opcode in C++.
 
+The order of initialization is:
+
+ 1. Default values of preset fields.
+ 2. User choice of preset.
+ 3. Default value of non-preset "control channels" (opcode parameters).
+ 4. User-defined opcode parameters.
+    
