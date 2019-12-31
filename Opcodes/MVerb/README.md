@@ -53,11 +53,11 @@ The order of processing is:
 1. 2 DC blockers for the stereo input signal.
 2. 2 multitap delays for early reflections.
 3. 25 mesh nodes for the reverb, each with:
-3.1 4 variable delays, with optionally randomized delay times.
-3.2 4 equalizers, each with:
-   3.2.1 10 parametric equalizers (biquad filters).
-   3.2.2 1 level balancer.
-   3.2.3 1 DC blocker.
+    3.1 4 variable delays, with optionally randomized delay times.
+    3.2 4 equalizers, each with:
+        3.2.1 10 parametric equalizers (biquad filters).
+        3.2.2 1 level balancer.
+        3.2.3 1 DC blocker.
 9. 2 DC blockers for the stereo output signal.
 
 ## Credits
