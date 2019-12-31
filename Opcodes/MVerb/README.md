@@ -19,9 +19,8 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
 ```
 ## Initialization
 
-*Spreset* -- Name of a built-in preset, one of:
-
-- Default
+*Spreset* -- Name of a built-in preset, one of: "Small Hall", "Medium Hall", "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench"
+"Small Hall", "Medium Hall", "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench".
 
 The order of initialization is:
 
@@ -65,12 +64,13 @@ strings.
 - *res23* -- Resonant frequency of node 23 in the mesh.
 - *res24* -- Resonant frequency of node 24 in the mesh.
 - *res25* -- Resonant frequency of node 25 in the mesh.
-- *FB* -- Delay feedback.
-- *DFact* -- Delay factor.
-- *Q* -- Q of the equalizer filters.
+- *ERselect* -- Name of the early reflections preset, one of: "None","Small","Medium","Large","Huge","Long Random","Short Backwards","Long Backwards","Strange1","Strange2".
 - *ERamp* -- Amplitude of early reflections.
-- *ERselect* -- Name of the early reflections preset, one of:
-- *EQselect* -- Name of the equalization preset, one of:
+- *DFact* -- Amount (size) of early reflections.
+- *FB* -- Delay feedback (size) of mesh.
+- *FBclear* -- Amount by which delay lines are attenuated.
+- *Q* -- Q of the equalizer filters.
+- *EQselect* -- Name of the equalization preset, one of: "flat", "high cut 1", "high cut 2", "low cut 1", "low cut 2", "band pass 1", "band pass 2", "2 bands", "3 bands", "evens", "odds".
 - *eq1* -- Gain of equalizer band 1.
 - *eq2* -- Gain of equalizer band 2.
 - *eq3* -- Gain of equalizer band 3.
@@ -82,9 +82,9 @@ strings.
 - *eq9* -- Gain of equalizer band 9.
 - *eq10* -- Gain of equalizer band 10.
 - *random* -- Whether (1) or not (0) the randomization of mesh delays is enabled.
-- *rslow* -- Lower limit of mesh delay randomization frequency.
-- *rfast* -- Upper limit of mesh delay randomization frequency.;
-- *FBclear* -- Amount by which feedback delays are cleared.
+- *rslow* -- Lower limit of frequency of randomization of mesh delay times.
+- *rfast* -- Upper limit of frequency of randomization of mesh delay times.
+- *rmax* -- Maximum deviation of mesh delay times. 
     
 The order of processing is:
 
