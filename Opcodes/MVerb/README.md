@@ -15,9 +15,9 @@ plates or cymbals. The plugin incorporates a 10-band parametric equalizer for
 timbral control and delay randomization to create more unusual effects.
 
 ## Syntax
-```
+#```
 aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue ],...]
-```
+```#
 ## Initialization
 
 *Spreset* -- Name of a built-in preset, one of:
@@ -29,10 +29,10 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
  
 ## Performance
 
-#aoutleft# - Left channel of the output signal.
-#aoutright# - Right channel of the output signal.
+*aoutleft* - Left channel of the output signal.
+*aoutright* - Right channel of the output signal.
 
-#[[, Sparameter, xvalue ],...]# - Any number of control parameters, as name-value pairs:
+*[[, Sparameter, xvalue ],...]* -- Any number of control parameters, as name-value pairs:
 
 - *mix* -- Fraction of the output signal that is processed.
 - *res1*...res25 -- Resonant frequency of nodes 1 through 25 in the waveguide mesh.
