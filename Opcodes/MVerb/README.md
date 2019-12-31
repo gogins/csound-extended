@@ -28,8 +28,8 @@ The order of initialization is:
 
 1. Default values of all parameters.
 2. The user's choice of *Spreset* determines most parameters.
-3. The user can override any default or preset parameters using optional 
-   opcode parameters.
+3. The user can override any number of default or preset parameters using 
+   optional opcode parameters.
 
 ## Performance
 
