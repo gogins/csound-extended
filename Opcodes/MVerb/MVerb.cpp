@@ -246,8 +246,12 @@ struct RandomizeDelay {
     MYFLT rslow = 0.;
     MYFLT rfast = 0.;
     MYFLT rmax = 0.;
-
-    void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
+    gam::Upsample<> upsampler;
+    void initialize(MYFLT rand_, MYFLT rslow_, MYFLT rfast_, MYFLT rmax_) {
+        rand = (bool) rand_;
+        rslow = rslow_;
+        rfast = rfast_;
+        rmax = rmax_;
     };
     MYFLT operator () (MYFLT adel) {
         if (rand == true) {
@@ -303,9 +307,11 @@ struct Equalizer {
     Balance balance;
     gam::BlockDC<> blockdc;
     void initialize(CSOUND *csound, const MasterPreset &masterPreset) {
+        // Adjust nominal Q.
+        MYFLT adjusted_q = (masterPreset.preset.Q * .1) * .5;
         biquad[0].type(gam::LOW_SHELF);
         biquad[0].freq(   40.);
-        biquad[0].res(masterPreset.preset.Q);
+        biquad[0].res(adjusted_q);
         biquad[0].level(masterPreset.equalizerPreset.gain[0]);
         biquad[1].type(gam::PEAKING);
         biquad[1].freq(   80.);
@@ -313,35 +319,35 @@ struct Equalizer {
         biquad[1].level(masterPreset.equalizerPreset.gain[1]);
         biquad[2].type(gam::PEAKING);
         biquad[2].freq(  160.);
-        biquad[2].res(masterPreset.preset.Q);
+        biquad[2].res(adjusted_q);
         biquad[2].level(masterPreset.equalizerPreset.gain[2]);
         biquad[3].type(gam::PEAKING);
         biquad[3].freq(  320.);
-        biquad[3].res(masterPreset.preset.Q);
+        biquad[3].res(adjusted_q);
         biquad[3].level(masterPreset.equalizerPreset.gain[3]);
         biquad[4].type(gam::PEAKING);
         biquad[4].freq(  640.);
-        biquad[4].res(masterPreset.preset.Q);
+        biquad[4].res(adjusted_q);
         biquad[4].level(masterPreset.equalizerPreset.gain[4]);
         biquad[5].type(gam::PEAKING);
         biquad[5].freq( 1280.);
-        biquad[5].res(masterPreset.preset.Q);
+        biquad[5].res(adjusted_q);
         biquad[5].level(masterPreset.equalizerPreset.gain[5]);
         biquad[6].type(gam::PEAKING);
         biquad[6].freq( 2560.);
-        biquad[6].res(masterPreset.preset.Q);
+        biquad[6].res(adjusted_q);
         biquad[6].level(masterPreset.equalizerPreset.gain[6]);
         biquad[7].type(gam::PEAKING);
         biquad[7].freq( 5120.);
-        biquad[7].res(masterPreset.preset.Q);
+        biquad[7].res(adjusted_q);
         biquad[7].level(masterPreset.equalizerPreset.gain[7]);
         biquad[8].type(gam::PEAKING);
         biquad[8].freq(10240.);
-        biquad[8].res(masterPreset.preset.Q);
+        biquad[8].res(adjusted_q);
         biquad[8].level(masterPreset.equalizerPreset.gain[8]);
         biquad[9].type(gam::HIGH_SHELF);
         biquad[9].freq(20480.);
-        biquad[9].res(masterPreset.preset.Q);
+        biquad[9].res(adjusted_q);
         biquad[9].level(masterPreset.equalizerPreset.gain[9]);
     };
     MYFLT operator () (MYFLT input) {
@@ -396,6 +402,8 @@ struct MVerb {
     MYFLT seconds_per_frame = 0;
     int frames_per_block = 0;
     MasterPreset master_preset;
+    std::vector<std::string> early_return_presets_for_numbers = {"None", "Small", "Medium", "Large", "Huge", "Long Random", "Short Backwards", "Long Backwards", "Strange1", "Strange2"}; 
+    std::vector<std::string> equalizer_presets_for_numbers = {"flat", "high cut 1", "high cut 2", "low cut 1", "low cut 2", "band pass 1", "band pass 2", "2 bands", "3 bands", "evens", "odds"};
     MYFLT in_left = 0;
     MYFLT in_right = 0;
     MYFLT out_left = 0;
@@ -551,7 +559,7 @@ struct MVerb {
     MYFLT krfast = 0.;
     MYFLT krmax = 0.;
     // All user-controllable parameters, whether in a preset struct or not,
-    // are updated from here.
+    // are updated from here by reference.
     std::map<std::string, MYFLT *> parameter_values_for_names;
     void initialize(CSOUND *csound_) {
         if (initialized == false) {
@@ -636,6 +644,7 @@ struct MVerb {
         }
         gkFX = 1. - gksource;
         master_preset.preset.FB = master_preset.preset.FB * (1. - kdelclear);       
+        
     };
     void set_preset(const char *name) {
         master_preset.preset = presets()[name];
@@ -643,6 +652,12 @@ struct MVerb {
             mesheq[i].initialize(csound, master_preset);
             randomize_delay[i].initialize(csound, master_preset);
         }
+        auto early_return_preset_index = int(master_preset.preset.ERSelect) - 1;
+        auto early_return_preset_name = early_return_presets_for_numbers[early_return_preset_index];
+        set_early_return_preset(early_return_preset_name.c_str());
+        auto equalizer_preset_index = int(master_preset.preset.EQSelect) - 1;
+        auto equalizer_preset_name = equalizer_presets_for_numbers[equalizer_preset_index];
+        set_equalizer_preset(equalizer_preset_name.c_str());
     };
     void set_early_return_preset(const char *name) {
         master_preset.earlyReturnPreset = earlyReturnPresets()[name];
