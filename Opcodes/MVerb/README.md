@@ -30,6 +30,7 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
 ## Performance
 
 *aoutleft* - Left channel of the output signal.
+
 *aoutright* - Right channel of the output signal.
 
 *[[, Sparameter, xvalue ],...]* -- Any number of control parameters, as name-value pairs:
@@ -45,15 +46,15 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
     
  The order of processing is:
 
- 2 DC blockers for the stereo input signal.
- 2 multitap delays for early reflections.
- 25 mesh nodes for the reverb, each with:
-      4 variable delays, with optionally randomized delay times.
-      4 equalizers, each with:
-          10 parametric equalizers (biquad filters).
-          1 level balancer.
-          1 DC blocker.
- 2 DC blockers for the stereo output signal.
+ 1. 2 DC blockers for the stereo input signal.
+ 2. 2 multitap delays for early reflections.
+ 3. 25 mesh nodes for the reverb, each with:
+ 4.      4 variable delays, with optionally randomized delay times.
+ 5.      4 equalizers, each with:
+ 6.          10 parametric equalizers (biquad filters).
+ 7.          1 level balancer.
+ 8.          1 DC blocker.
+ 9. 2 DC blockers for the stereo output signal.
 
  The order of initialization is:
 
