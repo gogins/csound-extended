@@ -15,7 +15,7 @@ timbral control and delay randomization to create more unusual effects.
 
 ## Syntax
 ```
-aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue ],...]
+aoutleft, aoutright MVerb ainleft, ainright, Spreset [[, Sparameter, xvalue ],...]
 ```
 ## Initialization
 
@@ -28,13 +28,17 @@ The order of initialization is:
 
 1. Default values of all parameters.
 2. The user's choice of preset determines most parameters.
-3. The user can override any parameter(s) using opcode parameters.
+3. The user can override any parameter(s) using optional opcode parameters.
 
 ## Performance
 
 *aoutleft* - Left channel of the output signal.
 
 *aoutright* - Right channel of the output signal.
+
+*ainleft* - Left channel of the input signal.
+
+*aintright* - Right channel of the input signal.
 
 *[[, Sparameter, xvalue ],...]* -- Any number of the following control 
 parameters, as *name, value* pairs. These are real-valued unless they are 
