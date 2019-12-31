@@ -389,25 +389,6 @@ struct MeshEQ {
     };
 };
 
-// The order of processing is:
-//
-// 2 DC blockers.
-// 2 multitap delays for early reflections.
-// 25 mesh nodes for the reverb, each with:
-//      4 variable delays, with optionally randomized delay times.
-//      4 equalizers, each with:
-//          10 parametric equalizers (biquad filters).
-//          1 level balancer.
-//          1 DC blocker.
-// 2 DC blockers.
-//
-// The order of initialization is:
-//
-// 1. Default values of preset fields.
-// 2. User choice of preset.
-// 3. Default value of non-preset "control channels" (opcode parameters).
-// 4. User-defined opcode parameters.
-
 struct MVerb {
     bool initialized = false;
     CSOUND *csound = nullptr;

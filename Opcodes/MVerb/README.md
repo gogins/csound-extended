@@ -7,12 +7,12 @@ MVerb - Implements Jon Christopher Nelson's waveguide mesh reverb.
 Implements Jon Christopher Nelson's waveguide mesh reverb, originally created 
 as a Cabbage VST plugin, as a C++ Csound plugin opcode.
 
-MVerb is a plugin opcode that is based on a modified five-by-five 2D waveguide 
-mesh developed in Csound using the Cabbage framework. MVerb is highly flexible 
-and can generate compelling and unique reverberation effects ranging from 
-traditional spaces to infinite morphing spaces or the simulation of metallic 
-plates or cymbals. The plugin incorporates a 10-band parametric equalizer for 
-timbral control and delay randomization to create more unusual effects.
+MVerb is a modified five-by-five 2D waveguide mesh reverberation effect. It is 
+highly flexible and can generate compelling and unique effects timbres ranging 
+from traditional spaces to infinite morphing spaces or the simulation of 
+metallic plates or cymbals. The plugin incorporates a 10-band parametric 
+equalizer for timbral control and delay randomization to create more unusual 
+effects.
 
 ## Syntax
 ```
@@ -42,11 +42,31 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
     MYFLT ERamp;
     MYFLT ERSelect;
     MYFLT EQSelect;
+    
+ The order of processing is:
+
+ 2 DC blockers for the stereo input signal.
+ 2 multitap delays for early reflections.
+ 25 mesh nodes for the reverb, each with:
+      4 variable delays, with optionally randomized delay times.
+      4 equalizers, each with:
+          10 parametric equalizers (biquad filters).
+          1 level balancer.
+          1 DC blocker.
+ 2 DC blockers for the stereo output signal.
+
+ The order of initialization is:
+
+ 1. Default values of preset fields.
+ 2. User choice of preset.
+ 3. Default value of non-preset "control channels" (opcode parameters).
+ 4. User-defined opcode parameters.
+    
 
 
 ## Credits
 
-Original Csound user-defined VST plugin by Jon Christopher Nelson.
+Jon Christopher Nelson wrote the original Cabbage VST plugin.
 
-Adaptation to C++ plugin opcode by Michael Gogins.
+Michael Gogins adapted Nelson's plugin as a Csound plugin opcode in C++.
 
