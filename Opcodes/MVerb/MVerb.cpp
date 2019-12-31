@@ -30,7 +30,8 @@
 #include <vector>
 
 /**
- * Implements Jon Christopher Nelson's MVerb opcode in C++.
+ * Implements Jon Christopher Nelson's MVerb opcode, created as a Cabbage VST
+ * plugin, as a C++ Csound plugin opcode.
  *
  * MVerb is a plugin opcode that is based on a modified five-by-five 2D
  * waveguide mesh developed in Csound within the Cabbage framework. MVerb is
@@ -40,18 +41,11 @@
  * parametric EQ for timbral control and delay randomization to create more
  * unusual effects.
  *
+ * This opcode uses the same Csound control channels as the original MVerb
+ * plugin, but the channel names are prefixed "MVerb_" to create a channel
+ * namespace.
+ *
  * This opcode requires the Gamma library for audio signal processing.
- *
- * NOTES
- *
- * In MVerb.csd presets can be varied at run time but not stored under new
- * names. Perhaps as VSTs they can be.
- *
- * Nelson's paper talks about increasing channel counts, but I'm not sure how
- * to do this with the correct signal routing. I suspect that stereo is a
- * 2-cube or square, 4 channels would be a 4-cube, and so on. The number of
- * values needing to be stored in presets would grow exponentially... not
- * doing this, keeping to stereo here.
  *
  */
 
@@ -252,8 +246,14 @@ krslow chnget "rslow"
 krfast chnget "rfast"
 krmax chnget "rmax"
 if krand=1 then
-atime randomi krslow,krfast,krfast  ;calculate random cps
-adelayA randi krmax,atime   ;calculate value changes expressed as 0-.95
+; Generates a user-controlled random number series with interpolation between each new number.
+; xcps is the frequency of sampling the random variable.
+; ares randomi kmin, kmax, xcps [,imode] [,ifirstval]
+atime randomi krslow,krfast,krfast ; calculate random cps
+; Generates a controlled random number series with interpolation between each new number.
+; xcps is the frequency of sampling the random variable.
+; randi xamp, xcps [, iseed] [, isize] [, ioffset]
+adelayA randi krmax,atime   ; calculate value changes expressed as 0-.95
 adel=adel+(adel*adelayA)
 else
 xout adel
@@ -261,21 +261,21 @@ endif
 endop
 */
 
-
 struct RandomizeDelay {
     bool rand = false;
     MYFLT rslow = 0.;
     MYFLT rfast = 0.;
     MYFLT rmax = 0.;
-    
+
     void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
     };
     MYFLT operator () (MYFLT adel) {
         if (rand == true) {
-            MYFLT atime; 
+            MYFLT atime;
+            MYFLT adelayA;
             MYFLT output = adel + (adel * adelayA);
         } else {
-            return input;
+            return adel;
         }
     };
 
@@ -410,36 +410,45 @@ struct MeshEQ {
 };
 
 // The order of processing is:
-// 2 multitap delays.
-// 25 mesh nodes, each with:
+//
+// 2 DC blockers.
+// 2 multitap delays for early reflections.
+// 25 mesh nodes for the reverb, each with:
 //      4 variable delays, with optionally randomized delay times.
 //      4 equalizers, each with:
 //          10 parametric equalizers (biquad filters).
 //          1 level balancer.
 //          1 DC blocker.
 // 2 DC blockers.
+//
+// The order of initialization is:
+// 1. Default values of preset fields.
+// 2. User choice of preset structure(s).
+// 3. Default value of non-preset "control channels" (opcode parameters).
+// 4. User-defined opcode parameters.
 
 struct MVerb {
     bool initialized = false;
     CSOUND *csound = nullptr;
+    int frames_per_second = 0;
+    MYFLT seconds_per_frame = 0;
+    int frames_per_block = 0;
     MasterPreset master_preset;
     MYFLT in_left = 0;
     MYFLT in_right = 0;
     MYFLT out_left = 0;
     MYFLT out_right = 0;
-    MYFLT ga1mix = 0;
-    MYFLT ga2mix = 0;
-    MYFLT garev1 = 0;
-    MYFLT garev2 = 0;
+    gam::BlockDC<> blockdc_in_left;
+    gam::BlockDC<> blockdc_in_right;
     Multitaps multitaps_left;
     Multitaps multitaps_right;
-    MeshEQ mesheq[25];
     RandomizeDelay randomize_delay[25];
-    gam::BlockDC<> blockdc_left;
-    gam::BlockDC<> blockdc_right;
-    int frames_per_second = 0;
-    MYFLT seconds_per_frame = 0;
-    int frames_per_block = 0;
+    MeshEQ mesheq[25];
+    gam::BlockDC<> blockdc_out_left;
+    gam::BlockDC<> blockdc_out_right;
+    // State variables.
+    MYFLT ga1mix = 0;
+    MYFLT ga2mix = 0;
     MYFLT aL = 0.;
     MYFLT aR = 0.;
     MYFLT aAU = 0.;
@@ -567,6 +576,22 @@ struct MVerb {
     MYFLT adel23 = 0.;
     MYFLT adel24 = 0.;
     MYFLT adel25 = 0.;
+    MYFLT garev1 = 0.;
+    MYFLT garev2 = 0.;
+    // Control channels not in presets.
+    MYFLT gkFX = 0.;
+    MYFLT gksource = 0.75;
+    MYFLT kDFact = 0.;
+    MYFLT kFB = .25;
+    MYFLT kdelclear = .1;  
+    MYFLT krand = 0.;
+    MYFLT krslow = 0.;
+    MYFLT krfast = 0.;
+    MYFLT krmax = 0.;
+    // All user-controllable parameters, whether in a preset struct or not,
+    // are updated from here.
+    std::map<std::string, MYFLT *> parameter_values_for_names;
+    std::map<std::string, MYFLT> prior_parameter_values_for_names;
     void initialize(CSOUND *csound_) {
         if (initialized == false) {
             initialized = true;
@@ -575,7 +600,69 @@ struct MVerb {
             seconds_per_frame = 1.0 / MYFLT(frames_per_second);
             frames_per_block = csound->GetKsmps(csound);
             gam::sampleRate(frames_per_second);
+            // Preset.
+            parameter_values_for_names["mix"] = &gksource;
+            parameter_values_for_names["res1"] = &master_preset.preset.res1;
+            parameter_values_for_names["res2"] = &master_preset.preset.res1;
+            parameter_values_for_names["res3"] = &master_preset.preset.res1;
+            parameter_values_for_names["res4"] = &master_preset.preset.res1;
+            parameter_values_for_names["res5"] = &master_preset.preset.res1;
+            parameter_values_for_names["res6"] = &master_preset.preset.res1;
+            parameter_values_for_names["res7"] = &master_preset.preset.res1;
+            parameter_values_for_names["res8"] = &master_preset.preset.res1;
+            parameter_values_for_names["res9"] = &master_preset.preset.res1;
+            parameter_values_for_names["res10"] = &master_preset.preset.res1;
+            parameter_values_for_names["res11"] = &master_preset.preset.res1;
+            parameter_values_for_names["res12"] = &master_preset.preset.res1;
+            parameter_values_for_names["res13"] = &master_preset.preset.res1;
+            parameter_values_for_names["res14"] = &master_preset.preset.res1;
+            parameter_values_for_names["res15"] = &master_preset.preset.res1;
+            parameter_values_for_names["res16"] = &master_preset.preset.res1;
+            parameter_values_for_names["res17"] = &master_preset.preset.res1;
+            parameter_values_for_names["res18"] = &master_preset.preset.res1;
+            parameter_values_for_names["res19"] = &master_preset.preset.res1;
+            parameter_values_for_names["res20"] = &master_preset.preset.res1;
+            parameter_values_for_names["res21"] = &master_preset.preset.res1;
+            parameter_values_for_names["res22"] = &master_preset.preset.res1;
+            parameter_values_for_names["res23"] = &master_preset.preset.res1;
+            parameter_values_for_names["FB"] = &master_preset.preset.FB;
+            parameter_values_for_names["EQselect"] = &master_preset.preset.EQSelect;
+            parameter_values_for_names["ERselect"] = &master_preset.preset.ERSelect;
+            parameter_values_for_names["random"] = &krand;
+            parameter_values_for_names["rslow"] = &krslow;
+            parameter_values_for_names["rfast"] = &krfast;
+            parameter_values_for_names["rmax"] = &krmax;
+            parameter_values_for_names["FBclear"] = &kdelclear;
+            // EqualizerPreset.
+            parameter_values_for_names["eq1"] = &master_preset.equalizerPreset.gain[0];
+            parameter_values_for_names["eq2"] = &master_preset.equalizerPreset.gain[1];
+            parameter_values_for_names["eq3"] = &master_preset.equalizerPreset.gain[2];
+            parameter_values_for_names["eq4"] = &master_preset.equalizerPreset.gain[3];
+            parameter_values_for_names["eq5"] = &master_preset.equalizerPreset.gain[4];
+            parameter_values_for_names["eq6"] = &master_preset.equalizerPreset.gain[5];
+            parameter_values_for_names["eq7"] = &master_preset.equalizerPreset.gain[6];
+            parameter_values_for_names["eq8"] = &master_preset.equalizerPreset.gain[7];
+            parameter_values_for_names["eq9"] = &master_preset.equalizerPreset.gain[8];
+            parameter_values_for_names["eq10"] = &master_preset.equalizerPreset.gain[9];
+            // Not in a preset struct.
         };
+    };
+    void read_control_channels(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
+        for (int parameter_index = 0; parameter_index < parameter_count; ) {
+            STRINGDAT *stringdat = (STRINGDAT*) parameters[parameter_index];
+            std::string name = stringdat->data;
+            ++parameter_index;
+            MYFLT *value = parameters[parameter_index];
+            ++parameter_index;
+            // For some parameters, we only want to do something if the value actually changes.
+            if (name == "EQselect") {
+            } else if (name == "ERselect") {
+            }
+            // For the other paramters, just write to their addresses.
+            
+        }
+        gkFX = 1. - gksource;
+        kFB = kFB * (1. - kdelclear);       
     };
     void set_preset(const char *name) {
         master_preset.preset = presets()[name];
@@ -583,8 +670,6 @@ struct MVerb {
             mesheq[i].initialize(csound, master_preset);
             randomize_delay[i].initialize(csound, master_preset);
         }
-        gkFX=1-gksource
-
     };
     void set_early_return_preset(const char *name) {
         master_preset.earlyReturnPreset = earlyReturnPresets()[name];
@@ -594,9 +679,17 @@ struct MVerb {
     void set_equalizer_preset(const char *name) {
         master_preset.equalizerPreset = equalizerPresets()[name];
     };
-    void process(CSOUND *csound) {
-        aL = multitaps_left(in_left);
-        aR = multitaps_right(in_right);
+    void operator () (CSOUND *csound,
+                      /* Outputs: */
+                      MYFLT &out_left,
+                      MYFLT &out_right,
+                      /* Inputs: */
+                      MYFLT a1,
+                      MYFLT a2) {
+        ga1mix = blockdc_in_left(ga1mix + a1);
+        ga2mix = blockdc_in_left(ga2mix + a2);
+        aL = multitaps_left(ga1mix);
+        aR = multitaps_right(ga2mix);
         mesheq[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, adel1, master_preset.preset.FB);
         mesheq[ 1](aBU, aBR, aBD, aBL, aBU, aCL, aGU, aAR, adel2, master_preset.preset.FB);
         mesheq[ 2](aCU, aCR, aCD, aCL, aCU, aDL, aHU, aBR, adel3, master_preset.preset.FB);
@@ -622,14 +715,10 @@ struct MVerb {
         mesheq[22](aWU, aWR, aWD, aWL, aRD, aXL, aWD, aVR, adel23, master_preset.preset.FB);
         mesheq[23](aXU, aXR, aXD, aXL, aSD, aYL, aXD, aWR, adel24, master_preset.preset.FB);
         mesheq[24](aYU, aYR, aYD, aYL, aTD, aYR, aYD, aXR, adel25, master_preset.preset.FB);
-        garev1 = blockdc_left(aGL)
-        garev2 = blockdc_right(aIR)
+        garev1 = blockdc_out_left(aGL);
+        garev2 = blockdc_out_right(aIR);
         out_left  = (garev1 * gkFX) + (ga1mix * gksource);
-        out_right = (garev2 * gkFX) + (ga2mix * gksource); 
-
-    
-    };
-    void control(CSOUND *csound, const char *parameter, MYFLT value) {
+        out_right = (garev2 * gkFX) + (ga2mix * gksource);
     };
 };
 
@@ -643,11 +732,10 @@ public:
     MYFLT *in_left;
     MYFLT *in_right;
     STRINGDAT *preset;
-    STRINGDAT *early_return_preset;
-    STRINGDAT *equalizer_preset;
-    STRINGDAT *parameter;
-    MYFLT *value;
-    // State.
+    // These will be alternating name-value pairs, and 
+    // the number of pairs will be INOCOUNT / 2.
+    MYFLT *parameters[VARGMAX-4];
+    // State. This C++ object does all the real work.
     MVerb *mverb;
     int init(CSOUND *csound)
     {
@@ -656,12 +744,22 @@ public:
         }
         mverb->initialize(csound);
         mverb->set_preset(preset->data);
-        mverb->set_early_return_preset(early_return_preset->data);
-        mverb->set_equalizer_preset(equalizer_preset->data);
+        //mverb->set_early_return_preset(early_return_preset->data);
+        //mverb->set_equalizer_preset(equalizer_preset->data);
         return OK;
     }
     int kontrol(CSOUND *csound)
     {
+        // The Csound control channels in the Cabbage version of MVerb here 
+        // become opcode parameters. Many have default values or are also 
+        // set upon choice of preset. Hence the MVerb opcode signature is 
+        // "aaSN", i.e. the input signal, the initial preset name, and any 
+        // combination of what used to be channels, as name-value pairs. The 
+        // prints opcode shows how to handle "N", i.e. an arbitrary list of 
+        // opcode parameters.
+        if (mverb != nullptr) {
+            mverb->read_control_channels(csound, parameters, opds.optext->t.inArgCount);
+        }
         int frame_index = 0;
         for( ; frame_index < kperiodOffset(); ++frame_index) {
             out_right[frame_index] = 0;
@@ -669,12 +767,15 @@ public:
         }
         for( ; frame_index < kperiodEnd(); ++frame_index) {
             if (mverb != nullptr) {
-                mverb->in_left = in_left[frame_index];
-                mverb->in_right = in_right[frame_index];
-                mverb->process(csound);
-                out_right[frame_index] = mverb->out_right;
-                out_left[frame_index] = mverb->out_left;
-            } 
+                (*mverb)(csound,
+                         out_left[frame_index],
+                         out_right[frame_index],
+                         in_left[frame_index],
+                         in_right[frame_index]);
+            } else {
+                out_left[frame_index] = in_left[frame_index];
+                out_right[frame_index] = in_right[frame_index];
+            }
         }
         for( ; frame_index < ksmps(); ++frame_index) {
             out_right[frame_index] = 0;
@@ -694,7 +795,7 @@ extern "C" {
                                           0,
                                           3,
                                           (char*)"aa",
-                                          (char*)"aaSSS",
+                                          (char*)"aaSN",
                                           (int(*)(CSOUND*,void*)) MVerbOpcode::init_,
                                           (int(*)(CSOUND*,void*)) MVerbOpcode::kontrol_,
                                           (int (*)(CSOUND*,void*)) 0);
