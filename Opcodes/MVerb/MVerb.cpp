@@ -591,7 +591,6 @@ struct MVerb {
     // All user-controllable parameters, whether in a preset struct or not,
     // are updated from here.
     std::map<std::string, MYFLT *> parameter_values_for_names;
-    std::map<std::string, MYFLT> prior_parameter_values_for_names;
     void initialize(CSOUND *csound_) {
         if (initialized == false) {
             initialized = true;
@@ -626,13 +625,11 @@ struct MVerb {
             parameter_values_for_names["res22"] = &master_preset.preset.res1;
             parameter_values_for_names["res23"] = &master_preset.preset.res1;
             parameter_values_for_names["FB"] = &master_preset.preset.FB;
-            parameter_values_for_names["EQselect"] = &master_preset.preset.EQSelect;
+            parameter_values_for_names["DFact"] = &master_preset.preset.DFact;
+            parameter_values_for_names["Q"] = &master_preset.preset.Q;
+            parameter_values_for_names["ERamp"] = &master_preset.preset.ERamp;
             parameter_values_for_names["ERselect"] = &master_preset.preset.ERSelect;
-            parameter_values_for_names["random"] = &krand;
-            parameter_values_for_names["rslow"] = &krslow;
-            parameter_values_for_names["rfast"] = &krfast;
-            parameter_values_for_names["rmax"] = &krmax;
-            parameter_values_for_names["FBclear"] = &kdelclear;
+            parameter_values_for_names["EQselect"] = &master_preset.preset.EQSelect;
             // EqualizerPreset.
             parameter_values_for_names["eq1"] = &master_preset.equalizerPreset.gain[0];
             parameter_values_for_names["eq2"] = &master_preset.equalizerPreset.gain[1];
@@ -644,25 +641,39 @@ struct MVerb {
             parameter_values_for_names["eq8"] = &master_preset.equalizerPreset.gain[7];
             parameter_values_for_names["eq9"] = &master_preset.equalizerPreset.gain[8];
             parameter_values_for_names["eq10"] = &master_preset.equalizerPreset.gain[9];
-            // Not in a preset struct.
+            // EarlyReturnPreset values are not user-configurable.
+            // The following parameters are not stored in a preset struct.
+            parameter_values_for_names["mix"] = &gksource;
+            parameter_values_for_names["random"] = &krand;
+            parameter_values_for_names["rslow"] = &krslow;
+            parameter_values_for_names["rfast"] = &krfast;
+            parameter_values_for_names["rmax"] = &krmax;
+            parameter_values_for_names["FBclear"] = &kdelclear;
         };
     };
     void read_control_channels(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
         for (int parameter_index = 0; parameter_index < parameter_count; ) {
-            STRINGDAT *stringdat = (STRINGDAT*) parameters[parameter_index];
+            STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
             std::string name = stringdat->data;
             ++parameter_index;
-            MYFLT *value = parameters[parameter_index];
+            MYFLT *new_value = parameters[parameter_index];
             ++parameter_index;
-            // For some parameters, we only want to do something if the value actually changes.
-            if (name == "EQselect") {
-            } else if (name == "ERselect") {
+            // We only update a parameter if its value has changed.
+            // TODO: Handle STRINGDAT memory?
+            auto current_value = parameter_values_for_names[name];
+            if (*new_value != *current_value) {
+                *current_value = *new_value;
+                if (name == "EQselect") {
+                    STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
+                    set_equalizer_preset(stringdat->data);
+                } else if (name == "ERselect") {
+                    STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
+                    set_early_return_preset(stringdat->data);
+                } 
             }
-            // For the other paramters, just write to their addresses.
-            
         }
         gkFX = 1. - gksource;
-        kFB = kFB * (1. - kdelclear);       
+        master_preset.preset.FB = master_preset.preset.FB * (1. - kdelclear);       
     };
     void set_preset(const char *name) {
         master_preset.preset = presets()[name];
