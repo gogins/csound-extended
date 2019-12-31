@@ -19,7 +19,9 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
 ```
 ## Initialization
 
-*Spreset* -- Name of a built-in preset, one of: "Small Hall", "Medium Hall", "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench"
+*Spreset* -- Name of a built-in preset, one of: "Small Hall", "Medium Hall", 
+            "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", 
+            "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench"
 "Small Hall", "Medium Hall", "Large Hall", "Huge Hall", "Infinite Space", "Dry Echo", "Right-Left", "Comby 1", "Comby 2", "Octaves", "TriTones", "Big Dark", "Metallic 1", "Weird 1", "Weird 2", "Weird 3", "Large Cymbal 1", "Large Cymbal 2", "Splash Cymbal 1", "Splash Cymbal 2", "Turkish Cymbal", "Gong", "Small Gong", "Metallic 2", "Tubular Metallic", "Cowbell", "Finger Cymbal", "Bell", "Chinese Ball", "Cymbal Cap", "Baking Sheet", "Frying Pan", "Squeak", "Trellace", "Monkey Wrench".
 
 The order of initialization is:
