@@ -20,7 +20,7 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
 ```
 ## Initialization
 
-#Spreset# - Name of a built-in preset, one of:
+*Spreset* -- Name of a built-in preset, one of:
 
 - Default
 
@@ -34,8 +34,8 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset a, a[[, Sparameter, xvalue 
 
 #[[, Sparameter, xvalue ],...]# - Any number of control parameters, as name-value pairs:
 
-- #mix# - Fraction of the output signal that is processed.
-- #res1#...res25 - Resonant frequency of nodes 1 through 25 in the waveguide mesh.
+- *mix* -- Fraction of the output signal that is processed.
+- *res1*...res25 -- Resonant frequency of nodes 1 through 25 in the waveguide mesh.
     MYFLT FB;
     MYFLT DFact;
     MYFLT Q;
