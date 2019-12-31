@@ -27,8 +27,9 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset [[, Sparameter, xvalue ],..
 The order of initialization is:
 
 1. Default values of all parameters.
-2. The user's choice of preset determines most parameters.
-3. The user can override any parameter(s) using optional opcode parameters.
+2. The user's choice of *Spreset* determines most parameters.
+3. The user can override any default or preset parameters using optional 
+   opcode parameters.
 
 ## Performance
 
@@ -90,7 +91,7 @@ strings.
 - *random* -- Whether (1) or not (0) the randomization of mesh delays is enabled.
 - *rslow* -- Lower limit of frequency of randomization of mesh delay times.
 - *rfast* -- Upper limit of frequency of randomization of mesh delay times.
-- *rmax* -- Maximum deviation of mesh delay times. 
+- *rmax* -- Maximum random deviation of mesh delay times. 
     
 The order of processing is:
 
