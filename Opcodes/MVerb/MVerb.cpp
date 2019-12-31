@@ -29,26 +29,6 @@
 #include <string>
 #include <vector>
 
-/**
- * Implements Jon Christopher Nelson's MVerb opcode, created as a Cabbage VST
- * plugin, as a C++ Csound plugin opcode.
- *
- * MVerb is a plugin opcode that is based on a modified five-by-five 2D
- * waveguide mesh developed in Csound within the Cabbage framework. MVerb is
- * highly flexible and can generate compelling and unique reverberation
- * effects ranging from traditional spaces to infinite morphing spaces or the
- * simulation of metallic plates or cymbals. The plugin incorporates a 10-band
- * parametric EQ for timbral control and delay randomization to create more
- * unusual effects.
- *
- * This opcode uses the same Csound control channels as the original MVerb
- * plugin, but the channel names are prefixed "MVerb_" to create a channel
- * namespace.
- *
- * This opcode requires the Gamma library for audio signal processing.
- *
- */
-
 struct Preset {
     MYFLT number;
     MYFLT res1;
@@ -422,8 +402,9 @@ struct MeshEQ {
 // 2 DC blockers.
 //
 // The order of initialization is:
+//
 // 1. Default values of preset fields.
-// 2. User choice of preset structure(s).
+// 2. User choice of preset.
 // 3. Default value of non-preset "control channels" (opcode parameters).
 // 4. User-defined opcode parameters.
 
@@ -651,7 +632,7 @@ struct MVerb {
             parameter_values_for_names["FBclear"] = &kdelclear;
         };
     };
-    void read_control_channels(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
+    void read_opcode_parameters(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
         for (int parameter_index = 0; parameter_index < parameter_count; ) {
             STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
             std::string name = stringdat->data;
@@ -743,7 +724,7 @@ public:
     MYFLT *in_left;
     MYFLT *in_right;
     STRINGDAT *preset;
-    // These will be alternating name-value pairs, and 
+    // These will be arbitrary name-value pairs, and 
     // the number of pairs will be INOCOUNT / 2.
     MYFLT *parameters[VARGMAX-4];
     // State. This C++ object does all the real work.
@@ -769,7 +750,7 @@ public:
         // prints opcode shows how to handle "N", i.e. an arbitrary list of 
         // opcode parameters.
         if (mverb != nullptr) {
-            mverb->read_control_channels(csound, parameters, opds.optext->t.inArgCount);
+            mverb->read_opcode_parameters(csound, parameters, opds.optext->t.inArgCount);
         }
         int frame_index = 0;
         for( ; frame_index < kperiodOffset(); ++frame_index) {
