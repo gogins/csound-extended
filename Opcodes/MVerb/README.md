@@ -64,7 +64,7 @@ strings.
 - *res23* -- Resonant frequency of node 23 in the mesh.
 - *res24* -- Resonant frequency of node 24 in the mesh.
 - *res25* -- Resonant frequency of node 25 in the mesh.
-- *ERselect* -- Name of the early reflections preset, one of: "None","Small","Medium","Large","Huge","Long Random","Short Backwards","Long Backwards","Strange1","Strange2".
+- *ERselect* -- Name of the early reflections preset, one of: "None", "Small", "Medium", "Large", "Huge", "Long Random", "Short Backwards", "Long Backwards", "Strange1", "Strange2".
 - *ERamp* -- Amplitude of early reflections.
 - *DFact* -- Amount (size) of early reflections.
 - *FB* -- Delay feedback (size) of mesh.
