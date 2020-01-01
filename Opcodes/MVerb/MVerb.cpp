@@ -19,6 +19,15 @@
     License along with Csound; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
     02110-1301 USA
+    
+    TODO:
+    
+    Implement Balance unit generator.
+    
+    Ensure that shared library is built with correct flags and installed.
+    
+    Test.
+    
  */
 #include "OpcodeBase.hpp"
 #define GAMMA_H_INC_ALL 1
@@ -196,6 +205,16 @@ struct MasterPreset {
     Preset preset;
     EarlyReturnPreset earlyReturnPreset;
     EqualizerPreset equalizerPreset;
+    // Control parameters not in sub-presets.
+    MYFLT gkFX = 0.;
+    MYFLT gksource = 0.75;
+    MYFLT kDFact = 0.;
+    MYFLT kFB = .25;
+    MYFLT kdelclear = .1;  
+    MYFLT krand = 0.;
+    MYFLT krslow = 0.;
+    MYFLT krfast = 0.;
+    MYFLT krmax = 0.;
 };
 
 static std::map<std::string, EqualizerPreset> &equalizerPresets() {
@@ -218,48 +237,64 @@ static std::map<std::string, EqualizerPreset> &equalizerPresets() {
     return presets_;
 };
 
-/*
-opcode randomdel,a,a
-adel xin
-krand chnget "random"
-krslow chnget "rslow"
-krfast chnget "rfast"
-krmax chnget "rmax"
-if krand=1 then
-; Generates a user-controlled random number series with interpolation between each new number.
-; xcps is the frequency of sampling the random variable.
-; ares randomi kmin, kmax, xcps [,imode] [,ifirstval]
-atime randomi krslow,krfast,krfast ; calculate random cps
-; Generates a controlled random number series with interpolation between each new number.
-; xcps is the frequency of sampling the random variable.
-; randi xamp, xcps [, iseed] [, isize] [, ioffset]
-adelayA randi krmax,atime   ; calculate value changes expressed as 0-.95
-adel=adel+(adel*adelayA)
-else
-xout adel
-endif
-endop
-*/
-
-struct RandomizeDelay {
-    bool rand = false;
-    MYFLT rslow = 0.;
-    MYFLT rfast = 0.;
-    MYFLT rmax = 0.;
-    gam::Upsample<> upsampler;
-    void initialize(MYFLT rand_, MYFLT rslow_, MYFLT rfast_, MYFLT rmax_) {
-        rand = (bool) rand_;
-        rslow = rslow_;
-        rfast = rfast_;
-        rmax = rmax_;
+/**
+ * Adds interpolated random deviations to a value. The timing and magnitude of 
+ * deviations is set by the user.
+ */
+struct RandomDeviation {
+    const MasterPreset *masterPreset;
+    gam::Accum<> frequency_phasor;
+    gam::Accum<> magnitude_phasor; 
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> frequency_distribution;
+    std::uniform_real_distribution<double> deviation_distribution;
+    MYFLT deviation_frequency = 0.;
+    MYFLT prior_deviation_frequency = 0;
+    MYFLT deviation_magnitude = 0.95;
+    MYFLT prior_deviation_magnitude = 0;
+    void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
+        masterPreset = &masterPreset_;
+        /*
+        opcode randomdel,a,a
+        adel xin
+        krand chnget "random"
+        krslow chnget "rslow"
+        krfast chnget "rfast"
+        krmax chnget "rmax"
+        if krand=1 then
+        atime randomi krslow,krfast,krfast  ;calculate random cps
+        adelayA randi krmax,atime   ;calculate value changes expressed as 0-.95
+        adel=adel+(adel*adelayA)
+        else
+        xout adel
+        endif
+        endop
+        */
+        frequency_distribution.param(std::uniform_real_distribution<double>::param_type(masterPreset->krslow, masterPreset->krfast));
+        prior_deviation_frequency = frequency_distribution(generator);
+        frequency_phasor.freq(masterPreset->krfast);
+        deviation_distribution.param(std::uniform_real_distribution<double>::param_type(.0, masterPreset->krmax));
+        prior_deviation_magnitude = deviation_distribution(generator);
+        magnitude_phasor.freq(prior_deviation_frequency);
     };
-    MYFLT operator () (MYFLT adel) {
-        if (rand == true) {
-            MYFLT atime;
-            MYFLT adelayA;
-            MYFLT output = adel + (adel * adelayA);
+    MYFLT operator () (MYFLT value) {
+        if (masterPreset->krand == true) {
+            if (frequency_phasor()) {
+                prior_deviation_frequency = deviation_frequency;
+                deviation_frequency = frequency_distribution(generator);
+                deviation_distribution.param(std::uniform_real_distribution<double>::param_type(0., masterPreset->krmax));
+                
+            }
+            MYFLT current_deviation_frequency = prior_deviation_frequency + ((prior_deviation_frequency - deviation_frequency) / frequency_phasor.phase());
+            magnitude_phasor.freq(current_deviation_frequency);
+            if (magnitude_phasor()) {
+                prior_deviation_magnitude = deviation_magnitude;
+                deviation_magnitude = deviation_distribution(generator);
+            }
+            MYFLT current_deviation = prior_deviation_magnitude + ((prior_deviation_magnitude - deviation_magnitude) / magnitude_phasor.phase());
+            value = value + (value * current_deviation);
         } else {
-            return adel;
+            return value;
         }
     };
 
@@ -270,9 +305,9 @@ struct Multitaps {
     std::vector<MYFLT> times;
     std::vector<MYFLT> gains;
     int tap_count = 0;
-    MasterPreset master_preset;
+    const MasterPreset *master_preset;
     void initialize(CSOUND *csound, const std::vector<MYFLT> &parameters, const MasterPreset &master_preset_) {
-        master_preset = master_preset_;
+        master_preset = &master_preset_;
         MYFLT maximum_delay = 0;
         for (int i = 0, n = parameters.size(); i < n; ) {
             if (maximum_delay < parameters[i]) {
@@ -290,7 +325,7 @@ struct Multitaps {
         delay(in);
         MYFLT result = 0;
         for (int tap = 0; tap < tap_count; ++tap) {
-            result += (delay.read(times[tap]) * gains[tap] * master_preset.preset.ERamp);
+            result += (delay.read(times[tap]) * gains[tap] * master_preset->preset.ERamp);
         }
         return result;
     }
@@ -412,7 +447,7 @@ struct MVerb {
     gam::BlockDC<> blockdc_in_right;
     Multitaps multitaps_left;
     Multitaps multitaps_right;
-    RandomizeDelay randomize_delay[25];
+    RandomDeviation randomize_delay[25];
     MeshEQ mesheq[25];
     gam::BlockDC<> blockdc_out_left;
     gam::BlockDC<> blockdc_out_right;
@@ -548,16 +583,6 @@ struct MVerb {
     MYFLT adel25 = 0.;
     MYFLT garev1 = 0.;
     MYFLT garev2 = 0.;
-    // Control channels not in presets.
-    MYFLT gkFX = 0.;
-    MYFLT gksource = 0.75;
-    MYFLT kDFact = 0.;
-    MYFLT kFB = .25;
-    MYFLT kdelclear = .1;  
-    MYFLT krand = 0.;
-    MYFLT krslow = 0.;
-    MYFLT krfast = 0.;
-    MYFLT krmax = 0.;
     // All user-controllable parameters, whether in a preset struct or not,
     // are updated from here by reference.
     std::map<std::string, MYFLT *> parameter_values_for_names;
@@ -570,7 +595,7 @@ struct MVerb {
             frames_per_block = csound->GetKsmps(csound);
             gam::sampleRate(frames_per_second);
             // Preset.
-            parameter_values_for_names["mix"] = &gksource;
+            parameter_values_for_names["mix"] = &master_preset.gksource;
             parameter_values_for_names["res1"] = &master_preset.preset.res1;
             parameter_values_for_names["res2"] = &master_preset.preset.res1;
             parameter_values_for_names["res3"] = &master_preset.preset.res1;
@@ -613,12 +638,12 @@ struct MVerb {
             parameter_values_for_names["eq10"] = &master_preset.equalizerPreset.gain[9];
             // EarlyReturnPreset values are not user-configurable.
             // The following parameters are not stored in a preset struct.
-            parameter_values_for_names["mix"] = &gksource;
-            parameter_values_for_names["random"] = &krand;
-            parameter_values_for_names["rslow"] = &krslow;
-            parameter_values_for_names["rfast"] = &krfast;
-            parameter_values_for_names["rmax"] = &krmax;
-            parameter_values_for_names["FBclear"] = &kdelclear;
+            parameter_values_for_names["mix"] = &master_preset.gksource;
+            parameter_values_for_names["random"] = &master_preset.krand;
+            parameter_values_for_names["rslow"] = &master_preset.krslow;
+            parameter_values_for_names["rfast"] = &master_preset.krfast;
+            parameter_values_for_names["rmax"] = &master_preset.krmax;
+            parameter_values_for_names["FBclear"] = &master_preset.kdelclear;
         };
     };
     void read_opcode_parameters(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
@@ -642,8 +667,8 @@ struct MVerb {
                 } 
             }
         }
-        gkFX = 1. - gksource;
-        master_preset.preset.FB = master_preset.preset.FB * (1. - kdelclear);       
+        master_preset.gkFX = 1. - master_preset.gksource;
+        master_preset.preset.FB = master_preset.preset.FB * (1. - master_preset.kdelclear);       
         
     };
     void set_preset(const char *name) {
@@ -705,8 +730,8 @@ struct MVerb {
         mesheq[24](aYU, aYR, aYD, aYL, aTD, aYR, aYD, aXR, adel25, master_preset.preset.FB);
         garev1 = blockdc_out_left(aGL);
         garev2 = blockdc_out_right(aIR);
-        out_left  = (garev1 * gkFX) + (ga1mix * gksource);
-        out_right = (garev2 * gkFX) + (ga2mix * gksource);
+        out_left  = (garev1 * master_preset.gkFX) + (ga1mix * master_preset.gksource);
+        out_right = (garev2 * master_preset.gkFX) + (ga2mix * master_preset.gksource);
     };
 };
 
