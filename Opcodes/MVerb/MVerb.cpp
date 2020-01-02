@@ -285,7 +285,6 @@ struct RandomDeviation {
                 prior_deviation_frequency = deviation_frequency;
                 deviation_frequency = frequency_distribution(generator);
                 deviation_distribution.param(std::uniform_real_distribution<float>::param_type(0., masterPreset->krmax));
-                
             }
             float current_deviation_frequency = prior_deviation_frequency + ((prior_deviation_frequency - deviation_frequency) / frequency_phasor.phase());
             magnitude_phasor.freq(current_deviation_frequency);
@@ -341,8 +340,12 @@ struct Balance {
      float operator () (float signal, float comparator) {
         float signal_envelope = signal_envelope_follower(signal);
         float comparator_envelope = comparator_envelope_follower(comparator);
-        float gain_factor = comparator_envelope / signal_envelope;
-        return signal * gain_factor;
+        if (comparator_envelope != 0. && signal_envelope != 0.) {
+            float gain_factor = comparator_envelope / signal_envelope;
+            return signal * gain_factor;
+        } else {
+            return signal;
+        }
     };
 };
 
@@ -810,16 +813,16 @@ struct MVerb {
     };
     void set_preset(const char *name) {
         master_preset.preset = presets()[name];
-        for (int i = 0; i < 25; ++i) {
-            mesheq[i].initialize(csound, master_preset);
-            randomize_delay[i].initialize(csound, master_preset);
-        }
         auto early_return_preset_index = int(master_preset.preset.ERSelect) - 1;
         auto early_return_preset_name = early_return_presets_for_numbers[early_return_preset_index];
         set_early_return_preset(early_return_preset_name.c_str());
         auto equalizer_preset_index = int(master_preset.preset.EQSelect) - 1;
         auto equalizer_preset_name = equalizer_presets_for_numbers[equalizer_preset_index];
         set_equalizer_preset(equalizer_preset_name.c_str());
+        for (int i = 0; i < 25; ++i) {
+            mesheq[i].initialize(csound, master_preset);
+            randomize_delay[i].initialize(csound, master_preset);
+        }
     };
     void set_early_return_preset(const char *name) {
         master_preset.earlyReturnPreset = earlyReturnPresets()[name];
