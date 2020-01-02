@@ -1,7 +1,7 @@
 /*
-    mverb.cpp
+    MVerb.cpp
 
-    Copyright (C) 2006 Michael Gogins
+    Copyright (C) 2020 Michael Gogins
 
     This file is part of Csound.
 
@@ -20,13 +20,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
     02110-1301 USA
     
+    BUILDING
+    
+    First make sure you have built the Gamma library with -fPIC.
+    
+    Then build for your build of Csound with C++17 and -lGamma -olibMVerb.so
+    
     TODO:
     
-    Implement Balance unit generator.
-    
-    Ensure that shared library is built with correct flags and installed.
-    
-    Test.
+    Test with a C++ program.
     
  */
 #include "OpcodeBase.hpp"
@@ -39,38 +41,38 @@
 #include <vector>
 
 struct Preset {
-    MYFLT number;
-    MYFLT res1;
-    MYFLT res2;
-    MYFLT res3;
-    MYFLT res4;
-    MYFLT res5;
-    MYFLT res6;
-    MYFLT res7;
-    MYFLT res8;
-    MYFLT res9;
-    MYFLT res10;
-    MYFLT res11;
-    MYFLT res12;
-    MYFLT res13;
-    MYFLT res14;
-    MYFLT res15;
-    MYFLT res16;
-    MYFLT res17;
-    MYFLT res18;
-    MYFLT res19;
-    MYFLT res20;
-    MYFLT res21;
-    MYFLT res22;
-    MYFLT res23;
-    MYFLT res24;
-    MYFLT res25;
-    MYFLT FB;
-    MYFLT DFact;
-    MYFLT Q;
-    MYFLT ERamp;
-    MYFLT ERSelect;
-    MYFLT EQSelect;
+    float number;
+    float res1;
+    float res2;
+    float res3;
+    float res4;
+    float res5;
+    float res6;
+    float res7;
+    float res8;
+    float res9;
+    float res10;
+    float res11;
+    float res12;
+    float res13;
+    float res14;
+    float res15;
+    float res16;
+    float res17;
+    float res18;
+    float res19;
+    float res20;
+    float res21;
+    float res22;
+    float res23;
+    float res24;
+    float res25;
+    float FB;
+    float DFact;
+    float Q;
+    float ERamp;
+    float ERSelect;
+    float EQSelect;
 };
 
 /*
@@ -156,8 +158,8 @@ static std::map<std::string, Preset> &presets() {
 // Different presets may have different numbers of taps.
 
 struct EarlyReturnPreset {
-    std::vector<MYFLT> taps_left;
-    std::vector<MYFLT> taps_right;
+    std::vector<float> taps_left;
+    std::vector<float> taps_right;
 };
 
 static std::map<std::string, EarlyReturnPreset> &earlyReturnPresets() {
@@ -198,7 +200,7 @@ static std::map<std::string, EarlyReturnPreset> &earlyReturnPresets() {
 };
 
 struct EqualizerPreset {
-    MYFLT gain[10];
+    float gain[10];
 };
 
 struct MasterPreset {
@@ -206,15 +208,15 @@ struct MasterPreset {
     EarlyReturnPreset earlyReturnPreset;
     EqualizerPreset equalizerPreset;
     // Control parameters not in sub-presets.
-    MYFLT gkFX = 0.;
-    MYFLT gksource = 0.75;
-    MYFLT kDFact = 0.;
-    MYFLT kFB = .25;
-    MYFLT kdelclear = .1;  
-    MYFLT krand = 0.;
-    MYFLT krslow = 0.;
-    MYFLT krfast = 0.;
-    MYFLT krmax = 0.;
+    float gkFX = 0.;
+    float gksource = 0.75;
+    float kDFact = 0.;
+    float kFB = .25;
+    float kdelclear = .1;  
+    float krand = 0.;
+    float krslow = 0.;
+    float krfast = 0.;
+    float krmax = 0.;
 };
 
 static std::map<std::string, EqualizerPreset> &equalizerPresets() {
@@ -246,12 +248,12 @@ struct RandomDeviation {
     gam::Accum<> frequency_phasor;
     gam::Accum<> magnitude_phasor; 
     std::default_random_engine generator;
-    std::uniform_real_distribution<double> frequency_distribution;
-    std::uniform_real_distribution<double> deviation_distribution;
-    MYFLT deviation_frequency = 0.;
-    MYFLT prior_deviation_frequency = 0;
-    MYFLT deviation_magnitude = 0.95;
-    MYFLT prior_deviation_magnitude = 0;
+    std::uniform_real_distribution<float> frequency_distribution;
+    std::uniform_real_distribution<float> deviation_distribution;
+    float deviation_frequency = 0.;
+    float prior_deviation_frequency = 0;
+    float deviation_magnitude = 0.95;
+    float prior_deviation_magnitude = 0;
     void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
         masterPreset = &masterPreset_;
         /*
@@ -270,28 +272,28 @@ struct RandomDeviation {
         endif
         endop
         */
-        frequency_distribution.param(std::uniform_real_distribution<double>::param_type(masterPreset->krslow, masterPreset->krfast));
+        frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
         prior_deviation_frequency = frequency_distribution(generator);
         frequency_phasor.freq(masterPreset->krfast);
-        deviation_distribution.param(std::uniform_real_distribution<double>::param_type(.0, masterPreset->krmax));
+        deviation_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
         prior_deviation_magnitude = deviation_distribution(generator);
         magnitude_phasor.freq(prior_deviation_frequency);
     };
-    MYFLT operator () (MYFLT value) {
+    float operator () (float value) {
         if (masterPreset->krand == true) {
             if (frequency_phasor()) {
                 prior_deviation_frequency = deviation_frequency;
                 deviation_frequency = frequency_distribution(generator);
-                deviation_distribution.param(std::uniform_real_distribution<double>::param_type(0., masterPreset->krmax));
+                deviation_distribution.param(std::uniform_real_distribution<float>::param_type(0., masterPreset->krmax));
                 
             }
-            MYFLT current_deviation_frequency = prior_deviation_frequency + ((prior_deviation_frequency - deviation_frequency) / frequency_phasor.phase());
+            float current_deviation_frequency = prior_deviation_frequency + ((prior_deviation_frequency - deviation_frequency) / frequency_phasor.phase());
             magnitude_phasor.freq(current_deviation_frequency);
             if (magnitude_phasor()) {
                 prior_deviation_magnitude = deviation_magnitude;
                 deviation_magnitude = deviation_distribution(generator);
             }
-            MYFLT current_deviation = prior_deviation_magnitude + ((prior_deviation_magnitude - deviation_magnitude) / magnitude_phasor.phase());
+            float current_deviation = prior_deviation_magnitude + ((prior_deviation_magnitude - deviation_magnitude) / magnitude_phasor.phase());
             value = value + (value * current_deviation);
         } else {
             return value;
@@ -302,28 +304,30 @@ struct RandomDeviation {
 
 struct Multitaps {
     gam::Delay<> delay;
-    std::vector<MYFLT> times;
-    std::vector<MYFLT> gains;
-    int tap_count = 0;
+    std::vector<float> times;
+    std::vector<float> gains;
+    int tap_count;
     const MasterPreset *master_preset;
-    void initialize(CSOUND *csound, const std::vector<MYFLT> &parameters, const MasterPreset &master_preset_) {
+    void initialize(CSOUND *csound, const std::vector<float> &parameters, const MasterPreset &master_preset_) {
         master_preset = &master_preset_;
-        MYFLT maximum_delay = 0;
+        float maximum_delay = 0;
+        tap_count = 0;
         for (int i = 0, n = parameters.size(); i < n; ) {
             if (maximum_delay < parameters[i]) {
                 maximum_delay = parameters[i];
             }
-            times.push_back(parameters[i]);
+            times.push_back((float) parameters[i]);
             ++i;
-            gains.push_back(parameters[i]);
+            gains.push_back((float) parameters[i]);
             ++i;
             ++tap_count;
         }
-        delay.delay(maximum_delay + .1);
+        delay.maxDelay(maximum_delay + .1);
     }
-    virtual MYFLT operator () (MYFLT in) {
-        delay(in);
-        MYFLT result = 0;
+    virtual float operator () (float in) {
+        // This increments phase...
+        delay.write(in);
+        float result = 0;
         for (int tap = 0; tap < tap_count; ++tap) {
             result += (delay.read(times[tap]) * gains[tap] * master_preset->preset.ERamp);
         }
@@ -332,8 +336,13 @@ struct Multitaps {
 };
 
 struct Balance {
-    MYFLT operator () (MYFLT signal, MYFLT comparator) {
-        return signal;
+    gam::EnvFollow<> signal_envelope_follower;
+    gam::EnvFollow<> comparator_envelope_follower;
+     float operator () (float signal, float comparator) {
+        float signal_envelope = signal_envelope_follower(signal);
+        float comparator_envelope = comparator_envelope_follower(comparator);
+        float gain_factor = comparator_envelope / signal_envelope;
+        return signal * gain_factor;
     };
 };
 
@@ -343,7 +352,7 @@ struct Equalizer {
     gam::BlockDC<> blockdc;
     void initialize(CSOUND *csound, const MasterPreset &masterPreset) {
         // Adjust nominal Q.
-        MYFLT adjusted_q = (masterPreset.preset.Q * .1) * .5;
+        float adjusted_q = (masterPreset.preset.Q * .1) * .5;
         biquad[0].type(gam::LOW_SHELF);
         biquad[0].freq(   40.);
         biquad[0].res(adjusted_q);
@@ -385,8 +394,8 @@ struct Equalizer {
         biquad[9].res(adjusted_q);
         biquad[9].level(masterPreset.equalizerPreset.gain[9]);
     };
-    MYFLT operator () (MYFLT input) {
-        MYFLT output = 0.;
+    float operator () (float input) {
+        float output = 0.;
         for (int i = 0; i < 10; ++i) {
             output += biquad[i](input);
         }
@@ -411,17 +420,17 @@ struct MeshEQ {
     };
     void operator () (
         /* Outputs: */
-        MYFLT &aUout, MYFLT &aRout, MYFLT &aDout, MYFLT &aLout,
+        float &aUout, float &aRout, float &aDout, float &aLout,
         /* Inputs: */
-        MYFLT aUin, MYFLT aRin, MYFLT aDin, MYFLT aLin, MYFLT adel, MYFLT kFB) {
-        MYFLT afactor = (aUin + aRin + aDin + aLin) * -.5;
-        delay[0](aUin + afactor);
+        float aUin, float aRin, float aDin, float aLin, float adel, float kFB) {
+        float afactor = (aUin + aRin + aDin + aLin) * -.5;
+        delay[0].write(aUin + afactor);
         aUout = delay[0].read(adel);
-        delay[1](aRin + afactor);
+        delay[1].write(aRin + afactor);
         aRout = delay[1].read(adel);
-        delay[2](aDin + afactor);
+        delay[2].write(aDin + afactor);
         aDout = delay[2].read(adel);
-        delay[3](aLin + afactor);
+        delay[3].write(aLin + afactor);
         aLout = delay[3].read(adel);
         aUout = equalizer[0](aUout) * kFB;
         aRout = equalizer[1](aRout) * kFB;
@@ -439,10 +448,6 @@ struct MVerb {
     MasterPreset master_preset;
     std::vector<std::string> early_return_presets_for_numbers = {"None", "Small", "Medium", "Large", "Huge", "Long Random", "Short Backwards", "Long Backwards", "Strange1", "Strange2"}; 
     std::vector<std::string> equalizer_presets_for_numbers = {"flat", "high cut 1", "high cut 2", "low cut 1", "low cut 2", "band pass 1", "band pass 2", "2 bands", "3 bands", "evens", "odds"};
-    MYFLT in_left = 0;
-    MYFLT in_right = 0;
-    MYFLT out_left = 0;
-    MYFLT out_right = 0;
     gam::BlockDC<> blockdc_in_left;
     gam::BlockDC<> blockdc_in_right;
     Multitaps multitaps_left;
@@ -452,140 +457,140 @@ struct MVerb {
     gam::BlockDC<> blockdc_out_left;
     gam::BlockDC<> blockdc_out_right;
     // State variables.
-    MYFLT ga1mix = 0;
-    MYFLT ga2mix = 0;
-    MYFLT aL = 0.;
-    MYFLT aR = 0.;
-    MYFLT aAU = 0.;
-    MYFLT aAR = 0.;
-    MYFLT aAD = 0.;
-    MYFLT aAL = 0.;
-    MYFLT aBU = 0.;
-    MYFLT aBR = 0.;
-    MYFLT aBD = 0.;
-    MYFLT aBL = 0.;
-    MYFLT aCU = 0.;
-    MYFLT aCR = 0.;
-    MYFLT aCD = 0.;
-    MYFLT aCL = 0.;
-    MYFLT aDU = 0.;
-    MYFLT aDR = 0.;
-    MYFLT aDD = 0.;
-    MYFLT aDL = 0.;
-    MYFLT aEU = 0.;
-    MYFLT aER = 0.;
-    MYFLT aED = 0.;
-    MYFLT aEL = 0.;
-    MYFLT aFU = 0.;
-    MYFLT aFR = 0.;
-    MYFLT aFD = 0.;
-    MYFLT aFL = 0.;
-    MYFLT aGU = 0.;
-    MYFLT aGR = 0.;
-    MYFLT aGD = 0.;
-    MYFLT aGL = 0.;
-    MYFLT aHU = 0.;
-    MYFLT aHR = 0.;
-    MYFLT aHD = 0.;
-    MYFLT aHL = 0.;
-    MYFLT aIU = 0.;
-    MYFLT aIR = 0.;
-    MYFLT aID = 0.;
-    MYFLT aIL = 0.;
-    MYFLT aJU = 0.;
-    MYFLT aJR = 0.;
-    MYFLT aJD = 0.;
-    MYFLT aJL = 0.;
-    MYFLT aKU = 0.;
-    MYFLT aKR = 0.;
-    MYFLT aKD = 0.;
-    MYFLT aKL = 0.;
-    MYFLT aLU = 0.;
-    MYFLT aLR = 0.;
-    MYFLT aLD = 0.;
-    MYFLT aLL = 0.;
-    MYFLT aMU = 0.;
-    MYFLT aMR = 0.;
-    MYFLT aMD = 0.;
-    MYFLT aML = 0.;
-    MYFLT aNU = 0.;
-    MYFLT aNR = 0.;
-    MYFLT aND = 0.;
-    MYFLT aNL = 0.;
-    MYFLT aOU = 0.;
-    MYFLT aOR = 0.;
-    MYFLT aOD = 0.;
-    MYFLT aOL = 0.;
-    MYFLT aPU = 0.;
-    MYFLT aPR = 0.;
-    MYFLT aPD = 0.;
-    MYFLT aPL = 0.;
-    MYFLT aQU = 0.;
-    MYFLT aQR = 0.;
-    MYFLT aQD = 0.;
-    MYFLT aQL = 0.;
-    MYFLT aRU = 0.;
-    MYFLT aRR = 0.;
-    MYFLT aRD = 0.;
-    MYFLT aRL = 0.;
-    MYFLT aSU = 0.;
-    MYFLT aSR = 0.;
-    MYFLT aSD = 0.;
-    MYFLT aSL = 0.;
-    MYFLT aTU = 0.;
-    MYFLT aTR = 0.;
-    MYFLT aTD = 0.;
-    MYFLT aTL = 0.;
-    MYFLT aUU = 0.;
-    MYFLT aUR = 0.;
-    MYFLT aUD = 0.;
-    MYFLT aUL = 0.;
-    MYFLT aVU = 0.;
-    MYFLT aVR = 0.;
-    MYFLT aVD = 0.;
-    MYFLT aVL = 0.;
-    MYFLT aWU = 0.;
-    MYFLT aWR = 0.;
-    MYFLT aWD = 0.;
-    MYFLT aWL = 0.;
-    MYFLT aXU = 0.;
-    MYFLT aXR = 0.;
-    MYFLT aXD = 0.;
-    MYFLT aXL = 0.;
-    MYFLT aYU = 0.;
-    MYFLT aYR = 0.;
-    MYFLT aYD = 0.;
-    MYFLT aYL = 0.;
-    MYFLT adel1 = 0.;
-    MYFLT adel2 = 0.;
-    MYFLT adel3 = 0.;
-    MYFLT adel4 = 0.;
-    MYFLT adel5 = 0.;
-    MYFLT adel6 = 0.;
-    MYFLT adel7 = 0.;
-    MYFLT adel8 = 0.;
-    MYFLT adel9 = 0.;
-    MYFLT adel10 = 0.;
-    MYFLT adel11 = 0.;
-    MYFLT adel12 = 0.;
-    MYFLT adel13 = 0.;
-    MYFLT adel14 = 0.;
-    MYFLT adel15 = 0.;
-    MYFLT adel16 = 0.;
-    MYFLT adel17 = 0.;
-    MYFLT adel18 = 0.;
-    MYFLT adel19 = 0.;
-    MYFLT adel20 = 0.;
-    MYFLT adel21 = 0.;
-    MYFLT adel22 = 0.;
-    MYFLT adel23 = 0.;
-    MYFLT adel24 = 0.;
-    MYFLT adel25 = 0.;
-    MYFLT garev1 = 0.;
-    MYFLT garev2 = 0.;
+    float ga1mix = 0;
+    float ga2mix = 0;
+    float aL = 0.;
+    float aR = 0.;
+    float aAU = 0.;
+    float aAR = 0.;
+    float aAD = 0.;
+    float aAL = 0.;
+    float aBU = 0.;
+    float aBR = 0.;
+    float aBD = 0.;
+    float aBL = 0.;
+    float aCU = 0.;
+    float aCR = 0.;
+    float aCD = 0.;
+    float aCL = 0.;
+    float aDU = 0.;
+    float aDR = 0.;
+    float aDD = 0.;
+    float aDL = 0.;
+    float aEU = 0.;
+    float aER = 0.;
+    float aED = 0.;
+    float aEL = 0.;
+    float aFU = 0.;
+    float aFR = 0.;
+    float aFD = 0.;
+    float aFL = 0.;
+    float aGU = 0.;
+    float aGR = 0.;
+    float aGD = 0.;
+    float aGL = 0.;
+    float aHU = 0.;
+    float aHR = 0.;
+    float aHD = 0.;
+    float aHL = 0.;
+    float aIU = 0.;
+    float aIR = 0.;
+    float aID = 0.;
+    float aIL = 0.;
+    float aJU = 0.;
+    float aJR = 0.;
+    float aJD = 0.;
+    float aJL = 0.;
+    float aKU = 0.;
+    float aKR = 0.;
+    float aKD = 0.;
+    float aKL = 0.;
+    float aLU = 0.;
+    float aLR = 0.;
+    float aLD = 0.;
+    float aLL = 0.;
+    float aMU = 0.;
+    float aMR = 0.;
+    float aMD = 0.;
+    float aML = 0.;
+    float aNU = 0.;
+    float aNR = 0.;
+    float aND = 0.;
+    float aNL = 0.;
+    float aOU = 0.;
+    float aOR = 0.;
+    float aOD = 0.;
+    float aOL = 0.;
+    float aPU = 0.;
+    float aPR = 0.;
+    float aPD = 0.;
+    float aPL = 0.;
+    float aQU = 0.;
+    float aQR = 0.;
+    float aQD = 0.;
+    float aQL = 0.;
+    float aRU = 0.;
+    float aRR = 0.;
+    float aRD = 0.;
+    float aRL = 0.;
+    float aSU = 0.;
+    float aSR = 0.;
+    float aSD = 0.;
+    float aSL = 0.;
+    float aTU = 0.;
+    float aTR = 0.;
+    float aTD = 0.;
+    float aTL = 0.;
+    float aUU = 0.;
+    float aUR = 0.;
+    float aUD = 0.;
+    float aUL = 0.;
+    float aVU = 0.;
+    float aVR = 0.;
+    float aVD = 0.;
+    float aVL = 0.;
+    float aWU = 0.;
+    float aWR = 0.;
+    float aWD = 0.;
+    float aWL = 0.;
+    float aXU = 0.;
+    float aXR = 0.;
+    float aXD = 0.;
+    float aXL = 0.;
+    float aYU = 0.;
+    float aYR = 0.;
+    float aYD = 0.;
+    float aYL = 0.;
+    float adel1 = 0.;
+    float adel2 = 0.;
+    float adel3 = 0.;
+    float adel4 = 0.;
+    float adel5 = 0.;
+    float adel6 = 0.;
+    float adel7 = 0.;
+    float adel8 = 0.;
+    float adel9 = 0.;
+    float adel10 = 0.;
+    float adel11 = 0.;
+    float adel12 = 0.;
+    float adel13 = 0.;
+    float adel14 = 0.;
+    float adel15 = 0.;
+    float adel16 = 0.;
+    float adel17 = 0.;
+    float adel18 = 0.;
+    float adel19 = 0.;
+    float adel20 = 0.;
+    float adel21 = 0.;
+    float adel22 = 0.;
+    float adel23 = 0.;
+    float adel24 = 0.;
+    float adel25 = 0.;
+    float garev1 = 0.;
+    float garev2 = 0.;
     // All user-controllable parameters, whether in a preset struct or not,
     // are updated from here by reference.
-    std::map<std::string, MYFLT *> parameter_values_for_names;
+    std::map<std::string, float *> parameter_values_for_names;
     void initialize(CSOUND *csound_) {
         if (initialized == false) {
             initialized = true;
@@ -597,28 +602,28 @@ struct MVerb {
             // Preset.
             parameter_values_for_names["mix"] = &master_preset.gksource;
             parameter_values_for_names["res1"] = &master_preset.preset.res1;
-            parameter_values_for_names["res2"] = &master_preset.preset.res1;
-            parameter_values_for_names["res3"] = &master_preset.preset.res1;
-            parameter_values_for_names["res4"] = &master_preset.preset.res1;
-            parameter_values_for_names["res5"] = &master_preset.preset.res1;
-            parameter_values_for_names["res6"] = &master_preset.preset.res1;
-            parameter_values_for_names["res7"] = &master_preset.preset.res1;
-            parameter_values_for_names["res8"] = &master_preset.preset.res1;
-            parameter_values_for_names["res9"] = &master_preset.preset.res1;
-            parameter_values_for_names["res10"] = &master_preset.preset.res1;
-            parameter_values_for_names["res11"] = &master_preset.preset.res1;
-            parameter_values_for_names["res12"] = &master_preset.preset.res1;
-            parameter_values_for_names["res13"] = &master_preset.preset.res1;
-            parameter_values_for_names["res14"] = &master_preset.preset.res1;
-            parameter_values_for_names["res15"] = &master_preset.preset.res1;
-            parameter_values_for_names["res16"] = &master_preset.preset.res1;
-            parameter_values_for_names["res17"] = &master_preset.preset.res1;
-            parameter_values_for_names["res18"] = &master_preset.preset.res1;
-            parameter_values_for_names["res19"] = &master_preset.preset.res1;
-            parameter_values_for_names["res20"] = &master_preset.preset.res1;
-            parameter_values_for_names["res21"] = &master_preset.preset.res1;
-            parameter_values_for_names["res22"] = &master_preset.preset.res1;
-            parameter_values_for_names["res23"] = &master_preset.preset.res1;
+            parameter_values_for_names["res2"] = &master_preset.preset.res2;
+            parameter_values_for_names["res3"] = &master_preset.preset.res3;
+            parameter_values_for_names["res4"] = &master_preset.preset.res4;
+            parameter_values_for_names["res5"] = &master_preset.preset.res5;
+            parameter_values_for_names["res6"] = &master_preset.preset.res6;
+            parameter_values_for_names["res7"] = &master_preset.preset.res7;
+            parameter_values_for_names["res8"] = &master_preset.preset.res8;
+            parameter_values_for_names["res9"] = &master_preset.preset.res9;
+            parameter_values_for_names["res10"] = &master_preset.preset.res10;
+            parameter_values_for_names["res11"] = &master_preset.preset.res11;
+            parameter_values_for_names["res12"] = &master_preset.preset.res12;
+            parameter_values_for_names["res13"] = &master_preset.preset.res13;
+            parameter_values_for_names["res14"] = &master_preset.preset.res14;
+            parameter_values_for_names["res15"] = &master_preset.preset.res15;
+            parameter_values_for_names["res16"] = &master_preset.preset.res16;
+            parameter_values_for_names["res17"] = &master_preset.preset.res17;
+            parameter_values_for_names["res18"] = &master_preset.preset.res18;
+            parameter_values_for_names["res19"] = &master_preset.preset.res19;
+            parameter_values_for_names["res20"] = &master_preset.preset.res20;
+            parameter_values_for_names["res21"] = &master_preset.preset.res21;
+            parameter_values_for_names["res22"] = &master_preset.preset.res22;
+            parameter_values_for_names["res23"] = &master_preset.preset.res23;
             parameter_values_for_names["FB"] = &master_preset.preset.FB;
             parameter_values_for_names["DFact"] = &master_preset.preset.DFact;
             parameter_values_for_names["Q"] = &master_preset.preset.Q;
@@ -644,20 +649,152 @@ struct MVerb {
             parameter_values_for_names["rfast"] = &master_preset.krfast;
             parameter_values_for_names["rmax"] = &master_preset.krmax;
             parameter_values_for_names["FBclear"] = &master_preset.kdelclear;
+            ga1mix = 0;
+            ga2mix = 0;
+            aL = 0.;
+            aR = 0.;
+            aAU = 0.;
+            aAR = 0.;
+            aAD = 0.;
+            aAL = 0.;
+            aBU = 0.;
+            aBR = 0.;
+            aBD = 0.;
+            aBL = 0.;
+            aCU = 0.;
+            aCR = 0.;
+            aCD = 0.;
+            aCL = 0.;
+            aDU = 0.;
+            aDR = 0.;
+            aDD = 0.;
+            aDL = 0.;
+            aEU = 0.;
+            aER = 0.;
+            aED = 0.;
+            aEL = 0.;
+            aFU = 0.;
+            aFR = 0.;
+            aFD = 0.;
+            aFL = 0.;
+            aGU = 0.;
+            aGR = 0.;
+            aGD = 0.;
+            aGL = 0.;
+            aHU = 0.;
+            aHR = 0.;
+            aHD = 0.;
+            aHL = 0.;
+            aIU = 0.;
+            aIR = 0.;
+            aID = 0.;
+            aIL = 0.;
+            aJU = 0.;
+            aJR = 0.;
+            aJD = 0.;
+            aJL = 0.;
+            aKU = 0.;
+            aKR = 0.;
+            aKD = 0.;
+            aKL = 0.;
+            aLU = 0.;
+            aLR = 0.;
+            aLD = 0.;
+            aLL = 0.;
+            aMU = 0.;
+            aMR = 0.;
+            aMD = 0.;
+            aML = 0.;
+            aNU = 0.;
+            aNR = 0.;
+            aND = 0.;
+            aNL = 0.;
+            aOU = 0.;
+            aOR = 0.;
+            aOD = 0.;
+            aOL = 0.;
+            aPU = 0.;
+            aPR = 0.;
+            aPD = 0.;
+            aPL = 0.;
+            aQU = 0.;
+            aQR = 0.;
+            aQD = 0.;
+            aQL = 0.;
+            aRU = 0.;
+            aRR = 0.;
+            aRD = 0.;
+            aRL = 0.;
+            aSU = 0.;
+            aSR = 0.;
+            aSD = 0.;
+            aSL = 0.;
+            aTU = 0.;
+            aTR = 0.;
+            aTD = 0.;
+            aTL = 0.;
+            aUU = 0.;
+            aUR = 0.;
+            aUD = 0.;
+            aUL = 0.;
+            aVU = 0.;
+            aVR = 0.;
+            aVD = 0.;
+            aVL = 0.;
+            aWU = 0.;
+            aWR = 0.;
+            aWD = 0.;
+            aWL = 0.;
+            aXU = 0.;
+            aXR = 0.;
+            aXD = 0.;
+            aXL = 0.;
+            aYU = 0.;
+            aYR = 0.;
+            aYD = 0.;
+            aYL = 0.;
+            adel1 = 0.;
+            adel2 = 0.;
+            adel3 = 0.;
+            adel4 = 0.;
+            adel5 = 0.;
+            adel6 = 0.;
+            adel7 = 0.;
+            adel8 = 0.;
+            adel9 = 0.;
+            adel10 = 0.;
+            adel11 = 0.;
+            adel12 = 0.;
+            adel13 = 0.;
+            adel14 = 0.;
+            adel15 = 0.;
+            adel16 = 0.;
+            adel17 = 0.;
+            adel18 = 0.;
+            adel19 = 0.;
+            adel20 = 0.;
+            adel21 = 0.;
+            adel22 = 0.;
+            adel23 = 0.;
+            adel24 = 0.;
+            adel25 = 0.;
+            garev1 = 0.;
+            garev2 = 0.;
         };
     };
     void read_opcode_parameters(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
-        for (int parameter_index = 0; parameter_index < parameter_count; ) {
+        for (int parameter_index = 0; parameter_index < (parameter_count - 3); ) {
             STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
             std::string name = stringdat->data;
             ++parameter_index;
-            MYFLT *new_value = parameters[parameter_index];
+            MYFLT *new_value_ = parameters[parameter_index];
+            float new_value = (float) *new_value_;
             ++parameter_index;
             // We only update a parameter if its value has changed.
             // TODO: Handle STRINGDAT memory?
             auto current_value = parameter_values_for_names[name];
-            if (*new_value != *current_value) {
-                *current_value = *new_value;
+            if (new_value != *current_value) {
+                *current_value = new_value;
                 if (name == "EQselect") {
                     STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
                     set_equalizer_preset(stringdat->data);
@@ -699,8 +836,8 @@ struct MVerb {
                       /* Inputs: */
                       MYFLT a1,
                       MYFLT a2) {
-        ga1mix = blockdc_in_left(ga1mix + a1);
-        ga2mix = blockdc_in_left(ga2mix + a2);
+        ga1mix = blockdc_in_left(ga1mix + (float) a1);
+        ga2mix = blockdc_in_right(ga2mix + (float) a2);
         aL = multitaps_left(ga1mix);
         aR = multitaps_right(ga2mix);
         mesheq[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, adel1, master_preset.preset.FB);
@@ -739,11 +876,11 @@ class MVerbOpcode  : public csound::OpcodeBase<MVerbOpcode>
 {
 public:
     // Outputs.
-    MYFLT *out_left;
-    MYFLT *out_right;
+    MYFLT *aout_left;
+    MYFLT *aout_right;
     // Inputs.
-    MYFLT *in_left;
-    MYFLT *in_right;
+    MYFLT *ain_left;
+    MYFLT *ain_right;
     STRINGDAT *preset;
     // These will be arbitrary name-value pairs, and 
     // the number of pairs will be INOCOUNT / 2.
@@ -757,8 +894,6 @@ public:
         }
         mverb->initialize(csound);
         mverb->set_preset(preset->data);
-        //mverb->set_early_return_preset(early_return_preset->data);
-        //mverb->set_equalizer_preset(equalizer_preset->data);
         return OK;
     }
     int kontrol(CSOUND *csound)
@@ -775,24 +910,24 @@ public:
         }
         int frame_index = 0;
         for( ; frame_index < kperiodOffset(); ++frame_index) {
-            out_right[frame_index] = 0;
-            out_left[frame_index] = 0;
+            aout_right[frame_index] = 0;
+            aout_left[frame_index] = 0;
         }
         for( ; frame_index < kperiodEnd(); ++frame_index) {
             if (mverb != nullptr) {
                 (*mverb)(csound,
-                         out_left[frame_index],
-                         out_right[frame_index],
-                         in_left[frame_index],
-                         in_right[frame_index]);
+                         aout_left[frame_index],
+                         aout_right[frame_index],
+                         ain_left[frame_index],
+                         ain_right[frame_index]);
             } else {
-                out_left[frame_index] = in_left[frame_index];
-                out_right[frame_index] = in_right[frame_index];
+                aout_left[frame_index] = ain_left[frame_index];
+                aout_right[frame_index] = ain_right[frame_index];
             }
         }
         for( ; frame_index < ksmps(); ++frame_index) {
-            out_right[frame_index] = 0;
-            out_left[frame_index] = 0;
+            aout_right[frame_index] = 0;
+            aout_left[frame_index] = 0;
         }
         return OK;
     }
