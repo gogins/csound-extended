@@ -24,12 +24,7 @@
     
     First make sure you have built the Gamma library with -fPIC.
     
-    Then build for your build of Csound with C++17 and -lGamma -olibMVerb.so
-    
-    TODO:
-    
-    Test with a C++ program.
-    
+    Then build for your build of Csound with C++17 and -lGamma -olibMVerb.so    
  */
 #include "OpcodeBase.hpp"
 #define GAMMA_H_INC_ALL 1
@@ -843,6 +838,61 @@ struct MVerb {
         ga2mix = blockdc_in_right(ga2mix + (float) a2);
         aL = multitaps_left(ga1mix);
         aR = multitaps_right(ga2mix);
+        /*
+        kres1   chnget  "res1"
+        adel1=kDFact*(1000/kres1)
+        adel1 randomdel adel1
+        */
+        adel1  = master_preset.kDFact * (1000. / master_preset.preset.res1 );
+        adel1  = randomize_delay[0 ](adel1 );
+        adel2  = master_preset.kDFact * (1000. / master_preset.preset.res2 );
+        adel2  = randomize_delay[2 ](adel2 );
+        adel3  = master_preset.kDFact * (1000. / master_preset.preset.res3 );
+        adel3  = randomize_delay[3 ](adel3 );
+        adel4  = master_preset.kDFact * (1000. / master_preset.preset.res4 );
+        adel4  = randomize_delay[4 ](adel4 );
+        adel5  = master_preset.kDFact * (1000. / master_preset.preset.res5 );
+        adel5  = randomize_delay[5 ](adel5 );
+        adel6  = master_preset.kDFact * (1000. / master_preset.preset.res6 );
+        adel6  = randomize_delay[6 ](adel6 );
+        adel7  = master_preset.kDFact * (1000. / master_preset.preset.res7 );
+        adel7  = randomize_delay[7 ](adel7 );
+        adel8  = master_preset.kDFact * (1000. / master_preset.preset.res8 );
+        adel8  = randomize_delay[8 ](adel8 );
+        adel9  = master_preset.kDFact * (1000. / master_preset.preset.res9 );
+        adel9  = randomize_delay[9 ](adel9 );
+        adel10 = master_preset.kDFact * (1000. / master_preset.preset.res10);
+        adel10 = randomize_delay[10](adel10);
+        adel11 = master_preset.kDFact * (1000. / master_preset.preset.res11);
+        adel11 = randomize_delay[11](adel11);
+        adel12 = master_preset.kDFact * (1000. / master_preset.preset.res12);
+        adel12 = randomize_delay[12](adel12);
+        adel13 = master_preset.kDFact * (1000. / master_preset.preset.res13);
+        adel13 = randomize_delay[13](adel13);
+        adel14 = master_preset.kDFact * (1000. / master_preset.preset.res14);
+        adel14 = randomize_delay[14](adel14);
+        adel15 = master_preset.kDFact * (1000. / master_preset.preset.res15);
+        adel15 = randomize_delay[15](adel15);
+        adel16 = master_preset.kDFact * (1000. / master_preset.preset.res16);
+        adel16 = randomize_delay[16](adel16);
+        adel17 = master_preset.kDFact * (1000. / master_preset.preset.res17);
+        adel17 = randomize_delay[17](adel17);
+        adel18 = master_preset.kDFact * (1000. / master_preset.preset.res18);
+        adel18 = randomize_delay[18](adel18);
+        adel19 = master_preset.kDFact * (1000. / master_preset.preset.res19);
+        adel19 = randomize_delay[19](adel19);
+        adel20 = master_preset.kDFact * (1000. / master_preset.preset.res20);
+        adel20 = randomize_delay[20](adel20);
+        adel21 = master_preset.kDFact * (1000. / master_preset.preset.res21);
+        adel21 = randomize_delay[21](adel21);
+        adel22 = master_preset.kDFact * (1000. / master_preset.preset.res22);
+        adel22 = randomize_delay[22](adel22);
+        adel23 = master_preset.kDFact * (1000. / master_preset.preset.res23);
+        adel23 = randomize_delay[23](adel23);
+        adel24 = master_preset.kDFact * (1000. / master_preset.preset.res24);
+        adel24 = randomize_delay[24](adel24);
+        adel25 = master_preset.kDFact * (1000. / master_preset.preset.res25);
+        adel25 = randomize_delay[25](adel25);
         mesheq[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, adel1, master_preset.preset.FB);
         mesheq[ 1](aBU, aBR, aBD, aBL, aBU, aCL, aGU, aAR, adel2, master_preset.preset.FB);
         mesheq[ 2](aCU, aCR, aCD, aCL, aCU, aDL, aHU, aBR, adel3, master_preset.preset.FB);
