@@ -36,7 +36,7 @@
 #include <vector>
 
 struct Preset {
-    float number;
+    float N;
     float res1;
     float res2;
     float res3;
@@ -203,11 +203,9 @@ struct MasterPreset {
     EarlyReturnPreset earlyReturnPreset;
     EqualizerPreset equalizerPreset;
     // Control parameters not in sub-presets.
-    float gkFX = 0.;
-    float gksource = 0.75;
-    float kDFact = 0.;
-    float kFB = .25;
-    float kdelclear = 0.;  
+    float effect_mix_wet = 0.25;
+    float effect_mix_dry = 0.75;
+    float clear_delays = 0.;  
     float krand = 0.;
     float krslow = 0.;
     float krfast = 0.;
@@ -457,8 +455,8 @@ struct MVerb {
     gam::BlockDC<> blockdc_out_left;
     gam::BlockDC<> blockdc_out_right;
     // State variables.
-    float ga1mix = 0;
-    float ga2mix = 0;
+    float input_left = 0;
+    float input_right = 0;
     float aL = 0.;
     float aR = 0.;
     float aAU = 0.;
@@ -586,8 +584,8 @@ struct MVerb {
     float adel23 = 0.;
     float adel24 = 0.;
     float adel25 = 0.;
-    float garev1 = 0.;
-    float garev2 = 0.;
+    float reverberated_left = 0.;
+    float reverberated_right = 0.;
     // All user-controllable parameters, whether in a preset struct or not,
     // are updated from here by reference.
     std::map<std::string, float *> parameter_values_for_names;
@@ -600,7 +598,6 @@ struct MVerb {
             frames_per_block = csound->GetKsmps(csound);
             gam::sampleRate(frames_per_second);
             // Preset.
-            parameter_values_for_names["mix"] = &master_preset.gksource;
             parameter_values_for_names["res1"] = &master_preset.preset.res1;
             parameter_values_for_names["res2"] = &master_preset.preset.res2;
             parameter_values_for_names["res3"] = &master_preset.preset.res3;
@@ -645,14 +642,14 @@ struct MVerb {
             parameter_values_for_names["eq10"] = &master_preset.equalizerPreset.gain[9];
             // EarlyReturnPreset values are not user-configurable.
             // The following parameters are not stored in a preset struct.
-            parameter_values_for_names["mix"] = &master_preset.gksource;
+            parameter_values_for_names["mix"] = &master_preset.effect_mix_dry;
             parameter_values_for_names["random"] = &master_preset.krand;
             parameter_values_for_names["rslow"] = &master_preset.krslow;
             parameter_values_for_names["rfast"] = &master_preset.krfast;
             parameter_values_for_names["rmax"] = &master_preset.krmax;
-            parameter_values_for_names["FBclear"] = &master_preset.kdelclear;
-            ga1mix = 0;
-            ga2mix = 0;
+            parameter_values_for_names["FBclear"] = &master_preset.clear_delays;
+            input_left = 0;
+            input_right = 0;
             aL = 0.;
             aR = 0.;
             aAU = 0.;
@@ -780,8 +777,8 @@ struct MVerb {
             adel23 = 0.;
             adel24 = 0.;
             adel25 = 0.;
-            garev1 = 0.;
-            garev2 = 0.;
+            reverberated_left = 0.;
+            reverberated_right = 0.;
         };
     };
     void read_opcode_parameters(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
@@ -805,10 +802,7 @@ struct MVerb {
                     set_early_return_preset(stringdat->data);
                 } 
             }
-        }
-        master_preset.gkFX = 1. - master_preset.gksource;
-        master_preset.preset.FB = master_preset.preset.FB * (1. - master_preset.kdelclear);       
-        
+        }        
     };
     void set_preset(const char *name) {
         master_preset.preset = presets()[name];
@@ -819,8 +813,8 @@ struct MVerb {
         auto equalizer_preset_name = equalizer_presets_for_numbers[equalizer_preset_index];
         set_equalizer_preset(equalizer_preset_name.c_str());
         for (int i = 0; i < 25; ++i) {
-            mesheq[i].initialize(csound, master_preset);
             randomize_delay[i].initialize(csound, master_preset);
+            mesheq[i].initialize(csound, master_preset);
         }
     };
     void set_early_return_preset(const char *name) {
@@ -838,64 +832,66 @@ struct MVerb {
                       /* Inputs: */
                       MYFLT a1,
                       MYFLT a2) {
-        ga1mix = blockdc_in_left(ga1mix + (float) a1);
-        ga2mix = blockdc_in_right(ga2mix + (float) a2);
-        aL = multitaps_left(ga1mix);
-        aR = multitaps_right(ga2mix);
+        master_preset.effect_mix_wet = 1. - master_preset.effect_mix_dry;
+        master_preset.preset.FB = master_preset.preset.FB * (1. - master_preset.clear_delays);       
+        input_left = blockdc_in_left(input_left + (float) a1);
+        input_right = blockdc_in_right(input_right + (float) a2);
+        aL = multitaps_left(input_left);
+        aR = multitaps_right(input_right);
         /*
         kres1   chnget  "res1"
         adel1=kDFact*(1000/kres1)
         adel1 randomdel adel1
         */
-        adel1  = master_preset.kDFact * (1000. / master_preset.preset.res1 );
+        adel1  = master_preset.preset.DFact * (1000. / master_preset.preset.res1 );
         adel1  = randomize_delay[0 ](adel1 );
-        adel2  = master_preset.kDFact * (1000. / master_preset.preset.res2 );
+        adel2  = master_preset.preset.DFact * (1000. / master_preset.preset.res2 );
         adel2  = randomize_delay[2 ](adel2 );
-        adel3  = master_preset.kDFact * (1000. / master_preset.preset.res3 );
+        adel3  = master_preset.preset.DFact * (1000. / master_preset.preset.res3 );
         adel3  = randomize_delay[3 ](adel3 );
-        adel4  = master_preset.kDFact * (1000. / master_preset.preset.res4 );
+        adel4  = master_preset.preset.DFact * (1000. / master_preset.preset.res4 );
         adel4  = randomize_delay[4 ](adel4 );
-        adel5  = master_preset.kDFact * (1000. / master_preset.preset.res5 );
+        adel5  = master_preset.preset.DFact * (1000. / master_preset.preset.res5 );
         adel5  = randomize_delay[5 ](adel5 );
-        adel6  = master_preset.kDFact * (1000. / master_preset.preset.res6 );
+        adel6  = master_preset.preset.DFact * (1000. / master_preset.preset.res6 );
         adel6  = randomize_delay[6 ](adel6 );
-        adel7  = master_preset.kDFact * (1000. / master_preset.preset.res7 );
+        adel7  = master_preset.preset.DFact * (1000. / master_preset.preset.res7 );
         adel7  = randomize_delay[7 ](adel7 );
-        adel8  = master_preset.kDFact * (1000. / master_preset.preset.res8 );
+        adel8  = master_preset.preset.DFact * (1000. / master_preset.preset.res8 );
         adel8  = randomize_delay[8 ](adel8 );
-        adel9  = master_preset.kDFact * (1000. / master_preset.preset.res9 );
+        adel9  = master_preset.preset.DFact * (1000. / master_preset.preset.res9 );
         adel9  = randomize_delay[9 ](adel9 );
-        adel10 = master_preset.kDFact * (1000. / master_preset.preset.res10);
+        adel10 = master_preset.preset.DFact * (1000. / master_preset.preset.res10);
         adel10 = randomize_delay[10](adel10);
-        adel11 = master_preset.kDFact * (1000. / master_preset.preset.res11);
+        adel11 = master_preset.preset.DFact * (1000. / master_preset.preset.res11);
         adel11 = randomize_delay[11](adel11);
-        adel12 = master_preset.kDFact * (1000. / master_preset.preset.res12);
+        adel12 = master_preset.preset.DFact * (1000. / master_preset.preset.res12);
         adel12 = randomize_delay[12](adel12);
-        adel13 = master_preset.kDFact * (1000. / master_preset.preset.res13);
+        adel13 = master_preset.preset.DFact * (1000. / master_preset.preset.res13);
         adel13 = randomize_delay[13](adel13);
-        adel14 = master_preset.kDFact * (1000. / master_preset.preset.res14);
+        adel14 = master_preset.preset.DFact * (1000. / master_preset.preset.res14);
         adel14 = randomize_delay[14](adel14);
-        adel15 = master_preset.kDFact * (1000. / master_preset.preset.res15);
+        adel15 = master_preset.preset.DFact * (1000. / master_preset.preset.res15);
         adel15 = randomize_delay[15](adel15);
-        adel16 = master_preset.kDFact * (1000. / master_preset.preset.res16);
+        adel16 = master_preset.preset.DFact * (1000. / master_preset.preset.res16);
         adel16 = randomize_delay[16](adel16);
-        adel17 = master_preset.kDFact * (1000. / master_preset.preset.res17);
+        adel17 = master_preset.preset.DFact * (1000. / master_preset.preset.res17);
         adel17 = randomize_delay[17](adel17);
-        adel18 = master_preset.kDFact * (1000. / master_preset.preset.res18);
+        adel18 = master_preset.preset.DFact * (1000. / master_preset.preset.res18);
         adel18 = randomize_delay[18](adel18);
-        adel19 = master_preset.kDFact * (1000. / master_preset.preset.res19);
+        adel19 = master_preset.preset.DFact * (1000. / master_preset.preset.res19);
         adel19 = randomize_delay[19](adel19);
-        adel20 = master_preset.kDFact * (1000. / master_preset.preset.res20);
+        adel20 = master_preset.preset.DFact * (1000. / master_preset.preset.res20);
         adel20 = randomize_delay[20](adel20);
-        adel21 = master_preset.kDFact * (1000. / master_preset.preset.res21);
+        adel21 = master_preset.preset.DFact * (1000. / master_preset.preset.res21);
         adel21 = randomize_delay[21](adel21);
-        adel22 = master_preset.kDFact * (1000. / master_preset.preset.res22);
+        adel22 = master_preset.preset.DFact * (1000. / master_preset.preset.res22);
         adel22 = randomize_delay[22](adel22);
-        adel23 = master_preset.kDFact * (1000. / master_preset.preset.res23);
+        adel23 = master_preset.preset.DFact * (1000. / master_preset.preset.res23);
         adel23 = randomize_delay[23](adel23);
-        adel24 = master_preset.kDFact * (1000. / master_preset.preset.res24);
+        adel24 = master_preset.preset.DFact * (1000. / master_preset.preset.res24);
         adel24 = randomize_delay[24](adel24);
-        adel25 = master_preset.kDFact * (1000. / master_preset.preset.res25);
+        adel25 = master_preset.preset.DFact * (1000. / master_preset.preset.res25);
         adel25 = randomize_delay[25](adel25);
         mesheq[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, adel1, master_preset.preset.FB);
         mesheq[ 1](aBU, aBR, aBD, aBL, aBU, aCL, aGU, aAR, adel2, master_preset.preset.FB);
@@ -908,9 +904,9 @@ struct MVerb {
         mesheq[ 8](aIU, aIR, aID, aIL, aDD, aJL, aNU, aHR, adel9, master_preset.preset.FB);
         mesheq[ 9](aJU, aJR, aJD, aJL, aED, aJR, aOU, aIR, adel10, master_preset.preset.FB);
         mesheq[10](aKU, aKR, aKD, aKL, aFD, aLL, aPU, aKL, adel11, master_preset.preset.FB);
-        mesheq[11](aLU, aLR, aLD, aLL, ga1mix+aL+aGD, aML, aQU, aKR, adel12, master_preset.preset.FB);
+        mesheq[11](aLU, aLR, aLD, aLL, input_left+aL+aGD, aML, aQU, aKR, adel12, master_preset.preset.FB);
         mesheq[12](aMU, aMR, aMD, aML, aHD, aNL, aRU, aLR, adel13, master_preset.preset.FB);
-        mesheq[13](aNU, aNR, aND, aNL, ga2mix+aR+aID, aOL, aSU, aMR, adel14, master_preset.preset.FB);
+        mesheq[13](aNU, aNR, aND, aNL, input_right+aR+aID, aOL, aSU, aMR, adel14, master_preset.preset.FB);
         mesheq[14](aOU, aOR, aOD, aOL, aJD, aOR, aTU, aNR, adel15, master_preset.preset.FB);
         mesheq[15](aPU, aPR, aPD, aPL, aKD, aQL, aUU, aPL, adel16, master_preset.preset.FB);
         mesheq[16](aQU, aQR, aQD, aQL, aLD, aRL, aVU, aPR, adel17, master_preset.preset.FB);
@@ -922,14 +918,12 @@ struct MVerb {
         mesheq[22](aWU, aWR, aWD, aWL, aRD, aXL, aWD, aVR, adel23, master_preset.preset.FB);
         mesheq[23](aXU, aXR, aXD, aXL, aSD, aYL, aXD, aWR, adel24, master_preset.preset.FB);
         mesheq[24](aYU, aYR, aYD, aYL, aTD, aYR, aYD, aXR, adel25, master_preset.preset.FB);
-        garev1 = blockdc_out_left(aGL);
-        garev2 = blockdc_out_right(aIR);
-        out_left  = (garev1 * master_preset.gkFX) + (ga1mix * master_preset.gksource);
-        out_right = (garev2 * master_preset.gkFX) + (ga2mix * master_preset.gksource);
-        ga1mix = 0.;
-        ga2mix = 0.;
-        garev1 = 0.;
-        garev2 = 0.;
+        reverberated_left = blockdc_out_left(aGL);
+        reverberated_right = blockdc_out_right(aIR);
+        out_left  = (reverberated_left * master_preset.effect_mix_wet) + (input_left * master_preset.effect_mix_dry);
+        out_right = (reverberated_right * master_preset.effect_mix_wet) + (input_right * master_preset.effect_mix_dry);
+        input_left = 0.;
+        input_right = 0.;
     };
 };
 
