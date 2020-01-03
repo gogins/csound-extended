@@ -207,7 +207,7 @@ struct MasterPreset {
     float gksource = 0.75;
     float kDFact = 0.;
     float kFB = .25;
-    float kdelclear = .1;  
+    float kdelclear = 0.;  
     float krand = 0.;
     float krslow = 0.;
     float krfast = 0.;
@@ -301,9 +301,11 @@ struct Multitaps {
     std::vector<float> times;
     std::vector<float> gains;
     int tap_count;
-    const MasterPreset *master_preset;
-    void initialize(CSOUND *csound, const std::vector<float> &parameters, const MasterPreset &master_preset_) {
+    MasterPreset *master_preset;
+    void initialize(CSOUND *csound, std::vector<float> &parameters, MasterPreset &master_preset_) {
         master_preset = &master_preset_;
+        times.resize(0);
+        gains.resize(0);
         float maximum_delay = 0;
         tap_count = 0;
         for (int i = 0, n = parameters.size(); i < n; ) {
@@ -318,14 +320,14 @@ struct Multitaps {
         }
         delay.maxDelay(maximum_delay + .1);
     }
-    virtual float operator () (float in) {
+    virtual float operator () (float input) {
         // This increments phase...
-        delay.write(in);
-        float result = 0;
+        delay.write(input);
+        float output = 0;
         for (int tap = 0; tap < tap_count; ++tap) {
-            result += (delay.read(times[tap]) * gains[tap] * master_preset->preset.ERamp);
+            output += (delay.read(times[tap]) * gains[tap] * master_preset->preset.ERamp);
         }
-        return result;
+        return output;
     }
 };
 
@@ -622,6 +624,8 @@ struct MVerb {
             parameter_values_for_names["res21"] = &master_preset.preset.res21;
             parameter_values_for_names["res22"] = &master_preset.preset.res22;
             parameter_values_for_names["res23"] = &master_preset.preset.res23;
+            parameter_values_for_names["res24"] = &master_preset.preset.res24;
+            parameter_values_for_names["res25"] = &master_preset.preset.res25;
             parameter_values_for_names["FB"] = &master_preset.preset.FB;
             parameter_values_for_names["DFact"] = &master_preset.preset.DFact;
             parameter_values_for_names["Q"] = &master_preset.preset.Q;
@@ -922,6 +926,10 @@ struct MVerb {
         garev2 = blockdc_out_right(aIR);
         out_left  = (garev1 * master_preset.gkFX) + (ga1mix * master_preset.gksource);
         out_right = (garev2 * master_preset.gkFX) + (ga2mix * master_preset.gksource);
+        ga1mix = 0.;
+        ga2mix = 0.;
+        garev1 = 0.;
+        garev2 = 0.;
     };
 };
 
