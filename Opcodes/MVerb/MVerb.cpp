@@ -199,8 +199,11 @@ struct EqualizerPreset {
 };
 
 struct MasterPreset {
+    std::string presetName;
     Preset preset;
+    std::string earlyReturnPresetName;
     EarlyReturnPreset earlyReturnPreset;
+    std::string equalizerPresetName;
     EqualizerPreset equalizerPreset;
     // Control parameters not in sub-presets.
     float effect_mix_wet = 0.25;
@@ -783,25 +786,29 @@ struct MVerb {
     };
     void read_opcode_parameters(CSOUND *csound, MYFLT* parameters[VARGMAX-4], int parameter_count) {
         for (int parameter_index = 0; parameter_index < (parameter_count - 3); ) {
-            STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
-            std::string name = stringdat->data;
-            ++parameter_index;
-            MYFLT *new_value_ = parameters[parameter_index];
-            float new_value = (float) *new_value_;
-            ++parameter_index;
+            STRINGDAT *name_stringdat = (STRINGDAT *) parameters[parameter_index];
+            std::string name = name_stringdat->data;
             // We only update a parameter if its value has changed.
-            // TODO: Handle STRINGDAT memory?
-            auto current_value = parameter_values_for_names[name];
-            if (new_value != *current_value) {
-                *current_value = new_value;
-                if (name == "EQselect") {
-                    STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
-                    set_equalizer_preset(stringdat->data);
-                } else if (name == "ERselect") {
-                    STRINGDAT *stringdat = (STRINGDAT *) parameters[parameter_index];
-                    set_early_return_preset(stringdat->data);
-                } 
+            ++parameter_index;
+            if (name == "ERSelect") {
+                STRINGDAT *value_stringdat = (STRINGDAT *) parameters[parameter_index];
+                if (master_preset.earlyReturnPresetName == value_stringdat->data) {
+                    set_early_return_preset(value_stringdat->data);
+                }
+            } else if (name == "EQSelect") {
+                STRINGDAT *value_stringdat = (STRINGDAT *) parameters[parameter_index];
+                if (master_preset.equalizerPresetName == value_stringdat->data) {
+                    set_equalizer_preset(value_stringdat->data);
+                }
+            } else {
+                MYFLT *new_value_ = parameters[parameter_index];
+                float new_value = (float) *new_value_;
+                auto current_value = parameter_values_for_names[name];
+                if (new_value != *current_value) {
+                    *current_value = new_value;
+                }
             }
+            ++parameter_index;
         }        
     };
     void set_preset(const char *name) {
@@ -846,53 +853,53 @@ struct MVerb {
         adel1  = master_preset.preset.DFact * (1000. / master_preset.preset.res1 );
         adel1  = randomize_delay[0 ](adel1 );
         adel2  = master_preset.preset.DFact * (1000. / master_preset.preset.res2 );
-        adel2  = randomize_delay[2 ](adel2 );
+        adel2  = randomize_delay[1 ](adel2 );
         adel3  = master_preset.preset.DFact * (1000. / master_preset.preset.res3 );
-        adel3  = randomize_delay[3 ](adel3 );
+        adel3  = randomize_delay[2 ](adel3 );
         adel4  = master_preset.preset.DFact * (1000. / master_preset.preset.res4 );
-        adel4  = randomize_delay[4 ](adel4 );
+        adel4  = randomize_delay[3 ](adel4 );
         adel5  = master_preset.preset.DFact * (1000. / master_preset.preset.res5 );
-        adel5  = randomize_delay[5 ](adel5 );
+        adel5  = randomize_delay[4 ](adel5 );
         adel6  = master_preset.preset.DFact * (1000. / master_preset.preset.res6 );
-        adel6  = randomize_delay[6 ](adel6 );
+        adel6  = randomize_delay[5 ](adel6 );
         adel7  = master_preset.preset.DFact * (1000. / master_preset.preset.res7 );
-        adel7  = randomize_delay[7 ](adel7 );
+        adel7  = randomize_delay[6 ](adel7 );
         adel8  = master_preset.preset.DFact * (1000. / master_preset.preset.res8 );
-        adel8  = randomize_delay[8 ](adel8 );
+        adel8  = randomize_delay[7 ](adel8 );
         adel9  = master_preset.preset.DFact * (1000. / master_preset.preset.res9 );
-        adel9  = randomize_delay[9 ](adel9 );
+        adel9  = randomize_delay[8 ](adel9 );
         adel10 = master_preset.preset.DFact * (1000. / master_preset.preset.res10);
-        adel10 = randomize_delay[10](adel10);
+        adel10 = randomize_delay[9 ](adel10);
         adel11 = master_preset.preset.DFact * (1000. / master_preset.preset.res11);
-        adel11 = randomize_delay[11](adel11);
+        adel11 = randomize_delay[10](adel11);
         adel12 = master_preset.preset.DFact * (1000. / master_preset.preset.res12);
-        adel12 = randomize_delay[12](adel12);
+        adel12 = randomize_delay[11](adel12);
         adel13 = master_preset.preset.DFact * (1000. / master_preset.preset.res13);
-        adel13 = randomize_delay[13](adel13);
+        adel13 = randomize_delay[12](adel13);
         adel14 = master_preset.preset.DFact * (1000. / master_preset.preset.res14);
-        adel14 = randomize_delay[14](adel14);
+        adel14 = randomize_delay[13](adel14);
         adel15 = master_preset.preset.DFact * (1000. / master_preset.preset.res15);
-        adel15 = randomize_delay[15](adel15);
+        adel15 = randomize_delay[14](adel15);
         adel16 = master_preset.preset.DFact * (1000. / master_preset.preset.res16);
-        adel16 = randomize_delay[16](adel16);
+        adel16 = randomize_delay[15](adel16);
         adel17 = master_preset.preset.DFact * (1000. / master_preset.preset.res17);
-        adel17 = randomize_delay[17](adel17);
+        adel17 = randomize_delay[16](adel17);
         adel18 = master_preset.preset.DFact * (1000. / master_preset.preset.res18);
-        adel18 = randomize_delay[18](adel18);
+        adel18 = randomize_delay[17](adel18);
         adel19 = master_preset.preset.DFact * (1000. / master_preset.preset.res19);
-        adel19 = randomize_delay[19](adel19);
+        adel19 = randomize_delay[18](adel19);
         adel20 = master_preset.preset.DFact * (1000. / master_preset.preset.res20);
-        adel20 = randomize_delay[20](adel20);
+        adel20 = randomize_delay[19](adel20);
         adel21 = master_preset.preset.DFact * (1000. / master_preset.preset.res21);
-        adel21 = randomize_delay[21](adel21);
+        adel21 = randomize_delay[20](adel21);
         adel22 = master_preset.preset.DFact * (1000. / master_preset.preset.res22);
-        adel22 = randomize_delay[22](adel22);
+        adel22 = randomize_delay[21](adel22);
         adel23 = master_preset.preset.DFact * (1000. / master_preset.preset.res23);
-        adel23 = randomize_delay[23](adel23);
+        adel23 = randomize_delay[22](adel23);
         adel24 = master_preset.preset.DFact * (1000. / master_preset.preset.res24);
-        adel24 = randomize_delay[24](adel24);
+        adel24 = randomize_delay[23](adel24);
         adel25 = master_preset.preset.DFact * (1000. / master_preset.preset.res25);
-        adel25 = randomize_delay[25](adel25);
+        adel25 = randomize_delay[24](adel25);
         mesheq[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, adel1, master_preset.preset.FB);
         mesheq[ 1](aBU, aBR, aBD, aBL, aBU, aCL, aGU, aAR, adel2, master_preset.preset.FB);
         mesheq[ 2](aCU, aCR, aCD, aCL, aCU, aDL, aHU, aBR, adel3, master_preset.preset.FB);
@@ -904,9 +911,9 @@ struct MVerb {
         mesheq[ 8](aIU, aIR, aID, aIL, aDD, aJL, aNU, aHR, adel9, master_preset.preset.FB);
         mesheq[ 9](aJU, aJR, aJD, aJL, aED, aJR, aOU, aIR, adel10, master_preset.preset.FB);
         mesheq[10](aKU, aKR, aKD, aKL, aFD, aLL, aPU, aKL, adel11, master_preset.preset.FB);
-        mesheq[11](aLU, aLR, aLD, aLL, input_left+aL+aGD, aML, aQU, aKR, adel12, master_preset.preset.FB);
+        mesheq[11](aLU, aLR, aLD, aLL, input_left  + aL + aGD, aML, aQU, aKR, adel12, master_preset.preset.FB);
         mesheq[12](aMU, aMR, aMD, aML, aHD, aNL, aRU, aLR, adel13, master_preset.preset.FB);
-        mesheq[13](aNU, aNR, aND, aNL, input_right+aR+aID, aOL, aSU, aMR, adel14, master_preset.preset.FB);
+        mesheq[13](aNU, aNR, aND, aNL, input_right + aR + aID, aOL, aSU, aMR, adel14, master_preset.preset.FB);
         mesheq[14](aOU, aOR, aOD, aOL, aJD, aOR, aTU, aNR, adel15, master_preset.preset.FB);
         mesheq[15](aPU, aPR, aPD, aPL, aKD, aQL, aUU, aPL, adel16, master_preset.preset.FB);
         mesheq[16](aQU, aQR, aQD, aQL, aLD, aRL, aVU, aPR, adel17, master_preset.preset.FB);

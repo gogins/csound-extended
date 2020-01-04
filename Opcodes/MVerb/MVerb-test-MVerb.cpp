@@ -3315,7 +3315,7 @@ if (gkReverberationEnabled == 0) then
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 else
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Large Hall"
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Medium Hall", "random", 1, "rslow", 0.2, "rfast", 3, "rmax", .05
 endif
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
