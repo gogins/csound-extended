@@ -241,15 +241,21 @@ static std::map<std::string, EqualizerPreset> &equalizerPresets() {
  */
 struct RandomDeviation {
     const MasterPreset *masterPreset;
-    gam::Accum<> frequency_phasor;
-    gam::Accum<> magnitude_phasor; 
     std::default_random_engine generator;
-    std::uniform_real_distribution<float> frequency_distribution;
-    std::uniform_real_distribution<float> deviation_distribution;
-    float deviation_frequency = 0.;
-    float prior_deviation_frequency = 0;
-    float deviation_magnitude = 0.95;
-    float prior_deviation_magnitude = 0;
+    std::uniform_real_distribution<float> deviation_frequency_distribution;
+    std::uniform_real_distribution<float> deviation_magnitude_distribution;
+    float samples_per_second = 0.;
+    float seconds_per_sample = 0.;
+    float frequency_sampling_phase = 1.;
+    float frequency_sampling_phase_increment = 0.;
+    float deviation_sampling_phase = 1.;
+    float deviation_sampling_phase_increment = 0.;
+    float current_deviation_sampling_frequency = 0.;
+    float prior_deviation_sampling_frequency = 0.;
+    float next_deviation_sampling_frequency = 0.;
+    float current_deviation_magnitude = 0.;
+    float prior_deviation_magnitude = 0.;
+    float next_deviation_magnitude = 0.;
     void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
         masterPreset = &masterPreset_;
         /*
@@ -268,33 +274,45 @@ struct RandomDeviation {
         endif
         endop
         */
-        frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
-        prior_deviation_frequency = frequency_distribution(generator);
-        frequency_phasor.freq(masterPreset->krfast);
-        deviation_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
-        prior_deviation_magnitude = deviation_distribution(generator);
-        magnitude_phasor.freq(prior_deviation_frequency);
+        samples_per_second = csound->GetSr(csound);
+        seconds_per_sample = 1. / samples_per_second;
+        // Set up the phasors to start on the first "tick."
+        frequency_sampling_phase = 1.;
+        deviation_sampling_phase = 1.;
+        // Set up the zeroth breakpoints.
+        deviation_frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
+        current_deviation_sampling_frequency = deviation_frequency_distribution(generator);
+        deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
+        current_deviation_magnitude = deviation_magnitude_distribution(generator);
     };
+    // This can be implemented with simple difference equations, because 
+    // rounding errors should not be a problem at these low frequencies.
     float operator () (float value) {
         if (masterPreset->krand == true) {
-            if (frequency_phasor()) {
-                prior_deviation_frequency = deviation_frequency;
-                deviation_frequency = frequency_distribution(generator);
-                deviation_distribution.param(std::uniform_real_distribution<float>::param_type(0., masterPreset->krmax));
+            value = value + (value * current_deviation_magnitude);
+            if (frequency_sampling_phase >= 1.) {
+                frequency_sampling_phase = 0.;
+                frequency_sampling_phase_increment = masterPreset->krfast / samples_per_second;
+                deviation_frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
+                prior_deviation_sampling_frequency = current_deviation_sampling_frequency;
+                next_deviation_sampling_frequency = deviation_frequency_distribution(generator);
+                deviation_sampling_phase_increment = next_deviation_sampling_frequency / samples_per_second;                
             }
-            float current_deviation_frequency = prior_deviation_frequency + ((prior_deviation_frequency - deviation_frequency) / frequency_phasor.phase());
-            magnitude_phasor.freq(current_deviation_frequency);
-            if (magnitude_phasor()) {
-                prior_deviation_magnitude = deviation_magnitude;
-                deviation_magnitude = deviation_distribution(generator);
+            current_deviation_sampling_frequency = prior_deviation_sampling_frequency + ((next_deviation_sampling_frequency - prior_deviation_sampling_frequency) * frequency_sampling_phase);
+            if (deviation_sampling_phase >= 1.) {
+                deviation_sampling_phase = 0.;
+                deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
+                prior_deviation_magnitude = current_deviation_magnitude;
+                next_deviation_magnitude = deviation_magnitude_distribution(generator);
             }
-            float current_deviation = prior_deviation_magnitude + ((prior_deviation_magnitude - deviation_magnitude) / magnitude_phasor.phase());
-            value = value + (value * current_deviation);
+            current_deviation_magnitude = prior_deviation_magnitude + ((next_deviation_magnitude - prior_deviation_magnitude) * deviation_sampling_phase);            
+            frequency_sampling_phase += frequency_sampling_phase_increment;
+            deviation_sampling_phase += deviation_sampling_phase_increment;
+            return value;
         } else {
             return value;
         }
     };
-
 };
 
 struct Multitaps {
