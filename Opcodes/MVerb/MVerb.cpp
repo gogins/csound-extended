@@ -258,22 +258,6 @@ struct RandomDeviation {
     float next_deviation_magnitude = 0.;
     void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
         masterPreset = &masterPreset_;
-        /*
-        opcode randomdel,a,a
-        adel xin
-        krand chnget "random"
-        krslow chnget "rslow"
-        krfast chnget "rfast"
-        krmax chnget "rmax"
-        if krand=1 then
-        atime randomi krslow,krfast,krfast  ;calculate random cps
-        adelayA randi krmax,atime   ;calculate value changes expressed as 0-.95
-        adel=adel+(adel*adelayA)
-        else
-        xout adel
-        endif
-        endop
-        */
         samples_per_second = csound->GetSr(csound);
         seconds_per_sample = 1. / samples_per_second;
         // Set up the phasors to start on the first "tick."
@@ -424,7 +408,7 @@ struct Equalizer {
     }
 };
 
-struct MeshEQ {
+struct MeshEqualizer {
     gam::Delay<> delay[4];
     Equalizer equalizer[4];
     void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
@@ -441,16 +425,16 @@ struct MeshEQ {
         /* Outputs: */
         float &aUout, float &aRout, float &aDout, float &aLout,
         /* Inputs: */
-        float aUin, float aRin, float aDin, float aLin, float adel, float kFB) {
+        float aUin, float aRin, float aDin, float aLin, float delay_variation, float kFB) {
         float afactor = (aUin + aRin + aDin + aLin) * -.5;
         delay[0].write(aUin + afactor);
-        aUout = delay[0].read(adel);
+        aUout = delay[0].read(delay_variation);
         delay[1].write(aRin + afactor);
-        aRout = delay[1].read(adel);
+        aRout = delay[1].read(delay_variation);
         delay[2].write(aDin + afactor);
-        aDout = delay[2].read(adel);
+        aDout = delay[2].read(delay_variation);
         delay[3].write(aLin + afactor);
-        aLout = delay[3].read(adel);
+        aLout = delay[3].read(delay_variation);
         aUout = equalizer[0](aUout) * kFB;
         aRout = equalizer[1](aRout) * kFB;
         aDout = equalizer[2](aDout) * kFB;
@@ -472,7 +456,7 @@ struct MVerb {
     Multitaps multitaps_left;
     Multitaps multitaps_right;
     RandomDeviation randomize_delay[25];
-    MeshEQ mesheq[25];
+    MeshEqualizer mesh_equalizer[25];
     gam::BlockDC<> blockdc_out_left;
     gam::BlockDC<> blockdc_out_right;
     // State variables.
@@ -580,31 +564,31 @@ struct MVerb {
     float aYR = 0.;
     float aYD = 0.;
     float aYL = 0.;
-    float adel1 = 0.;
-    float adel2 = 0.;
-    float adel3 = 0.;
-    float adel4 = 0.;
-    float adel5 = 0.;
-    float adel6 = 0.;
-    float adel7 = 0.;
-    float adel8 = 0.;
-    float adel9 = 0.;
-    float adel10 = 0.;
-    float adel11 = 0.;
-    float adel12 = 0.;
-    float adel13 = 0.;
-    float adel14 = 0.;
-    float adel15 = 0.;
-    float adel16 = 0.;
-    float adel17 = 0.;
-    float adel18 = 0.;
-    float adel19 = 0.;
-    float adel20 = 0.;
-    float adel21 = 0.;
-    float adel22 = 0.;
-    float adel23 = 0.;
-    float adel24 = 0.;
-    float adel25 = 0.;
+    float delay_variation1 = 0.;
+    float delay_variation2 = 0.;
+    float delay_variation3 = 0.;
+    float delay_variation4 = 0.;
+    float delay_variation5 = 0.;
+    float delay_variation6 = 0.;
+    float delay_variation7 = 0.;
+    float delay_variation8 = 0.;
+    float delay_variation9 = 0.;
+    float delay_variation10 = 0.;
+    float delay_variation11 = 0.;
+    float delay_variation12 = 0.;
+    float delay_variation13 = 0.;
+    float delay_variation14 = 0.;
+    float delay_variation15 = 0.;
+    float delay_variation16 = 0.;
+    float delay_variation17 = 0.;
+    float delay_variation18 = 0.;
+    float delay_variation19 = 0.;
+    float delay_variation20 = 0.;
+    float delay_variation21 = 0.;
+    float delay_variation22 = 0.;
+    float delay_variation23 = 0.;
+    float delay_variation24 = 0.;
+    float delay_variation25 = 0.;
     float reverberated_left = 0.;
     float reverberated_right = 0.;
     // All user-controllable parameters, whether in a preset struct or not,
@@ -663,7 +647,7 @@ struct MVerb {
             parameter_values_for_names["eq10"] = &master_preset.equalizerPreset.gain[9];
             // EarlyReturnPreset values are not user-configurable.
             // The following parameters are not stored in a preset struct.
-            parameter_values_for_names["mix"] = &master_preset.effect_mix_dry;
+            parameter_values_for_names["wet"] = &master_preset.effect_mix_wet;
             parameter_values_for_names["random"] = &master_preset.krand;
             parameter_values_for_names["rslow"] = &master_preset.krslow;
             parameter_values_for_names["rfast"] = &master_preset.krfast;
@@ -773,31 +757,31 @@ struct MVerb {
             aYR = 0.;
             aYD = 0.;
             aYL = 0.;
-            adel1 = 0.;
-            adel2 = 0.;
-            adel3 = 0.;
-            adel4 = 0.;
-            adel5 = 0.;
-            adel6 = 0.;
-            adel7 = 0.;
-            adel8 = 0.;
-            adel9 = 0.;
-            adel10 = 0.;
-            adel11 = 0.;
-            adel12 = 0.;
-            adel13 = 0.;
-            adel14 = 0.;
-            adel15 = 0.;
-            adel16 = 0.;
-            adel17 = 0.;
-            adel18 = 0.;
-            adel19 = 0.;
-            adel20 = 0.;
-            adel21 = 0.;
-            adel22 = 0.;
-            adel23 = 0.;
-            adel24 = 0.;
-            adel25 = 0.;
+            delay_variation1 = 0.;
+            delay_variation2 = 0.;
+            delay_variation3 = 0.;
+            delay_variation4 = 0.;
+            delay_variation5 = 0.;
+            delay_variation6 = 0.;
+            delay_variation7 = 0.;
+            delay_variation8 = 0.;
+            delay_variation9 = 0.;
+            delay_variation10 = 0.;
+            delay_variation11 = 0.;
+            delay_variation12 = 0.;
+            delay_variation13 = 0.;
+            delay_variation14 = 0.;
+            delay_variation15 = 0.;
+            delay_variation16 = 0.;
+            delay_variation17 = 0.;
+            delay_variation18 = 0.;
+            delay_variation19 = 0.;
+            delay_variation20 = 0.;
+            delay_variation21 = 0.;
+            delay_variation22 = 0.;
+            delay_variation23 = 0.;
+            delay_variation24 = 0.;
+            delay_variation25 = 0.;
             reverberated_left = 0.;
             reverberated_right = 0.;
         };
@@ -839,7 +823,7 @@ struct MVerb {
         set_equalizer_preset(equalizer_preset_name.c_str());
         for (int i = 0; i < 25; ++i) {
             randomize_delay[i].initialize(csound, master_preset);
-            mesheq[i].initialize(csound, master_preset);
+            mesh_equalizer[i].initialize(csound, master_preset);
         }
     };
     void set_early_return_preset(const char *name) {
@@ -857,99 +841,97 @@ struct MVerb {
                       /* Inputs: */
                       MYFLT a1,
                       MYFLT a2) {
-        master_preset.effect_mix_wet = 1. - master_preset.effect_mix_dry;
-        master_preset.preset.FB = master_preset.preset.FB * (1. - master_preset.clear_delays);       
-        input_left = blockdc_in_left(input_left + (float) a1);
-        input_right = blockdc_in_right(input_right + (float) a2);
-        aL = multitaps_left(input_left);
-        aR = multitaps_right(input_right);
-        /*
-        kres1   chnget  "res1"
-        adel1=kDFact*(1000/kres1)
-        adel1 randomdel adel1
-        */
-        adel1  = master_preset.preset.DFact * (1000. / master_preset.preset.res1 );
-        adel1  = randomize_delay[0 ](adel1 );
-        adel2  = master_preset.preset.DFact * (1000. / master_preset.preset.res2 );
-        adel2  = randomize_delay[1 ](adel2 );
-        adel3  = master_preset.preset.DFact * (1000. / master_preset.preset.res3 );
-        adel3  = randomize_delay[2 ](adel3 );
-        adel4  = master_preset.preset.DFact * (1000. / master_preset.preset.res4 );
-        adel4  = randomize_delay[3 ](adel4 );
-        adel5  = master_preset.preset.DFact * (1000. / master_preset.preset.res5 );
-        adel5  = randomize_delay[4 ](adel5 );
-        adel6  = master_preset.preset.DFact * (1000. / master_preset.preset.res6 );
-        adel6  = randomize_delay[5 ](adel6 );
-        adel7  = master_preset.preset.DFact * (1000. / master_preset.preset.res7 );
-        adel7  = randomize_delay[6 ](adel7 );
-        adel8  = master_preset.preset.DFact * (1000. / master_preset.preset.res8 );
-        adel8  = randomize_delay[7 ](adel8 );
-        adel9  = master_preset.preset.DFact * (1000. / master_preset.preset.res9 );
-        adel9  = randomize_delay[8 ](adel9 );
-        adel10 = master_preset.preset.DFact * (1000. / master_preset.preset.res10);
-        adel10 = randomize_delay[9 ](adel10);
-        adel11 = master_preset.preset.DFact * (1000. / master_preset.preset.res11);
-        adel11 = randomize_delay[10](adel11);
-        adel12 = master_preset.preset.DFact * (1000. / master_preset.preset.res12);
-        adel12 = randomize_delay[11](adel12);
-        adel13 = master_preset.preset.DFact * (1000. / master_preset.preset.res13);
-        adel13 = randomize_delay[12](adel13);
-        adel14 = master_preset.preset.DFact * (1000. / master_preset.preset.res14);
-        adel14 = randomize_delay[13](adel14);
-        adel15 = master_preset.preset.DFact * (1000. / master_preset.preset.res15);
-        adel15 = randomize_delay[14](adel15);
-        adel16 = master_preset.preset.DFact * (1000. / master_preset.preset.res16);
-        adel16 = randomize_delay[15](adel16);
-        adel17 = master_preset.preset.DFact * (1000. / master_preset.preset.res17);
-        adel17 = randomize_delay[16](adel17);
-        adel18 = master_preset.preset.DFact * (1000. / master_preset.preset.res18);
-        adel18 = randomize_delay[17](adel18);
-        adel19 = master_preset.preset.DFact * (1000. / master_preset.preset.res19);
-        adel19 = randomize_delay[18](adel19);
-        adel20 = master_preset.preset.DFact * (1000. / master_preset.preset.res20);
-        adel20 = randomize_delay[19](adel20);
-        adel21 = master_preset.preset.DFact * (1000. / master_preset.preset.res21);
-        adel21 = randomize_delay[20](adel21);
-        adel22 = master_preset.preset.DFact * (1000. / master_preset.preset.res22);
-        adel22 = randomize_delay[21](adel22);
-        adel23 = master_preset.preset.DFact * (1000. / master_preset.preset.res23);
-        adel23 = randomize_delay[22](adel23);
-        adel24 = master_preset.preset.DFact * (1000. / master_preset.preset.res24);
-        adel24 = randomize_delay[23](adel24);
-        adel25 = master_preset.preset.DFact * (1000. / master_preset.preset.res25);
-        adel25 = randomize_delay[24](adel25);
-        mesheq[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, adel1, master_preset.preset.FB);
-        mesheq[ 1](aBU, aBR, aBD, aBL, aBU, aCL, aGU, aAR, adel2, master_preset.preset.FB);
-        mesheq[ 2](aCU, aCR, aCD, aCL, aCU, aDL, aHU, aBR, adel3, master_preset.preset.FB);
-        mesheq[ 3](aDU, aDR, aDD, aDL, aDU, aEL, aIU, aCR, adel4, master_preset.preset.FB);
-        mesheq[ 4](aEU, aER, aED, aEL, aEU, aER, aJU, aDR, adel5, master_preset.preset.FB);
-        mesheq[ 5](aFU, aFR, aFD, aFL, aAD, aGL, aKU, aFL, adel6, master_preset.preset.FB);
-        mesheq[ 6](aGU, aGR, aGD, aGL, aBD, aHL, aLU, aFR, adel7, master_preset.preset.FB);
-        mesheq[ 7](aHU, aHR, aHD, aHL, aCD, aIL, aMU, aGR, adel8, master_preset.preset.FB);
-        mesheq[ 8](aIU, aIR, aID, aIL, aDD, aJL, aNU, aHR, adel9, master_preset.preset.FB);
-        mesheq[ 9](aJU, aJR, aJD, aJL, aED, aJR, aOU, aIR, adel10, master_preset.preset.FB);
-        mesheq[10](aKU, aKR, aKD, aKL, aFD, aLL, aPU, aKL, adel11, master_preset.preset.FB);
-        mesheq[11](aLU, aLR, aLD, aLL, input_left  + aL + aGD, aML, aQU, aKR, adel12, master_preset.preset.FB);
-        mesheq[12](aMU, aMR, aMD, aML, aHD, aNL, aRU, aLR, adel13, master_preset.preset.FB);
-        mesheq[13](aNU, aNR, aND, aNL, input_right + aR + aID, aOL, aSU, aMR, adel14, master_preset.preset.FB);
-        mesheq[14](aOU, aOR, aOD, aOL, aJD, aOR, aTU, aNR, adel15, master_preset.preset.FB);
-        mesheq[15](aPU, aPR, aPD, aPL, aKD, aQL, aUU, aPL, adel16, master_preset.preset.FB);
-        mesheq[16](aQU, aQR, aQD, aQL, aLD, aRL, aVU, aPR, adel17, master_preset.preset.FB);
-        mesheq[17](aRU, aRR, aRD, aRL, aMD, aSL, aWU, aQR, adel18, master_preset.preset.FB);
-        mesheq[18](aSU, aSR, aSD, aSL, aND, aTL, aXU, aRR, adel19, master_preset.preset.FB);
-        mesheq[19](aTU, aTR, aTD, aTL, aOD, aTR, aYU, aSR, adel20, master_preset.preset.FB);
-        mesheq[20](aUU, aUR, aUD, aUL, aPD, aVL, aUD, aUL, adel21, master_preset.preset.FB);
-        mesheq[21](aVU, aVR, aVD, aVL, aQD, aWL, aVD, aUR, adel22, master_preset.preset.FB);
-        mesheq[22](aWU, aWR, aWD, aWL, aRD, aXL, aWD, aVR, adel23, master_preset.preset.FB);
-        mesheq[23](aXU, aXR, aXD, aXL, aSD, aYL, aXD, aWR, adel24, master_preset.preset.FB);
-        mesheq[24](aYU, aYR, aYD, aYL, aTD, aYR, aYD, aXR, adel25, master_preset.preset.FB);
-        reverberated_left = blockdc_out_left(aGL);
-        reverberated_right = blockdc_out_right(aIR);
-        out_left  = (reverberated_left * master_preset.effect_mix_wet) + (input_left * master_preset.effect_mix_dry);
-        out_right = (reverberated_right * master_preset.effect_mix_wet) + (input_right * master_preset.effect_mix_dry);
-        input_left = 0.;
-        input_right = 0.;
-    };
+        master_preset.effect_mix_dry = 1. - master_preset.effect_mix_wet;
+        if (master_preset.effect_mix_wet == 0.) {
+            out_left = a1;
+            out_right = a2;
+        } else {
+            master_preset.preset.FB = master_preset.preset.FB * (1. - master_preset.clear_delays);       
+            input_left = blockdc_in_left((float) a1);
+            input_right = blockdc_in_right((float) a2);
+            aL = multitaps_left(input_left);
+            aR = multitaps_right(input_right);
+            delay_variation1  = master_preset.preset.DFact * (1000. / master_preset.preset.res1 );
+            delay_variation1  = randomize_delay[0 ](delay_variation1 );
+            delay_variation2  = master_preset.preset.DFact * (1000. / master_preset.preset.res2 );
+            delay_variation2  = randomize_delay[1 ](delay_variation2 );
+            delay_variation3  = master_preset.preset.DFact * (1000. / master_preset.preset.res3 );
+            delay_variation3  = randomize_delay[2 ](delay_variation3 );
+            delay_variation4  = master_preset.preset.DFact * (1000. / master_preset.preset.res4 );
+            delay_variation4  = randomize_delay[3 ](delay_variation4 );
+            delay_variation5  = master_preset.preset.DFact * (1000. / master_preset.preset.res5 );
+            delay_variation5  = randomize_delay[4 ](delay_variation5 );
+            delay_variation6  = master_preset.preset.DFact * (1000. / master_preset.preset.res6 );
+            delay_variation6  = randomize_delay[5 ](delay_variation6 );
+            delay_variation7  = master_preset.preset.DFact * (1000. / master_preset.preset.res7 );
+            delay_variation7  = randomize_delay[6 ](delay_variation7 );
+            delay_variation8  = master_preset.preset.DFact * (1000. / master_preset.preset.res8 );
+            delay_variation8  = randomize_delay[7 ](delay_variation8 );
+            delay_variation9  = master_preset.preset.DFact * (1000. / master_preset.preset.res9 );
+            delay_variation9  = randomize_delay[8 ](delay_variation9 );
+            delay_variation10 = master_preset.preset.DFact * (1000. / master_preset.preset.res10);
+            delay_variation10 = randomize_delay[9 ](delay_variation10);
+            delay_variation11 = master_preset.preset.DFact * (1000. / master_preset.preset.res11);
+            delay_variation11 = randomize_delay[10](delay_variation11);
+            delay_variation12 = master_preset.preset.DFact * (1000. / master_preset.preset.res12);
+            delay_variation12 = randomize_delay[11](delay_variation12);
+            delay_variation13 = master_preset.preset.DFact * (1000. / master_preset.preset.res13);
+            delay_variation13 = randomize_delay[12](delay_variation13);
+            delay_variation14 = master_preset.preset.DFact * (1000. / master_preset.preset.res14);
+            delay_variation14 = randomize_delay[13](delay_variation14);
+            delay_variation15 = master_preset.preset.DFact * (1000. / master_preset.preset.res15);
+            delay_variation15 = randomize_delay[14](delay_variation15);
+            delay_variation16 = master_preset.preset.DFact * (1000. / master_preset.preset.res16);
+            delay_variation16 = randomize_delay[15](delay_variation16);
+            delay_variation17 = master_preset.preset.DFact * (1000. / master_preset.preset.res17);
+            delay_variation17 = randomize_delay[16](delay_variation17);
+            delay_variation18 = master_preset.preset.DFact * (1000. / master_preset.preset.res18);
+            delay_variation18 = randomize_delay[17](delay_variation18);
+            delay_variation19 = master_preset.preset.DFact * (1000. / master_preset.preset.res19);
+            delay_variation19 = randomize_delay[18](delay_variation19);
+            delay_variation20 = master_preset.preset.DFact * (1000. / master_preset.preset.res20);
+            delay_variation20 = randomize_delay[19](delay_variation20);
+            delay_variation21 = master_preset.preset.DFact * (1000. / master_preset.preset.res21);
+            delay_variation21 = randomize_delay[20](delay_variation21);
+            delay_variation22 = master_preset.preset.DFact * (1000. / master_preset.preset.res22);
+            delay_variation22 = randomize_delay[21](delay_variation22);
+            delay_variation23 = master_preset.preset.DFact * (1000. / master_preset.preset.res23);
+            delay_variation23 = randomize_delay[22](delay_variation23);
+            delay_variation24 = master_preset.preset.DFact * (1000. / master_preset.preset.res24);
+            delay_variation24 = randomize_delay[23](delay_variation24);
+            delay_variation25 = master_preset.preset.DFact * (1000. / master_preset.preset.res25);
+            delay_variation25 = randomize_delay[24](delay_variation25);
+            mesh_equalizer[ 0](aAU, aAR, aAD, aAL, aAU, aBL, aFU, aAL, delay_variation1, master_preset.preset.FB);
+            mesh_equalizer[ 1](aBU, aBR, aBD, aBL, aBU, aCL, aGU, aAR, delay_variation2, master_preset.preset.FB);
+            mesh_equalizer[ 2](aCU, aCR, aCD, aCL, aCU, aDL, aHU, aBR, delay_variation3, master_preset.preset.FB);
+            mesh_equalizer[ 3](aDU, aDR, aDD, aDL, aDU, aEL, aIU, aCR, delay_variation4, master_preset.preset.FB);
+            mesh_equalizer[ 4](aEU, aER, aED, aEL, aEU, aER, aJU, aDR, delay_variation5, master_preset.preset.FB);
+            mesh_equalizer[ 5](aFU, aFR, aFD, aFL, aAD, aGL, aKU, aFL, delay_variation6, master_preset.preset.FB);
+            mesh_equalizer[ 6](aGU, aGR, aGD, aGL, aBD, aHL, aLU, aFR, delay_variation7, master_preset.preset.FB);
+            mesh_equalizer[ 7](aHU, aHR, aHD, aHL, aCD, aIL, aMU, aGR, delay_variation8, master_preset.preset.FB);
+            mesh_equalizer[ 8](aIU, aIR, aID, aIL, aDD, aJL, aNU, aHR, delay_variation9, master_preset.preset.FB);
+            mesh_equalizer[ 9](aJU, aJR, aJD, aJL, aED, aJR, aOU, aIR, delay_variation10, master_preset.preset.FB);
+            mesh_equalizer[10](aKU, aKR, aKD, aKL, aFD, aLL, aPU, aKL, delay_variation11, master_preset.preset.FB);
+            mesh_equalizer[11](aLU, aLR, aLD, aLL, input_left  + aL + aGD, aML, aQU, aKR, delay_variation12, master_preset.preset.FB);
+            mesh_equalizer[12](aMU, aMR, aMD, aML, aHD, aNL, aRU, aLR, delay_variation13, master_preset.preset.FB);
+            mesh_equalizer[13](aNU, aNR, aND, aNL, input_right + aR + aID, aOL, aSU, aMR, delay_variation14, master_preset.preset.FB);
+            mesh_equalizer[14](aOU, aOR, aOD, aOL, aJD, aOR, aTU, aNR, delay_variation15, master_preset.preset.FB);
+            mesh_equalizer[15](aPU, aPR, aPD, aPL, aKD, aQL, aUU, aPL, delay_variation16, master_preset.preset.FB);
+            mesh_equalizer[16](aQU, aQR, aQD, aQL, aLD, aRL, aVU, aPR, delay_variation17, master_preset.preset.FB);
+            mesh_equalizer[17](aRU, aRR, aRD, aRL, aMD, aSL, aWU, aQR, delay_variation18, master_preset.preset.FB);
+            mesh_equalizer[18](aSU, aSR, aSD, aSL, aND, aTL, aXU, aRR, delay_variation19, master_preset.preset.FB);
+            mesh_equalizer[19](aTU, aTR, aTD, aTL, aOD, aTR, aYU, aSR, delay_variation20, master_preset.preset.FB);
+            mesh_equalizer[20](aUU, aUR, aUD, aUL, aPD, aVL, aUD, aUL, delay_variation21, master_preset.preset.FB);
+            mesh_equalizer[21](aVU, aVR, aVD, aVL, aQD, aWL, aVD, aUR, delay_variation22, master_preset.preset.FB);
+            mesh_equalizer[22](aWU, aWR, aWD, aWL, aRD, aXL, aWD, aVR, delay_variation23, master_preset.preset.FB);
+            mesh_equalizer[23](aXU, aXR, aXD, aXL, aSD, aYL, aXD, aWR, delay_variation24, master_preset.preset.FB);
+            mesh_equalizer[24](aYU, aYR, aYD, aYL, aTD, aYR, aYD, aXR, delay_variation25, master_preset.preset.FB);
+            reverberated_left = blockdc_out_left(aGL);
+            reverberated_right = blockdc_out_right(aIR);
+            out_left  = (reverberated_left * master_preset.effect_mix_wet) + (input_left * master_preset.effect_mix_dry);
+            out_right = (reverberated_right * master_preset.effect_mix_wet) + (input_right * master_preset.effect_mix_dry);
+       }
+     };
 };
 
 class MVerbOpcode  : public csound::OpcodeBase<MVerbOpcode>
@@ -962,8 +944,7 @@ public:
     MYFLT *ain_left;
     MYFLT *ain_right;
     STRINGDAT *preset;
-    // These will be arbitrary name-value pairs, and 
-    // the number of pairs will be INOCOUNT / 2.
+    // These will be arbitrary name-value pairs.
     MYFLT *parameters[VARGMAX-4];
     // State. This C++ object does all the real work.
     MVerb *mverb;

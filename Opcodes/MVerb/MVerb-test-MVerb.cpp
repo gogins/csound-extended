@@ -3315,7 +3315,17 @@ if (gkReverberationEnabled == 0) then
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 else
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Medium Hall", "random", 1, "rslow", 0.2, "rfast", 3, "rmax", .05
+
+; Emulate reverbsc parameters:
+
+; gkReverberationEnabled        chnexport               "gkReverberationEnabled", 1
+; gkReverberationEnabled        init                    1
+; gkReverberationDelay          chnexport               "gkReverberationDelay", 1
+; gkReverberationDelay          init                    0.65
+; gkReverberationWet          	chnexport               "gkReverberationWet", 1
+; gkReverberationWet          	init                    0.125
+
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Medium Hall", "wet", .125, "FB", .65
 endif
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright

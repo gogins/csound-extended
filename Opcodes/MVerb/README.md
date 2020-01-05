@@ -50,7 +50,7 @@ The order of initialization is:
                                    parameters, as *name, value* pairs. These 
                                    are real-valued unless they are strings.
 
-- *mix* -- Fraction of the output signal that is not processed.
+- *wet* -- Fraction of the output signal that is reverberated.
 - *res1* -- Resonant frequency of node 1 in the mesh.
 - *res2* -- Resonant frequency of node 2 in the mesh.
 - *res3* -- Resonant frequency of node 3 in the mesh.

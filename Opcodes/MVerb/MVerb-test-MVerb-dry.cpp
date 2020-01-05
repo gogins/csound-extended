@@ -59,8 +59,8 @@ int main(int argc, const char **argv)
 {
     csound::MusicModel model;
     // These fields determine output filenames and ID 3 tags.
-    model.setTitle("MVerb-test-dry");
-    model.setFilename("MVerb-test-dry");
+    model.setTitle("MVerb-test-MVerb");
+    model.setFilename("MVerb-test-MVerb");
     model.setAlbum("Silence");
     model.setArtist("Michael Gogins");
     model.setAuthor("Michael Gogins");
@@ -206,7 +206,7 @@ int main(int argc, const char **argv)
 sr                              =                       96000
 ksmps                           =                       100
 nchnls                          =                       2
-0dbfs                           =                       2000
+0dbfs                           =                       20000
 iampdbfs                        init                    32768
                                 prints                  "Default amplitude at 0 dBFS:  %9.4f\n", iampdbfs
 idbafs                          init                    dbamp(iampdbfs)
@@ -3315,7 +3315,7 @@ if (gkReverberationEnabled == 0) then
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 else
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Large Hall"
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Medium Hall", "wet", 0.
 endif
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
