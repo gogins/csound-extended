@@ -59,8 +59,8 @@ int main(int argc, const char **argv)
 {
     csound::MusicModel model;
     // These fields determine output filenames and ID 3 tags.
-    model.setTitle("MVerb-test-MVerb-dry");
-    model.setFilename("MVerb-test-MVerb-dry");
+    model.setTitle("MVerb-test-Weird_1");
+    model.setFilename("MVerb-test-Weird_1");
     model.setAlbum("Silence");
     model.setArtist("Michael Gogins");
     model.setAuthor("Michael Gogins");
@@ -3315,7 +3315,17 @@ if (gkReverberationEnabled == 0) then
 aoutleft                        =                       ainleft
 aoutright                       =                       ainright
 else
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Medium Hall", "wet", 0.
+
+; Emulate reverbsc parameters:
+
+; gkReverberationEnabled        chnexport               "gkReverberationEnabled", 1
+; gkReverberationEnabled        init                    1
+; gkReverberationDelay          chnexport               "gkReverberationDelay", 1
+; gkReverberationDelay          init                    0.65
+; gkReverberationWet          	chnexport               "gkReverberationWet", 1
+; gkReverberationWet          	init                    0.125
+
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Weird 1"
 endif
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright

@@ -80,7 +80,7 @@ The order of initialization is:
 - *ERamp* -- Amplitude of early reflections.
 - *DFact* -- Amount (size) of early reflections.
 - *FB* -- Delay feedback (size) of mesh.
-- *FBclear* -- Amount by which delay lines are attenuated.
+- *FBclear* -- If true (1), clears all feedbacks in the mesh; if false (0), enables feedbacks.
 - *Q* -- Q of the equalizer filters.
 - *EQselect* -- Name of the equalization preset, one of: "flat", "high cut 1", "high cut 2", "low cut 1", "low cut 2", "band pass 1", "band pass 2", "2 bands", "3 bands", "evens", "odds".
 - *eq1* -- Gain of equalizer band 1.
