@@ -5,9 +5,9 @@ MVerb - Implements Jon Christopher Nelson's waveguide mesh reverb.
 ## Description
 
 Implements Jon Christopher Nelson's waveguide mesh reverb, originally created 
-as a Cabbage VST plugin, as a C++ Csound plugin opcode.
+as a Cabbage VST plugin, as a C++ Csound plugin opcode. 
 
-MVerb is a modified five-by-five 2D waveguide mesh reverberator. It is highly 
+MVerb is a modified 5-by-5 2D waveguide mesh reverberator. It is highly 
 flexible and can generate compelling and unique effects timbres ranging from 
 traditional spaces to infinite morphing spaces or the simulation of metallic 
 plates or cymbals. The plugin incorporates a 10-band parametric equalizer for 
@@ -15,7 +15,7 @@ timbral control and delay randomization to create more unusual effects.
 
 ## Syntax
 ```
-aoutleft, aoutright MVerb ainleft, ainright, Spreset [[, Sparameter, xvalue ],...]
+aoutleft, aoutright MVerb ainleft, ainright, Spreset [[, Sparameter, kvalue ],...]
 ```
 ## Initialization
 
@@ -31,8 +31,8 @@ aoutleft, aoutright MVerb ainleft, ainright, Spreset [[, Sparameter, xvalue ],..
 
 The order of initialization is:
 
-1. Default values of all parameters.
-2. The user's choice of *Spreset* determines most parameters.
+1. All parameters have default values.
+2. The user's choice of *Spreset* determines most of these parameters.
 3. The user can override any number of default or preset parameters using 
    optional opcode parameters.
 
@@ -44,13 +44,13 @@ The order of initialization is:
 
 *ainleft* - Left channel of the input signal.
 
-*aintright* - Right channel of the input signal.
+*ainright* - Right channel of the input signal.
 
 *[[, Sparameter, xvalue ],...]* -- Any number of the following control 
                                    parameters, as *name, value* pairs. These 
                                    are real-valued unless they are strings.
 
-- *wet* -- Fraction of the output signal that is reverberated.
+- *wet* -- Fraction of the output signal that is reverberated. Not in a preset, must be set as an opcode parameter.
 - *res1* -- Resonant frequency of node 1 in the mesh.
 - *res2* -- Resonant frequency of node 2 in the mesh.
 - *res3* -- Resonant frequency of node 3 in the mesh.
@@ -93,18 +93,18 @@ The order of initialization is:
 - *eq8* -- Gain of equalizer band 8.
 - *eq9* -- Gain of equalizer band 9.
 - *eq10* -- Gain of equalizer band 10.
-- *random* -- Whether (1) or not (0) the randomization of mesh delays is enabled.
-- *rslow* -- Lower limit of frequency of randomization of mesh delay times.
-- *rfast* -- Upper limit of frequency of randomization of mesh delay times.
-- *rmax* -- Maximum random deviation of mesh delay times. 
+- *random* -- Whether (1) or not (0) the randomization of mesh delays is enabled. Not in a preset, must be set as an opcode parameter.
+- *rslow* -- Lower limit of frequency of randomization of mesh delay times. Not in a preset, must be set as an opcode parameter.
+- *rfast* -- Upper limit of frequency of randomization of mesh delay times.  Not in a preset, must be set as an opcode parameter.
+- *rmax* -- Maximum random deviation of mesh delay times. Not in a preset, must be set as an opcode parameter.
     
 The order of processing is:
 
 1.  2 DC blockers for the stereo input signal.
 2.  2 multitap delays for stereo early reflections.
 3.  25 mesh nodes for the reverb, each with:
-    1.  4 variable delays, with optionally randomized delay times.
-    1.  4 equalizers, each with:    
+    1.  4 variable delay lines, with optionally randomized delay times.
+    1.  4 10-band equalizers, each with:    
         1.  10 parametric biquad filters.
         2.  1 level balancer.
         3.  1 DC blocker.        

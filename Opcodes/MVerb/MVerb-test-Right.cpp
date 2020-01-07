@@ -3325,7 +3325,7 @@ else
 ; gkReverberationWet          	chnexport               "gkReverberationWet", 1
 ; gkReverberationWet          	init                    0.125
 
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Right"
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Right", "wet", 1.
 endif
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright

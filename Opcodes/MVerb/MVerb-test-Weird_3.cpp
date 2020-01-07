@@ -59,8 +59,8 @@ int main(int argc, const char **argv)
 {
     csound::MusicModel model;
     // These fields determine output filenames and ID 3 tags.
-    model.setTitle("MVerb-test-Weird_1");
-    model.setFilename("MVerb-test-Weird_1");
+    model.setTitle("MVerb-test-Weird_3");
+    model.setFilename("MVerb-test-Weird_3");
     model.setAlbum("Silence");
     model.setArtist("Michael Gogins");
     model.setAuthor("Michael Gogins");
@@ -3325,7 +3325,7 @@ else
 ; gkReverberationWet          	chnexport               "gkReverberationWet", 1
 ; gkReverberationWet          	init                    0.125
 
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Weird 1"
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Weird 3", "wet", 1., "random", 1., "rslow", .05, "rfast", 2., "rmax", 0.25
 endif
                                 outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright

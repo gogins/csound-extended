@@ -239,22 +239,22 @@ struct RandomDeviation {
     float operator () (float value) {
         if (masterPreset->krand == true) {
             value = value + (value * current_deviation_magnitude);
+            frequency_sampling_phase_increment = masterPreset->krfast / samples_per_second;
             if (frequency_sampling_phase >= 1.) {
                 frequency_sampling_phase = 0.;
-                frequency_sampling_phase_increment = masterPreset->krfast / samples_per_second;
-                deviation_frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
+                ///deviation_frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
                 prior_deviation_sampling_frequency = current_deviation_sampling_frequency;
-                next_deviation_sampling_frequency = deviation_frequency_distribution(generator);
-                deviation_sampling_phase_increment = next_deviation_sampling_frequency / samples_per_second;                
+                next_deviation_sampling_frequency = deviation_frequency_distribution(generator, std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
             }
+            deviation_sampling_phase_increment = next_deviation_sampling_frequency / samples_per_second;                
             current_deviation_sampling_frequency = prior_deviation_sampling_frequency + ((next_deviation_sampling_frequency - prior_deviation_sampling_frequency) * frequency_sampling_phase);
             if (deviation_sampling_phase >= 1.) {
                 deviation_sampling_phase = 0.;
-                deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
+                ///deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
                 prior_deviation_magnitude = current_deviation_magnitude;
-                next_deviation_magnitude = deviation_magnitude_distribution(generator);
+                next_deviation_magnitude = deviation_magnitude_distribution(generator, std::uniform_real_distribution<float>::param_type(-masterPreset->krmax, masterPreset->krmax));
             }
-            current_deviation_magnitude = prior_deviation_magnitude + ((next_deviation_magnitude - prior_deviation_magnitude) * deviation_sampling_phase);            
+            current_deviation_magnitude = prior_deviation_magnitude + ((next_deviation_magnitude - prior_deviation_magnitude) * deviation_sampling_phase);   
             frequency_sampling_phase += frequency_sampling_phase_increment;
             deviation_sampling_phase += deviation_sampling_phase_increment;
             return value;
