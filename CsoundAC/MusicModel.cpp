@@ -210,7 +210,8 @@ std::string MusicModel::getCsoundCommand() const
     }
     char buffer[0x200];
     std::sprintf(buffer,
-                 "--midi-key=4 --midi-velocity=5 -m195 -j%d -RWdfo%s",
+                // message flags: 1 + 2 + 32 + 128 
+                 "--midi-key=4 --midi-velocity=5 -m168 -j%d -RWdfo%s",
                  threadCount,
                  output_soundfile_filepath.c_str());
     return buffer;
