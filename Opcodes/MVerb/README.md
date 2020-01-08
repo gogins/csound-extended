@@ -97,6 +97,8 @@ The order of initialization is:
 - *rslow* -- Lower limit of frequency of randomization of mesh delay times. Not in a preset, must be set as an opcode parameter.
 - *rfast* -- Upper limit of frequency of randomization of mesh delay times.  Not in a preset, must be set as an opcode parameter.
 - *rmax* -- Maximum random deviation of mesh delay times. Not in a preset, must be set as an opcode parameter.
+- *random_seed* -- Optional seed for the random number generator used by the delay time randomizers. If not set, the C++ library selects a seed. Not in a preset, must be set as an opcode parameter.
+- *print* -- Optional flag to print all parameter values (at initialization time only) to the Csound message console. Not in a preset, must be set as an opcode parameter.
     
 The order of processing is:
 

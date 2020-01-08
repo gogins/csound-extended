@@ -178,6 +178,8 @@ struct MasterPreset {
     float krslow = 0.;
     float krfast = 0.;
     float krmax = 0.;
+    float random_seed = -1.;
+    float print = 0.;
 };
 
 static std::map<std::string, EqualizerPreset> &equalizerPresets() {
@@ -206,7 +208,7 @@ static std::map<std::string, EqualizerPreset> &equalizerPresets() {
  */
 struct RandomDeviation {
     const MasterPreset *masterPreset;
-    std::default_random_engine generator;
+    std::default_random_engine *generator;
     std::uniform_real_distribution<float> deviation_frequency_distribution;
     std::uniform_real_distribution<float> deviation_magnitude_distribution;
     float samples_per_second = 0.;
@@ -221,8 +223,9 @@ struct RandomDeviation {
     float current_deviation_magnitude = 0.;
     float prior_deviation_magnitude = 0.;
     float next_deviation_magnitude = 0.;
-    void initialize(CSOUND *csound, const MasterPreset &masterPreset_) {
+    void initialize(CSOUND *csound, const MasterPreset &masterPreset_, std::default_random_engine *generator_) {
         masterPreset = &masterPreset_;
+        generator = generator_;
         samples_per_second = csound->GetSr(csound);
         seconds_per_sample = 1. / samples_per_second;
         // Set up the phasors to start on the first "tick."
@@ -230,9 +233,9 @@ struct RandomDeviation {
         deviation_sampling_phase = 1.;
         // Set up the zeroth breakpoints.
         deviation_frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
-        current_deviation_sampling_frequency = deviation_frequency_distribution(generator);
-        deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
-        current_deviation_magnitude = deviation_magnitude_distribution(generator);
+        current_deviation_sampling_frequency = deviation_frequency_distribution(*generator);
+        deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(-masterPreset->krmax, masterPreset->krmax));
+        current_deviation_magnitude = deviation_magnitude_distribution(*generator);
     };
     // This can be implemented with simple difference equations, because 
     // rounding errors should not be a problem at these low frequencies.
@@ -242,17 +245,15 @@ struct RandomDeviation {
             frequency_sampling_phase_increment = masterPreset->krfast / samples_per_second;
             if (frequency_sampling_phase >= 1.) {
                 frequency_sampling_phase = 0.;
-                ///deviation_frequency_distribution.param(std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
                 prior_deviation_sampling_frequency = current_deviation_sampling_frequency;
-                next_deviation_sampling_frequency = deviation_frequency_distribution(generator, std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
+                next_deviation_sampling_frequency = deviation_frequency_distribution(*generator, std::uniform_real_distribution<float>::param_type(masterPreset->krslow, masterPreset->krfast));
             }
             deviation_sampling_phase_increment = next_deviation_sampling_frequency / samples_per_second;                
             current_deviation_sampling_frequency = prior_deviation_sampling_frequency + ((next_deviation_sampling_frequency - prior_deviation_sampling_frequency) * frequency_sampling_phase);
             if (deviation_sampling_phase >= 1.) {
                 deviation_sampling_phase = 0.;
-                ///deviation_magnitude_distribution.param(std::uniform_real_distribution<float>::param_type(.0, masterPreset->krmax));
-                prior_deviation_magnitude = current_deviation_magnitude;
-                next_deviation_magnitude = deviation_magnitude_distribution(generator, std::uniform_real_distribution<float>::param_type(-masterPreset->krmax, masterPreset->krmax));
+               prior_deviation_magnitude = current_deviation_magnitude;
+                next_deviation_magnitude = deviation_magnitude_distribution(*generator, std::uniform_real_distribution<float>::param_type(-masterPreset->krmax, masterPreset->krmax));
             }
             current_deviation_magnitude = prior_deviation_magnitude + ((next_deviation_magnitude - prior_deviation_magnitude) * deviation_sampling_phase);   
             frequency_sampling_phase += frequency_sampling_phase_increment;
@@ -413,6 +414,8 @@ struct MVerb {
     int frames_per_second = 0;
     MYFLT seconds_per_frame = 0;
     int frames_per_block = 0;
+    std::default_random_engine generator;
+    int random_seed = 1;
     MasterPreset master_preset;
     std::vector<std::string> early_return_presets_for_numbers = {"None", "Small", "Medium", "Large", "Huge", "Long Random", "Short Backwards", "Long Backwards", "Strange1", "Strange2"}; 
     std::vector<std::string> equalizer_presets_for_numbers = {"flat", "high cut 1", "high cut 2", "low cut 1", "low cut 2", "band pass 1", "band pass 2", "2 bands", "3 bands", "evens", "odds"};
@@ -559,6 +562,7 @@ struct MVerb {
     // All user-controllable parameters, whether in a preset struct or not,
     // are updated from here by reference.
     std::map<std::string, float *> parameter_values_for_names;
+    bool printed = false;
     void initialize(CSOUND *csound_) {
         if (initialized == false) {
             initialized = true;
@@ -567,6 +571,7 @@ struct MVerb {
             seconds_per_frame = 1.0 / MYFLT(frames_per_second);
             frames_per_block = csound->GetKsmps(csound);
             gam::sampleRate(frames_per_second);
+            printed = false;
             // Preset.
             parameter_values_for_names["res1"] = &master_preset.preset.res1;
             parameter_values_for_names["res2"] = &master_preset.preset.res2;
@@ -618,6 +623,8 @@ struct MVerb {
             parameter_values_for_names["rfast"] = &master_preset.krfast;
             parameter_values_for_names["rmax"] = &master_preset.krmax;
             parameter_values_for_names["FBclear"] = &master_preset.clear_delays;
+            parameter_values_for_names["random_seed"] = &master_preset.random_seed;
+            parameter_values_for_names["print"] = &master_preset.print;
             input_left = 0;
             input_right = 0;
             aL = 0.;
@@ -777,19 +784,48 @@ struct MVerb {
             }
             ++parameter_index;
         }        
+        if (master_preset.print != 0. && printed == false) {
+            print_parameters();
+            printed = true;
+        }
     };
     void set_preset(const char *name) {
         master_preset.preset = presets()[name];
+        master_preset.presetName = name;
         auto early_return_preset_index = int(master_preset.preset.ERSelect) - 1;
         auto early_return_preset_name = early_return_presets_for_numbers[early_return_preset_index];
         set_early_return_preset(early_return_preset_name.c_str());
         auto equalizer_preset_index = int(master_preset.preset.EQSelect) - 1;
         auto equalizer_preset_name = equalizer_presets_for_numbers[equalizer_preset_index];
         set_equalizer_preset(equalizer_preset_name.c_str());
+        if (master_preset.random_seed > 0) {
+            generator.seed((unsigned int) master_preset.random_seed);
+        }
         for (int i = 0; i < 25; ++i) {
-            randomize_delay[i].initialize(csound, master_preset);
+            randomize_delay[i].initialize(csound, master_preset, &generator);
             mesh_equalizer[i].initialize(csound, master_preset);
         }
+    };
+    void print_parameters() {
+        csound->Message(csound, "MVerb preset: %s\n", master_preset.presetName.c_str());
+        for (auto entry : parameter_values_for_names) {
+            csound->Message(csound, "  %15s: %12.6f\n", entry.first.c_str(), *entry.second);
+        };
+        auto early_return_preset_index = int(master_preset.preset.ERSelect) - 1;
+        auto early_return_preset_name = early_return_presets_for_numbers[early_return_preset_index];
+        csound->Message(csound, "  Early reflections: %s\n", early_return_preset_name.c_str());
+        for (int i = 0, n = master_preset.earlyReturnPreset.taps_left.size(); i < n; ++i) {
+            csound->Message(csound, "    Left tap  %3d: %12.6f\n", i, master_preset.earlyReturnPreset.taps_left[i]);
+        }
+        for (int i = 0, n = master_preset.earlyReturnPreset.taps_right.size(); i < n; ++i) {
+            csound->Message(csound, "    Right tap %3d: %12.6f\n", i, master_preset.earlyReturnPreset.taps_right[i]);
+        }
+        auto equalizer_preset_index = int(master_preset.preset.EQSelect) - 1;
+        auto equalizer_preset_name = equalizer_presets_for_numbers[equalizer_preset_index];
+        csound->Message(csound, "  Equalizer: %s\n", equalizer_preset_name.c_str());
+        for (int i = 0; i < 10; i++) {
+            csound->Message(csound, "         Band %3d: %12.6f\n", i, master_preset.equalizerPreset.gain[i]);
+        }         
     };
     void set_early_return_preset(const char *name) {
         master_preset.earlyReturnPreset = earlyReturnPresets()[name];

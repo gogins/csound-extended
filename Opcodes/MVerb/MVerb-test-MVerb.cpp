@@ -3311,10 +3311,6 @@ endifclause:
                                 //////////////////////////////////////////////
 ainleft                         inleta                  "inleft"
 ainright                        inleta                  "inright"
-if (gkReverberationEnabled == 0) then
-aoutleft                        =                       ainleft
-aoutright                       =                       ainright
-else
 
 ; Emulate reverbsc parameters:
 
@@ -3325,9 +3321,11 @@ else
 ; gkReverberationWet          	chnexport               "gkReverberationWet", 1
 ; gkReverberationWet          	init                    0.125
 
-aoutleft, aoutright             MVerb                   ainleft, ainright, "Medium Hall", "wet", .125, "FB", .65
-endif
-                                outleta                 "outleft", aoutleft
+; Trying to emulate reverbsc parameters in the original piece. Some of these are internal to reverbsc's C code.
+
+aoutleft, aoutright             MVerb                   ainleft, ainright, "Large Hall", "wet", 1., "FB", .865, "random", 1, "rslow", 1.1, "rfast", 3.8, "rmax", .01, "print", 1., "DFact", .92
+
+outleta                 "outleft", aoutleft
                                 outleta                 "outright", aoutright
 prints "Reverberation  i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
                                 endin
