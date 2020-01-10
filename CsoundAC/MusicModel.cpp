@@ -88,6 +88,7 @@ void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
 
 int MusicModel::perform()
 {
+    auto started_at = System::startTiming();
     int errorStatus = 0;
     std::string old_command = cppSound->getCommand();
     auto csound_command = getCsoundCommand();
@@ -114,6 +115,8 @@ int MusicModel::perform()
         errorStatus = 0;
     }
     cppSound->setCommand(old_command);
+    auto seconds = System::stopTiming(started_at);
+    System::message("Performance took %9.4f seconds.\n", seconds);
     return errorStatus;
 }
 

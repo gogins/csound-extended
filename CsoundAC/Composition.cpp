@@ -263,10 +263,14 @@ int Composition::performMaster()
 int Composition::performAll()
 {
     System::inform("BEGAN Composition::performAll()...\n");
+    auto started_at = System::startTiming();
     int errorStatus = performMaster();
     if (errorStatus) {
         return errorStatus;
     }
+    double seconds = System::stopTiming(started_at);
+    System::message("Performance took %9.4f seconds.\n", seconds);
+    started_at = System::startTiming();
     errorStatus = translateMaster();
     System::inform("ENDED Composition::performAll().\n");
     return errorStatus;
@@ -274,7 +278,8 @@ int Composition::performAll()
 
 int Composition::translateMaster()
 {
-    System::inform("ENDED Composition::translateMaster().\n");
+    auto started_at = System::startTiming();
+    System::inform("BEGAN Composition::translateMaster...\n");
     int errorStatus = tagFile(getOutputSoundfileFilepath());
     if (errorStatus) {
         return errorStatus;
@@ -292,7 +297,9 @@ int Composition::translateMaster()
         return errorStatus;
     }
     errorStatus = translateToMp4();
-    System::inform("ENDED Composition::translateMaster().\n");
+    auto seconds = System::stopTiming(started_at);
+    System::message("Translation took %9.4f seconds.\n", seconds);
+    System::inform("ENDED Composition::translateMaster.\n");
     return errorStatus;
 }
 

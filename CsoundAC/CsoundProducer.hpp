@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 extern "C"
@@ -192,6 +193,15 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             }
             virtual ~CsoundProducer() {
             }
+            virtual clock_t startTiming() {
+                return clock();
+            }
+            virtual double stopTiming(clock_t beganAt)
+            {
+                clock_t endedAt = clock();
+                clock_t elapsed = endedAt - beganAt;
+                return double(elapsed) / double(CLOCKS_PER_SEC);
+            }
             /**
              * If enabled, assumes that the code embedding this piece is within a 
              * Git repository, and commits the repository before rendering the piece 
@@ -284,8 +294,13 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 return CsoundThreaded::Start();
             }
             virtual int PerformAndPostProcessRoutine() {
+                // We do our own performance benchmarks.
+                auto clock_started = startTiming();
                 Message("Began CsoundProducer::PerformAndPostProcessRoutine...\n");
                 auto result = CsoundThreaded::PerformAndResetRoutine();
+                auto seconds = stopTiming(clock_started);
+                Message("Rendering took %9.4f seconds.\n", seconds);
+                clock_started = startTiming();
                 auto output_filename = GetFilenameBase();
                 output_filename.append(".");
                 output_filename.append(output_type);
@@ -293,6 +308,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                     Message("Post-processing output file: %s.\n", output_filename.c_str());
                     PostProcess(tags, output_filename);
                 //}
+                seconds = stopTiming(clock_started);
+                Message("Post-processing %s took %9.4f seconds.\n", output_filename.c_str(), seconds);                
                 Message("Ended CsoundProducer::PerformAndPostProcessRoutine with %d.\n", result);
                 return result;
             }

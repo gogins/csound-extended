@@ -6,11 +6,11 @@
  * It features real and complex numbers, units, matrices, a large set of
  * mathematical functions, and a flexible expression parser.
  *
- * @version 6.2.5
- * @date    2019-11-20
+ * @version 6.5.0
+ * @date    2020-01-08
  *
  * @license
- * Copyright (C) 2013-2019 Jos de Jong <wjosdejong@gmail.com>
+ * Copyright (C) 2013-2020 Jos de Jong <wjosdejong@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -27287,7 +27287,7 @@ Object(factory["a" /* factory */])(pow_name, pow_dependencies, function (_ref) {
 // CONCATENATED MODULE: ./src/function/arithmetic/round.js
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -36226,11 +36226,24 @@ Object(factory["a" /* factory */])(Unit_name, Unit_dependencies, function (_ref)
    *  createUnitSingle('acre', new Unit(43560, 'ft^2'))
    *
    * @param {string} name      The name of the new unit. Must be unique. Example: 'knot'
-   * @param {string, Unit} definition      Definition of the unit in terms of existing units. For example, '0.514444444 m / s'.
-   * @param {Object} options   (optional) An object containing any of the following properties:
-   *     prefixes {string} "none", "short", "long", "binary_short", or "binary_long". The default is "none".
-   *     aliases {Array} Array of strings. Example: ['knots', 'kt', 'kts']
-   *     offset {Numeric} An offset to apply when converting from the unit. For example, the offset for celsius is 273.15 and the offset for farhenheit is 459.67. Default is 0.
+   * @param {string, Unit, Object} definition      Definition of the unit in terms
+   * of existing units. For example, '0.514444444 m / s'. Can be a Unit, a string,
+   * or an Object. If an Object, may have the following properties:
+   *   - definition {string|Unit} The definition of this unit.
+   *   - prefixes {string} "none", "short", "long", "binary_short", or "binary_long".
+   *     The default is "none".
+   *   - aliases {Array} Array of strings. Example: ['knots', 'kt', 'kts']
+   *   - offset {Numeric} An offset to apply when converting from the unit. For
+   *     example, the offset for celsius is 273.15 and the offset for farhenheit
+   *     is 459.67. Default is 0.
+   *   - baseName {string} If the unit's dimension does not match that of any other
+   *     base unit, the name of the newly create base unit. Otherwise, this property
+   *     has no effect.
+   *
+   * @param {Object} options   (optional) An object containing any of the following
+   * properties:
+   *   - override {boolean} Whether this unit should be allowed to override existing
+   *     units.
    *
    * @return {Unit}
    */
@@ -36258,6 +36271,7 @@ Object(factory["a" /* factory */])(Unit_name, Unit_dependencies, function (_ref)
     var offset = 0;
     var definition;
     var prefixes;
+    var baseName;
 
     if (obj && obj.type === 'Unit') {
       defUnit = obj.clone();
@@ -36269,6 +36283,7 @@ Object(factory["a" /* factory */])(Unit_name, Unit_dependencies, function (_ref)
       definition = obj.definition;
       prefixes = obj.prefixes;
       offset = obj.offset;
+      baseName = obj.baseName;
 
       if (obj.aliases) {
         aliases = obj.aliases.valueOf(); // aliases could be a Matrix, so convert to Array
@@ -36313,7 +36328,7 @@ Object(factory["a" /* factory */])(Unit_name, Unit_dependencies, function (_ref)
 
     if (!defUnit) {
       // Add a new base dimension
-      var baseName = name + '_STUFF'; // foo --> foo_STUFF, or the essence of foo
+      baseName = baseName || name + '_STUFF'; // foo --> foo_STUFF, or the essence of foo
 
       if (BASE_DIMENSIONS.indexOf(baseName) >= 0) {
         throw new Error('Cannot create new base unit "' + name + '": a base unit with that name already exists (and cannot be overridden)');
@@ -36382,20 +36397,19 @@ Object(factory["a" /* factory */])(Unit_name, Unit_dependencies, function (_ref)
       }
 
       if (!anyMatch) {
-        var _baseName = name + '_STUFF'; // foo --> foo_STUFF, or the essence of foo
+        baseName = baseName || name + '_STUFF'; // foo --> foo_STUFF, or the essence of foo
         // Add the new base unit
-
 
         var _newBaseUnit = {
           dimensions: defUnit.dimensions.slice(0)
         };
-        _newBaseUnit.key = _baseName;
-        BASE_UNITS[_baseName] = _newBaseUnit;
-        currentUnitSystem[_baseName] = {
+        _newBaseUnit.key = baseName;
+        BASE_UNITS[baseName] = _newBaseUnit;
+        currentUnitSystem[baseName] = {
           unit: newUnit,
           prefix: PREFIXES.NONE['']
         };
-        newUnit.base = BASE_UNITS[_baseName];
+        newUnit.base = BASE_UNITS[baseName];
       }
     }
 
@@ -51187,7 +51201,7 @@ var intersectDocs = {
 var distanceDocs = {
   name: 'distance',
   category: 'Geometry',
-  syntax: ['distance([x1, y1], [x2, y2])', 'distance([[x1, y1], [x2, y2])'],
+  syntax: ['distance([x1, y1], [x2, y2])', 'distance([[x1, y1], [x2, y2]])'],
   description: 'Calculates the Euclidean distance between two points.',
   examples: ['distance([0,0], [4,4])', 'distance([[0,0], [4,4]])'],
   seealso: []
@@ -53575,7 +53589,7 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
 
   /**
     * Calculates:
-    *    The eucledian distance between two points in 2 and 3 dimensional spaces.
+    *    The eucledian distance between two points in N-dimensional spaces.
     *    Distance between point and a line in 2 and 3 dimensional spaces.
     *    Pairwise distance between a set of 2D or 3D points
     * NOTE:
@@ -53587,6 +53601,7 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
     *-   math.distance({pointOneX: 4, pointOneY: 5}, {pointTwoX: 2, pointTwoY: 7})
     *    math.distance([x1, y1, z1], [x2, y2, z2])
     *    math.distance({pointOneX: 4, pointOneY: 5, pointOneZ: 8}, {pointTwoX: 2, pointTwoY: 7, pointTwoZ: 9})
+    *    math.distance([x1, y1, ... , N1], [x2, y2, ... , N2])
     *    math.distance([[A], [B], [C]...])
     *    math.distance([x1, y1], [LinePtX1, LinePtY1], [LinePtX2, LinePtY2])
     *    math.distance({pointX: 1, pointY: 4}, {lineOnePtX: 6, lineOnePtY: 3}, {lineTwoPtX: 2, lineTwoPtY: 8})
@@ -53607,6 +53622,7 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
     *    math.distance(
     *     {pointOneX: 4, pointOneY: 5, pointOneZ: 8},
     *     {pointTwoX: 2, pointTwoY: 7, pointTwoZ: 9})    // Returns 3
+    *    math.distance([1, 0, 1, 0], [0, -1, 0, -1])     // Returns 2
     *    math.distance([[1, 2], [1, 2], [1, 3]])         // Returns [0, 1, 1]
     *    math.distance([[1,2,4], [1,2,6], [8,1,3]])      // Returns [2, 7.14142842854285, 7.681145747868608]
     *    math.distance([10, 10], [8, 1, 3])              // Returns 11.535230316796387
@@ -53699,28 +53715,17 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
         }
 
         return _distancePointLine3D(x[0], x[1], x[2], y[0], y[1], y[2], y[3], y[4], y[5]);
-      } else if (x.length === 2 && y.length === 2) {
-        // Point to Point 2D
-        if (!_2d(x)) {
-          throw new TypeError('Array with 2 numbers or BigNumbers expected for first argument');
+      } else if (x.length === y.length && x.length > 0) {
+        // Point to Point N-dimensions
+        if (!_containsOnlyNumbers(x)) {
+          throw new TypeError('All values of an array should be numbers or BigNumbers');
         }
 
-        if (!_2d(y)) {
-          throw new TypeError('Array with 2 numbers or BigNumbers expected for second argument');
+        if (!_containsOnlyNumbers(y)) {
+          throw new TypeError('All values of an array should be numbers or BigNumbers');
         }
 
-        return _distance2d(x[0], x[1], y[0], y[1]);
-      } else if (x.length === 3 && y.length === 3) {
-        // Point to Point 3D
-        if (!_3d(x)) {
-          throw new TypeError('Array with 3 numbers or BigNumbers expected for first argument');
-        }
-
-        if (!_3d(y)) {
-          throw new TypeError('Array with 3 numbers or BigNumbers expected for second argument');
-        }
-
-        return _distance3d(x[0], x[1], x[2], y[0], y[1], y[2]);
+        return _euclideanDistance(x, y);
       } else {
         throw new TypeError('Invalid Arguments: Try again');
       }
@@ -53766,7 +53771,7 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
         }
 
         if ('pointOneX' in x && 'pointOneY' in x && 'pointTwoX' in y && 'pointTwoY' in y) {
-          return _distance2d(x.pointOneX, x.pointOneY, y.pointTwoX, y.pointTwoY);
+          return _euclideanDistance([x.pointOneX, x.pointOneY], [y.pointTwoX, y.pointTwoY]);
         } else {
           throw new TypeError('Key names do not match');
         }
@@ -53781,7 +53786,7 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
         }
 
         if ('pointOneX' in x && 'pointOneY' in x && 'pointOneZ' in x && 'pointTwoX' in y && 'pointTwoY' in y && 'pointTwoZ' in y) {
-          return _distance3d(x.pointOneX, x.pointOneY, x.pointOneZ, y.pointTwoX, y.pointTwoY, y.pointTwoZ);
+          return _euclideanDistance([x.pointOneX, x.pointOneY, x.pointOneZ], [y.pointTwoX, y.pointTwoY, y.pointTwoZ]);
         } else {
           throw new TypeError('Key names do not match');
         }
@@ -53819,6 +53824,15 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
     }
 
     return _isNumber(a[0]) && _isNumber(a[1]) && _isNumber(a[2]);
+  }
+
+  function _containsOnlyNumbers(a) {
+    // checks if the number of arguments are correct in count and are valid (should be numbers)
+    if (!Array.isArray(a)) {
+      a = _objectToArray(a);
+    }
+
+    return a.every(_isNumber);
   }
 
   function _parametricLine(a) {
@@ -53874,31 +53888,35 @@ Object(factory["a" /* factory */])(distance_name, distance_dependencies, functio
     return divideScalar(num, den);
   }
 
-  function _distance2d(x1, y1, x2, y2) {
-    var yDiff = subtract(y2, y1);
-    var xDiff = subtract(x2, x1);
-    var radicant = addScalar(multiplyScalar(yDiff, yDiff), multiplyScalar(xDiff, xDiff));
-    return sqrt(radicant);
-  }
+  function _euclideanDistance(x, y) {
+    var vectorSize = x.length;
+    var result = 0;
+    var diff = 0;
 
-  function _distance3d(x1, y1, z1, x2, y2, z2) {
-    var zDiff = subtract(z2, z1);
-    var yDiff = subtract(y2, y1);
-    var xDiff = subtract(x2, x1);
-    var radicant = addScalar(addScalar(multiplyScalar(zDiff, zDiff), multiplyScalar(yDiff, yDiff)), multiplyScalar(xDiff, xDiff));
-    return sqrt(radicant);
+    for (var i = 0; i < vectorSize; i++) {
+      diff = subtract(x[i], y[i]);
+      result = addScalar(multiplyScalar(diff, diff), result);
+    }
+
+    return sqrt(result);
   }
 
   function _distancePairwise(a) {
     var result = [];
+    var pointA = [];
+    var pointB = [];
 
     for (var i = 0; i < a.length - 1; i++) {
       for (var j = i + 1; j < a.length; j++) {
         if (a[0].length === 2) {
-          result.push(_distance2d(a[i][0], a[i][1], a[j][0], a[j][1]));
+          pointA = [a[i][0], a[i][1]];
+          pointB = [a[j][0], a[j][1]];
         } else if (a[0].length === 3) {
-          result.push(_distance3d(a[i][0], a[i][1], a[i][2], a[j][0], a[j][1], a[j][2]));
+          pointA = [a[i][0], a[i][1], a[i][2]];
+          pointB = [a[j][0], a[j][1], a[j][2]];
         }
+
+        result.push(_euclideanDistance(pointA, pointB));
       }
     }
 
@@ -55409,8 +55427,8 @@ Object(factory["a" /* factory */])(gamma_name, gamma_dependencies, function (_re
    */
 
   function bigFactorial(n) {
-    if (n.isZero()) {
-      return new _BigNumber(1); // 0! is per definition 1
+    if (n < 8) {
+      return new _BigNumber([1, 1, 2, 6, 24, 120, 720, 5040][n]);
     }
 
     var precision = config.precision + (Math.log(n.toNumber()) | 0);
@@ -55419,15 +55437,21 @@ Object(factory["a" /* factory */])(gamma_name, gamma_dependencies, function (_re
       precision: precision
     });
 
-    var res = new Big(n);
-    var value = n.toNumber() - 1; // number
-
-    while (value > 1) {
-      res = res.times(value);
-      value--;
+    if (n % 2 === 1) {
+      return n.times(bigFactorial(new _BigNumber(n - 1)));
     }
 
-    return new _BigNumber(res.toPrecision(_BigNumber.precision));
+    var p = n;
+    var prod = new Big(n);
+    var sum = n.toNumber();
+
+    while (p > 2) {
+      p -= 2;
+      sum += p;
+      prod = prod.times(sum);
+    }
+
+    return new _BigNumber(prod.toPrecision(_BigNumber.precision));
   }
 
   return gamma;
@@ -59419,7 +59443,7 @@ Object(factory["a" /* factory */])(reviver_name, reviver_dependencies, function 
   };
 });
 // CONCATENATED MODULE: ./src/version.js
-var version = '6.2.5'; // Note: This file is automatically generated when building math.js.
+var version = '6.5.0'; // Note: This file is automatically generated when building math.js.
 // Changes made in this file will be overwritten.
 // CONCATENATED MODULE: ./src/plain/number/constants.js
 var constants_pi = Math.PI;

@@ -1,7 +1,7 @@
 {
     'dependencies': 
     {
-        'node-addon-api': '^1.3.0',
+        'node-addon-api': '*',
     },
     'target_defaults': 
     {
@@ -9,7 +9,10 @@
         "cflags_cc!": [ "-fno-exceptions" ],
         "include_dirs": 
         [
-            "<!@(node -p \"require('node-addon-api').include\")"
+            ## This is theoretically required but causes the build to fail: 
+            ## "<!@(node -p \"require('node-addon-api').include\")",
+            ## This does work but must be manually configured here:
+            "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
         ],
          'conditions': 
         [

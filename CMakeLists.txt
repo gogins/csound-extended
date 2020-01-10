@@ -216,6 +216,7 @@ add_custom_target(doxygen_reference
 add_subdirectory(Opcodes/cmask)
 add_subdirectory(Opcodes/LuaCsound)
 add_subdirectory(Opcodes/bformdec2)
+add_subdirectory(Opcodes/MVerb)
 add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
@@ -244,13 +245,13 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask csound-luajit csound-bformdec2)
+set(CPACK_COMPONENTS_ALL csound-base csound-html5 csound-node csound-cmask csound-luajit csound-bformdec2 csound-mverb)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "1.3.5")
+set(CPACK_PACKAGE_VERSION "1.3.6")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")

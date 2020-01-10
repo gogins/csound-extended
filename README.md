@@ -11,8 +11,8 @@ out of the core Csound Git repository at https://github.com/csound/csound,
 or collected from older projects of mine. These extensions include:
 
 1.  CsoundAC, an algorithmic composition library designed to be used with
-    Csound. Csound is written in C++ and has C++, Python, Java, and Lua
-    interfaces.
+    Csound. Csound is written in C++ and has C++, Python, Java, Common Lisp, 
+    Haskell, Lua, and other interfaces.
 
 2.  csound.node, a C++ add-on that embeds Csound in the JavaScript context of
     Web pages running in MW.js from https://nwjs.io/.
@@ -111,8 +111,9 @@ Currently, the supported platforms are Linux, Android, and WebAssembly.
 The code is generally "cross-platform" in nature and this build system could
 be adapted to build for Windows or OS X.
 
-Please note, the Linux package for native code (CsoundAC etc.) is built using
-the Ubuntu system packages for Csound, whereas the Csound for Android app and
+Please note, the Linux package for native code (CsoundAC etc.) can be build 
+either using the Ubuntu system packages for Csound, or using a local build of 
+Csound which may be more up to date. The Csound for Android app and
 the WebAssembly module are built from Csound source code cloned from GitHub.
 
 First clone the Git repository at https://github.com/gogins/csound-extended.
@@ -161,6 +162,16 @@ with debug information. There are few (ideally, no) configuration options.
 When the build is complete, all targets have been built and the package
 files have been generated.
 
+An exception is that Node.js and npm must be installed, not from any Linux 
+package repository, but according to the instructions for binary archives at 
+https://github.com/nodejs/help/wiki/Installation. When that has been done, 
+execute `npm install -g node-gyp` and `npm install -g node-addon-api`.
+
+Another exception is that Lance Putnum's Gamma library for C++ audio signal 
+processing must be cloned from GitHub, built with the addition of the 
+`-fPIC` compiler option, and installed (CMake should be able to find it in 
+the `/usr/local` tree).
+
 The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
 home directory and installation details.
@@ -172,9 +183,6 @@ NODE_PATH=/home/mkg/csound/csound/frontends/nwjs/build/Release
 OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
 ```
-
-If csound.node fails to build, you may also need to add the NPM bin directory to
-your PATH variable so that CMake can find node-gyp.
 
 Change to your csound-extended repository and execute `fresh-build-linux-release.sh`,
 which does the following:
@@ -254,6 +262,25 @@ does the following:
 
 ### Building csound.node
 
-Just make sure that your PATH environment variable puts the global npm and 
-node-gyp binaries ahead of the emsdk ones.
+If csound.node fails to build: 
+
+1.  You may need to add the NPM bin directory to your PATH variable so that 
+    CMake can find node-gyp.
+    
+2.  You may need to manually configure `csound.node/binding.gyp` to explicly
+    include the directory containing `napi.h` more or less as follows:
+    ```
+    'target_defaults': 
+    {
+       "cflags!": [ "-fno-exceptions" ],
+        "cflags_cc!": [ "-fno-exceptions" ],
+        "include_dirs": 
+        [
+            ## This is theoretically required but causes the build to fail: 
+            ## "<!@(node -p \"require('node-addon-api').include\")",
+            ## This does work but must be manually configured here:
+            "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
+        ],
+    ```
+
 
