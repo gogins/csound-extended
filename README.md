@@ -158,21 +158,28 @@ updating Csound** (`bash fresh-build-linux.sh`).
 The build script involves some user interaction for sudo or deletions.
 Otherwise, the build is highly automated. Many dependencies are local. All
 dependencies are fetched automatically. Most targets are built for release
-with debug information. There are few (ideally, no) configuration options.
-When the build is complete, all targets have been built and the package
-files have been generated.
+with debug information. I have tried to keep configuration options, and 
+manual configuration steps, to an absolute minimum. When the build is 
+complete, all targets have been built and the package files have been 
+generated.
 
-An exception is that Node.js and npm must be installed, not from any Linux 
+Manual configuration steps include, but are not necessarily limited to:
+
+1. Node.js and npm must be installed, not from any Linux 
 package repository, but according to the instructions for binary archives at 
 https://github.com/nodejs/help/wiki/Installation. When that has been done, 
-execute `npm install -g node-gyp` and `npm install -g node-addon-api`.
+execute `npm install -g node-gyp` and `npm install -g node-addon-api`. Also 
+put node-gyp into your executable PATH.
 
-Another exception is that Lance Putnum's Gamma library for C++ audio signal 
+2. Lance Putnum's Gamma library for C++ audio signal 
 processing must be cloned from GitHub, built with the addition of the 
 `-fPIC` compiler option, and installed (CMake should be able to find it in 
 the `/usr/local` tree).
 
-The following environment variables MUST be set before building, perhaps in
+3. The OpenCV library with codecs must be downloaded as source from 
+`https://opencv.org/releases/`, built, and installed.
+
+4. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
 home directory and installation details.
 
@@ -182,6 +189,14 @@ CSOUND_EXTENDED_VERSION=0.1.2
 NODE_PATH=/home/mkg/csound/csound/frontends/nwjs/build/Release
 OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
+```
+
+The very first time you build csound-extended, go to about line 280 in 
+CMakeLists.txt and do as it says there:
+```
+# For your first build on your system, set this to "OFF", then rebuild with 
+# it "ON" to handle a bug with how CPack interacts with shlibdeps.
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 ```
 
 Change to your csound-extended repository and execute `fresh-build-linux-release.sh`,
@@ -207,7 +222,11 @@ convention, e.g. `link` is the original Git repository for the Ableton Link
 Kit which we do not build, and `link-opcodes` is our subdirectory which we do
 build and which includes files from the `link` subdirectory.
 
-Prerequisites for building include:
+The _first_ time you build csound-extended, to work around a bug in CPack, 
+comment out this line in CMakeLists.txt, build csound-extended, and install 
+the Debian package that is produced. The
+
+Prerequisites for building Csound for Android include:
 
 1.  You must install Android Studio 3.0.1, Android SDKs 28, 27.1.1, 23, and 21,
     GDB, LLDB, the NDK, and build tools 26.0.2.

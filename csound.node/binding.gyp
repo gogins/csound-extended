@@ -5,16 +5,18 @@
     },
     'target_defaults': 
     {
-       "cflags!": [ "-fno-exceptions" ],
+        "cflags!": [ "-fno-exceptions" ],
         "cflags_cc!": [ "-fno-exceptions" ],
         "include_dirs": 
         [
             ## This is theoretically required but causes the build to fail: 
             ## "<!@(node -p \"require('node-addon-api').include\")",
+            ## This also does not work:
+            ## "/usr/local/lib/nodejs/$(NODEJS_VERSION)-$(NODEJS_VERSION)/lib/node_modules/node-addon-api",
             ## This does work but must be manually configured here:
-            "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
+            "/usr/local/lib/nodejs/node-v13.6.0-linux-x64/lib/node_modules/node-addon-api",
         ],
-         'conditions': 
+        'conditions': 
         [
             ['OS=="linux"',
                 {
@@ -26,31 +28,17 @@
                     ],
                     'libraries': 
                     [
-                        '-lcsound64 -lecl -lluajit-5.1 -lpython3.6m -lgc -lpthread',
+                        '-lcsound64 -lluajit-5.1 -lpython3.5m -lecl -lgc -lpthread',
                     ],
                     'include_dirs': 
                     [
                         '/usr/include/csound',
-                        '/usr/include/python3.6',
-                        '/usr/include/luajit-2.1',
-                        '/usr/include/ecl',
+                        '/usr/include/python3.5',
+                        '/usr/include/luajit-2.0',
                         '../CsoundAC',
                     ],
                 }
             ],
-            ['OS=="win"',
-                {
-                    'msbuild_toolset': 'v140',
-                    'libraries': 
-                    [
-                        '-l$(CSOUND_HOME)/msvc/csound-vs/RelWithDebInfo/csound64.lib',
-                    ],
-                    'include_dirs': 
-                    [
-                        '$(CSOUND_HOME)/include',
-                    ],
-                }
-            ]
         ]
     },
     'targets': 

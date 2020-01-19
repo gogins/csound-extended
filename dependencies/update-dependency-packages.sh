@@ -20,6 +20,8 @@ echo "Updating libtool..."
 sudo apt-get install libtool
 echo "Updating autogen..."
 sudo apt-get install autogen
+echo "Updating ecl..."
+sudo apt-get install ecl
 echo "Updating libeigen3-dev..."
 sudo apt-get install libeigen3-dev
 echo "Updating FLTK 1.3..."
@@ -30,6 +32,8 @@ echo "Updating fluidsynth..."
 sudo apt-get install libfluidsynth-dev
 echo "Updating libgit2-dev..."
 sudo apt-get install libgit2-dev
+echo "Updating libluajit-5.1-dev..."
+sudo apt-get install libluajit-5.1-dev
 echo "Updating gcc-arm-linux-gnueabi..."
 sudo apt-get install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."
@@ -50,4 +54,9 @@ sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5
 sudo apt-get update
 sudo apt-get install -y clang-5.0
 sudo -k
+echo "Updating python3.5-dev..."
+sudo apt-get install python3.5-dev
+echo "Updating sbcl..."
+sudo apt-get install sbcl
+
 echo "Finished updating all Debian packages required for csound-extended."
