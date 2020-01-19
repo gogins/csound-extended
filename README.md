@@ -194,8 +194,9 @@ RAWWAVE_PATH=/home/mkg/stk/rawwaves
 The very first time you build csound-extended, go to about line 280 in 
 CMakeLists.txt and do as it says there:
 ```
-# For your first build on your system, set this to "OFF", then rebuild with 
-# it "ON" to handle a bug with how CPack interacts with shlibdeps.
+# For your first build on your system, set this to "OFF", build, and install.
+# Then, set this to "ON", rebuild, and reinstall. This is a workaround for a 
+# bug in how CPack interacts with shlibdeps.
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 ```
 
@@ -222,9 +223,7 @@ convention, e.g. `link` is the original Git repository for the Ableton Link
 Kit which we do not build, and `link-opcodes` is our subdirectory which we do
 build and which includes files from the `link` subdirectory.
 
-The _first_ time you build csound-extended, to work around a bug in CPack, 
-comment out this line in CMakeLists.txt, build csound-extended, and install 
-the Debian package that is produced. The
+### Building for Android
 
 Prerequisites for building Csound for Android include:
 

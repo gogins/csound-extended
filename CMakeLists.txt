@@ -277,8 +277,9 @@ set(CPACK_DEBIAN_PACKAGE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michael Gogins <michael.gogins@gmail.com>")
 set(CPACK_DEBIAN_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-# For your first build on your system, set this to "OFF", then rebuild with it "ON"
-# to handle a bug with shlibdeps.
+# For your first build on your system, set this to "OFF", build, and install.
+# Then, set this to "ON", rebuild, and reinstall. This is a workaround for a 
+# bug in how CPack interacts with shlibdeps.
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS "ON")
