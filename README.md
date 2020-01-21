@@ -99,11 +99,10 @@ log.
 You may also install locally by first building from sources, as described
 below. You may then install the software by running `sudo make install` in
 the build-linux directory. However, be warned that this installs the
-software in /usr/local. You will also first need to separately install
-Csound.
+software in /usr/local. 
 
 There are files and directories in the Git repository and in the packages that 
-can be used as helpers for csound-extended. You can create symbolic links from  
+can be used as helpers for csound-extended. You can create symbolic links from 
 these files to your home directory or other places.
 
 - `build-env.sh`: Source this to set useful environment variables for the 
@@ -172,8 +171,7 @@ processing must be cloned from GitHub, built with the addition of the
 `-fPIC` compiler option, and installed (CMake should be able to find it in 
 the `/usr/local` tree).
 
-3. The OpenCV library with codecs must be downloaded as source from 
-`https://opencv.org/releases/`, built, and installed.
+3. The OpenCV library with codecs must be downloaded as source from `https://opencv.org/releases/`, built, and installed.
 
 4. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
@@ -195,7 +193,6 @@ CMakeLists.txt and do as it says there:
 # bug in how CPack interacts with shlibdeps.
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 ```
-
 Change to your csound-extended repository and execute `fresh-build-linux-release.sh`,
 which does the following:
 
