@@ -11,17 +11,14 @@ out of the core Csound Git repository at https://github.com/csound/csound,
 or collected from older projects of mine. These extensions include:
 
 1.  CsoundAC, an algorithmic composition library designed to be used with
-    Csound. Csound is written in C++ and has C++, Python, Java, Common Lisp, 
-    Haskell, Lua, and other interfaces.
+    Csound. CsoundAC is written in C++ and has C++, Python, Java, Common Lisp, 
+    Haskell, and other interfaces.
 
 2.  csound.node, a C++ add-on that embeds Csound in the JavaScript context of
     Web pages running in MW.js from https://nwjs.io/.
 
 3.  A port of the algorithmic composition program CMask by Andre Bartetzki
     to WebAssembly and to a Linux Csound plugin opcode.
-
-4.  The Lua opcodes for running Lua code inside a Csound performance by means
-    of an embedded LuaJIT runtime.
 
 5.  Csound for Android, almost all features of Csound in an Android app that
     also integrates Csound with HTML5. Please note, dependencies of Csound
@@ -105,55 +102,54 @@ the build-linux directory. However, be warned that this installs the
 software in /usr/local. You will also first need to separately install
 Csound.
 
+There are files and directories in the Git repository and in the packages that 
+can be used as helpers for csound-extended. You can create symbolic links from  
+these files to your home directory or other places.
+
+- `build-env.sh`: Source this to set useful environment variables for the 
+  build and runtime environment on Linux. You may need to copy and modify this 
+  script.
+  
+- Create a symbolic link from `csound-extended/.SciTEUser.properties` to your 
+  home directory, to create custom commands and editor features in the SciTE 
+  text editor. This makes it possible to run various kinds of Csound pieces, 
+  and even to build C++ pieces and plugin opcodes, from the editor. Believe 
+  me, I tried all the other editors, and this is the one that is both simple 
+  and useful.
+
+- `run_nwjs_application.sh`: Create a symbolic link to this script in your 
+  home dirctory to assist with running pieces written for csound.node that run 
+  in NW.js. This also requires installing the SDK version of NW.js and 
+  creating a symbolic link from the installation directory to `nwjs` in your 
+  home directory.
+
+- `silencio`: Create a symbolic link to this directory in every directory in 
+  which you are writing or running a piece that uses the Silencio library.
+
 ## Building
 
 Currently, the supported platforms are Linux, Android, and WebAssembly.
 The code is generally "cross-platform" in nature and this build system could
 be adapted to build for Windows or OS X.
 
-Please note, the Linux package for native code (CsoundAC etc.) can be build 
-either using the Ubuntu system packages for Csound, or using a local build of 
-Csound which may be more up to date. The Csound for Android app and
-the WebAssembly module are built from Csound source code cloned from GitHub.
+### Build and Install Csound
 
-First clone the Git repository at https://github.com/gogins/csound-extended.
-
-### Using a Local Build of Csound on Linux
-
-Please be aware that you can use csound-extended with your own local build of
-Csound from the Csound git repository.
-
-To do this, first build  **and install** csound-extended using the instructions
-below, which automatically **installs the official Csound packages.** Run some
-pieces that use features you need to test your installation.
-
-Then, clone the Csound Git repository from `https://github.com/csound/csound`,
-and build Csound according to the instructions there. However, when running
-CMake, change the value of the default CMake install prefix from `/usr/local` to
-`/usr`, like this:
+The system packages for Csound are out of date, so you must perform a local 
+build and installation of Csound. Clone the Csound Git repository from 
+`https://github.com/csound/csound`, and build Csound according to the 
+instructions there. However, when running CMake, change the value of the 
+default CMake install prefix from `/usr/local` to `/usr`, like this:
 ```
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 ```
-After that of course do the usual `make -j6` and `sudo make install` for Csound.
+After that of course do the usual `make -j6` and `sudo make install` for 
+Csound.
 
-Finally, re-run your tests to make sure the features you need are still working
-and that the newer Csound is compatible with csound-extended. If not all
-features you need work, e.g. the Python interfaces, do a local build and install
-of csound-extended, **i.e. without updating dependencies** (`bash
-build-linux.sh`), and re-install your local build of csound-extended over your
-existing installation, like this:
-``` sudo apt install
-./build-linux/csound-extended-dev-1.3.1-Linux.deb --reinstall
-```
-If you ever need to revert to the original packaged version of Csound
-normally used by csound-extended, in your local Csound build directory, do this:
-```
-sudo xargs rm < install_manifest.txt
-```
-and then do a fresh build and installation of csound-extended **including
-updating Csound** (`bash fresh-build-linux.sh`).
+### Build, Package, and Install CsoundAC
 
-### Building on Linux
+First clone the Git repository at https://github.com/gogins/csound-extended.
+
+#### Building on Linux
 
 The build script involves some user interaction for sudo or deletions.
 Otherwise, the build is highly automated. Many dependencies are local. All
@@ -214,16 +210,16 @@ Subsequently, you can perform these steps independently.
 To make clean, execute `bash clean-linux.sh`.
 
 To install, change to build-linux and execute `sudo install
-./csound-extended-dev-1.3.1-Linux.deb --reinstall`.
+./csound-extended-dev-{version}-Linux.deb --reinstall`.
+
+#### Building for Android
 
 Please note, some NDK dependencies are built in their own subdirectories,
 and some are built in OTHER subdirectories with their own makefiles that
 refer to source files in the ORIGINAL subdirectories. There is a naming
 convention, e.g. `link` is the original Git repository for the Ableton Link
 Kit which we do not build, and `link-opcodes` is our subdirectory which we do
-build and which includes files from the `link` subdirectory.
-
-### Building for Android
+build# and which includes files from the `link` subdirectory.
 
 Prerequisites for building Csound for Android include:
 
@@ -266,7 +262,7 @@ CsoundApplication project.
 For a production build, apply to me for the signing key, build for
 release, and generate a signed .apk.
 
-### Building for WebAssembly
+#### Building for WebAssembly
 
 To build for WebAssembly for the first time, change to the WebAssembly
 subdirectory of this repository and execute `bash fresh-build.sh`, which
@@ -278,7 +274,7 @@ does the following:
 
 4.  Creates a release package.
 
-### Building csound.node
+#### Building csound.node
 
 If csound.node fails to build: 
 

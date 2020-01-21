@@ -12,21 +12,19 @@ Silencio features advanced score generators based on recurrent iterated function
 
 Please note, some full-scale examples for Silencio may be found here.
 
-The original version of Silencio is written in the Lua programming language, and runs best on Mike Pall's marvelous [LuaJIT/FFI](http://luajit.org/). The current version of Silencio is written in portable JavaScript because that makes more capabilities (audio, MIDI, animated 3-dimensional graphics, video, proper mathematics typesetting, symbolic mathematics, <it>etc</it>., <it>etc</it>.) available to Csound than any other programming environment. 
+The original version of Silencio was written in the Lua programming language. The current version of Silencio is written in portable JavaScript because that makes more capabilities (audio, MIDI, animated 3-dimensional graphics, video, proper mathematics typesetting, symbolic mathematics, <it>etc</it>., <it>etc</it>.) available to Csound than any other programming environment.
 
-Thus, for the most part, only the JavaScript version is currently under development, although I will fix bugs in the Lua version. If and when [WebAssembly](http://webassembly.org/) becomes an accepted standard implemented in major Web browsers, I will port Silencio to WebAssembly, probably by updating my [CsoundAC C++ code base](https://github.com/csound/csound/tree/develop/frontends/CsoundAC) which is the inspiration for Silencio. 
+Only the JavaScript version is currently under development. If and when [WebAssembly](http://webassembly.org/) becomes an accepted standard implemented in major Web browsers, I will port Silencio to WebAssembly, probably by updating my [CsoundAC C++ code base](https://github.com/csound/csound/tree/develop/frontends/CsoundAC) which is the inspiration for Silencio. 
 
-Both the Lua and the JavaScript versions of Silencio are designed to be used with [Csound](http://csound.github.io/) as part of a computer music "playpen" for rapid, iterative composition and development without functional limitations:
+Silencio is designed to be used with [Csound](http://csound.github.io/) as part of a computer music "playpen" for rapid, iterative composition and development without functional limitations:
 
-1. Stand-alone Csound on Windows and Linux: Lua version.
+2. CsoundQt front end for Csound.
 
-2. CsoundQt front end for Csound on Windows and Linux: Lua and JavaScript versions.
+3. Csound for Android.
 
-3. Csound for Android: Lua and JavaScript versions.
+4. csound.node for Windows and Linux.
 
-4. csound.node for Windows and Linux: Lua and JavaScript versions.
-
-5. Csound for PNaCl: Lua (I think) and JavaScript (for sure) versions.
+5. Csound for WebAssembly.
 
 Currently, the environments I recommend for musicians are csound.node running in [NW.js](http://nwjs.io/) on the desktop, and [Csound for Android](https://play.google.com/store/apps/details?id=com.csounds.Csound6&hl=en) for mobile devices.
 
