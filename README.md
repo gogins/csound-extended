@@ -75,7 +75,10 @@ log.
 
 ## Installation
 
-1.  CsoundAC and other Linux binaries and other resources are installed from
+1.  You must first install Csound on your system, e.g. as instructed at 
+    `https://github.com/csound/csound`.
+
+2.  CsoundAC and other Linux binaries and other resources are installed from
     the Debian package released from this repository, e.g.
     `sudo apt install ./csound-extended-dev-version-Linux.deb`.  Please note,
     this package conflicts with the system packages for CsoundAC. The Lisp
