@@ -14,7 +14,7 @@
             ## This also does not work:
             ## "/usr/local/lib/nodejs/$(NODEJS_VERSION)-$(NODEJS_VERSION)/lib/node_modules/node-addon-api",
             ## This does work but must be manually configured here:
-            "/usr/local/lib/nodejs/node-v13.6.0-linux-x64/lib/node_modules/node-addon-api",
+            "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
         ],
         'conditions': 
         [
@@ -28,13 +28,12 @@
                     ],
                     'libraries': 
                     [
-                        '-lcsound64 -lluajit-5.1 -lpython3.5m -lecl -lgc -lpthread',
+                        '-lcsound64 -lpython3.6m -lecl -lgc -lpthread',
                     ],
                     'include_dirs': 
                     [
                         '/usr/include/csound',
-                        '/usr/include/python3.5',
-                        '/usr/include/luajit-2.0',
+                        '/usr/include/python3.6',
                         '../CsoundAC',
                     ],
                 }

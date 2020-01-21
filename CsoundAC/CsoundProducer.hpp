@@ -9,12 +9,6 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
-extern "C"
-{
-    #include <lua.h>
-    #include <lauxlib.h>
-    #include <lualib.h>
-}
 #include <map>
 #include <ecl/ecl.h>
 #include <string>
@@ -328,24 +322,6 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             virtual bool GetDoGitCommit() const {
                 return do_git_commit;
             }
-            virtual lua_State *GetLuaState() {
-                return L;
-            }
-            virtual void InitializeLuaJIT(lua_State *L_ = nullptr) {
-                if (L != nullptr) {
-                    lua_close(L);
-                }
-                if (L_ == nullptr) {
-                    L = luaL_newstate();
-                    luaL_openlibs(L);
-                } else {
-                    L = L_;
-                }
-                // Ensure that this instance of Csound is available in the 
-                // LuaJIT runtime context. 
-                lua_pushlightuserdata(L, csound);
-                lua_setfield(L, LUA_GLOBALSINDEX, "csound");
-            }
             virtual void InitializePython() {
                 Py_Initialize();
                 // Ensure that this instance of Csound is available in the 
@@ -378,21 +354,12 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
              * usable interface to this Csound object. RunScript is normally 
              * called after Compile* and either before or after Perform, and 
              * can be called any number of times during rendering. The 
-             * available languages are "LuaJIT", "Python3.6m", and 
+             * available languages are "Python3.6m", and 
              * "Common Lisp".
              */
             virtual int RunScript(const std::string script, const std::string language) {
                 int result = 0;
-                if (language == "LuaJIT") {
-                    const char *luacode = script.c_str();
-                    Message("Executing (L: 0x%p) Lua code.\n", L);
-                    result = luaL_dostring(L, luacode);
-                    if (result == 0) {
-                        //log(csound, "Result: %d\n", result);
-                    } else {
-                        Message("luaL_dostring failed with: %d\n%s\n", result, lua_tostring(L, -1));
-                    }
-                } else if (language == "Python3.6m") {
+                if (language == "Python3.6m") {
                     result = PyRun_SimpleString(script.c_str());
                     if (result == 0) {
                         //log(csound, "Result: %d\n", result);
@@ -413,7 +380,6 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             std::string git_hash;
             std::string output_type = "wav";
             std::string output_format = "float";
-            lua_State *L = nullptr;
             cl_env_ptr common_lisp_environment = nullptr;
     };
     
