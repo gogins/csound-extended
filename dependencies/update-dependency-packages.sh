@@ -32,8 +32,6 @@ echo "Updating fluidsynth..."
 sudo apt-get install libfluidsynth-dev
 echo "Updating libgit2-dev..."
 sudo apt-get install libgit2-dev
-echo "Updating libluajit-5.1-dev..."
-sudo apt-get install libluajit-5.1-dev
 echo "Updating gcc-arm-linux-gnueabi..."
 sudo apt-get install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."

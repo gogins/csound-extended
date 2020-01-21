@@ -24,12 +24,6 @@ git checkout develop
 git pull 
 git branch
 cd ..
-cd examples
-echo "Pulling from `pwd`..."
-git checkout master
-git pull 
-git branch
-cd ..
 ##cd faust
 ##echo "Pulling from `pwd`..."
 ##git checkout master-dev
@@ -56,12 +50,6 @@ cd ..
 cd link
 echo "Pulling from `pwd`..."
 git checkout master
-git pull
-git branch
-cd ..
-cd luajit-2.0
-echo "Pulling from `pwd`..."
-git checkout v2.1
 git pull
 git branch
 cd ..

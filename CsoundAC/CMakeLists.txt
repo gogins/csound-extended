@@ -8,12 +8,10 @@ set(CMAKE_CXX_STANDARD 11)
 # For now I am hard-coding them to the Csound Debian control values.
 
 set(PYTHON_MODULE_INSTALL_DIR "/usr/lib/python2.7/dist-packages/")
-set(LUA_MODULE_INSTALL_DIR "/usr/lib/lua/5.1/")
 set(CMAKE_INCLUDE_CURRENT_DIR "On")
 
 option(BUILD_CSOUND_AC "Build CsoundAC extension module for Csound with algorithmic composition (needs C++ interface)" ON)
 option(BUILD_CSOUND_AC_PYTHON_INTERFACE "Build the Csound AC Python interface" ON)
-option(BUILD_CSOUND_AC_LUA_INTERFACE "Build the Csound AC Lua interface" ON)
 option(USE_SYSTEM_PORTSMF ON)
 
 find_library(MUSICXML_LIBRARY musicxml2)
@@ -167,15 +165,6 @@ if(BUILD_CSOUND_AC)
             install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
             DESTINATION ${PYTHON_MODULE_INSTALL_DIR})
     endif()
-
-    if(BUILD_CSOUND_AC_LUA_INTERFACE)
-        message(STATUS "Building CsoundAC Lua interface.")
-
-        SET_SOURCE_FILES_PROPERTIES(luaCsoundAC.i
-            PROPERTIES CPLUSPLUS ON
-            SWIG_MODULE_NAME luaCsoundAC)
-        SWIG_ADD_MODULE(luaCsoundAC lua luaCsoundAC.i)
-        SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUNDLIB} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES}  ${LIBSNDFILE_LIBRARY} ${LUAJIT_LIBRARIES})
 
         if(MUSICXML_LIBRARY)
           SWIG_LINK_LIBRARIES(luaCsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${LUAJIT_LIBRARY})
