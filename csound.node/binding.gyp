@@ -10,11 +10,12 @@
         "include_dirs": 
         [
             ## This is theoretically required but causes the build to fail: 
-            ## "<!@(node -p \"require('node-addon-api').include\")",
+            ##"<!@(node -p \"require('node-addon-api').include\")",
             ## This also does not work:
             ## "/usr/local/lib/nodejs/$(NODEJS_VERSION)-$(NODEJS_VERSION)/lib/node_modules/node-addon-api",
             ## This does work but must be manually configured here:
-            "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
+            ## "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
+            '<!@(printf "%s" "$NODE_ADDON_API_INCLUDE")'
         ],
         'conditions': 
         [

@@ -157,9 +157,11 @@ The build script involves some user interaction for sudo or deletions.
 Otherwise, the build is highly automated. Many dependencies are local. All
 dependencies are fetched automatically. Most targets are built for release
 with debug information. I have tried to keep configuration options, and 
-manual configuration steps, to an absolute minimum. When the build is 
-complete, all targets have been built and the package files have been 
-generated.
+manual configuration steps, to an absolute minimum, all controlled by 
+environment variables in `build-env.sh`.
+
+When the build is complete, all targets have been built and the package 
+files have been generated.
 
 Manual configuration steps include, but are not necessarily limited to:
 
@@ -178,14 +180,18 @@ the `/usr/local` tree).
 
 4. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
-home directory and installation details.
+home directory and installation details. These are exported in `build-env.sh` 
+which you can have your .profile script source.
 
 ```
 CSOUND_SRC_ROOT=/home/mkg/csound-extended/dependencies/csound
-CSOUND_EXTENDED_VERSION=0.1.2
 NODE_PATH=/home/mkg/csound/csound/frontends/nwjs/build/Release
 OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
+export PATH=/usr/local/lib/node-v12.14.1-linux-x64/bin:${PATH}
+unset NODE_ADDON_API_INCLUDE
+export NODE_ADDON_API_INCLUDE=/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api
+
 ```
 
 The very first time you build csound-extended, go to about line 280 in 

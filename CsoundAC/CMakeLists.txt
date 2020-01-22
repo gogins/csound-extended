@@ -17,7 +17,9 @@ option(USE_SYSTEM_PORTSMF ON)
 find_library(MUSICXML_LIBRARY musicxml2)
 find_package(FLTK)
 find_package(SWIG)
+find_package(PythonInterp)
 find_package(PythonLibs)
+message(STATUS "Python libraries:  ${PYTHONLIBS_VERSION_STRING}")
 find_library(PORTSMF_LIBRARY portSMF)
 find_library(JPEG_LIBRARY jpeg)
 find_library(PNG_LIBRARY NAMES png png16 libpng16)
@@ -125,7 +127,6 @@ if(BUILD_CSOUND_AC)
 
     if(BUILD_CSOUND_AC_PYTHON_INTERFACE)
         message(STATUS "Building CsoundAC Python interface.")
-        find_package(PythonLibs)
         include_directories(${PYTHON_INCLUDE_PATH})
         # Had: 	    SWIG_FLAGS "-threads"
         set_source_files_properties(CsoundAC.i
