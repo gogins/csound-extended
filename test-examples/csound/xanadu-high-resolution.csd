@@ -1,9 +1,9 @@
 <CsoundSynthesizer>
 <CsOptions>
--d -R -W -Z -f -o dac
+-d -odac
 </CsOptions>
 <CsInstruments>
-sr          =           88200
+sr          =           4800
 ksmps       =           100
 nchnls      =           2
 ;--------------------------------------------------------
