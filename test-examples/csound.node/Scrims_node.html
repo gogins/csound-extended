@@ -51,12 +51,12 @@
             <tr>
                 <td colspan="2" style="color:gold;text-align:left">Click "Play"; adjust "Master effects" group "gk_MasterOutput_level" slider.</td>
             </tr>
-        </tr>
-            <tr>
-            <td>Time:</td>
-            <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
             </tr>
-        <tr>
+                <tr>
+                <td>Time:</td>
+                <td id="Time_cell" style="text-align:right;color:LawnGreen;font-weight:bold;">0</td>
+                </tr>
+            <tr>
             <tr>
                 <td>Subset: </td><td id="Subset_cell" style="color:SkyBlue;text-align:right;"></td>
             </tr>
@@ -1391,6 +1391,28 @@ f 0 360
             add_slider(Generate, 'Camera_Y', -500, 500).name('Camera Y');
            gui.revert();
         }
+    document.addEventListener("keydown", function (e) {
+        var e_char = String.fromCharCode(e.keyCode || e.charCode);
+        if (e.ctrlKey === true) {
+            if        (e_char === 'H') {
+                var console = document.getElementById("statistics");
+                if (console.style.display === "none") {
+                    console.style.display = "block";
+                } else {
+                    console.style.display = "none";
+                }
+                gui.closed = true;
+                gui.closed = false;
+            } else if (e_char === 'G') {
+                generate();
+            } else if (e_char === 'P') {
+                parameters.play();
+            } else if (e_char === 'S') {
+                parameters.stop();
+            }
+        }
+    });
+
         function gk_update(name, value) {
             if (typeof csound !== 'undefined') {
                 var numberValue = parseFloat(value);

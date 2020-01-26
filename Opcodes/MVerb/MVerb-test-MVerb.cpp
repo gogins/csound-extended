@@ -203,7 +203,7 @@ int main(int argc, const char **argv)
 
     model.setCsoundOrchestra(R"(
 
-sr                              =                       96000
+sr                              =                       48000
 ksmps                           =                       100
 nchnls                          =                       2
 0dbfs                           =                       20000
