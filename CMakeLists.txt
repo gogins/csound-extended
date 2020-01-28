@@ -209,6 +209,7 @@ add_custom_target(doxygen_reference
 add_subdirectory(Opcodes/cmask)
 add_subdirectory(Opcodes/bformdec2)
 add_subdirectory(Opcodes/MVerb)
+add_subdirectory(Opcodes/stk)
 add_subdirectory(CsoundAC)
 ExternalProject_Add(CsoundNode
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
@@ -237,7 +238,7 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-node csound-cmask csound-luajit csound-bformdec2 csound-mverb)
+set(CPACK_COMPONENTS_ALL csound-base csound-node csound-cmask csound-luajit csound-bformdec2 csound-mverb csound-stk)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")

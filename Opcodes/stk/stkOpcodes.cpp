@@ -51,71 +51,38 @@
  * See the STK class documentation to determine the controller numbers
  * used by each instrument.
  */
-#ifndef JPFF
-#include <Stk.h>
-#include <BandedWG.h>
-#include <BeeThree.h>
-#include <BlowBotl.h>
-#include <BlowHole.h>
-#include <Bowed.h>
-#include <Brass.h>
-#include <Clarinet.h>
-#include <Drummer.h>
-#include <Flute.h>
-#include <FMVoices.h>
-#include <HevyMetl.h>
-#include <Mandolin.h>
-//#include <Mesh2D.h>
-#include <ModalBar.h>
-#include <Moog.h>
-#include <PercFlut.h>
-#include <Plucked.h>
-#include <Resonate.h>
-#include <Rhodey.h>
-#include <Saxofony.h>
-#include <Shakers.h>
-#include <Simple.h>
-#include <Sitar.h>
-#include <StifKarp.h>
-#include <TubeBell.h>
-#include <VoicForm.h>
-#include <Whistle.h>
-#include <Wurley.h>
-#else
-#include "include/Stk.h"
-#include "include/BandedWG.h"
-#include "include/BeeThree.h"
-#include "include/BlowBotl.h"
-#include "include/BlowHole.h"
-#include "include/Bowed.h"
-#include "include/Brass.h"
-#include "include/Clarinet.h"
-#include "include/Drummer.h"
-#include "include/Flute.h"
-#include "include/FMVoices.h"
-#include "include/HevyMetl.h"
-#include "include/Mandolin.h"
-//#include "include/Mesh2D.h"
-#include "include/ModalBar.h"
-#include "include/Moog.h"
-#include "include/PercFlut.h"
-#include "include/Plucked.h"
-#include "include/Resonate.h"
-#include "include/Rhodey.h"
-#include "include/Saxofony.h"
-#include "include/Shakers.h"
-#include "include/Simple.h"
-#include "include/Sitar.h"
-#include "include/StifKarp.h"
-#include "include/TubeBell.h"
-#include "include/VoicForm.h"
-#include "include/Whistle.h"
-#include "include/Wurley.h"
-#endif
+#include <stk/Stk.h>
+#include <stk/BandedWG.h>
+#include <stk/BeeThree.h>
+#include <stk/BlowBotl.h>
+#include <stk/BlowHole.h>
+#include <stk/Bowed.h>
+#include <stk/Brass.h>
+#include <stk/Clarinet.h>
+#include <stk/Drummer.h>
+#include <stk/Flute.h>
+#include <stk/FMVoices.h>
+#include <stk/HevyMetl.h>
+#include <stk/Mandolin.h>
+//#include <stk/Mesh2D.h>
+#include <stk/ModalBar.h>
+#include <stk/Moog.h>
+#include <stk/PercFlut.h>
+#include <stk/Plucked.h>
+#include <stk/Resonate.h>
+#include <stk/Rhodey.h>
+#include <stk/Saxofony.h>
+#include <stk/Shakers.h>
+#include <stk/Simple.h>
+#include <stk/Sitar.h>
+#include <stk/StifKarp.h>
+#include <stk/TubeBell.h>
+#include <stk/VoicForm.h>
+#include <stk/Whistle.h>
+#include <stk/Wurley.h>
+
 using namespace stk;
 
-#define __BUILDING_LIBCSOUND
-#include <csoundCore.h>
 #include <OpcodeBase.hpp>
 
 using namespace csound;
@@ -762,8 +729,7 @@ extern "C"
             path = std::getenv("RAWWAVE_PATH");
         }
 #endif
-
-       if (path != NULL && strlen(path) != 0) {
+        if (path != NULL && strlen(path) != 0) {
             Stk::setRawwavePath(path);
         }
        //csound->DebugMsg(csound,
@@ -778,7 +744,7 @@ extern "C"
                                        oentry->outypes, oentry->intypes,
                                        (int (*)(CSOUND*,void*)) oentry->iopadr,
                                        (int (*)(CSOUND*,void*)) oentry->kopadr,
-                                       (int (*)(CSOUND*,void*)) oentry->aopadr);
+                                       (int (*)(CSOUND*,void*)) nullptr);
       }
     return status;
   }
