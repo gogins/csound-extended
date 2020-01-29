@@ -2,27 +2,27 @@ gk_Template_level init 0
 gi_Template_attack init 0.003
 gi_Template_release init 0.01
 gk_Template_midi_dynamic_range init 127
-gi_Template_sine ftgen 0, 0, 65536, 10, 1
+gi_Template_sine ftgen 0, 0, 65537, 10, 1
 instr Template
 //////////////////////////////////////////////
-// Original by Hans Mikelson.
-// Adapted by Michael Gogins.
+//  Instrument definition patch template.
+//  Author: Michael Gogins
 //////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
-i_duration = p3
-; One of the envelopes in this instrument should be releasing, and use this:
-i_sustain = 1000
-xtratim gi_Template_attack + gi_Template_release
+i_sustain = p3
+//  Adjust actual instrument duration by adding attack and release.
+p3 = i_sustain + gi_Template_attack + gi_Template_release
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_Template_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
+// AKA stereo pan.
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+// Adjust the following value until "overall amps" at the end of performance is about -6 dB.
 i_level_correction = 80
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
