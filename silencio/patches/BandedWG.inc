@@ -2,8 +2,8 @@ gk_BandedWG_level init 0
 gi_BandedWG_attack init 0.003
 gi_BandedWG_release init 0.01
 gk_BandedWG_midi_dynamic_range init 127
-gi_BandedWG_sine ftgen 0, 0, 65536, 10, 1
-gi_BandedWG_cosine ftgen 0, 0, 65536, 11, 1
+gi_BandedWG_sine ftgen 0, 0, 65537, 10, 1
+gi_BandedWG_cosine ftgen 0, 0, 65537, 11, 1
 instr BandedWG
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
@@ -11,10 +11,9 @@ instr BandedWG
 //////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
+i_sustain = p3
+p3 = i_sustain + gi_BandedWG_attack + gi_BandedWG_release
 i_duration = p3
-; One of the envelopes in this instrument should be releasing, and use this:
-i_sustain = 1000
-xtratim gi_BandedWG_attack + gi_BandedWG_release
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_BandedWG_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
