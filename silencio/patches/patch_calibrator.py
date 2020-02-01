@@ -4,7 +4,7 @@ import sys
 
 orc = '''
 sr = 48000
-ksmps = 100
+ksmps = 1
 nchnls = 2
 0dbfs = 1
 
@@ -31,13 +31,51 @@ alwayson "MasterOutput"
 '''
 
 def generate_score():
-    score = ''
+    score = 'f 0 60\n'
     time_= 1.0
+    # Generate a chord.
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 36, 70)
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 48, 70)
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 55, 70)
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 59, 70)
+    score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 64, 70)
+    time_ += 7
+    # Generate a random pattern.
+    for note_i in xrange(50):
+        duration = random.choice([0.125, 0.33334, 0.25, 0.66667, 1])
+        time_ += duration / 2;
+        key = random.choice(range(24, 108, 1))
+        velocity = random.choice([80, 80-6, 80-12, 80-18]) / 3
+        score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, duration, key, 60)
+    time_ += 2
+    # Generate notes to calibrate loudness.
     for duration in [0.125, .25, 2]:
         for key in range(24,108,3):
             time_ = time_ + duration * 1.5
             velocity = random.choice([80, 80-6, 80-12, 80-18])
             score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, duration, key, velocity)
+    time_ += 2
+    # Test score-driven note-on, note-off.
+    score += 'i 1.01 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 36, 70)
+    time_ += 1
+    score += 'i 1.02 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 48, 70)
+    time_ += 1
+    score += 'i 1.03 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 55, 70)
+    time_ += 1
+    score += 'i 1.04 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 59, 70)
+    time_ += 1
+    score += 'i 1.05 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, -1, 64, 70)
+
+    time_ += 5
+    score += 'd 1.01 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 1, 36, 70)
+    time_ += 1
+    score += 'd 1.02 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 1, 48, 70)
+    time_ += 1
+    score += 'd 1.03 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 1, 55, 70)
+    time_ += 1
+    score += 'd 1.04 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 1, 59, 70)
+    time_ += 1
+    score += 'd 1.05 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 1, 64, 70)
     return score
 
 print(sys.argv)
@@ -52,6 +90,7 @@ output = "/tmp/{}.wav".format(patch_filename)
 csound.setOption("-o%s" % output)
 csound.setOption("-m%d" % message_level)
 csound.setOption("-+msg_color=0")
+csound.setOption("--simple-sorted-score")
 csound.setOption("--omacro:PATCH_FILENAME={}".format(patch_filename))
 csound.setOption("--omacro:PATCH_NAME={}".format(patch_name))
 csound.compileOrc(orc)
