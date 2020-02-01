@@ -20,8 +20,8 @@ endif
 //  If p3 is less than 0, the performance is MIDI-driven or otherwise 
 //  real-time. To enable the envelope to work, we set the sustain segment to a 
 //  large value, and count on the release segment of the envelope to be 
-//  triggered by the note off, and to complete without a click. However, if 
-//  the d opcode is used to turn the instance off, there will be a click 
+//  triggered by the note off, and thus to complete without a click. However, 
+//  if the d opcode is used to turn the instance off, there will be a click 
 //  instead of a smooth release.
 if p3 < 0 then
   i_sustain = 1000

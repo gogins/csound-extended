@@ -31,6 +31,14 @@ if p3 < 0 then
 endif
 p3 = gi_KarplusStrong3_attack + i_sustain + gi_KarplusStrong3_release
 i_midi_key = p4
+//  Reflect pitches not good for this instrument back into a range that is 
+//  good.
+while (i_midi_key < 0) do
+  i_midi_key += 12
+od
+while (i_midi_key > 128) do
+  i_midi_key -= 12
+od
 i_midi_dynamic_range = i(gk_KarplusStrong3_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 // Spatial location is specified in Ambisonic coordinates.
