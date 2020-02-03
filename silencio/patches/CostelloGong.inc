@@ -95,8 +95,8 @@ ipitchmod = gi_CostelloGong_pitch_modulation
 ; frequency corresponds to the 90 degree phase shift
 ; frequency of the allpass filter.
 i_half_bandwidth = gi_CostelloGong_phase_shift_bandwidth / 2
-phase_shift_1 = cpsmidinn(i_midi_key)
-phase_shift_2 = cpsmidinn(i_midi_key + gi_CostelloGong_phase_shift_bandwidth)
+phase_shift_1 = cpsmidinn(i_midi_key - i_half_bandwidth)
+phase_shift_2 = cpsmidinn(i_midi_key + i_half_bandwidth)
 ilimit1 = (1 - ipi * phase_shift_1 / sr) / (1 + ipi * phase_shift_1 / sr)
 ilimit2 = (1 - ipi * phase_shift_2 / sr) / (1 + ipi * phase_shift_2 / sr)
 ; print ilimit1, ilimit2
