@@ -2,8 +2,8 @@ gk_BanchoffKleinBottle_level init 0
 gi_BanchoffKleinBottle_attack init 0.003
 gi_BanchoffKleinBottle_release init 0.01
 gk_BanchoffKleinBottle_midi_dynamic_range init 127
-gi_BanchoffKleinBottle_sine ftgen 0, 0, 65536, 10, 1
-gi_BanchoffKleinBottle_cosine ftgen 0, 0, 65536, 11, 1
+gi_BanchoffKleinBottle_sine ftgen 0, 0, 65537, 10, 1
+gi_BanchoffKleinBottle_cosine ftgen 0, 0, 65537, 11, 1
 instr BanchoffKleinBottle
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
