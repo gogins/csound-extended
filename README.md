@@ -280,7 +280,7 @@ subdirectory of this repository and execute:
 
     1   Updates the Emscripten toolchain.
     
-    2   Executes `bash clean-build-wasm.sh`, which performs the following steps:
+    2   Executes `bash clean-build-wasm.sh`, which:
     
         1   Cleans the previous build.
         
@@ -288,13 +288,13 @@ subdirectory of this repository and execute:
         
         3   Runs `bash build-wasm.sh`, which:
         
-            1   Builds the CMask opcodes for Csound for WebAssembly. 
+            1   Builds the CMask opcodes for Csound. 
             
-            2   Builds the Csound static library for WebAssembly. 
+            2   Builds the Csound static library. 
             
-            3   Builds two Csound JavaScript interface classes for WebAssembly.
+            3   Builds two Csound JavaScript interface classes.
             
-            4   Runs `bash release-wasm.sh` to package the build artifacts and some examples in an archive for release. 
+            4   Runs `bash release-wasm.sh` to package the build and examples for release. 
 
 Any of the bash scripts in this sequence can be run independently, and will 
 continue to the end of the sequence.
