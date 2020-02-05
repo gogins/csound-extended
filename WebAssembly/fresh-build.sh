@@ -15,7 +15,5 @@ echo "Deleting previous build..."
 rm -rf deps
 rm -rf build-wasm
 emcc --clear-cache
-echo "Building libsndfile for WebAssembly..."
 bash download_and_build_libsndfile_wasm.sh
-echo "Building the Csound library for WebAssembly..."
 bash build-wasm.sh
