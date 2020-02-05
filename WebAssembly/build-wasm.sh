@@ -6,7 +6,7 @@ cd ~/emsdk
 ./emsdk activate latest
 source ./emsdk_env.sh
 echo "Using EMSCRIPTEN_ROOT: $EMSCRIPTEN_ROOT"
-export EMCC_DEBUG=1
+# export EMCC_DEBUG=1
 popd
 
 cd cmask
@@ -59,4 +59,4 @@ em++ -s SAFE_HEAP=0 -v -O1 -std=c++11 --bind --embed-file ../../dependencies/cso
 
 cd ..
 bash release-wasm.sh
-echo "Finished building Csound for WebAssembly."
+echo "Finished building the Csound library for WebAssembly."
