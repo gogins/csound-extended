@@ -276,25 +276,25 @@ First, install the Emscripten SDK according to instructions at
 Then, to build for WebAssembly for the first time, change to the WebAssembly
 subdirectory of this repository and execute:
 
-1 `bash fresh-build-build.sh`, which performs the following steps:
+1   `bash fresh-build-build.sh`, which performs the following steps:
 
-    1 Updates the Emscripten toolchain.
+    - Updates the Emscripten toolchain.
     
-    2 Executes `bash clean-build-wasm.sh`, which:
+    - Executes `bash clean-build-wasm.sh`, which:
     
-        1 Cleans the previous build.
+        * Cleans the previous build.
         
-        2 Runs `bash download-and-build-libsndfile-wasm.sh.`
+        * Runs `bash download-and-build-libsndfile-wasm.sh.`
         
-        3 Runs `bash build-wasm.sh`, which:
+        * Runs `bash build-wasm.sh`, which:
         
-            1 Builds the CMask opcodes for Csound. 
+            > Builds the CMask opcodes for Csound. 
             
-            2 Builds the Csound static library. 
+            > Builds the Csound static library. 
             
-            3 Builds two Csound JavaScript interface classes.
+            > Builds two Csound JavaScript interface classes.
             
-            4 Runs `bash release-wasm.sh` to package the build and examples for release. 
+            > Runs `bash release-wasm.sh` to package the build and examples for release. 
 
 Any of the bash scripts in this sequence can be run independently, and will 
 continue to the end of the sequence.
