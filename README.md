@@ -276,8 +276,7 @@ First, install the Emscripten SDK according to instructions at
 Then, to build for WebAssembly for the first time, change to the WebAssembly
 subdirectory of this repository and execute:
 
-1   `bash fresh-build-build.sh`, which
-performs the following steps:
+1   `bash fresh-build-build.sh`, which performs the following steps:
 
     1   Updates the Emscripten toolchain.
     
