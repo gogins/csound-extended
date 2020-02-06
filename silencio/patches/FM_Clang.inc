@@ -172,7 +172,7 @@ i_sustain = p3
 i_release = 0.01
 xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * i_amplitude * a_declicking * k_gain
+a_signal = a_signal * i_amplitude * a_declicking * k_gain * 2.18
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -187,5 +187,5 @@ outleta "outright", a_out_right
 kleft = k(a_out_left)
 kright = k(a_out_right)
 ; printks "FM_Clang       L %9.4f R %9.4f l %9.4f\\n", 0.5, a_out_left, a_out_right, gk_FM_Clang_level
-prints  "FM_Clang       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

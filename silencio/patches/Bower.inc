@@ -1,8 +1,9 @@
 gk_Bower_midi_dynamic_range init 127
 gk_Bower_attack init .0125
 gk_Bower_release init .0125
-gk_Bower_level init 0.5
+gk_Bower_level init 0
 gk_Bower_pressure init 0.25
+gi_Bower_sine ftgen 0,0,65537,10,1
 instr Bower
 if p3 == -1 goto indefinite
   goto non_indefinite
@@ -21,7 +22,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 74.6
+i_level_correction = 83.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Bower_level)
@@ -38,14 +39,12 @@ kpres = 0.25
 krat rspline 0.006,0.988,1,4
 kvibf = 4.5
 kvibamp = 0
-iminfreq = 30
-isine ftgenonce 0,0,65536,10,1
-aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,isine,iminfreq
-aleft, aright pan2 aSig / 7, k_space_left_to_right
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-outleta "outleft", aleft * k_gain
-outleta "outright", aright * k_gain
-prints "Bower          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+iminfreq = i(kfreq) / 2
+aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+a_damping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+a_signal = aSig * a_damping * k_gain
+aleft, aright pan2 a_signal, k_space_left_to_right
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

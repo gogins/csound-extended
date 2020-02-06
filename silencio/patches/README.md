@@ -28,7 +28,7 @@ You can `#include` any of these patches in a Csound orchestra and expect it to
 render audio from any MIDI or score events. All audio output levels are
 normalized so that MIDI velocity 80 produces about -6 dBFS. Each instrument
 patch uses a releasing envelope. The patches are optimized for audio quality.
-Pitches, amplitudes, or durations that would crash the instrument are reflected 
+Pitches, amplitudes, or durations that would not render well are reflected
 back into a safe domain before rendering.
 
 All audio outputs and inputs are performed using the signal flow graph
@@ -39,7 +39,7 @@ output plain stereo to outlets `outleft` and `outright`.
 
 Control parameters are set by global variables using the naming convention
 `gk_InstrumentName_control_variable_name`. Default values are set for all
-control parameters, but in use they most likely would be set by k-rate
+control parameters, but in use some most likely would be set by k-rate
 control channels in an "always on" Controller instrument. Each instrument
 has a `gk_InstrumentName_level` control parameter calibrated in dB.
 

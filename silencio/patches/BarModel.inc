@@ -1,10 +1,14 @@
 gk_BarModel_midi_dynamic_range init 127
 gk_BarModel_level init 0
-gk_BarModel_pick init .5
-gk_BarModel_reflection init .5
-gi_BarModel_pluck init 0
-gi_BarModel_damping init 10
-gi_BarModel_filter init 1000
+gk_BarModel_kbcL init 1
+gk_BarModel_kbcR init 1
+gi_BarModel_iK init 0 -3
+gi_BarModel_ib init .001
+gk_BarModel_kscan init .23
+gi_BarModel_iT30 init 5
+gi_BarModel_ipos init 0.3 
+gi_BarModel_ivel init 1000 
+gi_BarModel_iwid init 0.05
 gi_BarModel_sine ftgen 0, 0, 65536, 10, 1, 0, 1
 instr BarModel
 i_instrument = p1
@@ -19,7 +23,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 77
+i_level_correction = 84.75
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_BarModel_level)
@@ -27,11 +31,12 @@ iHz = cpsmidinn(i_midi_key)
 kHz = k(iHz)
 aenvelope transeg 1.0, 20.0, -10.0, 0.05
 k_amplitude = 1
-; Initialize the global variables.
-
-; ares   barmodel    kbcL, kbcR, iK, ib,    kscan, iT30, ipos, ivel, iwid
-a_signal barmodel    1,    1,    p4, 0.001, 0.23,  5,    p5,    p6,   p7
-a_signal barmodel    k_left_bc,    k_right_bc,   k_stiffness, i_high_frequency_loss, k_scan,  i_decay, i_position, i_velocity, i_width   p5,    p6,   p7
+; ares     barmodel    kbcL, kbcR, iK, ib,    kscan, iT30, ipos, ivel, iwid
+; a_signal barmodel    1,    1,    p4, 0.001, 0.23,  5,    p5,    p6,   p7
+; a_signal barmodel gk_BarModel_kbcL, gk_BarModel_kbcR, gi_BarModel_iK, gi_BarModel_ib, gk_BarModel_kscan, gi_BarModel_iT30, gi_BarModel_ipos, gi_BarModel_ivel, gi_BarModel_iwid
+// May not be correct.
+k_scan = i_frequency
+a_signal barmodel gk_BarModel_kbcL, gk_BarModel_kbcR, gi_BarModel_iK, gi_BarModel_ib, k_scan, gi_BarModel_iT30, gi_BarModel_ipos, gi_BarModel_ivel, gi_BarModel_iwid
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
@@ -50,5 +55,5 @@ outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
 ;printks "BarModel      %9.4f   %9.4f\n", 0.5, a_out_left, a_out_right
-prints "BarModel    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

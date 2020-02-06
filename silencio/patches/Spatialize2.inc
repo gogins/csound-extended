@@ -70,6 +70,7 @@ absignal, asend Spatializer asignal, 87, 15, 15
 outleta "out", asend
 ; Send the spatialized signal to the global Ambisonc decoder instr.
 outletv "outbformat", absignal
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 }}
@@ -905,8 +906,8 @@ if gk_Spatialize_Verbose != 0 goto gk_Spatialize_Verbose_not_0
 goto gk_Spatialize_Verbose_0
 gk_Spatialize_Verbose_not_0:
 kelapsed timeinsts
-printks "SpatialReverb i %5.2f t %5.2f [%5.2f] d %5.2f c %9.2f in %5.2f A[0] %5.2f\n", 1.0, p1, p2, kelapsed, p3, gk_SpatialReverb_CutoffHz, downsamp(arevsig), downsamp(aboutput[0])
 gk_Spatialize_Verbose_0:
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 gk_SpatialReverb_Gain init 0.2
@@ -1218,6 +1219,7 @@ aoutput sum aboutput[0], aboutput[1], aboutput[2], aboutput[3], aboutput[4], abo
 kelapsed timeinsts
 printks "SpatialReverb i %5.2f t %5.2f [%5.2f] d %5.2f c %9.2f in %5.2f A %5.2f\n", 1.0, p1, p2, kelapsed, p3, kcutoff, asignal, aoutput
 gk_Spatialize_Verbose_0:
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 gk_Bformat2DecodeBinaural_krelcoef init 1
@@ -1488,5 +1490,6 @@ goto channels_end
 channels_end:
 asignal = aoutsignal * kmasterlevel
 out asignal
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 

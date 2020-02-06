@@ -43,7 +43,7 @@ isustain = p3
 p3 = iattack + isustain + idecay
 aenvelope transegr 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
-isine ftgenonce 0, 0, 65536, 10, 1, 0, .02
+isine ftgenonce 0, 0, 65537, 10, 1, 0, .02
 if iwaveform == 0 goto i_waveform_0
 if iwaveform == 1 goto i_waveform_1
 if iwaveform == 2 goto i_waveform_2
@@ -57,8 +57,9 @@ i_waveform_2:
 asignal vco2 1, ihertz, 12 ; triangle
 i_waveform_endif:
 asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
-a_signal = asignal
-a_signal = a_signal * i_amplitude * k_gain
+adeclicking linsegr 0, .004, 1, p3 - .014, 1, .1, 0
+a_signal = asignal * adeclicking
+a_signal = a_signal * i_amplitude * k_gain * .56
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -70,5 +71,5 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "Droner         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
