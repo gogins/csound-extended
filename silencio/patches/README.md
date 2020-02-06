@@ -28,6 +28,8 @@ You can `#include` any of these patches in a Csound orchestra and expect it to
 render audio from any MIDI or score events. All audio output levels are
 normalized so that MIDI velocity 80 produces about -6 dBFS. Each instrument
 patch uses a releasing envelope. The patches are optimized for audio quality.
+Pitches, amplitudes, or durations that would crash the instrument are reflected 
+back into a safe domain before rendering.
 
 All audio outputs and inputs are performed using the signal flow graph
 opcodes. In the orchestra header, `#define USE_SPATIALIZATION` to output audio 

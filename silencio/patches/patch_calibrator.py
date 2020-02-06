@@ -81,13 +81,13 @@ def generate_score():
 print(sys.argv)
 patch_filename = sys.argv[1]
 patch_name = sys.argv[2]
+output = sys.argv[3]
 message_level = 1 + 2 + 32 + 128
 csound = ctcsound.Csound()
-csound.message("Patch file: {} Patch name: {}\n".format(patch_filename, patch_name))
+csound.message("Patch file: {} Patch name: {} Output: {}\n".format(patch_filename, patch_name, output))
 csound.setOption("-d")
 csound.setOption("--nchnls=2")
-output = "/tmp/{}.wav".format(patch_filename)
-csound.setOption("-o%s" % output)
+csound.setOption(output)
 csound.setOption("-m%d" % message_level)
 csound.setOption("-+msg_color=0")
 csound.setOption("--simple-sorted-score")
