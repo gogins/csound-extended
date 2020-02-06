@@ -4,8 +4,8 @@ gk_Blower_grainAmplitudeRange init 100
 gk_Blower_grainFrequencyRange init 3
 gk_Blower_level init 0
 gk_Blower_midi_dynamic_range init 127
-gi_Blower_grtab ftgen 0, 0, 65536, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
-gi_Blower_wintab ftgen 0, 0, 65536, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
+gi_Blower_grtab ftgen 0, 0, 65537, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65537, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
 instr Blower
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
