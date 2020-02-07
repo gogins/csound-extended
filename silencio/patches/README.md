@@ -76,9 +76,8 @@ License, v2.2.
 ## Acknowledgments
 
 I would like to thank the many authors of the Csound instrument definitions 
-that I have borrowed for writing these musical objects and for making them 
-available for re-use. I have tried to credit each original author in each 
-patch file. 
+that I have borrowed both for writing them, and for making them available for 
+re-use. I have tried to credit each original author in each patch file. 
 
-The existence of such code in such profusion is one of the great strengths of 
-the Csound ecosystem.
+The existence of such great code in such profusion is one of the outstanding 
+strengths of the Csound ecosystem.
