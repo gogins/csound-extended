@@ -51,7 +51,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 80
+i_level_correction = 80.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_TerrainMappedBass_level)
@@ -105,7 +105,7 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "TerrainMappedBass i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 ;printks "TerrainMappedBass i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 endin
 

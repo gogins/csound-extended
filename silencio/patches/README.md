@@ -7,9 +7,17 @@ http://michaelgogins.tumblr.com
 ## Introduction
 
 This directory contains Csound patches written in such a way as to be 
-completely modular. I use these patches to compose my own pieces. Most of 
-these patches do not depend on any external resources or code. A few patches 
-depend on SoundFonts, VST plugins, or samples.
+completely modular. I often use these patches to compose my own pieces. Most 
+of these patches do not depend on any external resources or code. A few 
+patches depend on SoundFonts, VST plugins, or samples.
+
+The approach here is generally to find existing instrument definitions that 
+sound good to me and are free for me to use, and then to adapt them to my 
+module system. At times, I extensively modify the instrument definitions. 
+Occasionally, I write the instrument definitions from scratch.
+
+There is some redundancy in the form of multiple implementations of similar 
+instruments. For this I make no excuse. Use the one that best suits.
 
 There are two pianos. In the orchestra header, `#define USE_PIANOTEQ` to use 
 the excellent commercial physically modeled piano VST plugin; otherwise, a 
@@ -41,7 +49,9 @@ Control parameters are set by global variables using the naming convention
 `gk_InstrumentName_control_variable_name`. Default values are set for all
 control parameters, but in use some most likely would be set by k-rate
 control channels in an "always on" Controller instrument. Each instrument
-has a `gk_InstrumentName_level` control parameter calibrated in dB.
+has a `gk_InstrumentName_level` control parameter calibrated in dB. Sometimes, 
+the parameters to opcodes are the Csound Reference Manual parameter names for 
+that opcode, prefixed by the instrument name.
 
 A Python script, `patch_calibrator.py`, is provided to help with the writing
 of new patches. It generates a range of notes for a patch, and prints output
@@ -62,3 +72,13 @@ log.
 
 These patches are licensed under the terms of the GNU Lesser General Public 
 License, v2.2.
+
+## Acknowledgments
+
+I would like to thank the many authors of the Csound instrument definitions 
+that I have borrowed for writing these musical objects and for making them 
+available for re-use. I have tried to credit each original author in each 
+patch file. 
+
+The existence of such code in such profusion is one of the great strengths of 
+the Csound ecosystem.
