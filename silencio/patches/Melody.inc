@@ -18,7 +18,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 69
+i_level_correction = 72
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Melody_level)
@@ -57,8 +57,8 @@ a7 comb a6, .5, 1 / i1
 a8 = (a6 * .9) + (a7 * .1)
 asignal balance a8, a1
 a_declick linsegr 0, iattack, 1, isustain, 1, irelease, 0
-aleft, aright pan2 asignal * i_amplitude * a_declick * k_gain, i(k_space_left_to_right)
+aleft, aright pan2 asignal * i_amplitude * a_declick * k_gain, k_space_left_to_right
 outleta "outleft", aleft
 outleta "outright", aright
-prints "Melody         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

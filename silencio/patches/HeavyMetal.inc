@@ -1,8 +1,8 @@
 gk_HeavyMetal_level init 0
-gi_HeavyMetal_sine ftgen 0, 0, 65536, 10, 1
-gi_HeavyMetal_cosine ftgen 0, 0, 65536, 11, 1
-gi_HeavyMetal_exponentialrise ftgen 0, 0, 65536, 5, .001, 513, 1 ; Exponential rise.
-gi_HeavyMetal_thirteen ftgenonce 0, 0, 65536, 9, 1, .3, 0
+gi_HeavyMetal_sine ftgen 0, 0, 65537, 10, 1
+gi_HeavyMetal_cosine ftgen 0, 0, 65537, 11, 1
+gi_HeavyMetal_exponentialrise ftgen 0, 0, 65536, 5, .001, 65536, 1 , 0; Exponential rise.
+gi_HeavyMetal_thirteen ftgenonce 0, 0, 65537, 9, 1, .3, 0
 instr HeavyMetal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Author: Perry Cook and John ffitch
@@ -55,5 +55,5 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "HeavyMetal     i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

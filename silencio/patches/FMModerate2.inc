@@ -13,7 +13,7 @@ k_space_front_to_back = p6
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
-i_overall_amps = 83
+i_overall_amps = 85
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 i_frequency = cpsmidinn(i_midi_key)
@@ -31,7 +31,7 @@ ifrequencyb = i_frequency * 1.003
 icarrierb = icarrier * 1.004
 aindenv transegr 0.0, iattack, -8.0, 1.0, idecay, -8.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
 aindex = aindenv * index * ifmamplitude
-icosine ftgenonce 0, 0, 65536, 11, 1
+icosine ftgenonce 0, 0, 65537, 11, 1
 aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine
 aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, icosine; Plus amplitude correction.
 a_signal = (aouta + aoutb) * aindenv
@@ -52,5 +52,5 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "FMModerate2    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
