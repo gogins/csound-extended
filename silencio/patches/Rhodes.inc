@@ -1,8 +1,8 @@
 gk_Rhodes_level init 0
-gi_Rhodes_sine ftgen 0, 0, 65536, 10, 1
-gi_Rhodes_cosine ftgen 0, 0, 65536, 11, 1
-gi_Rhodes_blank ftgen 0, 0, 65536, 10, 0 ; Blank wavetable for some Cook FM opcodes.
-instr 1,2,3,4
+gi_Rhodes_sine ftgen 0, 0, 65537, 10, 1
+gi_Rhodes_cosine ftgen 0, 0, 65537, 11, 1
+gi_Rhodes_blank ftgen 0, 0, 65537, 10, 0 ; Blank wavetable for some Cook FM opcodes.
+instr Rhodes
 ; Authors: Perry Cook, John ffitch, Michael Gogins
 if p3 == -1 then
   p3 = 1000000
@@ -49,6 +49,6 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "Rhodes         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 

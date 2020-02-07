@@ -39,51 +39,40 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 //  Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 155
+i_level_correction = 156
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_PhysicalModel2_level)
-
 
 ;Two masses, 1 end. Scheme : m1<-->m2<-->(grnd)
 ;coded by Josep M Comajuncosas / gelida@intercom.es
 
 i2pi2 =   39.47841760436; (2pi)^2
-
 ;set initial position and velocity of the mass
 iv0 = 0
 ix0 = 10000
-
 ;set frequency, z and m
 ;ifreq = cpspch(p4)
 ifreq = i_frequency
 iz = gi_PhysicalModel2_damping
 im1 = 30
 im2 = 30
-
 ;normalize (don't touch this!)
 iz = iz/(1000000000*sr); z given in N*s/(kg*10e-9)
 im1 = im1/1000000000; mass given in kg*10e-9
 im2 = im2/1000000000; mass given in kg*10e-9
-
 ;calculate k according to given freq
 ik = i2pi2*ifreq*ifreq*im1
 ik = ik/(sr*sr)
-
 ax1 init ix0
 axprev1 init ix0-1000*iv0/sr
-
 ax2 init 0
 axprev2 init 0
-
 af1 = ik*(ax2-ax1) + iz*((ax2-axprev2)-(ax1-axprev1))
 af2 = -af1 + ik*(-ax2) + iz*(-(ax2-axprev2))
-
 anext1 = af1/im1 + 2*ax1-axprev1
 anext2 = af2/im2 + 2*ax2-axprev2
-
 a_signal = anext2
-
 axprev1 = ax1
 axprev2 = ax2
 ax1 = anext1
@@ -102,6 +91,6 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "PhysicalModel2       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 ;printks "PhysicalModel2      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 endin
