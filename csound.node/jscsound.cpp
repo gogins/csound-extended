@@ -396,6 +396,7 @@ Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
                 Napi::Function::New(env, Stop));
     exports.Set(Napi::String::New(env, "stop"),
                 Napi::Function::New(env, Stop));
+    std::fprintf(stderr, "csound.node initialized.\n");
     return exports;
 }
 

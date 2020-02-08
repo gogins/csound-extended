@@ -45,6 +45,9 @@ or collected from older projects of mine. These extensions include:
     programming language and the Euterpea package for algorithmic composition, 
     in the haskell directory. This is a dynamic FFI and does not require to be 
     pre-built in order to be used.
+    
+11. Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
+    and the STK opcodes.
 
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move
@@ -147,7 +150,7 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 After that of course do the usual `make -j6` and `sudo make install` for 
 Csound.
 
-### Build, Package, and Install CsoundAC
+### Build, Package, and Install csound-extended
 
 First clone the Git repository at https://github.com/gogins/csound-extended.
 
@@ -181,7 +184,7 @@ the `/usr/local` tree).
 4. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
 home directory and installation details. These are exported in `build-env.sh` 
-which you can have your .profile script source.
+which you can source in your .profile script.
 
 ```
 CSOUND_SRC_ROOT=/home/mkg/csound-extended/dependencies/csound

@@ -12,10 +12,9 @@ sudo apt-get install autoconf
 echo "Updating autotools..."
 sudo apt-get install autotools
 echo "Updating FFmpeg..."
-sudo apt-get install ffsudo apt-get install csoundqt --reinstall
-sudo apt-get install csoundqt --reinstall
-mpeg
+sudo apt-get install ffmpeg
 sudo apt-get install libavfilter-dev
+sudo apt-get install libmp3lame-dev
 echo "Updating libtool..."
 sudo apt-get install libtool
 echo "Updating autogen..."
