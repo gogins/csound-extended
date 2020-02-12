@@ -1,6 +1,8 @@
 gk_Piano_level init 0
 gi_Pianoteq_print init 0
-instr PianoOut
+// This must be in the orc header above any #includes:
+// gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+instr PianoOutPianoteq
 ; Should be "D4 Daily Practice".
 vstprogset gi_Pianoteq, 0
 ; Sustain off.
@@ -22,7 +24,7 @@ i_midi_velocity = p5
 ainleft init 0.0
 ainright init 0.0
 aoutleft, aoutright vstaudio gi_Pianoteq, ainleft, ainright
-; printks "vstaudiog:       %9.4f   %9.4f\n", 0.5, aoutleft, aoutright
+; printks "vstaudio:       %9.4f   %9.4f\n", 0.5, aoutleft, aoutright
 #ifdef USE_SPATIALIZATION
 a_signal = a_out_left + a_out_right
 a_spatial_reverb_send init 0

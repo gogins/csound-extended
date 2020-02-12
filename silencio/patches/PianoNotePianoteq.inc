@@ -1,6 +1,5 @@
-gk_PianoNote_midi_dynamic_range init 127
-gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
-instr PianoNote
+gk_PianoNotePianoteq_midi_dynamic_range init 127
+instr PianoNotePianoteq
 if p3 == -1 then
   p3 = 1000000
 endif
@@ -8,7 +7,7 @@ i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
-i_midi_dynamic_range = i(gk_PianoNote_midi_dynamic_range)
+i_midi_dynamic_range = i(gk_PianoNotePianoteq_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
 k_space_left_to_right = p7

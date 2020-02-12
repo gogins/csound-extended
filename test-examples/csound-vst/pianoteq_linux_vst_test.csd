@@ -4,14 +4,14 @@
 ; from code by David Horowitz and Lian Cheung. 
 ; The "--displays" option is required in order for 
 ; the Pianoteq GUI to dispatch events and display properly.
--m3 --displays -odac
+-m165 --displays -odac
 </CsOptions>
 <CsInstruments>
 sr     = 44100
 ksmps  = 20
 nchnls = 2 ; Changed for WebAssembly output from: = 2
                 ; Load the Pianoteq into memory.
-gipianoteq      vstinit         "/home/mkg/pianoteq_linux_v630/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+gipianoteq      vstinit         "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
                 
                 ; Print information about the Pianoteq, such as parameter names and numbers.
                 vstinfo         gipianoteq

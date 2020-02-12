@@ -2,7 +2,7 @@ gk_Piano_level init 0
 gk_Piano_front_to_back init 0
 gk_Piano_left_to_right init 0
 gk_Piano_bottom_to_top init 0
-instr PianoOut
+instr PianoOutFluidsynth
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -17,10 +17,8 @@ i_overall_amps = -27
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Piano_level)
-giFluidsynth fluidEngine 0, 0
-giFluidSteinway fluidLoad "Piano Steinway Grand Model C (21,738KB).sf2", giFluidsynth, 1
-fluidProgramSelect giFluidsynth, 0, giFluidSteinway, 0, 1
-a_out_left, a_out_right fluidOut giFluidsynth
+fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
+a_out_left, a_out_right fluidOut gi_Fluidsynth
 a_out_left = a_out_left * i_amplitude * k_gain
 a_out_right = a_out_right * i_amplitude * k_gain
 #ifdef USE_SPATIALIZATION

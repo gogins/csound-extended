@@ -59,7 +59,9 @@ i_level_correction = 118
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_LivingstonGuitar_level)
-isine ftgenonce 0, 0, 65536, 10, 1
+isine ftgenonce 0, 0, 65537, 10, 1
+// Protect against too short delay times.
+i_minimum_delay_seconds = ksmps / sr
 afwav init 0
 abkwav init 0
 abkdout init 0
@@ -84,6 +86,7 @@ adeclick linsegr 0, iattack_, 1, isustain_, 1, irelease_, 0
 iEstr = 1/cpspch(6.04)
 ifqc = cpspch(ip5)
 idlt = 1/(ifqc) ;note:delay time=2x length of string (time to traverse it)
+idlt max i_minimum_delay_seconds, idlt
 ipluck = .5*idlt * ip6 * ifqc/cpspch(8.02)
 ifbfac = ip7 ;feedback factor
 ibrightness = ip10*exp(ip6*log(2))/2 ;(exponentialy scaled) additive noise to add hi freq content
@@ -159,6 +162,7 @@ ainputf tone ainputf,sr*.9/2
 ainputb tone ainputb,sr*.9/2
 ; Vibrato generator
 avib poscil ivibDepth, ivibRate,isine
+ivibStDly max i_minimum_delay_seconds, ivibStDly
 avibdl delayr ivibStDly*1.1+.001
 avibrato deltapi ivibStDly
 delayw avib
