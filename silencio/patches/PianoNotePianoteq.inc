@@ -1,5 +1,5 @@
 gk_PianoNote_midi_dynamic_range init 127
-gi_Pianoteq init 0
+gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
 instr PianoNote
 if p3 == -1 then
   p3 = 1000000

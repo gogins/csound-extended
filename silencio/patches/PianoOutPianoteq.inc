@@ -1,21 +1,16 @@
 gk_Piano_level init 0
-gi_Pianoteq init 0
 gi_Pianoteq_print init 0
-gS_Pianoteq_filename init "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so"
 instr PianoOut
-k_gain = ampdb(gk_Piano_level)
-i_overall_amps = 80
-i_normalization = ampdb(-i_overall_amps) * 2
-i_amplitude = ampdb(80) * i_normalization
-if gi_Pianoteq == 0 then
-gi_Pianoteq vstinit gS_Pianoteq_filename, 0
-endif
 ; Should be "D4 Daily Practice".
 vstprogset gi_Pianoteq, 0
 ; Sustain off.
 vstparamset gi_Pianoteq, 0, 0
 ; Reverb off.
 vstparamset gi_Pianoteq, 72, 0
+k_gain = ampdb(gk_Piano_level)
+i_overall_amps = 80
+i_normalization = ampdb(-i_overall_amps) * 2
+i_amplitude = ampdb(80) * i_normalization
 if gi_Pianoteq_print == 1 then
   vstinfo gi_Pianoteq
 endif
