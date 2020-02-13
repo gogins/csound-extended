@@ -59,7 +59,7 @@ krt = gk_Cascone_SampleAndHold_krt ; p6 THIS IS THE FRQ OF THE RANDH OUTPUT & CL
 isd = p4/127 ; gi_Cascone_SampleAndHold_isd ; p4 HOLDS THE VALUE OF THE SEED OF RANDH UG
 krn randh 1000,krt,isd ; NOISE INPUT TO S&H
 kclk poscil3 100,krt,gi_Cascone_SampleAndHold_f14 ; KCLK CLOCKS THE S&H -- f14 IS A DUTY CYCLE WAVE
-ksh samphold krn, kclk ;S&H
+ksh samphold krn, kclk 
 // Round to 12TET.
 kmidi ftom ksh, 1
 ksh1 mtof kmidi

@@ -25,11 +25,11 @@ export ANDROID_SDK_ROOT=/home/mkg/Android/Sdk
 export ANDROID_HOME=$ANDROID_SDK_ROOT
 
 unset SADIR
-export SADIR=$CSOUND_SRC_ROOT/samples
+export SADIR=$CSOUND_SRC_ROOT/samples/
 unset SSDIR
-export SSDIR=/home/mkg/michael.gogins.studio/music/samples
+export SSDIR=/home/mkg/michael.gogins.studio/music/samples/
 unset INCDIR
-export INCDIR=/home/mkg/csound/gogins.github.io/csound/silencio/patches
+export INCDIR=/home/mkg/csound-extended/silencio/patches/
 ## source ./emsdk/emsdk_env.sh --build=Release
 export PATH=${PATH}:/opt/android-studio/bin:/home/mkg/Android/Sdk/platform-tools
 # For node-gyp:
@@ -38,7 +38,7 @@ unset NODE_ADDON_API_INCLUDE
 export NODE_ADDON_API_INCLUDE=/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api
 
 unset OPCODE6DIR64
-set OPCODE6DIR64=/usr/lib/csound/plugins64-6.0
+export OPCODE6DIR64=/usr/lib/csound/plugins64-6.0/
 
 unset ALSA_CARD
 export ALSA_CARD=USB
@@ -48,3 +48,4 @@ env | grep ANDROID
 env | grep NDK
 env | grep NODE
 env | grep QT
+env | grep DIR
