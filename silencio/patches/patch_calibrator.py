@@ -8,7 +8,27 @@ ksmps = 1
 nchnls = 2
 0dbfs = 1
 
+// These must be initialized here to be in scope for both 
+// the note and the audio patches.
+
+gi_Fluidsynth fluidEngine 0, 0
+gi_FluidSteinway fluidLoad "Steinway_C.sf2", gi_Fluidsynth, 1
+fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
+
+gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+vstinfo gi_Pianoteq 
+
+alwayson "PianoOutFluidsynth"
+alwayson "PianoOutPianoteq"
+
 #includestr "$PATCH_FILENAME"
+
+// Comment out if you don't have the Steinway_C.sf2 SoundFont.
+#include "PianoOutFluidsynth.inc"
+
+// Comment out if you don't have the Pianoteq and vst4cs.
+#include "PianoOutPianoteq.inc"
+
 #include "MasterOutput.inc"
 
 iampdbfs init 1
@@ -26,6 +46,10 @@ prints "nchnls:                      %9.4f\\n", nchnls
 
 connect "$PATCH_NAME", "outleft", "MasterOutput", "inleft"
 connect "$PATCH_NAME", "outright", "MasterOutput", "inright"
+connect "PianoOutFluidsynth", "outleft", "MasterOutput", "inleft"
+connect "PianoOutFluidsynth", "outright", "MasterOutput", "inright"
+connect "PianoOutPianoteq", "outleft", "MasterOutput", "inleft"
+connect "PianoOutPianoteq", "outright", "MasterOutput", "inright"
 
 alwayson "MasterOutput"
 '''

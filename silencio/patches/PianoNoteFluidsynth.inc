@@ -1,6 +1,7 @@
 // These must be initialized to 0 in the orc header before any #includes.
-// gi_Fluidsynth init 0
-// gi_FluidSteinway init 0
+// gi_Fluidsynth fluidEngine 0, 0
+// gi_FluidSteinway fluidLoad "Steinway_C.sf2", gi_Fluidsynth, 1
+// fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 instr PianoNoteFluidsynth
 i_instrument = p1
 i_time = p2

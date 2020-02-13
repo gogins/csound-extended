@@ -5,10 +5,10 @@
 // fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 // fluidInfo gi_Fluidsynth
 
-gk_Piano_level init 0
-gk_Piano_front_to_back init 0
-gk_Piano_left_to_right init 0
-gk_Piano_bottom_to_top init 0
+gk_PianoOutFluidsynth_level init 0
+gk_PianoOutFluidsynth_front_to_back init 0
+gk_PianoOutFluidsynth_left_to_right init 0.5
+gk_PianoOutFluidsynth_bottom_to_top init 0
 
 instr PianoOutFluidsynth
 i_instrument = p1
@@ -21,24 +21,25 @@ k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-i_overall_amps = -130
+i_overall_amps = -19
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
-k_gain = ampdb(gk_Piano_level)
+k_gain = ampdb(gk_PianoOutFluidsynth_level)
 fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 a_out_left, a_out_right fluidOut gi_Fluidsynth
-a_out_left = a_out_left * i_amplitude * k_gain
-a_out_right = a_out_right * i_amplitude * k_gain
-#ifdef USE_SPATIALIZATION
 a_signal = a_out_left + a_out_right
+a_signal *= i_amplitude
+a_signal *= k_gain
+a_out_left, a_out_right pan2 a_signal, gk_PianoOutFluidsynth_left_to_right
+#ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
-a_bsignal, a_spatial_reverb_send Spatialize a_signal, gk_Piano_front_to_back, gk_Piano_left_to_right, gk_Piano_bottom_to_top
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, gk_PianoOutFluidsynth_front_to_back, gk_PianoOutFluidsynth_left_to_right, gk_PianoOutFluidsynth_bottom_to_top
 outletv "outbformat", a_bsignal
 outleta "out", a_spatial_reverb_send
 #else
-outleta "outleft", a_out_left * .01
-outleta "outright", a_out_right *.01
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
 #endif
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
