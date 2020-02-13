@@ -65,6 +65,7 @@ ipluck = i(gk_KarplusStrong3_pluck); pluck position ( 0 to 1 )
 ifreq = i_frequency
 idlts = int(kr/ifreq-.5); set waveguide length (an integer number of samples)
 idlt = idlts/kr; convert so seconds
+idlt max ksmps / sr, idlt
 kdlt init idlts; counter for string initialisation
 irems = kr/ifreq - idlts +.5;remaining time in fractions of a sample
 ; set phase delay induced by the FIR lowpass filter

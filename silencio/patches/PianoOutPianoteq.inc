@@ -1,7 +1,10 @@
+// This must be initialized in the orc header before any #includes.
+
+gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+vstinfo gi_Pianoteq 
+
 gk_Piano_level init 0
 gi_Pianoteq_print init 0
-// This must be in the orc header above any #includes:
-// gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
 instr PianoOutPianoteq
 ; Should be "D4 Daily Practice".
 vstprogset gi_Pianoteq, 0
@@ -10,7 +13,7 @@ vstparamset gi_Pianoteq, 0, 0
 ; Reverb off.
 vstparamset gi_Pianoteq, 72, 0
 k_gain = ampdb(gk_Piano_level)
-i_overall_amps = 80
+i_overall_amps = 72
 i_normalization = ampdb(-i_overall_amps) * 2
 i_amplitude = ampdb(80) * i_normalization
 if gi_Pianoteq_print == 1 then
@@ -21,8 +24,8 @@ i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-ainleft init 0.0
-ainright init 0.0
+ainleft init 0
+ainright init 0
 aoutleft, aoutright vstaudio gi_Pianoteq, ainleft, ainright
 ; printks "vstaudio:       %9.4f   %9.4f\n", 0.5, aoutleft, aoutright
 #ifdef USE_SPATIALIZATION

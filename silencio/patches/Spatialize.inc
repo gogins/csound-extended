@@ -6,7 +6,8 @@ This software is licensed under the terms of the
 GNU Lesser Public License.
 
 Many thanks to Jan Jacob Hofmann for his advanced Csound
-spatialization system, which I have adapted here.
+spatialization system (http://www.sonicarchitecture.de/), 
+which I have adapted here.
 
 This software is a system of Ambisonic and/or HRTF-based
 audio spatialization for Csound. I have simplified Hofmann's

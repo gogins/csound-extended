@@ -9,7 +9,7 @@ http://michaelgogins.tumblr.com
 This directory contains Csound patches written in such a way as to be 
 completely modular. I often use these patches to compose my own pieces. Most 
 of these patches do not depend on any external resources or code. A few 
-patches depend on SoundFonts, VST plugins, or samples.
+patches depend on SoundFonts, VST plugins, or sound samples.
 
 The approach here is generally to find existing instrument definitions that 
 sound good to me and are free for me to use, and then to adapt them to my 
@@ -19,9 +19,9 @@ Occasionally, I write the instrument definitions from scratch.
 There is some redundancy in the form of multiple implementations of similar 
 instruments. For this I make no excuse. Use the one that best suits.
 
-There are two pianos. In the orchestra header, `#define USE_PIANOTEQ` to use 
-the excellent commercial physically modeled piano VST plugin; otherwise, a 
-large sampled Steinway SoundFont is used.
+There are two pianos. One uses the excellent physically modeled piano by 
+Modartt (as a VST plugin), the other uses a large SoundFont sampled from a 
+Steinway Model C (with the Fluidsynth opcodes).
 
 An (incomplete but still useful) exposition of the methodology behind these
 modular patches may be found in<a href='modular_csound.pdf'>
@@ -59,8 +59,8 @@ levels that can be used to derive an audio level normalization factor.
 
 The <a href='Spatialize.inc'>Spatialize.inc</a>
 file implements a complete system for spatializing audio based on the
-excellent work of <a href='xxx'>Jan Jacob Hofmann</a>. For a working example 
-of the spatialization system, see 
+excellent work of <a href='http://www.sonicarchitecture.de/'>Jan Jacob 
+Hofmann</a>. For a working example of the spatialization system, see 
 <a href='SpatializedDrone.inc'>`SpatializedDrone`</a>
 
 ## Changes

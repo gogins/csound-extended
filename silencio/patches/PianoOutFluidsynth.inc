@@ -1,7 +1,15 @@
+// These must be initialized in the orc header before any #includes:
+
+// gi_Fluidsynth fluidEngine 0, 0
+// gi_FluidSteinway fluidLoad "Steinway_C.sf2", gi_Fluidsynth, 1
+// fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
+// fluidInfo gi_Fluidsynth
+
 gk_Piano_level init 0
 gk_Piano_front_to_back init 0
 gk_Piano_left_to_right init 0
 gk_Piano_bottom_to_top init 0
+
 instr PianoOutFluidsynth
 i_instrument = p1
 i_time = p2
@@ -13,7 +21,7 @@ k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-i_overall_amps = -27
+i_overall_amps = -130
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Piano_level)
