@@ -97,5 +97,9 @@ In general, you should use Quicklisp rather than ASDF to load packages and
 systems in Common Lisp, because Quicklisp can load ASDF systems, but ASDF cannot 
 download ASDF systems.
 
+When you first run a Lisp piece using the nudruz package, do not give up if 
+there are errors, e.g. in loading or compiling Fomus. Just accept the error 
+and continue...
+
 The nudruz code and examples run in the package `:cm` although it should be 
 possible to rewrite them to run them in other packages.
