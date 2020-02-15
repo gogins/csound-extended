@@ -12,7 +12,7 @@ Silencio features advanced score generators based on recurrent iterated function
 
 Please note, some full-scale examples for Silencio may be found here.
 
-The original version of Silencio was written in the Lua programming language. The current version of Silencio is written in portable JavaScript because that makes more capabilities (audio, MIDI, animated 3-dimensional graphics, video, proper mathematics typesetting, symbolic mathematics, <it>etc</it>., <it>etc</it>.) available to Csound than any other programming environment.
+The original version of Silencio was written in the Lua programming language. This is no longer supported. The current version of Silencio is written in portable JavaScript because that makes more capabilities (audio, MIDI, animated 3-dimensional graphics, video, proper mathematics typesetting, symbolic mathematics, <it>etc</it>., <it>etc</it>.) available to Csound than any other programming environment.
 
 Only the JavaScript version is currently under development. If and when [WebAssembly](http://webassembly.org/) becomes an accepted standard implemented in major Web browsers, I will port Silencio to WebAssembly, probably by updating my [CsoundAC C++ code base](https://github.com/csound/csound/tree/develop/frontends/CsoundAC) which is the inspiration for Silencio. 
 
@@ -41,7 +41,9 @@ This code is licensed under the terms of the GNU Library General Public License,
 
 ## Installation
 
-Please see the main README.md for csound-extended.
+To use the Csound instrument definition library that is found in `silencio/patches`, include this directory in Csound's `INCDIR` environment variable.
+
+Otherwise, see the main README.md for csound-extended.
 
 ## Building
 
