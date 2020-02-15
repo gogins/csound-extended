@@ -29,6 +29,16 @@ cd ..
 ##git checkout master-dev
 ##git pull
 ##  cd ..
+cd fomus
+echo "Pulling from `pwd`..."
+git checkout master
+git pull
+cd ..
+cd cm-fomus
+ho "Pulling from `pwd`..."
+git checkout master
+git pull
+cd ..
 cd liblo
 echo "Pulling from `pwd`..."
 git checkout master
