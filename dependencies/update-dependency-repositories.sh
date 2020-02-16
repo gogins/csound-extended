@@ -35,7 +35,7 @@ git checkout master
 git pull
 cd ..
 cd cm-fomus
-ho "Pulling from `pwd`..."
+echo "Pulling from `pwd`..."
 git checkout master
 git pull
 cd ..
