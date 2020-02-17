@@ -50,47 +50,80 @@ defined in Vinjar's release of Common Music 2."
             (map-subcontainers fn o :key key :recurse recurse))))
     (values))
     
+;; (defun gen-poisson-variate (mean &optional (*random-state* *random-state*))
+;; "Generate a pseudo-random number from a Poisson distribution
+;; with mean M:
+;; 
+;;                K   - M
+;;               M  %E
+;;        P(K) = --------
+;;                  K!
+;; 
+;;  MEAN       = Mean (M) of the distribution, M >= 0
+;;  STATE      = random state to use.
+;; 
+;;  The output is an integer.
+;; "
+;;   (declare (type (double-float 0d0) mean))
+;;   (let ((threshold 30d0))
+;;     (cond ((< mean threshold)
+;; 	   ;; Direct generation
+;; 	   (let ((limit (exp (- mean))))
+;; 	     (do ((prod (random 1d0))
+;; 		  (n 1 (+ n 1)))
+;; 		 ((<= prod limit)
+;; 		  (- n 1))
+;; 	       (declare (fixnum n)
+;; 			(type (double-float 0d0) prod))
+;; 	       (setf prod (* prod (random 1d0))))))
+;; 	  (t
+;; 	   ;; Indirect generation
+;; 	   (let* ((alpha #.(coerce 7/8 'double-float)) ; Suggested value
+;; 		  (order (floor (* alpha mean)))
+;; 		  (x (gen-gamma-variate (dfloat order))))
+;; 	     (declare (fixnum order))
+;; 	     (if (< x mean)
+;; 		 (+ order (gen-poisson-variate (- mean x)))
+;; 		 (gen-binomial-variate (1- order)
+;; 				       (/ mean x))))))))
+;;
+ 
+(declaim (ftype (function (double-float) integer) gen-poisson-variate))
+
 (defun gen-poisson-variate (mean &optional (*random-state* *random-state*))
-  "Generate a pseudo-random number from a Poisson distribution
-with mean M:
+"The poisson distribution has the form
+  p(n) = (mu^n / n!) exp(-mu) 
+  for n = 0, 1, 2, ... . The method used here is the one from Knuth."
 
-               K   - M
-              M  %E
-       P(K) = --------
-                 K!
+  (declare (type double-float mu))
+  (let ((k 0))
+    (declare (type integer k))
+    (loop 
+       for m integer = (truncate (* mu (/ 7d0 8d0)))
+       for X double-float = (random-gamma-int m)
+       while (> mu 10)
+       do (if (>= X mu)
+	      (return-from 
+	       gen-poisson-variate
+		(+ k (truncate
+		      (random-binomial (/ mu X) (- m 1)))))
+	      (progn
+		(incf k m)
+		(decf mu X))))
 
- MEAN       = Mean (M) of the distribution, M >= 0
- STATE      = random state to use.
-
- The output is an integer.
-"
-  (declare (type (double-float 0d0) mean))
-  (let ((threshold 30d0))
-    (cond ((< mean threshold)
-	   ;; Direct generation
-	   (let ((limit (exp (- mean))))
-	     (do ((prod (random 1d0))
-		  (n 1 (+ n 1)))
-		 ((<= prod limit)
-		  (- n 1))
-	       (declare (fixnum n)
-			(type (double-float 0d0) prod))
-	       (setf prod (* prod (random 1d0))))))
-	  (t
-	   ;; Indirect generation
-	   (let* ((alpha #.(coerce 7/8 'double-float)) ; Suggested value
-		  (order (floor (* alpha mean)))
-		  (x (gen-gamma-variate (dfloat order))))
-	     (declare (fixnum order))
-	     (if (< x mean)
-		 (+ order (gen-poisson-variate (- mean x)))
-		 (gen-binomial-variate (1- order)
-				       (/ mean x))))))))
-  
+    (let ((prod 1d0)
+	  (emu (exp (- mu))))
+      (declare (type double-float prod emu))
+      (loop 
+	 do (progn
+	      (setf prod (* prod (random-uniform)))
+	      (incf k))
+	 while (> prod emu)))
+      
+    (1- k)))
 
 (defgeneric duration-seconds (sequence) 
-    (:documentation "Returns the duration of the sequence in seconds.")
-    )
+    (:documentation "Returns the duration of the sequence in seconds."))
 
 (defmethod duration-seconds ((sequence seq)) 
   (reduce #'max (mapcar #'(lambda (e) (+ (object-time e)(midi-duration e))) 

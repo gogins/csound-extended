@@ -3,7 +3,7 @@
 ;;;
 ;;; Michael Gogins
 
-(require :asdf)    
+;;(require :asdf)    
 (require :cl-heredoc)
 #+sbcl
 (require 'sb-introspect)
