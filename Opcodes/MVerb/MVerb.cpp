@@ -26,14 +26,21 @@
     
     Then build for your build of Csound with C++17 and -lGamma -olibMVerb.so    
  */
+#include <cmath>
+#include <map>
+#include <mutex>
+#include <random>
+#include <string>
+#include <thread>
+#include <vector>
 #include "OpcodeBase.hpp"
 #define GAMMA_H_INC_ALL 1
 #include <Gamma/Gamma.h>
 
-#include <cmath>
-#include <random>
-#include <string>
-#include <vector>
+
+class MVerb;
+class MVerbsForCsounds;
+static MVerbsForCsounds &mverbs();
 
 struct Preset {
     float N;
@@ -938,6 +945,30 @@ struct MVerb {
      };
 };
 
+struct MVerbsForCsounds 
+{
+    std::mutex mutex_;
+    std::multimap<CSOUND *, MVerb *> mverbs_for_csounds;
+    void add(CSOUND *csound, MVerb *mverb) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        mverbs_for_csounds.insert({csound, mverb});
+    }
+    void del(CSOUND *csound) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        auto begin_ = mverbs_for_csounds.lower_bound(csound);
+        auto end_ = mverbs_for_csounds.upper_bound(csound);
+        for (auto it = begin_; it != end_; ++it) {
+            delete it->second;
+        }
+        mverbs_for_csounds.erase(csound);
+    }
+};
+
+static MVerbsForCsounds &mverbs() {
+    static MVerbsForCsounds mverbs_;
+    return mverbs_;
+};
+
 class MVerbOpcode  : public csound::OpcodeBase<MVerbOpcode>
 {
 public:
@@ -956,6 +987,7 @@ public:
     {
         if (mverb == nullptr) {
             mverb = new MVerb();
+            mverbs().add(csound, mverb);
         }
         mverb->initialize(csound);
         mverb->set_preset(preset->data);
@@ -1028,6 +1060,7 @@ extern "C" {
 
     PUBLIC int csoundModuleDestroy(CSOUND *csound)
     {
+        mverbs().del(csound);
         return 0;
     }
 #endif
