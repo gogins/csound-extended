@@ -1047,6 +1047,12 @@ extern "C" {
         return status;
     }
 
+    PUBLIC int csoundModuleDestroy_mverb(CSOUND *csound)
+    {
+        mverbs().del(csound);
+        return 0;
+    }
+
 #ifndef INIT_STATIC_MODULES
     PUBLIC int csoundModuleCreate(CSOUND *csound)
     {
@@ -1060,8 +1066,7 @@ extern "C" {
 
     PUBLIC int csoundModuleDestroy(CSOUND *csound)
     {
-        mverbs().del(csound);
-        return 0;
+        return csoundModuleDestroy_mverb(csound);
     }
 #endif
 }
