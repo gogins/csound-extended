@@ -69,7 +69,7 @@ https://github.com/gogins/csound-extended/issues.
 
 Some tests of basic functionality that also serve as examples and can be used
 as templates for new compositions are installed in the
-/usr/share/doc/csound-extended-dev/test-examples directory.
+/usr/share/doc/csound-extended-dev/tests-and-examples directory.
 
 ## Changes
 
