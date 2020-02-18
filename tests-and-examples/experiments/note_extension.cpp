@@ -42,7 +42,27 @@ prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrst
 endin
 
 instr noteon_noteoff
+i_attack = .05
+i_release = .15
+i_sustain = 10000
+
+k_release release
+if k_release == 0 && p3 < 0 then
+printks2 "sustain\n", k_release
+a_envelope linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+else
+p3 = i_release
+printks2 "release\n", k_release
+a_envelope linsegr 1, i_release, 0
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endif
+
+
+i_frequency = cpsmidinn(p4)
+i_amplitude = ampdb(p5)
+a_signal poscil3 i_amplitude, i_frequency
+outs a_signal, a_signal * a_envelope
 endin
 </CsInstruments>
 <CsScore>
@@ -56,10 +76,14 @@ i 2 7 5 60 60 0 .5
 i 2 8 5 64 60 0 .5
 i 2 9 5 67 60 0 .5
 s 15
-i 3 1 5 60 60 0 .5
-i 3 7 5 60 60 0 .5
-i 3 8 5 64 60 0 .5
-i 3 9 5 67 60 0 .5
+i 3.1  1 -5 60 60 0 .5
+;i 3.2  7 -5 60 60 0 .5
+;i 3.3  8 -5 64 60 0 .5
+;i 3.4  9 -5 67 60 0 .5
+d 3.1  6  5 60 60 0 .5
+;d 3.2 12  0 60 60 0 .5
+;d 3.3 13  0 64 60 0 .5
+;d 3.4 14  0 67 60 0 .5
 s 15
 </CsScore>
 </CsoundSynthesizer>
@@ -71,6 +95,7 @@ int main(int argc, char *argv[])
     csound.SetOption("-d");
     csound.SetOption("-m160");
     csound.SetOption("-otest.wav");
+    csound.SetOption("-+msg_color=0");
     std::fprintf(stderr, "csound.Compile...\n");
     csound.CompileCsdText(csd_text);
     std::fprintf(stderr, "csound.Start...\n");
