@@ -23,7 +23,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 //  Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 220
+i_level_correction = 221.2
 i_normalization = ampdb(-i_level_correction)
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_PulseWidthModulation_level)

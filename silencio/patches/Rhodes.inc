@@ -4,9 +4,6 @@ gi_Rhodes_cosine ftgen 0, 0, 65537, 11, 1
 gi_Rhodes_blank ftgen 0, 0, 65537, 10, 0 ; Blank wavetable for some Cook FM opcodes.
 instr Rhodes
 ; Authors: Perry Cook, John ffitch, Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -35,7 +32,7 @@ a_signal fmrhode i_amplitude, i_frequency, iindex, icrossfade, ivibedepth, ivibe
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
