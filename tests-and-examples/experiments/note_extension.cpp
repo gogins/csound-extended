@@ -54,6 +54,8 @@ a_signal poscil3 i_amplitude, i_frequency
 outs a_signal * a_envelope, a_signal * a_envelope
 endin
 
+// This is the pattern to use.
+
 instr noteon_noteoff
 i_attack = .05
 i_release = .15
@@ -91,6 +93,11 @@ i 3 1 5 60 60 0 .5
 i 3 7 5 60 60 0 .5
 i 3 8 5 64 60 0 .5
 i 3 9 5 67 60 0 .5
+s 15
+i 3 1 .05 60 60 0 .5
+i 3 7 .05 60 60 0 .5
+i 3 8 .05 64 60 0 .5
+i 3 9 .05 67 60 0 .5
 s 15
 
 </CsScore>

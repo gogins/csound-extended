@@ -1,15 +1,10 @@
 gk_Bower_midi_dynamic_range init 127
-gk_Bower_attack init .0125
-gk_Bower_release init .0125
+gk_Bower_attack init .125
+gk_Bower_release init .125
 gk_Bower_level init 0
 gk_Bower_pressure init 0.25
 gi_Bower_sine ftgen 0,0,65537,10,1
 instr Bower
-if p3 == -1 goto indefinite
-  goto non_indefinite
-indefinite:
-  p3 = 1000000
-non_indefinite:
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -22,16 +17,16 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 83.5
+i_level_correction = 80
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Bower_level)
 iattack = i(gk_Bower_attack)
 idecay = i(gk_Bower_release)
 isustain = p3
-p3 = iattack + isustain + idecay
 iamp = i_amplitude
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 kamp = kenvelope
 kfreq = ihertz
@@ -41,8 +36,7 @@ kvibf = 4.5
 kvibamp = 0
 iminfreq = i(kfreq) / 2
 aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
-a_damping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-a_signal = aSig * a_damping * k_gain
+a_signal = aSig * kenvelope * k_gain
 aleft, aright pan2 a_signal, k_space_left_to_right
 outleta "outleft", aleft
 outleta "outright", aright

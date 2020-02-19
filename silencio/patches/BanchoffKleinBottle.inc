@@ -9,6 +9,9 @@ instr BanchoffKleinBottle
 // Original by Hans Mikelson.
 // Adapted by Michael Gogins.
 //////////////////////////////////////////////
+xtratim gi_BanchoffKleinBottle_attack + gi_BanchoffKleinBottle_release
+a_declicking linsegr 0, gi_BanchoffKleinBottle_attack, 1, p3, 1, gi_BanchoffKleinBottle_release, 0
+
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -64,7 +67,6 @@ aoy = -ax * klfsinth * klfcosph - ay * klfsinth * klfcosph + klfsinph
 aoutleft = aampenv * aox
 aoutright = aampenv * aoy
 a_signal = aox + aoy
-a_declicking linsegr 0, gi_BanchoffKleinBottle_attack, 1, i_sustain, 1, gi_BanchoffKleinBottle_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0

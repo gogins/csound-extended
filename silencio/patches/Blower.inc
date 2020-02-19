@@ -50,10 +50,10 @@ idens = ip9
 ifade = ip10
 igdur = 0.2
 iattack = 0.5
-i_sustain = 1000
+i_sustain = p3
 idecay = 1.5
 xtratim iattack + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, .5, iattack / 2.0, -1.5, 1, i_sustain, 0.0, 1, idecay / 2.0, 1.5, .5, idecay / 2.0, -1.5, 0
+kenvelope transegr 0.0, iattack / 2.0, 1.5, .5, iattack / 2.0, -1.5, 1, i_sustain, 0.0, 1, idecay / 2.0, 1.5, .5, idecay / 2.0, -1.5, 0
 ; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
 kamp = kenvelope
 ; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur

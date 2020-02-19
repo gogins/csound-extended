@@ -9,10 +9,12 @@ instr BandedWG
 // Original by Hans Mikelson.
 // Adapted by Michael Gogins.
 //////////////////////////////////////////////
+xtratim gi_BandedWG_attack + gi_BandedWG_release
+a_declicking linsegr 0, gi_BandedWG_attack, 1, p3, 1, gi_BandedWG_release, 0
+
 i_instrument = p1
 i_time = p2
 i_sustain = p3
-p3 = i_sustain + gi_BandedWG_attack + gi_BandedWG_release
 i_duration = p3
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_BandedWG_midi_dynamic_range)
@@ -28,7 +30,6 @@ i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_BandedWG_level)
 a_signal STKBandedWG i_frequency, 1
-a_declicking linsegr 0, gi_BandedWG_attack, 1, i_sustain, 1, gi_BandedWG_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0

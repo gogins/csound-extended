@@ -8,25 +8,12 @@ instr Template
 //  Instrument definition patch template.
 //  Author: Michael Gogins
 //////////////////////////////////////////////
+xtratim gi_Template_attack + gi_Template_release
+a_declicking linsegr 0, gi_Template_attack, 1, p3, 1, gi_Template_release, 0
+
 i_instrument = p1
 i_time = p2
-//  If p3 is greater than 0, the performance is score-driven. To prevent 
-//  a click at release time, we set the sustain segment to p3, and 
-//  extend p3 so that the release will complete before the instance is 
-//  deleted.
-if p3 > 0 then
-  i_sustain = p3
-endif
-//  If p3 is less than 0, the performance is MIDI-driven or otherwise 
-//  real-time. To enable the envelope to work, we set the sustain segment to a 
-//  large value, and count on the release segment of the envelope to be 
-//  triggered by the note off, and thus to complete without a click. However, 
-//  if the d opcode is used to turn the instance off, there will be a click 
-//  instead of a smooth release.
-if p3 < 0 then
-  i_sustain = 1000
-endif
-p3 = gi_Template_attack + i_sustain + gi_Template_release
+i_sustain = p3
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_Template_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
@@ -45,7 +32,6 @@ k_gain = ampdb(gk_Template_level)
 
 a_signal oscili 1, i_frequency
 
-a_declicking linsegr 0, gi_Template_attack, 1, i_sustain, 1, gi_Template_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0

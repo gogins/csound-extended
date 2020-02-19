@@ -3,7 +3,7 @@ gk_Buzzer_release init .25
 gk_Buzzer_harmonics init 8
 gk_Buzzer_level init 0
 gk_Buzzer_midi_dynamic_range init 127
-gi_Buzzer_sine ftgen 0, 0, 65536, 10, 1
+gi_Buzzer_sine ftgen 0, 0, 65537, 10, 1
 instr Buzzer
 i_instrument = p1
 i_time = p2
@@ -17,15 +17,14 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 82
+i_level_correction = 79.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Buzzer_level)
 i_attack = i(gk_Buzzer_attack)
 i_release = i(gk_Buzzer_release)
 i_sustain = p3
-p3 = i_attack + i_sustain + i_release
-
+xtratim i_attack + i_release
 a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
 a_signal buzz a_envelope, i_frequency, gk_Buzzer_harmonics, gi_Buzzer_sine
 

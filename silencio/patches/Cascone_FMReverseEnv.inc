@@ -15,23 +15,8 @@ instr Cascone_FMReverseEnv
 //////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
-// If p3 is greater than 0, the performance is score-driven. To prevent 
-// a click at release time, we set the sustain segment to p3, and 
-// extend p3 so that the release will complete before the instance is 
-// deleted.
-if p3 > 0 then
- i_sustain = p3
-endif
-// If p3 is less than 0, the performance is MIDI-driven or otherwise 
-// real-time. To enable the envelope to work, we set the sustain segment to a 
-// large value, and count on the release segment of the envelope to be 
-// triggered by the note off, and thus to complete without a click. However, 
-// if the d opcode is used to turn the instance off, there will be a click 
-// instead of a smooth release.
-if p3 < 0 then
- i_sustain = 1000
-endif
-p3 = gi_Cascone_FMReverseEnv_attack + i_sustain + gi_Cascone_FMReverseEnv_release
+i_sustain = p3
+xtratim gi_Cascone_FMReverseEnv_attack + gi_Cascone_FMReverseEnv_release
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_Cascone_FMReverseEnv_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
