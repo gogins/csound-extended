@@ -1,8 +1,8 @@
 gk_Melody_midi_dynamic_range init 127
 gk_Melody_level init 0
-gi_Melody_chebyshev ftgen 0, 0, 65536, -7, -1, 150, 0.1, 110, 0, 252, 0
-gi_Melody_sine ftgen 0, 0, 65536, 10, 1
-gi_Melody_cook3 ftgen 0, 0, 65536, 10, 1, .4, 0.2, 0.1, 0.1, .05
+gi_Melody_chebyshev ftgen 0, 0, 65537, -7, -1, 150, 0.1, 110, 0, 252, 0
+gi_Melody_sine ftgen 0, 0, 65537, 10, 1
+gi_Melody_cook3 ftgen 0, 0, 65537, 10, 1, .4, 0.2, 0.1, 0.1, .05
 instr Melody
 ; Author: Jon Nelson
 ; Adapted by: Michael Gogins

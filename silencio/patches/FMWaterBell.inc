@@ -20,7 +20,7 @@ i_duration = p3
 ; One of the envelopes in this instrument should be releasing, and use this:
 i_sustain = 1000
 ;xtratim gi_FMWaterBell_attack + gi_FMWaterBell_release
-p3 = p3 + gi_FMWaterBell_attack + gi_FMWaterBell_release
+xtratim gi_FMWaterBell_attack + gi_FMWaterBell_release
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_FMWaterBell_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)

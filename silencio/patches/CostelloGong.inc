@@ -17,28 +17,8 @@ instr CostelloGong
 //////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
-// If p3 is greater than 0, the performance is score-driven. To prevent 
-// a click at release time, we set the sustain segment to p3, and 
-// extend p3 so that the release will complete before the instance is 
-// deleted.
-if p3 > 0 then
-// It makes no sense for this gong, especially at low frequencies, to sound 
-// for a very short time.
-if p3 < 1 then
-  p3 = 1
-endif
 i_sustain = p3
-endif
-// If p3 is less than 0, the performance is MIDI-driven or otherwise 
-// real-time. To enable the envelope to work, we set the sustain segment to a 
-// large value, and count on the release segment of the envelope to be 
-// triggered by the note off, and thus to complete without a click. However, 
-// if the d opcode is used to turn the instance off, there will be a click 
-// instead of a smooth release.
-if p3 < 0 then
-i_sustain = 1000
-endif
-p3 = gi_CostelloGong_attack + i_sustain + gi_CostelloGong_release
+xtratim gi_CostelloGong_attack + gi_CostelloGong_release
 i_midi_key = p4
 // Low frequencies don't work very well.
 while i_midi_key < gi_CostelloGong_lowest_note do
@@ -54,7 +34,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 88
+i_level_correction = 84
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization * 1.5
 k_gain = ampdb(gk_CostelloGong_level)

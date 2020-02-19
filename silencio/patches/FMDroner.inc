@@ -18,9 +18,6 @@ gk_FMDroner_z init 0
 gk_FMDroner_level init 0
 gi_FMDroner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
 instr FMDroner
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -49,7 +46,7 @@ k10 = gk_FMDroner_partial10
 iattack = .5
 idecay = .5
 isustain = p3
-xtratim iattack + isustain + idecay
+xtratim iattack + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 ;asignal poscil3 1, ihertz, gi_FMDroner_sine

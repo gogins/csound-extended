@@ -2,9 +2,6 @@ gk_Harpsichord_midi_dynamic_range init 127
 gk_Guitar_level init 0
 instr Guitar
 ; Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -17,7 +14,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 82
+i_level_correction = 80.275
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Guitar_level)
@@ -27,7 +24,7 @@ kHz = k(i_frequency)
 iattack = 0.004
 isustain = p3
 irelease = 0.05
-xtratim iattack + isustain + irelease
+xtratim iattack + irelease
 asigcomp pluck 1.0, 440, 440, 0, 1
 asig pluck 1.0, i_frequency, i_frequency, 0, 1
 af1 reson asig, 110, 80

@@ -13,7 +13,7 @@ instr FMModulatedChorus
 i_instrument = p1
 i_time = p2
 i_sustain = p3
-p3 = p3 + gi_FMModulatedChorus_attack + gi_FMModulatedChorus_release
+xtratim gi_FMModulatedChorus_attack + gi_FMModulatedChorus_release
 i_duration = p3
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_FMModulatedChorus_midi_dynamic_range)

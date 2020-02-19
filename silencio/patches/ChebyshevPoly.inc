@@ -20,9 +20,8 @@ instr ChebyshevPoly
 //////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
-i_duration = p3
 ; One of the envelopes in this instrument should be releasing, and use this:
-i_sustain = 1000
+i_sustain = p3
 xtratim gi_ChebyshevPoly_attack + gi_ChebyshevPoly_release
 i_midi_key = p4
 i_midi_dynamic_range = i(gk_ChebyshevPoly_midi_dynamic_range)

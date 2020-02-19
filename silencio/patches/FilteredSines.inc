@@ -4,9 +4,7 @@ gi_FilteredSines_release init 1
 instr FilteredSines
 ; Author: Michael Bergeman
 ; Modified by: Michael Gogins
-if p3 == -1 then
- p3 = 1000000
-endif
+xtratim gi_FilteredSines_attack + gi_FilteredSines_release
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -26,9 +24,8 @@ koctave = octcps(kHz)
 iattack init gi_FilteredSines_attack
 isustain init p3
 irelease init gi_FilteredSines_release
-xtratim iattack + isustain + irelease
 idb = 1.5
-ibergeman ftgenonce 0, 0, 65536, 10, .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
+ibergeman ftgenonce 0, 0, 65537, 10, .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
 ip5 = ibergeman
 ip3 = 5.0
 ip6 = 0.9
@@ -65,7 +62,6 @@ a_signal = (a17 + a18)
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.88
 #ifdef USE_SPATIALIZATION

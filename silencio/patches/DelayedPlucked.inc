@@ -2,9 +2,6 @@ gk_DelayedPlucked_midi_dynamic_range init 127
 gk_DelayedPlucked_level init 0
 instr DelayedPlucked
 ; Author: Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -23,6 +20,7 @@ i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_DelayedPlucked_level)
 iattack = 0.006
 idecay = 1.5
+xtratim iattack + idecay
 isustain = p3
 irelease = 0.05
 xtratim iattack + isustain + irelease
@@ -53,7 +51,7 @@ a_signal = asignal
 i_attack = .01
 i_sustain = p3
 i_release = 0.1
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.7
 #ifdef USE_SPATIALIZATION

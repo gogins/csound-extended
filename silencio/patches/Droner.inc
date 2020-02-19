@@ -39,8 +39,8 @@ k10 = gk_Droner_partial10
 iwaveform = gi_Droner_waveform
 iattack = .5
 idecay = .5
+xtratim iattack + idecay
 isustain = p3
-p3 = iattack + isustain + idecay
 aenvelope transegr 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 isine ftgenonce 0, 0, 65537, 10, 1, 0, .02
@@ -59,7 +59,7 @@ i_waveform_endif:
 asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
 adeclicking linsegr 0, .004, 1, p3 - .014, 1, .1, 0
 a_signal = asignal * adeclicking
-a_signal = a_signal * i_amplitude * k_gain * .56
+a_signal = a_signal * i_amplitude * k_gain * 1.4
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

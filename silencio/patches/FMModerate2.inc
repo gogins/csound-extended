@@ -1,9 +1,6 @@
 gk_FMModerate2_level init 0
 instr FMModerate2
 ; Author: Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -22,7 +19,7 @@ iattack = 0.002
 isustain = p3
 idecay = 1.5
 irelease = 0.05
-xtratim iattack + isustain + irelease
+xtratim iattack + irelease
 icarrier = 1
 imodulator = 4
 ifmamplitude = 9
