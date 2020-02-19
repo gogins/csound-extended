@@ -71,9 +71,8 @@ controlled using Csound control channels that are generally assumed to affect
 all instances of the same instrument definition.
 
 These goals are achieved by strictly following, insofar as the
-Csound
-orchestra language permits, that fundamental principle of software engineering
-known as \emph{encapsulation} or \emph{data hiding}.
+Csound orchestra language permits, that fundamental principle of software
+engineering known as \emph{encapsulation} or \emph{data hiding}.
 
 A Csound instrument definition or user-defined opcode definition is called a
 \emph{module}. These modules are ``black boxes'' that expose only the following
@@ -83,77 +82,48 @@ modules may be defined in include files (\texttt{.inc} files) and
 a module (with comments added):
 
 \begin{lstlisting}
-; Global control variables for STKBowed, named to prevent collisions.
-; The init values are usable defaults that pieces, hosts, and applications may
-; choose to override.
-
-; Controllers range from 0 through 127.
-
+gk_STKBowed_vibrato_level init 2.8
 gk_STKBowed_bow_pressure init 110
 gk_STKBowed_bow_position init 20
-gk_STKBowed_vibrato_level init 2.8
 gk_STKBowed_vibrato_frequency init 50.2
-
-; Level ranges from -40 to +40 dB, 0 is nominal.
-
 gk_STKBowed_level init 0
-
-; The actual instrument definition.
-
 instr STKBowed
-
 ; Author: Michael Gogins
-
-; More or less standard "prolog" for handling standard pfields.
-
-; Setting negative p3 to a large value enables normal arithmetic based on
-; duration so that "note-on/note-off" performance works just like
-; "score-driven" performance.
-
-if p3 == -1 then
-p3 = 1000000
-endif
-i_instrument = ;
+i_instrument = p1
 i_time = p2
 i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
-i_depth = p6
-i_pan = p7
-i_height = p8
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
-
-; Adjust the following value until "overall amps" at the end of solo
-; performance with midi velocity 80 is about -6 dB.
-
-i_overall_amps = 70
+; Adjust the following value until "overall amps" at the end of solo performance is about -6 dB.
+i_overall_amps = 74.5
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_STKBowed_level)
-
-; The body of the instrument definition.
-
-asignal STKBowed i_frequency, 1.0, 1, gk_STKBowed_vibrato_level, 2, gk_STKBowed_bow_pressure, 4, gk_STKBowed_bow_position, 11, gk_STKBowed_vibrato_frequency
-
-; More or less standard "epilog" for sending audio out.
-
-; To get note-offs to work without clicking, there must be a releasing
-; envelope generator with a suitable de-clicking envelope. If the note is too
-; short for the attack and release, p3 is extended.
-
-iattack = .005
-isustain = p3
-irelease = 0.1
-p3 = iattack + isustain + irelease
-a_declick linsegr 0, iattack, 1, isustain, 1, irelease, 0
-aleft, aright pan2 asignal * i_amplitude * a_declick * k_gain, i_pan
-outleta "outleft", aleft
-outleta "outright", aright
-prints "STKBowed       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n",
-p1, p2, p3, p4, p5, p7, active(p1)
+a_signal STKBowed i_frequency, 1.0, 1, gk_STKBowed_vibrato_level, 2, gk_STKBowed_bow_pressure, 4, gk_STKBowed_bow_position, 11, gk_STKBowed_vibrato_frequency
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
-
 \end{lstlisting}
 
 \begin{enumerate}
@@ -300,12 +270,13 @@ interoperability to work you must:
     \item For API-driven note-on/note-off usage only, to turn the note off,
     create a new \texttt{i} statement that is identical to the note-on
 \texttt{i} statement except that the sign of p1 is negative.
-    \item In the instrument definition, detect if p3 is -1 and, if so, reset
-    it to a large value such as 1000000. When the note-off event occurs,
-Csound will end the instrument instance but continue the release section of
-any releasing envelope generators. Using a large positive p3 for indefinitely
-held notes ensures that envelopes and other features that do arithmetic
-expecting a positive p3 will continue to work properly.
+    \item In the instrument definition, use the \texttt{xtratim} opcode to extend the
+    duration of the instrument instance by the sum of the attack and release
+    times, and create a de-clicking envelope using p3 for the sustain section along
+    with the attack and release times you have assigned.
+When the instance stops performing, either because p3 has elapsed or because a note
+off event has been received, Csounfd will end the instrument instance but continue the
+release section of any releasing envelope generators.
 \end{enumerate}
 
 \end{enumerate}
