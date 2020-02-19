@@ -1,9 +1,6 @@
 gk_ToneWheelOrgan_level init 0
 instr ToneWheelOrgan
 ; Author: Hans Mikelson
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -21,7 +18,7 @@ gk_Harpsichord_pan = .5
 iattack = .002
 isustain = p3
 irelease = .3
-xtratim iattack + isustain + irelease
+xtratim iattack + irelease
 iHz = cpsmidinn(i_midi_key)
 kHz = k(iHz)
 iphase = 0.25

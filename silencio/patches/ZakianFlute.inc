@@ -5,9 +5,6 @@ gi_ZakianFLute_seed init .5
 instr ZakianFlute
 ; Author: Lee Zakian
 ; Adapted by: Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -17,7 +14,7 @@ k_space_front_to_back = p6
 k_space_left_to_right = p7
 k_space_bottom_to_top = p8
 i_phase = p9
-i_overall_amps = 65
+i_overall_amps = 65.2
 i_normalization = ampdb(-i_overall_amps) / 2
 i_midi_dynamic_range = i(gk_ZakianFlute_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
@@ -26,7 +23,7 @@ k_gain = ampdb(gk_ZakianFlute_level)
 iattack = .002
 isustain = p3
 irelease = .3
-xtratim iattack + isustain + irelease
+xtratim iattack + irelease
 iHz = cpsmidinn(i_midi_key)
 kHz = k(iHz)
 aenvelope transeg 1.0, 20.0, -10.0, 0.05

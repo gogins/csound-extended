@@ -4,9 +4,6 @@ gi_TubularBell_vibrato_depth init .1
 gi_TubularBell_vibrato_rate init 5
 instr TubularBell
 ; Authors: Perry Cook, John ffitch, Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -38,7 +35,7 @@ a_signal fmbell 1, i_frequency, iindex, gi_TubularBell_crossfade, gi_TubularBell
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * .48
 #ifdef USE_SPATIALIZATION

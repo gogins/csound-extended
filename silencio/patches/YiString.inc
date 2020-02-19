@@ -4,13 +4,10 @@ gk_YiString_reverb_send init .5
 gk_YiString_chorus_send init .5
 gi_YiString_overlap init .1
 instr YiString
- //////////////////////////////////////////////
- // Original by Steven Yi.
- // Adapted by Michael Gogins.
- //////////////////////////////////////////////
-if p3 == -1 then
-  p3 = 1000000
-endif
+//////////////////////////////////////////////
+// Original by Steven Yi.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -30,7 +27,7 @@ k_gain = ampdb(gk_YiString_level)
 iattack = gi_YiString_overlap
 isustain = p3
 idecay = gi_YiString_overlap
-xtratim iattack + isustain + idecay
+xtratim iattack + idecay
 aenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
 ;ampenv = madsr:a(1, 0.1, 0.95, 0.5)
 asignal = vco2(1, i_frequency)

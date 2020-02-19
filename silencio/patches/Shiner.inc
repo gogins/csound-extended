@@ -3,9 +3,6 @@ gk_Shiner_attack init .0125
 gk_Shiner_release init .0125
 gk_Shiner_level init 0.5
 instr Shiner
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -26,7 +23,7 @@ k_gain = ampdb(gk_Shiner_level)
 iattack = i(gk_Shiner_attack)
 idecay = i(gk_Shiner_release)
 isustain = p3 - i(gk_Shiner_attack)
-xtratim iattack + isustain + idecay
+xtratim iattack + idecay
 kenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
 gk_Harmonics = 1 * 20

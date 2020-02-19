@@ -10,7 +10,6 @@ instr Template
 //////////////////////////////////////////////
 xtratim gi_Template_attack + gi_Template_release
 a_declicking linsegr 0, gi_Template_attack, 1, p3, 1, gi_Template_release, 0
-
 i_instrument = p1
 i_time = p2
 i_sustain = p3

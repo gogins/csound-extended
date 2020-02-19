@@ -25,7 +25,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 80
+i_level_correction = 78.3
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Sweeper_level)
@@ -33,7 +33,7 @@ k_gain = ampdb(gk_Sweeper_level)
 iattack = i(gk_Sweeper_attack)
 irelease = i(gk_Sweeper_release)
 isustain = p3
-p3 = iattack + isustain + irelease
+xtratim iattack + irelease
 kenvelope transegr 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, irelease / 2.0, 1.5, i_amplitude / 2.0, irelease / 2.0, -1.5, 0
 ihertz = i_frequency
 icps = ihertz

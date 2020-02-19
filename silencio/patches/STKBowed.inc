@@ -5,9 +5,6 @@ gk_STKBowed_vibrato_frequency init 50.2
 gk_STKBowed_level init 0
 instr STKBowed
 ; Author: Michael Gogins
-if p3 == -1 then
-  p3 = 1000000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -19,7 +16,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of solo performance is about -6 dB.
-i_overall_amps = 72
+i_overall_amps = 74.5
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_STKBowed_level)
@@ -27,7 +24,7 @@ a_signal STKBowed i_frequency, 1.0, 1, gk_STKBowed_vibrato_level, 2, gk_STKBowed
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain 
 #ifdef USE_SPATIALIZATION

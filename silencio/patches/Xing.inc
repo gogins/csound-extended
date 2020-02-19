@@ -1,9 +1,6 @@
 gk_Xing_level init 0
 instr Xing
 ; Author: Andrew Horner
-if p3 == -1 then
-  p3 = 100000
-endif
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -18,7 +15,7 @@ i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 i_frequency = cpsmidinn(i_midi_key)
 k_gain = ampdb(gk_Xing_level  )
-isine ftgenonce 0, 0, 65536, 10, 1
+isine ftgenonce 0, 0, 65537, 10, 1
 iinstrument = p1
 istarttime = p2
 ioctave = p4
@@ -47,7 +44,7 @@ a_signal = asig * arel * (iamp / inorm)
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
