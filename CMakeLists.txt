@@ -328,8 +328,8 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-exten
 
 # Test examples.
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}/test-examples
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/tests-and-examples/
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}/tests-and-examples
     FILES_MATCHING
     PATTERN "*.lisp"
     PATTERN "*.csd"
@@ -345,7 +345,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/test-examples/
 
 install(FILES "README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
-install(FILES "test-examples/README.md"
+install(FILES "tests-and-examples/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
     RENAME "README-TEST-EXAMPLES.md")
 install(FILES "csound.node/README.md"

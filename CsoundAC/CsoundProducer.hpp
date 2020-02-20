@@ -82,7 +82,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
 }
 
 #endif
-    
+        
     /**
      * Uses ffmpeg to translate a soundfile to a normalized output 
      * file, an MP3 file, a CD audio file, a FLAC soundfile, and an 
@@ -90,11 +90,15 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
      * tagged with metadata. This function is called automatically by 
      * PerformAndPostProcess. 
      */
-    static void PostProcess(std::map<std::string, std::string> &tags, std::string filename) {
+    static void PostProcess_(std::map<std::string, std::string> &tags, std::string filename, CsoundThreaded *csound) {
         auto period_index = filename.rfind(".");
         std::string filename_base = filename.substr(0, period_index);
         std::string filename_extension = filename.substr(period_index + 1, std::string::npos);
-        std::printf("Began PostProcess(%s)...\n", filename.c_str());
+        if (csound == nullptr) {
+            std::printf("Began PostProcess(%s)...\n", filename.c_str());
+        } else {
+            csound->Message("Began PostProcess(%s)...\n", filename.c_str());
+        }
         std::string tag_options;
         for (auto it = tags.begin(); it != tags.end(); ++it) {
             tag_options.append(" ");
@@ -104,7 +108,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             tag_options.append(it->second);
             tag_options.append("\" ");
         }
-         char buffer[0x1000];
+        char buffer[0x1000];
         // FFmpeg requires two passes to SET the loudness.
         // http://k.ylo.ph/2016/04/04/loudnorm.html
         const char *volumedetect_command = "ffmpeg -i %s.%s -af \"volumedetect\" -vn -sn -dn -f null /dev/null 2>&1";
@@ -116,48 +120,86 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             if (found != nullptr) {
                 found = std::strstr(found, " ");
                 max_volume = std::atof(found);
-                std::printf("Original maximum level: %9.4f dBFS\n", max_volume);
+                if (csound == nullptr) {
+                    std::printf("Original maximum level: %9.4f dBFS\n", max_volume);
+                } else {
+                    csound->Message("Original maximum level: %9.4f dBFS\n", max_volume);
+                }
                 break;
             }
         }
         auto result = pclose(pipe);
         max_volume = (max_volume + 6) * -1;
-        std::printf("Correction: %9.4f dB\n", max_volume);
+        if (csound == nullptr) {
+            std::printf("Correction: %9.4f dB\n", max_volume);
+        } else {
+            csound->Message("Correction: %9.4f dB\n", max_volume);
+        }
         
         const char *volume_command = "ffmpeg -y -i %s.%s -filter:a \"volume=%fdB\" -codec:a pcm_s32le -format:a flt %s \"%s-normalized.wav\"";
         std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), filename_extension.c_str(), max_volume, tag_options.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("Volume command:      %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("Volume command:      %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("Volume command:      %s\n", buffer);
+        }
         result = std::system(buffer);
         
         const char *mp3_command = "ffmpeg -y -i %s-normalized.wav -acodec libmp3lame -b:a 192k -r:a 48k %s \"%s.mp3\"";
         std::snprintf(buffer, 0x1000, mp3_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("MP3 command:         %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("MP3 command:         %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("MP3 command:         %s\n", buffer);
+        }
         result = std::system(buffer);
         
         const char *cda_command = "ffmpeg -y -i %s-normalized.wav -acodec pcm_s16le -ar 44100 -ac 2 -f wav %s \"%s.cd.wav\"";
         std::snprintf(buffer, 0x1000, cda_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("CD audio command:    %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("CD audio command:    %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("CD audio command:    %s\n", buffer);
+        }
         result = std::system(buffer);
-        
+          
         const char *flac_command = "ffmpeg -y -i %s-normalized.wav -af aformat=s32 %s \"%s.flac\"";
         std::snprintf(buffer, 0x1000, flac_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("FLAC command:        %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("FLAC command:        %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("FLAC command:        %s\n", buffer);
+        }
         result = std::system(buffer);
-        
+          
         const char *png_command = "ffmpeg -y -i %s.cd.wav -lavfi showspectrumpic=s=wxga:mode=separate %s.png";
         std::snprintf(buffer, 0x1000, png_command, filename_base.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("Spectrogram command: %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("Spectrogram command: %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("Spectrogram command: %s\n", buffer);
+        }
         result = std::system(buffer);
-
+  
         const char *mp4_command = "ffmpeg -y -loop 1 -framerate 2 -i %s.png -i %s-normalized.wav -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" %s %s-unlabeled.mp4";
         std::snprintf(buffer, 0x1000, mp4_command, filename_base.c_str(), filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("MP4 command:         %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("MP4 command:         %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("MP4 command:         %s\n", buffer);
+        }
         result = std::system(buffer);
         
         std::string artist = tags["artist"];
@@ -167,11 +209,22 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         std::string license = tags["license"];
         const char *label_command = "ffmpeg -y -i %s-unlabeled.mp4 -max_muxing_queue_size 9999 -vf drawtext=fontfile=OpenSans-Regular.ttf:text='%s\n%s\n%s\n%s %s':fontcolor=white:fontsize=36:alpha=.5:x=w/2-tw/2:y=h/6 -codec:a copy %s.mp4";
         std::snprintf(buffer, 0x1000, label_command, filename_base.c_str(), artist.c_str(), title.c_str(), publisher.c_str(), copyright.c_str(), license.c_str(), filename_base.c_str());
-        std::printf("%s", buffer);
-        std::printf("Label command:       %s\n", buffer);
+        if (csound == nullptr) {
+            std::printf("%s", buffer);
+            std::printf("Label command: %s\n", buffer);
+        } else {
+            csound->Message("%s", buffer);
+            csound->Message("Label command: %s\n", buffer);
+        }
         result = std::system(buffer);
-        std::printf("Ended PostProcess().\n");
+        
+        std::printf("Ended PostProcess.\n");
     }
+    
+    static void PostProcess(std::map<std::string, std::string> &tags, std::string filename) {
+        PostProcess_(tags, filename, nullptr);
+    }
+    
 
     /** 
      * Optionally adds metadata, performs post-processing, translates to 
@@ -291,20 +344,44 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 // We do our own performance benchmarks.
                 auto clock_started = startTiming();
                 Message("Began CsoundProducer::PerformAndPostProcessRoutine...\n");
-                auto result = CsoundThreaded::PerformAndResetRoutine();
+                keep_running = true;
+                int result = 0;
+                while (true) {
+                    if (keep_running == false) {
+                        break;
+                    }
+                    CsoundEvent *event = 0;
+                    while (input_queue.try_pop(event)) {
+                        (*event)(csound);
+                        delete event;
+                    }
+                    if (kperiod_callback != nullptr) {
+                        kperiod_callback(csound, kperiod_callback_user_data);
+                    }
+                    result = Csound::PerformKsmps();
+                    if (result != 0) {
+                        Message("CsoundThreaded::PerformAndPostProcessRoutine: CsoundThreaded::PerformKsmps ended with %d...\n", result);
+                        break;
+                    }
+                }
+                keep_running = false;
+                ClearQueue();
+                Message("CsoundThreaded::PerformAndPostProcessRoutine: Cleared performance queue...\n");
+                result = Cleanup();
+                Message("CsoundThreaded::PerformAndPostProcessRoutine: CsoundThreaded::Cleanup returned %d...\n", result);
                 auto seconds = stopTiming(clock_started);
                 Message("Rendering took %9.4f seconds.\n", seconds);
                 clock_started = startTiming();
                 auto output_filename = GetFilenameBase();
                 output_filename.append(".");
                 output_filename.append(output_type);
-                //if (result == 0) {
-                    Message("Post-processing output file: %s.\n", output_filename.c_str());
-                    PostProcess(tags, output_filename);
-                //}
+                Message("Post-processing output file: %s.\n", output_filename.c_str());
+                PostProcess_(tags, output_filename, this);
                 seconds = stopTiming(clock_started);
                 Message("Post-processing %s took %9.4f seconds.\n", output_filename.c_str(), seconds);                
                 Message("Ended CsoundProducer::PerformAndPostProcessRoutine with %d.\n", result);
+                Reset();
+                Message("CsoundThreaded::PerformAndPostProcessRoutine: CsoundThreaded::Reset returned...\n");
                 return result;
             }
             /**

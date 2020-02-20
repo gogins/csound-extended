@@ -34,4 +34,4 @@ EOM
 printf -v json_text "$json_format" $1 $2 $2
 echo "$json_text" | tee package.json
 # Change this if necessary to your nw pathname.
-~/nwjs/nw --context-mixed --experimental-modules --enable-logging=stderr $3
+~/nwjs/nw --context-mixed --experimental-modules $3
