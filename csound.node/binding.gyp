@@ -33,9 +33,10 @@
                     ],
                     'include_dirs': 
                     [
-                        '/usr/include/csound',
-                        '/usr/include/python2.7',
-                        '../CsoundAC',
+                        '/usr/local/include/csound/',
+                        '/usr/include/csound/',
+                        '/usr/include/python2.7/',
+                        '../CsoundAC/',
                     ],
                 }
             ],

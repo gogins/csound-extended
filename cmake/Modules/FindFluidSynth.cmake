@@ -1,28 +1,36 @@
-# - Try to find the FluidSynth library
-# Once done this will define
+# - Find fluidsynth
+# Find the native fluidsynth includes and library
 #
-#  FLUIDSYNTH_FOUND - system has FluidSynth
-#  FLUIDSYNTH_INCLUDE_DIR - the FLUIDSYNTH include directory
-#  FLUIDSYNTH_LIBRARY - The FLUIDSYNTH library
+#  FLUIDSYNTH_INCLUDE_DIR - where to find fluidsynth.h
+#  FLUIDSYNTH_LIBRARIES   - List of libraries when using fluidsynth.
+#  FLUIDSYNTH_FOUND       - True if fluidsynth found.
 
-# Copyright (c) 2014, cybermind <cybermindid@gmail.com>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+if (FLUIDSYNTH_INCLUDE_DIR AND FLUIDSYNTH_LIBRARIES)
+  # Already in cache, be silent
+  set (FluidSynth_FIND_QUIETLY TRUE)
+endif ()
 
-if(FLUIDSYNTH_INCLUDE_DIR AND FLUIDSYNTH_LIBRARY)
-	set(FLUIDSYNTH_FOUND true)
-else()
-	find_path(FLUIDSYNTH_INCLUDE_DIR fluidsynth.h)
-	find_library(FLUIDSYNTH_LIBRARY fluidsynth)
+find_path(FLUIDSYNTH_INCLUDE_DIR
+    NAMES
+      fluidsynth.h
+    HINTS
+      /usr/include
+      /usr/local/include
+    )
 
-	if(FLUIDSYNTH_INCLUDE_DIR AND FLUIDSYNTH_LIBRARY)
-		set(FLUIDSYNTH_FOUND true)
-		message(STATUS "Found FluidSynth: ${FLUIDSYNTH_LIBRARY}")
-	else()
-		set(FLUIDSYNTH_FOUND false)
-		message(STATUS "Could not find FluidSynth")
-	endif()
+find_library(FLUIDSYNTH_LIBRARIES
+    NAMES
+      fluidsynth
+      libfluidsynth
+    HINTS
+      /usr/lib
+      /usr/local/lib
+      /usr/local/lib64
+    )
 
-	mark_as_advanced(FLUIDSYNTH_INCLUDE_DIR FLUIDSYNTH_LIBRARY)
-endif()
+mark_as_advanced (FLUIDSYNTH_LIBRARIES FLUIDSYNTH_INCLUDE_DIR)
+
+# handle the QUIETLY and REQUIRED arguments and set FLUIDSYNTH_FOUND to TRUE if 
+# all listed variables are TRUE
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(FluidSynth DEFAULT_MSG FLUIDSYNTH_LIBRARIES FLUIDSYNTH_INCLUDE_DIR)
