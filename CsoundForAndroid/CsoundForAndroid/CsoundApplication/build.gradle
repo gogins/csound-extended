@@ -28,8 +28,8 @@ android {
         applicationId "com.csounds.Csound6"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 23
-        versionName '6.14.0 beta'
+        versionCode 24
+        versionName '6.14.0'
         multiDexEnabled true
     }
     buildTypes {
