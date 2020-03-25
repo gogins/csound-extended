@@ -35,7 +35,7 @@
         try {
             var text = editor.getValue();
             csoundApp.setCsoundText(text);
-            return 'getEmbeddedEditorText ' + text;
+            return 'getEmbeddedEditorText';
         } catch (e) {
             return e.description;
         }
@@ -45,7 +45,7 @@
         try {
             var text = editor.getValue();
             csoundApp.setCsoundText(text);
-            return 'getEmbeddedEditorTextAndRun' + text;
+            return 'getEmbeddedEditorTextAndRun';
         } catch (e) {
             return e.description;
         }
@@ -55,7 +55,7 @@
         try {
             var text = codemirror_editor.getDoc().getValue();
             csoundApp.setCsoundText(text);
-            return 'getEmbeddedEditorTextAndSave ' + text;
+            return 'getEmbeddedEditorTextAndSave';
         } catch (e) {
             return e.description;
         }

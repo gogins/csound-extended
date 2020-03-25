@@ -22,24 +22,6 @@
 [submodule "dependencies/liblo"]
 	path = dependencies/liblo
 	url = https://github.com/radarsat1/liblo.git
-[submodule "CsoundForAndroid/ndk-libraries/libsndfile-android"]
-	path = CsoundForAndroid/ndk-libraries/libsndfile-android
-	url = https://bitbucket.org/kunstmusik/libsndfile-android.git
-[submodule "CsoundForAndroid/ndk-libraries/oboe"]
-	path = CsoundForAndroid/ndk-libraries/oboe
-	url = https://github.com/google/oboe.git
-[submodule "CsoundForAndroid/ndk-libraries/stk"]
-	path = CsoundForAndroid/ndk-libraries/stk
-	url = https://github.com/thestk/stk.git
-[submodule "CsoundForAndroid/ndk-libraries/liblo-android"]
-	path = CsoundForAndroid/ndk-libraries/liblo-android
-	url = https://bitbucket.org/michael_gogins/liblo-android
-[submodule "CsoundForAndroid/ndk-libraries/link"]
-	path = CsoundForAndroid/ndk-libraries/link
-	url = https://github.com/Ableton/link.git
-[submodule "CsoundForAndroid/ndk-libraries/fluidsynth-android"]
-	path = CsoundForAndroid/ndk-libraries/fluidsynth-android
-	url = https://bitbucket.org/kunstmusik/fluidsynth-android.git
 [submodule "dependencies/cmask"]
 	path = dependencies/cmask
 	url = https://github.com/gogins/cmask.git
@@ -58,9 +40,6 @@
 [submodule "dependencies/cope/david-cope-cmmc"]
 	path = dependencies/cope/david-cope-cmmc
 	url = https://github.com/HeinrichApfelmus/david-cope-cmmc.git
-[submodule "CsoundForAndroid/ndk-libraries/ecl"]
-	path = CsoundForAndroid/ndk-libraries/ecl
-	url = https://gitlab.com/embeddable-common-lisp/ecl.git
 [submodule "dependencies/bformdec2"]
 	path = dependencies/bformdec2
 	url = https://github.com/pzinemanas/bformdec2.git
