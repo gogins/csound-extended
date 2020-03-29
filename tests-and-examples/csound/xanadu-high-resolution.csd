@@ -3,7 +3,7 @@
 -d -odac
 </CsOptions>
 <CsInstruments>
-sr          =           4800
+sr          =           48000
 ksmps       =           100
 nchnls      =           2
 ;--------------------------------------------------------
