@@ -1,6 +1,6 @@
 # How to Configure Linux for Optimal Real-Time Audio
 
-On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It is desirable to disable PulseAudio, and then to make Csound use ALSA with the _native_ audio frame rate and sample size, which depends on the operating system audio driver and the audio interface device. This avoids unnecessary overhead caused by sample rate and format conversions, and by audio mixing and routing.
+On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It is desirable to disable PulseAudio, and then to make Csound use ALSA with the _native_ audio frame rate and sample size, which depends on the operating system audio driver and the audio interface device. This avoids unnecessary overhead caused by sample rate and format conversions, and by audio mixing and routing. In theory, this overhead should be very small, but in practice, it is not always small.
 
 ## Disable PulseAudio
 
@@ -28,7 +28,7 @@ ctl.!default {
 }
 ```
 
-Then determine the default native ALSA audio format. On my Intel NUC this is 44100 Hz 24 bits little-endian. Then as there appear to be issues with Csound's default ALSA driver, Csound must use only the _PortAudio_ driver and only the _native_ ALSA audio format, e.g. on my NUC: `-+rtaudio=PortAudio -r 44100 -k 100 -fodac`.
+Then determine the default native ALSA audio format. On my Intel NUC this is 44100 Hz 24 bits little-endian. Because there appear to be issues with Csound's default ALSA driver, Csound must use only the _PortAudio_ driver with only the _native_ ALSA audio format, e.g. on my NUC: `-+rtaudio=PortAudio -r 44100 -k 100 -fodac`.
 
 ## Rendering to Soundfile
 
