@@ -11,6 +11,10 @@ linked. Some live examples run from here:
 4. [Duplex Audio](https://gogins.github.io/csound-extended/duplex.html), shows simultaneous audio input and output.
 5. [CMask](https://gogins.github.io/csound-extended/cmask.html), demonstrates Andre Bartetzki's <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> ported to WebAssembly.
     
+# Online Csound Player
+
+If you just want to play your own Csound piece in your Web browser, [this will do the job](https://gogins.github.io/csound-extended/player.html).
+
 # Csound Reference Manual 
 
 [indexframes.html](https://gogins.github.io/csound-extended/html/indexframes.html), an online version of the _**Csound Reference Manual**_ that is playable if your browser supports WebAssembly.
