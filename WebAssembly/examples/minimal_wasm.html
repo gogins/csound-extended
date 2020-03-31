@@ -4,40 +4,46 @@
     <title>Minimal Example using Csound for WebAssembly</title>
     <script src="csound_extended.js"></script>
     <script>
-        csound_extended_module().then(function(module) {
-            csound_extended = module;
-            csound = new csound_extended.CsoundWebAudio();
-            console.log("csound_extended_module: csound_extended.js has been loaded.\n");
-        });
     </script>
  </head>
 <body>
     <script>
+    var csound = null;
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
         messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;        
     };
-    console.log = handleMessage;
     var onPlayClick = function() {
-        if (typeof csound === 'undefined') {
-            console.log("Csound is not yet loaded, wait a bit...");
-            return;
+        var messages_textarea = document.getElementById("console");
+        messages_textarea.value = "";
+        if (csound == null) {
+            csound_extended_module().then(function(module) {
+                let csound_extended = module;
+                csound = new csound_extended.CsoundWebAudio();
+                console.log = handleMessage;
+                console.log("Csound class name: " + csound.constructor.name);
+                console.log("csound_extended_module: csound_extended.js has been loaded...\n");
+                let csd = document.getElementById('csd').value;
+                csound.CompileCsdText(csd);
+                csound.Start();
+                csound.Perform();
+            });
+        } else {
+            let csd = document.getElementById('csd').value;
+            console.log = handleMessage;
+            csound.CompileCsdText(csd);
+            csound.Start();
+            csound.Perform();
         }
-        var csd = document.getElementById('csd').value;
-        csound.Stop();
-        csound.Reset();
-        csound.CompileCsdText(csd);
-        csound.Start();
-        csound.Perform();
     };
     var onPlayStop = function() {
         csound.Stop();
         csound.Reset();
     };
-  </script>
-   <h1>Minimal Example using csound-extended for WebAssembly</h1>
+    </script>
+    <h1>Minimal Example using csound-extended for WebAssembly</h1>
     <p>This is a completely self-contained example, all in one file, and 
     without any unnecessary features, showing how to play a Csound piece in a 
     Web browser using csound-extended for WebAssembly. When the JavaScript file 

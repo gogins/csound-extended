@@ -12,6 +12,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  */
+
+// Workaround for Emscripten #8774.
+
+var tempDouble;
+var tempI64;
  
 /**
  * So that print output works in all JavaScript contexts, not only 

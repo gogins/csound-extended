@@ -337,7 +337,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 }
             }
         }
-        return true;
+        return this.is_playing;
     }
 };
 
