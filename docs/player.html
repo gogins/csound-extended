@@ -3,7 +3,7 @@
 <head>
     <title>Csound for WebAssembly Online Player</title>
     <script src="csound_extended.js"></script>
- </head>
+</head>
 <body>
     <script>
     csound_extended_module();
@@ -20,23 +20,23 @@
             return;
         }
         var csd = document.getElementById('csd').value;
-        csound.Stop();
-        csound.Reset();
+        //csound.SetMessageCallback(handleMessage);
         csound.CompileCsdText(csd);
         csound.Start();
         csound.Perform();
     };
     var onPlayStop = function() {
         csound.Stop();
+        csound.Cleanup();
         csound.Reset();
     };
     </script>
-    <h1>Online Csound Player</h1>
+    <h1>Csound</h1>
     <textarea id='console' cols=80 rows=15>
     </textarea>
     <p><input id="play" type="button" value="Play" onclick="onPlayClick()">
     <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
-    <p>You can play any self-contained Csound piece by pasting it into the 
+    <p>You can play any self-contained Csound piece (.csd file) by pasting it into the 
     text area below. Clicking on the <b>Play</b> 
     button performs the piece. Clicking on the <b>Stop</b> button ends the 
     performance and resets Csound for another performance. Csound's runtime 

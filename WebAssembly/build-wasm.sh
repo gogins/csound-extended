@@ -34,15 +34,15 @@ emmake make csound-static -j6
 
 echo "Compiling FileList..."
 
-emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 ../src/FileList.c -Iinclude -o FileList.bc
+emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 -c ../src/FileList.c -Iinclude -o FileList.bc
 
 echo "Compiling CsoundObj..."
 
-emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 ../src/CsoundObj.c -iquote ../src -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
+emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 -c ../src/CsoundObj.c -iquote ../src -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
 
 echo "Compiling csound_embind..."
 
-em++ -std=c++11 -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -iquote ../src -I../../dependencies/csound/include ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
+em++ -std=c++11 -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -iquote ../src -I../../dependencies/csound/include -c ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
 
 # Total memory for a WebAssembly module must be a multiple of 64 KB so...
 # 1024 * 64 = 65536 is 64 KB

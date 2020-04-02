@@ -25,8 +25,8 @@ var tempI64;
 var print = null;
 if (typeof console === 'undefined') {
     print = Module.print;
-} else print = function(message) {
-    console.log(message);
+} else {
+    print = console.log;
 }
 
 var CsoundWebAudio = function() {
@@ -200,6 +200,13 @@ CsoundWebAudio.prototype.SetInput = function(name) {
     return this.csound.SetInput(name);
 };
 CsoundWebAudio.prototype.setInput = CsoundWebAudio.prototype.SetInput;
+
+CsoundWebAudio.prototype.SetMessageCallback = function(message_callback) {
+    //print = message_callback;
+    console.log = message_callback;
+    return print;
+};
+CsoundWebAudio.prototype.setMessageCallback = CsoundWebAudio.prototype.SetMessageCallback;
 
 CsoundWebAudio.prototype.SetOption = function(option) {
     return this.csound.SetOption(option);

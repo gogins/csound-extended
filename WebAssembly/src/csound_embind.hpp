@@ -52,7 +52,7 @@ using namespace emscripten;
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist) {
     char buffer[0x1000];
     std::vsprintf(buffer, format, valist);
-    std::printf("%s", buffer);
+    ///std::printf("%s", buffer);
     EM_ASM_({
         console.log(UTF8ToString($0));
     }, buffer);    
