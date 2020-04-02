@@ -16,11 +16,11 @@ var csound_message_callback = function(message) {
 var onPlayClick = function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
+    console.log = csound_message_callback;
     if (csound == null) {
         csound_extended_module().then(function(module) {
             csound_extended = module;
             csound = new csound_extended.CsoundWebAudio();
-            console.log = csound_message_callback;
             console.log("csound_extended_module has been loaded...\n");
             console.log("Csound class name: " + csound.constructor.name + "\n");
             let csd = document.getElementById('csd').value;
@@ -39,7 +39,7 @@ var onPlayStop = function() {
 </script>
 <h2>Csound Player</h2>
 <p>
-Any self-contained Csound piece (.csd file) can be performed by pasting it into the text area below, and clicking on the <b>Play</b> button. Click on the <b>Stop</b> button to end the performance. The second text area will show Csound's runtime messages. You can edit the .csd file in the text area, but you must select it all and copy it out somewhere else order to save it.
+Any self-contained Csound piece (.csd file) can be performed by pasting it into the text area below, and clicking on the <b>Play</b> button. Click on the <b>Stop</b> button to end the performance. The second text area will show Csound's runtime messages. Please note, Csound's sr should be the same as WebAudio (printed as a message), ksmps should be 12k, and input and output channel counts should match WebAudio. You can edit the .csd file in the text area, but you must select it all and copy it out somewhere else order to save it.
 </p>
 <p>
 <input id="play" type="button" value="Play" onclick="onPlayClick()">
@@ -51,8 +51,8 @@ Any self-contained Csound piece (.csd file) can be performed by pasting it into 
 -odac -d -m195
 </CsOptions>
 <CsInstruments>
-sr          =           48000
-ksmps       =           128
+sr          =           44100
+ksmps       =           441
 nchnls      =           2
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and

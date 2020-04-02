@@ -17,6 +17,7 @@
 
 class CsoundAudioNode extends AudioWorkletNode {
     constructor(context, options) {
+        console.log("CsoundAudioNode constructor...\n");
         options = options || {};
         options.numberOfInputs  = 1;
         options.numberOfOutputs = 1;

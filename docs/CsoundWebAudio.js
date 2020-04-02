@@ -276,7 +276,9 @@ CsoundWebAudio.prototype.Start = function() {
         var outputChannelCount = this.csound.GetNchnls();
         this.audioProcessNode = audioContext.createScriptProcessor(0, inputChannelCount, outputChannelCount);
         bufferFrameCount = this.audioProcessNode.bufferSize;
-        print("Web Audio initialized with frames per buffer: " +  bufferFrameCount + "\n");
+        print("WebAudio frames per buffer:         " +  bufferFrameCount + "\n");
+        print("WebAudio frames per second:         " +  audioContext.sampleRate + "\n");
+        print("WebAudio maximum output channels:   " +  audioContext.destination.maxChannelCount + "\n");
         this.audioProcessNode.inputCount = inputChannelCount;
         this.audioProcessNode.outputCount = outputChannelCount;
         var inputChannelN = this.audioProcessNode.inputCount;
@@ -288,25 +290,20 @@ CsoundWebAudio.prototype.Start = function() {
             if (navigator.getUserMedia === null) {
                 print("Audio input not supported in this context.");
             } else {
-                function onSuccess(stream) {
+                navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
                     this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                    print("Audio input initialized.\n");
-                };
-                function onFailure(error) {
-                    this.microphoneNode = null;
-                    print("Could not initialise audio input, error:" + error);
-                };
-                navigator.getUserMedia({
-                    audio: true
-                }, onSuccess, onFailure);
-            }
-            if (this.microphoneNode !== null) {
-                if (inputChannelN >= this.microphoneNode.numberOfInputs) {
-                    this.microphoneNode.connect(this.audioProcessNode);
-                } else {
-                    print("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
-                    return;
-                }
+                    print("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
+                    if (this.microphoneNode !== null) {
+                        if (inputChannelN != this.microphoneNode.numberOfInputs) {
+                            this.microphoneNode.connect(this.audioProcessNode);
+                            print("Audio input initialized.\n");
+                        } else {
+                            print("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
+                        }
+                    }       
+                }).catch ((e) => {
+                    throw "Microphone: " + e.name + ". " + e.message;
+                })
             }
         }
         this.audioProcessNode.connect(audioContext.destination);
