@@ -302,7 +302,8 @@ CsoundWebAudio.prototype.Start = function() {
                         }
                     }       
                 }).catch ((e) => {
-                    throw "Microphone: " + e.name + ". " + e.message;
+                    print("Microphone: " + e.name + ". " + e.message + "\n");
+                    ///throw "Microphone: " + e.name + ". " + e.message;
                 })
             }
         }

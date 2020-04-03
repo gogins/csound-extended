@@ -17,12 +17,12 @@
 
 class CsoundAudioNode extends AudioWorkletNode {
     constructor(context, options) {
-        console.log("CsoundAudioNode constructor...\n");
         options = options || {};
         options.numberOfInputs  = 1;
         options.numberOfOutputs = 1;
         options.outputChannelCount = [context.destination.channelCount];
         super(context, 'csound-audio-processor', options);
+        console.log("CsoundAudioNode constructor...\n");
         this.reset_();
         this.port.onmessage = (event) => {
             let data = event.data;
@@ -182,6 +182,8 @@ class CsoundAudioNode extends AudioWorkletNode {
     // wiring within Csound down in the lower half.
     Start() {
         try {
+            this.Message("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
+            this.Message("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
             let onMidiEvent = function(event) {
                 this.port.postMessage(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
             };
@@ -203,32 +205,31 @@ class CsoundAudioNode extends AudioWorkletNode {
                 console.log("MIDI not supported in this context.");
             }
             if (this.input !== null) {
-                if (this.input.startsWith("adc")) {
-                    window.navigator = window.navigator || {};
-                    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
-                    if (navigator.getUserMedia === null) {
-                        console.log("Audio input not supported in this context.");
-                    } else {
-                        function onSuccess(stream) {
-                            this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                            console.log("Audio input initialized.\n");
-                        };
-                        function onFailure(error) {
-                            this.microphoneNode = null;
-                            console.log("Could not initialise audio input, error:" + error + "\n");
-                        };
-                        navigator.getUserMedia({
-                            audio: true
-                        }, onSuccess, onFailure);
-                    }
-                    if (this.microphoneNode !== null) {
-                        this.microphoneNode.connect(this);
-                    }
+                window.navigator = window.navigator || {};
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
+                if (navigator.getUserMedia === null) {
+                    this.Message("Audio input not supported in this context.");
+                } else {
+                    navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
+                        this.microphoneNode = audioContext.createMediaStreamSource(stream);
+                        this.Message("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
+                        if (this.microphoneNode !== null) {
+                            if (inputChannelN != this.microphoneNode.numberOfInputs) {
+                                this.microphoneNode.connect(this);
+                                this.Message("Audio input initialized.\n");
+                            } else {
+                                this.Message("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
+                            }
+                        }       
+                    }).catch ((e) => {
+                        this.Message("Microphone: " + e.name + ". " + e.message + "\n");
+                        ///throw "Microphone: " + e.name + ". " + e.message;
+                    })
                 }
             }
             this.disconnect();
+            this.connect(this.context.destination);
             this.port.postMessage(["Start"]);
-            this.connect(audioContext.destination);
             this.is_playing = true;
         } catch (e) {
             console.log(e);

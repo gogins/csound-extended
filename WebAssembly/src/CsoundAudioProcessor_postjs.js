@@ -311,7 +311,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             }
             this.format_validated = true;
         }
-        let csoundFrameI = 0;
+         let csoundFrameI = 0;
         let result = 0;
         for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
             if (this.has_input === true) {

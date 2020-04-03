@@ -303,7 +303,7 @@ CsoundWebAudio.prototype.Start = function() {
                     }       
                 }).catch ((e) => {
                     print("Microphone: " + e.name + ". " + e.message + "\n");
-                    throw "Microphone: " + e.name + ". " + e.message;
+                    ///throw "Microphone: " + e.name + ". " + e.message;
                 })
             }
         }
