@@ -35,89 +35,92 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         {
             case "Cleanup":
                 result = this.csound.Cleanup();
+                this.port.postMessage(["CleanupResult", result]);
                 break;
             case "CompileCsd":
                 result = this.csound.CompileCsd(data[1]);
                 break;
             case "CompileCsdText":
                 result = this.csound.CompileCsdText(data[1]);
+                this.port.postMessage(["CompileCsdTextResult", result]);
                 break;
             case "CompileOrc":
                 result = this.csound.CompileOrc(data[1]);
-                break;
+                this.port.postMessage(["CompileOrcResult", result]);
+               break;
             case "Destroy":
                 this.csound.Destroy();
                 break;
             case "EvalCode":
                 result = this.csound.EvalCode(data[1]);
-                this.port.postMessage(["EvalCode", result]);
+                this.port.postMessage(["EvalCodeResult", result]);
                 break;
             case "Get0dBFS":
                 result = this.csound.Get0dBFS();
-                this.port.postMessage(["GetOdBFS", result]);
+                this.port.postMessage(["GetOdBFSResult", result]);
                 break;
             case "GetAPIVersion":
                 result = this.csound.GetAPIVersion();
-                this.port.postMessage(["GetAPIVersion", result]);
+                this.port.postMessage(["GetAPIVersionResult", result]);
                 break;
             case "GetControlChannel":
                 result = this.csound.GetControlChannel(data[1]);
-                this.port.postMessage(["GetControlChannel", result]);
+                this.port.postMessage(["GetControlChannelResult", result]);
                 break;
             case "GetCurrentTimeSamples":
                 result = this.csound.GetCurrentTimeSamples();
-                this.port.postMessage(["GetCurrentTimeSamples", result]);
+                this.port.postMessage(["GetCurrentTimeSamplesResult", result]);
                 break;
             case "GetEnv":
                 result = this.csound.GetEnv(data[1]);
-                this.port.postMessage(["GetEnv", result]);
+                this.port.postMessage(["GetEnvResult", result]);
                 break;
             case "GetInputName":
                 result = this.csound.GetInputName();
-                this.port.postMessage(["GetInputName", result]);
+                this.port.postMessage(["GetInputNameResult", result]);
                 break;
             case "GetKsmps":
                 result = this.csound.GetKsmps();
-                this.port.postMessage(["GetKsmps", result]);
+                this.port.postMessage(["GetKsmpsResult", result]);
                 break;
             case "GetNchnls":
                 result = this.csound.GetNchnls();
-                this.port.postMessage(["GetNchnls", result]);
+                this.port.postMessage(["GetNchnlsResult", result]);
                 break;
             case "GetNchnlsInput":
                 result = this.csound.GetNchnlsInput();
-                this.port.postMessage(["GetNchnlsInput", result]);
+                this.port.postMessage(["GetNchnlsInputResult", result]);
                 break;
             case "GetOutputName":
                 result = this.csound.GetOutputName();
-                this.port.postMessage(["GetOutputName", result]);
+                this.port.postMessage(["GetOutputNameResult", result]);
                 break;
             case "GetScoreOffsetSeconds":
                 result = this.csound.GetScoreOffsetSeconds();
-                this.port.postMessage(["GetScoreOffsetSeconds", result]);
+                this.port.postMessage(["GetScoreOffsetSecondsResult", result]);
                 break;
             case "GetScoreTime":
                 result = this.csound.GetScoreTime();
-                this.port.postMessage(["GetScoreTime", result]);
+                this.port.postMessage(["GetScoreTimeResult", result]);
                 break;
             case "GetSr":
                 result = this.csound.GetSr();
-                this.port.postMessage(["GetSr", result]);
+                this.port.postMessage(["GetSrResult", result]);
                 break;
             case "GetStringChannel":
                 result = this.csound.GetStringChannel(data[1]);
-                this.port.postMessage(["GetStringChannel", result]);
+                this.port.postMessage(["GetStringChannelResult", result]);
                 break;
             case "GetVersion":
                 result = this.csound.GetVersion();
-                this.port.postMessage(["GetVersion", result]);
+                this.port.postMessage(["GetVersionResult", result]);
                 break;
             case "InputMessage":
                 this.csound.InputMessage(data[1]);
                 break;
             case "IsPlaying":
                 result = this.csound.IsPlaying();
-                this.port.postMessage(["IsPlaying", result]);
+                this.port.postMessage(["IsPlayingResult", result]);
                 break;
             case "IsScorePending":
                 result = this.csound.IsScorePending();
@@ -135,7 +138,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 // This method is a dummy to preserve API compatibility 
                 // across all platforms.
                 let result = 0;
-                this.port.postMessage(["Perform", result]);
+                this.port.postMessage(["PerformResult", result]);
             }
                 break;
             case "PerformCsd":
@@ -144,11 +147,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 let options = data[1];
                 let csd = data[2];
                 this.csound.CompileCsdText(csd);
-                for(let i = 0; i < options.length; i++) {
-                    this.csound.SetOption(options[i]);
-                }
-                result = this.csound.Start();
-                this.port.postMessage(["PerformCsd", result]);
+                //for(let i = 0; i < options.length; i++) {
+                //    this.csound.SetOption(options[i]);
+                //}
+                result = this.Start();
+                this.port.postMessage(["PerformCsdResult", result]);
             }
                 break;
             case "PerformOrc":
@@ -168,16 +171,17 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                         }
                     }
                 }
-                result = this.csound.Start();
-                this.port.postMessage(["PerformCsd", result]);
+                result = this.Start();
+                this.port.postMessage(["PerformCsdResult", result]);
            }
                 break;
             case "ReadScore":
                 result = this.csound.ReadScore(data[1]);
-                this.port.postMessage(["ReadScore", result]);
+                this.port.postMessage(["ReadScoreResult", result]);
                 break;
             case "Reset":
                 this.csound.Reset();
+                this.port.postMessage(["ResetResult"]);
                 break;
             case "RewindScore":
                 this.csound.RewindScore();
@@ -187,14 +191,14 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 break;
             case "SetGlobalEnv":
                 result = this.csound.SetGlobalEnv(data[1], data[2]);
-                this.port.postMessage(["SetGlobalEnv", result]);
+                this.port.postMessage(["SetGlobalEnvResult", result]);
                 break;
             case "SetInput":
                 this.csound.SetInput(data[1]);
                 break;
             case "SetOption":
                 result = this.csound.SetOption(data[1]);
-                this.port.postMessage(["SetOption", result]);
+                this.port.postMessage(["SetOptionResult", result]);
                 break;
             case "SetOutput":
                 this.csound.SetOutput(data[1], data[2], data[3]);
@@ -210,18 +214,20 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 break;
             case "Start":
                 result = this.Start();
+                this.port.postMessage(["StartResult", result]);
                 break;
             case "Stop":
                 this.Reset();
                 this.csound.Stop();
+                this.port.postMessage(["StopResult"]);
                 break;
             case "TableGet":
                 result = this.csound.TableGet(data[1], data[2]);
-                this.port.postMessage(["TableGet", result]);
+                this.port.postMessage(["TableGetResult", result]);
                 break;
             case "TableLength":
                 result = this.csound.TableLength(data[1]);
-                this.port.postMessage(["TableLength", result]);
+                this.port.postMessage(["TableLengthResult", result]);
                 break;
             case "TableSet":
                 this.csound.TableSet(data[1], data[2]);
@@ -239,8 +245,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.inputChannelN = 1;
         this.outputChannelN = 2;
         this.is_playing = false;
+        this.format_validated = false;
     }
     Start() {
+        this.is_playing = true;
+        this.format_validated = false;
         let result = 0;
         this.input_name = this.csound.GetInputName();
         this.output_name = this.csound.GetOutputName();
@@ -260,19 +269,15 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             } else {
                 this.has_input = false;
             }
+            console.log("CsoundAudioProcessor is rendering in real time: " + this.output_name + "\n");
         } else {
             this.is_realtime = false;
+            console.log("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
             result = this.csound.Start();
         }
-        this.is_playing = true;
-        this.format_validated = false;
-        return result;
     }
     process(inputs, outputs, parameters) {
-        if (this.is_playing !== true) {
-            return false;
-        } else if (this.is_realtime === false) {
-            console.log("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
+        if (this.is_realtime === false) {
             let result = 0;
             while (result === 0) {
                 result = this.csound.PerformKsmps();
@@ -283,7 +288,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                     return false;
                 }
             }
-        }
+        } 
         /// Get the parameter values array. Here we do not use, and ignore, them.
         /// let myParamValues = parameters.myParam;
         // The processor may have multiple inputs and outputs. 
@@ -297,21 +302,28 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         let hostFrameN = outputChannel0.length;
         // The audio stream format must match between Csound and the host.
         if (this.format_validated == false) {
+            console.log("CsoundAudioProcessor frames per second:         " +  sampleRate + "\n");
+            console.log("CsoundAudioProcessor output channels:   " +  outputChannelN + "\n");
+            console.log("CsoundAudioProcessor input channels:    " +  inputChannelN + "\n");
             if (this.ksmps !== hostFrameN) {
-                throw new RangeError("Csound ksmps doesn't match host ksmps!");
+                console.log("Csound ksmps doesn't match host ksmps!");
+                return false;
             } 
             if (this.inputChannelN > inputChannelN) {
-                throw new RangeError("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
+                console.log("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
+                return false;
             }
             if (this.outputChannelN != outputChannelN) {
-                throw new RangeError("Csound nchnls doesn't match host output channel count of " + outputChannelN);
+                console.log("Csound nchnls doesn't match host output channel count of " + outputChannelN);
+                return false;
             }
             if (this.csound.GetSr() != sampleRate) {
-                throw new RangeError("Csound sampling rate doesn't match host sampling rate of " + sampleRate);
+                console.log("Csound sampling rate doesn't match host sampling rate of " + sampleRate);
+                return false;
             }
-            this.format_validated = true;
         }
-         let csoundFrameI = 0;
+        this.format_validated = true;
+        let csoundFrameI = 0;
         let result = 0;
         for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
             if (this.has_input === true) {

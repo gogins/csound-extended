@@ -16,6 +16,36 @@
 // import csound_audio_processor_module from 'CsoundAudioProcessor.js';
 
 class CsoundAudioNode extends AudioWorkletNode {
+    async onMessage(event) {
+            let data = event.data;
+            switch(data[0]) {
+                case "Message":
+                    console.log(data[1]);
+                    break;
+                // Some Csound API calls should be serializable, i.e. 
+                // synchronous. These cases resolve promises from those calls.
+                case "CompileCsdTextResult":
+                    console.log("[" + window.performance.now() + " Received CompileCsdTextResult with: " + data[2] + ".]");
+                    let async_result = null;
+                    if (this.CompileCsdTextPromise != null) {
+                        await Promise.resolve(this.CompileCsdTextPromise);
+                    }
+                    console.log("[" + window.performance.now() + " CompileCsdTextResult async_result: " + async_result + ".]");
+                    break;
+                case "CompileOrcResult":
+                    console.log("[" + window.performance.now() + " Received CompileOrcResult with: " + data[2] + ".]");
+                    break;
+                case "StopResult":
+                    console.log("[" + window.performance.now() + " Received StopResult with: " + data[2] + ".]");
+                    break;
+                case "CleanupResult":
+                    console.log("[" + window.performance.now() + " Received CleanupResult with: " + data[2] + ".]");
+                    break;
+                case "ResetResult":
+                    console.log("[" + window.performance.now() + " Received ResetResult with: " + data[2] + ".]");
+                    break;
+            };
+    };
     constructor(context, options) {
         options = options || {};
         options.numberOfInputs  = 1;
@@ -24,17 +54,12 @@ class CsoundAudioNode extends AudioWorkletNode {
         super(context, 'csound-audio-processor', options);
         console.log("CsoundAudioNode constructor...\n");
         this.reset_();
-        this.port.onmessage = (event) => {
-            let data = event.data;
-            switch(data[0]) {
-                case "Start":
-                    //this.start();
-                    break;
-                case "Message":
-                    console.log(data[1]);
-                    break;
-            }
-        }
+        this.CompileCsdTextPromise = null;
+        this.CompileOrcPromise = null;
+        this.StopPromise = null;
+        this.CleanupPromise = null;
+        this.ResetPromise = null;
+        this.port.onmessage = this.onMessage.bind(this);
         this.port.start();
     }
     reset_() {
@@ -45,13 +70,20 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.output = null;
     }
     Cleanup() {
+        console.log("[" + window.performance.now() + " Cleanup.]");
         this.port.postMessage(["Cleanup"]);
     }
     CompileCsd(filename) {
         this.port.postMessage(["CompileCsd", filename]);
     };
-    CompileCsdText(csd) {
-        this.port.postMessage(["CompileCsdText", csd]);
+    async CompileCsdText(csd) {
+        this.CompileCsdTextPromise = new Promise(() => {
+            this.port.postMessage(["CompileCsdText", csd]);
+            console.log("[" + window.performance.now() + " posted CompileCsdText.]");
+        });
+        console.log("[" + window.performance.now() + " created async/await.]");
+        let async_result = (async function (promise) { return await promise; })(this.CompileCsdTextPromise);
+        console.log("[" + window.performance.now() + " async_result: " + async_result + "]");
     };
     CompileOrc(orc) {
         this.port.postMessage(["CompileOrc", orc]);
@@ -120,6 +152,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.port.postMessage(["Message", text]);
     };
     Perform() {
+        console.log("[" + window.performance.now() + " Perform.]");
         this.port.postMessage(["Perform"]);
     };
     /**
@@ -142,6 +175,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.port.postMessage(["ReadScore", score]);
     };
     Reset() {
+        console.log("[" + window.performance.now() + " Stop.]");
         this.port.postMessage(["Reset"]);
     };
     RewindScore() {
@@ -179,11 +213,13 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.port.postMessage(["SetStringChannel", name, value]);
     };
     // Wiring into Web Audio graph here in the upper half, 
-    // wiring within Csound down in the lower half.
+    // wiring within Csound down in the lower half.console.log
     Start() {
+        console.log("[" + window.performance.now() + " Start.]");
         try {
-            this.Message("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
-            this.Message("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
+            console.log("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
+            console.log("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
+            this.connect(this.context.destination);
             let onMidiEvent = function(event) {
                 this.port.postMessage(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
             };
@@ -202,33 +238,33 @@ class CsoundAudioNode extends AudioWorkletNode {
             if (navigator.requestMIDIAccess) {
                 navigator.requestMIDIAccess().then(midiSuccess, midiFail);
             } else {
-                console.log("MIDI not supported in this context.");
+                console.log("MIDI not supported in this context.\n");
             }
             if (this.input !== null) {
                 window.navigator = window.navigator || {};
                 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
                 if (navigator.getUserMedia === null) {
-                    this.Message("Audio input not supported in this context.");
+                    console.log("Audio input not supported in this context.");
                 } else {
                     navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
                         this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                        this.Message("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
+                        console.log("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
                         if (this.microphoneNode !== null) {
                             if (inputChannelN != this.microphoneNode.numberOfInputs) {
                                 this.microphoneNode.connect(this);
-                                this.Message("Audio input initialized.\n");
+                                console.log("Audio input initialized.\n");
                             } else {
-                                this.Message("Csound nchnls_i does not match microphoneNode.numberOfInputs.");
+                                console.log("Csound nchnls_i does not match microphoneNode.numberOfInputs.\n");
                             }
                         }       
                     }).catch ((e) => {
-                        this.Message("Microphone: " + e.name + ". " + e.message + "\n");
+                        console.log("Microphone: " + e.name + ". " + e.message + "\n");
                         ///throw "Microphone: " + e.name + ". " + e.message;
                     })
                 }
             }
-            this.disconnect();
-            this.connect(this.context.destination);
+            //this.start();
+            //this.disconnect();
             this.port.postMessage(["Start"]);
             this.is_playing = true;
         } catch (e) {
@@ -236,6 +272,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         }
     }
     Stop() {
+        console.log("[" + window.performance.now() + " Stop.]");
         this.port.postMessage(["Stop"]);
         if (this.microphoneNode !== null) {
             this.microphoneNode.stop();

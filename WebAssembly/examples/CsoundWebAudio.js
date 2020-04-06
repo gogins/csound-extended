@@ -276,9 +276,9 @@ CsoundWebAudio.prototype.Start = function() {
         var outputChannelCount = this.csound.GetNchnls();
         this.audioProcessNode = audioContext.createScriptProcessor(0, inputChannelCount, outputChannelCount);
         bufferFrameCount = this.audioProcessNode.bufferSize;
-        print("WebAudio frames per buffer:         " +  bufferFrameCount + "\n");
-        print("WebAudio frames per second:         " +  audioContext.sampleRate + "\n");
-        print("WebAudio maximum output channels:   " +  audioContext.destination.maxChannelCount + "\n");
+        print("CsoundWebAudio audioProcessNode frames per buffer:         " +  bufferFrameCount + "\n");
+        print("CsoundWebAudio audioProcessNode frames per second:         " +  audioContext.sampleRate + "\n");
+        print("CsoundWebAudio audioProcessNode maximum output channels:   " +  audioContext.destination.maxChannelCount + "\n");
         this.audioProcessNode.inputCount = inputChannelCount;
         this.audioProcessNode.outputCount = outputChannelCount;
         var inputChannelN = this.audioProcessNode.inputCount;
@@ -292,7 +292,7 @@ CsoundWebAudio.prototype.Start = function() {
             } else {
                 navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
                     this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                    print("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
+                    print("CsoundWebAudio audioProcessNod input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
                     if (this.microphoneNode !== null) {
                         if (inputChannelN != this.microphoneNode.numberOfInputs) {
                             this.microphoneNode.connect(this.audioProcessNode);
@@ -378,7 +378,6 @@ Module["CsoundWebAudio"] = CsoundWebAudio;
  * JavaScript context, and the user is notified that Csound is ready.
  */
 Module["onRuntimeInitialized"] = function() {
-    csound = new Module.CsoundWebAudio();
-    print("\nCsound has now been loaded; its functions may now be called.\n");
+    print("\nCsoundWebAssembly has been loaded.\n");
 }
 
