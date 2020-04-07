@@ -16,7 +16,22 @@
 // import csound_audio_processor_module from 'CsoundAudioProcessor.js';
 
 class CsoundAudioNode extends AudioWorkletNode {
-    onMessage(event) {
+    resolveCompileCsdText(result) {
+        console.log("[" + window.performance.now() + " resolveCompileCsdText with: " + result + ", " + this + "]\n");
+        return result;
+    }
+    resolveCompileOrc(result) {
+        return result;
+    }
+    resolveStop() {
+    }
+    resolveCleanup(result) {
+        return result;
+    }
+    resolveReset() {
+        return;
+    }
+    async onMessage(event) {
             let data = event.data;
             switch(data[0]) {
                 case "Message":
@@ -25,19 +40,24 @@ class CsoundAudioNode extends AudioWorkletNode {
                 // Some Csound API calls should be serializable, i.e. 
                 // synchronous. These cases resolve promises from those calls.
                 case "CompileCsdTextResult":
-                    console.log("[" + window.performance.now() + " Received CompileCsdTextResult with: " + data[2] + ".]");
+                    console.log("[" + window.performance.now() + " Received CompileCsdTextResult with: " + data[1] + ".]\n");
+                    this.resolveCompileCsdText(data[1]);
                     break;
                 case "CompileOrcResult":
-                    console.log("[" + window.performance.now() + " Received CompileOrcResult with: " + data[2] + ".]");
+                    console.log("[" + window.performance.now() + " Received CompileOrcResult with: " + data[1] + ".]\n");
+                    this.resolveCompileOrc(data[1]);
                     break;
                 case "StopResult":
-                    console.log("[" + window.performance.now() + " Received StopResult with: " + data[2] + ".]");
+                    console.log("[" + window.performance.now() + " Received StopResult.]\n");
+                    this.resolveStop();
                     break;
                 case "CleanupResult":
-                    console.log("[" + window.performance.now() + " Received CleanupResult with: " + data[2] + ".]");
+                    console.log("[" + window.performance.now() + " Received CleanupResult with: " + data[1] + ".]\n");
+                    this.resolveCleanup(data[1]);
                     break;
                 case "ResetResult":
-                    console.log("[" + window.performance.now() + " Received ResetResult with: " + data[2] + ".]");
+                    console.log("[" + window.performance.now() + " Received ResetResult.]\n");
+                    this.resolveReset();
                     break;
             };
     };
@@ -54,7 +74,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.StopPromise = null;
         this.CleanupPromise = null;
         this.ResetPromise = null;
-        this.port.onmessage = this.onMessage;
+        this.port.onmessage = this.onMessage.bind(this);
         this.port.start();
     }
     reset_() {
@@ -64,24 +84,41 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.input = null;
         this.output = null;
     }
-    Cleanup() {
-        console.log("[" + window.performance.now() + " Cleanup.]");
-        this.port.postMessage(["Cleanup"]);
+    async Cleanup() {
+        console.log("[" + window.performance.now() + " Cleanup.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveCleanup = resolve;
+            this.port.postMessage(["Cleanup", csd]);
+        });
+        let result = await promise;
+        console.log("[" + window.performance.now() + " Cleanup resolved with: " + result + ".]\n");
+        return result;
     }
     CompileCsd(filename) {
         this.port.postMessage(["CompileCsd", filename]);
     };
     async CompileCsdText(csd) {
-        this.CompileCsdTextPromise = new Promise(() => {
+        console.log("[" + window.performance.now() + " CompileCsdText.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveCompileCsdText = resolve;
             this.port.postMessage(["CompileCsdText", csd]);
-            console.log("[" + window.performance.now() + " posted CompileCsdText.]");
         });
-        console.log("[" + window.performance.now() + " created async/await.]");
-        let async_result = (async function (promise) { return await promise; })(this.CompileCsdTextPromise);
-        console.log("[" + window.performance.now() + " async_result: " + async_result + "]");
+        let result = await promise;
+        console.log("[" + window.performance.now() + " CompileCsdText resolved with: " + result + ".]\n");
+        return result;
     };
-    CompileOrc(orc) {
-        this.port.postMessage(["CompileOrc", orc]);
+    async CompileOrc(orc) {
+        console.log("[" + window.performance.now() + " CompileOrc.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveCompileOrc = resolve;
+            this.port.postMessage(["CompileOrc", orc]);
+        });
+        let result = await promise;
+        console.log("[" + window.performance.now() + " CompileOrc resolved with: " + result + ".]\n");
+        return result;
     };
     Destroy() {
         this.port.postMessage(["Destroy"]);
@@ -147,7 +184,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.port.postMessage(["Message", text]);
     };
     Perform() {
-        console.log("[x" + window.performance.now() + " Perform.]");
+        console.log("[" + window.performance.now() + " Perform.]\n");
         this.port.postMessage(["Perform"]);
     };
     /**
@@ -169,9 +206,15 @@ class CsoundAudioNode extends AudioWorkletNode {
     ReadScore(score) {
         this.port.postMessage(["ReadScore", score]);
     };
-    Reset() {
-        console.log("[" + window.performance.now() + " Stop.]");
-        this.port.postMessage(["Reset"]);
+    async Reset() {
+        console.log("[" + window.performance.now() + " Reset.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveReset = resolve;
+            this.port.postMessage(["Reset"]);
+        });
+        await promise;
+        console.log("[" + window.performance.now() + " Reset resolved.]\n");
     };
     RewindScore() {
         this.port.postMessage(["RewindScore"]);
@@ -210,7 +253,7 @@ class CsoundAudioNode extends AudioWorkletNode {
     // Wiring into Web Audio graph here in the upper half, 
     // wiring within Csound down in the lower half.console.log
     Start() {
-        console.log("[" + window.performance.now() + " Start.]");
+        console.log("[" + window.performance.now() + " Start.]\n");
         try {
             console.log("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
             console.log("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
@@ -266,16 +309,22 @@ class CsoundAudioNode extends AudioWorkletNode {
             console.log(e);
         }
     }
-    Stop() {
-        console.log("[" + window.performance.now() + " Stop.]");
-        this.port.postMessage(["Stop"]);
-        if (this.microphoneNode !== null) {
-            this.microphoneNode.stop();
-            this.microphoneNode.disconnect(this);
-        }
-        this.disconnect();
-        this.reset_();
-    };
+    async Stop() {
+       console.log("[" + window.performance.now() + " Stop.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveStop = resolve;
+            this.port.postMessage(["Stop"]);
+            if (this.microphoneNode !== null) {
+                this.microphoneNode.stop();
+                this.microphoneNode.disconnect(this);
+            }
+            this.disconnect();
+            this.reset_();
+        });
+        await promise;
+        console.log("[" + window.performance.now() + " Stop resolved.]\n");
+    }
     TableGet(number, index) {
         this.port.postMessage(["TableGet", number, index]);
     }

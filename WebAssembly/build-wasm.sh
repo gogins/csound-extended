@@ -1,16 +1,12 @@
 #!/bin/bash
 echo "Building the Csound library for WebAssembly..."
 
-pushd `pwd`
-cd ~/emsdk
-./emsdk activate latest
-source ./emsdk_env.sh
-echo "Using EMSCRIPTEN_ROOT: $EMSCRIPTEN_ROOT"
-# export EMCC_DEBUG=1
-popd
+~/emsdk/emsdk activate latest
+source ~/emsdk/emsdk_env.sh
+echo "Using EMSCRIPTEN_ROOT: $EMSCRIPTEN_ROOT."
 
 cd cmask
-rm CMakeCache.txt
+rm -f CMakeCache.txt
 emcmake cmake .
 emmake make clean
 emmake make "VERBOSE=1"
@@ -18,7 +14,7 @@ cd ..
 
 mkdir -p build-wasm
 cd build-wasm
-rm CMakeCache.txt
+rm -f CMakeCache.txt
 
 echo "Packaging some resources..."
 
@@ -26,7 +22,7 @@ python $EMSCRIPTEN_ROOT/tools/file_packager.py csound_samples.data --preload ../
 
 echo "Configuring csound-static..."
 
-emcmake cmake -DCMAKE_VERBOSE_MAKEFILE=1 -DBUILD_PLUGINS_DIR="plugins" -DUSE_COMPILER_OPTIMIZATIONS=0 -DWASM=1 -DINIT_STATIC_MODULES=1 -DUSE_DOUBLE=NO -DBUILD_MULTI_CORE=0 -DBUILD_JACK_OPCODES=0 -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN_ROOT/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN_ROOT/cmake -DCMAKE_BUILD_TYPE=Release -G"Unix Makefiles" -DHAVE_BIG_ENDIAN=0 -DCMAKE_16BIT_TYPE="unsigned short"  -DHAVE_STRTOD_L=0 -DBUILD_STATIC_LIBRARY=YES -DHAVE_ATOMIC_BUILTIN=0 -DHAVE_SPRINTF_L=NO -DUSE_GETTEXT=NO -DLIBSNDFILE_LIBRARY=../deps/libsndfile.a -DSNDFILE_H_PATH=../deps/libsndfile-1.0.25/src ../../dependencies/csound
+emcmake cmake -DCMAKE_VERBOSE_MAKEFILE=1 -Wno-dev -DBUILD_PLUGINS_DIR="plugins" -DUSE_COMPILER_OPTIMIZATIONS=0 -DWASM=1 -DINIT_STATIC_MODULES=1 -DUSE_DOUBLE=NO -DBUILD_MULTI_CORE=0 -DBUILD_JACK_OPCODES=0 -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN_ROOT/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN_ROOT/cmake -DCMAKE_BUILD_TYPE=Release -G"Unix Makefiles" -DHAVE_BIG_ENDIAN=0 -DCMAKE_16BIT_TYPE="unsigned short"  -DHAVE_STRTOD_L=0 -DBUILD_STATIC_LIBRARY=YES -DHAVE_ATOMIC_BUILTIN=0 -DHAVE_SPRINTF_L=NO -DUSE_GETTEXT=NO -DLIBSNDFILE_LIBRARY=../deps/libsndfile.a -DSNDFILE_H_PATH=../deps/libsndfile-1.0.25/src -DCMAKE_CFLAGS="-Wimplicit-int-float-conversion" ../../dependencies/csound
 
 echo "Making csound-static..."
 

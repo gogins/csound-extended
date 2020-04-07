@@ -18,6 +18,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         }
         this.Reset();
         this.port.onmessage = this.onMessage.bind(this);
+        this.port.postMessage.bind(this);
         var this_ = this;
         console.log = function(text) {
             this_.Message(text);
@@ -303,8 +304,8 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         // The audio stream format must match between Csound and the host.
         if (this.format_validated == false) {
             console.log("CsoundAudioProcessor frames per second:         " +  sampleRate + "\n");
-            console.log("CsoundAudioProcessor output channels:   " +  outputChannelN + "\n");
-            console.log("CsoundAudioProcessor input channels:    " +  inputChannelN + "\n");
+            console.log("CsoundAudioProcessor output channels:           " +  outputChannelN + "\n");
+            console.log("CsoundAudioProcessor input channels:            " +  inputChannelN + "\n");
             if (this.ksmps !== hostFrameN) {
                 console.log("Csound ksmps doesn't match host ksmps!");
                 return false;

@@ -84,9 +84,16 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.input = null;
         this.output = null;
     }
-    Cleanup() {
+    async Cleanup() {
         console.log("[" + window.performance.now() + " Cleanup.]\n");
-        this.port.postMessage(["Cleanup"]);
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveCleanup = resolve;
+            this.port.postMessage(["Cleanup", csd]);
+        });
+        let result = await promise;
+        console.log("[" + window.performance.now() + " Cleanup resolved with: " + result + ".]\n");
+        return result;
     }
     CompileCsd(filename) {
         this.port.postMessage(["CompileCsd", filename]);
@@ -102,8 +109,16 @@ class CsoundAudioNode extends AudioWorkletNode {
         console.log("[" + window.performance.now() + " CompileCsdText resolved with: " + result + ".]\n");
         return result;
     };
-    CompileOrc(orc) {
-        this.port.postMessage(["CompileOrc", orc]);
+    async CompileOrc(orc) {
+        console.log("[" + window.performance.now() + " CompileOrc.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveCompileOrc = resolve;
+            this.port.postMessage(["CompileOrc", orc]);
+        });
+        let result = await promise;
+        console.log("[" + window.performance.now() + " CompileOrc resolved with: " + result + ".]\n");
+        return result;
     };
     Destroy() {
         this.port.postMessage(["Destroy"]);
@@ -191,9 +206,15 @@ class CsoundAudioNode extends AudioWorkletNode {
     ReadScore(score) {
         this.port.postMessage(["ReadScore", score]);
     };
-    Reset() {
-        console.log("[" + window.performance.now() + " Stop.]\n");
-        this.port.postMessage(["Reset"]);
+    async Reset() {
+        console.log("[" + window.performance.now() + " Reset.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveReset = resolve;
+            this.port.postMessage(["Reset"]);
+        });
+        await promise;
+        console.log("[" + window.performance.now() + " Reset resolved.]\n");
     };
     RewindScore() {
         this.port.postMessage(["RewindScore"]);
@@ -288,16 +309,22 @@ class CsoundAudioNode extends AudioWorkletNode {
             console.log(e);
         }
     }
-    Stop() {
-        console.log("[" + window.performance.now() + " Stop.]\n");
-        this.port.postMessage(["Stop"]);
-        if (this.microphoneNode !== null) {
-            this.microphoneNode.stop();
-            this.microphoneNode.disconnect(this);
-        }
-        this.disconnect();
-        this.reset_();
-    };
+    async Stop() {
+       console.log("[" + window.performance.now() + " Stop.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveStop = resolve;
+            this.port.postMessage(["Stop"]);
+            if (this.microphoneNode !== null) {
+                this.microphoneNode.stop();
+                this.microphoneNode.disconnect(this);
+            }
+            this.disconnect();
+            this.reset_();
+        });
+        await promise;
+        console.log("[" + window.performance.now() + " Stop resolved.]\n");
+    }
     TableGet(number, index) {
         this.port.postMessage(["TableGet", number, index]);
     }

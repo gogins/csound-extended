@@ -41,6 +41,7 @@
 #include <deque>
 #include <emscripten/bind.h>
 #include <emscripten/emscripten.h>
+#include <emscripten/html5.h>
 #include <emscripten/val.h>
 
 extern "C" {
@@ -52,10 +53,12 @@ using namespace emscripten;
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist) {
     char buffer[0x1000];
     std::vsprintf(buffer, format, valist);
-    ///std::printf("%s", buffer);
-    EM_ASM_({
-        console.log(UTF8ToString($0));
-    }, buffer);    
+    emscripten_console_log(buffer);
+/*    std::printf("%s", buffer);
+ *     EM_ASM_({
+ *         console.log(UTF8ToString($0));
+ *     }, buffer);    
+ */
 }
 
 struct MidiData {

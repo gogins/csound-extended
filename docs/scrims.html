@@ -1377,8 +1377,9 @@ f 0 360
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toString();
                 // Protect against trying to call an undefined Csound.
-                if (csound !== null) {
-                    if (csound.IsPlaying()) {
+                csound = get_csound(csoundMessage);
+                if (typeof csound !== 'undefined') {
+                    if (csound != null) {
                         score.sendToCsound(csound);
                         var Chord_cell = document.getElementById('Chord_cell');
                         Chord_cell.innerHTML = chord.name();
@@ -1392,7 +1393,7 @@ f 0 360
                         X_cell.innerHTML = sprintf("%011.4f", point.x);
                         var Y_cell  = document.getElementById('Y_cell');
                         Y_cell.innerHTML = sprintf("%011.4f", point.y);
-                    }
+                     }
                 }
                 score.clear();
                 note_count = note_count + 1;
@@ -1457,22 +1458,26 @@ f 0 360
                 Notes_per_second: 8.,
                 Stride: 100,
                 Play: function() {
-                    csound = get_csound(csoundMessage);
-                    if (csound === null) {
-                        return;
-                    }
-                    //csound = csound_extended;
-                    //console.log = csoundMessage;
-                    csound.Stop();
-                    gui.revert();
-                    csound.CompileCsdText(document.getElementById('csd').value);
-                    csound.Start();
-                    start_time_seconds = new Date().getTime() / 1000.0;
-                    csound.Perform();
-                    setTimeout(updateTimeCell, 0);
+                    (async () => {
+                        csound = get_csound(csoundMessage);
+                        if (csound == null) {
+                            return;
+                        }
+                        gui.revert();
+                        await csound.CompileCsdText(document.getElementById('csd').value);
+                        await csound.Start();
+                        start_time_seconds = new Date().getTime() / 1000.0;
+                        csound.Perform();
+                        setTimeout(updateTimeCell, 0);
+                    })();
                 },
                 Stop: function() {
-                    csound.Stop();
+                    (async () => {
+                        csound = get_csound(csoundMessage);
+                        await csound.Stop();
+                        await csound.Cleanup();
+                        csound.Reset();
+                    })();
                 },
                 Close: function() {
                     try {

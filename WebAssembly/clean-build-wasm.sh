@@ -2,10 +2,9 @@ clear
 echo "Clean build of Csound for WebAssembly..."
 export WEBASSEMBLY_HOME=`pwd`
 echo "WEBASSEMBLY_HOME: $WEBASSEMBLY_HOME"
-cd ~/emsdk
-source ./emsdk_env.sh
-export EMSCRIPTEN_ROOT=$EMSCRIPTEN
-cd $WEBASSEMBLY_HOME
+~/emsdk/emsdk activate latest
+source ~/emsdk/emsdk_env.sh
+echo "Using EMSCRIPTEN_ROOT: $EMSCRIPTEN_ROOT."
 echo "Deleting previous build..."
 rm -rf deps
 rm -rf build-wasm
