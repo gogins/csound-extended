@@ -35,7 +35,11 @@ class CsoundAudioNode extends AudioWorkletNode {
             let data = event.data;
             switch(data[0]) {
                 case "Message":
-                    console.log(data[1]);
+                    if (this.message_callback != null) {
+                        this.message_callback(data[1]);
+                    } else {
+                        console.log(data[1]);
+                    }
                     break;
                 // Some Csound API calls should be serializable, i.e. 
                 // synchronous. These cases resolve promises from those calls.
@@ -76,6 +80,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.ResetPromise = null;
         this.port.onmessage = this.onMessage.bind(this);
         this.port.start();
+        this.message_callback = null;
     }
     reset_() {
         this.is_playing = false;
@@ -229,6 +234,9 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.input = name;
         this.port.postMessage(["SetInput", name]);
     };
+    SetMessageCallback(message_callback_) {
+        this.message_callback = message_callback_;
+    }
     SetOption(option) {
         if (option.startsWith("-odac")) {
             this.output = option.substr(2);

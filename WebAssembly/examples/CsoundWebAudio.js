@@ -202,9 +202,8 @@ CsoundWebAudio.prototype.SetInput = function(name) {
 CsoundWebAudio.prototype.setInput = CsoundWebAudio.prototype.SetInput;
 
 CsoundWebAudio.prototype.SetMessageCallback = function(message_callback) {
-    //print = message_callback;
-    console.log = message_callback;
-    return print;
+    this.csound.SetMessageCallback(message_callback);
+    return message_callback;
 };
 CsoundWebAudio.prototype.setMessageCallback = CsoundWebAudio.prototype.SetMessageCallback;
 

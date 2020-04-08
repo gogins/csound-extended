@@ -43,6 +43,7 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
 #include <emscripten/val.h>
+#include <string>
 
 extern "C" {
     int init_static_modules(CSOUND *csound);     
@@ -50,15 +51,18 @@ extern "C" {
 
 using namespace emscripten;
 
+static emscripten::val csound_message_callback = val::undefined();
+
 void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist) {
     char buffer[0x1000];
     std::vsprintf(buffer, format, valist);
-    emscripten_console_log(buffer);
-/*    std::printf("%s", buffer);
- *     EM_ASM_({
- *         console.log(UTF8ToString($0));
- *     }, buffer);    
- */
+    if (csound_message_callback.isUndefined() || csound_message_callback.isNull()) {
+        emscripten_console_log(buffer);
+    } else {
+        std::string string_buffer(buffer);
+        emscripten::val val_buffer(string_buffer);
+        csound_message_callback(val_buffer);
+    }
 }
 
 struct MidiData {
@@ -88,7 +92,7 @@ public:
     virtual ~CsoundEmbind() {};
     CsoundEmbind() {
         Csound::SetHostData(this);
-        Csound::SetMessageCallback(csoundMessageCallback_);
+        csoundSetDefaultMessageCallback(csoundMessageCallback_);
     };
     virtual int CompileCsd(const std::string &filename) {
         int result = 0;
@@ -161,6 +165,9 @@ public:
     }
     virtual void SetInput(const std::string &input) {
         return Csound::SetInput(input.c_str());
+    }
+    virtual void SetMessageCallback(const emscripten::val &csound_message_callback_) {
+        csound_message_callback = csound_message_callback_;
     }
     virtual int SetOption(const std::string &value) {
         return Csound::SetOption(value.c_str());
@@ -356,6 +363,8 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("setControlChannel", &CsoundEmbind::SetChannel)
         .function("SetInput", &CsoundEmbind::SetInput)
         .function("setInput", &CsoundEmbind::SetInput)
+        .function("SetMessageCallback", &CsoundEmbind::SetMessageCallback)
+        .function("setMessageCallback", &CsoundEmbind::SetMessageCallback)
         .function("SetOption", &CsoundEmbind::SetOption)
         .function("setOption", &CsoundEmbind::SetOption)
         .function("Start", &CsoundEmbind::Start)

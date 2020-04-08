@@ -57,6 +57,7 @@ var get_csound = function(csound_message_callback_) {
                 print_('Closing down...\n');
                 this.close(true); 
             });
+            csound_node.SetMessageCallback(csound_message_callback);
             print_("csound.node is available in this JavaScript context.\n");
             // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
             csound_extended["ENVIRONMENT"] = "NODE";
@@ -73,6 +74,7 @@ var get_csound = function(csound_message_callback_) {
                 await audioContext.audioWorklet.addModule('CsoundAudioProcessor.js');
                 csound_message_callback("Creating CsoundAudioNode...\n");
                 csound_audio_node = new CsoundAudioNode(audioContext);
+                csound_audio_node.SetMessageCallback(csound_message_callback);
                 csound_message_callback("CsoundAudioNode is available in this JavaScript context.\n");    
             };
             loader(audioContext);
@@ -84,6 +86,7 @@ var get_csound = function(csound_message_callback_) {
             csound_extended_module(csound_extended).then(function(module) {
                 csound_extended = module;
                 csound_web_audio = new csound_extended.CsoundWebAudio();
+                csound_web_audio.SetMessageCallback(csound_message_callback);
                 print_("CsoundWebAudio is available in this JavaSript contex.\n");
             });
         } catch (e) {
@@ -95,15 +98,10 @@ var get_csound = function(csound_message_callback_) {
     if (csound_injected != null) {
         return csound_injected;
     } else if (csound_node !== null) {
-        csound.setMessageCallback(csound_message_callback_);
         return csound_node;
     } else if (csound_audio_node !== null) {
-        console.log = console.warn = csound_message_callback_;
         return csound_audio_node;
     } else if (csound_web_audio !== null) {
-        if (console.log != csound_message_callback) {
-            console.log = console.warn = csound_message_callback_;
-        }
         return csound_web_audio;
     } else {
         print_("Csound is loading, wait a bit...\n");
@@ -122,7 +120,6 @@ var csound_message_callback = function(message) {
 var onPlayClick = async function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
-    console.log = csound_message_callback;
     let csound = get_csound(csound_message_callback);
     if (csound == null) {
         csound_message_callback("Csound is still loading, try again...\n");
