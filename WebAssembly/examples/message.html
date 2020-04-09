@@ -2,9 +2,6 @@
 <html>
 <head>
     <title>Message from Another Planet version 3</title>
-    <script src="csound_extended.js"></script>
-    <script src="CsoundAudioNode.js"></script>
-    <script src="csound_loader.js"></script>
     <style type="text/css">
     input[type='range'] {
         -webkit-appearance: none;
@@ -78,17 +75,19 @@
         font-family: 'Orienta', sans-serif;
     }    
     </style>
-    <script>
-        function handleMessage(message) {
-            var messages_textarea = document.getElementById("csound_console");
-            var existing = messages_textarea.value;
-            messages_textarea.value = existing + message;
-            messages_textarea.scrollTop = messages_textarea.scrollHeight;   
-        };
-    </script>
 </head>
 <body style="background-color:CadetBlue">
+    <script>
+        var handleMessage = function(message) {
+            let messages_textarea = document.getElementById("csound_console");
+            let existing = messages_textarea.value;
+            messages_textarea.value = existing + message;
+            messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+        };
     </script>
+    <script src="csound_extended.js"></script>
+    <script src="CsoundAudioNode.js"></script>
+    <script src="csound_loader.js"></script>
     <h1>Message from Another Planet, version 3</h1>
     <h3>Adapted for Csound with HTML5 by Michael Gogins, from "Message from Another Planet" by Jacob Joaquin</h3>
     <form id='persist'>
@@ -161,9 +160,9 @@ https://setiathome.berkeley.edu/
 -odac -m35 -d
 </CsOptions>
 <CsInstruments>
-sr              =           44100
+sr              =           48000
 ksmps           =           128
-;nchnls_i        =           2
+nchnls_i        =           1
 nchnls          =           2
 
 alwayson "controls"
@@ -257,25 +256,25 @@ i 2    0    .      500     .       16         1.00
 <script>    
 $(document).ready(function() {
     $('input').on('input', function(event) {
-        get_csound(handleMessage);
+        let csound = get_csound(handleMessage);
         var slider_value = parseFloat(event.target.value);
         csound.SetControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
-    $('#play').on('click', function() {
-        get_csound(handleMessage);
+    $('#play').on('click', async function() {
+        let csound = get_csound(handleMessage);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        console.log = handleMessage;
-        csound.CompileCsdText(csd);
+        await csound.CompileCsdText(csd);
         $('#restore').trigger('click');
-        csound.Start();
+        await csound.Start();
         csound.Perform();
     });
-    $('#stop').on('click', function() {
-        get_csound(handleMessage);
-        csound.Stop();
+    $('#stop').on('click', async function() {
+        let csound = get_csound(handleMessage);
+        await csound.Stop();
+        await csound.Cleanup();
         csound.Reset();
     });
     $('#save').on('click', function() {
@@ -284,7 +283,7 @@ $(document).ready(function() {
         });
     });
     $('#restore').on('click', function() {
-        get_csound(handleMessage);
+        let csound = get_csound(handleMessage);
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
             csound.SetControlChannel(this.id, parseFloat(this.value));

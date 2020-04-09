@@ -5,9 +5,6 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
-        <script src="csound_extended.js"></script>
-        <script src="CsoundAudioNode.js"></script>
-        <script src="csound_loader.js"></script>
         <script src="js/Silencio.js"></script>
         <script src="js/ChordSpace.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.1/dat.gui.js"></script>
@@ -34,6 +31,9 @@
         </style>
     </head>
     <body style="background:black;">
+        <script src="csound_extended.js"></script>
+        <script src="CsoundAudioNode.js"></script>
+        <script src="csound_loader.js"></script>
         <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"/>
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt;">
             <col width=400px>
@@ -1057,6 +1057,7 @@ f 0 360
              * Based on Barry Martin's formula for the hopalong fractal.
              * Updated and adapted for music generation by Michael Gogins.
              */
+            var is_playing = false;
             var score = new Silencio.Score();
             var FM9 = ChordSpace.chordForName('FM9');
             var Bb7 = ChordSpace.chordForName('Bb7');
@@ -1379,7 +1380,7 @@ f 0 360
                 // Protect against trying to call an undefined Csound.
                 csound = get_csound(csoundMessage);
                 if (typeof csound !== 'undefined') {
-                    if (csound != null) {
+                    if (csound != null & is_playing === true) {
                         score.sendToCsound(csound);
                         var Chord_cell = document.getElementById('Chord_cell');
                         Chord_cell.innerHTML = chord.name();
@@ -1468,11 +1469,13 @@ f 0 360
                         await csound.Start();
                         start_time_seconds = new Date().getTime() / 1000.0;
                         csound.Perform();
+                        is_playing = true;
                         setTimeout(updateTimeCell, 0);
                     })();
                 },
                 Stop: function() {
                     (async () => {
+                        is_playing = false;
                         csound = get_csound(csoundMessage);
                         await csound.Stop();
                         await csound.Cleanup();

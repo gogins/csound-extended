@@ -19,9 +19,7 @@ csound_extended = {};
 let print_;
 if (typeof csound_message_callback === 'undefined') {
     print_ = console.log;
-} else {
-    print_ = csound_message_callback;
-}
+} 
 
 if (typeof csound !== 'undefined') {
     csound_injected = csound;
@@ -69,23 +67,24 @@ try {
 }
 
 var get_csound = function(csound_message_callback_) {
+    print_ = csound_message_callback;
     if (csound_injected !== null) {
         csound = csound_injected;
         return csound_injected;
     } 
     if (csound_node !== null) {
         csound = csound_node;
-        csound.setMessageCallback(csound_message_callback_);
         return csound_node;
     } 
     if (csound_audio_node !== null) {
+        csound_audio_node.SetMessageCallback(csound_message_callback);
         csound = csound_audio_node;
-        console.log = console.warn = csound_message_callback_;
+         //console.log = console.warn = csound_message_callback_;
         return csound_audio_node;
     } 
     if (csound_web_audio !== null) {
         csound = csound_web_audio;
-        console.log = console.warn = csound_message_callback_;
+        //console.log = console.warn = csound_message_callback_;
         return csound_web_audio;
     } else {
         csound = null;

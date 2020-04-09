@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Csound</title>
+<title>Csound Player</title>
 </head>
 <body style="background-color:LightGrey;">
 <script src="csound_extended.js"></script>
 <script src="CsoundAudioNode.js"></script>
-<script>
+<script src="csound_loader.js"></script>
+<!-- <script>
 /**
  * This script attempts to load, and to use, in order of decreasing 
  * preference: 
@@ -82,7 +83,7 @@ var get_csound = function(csound_message_callback_, enable_audio_worklet_) {
                     await audioContext.audioWorklet.addModule('CsoundAudioProcessor.js');
                     csound_message_callback("Creating CsoundAudioNode...\n");
                     csound_audio_node = new CsoundAudioNode(audioContext);
-                    csound_audio_node.SetMessageCallback(csound_message_callback);
+                    //csound_audio_node.SetMessageCallback(csound_message_callback);
                     csound_message_callback("CsoundAudioNode is available in this JavaScript context.\n");    
                 };
                 loader(audioContext);
@@ -117,7 +118,7 @@ var get_csound = function(csound_message_callback_, enable_audio_worklet_) {
         return null;
     }
 }       
-</script>
+</script> -->
 <script>
 var csd = null;
 var csound_message_callback = function(message) {
@@ -162,7 +163,7 @@ Any self-contained Csound piece (.csd file) can be performed by pasting it into 
 </CsOptions>
 <CsInstruments>
 ; The value of sr must match the host.
-sr          =           44100
+sr          =           48000
 ; The value of 128 is required by WebAudio.
 ksmps       =           128
 ; The values of both nchnls and nchnls_i must match the host.

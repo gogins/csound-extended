@@ -27,8 +27,6 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.port.postMessage.bind(this);
         var port_ = this.port;
         var shim = function(text) {
-             ///post(["Message", text]);
-            console.log(text);
             port_.postMessage(["Message", text]);
         };
         shim.bind(this);
