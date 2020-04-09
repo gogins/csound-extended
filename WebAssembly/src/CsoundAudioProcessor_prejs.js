@@ -1,1 +1,1 @@
-Module['ENIVIRONMENT']='WEB';
+Module['ENIVIRONMENT']='NODE';

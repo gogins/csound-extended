@@ -35,7 +35,7 @@ try {
     nw_window = nwgui.Window.get();
     nw_window.on('close', function() {
         print_('Closing down...\n');
-        this.close(true); 
+        this.close(true);
     });
     print_("csound.node is available in this JavaScript context.\n");
     // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
@@ -45,15 +45,15 @@ try {
 }
 try {
     print_("Trying to load CsoundAudioNode...\n");
-    AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioContext = new AudioContext();
-    const loader = async (audioContext) => {
-        await audioContext.audioWorklet.addModule('CsoundAudioProcessor.js');
-        csound_message_callback("Creating CsoundAudioNode...\n");
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    var audioContext = new AudioContext();
+    audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
+        print_("Creating CsoundAudioNode...\n");
         csound_audio_node = new CsoundAudioNode(audioContext);
-        csound_message_callback("Csound audio worklet is available in this JavaScript context.\n");    
-    };
-    loader(audioContext);
+        print_("Csound audio worklet is available in this JavaScript context.\n");
+    }, function(error) {
+       print_(error + '\n');
+    });
 } catch (e) {
     print_(e + '\n');
 }

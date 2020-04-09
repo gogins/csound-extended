@@ -13,28 +13,29 @@ var csound_message_callback = function(message) {
     messages_textarea.value = existing + message;
     messages_textarea.scrollTop = messages_textarea.scrollHeight;        
 };
-var onPlayClick = function() {
+var onPlayClick = async function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
     if (csound == null) {
         csound_extended_module().then(function(module) {
             csound_extended = module;
             csound = new csound_extended.CsoundWebAudio();
-            console.log = csound_message_callback;
+            csound.SetMessageCallback(csound_message_callback)
             console.log("csound_extended_module has been loaded...\n");
             console.log("Csound class name: " + csound.constructor.name + "\n");
-            let csd = document.getElementById('csd').value;
-            csound.CompileCsdText(csd);
-            csound.Start();
-            csound.Perform();
+            return null;
         });
-    }
+    } else {
+        let csd = document.getElementById('csd').value;
+        await csound.CompileCsdText(csd);
+        await csound.Start();
+        csound.Perform();
+    };
 };
-var onPlayStop = function() {
-    csound.Stop();
-    csound.Cleanup();
+var onPlayStop = async function() {
+    await csound.Stop();
+    await csound.Cleanup();
     csound.Reset();
-    csound = null;
 };
 </script>
 <h1>Minimal Example using csound-extended for WebAssembly</h1>

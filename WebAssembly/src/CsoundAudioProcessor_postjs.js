@@ -264,7 +264,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.output_name = this.csound.GetOutputName();
         if (this.output_name.startsWith("dac") || this.input_name.startsWith("adc")) {
             this.is_realtime = true;                        
-            this.csound.SetHostImplementedAudioIO(1, 0);
+            this.csound.SetHostImplementedAudioIO(1, 128);
             this.csound.InitializeHostMidi();
             result = this.csound.Start();
             this.spinBuffer = this.csound.GetSpin();

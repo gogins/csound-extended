@@ -18,6 +18,7 @@ cp -R cmask/*.wasm dist-wasm
 cp -R dist-wasm/* examples
 cp -R examples/* ${RELEASE_DIR}/
 cp -R examples/* ../docs/
+cp -f src/csound_loader.js ../silencio/js/
 
 zip -r ${RELEASE_DIR}.zip ${RELEASE_DIR}
 ls -ll examples/

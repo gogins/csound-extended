@@ -12,7 +12,8 @@
  * preference: 
  * (1) Injected csound (e.g. Csound for Android, CsoundQt).
  * (2) csound.node.
- * (3) Csound for WebAssembly with AudioWorklet (CsoundWebAudio).
+ * (3) Csound for WebAssembly with AudioWorklet (CsoundWebAudio). Disabled 
+ *     by default, can be enabled with get_csound.
  * (4) Csound for WebAssmebly with ScriptProcessorNode (CsoundAudioNode).
  * To use this script, include it in the _body_ of your Web page and then call 
  * get_csound(csound_message_callback). The result will be a global csound 
@@ -34,12 +35,18 @@ if (typeof csound_message_callback === 'undefined') {
     print_ = csound_message_callback;
 }
 
+let enable_audio_worklet = false;
+
 /**
  * Returns an initialized instance of Csound. This function should _only_ be 
- * called _after_ a user gesture on the page.
+ * called _after_ a user gesture on the page. If enable_audio_worklet_ is not 
+ * passed, CsoundWebAudio (ScriptProcessorNode) is used.
  */
-var get_csound = function(csound_message_callback_) {
+var get_csound = function(csound_message_callback_, enable_audio_worklet_) {
     if (csound_initialized === false) {
+        if (typeof enable_audio_worklet_ !== 'undefined') {
+            enable_audio_worklet = enable_audio_worklet_;
+        }
         if (typeof csound != 'undefined') {
             if (csound != null) {
                 csound_initialized = true;
@@ -66,20 +73,22 @@ var get_csound = function(csound_message_callback_) {
          } catch (e) {
             print_(e + '\n');
         }
-        try {
-            print_("Trying to load CsoundAudioNode (AudioWorklet)...\n");
-            AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioContext = new AudioContext();
-            const loader = async (audioContext) => {
-                await audioContext.audioWorklet.addModule('CsoundAudioProcessor.js');
-                csound_message_callback("Creating CsoundAudioNode...\n");
-                csound_audio_node = new CsoundAudioNode(audioContext);
-                csound_audio_node.SetMessageCallback(csound_message_callback);
-                csound_message_callback("CsoundAudioNode is available in this JavaScript context.\n");    
-            };
-            loader(audioContext);
-        } catch (e) {
-            print_(e + '\n');
+        if (enable_audio_worklet === true) {
+            try {
+                print_("Trying to load CsoundAudioNode (AudioWorklet)...\n");
+                AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioContext = new AudioContext();
+                const loader = async (audioContext) => {
+                    await audioContext.audioWorklet.addModule('CsoundAudioProcessor.js');
+                    csound_message_callback("Creating CsoundAudioNode...\n");
+                    csound_audio_node = new CsoundAudioNode(audioContext);
+                    csound_audio_node.SetMessageCallback(csound_message_callback);
+                    csound_message_callback("CsoundAudioNode is available in this JavaScript context.\n");    
+                };
+                loader(audioContext);
+            } catch (e) {
+                print_(e + '\n');
+            }
         }
         try {
             print_("Trying to load CsoundWebAudio (ScriptProcessorNode)...");
@@ -129,19 +138,18 @@ var onPlayClick = async function() {
     csd = document.getElementById('csd').value;
     await csound.CompileCsdText(csd);
     await csound.Start();
-    await csound.Perform();
+    csound.Perform();
 };
 var onPlayStop = async function() {
     let csound = get_csound(csound_message_callback);
     await csound.Stop();
     await csound.Cleanup();
-    await csound.Reset();
-    csound = null;
+    csound.Reset();
 };
 </script>
 <h2>Csound Player</h2>
 <p>
-Any self-contained Csound piece (.csd file) can be performed by pasting it into the text area below, and clicking on the <b>Play</b> button. Click on the <b>Stop</b> button to end the performance. The second text area will show Csound's runtime messages. You can edit the .csd file in the text area, but you must select it all and copy it out somewhere else order to save it.
+Any self-contained Csound piece (.csd file) can be performed by pasting it into the text area below, and clicking on the <b>Play</b> button. Click on the <b>Stop</b> button to end the performance. The second text area will show Csound's runtime messages. You can edit the .csd file in the text area, but you must select it all and copy it out somewhere else in order to save it.
 </p>
 <p>
 <input id="play" type="button" value="Play" onclick="onPlayClick()">
