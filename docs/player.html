@@ -17,7 +17,7 @@ var csound_message_callback = function(message) {
 var onPlayClick = async function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
-    let csound = get_csound(csound_message_callback);
+    let csound = get_csound(console.log); //csound_message_callback);
     if (csound == null) {
         return;
     }
@@ -27,7 +27,7 @@ var onPlayClick = async function() {
     csound.Perform();
 };
 var onPlayStop = async function() {
-    let csound = get_csound(csound_message_callback);
+    let csound = get_csound(console.log); //csound_message_callback);
     await csound.Stop();
     await csound.Cleanup();
     await csound.Reset();

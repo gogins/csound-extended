@@ -276,10 +276,10 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             } else {
                 this.has_input = false;
             }
-            console.log("CsoundAudioProcessor is rendering in real time: " + this.output_name + "\n");
+            this.csound.Message("CsoundAudioProcessor is rendering in real time: " + this.output_name + "\n");
         } else {
             this.is_realtime = false;
-            console.log("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
+            this.csound.Message("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
             result = this.csound.Start();
         }
     }
@@ -294,7 +294,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                         this.csound.Stop();
                         this.csound.Cleanup();
                         this.csound.Reset();
-                        console.log("CsoundAudioProcessor returns 'false'.");
+                        this.csound.Message("CsoundAudioProcessor returns 'false'.");
                         return true;
                     }
                 }
@@ -312,19 +312,19 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             let hostFrameN = outputChannel0.length;
             // The audio stream buffer shape must match between Csound and the host.
             if (this.format_validated == false) {
-                console.log("CsoundAudioProcessor frames per quantum:        " +  hostFrameN + "\n");
-                console.log("CsoundAudioProcessor output channels:           " +  outputChannelN + "\n");
-                console.log("CsoundAudioProcessor input channels:            " +  inputChannelN + "\n");
+                this.csound.Message("CsoundAudioProcessor frames per quantum:        " +  hostFrameN + "\n");
+                this.csound.Message("CsoundAudioProcessor output channels:           " +  outputChannelN + "\n");
+                this.csound.Message("CsoundAudioProcessor input channels:            " +  inputChannelN + "\n");
                 if (this.ksmps !== hostFrameN) {
-                    console.log("Csound ksmps doesn't match host ksmps!");
+                    this.csound.Message("Csound ksmps doesn't match host ksmps!");
                     return false;
                 } 
                 if (this.inputChannelN > inputChannelN) {
-                    console.log("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
+                    this.csound.Message("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
                     return false;
                 }
                 if (this.outputChannelN != outputChannelN) {
-                    console.log("Csound nchnls doesn't match host output channel count of " + outputChannelN);
+                    this.csound.Message("Csound nchnls doesn't match host output channel count of " + outputChannelN);
                     return false;
                 }
             }
@@ -351,7 +351,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                         this.csound.Stop();
                         this.csound.Cleanup();
                         this.csound.Reset();
-                        console.log("CsoundAudioProcessor returns 'false'.");
+                        this.csound.Message("CsoundAudioProcessor returns 'false'.");
                         this.is_playing = false;
                     }
                 }
