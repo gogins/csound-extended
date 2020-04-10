@@ -88,7 +88,7 @@
 sr = 48000
 ksmps = 128
 nchnls = 2
-nchnls_i = 2
+nchnls_i = 1
 0dbfs = 1500000
 
 connect "FM_Clang", "outleft", "ReverbSC", "inleft"
@@ -1051,6 +1051,7 @@ f 0 360
 <CsoundSynthesizer>
     </textarea>
         <script type="text/javascript">
+            let csound;
             /**
              * AUTHOR: Iacopo Sassarini
              * Based on Barry Martin's formula for the hopalong fractal.
@@ -1317,7 +1318,7 @@ f 0 360
                     mouseY = event.touches[ 0 ].pageY - windowHalfY;
                 }
             }
-            function csoundMessage(text) {
+            var csound_message_callback = function(text) {
                 var Log_cell = document.getElementById('console');
                 Log_cell.value += text;
                 Log_cell.scrollTop = Log_cell.scrollHeight;
@@ -1377,7 +1378,6 @@ f 0 360
                 ChordSpace.conformScoreToChord(score, chord, false);
                 var score_text = score.toString();
                 // Protect against trying to call an undefined Csound.
-                csound = get_csound(csoundMessage);
                 if (typeof csound !== 'undefined') {
                     if (csound != null & is_playing === true) {
                         score.sendToCsound(csound);
@@ -1459,7 +1459,7 @@ f 0 360
                 Stride: 100,
                 Play: function() {
                     (async () => {
-                        csound = get_csound(csoundMessage);
+                        csound = get_csound(csound_message_callback);
                         if (csound == null) {
                             return;
                         }
@@ -1475,7 +1475,7 @@ f 0 360
                 Stop: function() {
                     (async () => {
                         is_playing = false;
-                        csound = get_csound(csoundMessage);
+                        csound = get_csound(csound_message_callback);
                         await csound.Stop();
                         await csound.Cleanup();
                         csound.Reset();

@@ -81,12 +81,12 @@ var get_csound = function(csound_message_callback_) {
     } else if (csound_node != null) {
         csound = csound_node;
         csound.SetMessageCallback(csound_message_callback_);
-        csound_message_callback("Using csound.node..\n");
+        csound_message_callback_("Using csound.node..\n");
        return csound_node;
     } else if (csound_audio_node != null) {
         csound = csound_audio_node;
         csound.SetMessageCallback(csound_message_callback_);
-        csound_message_callback("Using CsoundAudioNode (webAssembly AudioWorklet)...\n");
+        csound_message_callback_("Using CsoundAudioNode (webAssembly AudioWorklet)...\n");
         return csound_audio_node;
     //~ } 
     //~ if (csound_web_audio !== null) {

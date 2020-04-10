@@ -44,10 +44,8 @@ Any self-contained Csound piece (.csd file) can be performed by pasting it into 
 <textarea id='csd' style="width:98vw;height:50vh;font-family:monospace;background-color:MidnightBlue;color:NavajoWhite;">
 <CsoundSynthesizer>
 <CsOptions>
-; For csound.node:
--d -m195 -odac5
-; For other platforms:
-;-odac -d -m195
+; Needed to work with csound.node:
+-d -+rtaudio=PortAudio -m195 -odac
 </CsOptions>
 <CsInstruments>
 ; The value of sr must match the host.
