@@ -3,27 +3,33 @@
  * preference: 
  * (1) Injected csound (e.g. Csound for Android, CsoundQt).
  * (2) csound.node.
- * (3) Csound for WebAssembly (csound_extended).
- * To use this script, include it in your Web page and then call 
- * get_csound(csound_message_callback). The result will be a global 
- * csound object, if one is available on your system.
+ * (3) Csound for WebAssembly (CsoundAudioNode, based on AudioWorklet).
+ *
+ * To use this script, include it at the top of the body of your Web page and 
+ * and then call get_csound(csound_message_callback). The result will be a 
+ * global csound object, if one is available on your system.
+ *
+ * Please note, the Csound performance should (and sometimes must) be 
+ * configured with sr, ksmps, nchnls, nchnls_i, and sample word format 
+ * 
+ matching the host platform. 
+ *
+ * On Linux, PulseAudio may cause problems. It is better to disable PulseAudio
+ * and to use the lowest-level possible ALSA configuration.
  */
  
- // These are globals:
+// These are globals:
 csound_injected = null;
 csound_node = null;
-csound_web_audio = null;
+///csound_web_audio = null;
 csound_audio_node = null;
 csound_extended = {};
 
-let print_;
-if (typeof csound_message_callback === 'undefined') {
-    print_ = console.log;
-} 
+let print_= console.log;
 
 if (typeof csound !== 'undefined') {
     csound_injected = csound;
-    print_("Csound has already been injected into this JavaScript context.\n");
+    print_("Csound already exists in this JavaScript context.\n");
 }
 csound = null;
 try {
@@ -37,7 +43,7 @@ try {
     });
     print_("csound.node is available in this JavaScript context.\n");
     // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
-    csound_extended["ENVIRONMENT"] = "NODE";
+    ///csound_extended["ENVIRONMENT"] = "NODE";
 } catch (e) {
     print_(e + '\n');
 }
@@ -55,40 +61,39 @@ try {
 } catch (e) {
     print_(e + '\n');
 }
-try {
-    print_("Trying to load csound_extended...");
-    csound_extended_module(csound_extended).then(function(module) {
-        csound_extended = module;
-        csound_web_audio = new csound_extended.CsoundWebAudio();
-        print_("csound_extended is available in this JavaSript contex.\n");
-    });
-} catch (e) {
-    print_(e + '\n');
-}
+//~ try {
+    //~ print_("Trying to load csound_extended...");
+    //~ csound_extended_module(csound_extended).then(function(module) {
+        //~ csound_extended = module;
+        //~ csound_web_audio = new csound_extended.CsoundWebAudio();
+        //~ print_("csound_extended is available in this JavaSript contex.\n");
+    //~ });
+//~ } catch (e) {
+    //~ print_(e + '\n');
+//~ }
 
 var get_csound = function(csound_message_callback_) {
-    print_ = csound_message_callback;
-    if (csound_injected !== null) {
+    print_ = csound_message_callback_;
+    if (csound_injected != null) {
         csound = csound_injected;
+        csound_message_callback("Using injected csound...\n");
         return csound_injected;
-    } 
-    if (csound_node !== null) {
+    } else if (csound_node != null) {
         csound = csound_node;
-        return csound_node;
-    } 
-    if (csound_audio_node !== null) {
-        csound_audio_node.SetMessageCallback(csound_message_callback);
+        csound.SetMessageCallback(csound_message_callback_);
+        csound_message_callback("Using csound.node..\n");
+       return csound_node;
+    } else if (csound_audio_node != null) {
         csound = csound_audio_node;
-         //console.log = console.warn = csound_message_callback_;
+        csound.SetMessageCallback(csound_message_callback_);
+        csound_message_callback("Using CsoundAudioNode (webAssembly AudioWorklet)...\n");
         return csound_audio_node;
-    } 
-    if (csound_web_audio !== null) {
-        csound = csound_web_audio;
-        //console.log = console.warn = csound_message_callback_;
-        return csound_web_audio;
+    //~ } 
+    //~ if (csound_web_audio !== null) {
+        //~ csound = csound_web_audio;
+        //~ csound.SetMessageCallback(csound_message_callback_);
+        //~ return csound_web_audio;
     } else {
-        csound = null;
-        alert("Csound has not yet been loaded, wait a bit...\n");
-        return csound;
+        csound_message_callback_("Csound is still loading, wait a bit...\n");
     }
 }       

@@ -4,121 +4,8 @@
 <title>Csound Player</title>
 </head>
 <body style="background-color:LightGrey;">
-<script src="csound_extended.js"></script>
 <script src="CsoundAudioNode.js"></script>
 <script src="csound_loader.js"></script>
-<!-- <script>
-/**
- * This script attempts to load, and to use, in order of decreasing 
- * preference: 
- * (1) Injected csound (e.g. Csound for Android, CsoundQt).
- * (2) csound.node.
- * (3) Csound for WebAssembly with AudioWorklet (CsoundWebAudio). Disabled 
- *     by default, can be enabled with get_csound.
- * (4) Csound for WebAssmebly with ScriptProcessorNode (CsoundAudioNode).
- * To use this script, include it in the _body_ of your Web page and then call 
- * get_csound(csound_message_callback). The result will be a global csound 
- * object, if one is available on your system.
- */
- 
-// These are globals:
-var csound_initialized = false;
-var csound_injected = null;
-var csound_node = null;
-var csound_audio_node = null;
-var csound_web_audio = null;
-var csound_extended = {};
-
-let print_;
-if (typeof csound_message_callback === 'undefined') {
-    print_ = console.log;
-} else {
-    print_ = csound_message_callback;
-}
-
-let enable_audio_worklet = false;
-
-/**
- * Returns an initialized instance of Csound. This function should _only_ be 
- * called _after_ a user gesture on the page. If enable_audio_worklet_ is not 
- * passed, CsoundWebAudio (ScriptProcessorNode) is used.
- */
-var get_csound = function(csound_message_callback_, enable_audio_worklet_) {
-    if (csound_initialized === false) {
-        if (typeof enable_audio_worklet_ !== 'undefined') {
-            enable_audio_worklet = enable_audio_worklet_;
-        }
-        if (typeof csound != 'undefined') {
-            if (csound != null) {
-                csound_initialized = true;
-                csound_injected = csound;
-                print_("Csound already exists in this JavaScript context.\n");
-                return csound_injected;
-            }
-        }
-        try {
-            print_("Trying to load csound.node...\n");
-            csound_node = require('csound.node');
-            var nwgui = require('nw.gui');
-            nw_window = nwgui.Window.get();
-            nw_window.on('close', function() {
-                print_('Closing down...\n');
-                this.close(true); 
-            });
-            csound_node.SetMessageCallback(csound_message_callback);
-            print_("csound.node is available in this JavaScript context.\n");
-            // Workaround for Emscripten not knowing that NW.js is a variant of Node.js.
-            csound_extended["ENVIRONMENT"] = "NODE";
-            csound_initialized = true;
-            return csound_node;
-         } catch (e) {
-            print_(e + '\n');
-        }
-        if (enable_audio_worklet === true) {
-            try {
-                print_("Trying to load CsoundAudioNode (AudioWorklet)...\n");
-                AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioContext = new AudioContext();
-                const loader = async (audioContext) => {
-                    await audioContext.audioWorklet.addModule('CsoundAudioProcessor.js');
-                    csound_message_callback("Creating CsoundAudioNode...\n");
-                    csound_audio_node = new CsoundAudioNode(audioContext);
-                    //csound_audio_node.SetMessageCallback(csound_message_callback);
-                    csound_message_callback("CsoundAudioNode is available in this JavaScript context.\n");    
-                };
-                loader(audioContext);
-            } catch (e) {
-                print_(e + '\n');
-            }
-        }
-        try {
-            print_("Trying to load CsoundWebAudio (ScriptProcessorNode)...");
-            csound_extended_module(csound_extended).then(function(module) {
-                csound_extended = module;
-                csound_web_audio = new csound_extended.CsoundWebAudio();
-                csound_web_audio.SetMessageCallback(csound_message_callback);
-                print_("CsoundWebAudio is available in this JavaSript contex.\n");
-            });
-        } catch (e) {
-            print_(e + '\n');
-        }
-        // May not actually be the case, but we tried. Needs to be set for the next call.
-        csound_initialized = true;
-    }
-    if (csound_injected != null) {
-        return csound_injected;
-    } else if (csound_node !== null) {
-        return csound_node;
-    } else if (csound_audio_node !== null) {
-        return csound_audio_node;
-    } else if (csound_web_audio !== null) {
-        return csound_web_audio;
-    } else {
-        print_("Csound is loading, wait a bit...\n");
-        return null;
-    }
-}       
-</script> -->
 <script>
 var csd = null;
 var csound_message_callback = function(message) {
@@ -132,10 +19,8 @@ var onPlayClick = async function() {
     messages_textarea.value = "";
     let csound = get_csound(csound_message_callback);
     if (csound == null) {
-        csound_message_callback("Csound is still loading, try again...\n");
         return;
     }
-    csound_message_callback("Csound class name: " + csound.constructor.name + "\n");
     csd = document.getElementById('csd').value;
     await csound.CompileCsdText(csd);
     await csound.Start();
@@ -145,7 +30,7 @@ var onPlayStop = async function() {
     let csound = get_csound(csound_message_callback);
     await csound.Stop();
     await csound.Cleanup();
-    csound.Reset();
+    await csound.Reset();
 };
 </script>
 <h2>Csound Player</h2>
@@ -159,7 +44,10 @@ Any self-contained Csound piece (.csd file) can be performed by pasting it into 
 <textarea id='csd' style="width:98vw;height:50vh;font-family:monospace;background-color:MidnightBlue;color:NavajoWhite;">
 <CsoundSynthesizer>
 <CsOptions>
--odac -d -m195
+; For csound.node:
+-d -m195 -odac5
+; For other platforms:
+;-odac -d -m195
 </CsOptions>
 <CsInstruments>
 ; The value of sr must match the host.
@@ -168,7 +56,8 @@ sr          =           48000
 ksmps       =           128
 ; The values of both nchnls and nchnls_i must match the host.
 nchnls      =           2
-nchnls_i    =           1
+nchnls_i    =           2
+0dbfs       =           100000
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and
 ;       pitch-shifted and delayed taps thru exponential

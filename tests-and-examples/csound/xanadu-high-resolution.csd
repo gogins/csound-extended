@@ -1,10 +1,10 @@
 <CsoundSynthesizer>
 <CsOptions>
--d -odac -m195
+-d -+rtaudio=PortAudio -odac5 -m195
 </CsOptions>
 <CsInstruments>
-sr          =           48000
-ksmps       =           100
+sr          =           44100
+ksmps       =           128
 nchnls      =           2
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and

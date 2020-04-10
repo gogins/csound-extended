@@ -1,4 +1,4 @@
-// Globals to ensure that the AudioWorkletProcessor.port is in scope for 
+// Globals to ensure that AudioWorkletProcessor.port is in scope for 
 // the Csound message callback.
 
 var shim;
@@ -284,79 +284,80 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         }
     }
     process(inputs, outputs, parameters) {
-        if (this.is_realtime === false) {
-            let result = 0;
-            while (result === 0) {
-                result = this.csound.PerformKsmps();
-                if (result !== 0) {
-                    this.csound.Stop();
-                    this.csound.Reset();
-                    console.log("CsoundAudioProcessor returns 'false'.");
-                    return false;
+        if (this.is_playing === true) {
+            if (this.is_realtime === false) {
+                let result = 0;
+                while (result === 0) {
+                    result = this.csound.PerformKsmps();
+                    if (result !== 0) {
+                        this.is_playing = false;
+                        this.csound.Stop();
+                        this.csound.Cleanup();
+                        this.csound.Reset();
+                        console.log("CsoundAudioProcessor returns 'false'.");
+                        return true;
+                    }
                 }
-            }
-        } 
-        /// Get the parameter values array. Here we do not use, and ignore, them.
-        /// let myParamValues = parameters.myParam;
-        // The processor may have multiple inputs and outputs. 
-        // Each input or output may have multiple channels. 
-        let inputBuffer = inputs[0];
-        let outputBuffer = outputs[0];
-        let inputChannel0 = inputBuffer[0];
-        let outputChannel0 = outputBuffer[0];
-        let inputChannelN = inputBuffer.length;
-        let outputChannelN = outputBuffer.length;
-        let hostFrameN = outputChannel0.length;
-        // The audio stream format must match between Csound and the host.
-        if (this.format_validated == false) {
-            console.log("CsoundAudioProcessor frames per second:         " +  sampleRate + "\n");
-            console.log("CsoundAudioProcessor output channels:           " +  outputChannelN + "\n");
-            console.log("CsoundAudioProcessor input channels:            " +  inputChannelN + "\n");
-            if (this.ksmps !== hostFrameN) {
-                console.log("Csound ksmps doesn't match host ksmps!");
-                return false;
             } 
-            if (this.inputChannelN > inputChannelN) {
-                console.log("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
-                return false;
-            }
-            if (this.outputChannelN != outputChannelN) {
-                console.log("Csound nchnls doesn't match host output channel count of " + outputChannelN);
-                return false;
-            }
-            if (this.csound.GetSr() != sampleRate) {
-                console.log("Csound sampling rate doesn't match host sampling rate of " + sampleRate);
-                return false;
-            }
-        }
-        this.format_validated = true;
-        let csoundFrameI = 0;
-        let result = 0;
-        for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
-            if (this.has_input === true) {
-                for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                    let inputChannelBuffer = inputBuffer[inputChannelI];
-                    this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
+            /// Get the parameter values array. Here we do not use, and ignore, them.
+            /// let myParamValues = parameters.myParam;
+            // The processor may have multiple inputs and outputs. 
+            // Each input or output may have multiple channels. 
+            let inputBuffer = inputs[0];
+            let outputBuffer = outputs[0];
+            let inputChannel0 = inputBuffer[0];
+            let outputChannel0 = outputBuffer[0];
+            let inputChannelN = inputBuffer.length;
+            let outputChannelN = outputBuffer.length;
+            let hostFrameN = outputChannel0.length;
+            // The audio stream buffer shape must match between Csound and the host.
+            if (this.format_validated == false) {
+                console.log("CsoundAudioProcessor frames per quantum:        " +  hostFrameN + "\n");
+                console.log("CsoundAudioProcessor output channels:           " +  outputChannelN + "\n");
+                console.log("CsoundAudioProcessor input channels:            " +  inputChannelN + "\n");
+                if (this.ksmps !== hostFrameN) {
+                    console.log("Csound ksmps doesn't match host ksmps!");
+                    return false;
+                } 
+                if (this.inputChannelN > inputChannelN) {
+                    console.log("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
+                    return false;
                 }
-            }
-            for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
-                let outputChannelBuffer = outputBuffer[outputChannelI];
-                outputChannelBuffer[hostFrameI] = this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / this.zerodBFS;
-                this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
-            }
-            csoundFrameI++
-            if (csoundFrameI === hostFrameN) {
-                csoundFrameI = 0;
-                result = this.csound.PerformKsmps();
-                if (result !== 0) {
-                    this.csound.Stop();
-                    this.csound.Reset();
-                    console.log("CsoundAudioProcessor returns 'false'.");
+                if (this.outputChannelN != outputChannelN) {
+                    console.log("Csound nchnls doesn't match host output channel count of " + outputChannelN);
                     return false;
                 }
             }
+            this.format_validated = true;
+            let csoundFrameI = 0;
+            let result = 0;
+            for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
+                if (this.has_input === true) {
+                    for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
+                        let inputChannelBuffer = inputBuffer[inputChannelI];
+                        this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
+                    }
+                }
+                for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
+                    let outputChannelBuffer = outputBuffer[outputChannelI];
+                    outputChannelBuffer[hostFrameI] = this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / this.zerodBFS;
+                    this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
+                }
+                csoundFrameI++
+                if (csoundFrameI === hostFrameN) {
+                    csoundFrameI = 0;
+                    result = this.csound.PerformKsmps();
+                    if (result !== 0) {
+                        this.csound.Stop();
+                        this.csound.Cleanup();
+                        this.csound.Reset();
+                        console.log("CsoundAudioProcessor returns 'false'.");
+                        this.is_playing = false;
+                    }
+                }
+            }
         }
-        return this.is_playing;
+        return true;
     }
 };
 
