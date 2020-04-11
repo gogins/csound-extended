@@ -55,12 +55,12 @@ and will run with `CsoundAudioNode.js` in Chrome 66 or later.
 
 The `csound_loader.js` script is provided as a convenient method of
 detecting and using available implementations of Csound that run in HTML5
-environments, including:
+environments, including, in decreasing order of preference:
 
-- Current Web browsers (using `CsoundAudioNode.js`).
-- NW.js (using `csound.node`).
 - Android (using the CsoundAndroid library).
 - CsoundQt (using the built-in JavaScript wrapper).
+- NW.js (using `csound.node`).
+- Current Web browsers (using `CsoundAudioNode.js`).
 
 ## Building
 

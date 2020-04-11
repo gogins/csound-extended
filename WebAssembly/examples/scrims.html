@@ -11,6 +11,8 @@
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.1/sprintf.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/91/three.js"></script>
+        <script src="CsoundAudioNode.js"></script>
+        <script src="csound_loader.js"></script>
         <style>
             ::-webkit-scrollbar
             {
@@ -31,8 +33,6 @@
         </style>
     </head>
     <body style="background:black;">
-        <script src="CsoundAudioNode.js"></script>
-        <script src="csound_loader.js"></script>
         <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"/>
         <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt;">
             <col width=400px>
@@ -1466,19 +1466,17 @@ f 0 360
                         gui.revert();
                         await csound.CompileCsdText(document.getElementById('csd').value);
                         await csound.Start();
-                        start_time_seconds = new Date().getTime() / 1000.0;
-                        csound.Perform();
                         is_playing = true;
+                        start_time_seconds = new Date().getTime() / 1000.0;
+                        await csound.Perform();
                         setTimeout(updateTimeCell, 0);
                     })();
                 },
                 Stop: function() {
                     (async () => {
-                        is_playing = false;
-                        csound = get_csound(csound_message_callback);
                         await csound.Stop();
                         await csound.Cleanup();
-                        csound.Reset();
+                        await csound.Reset();
                     })();
                 },
                 Close: function() {
@@ -1550,7 +1548,6 @@ f 0 360
                 gui.remember(parameters);
                 gui.add(parameters, 'Play').name('Play [Ctrl-P]');
                 gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
-                gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
                 var Master = gui.addFolder('Master effects');
                 add_slider(Master, 'gk_overlap', 0, 20);
                 add_slider(Master, 'gk_Reverb_feedback', 0, 1);
@@ -1626,7 +1623,7 @@ f 0 360
                 gui.revert();
             }
             function gk_update(name, value) {
-                if (csound !== null) {
+                if (csound != null)  {
                     var numberValue = parseFloat(value);
                     csound.SetControlChannel(name, numberValue);
                     csound.Message(name + ': ' + numberValue + '\n');
@@ -1713,8 +1710,6 @@ f 0 360
                         parameters.Play();
                     } else if (e_char === 'S') {
                         parameters.Stop();
-                    } else if (e_char === 'X') {
-                        parameters.Close();
                     }
                 } else if (e.altKey === true) {
                     var sign = -1;

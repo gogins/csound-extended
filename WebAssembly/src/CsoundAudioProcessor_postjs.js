@@ -1,8 +1,8 @@
 // Globals to ensure that AudioWorkletProcessor.port is in scope for 
 // the Csound message callback.
 
-var shim;
-var port_;
+///var shim;
+///var port_;
 
 class CsoundAudioProcessor extends AudioWorkletProcessor {
     static get parameterDescriptors() {
@@ -29,9 +29,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         var shim = function(text) {
             port_.postMessage(["Message", text]);
         };
-        shim.bind(this);
         this.csound.SetMessageCallback(shim);
-        var this_ = this;
     }
     onMessage(event) {
         let result = null;

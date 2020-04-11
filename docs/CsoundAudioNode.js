@@ -59,6 +59,10 @@ class CsoundAudioNode extends AudioWorkletNode {
                     this.message_callback("[" + window.performance.now() + " Received CleanupResult with: " + data[1] + ".]\n");
                     this.resolveCleanup(data[1]);
                     break;
+                case "ReadScoreResult":
+                    this.message_callback("[" + window.performance.now() + " Received ReadScoreResult.]\n");
+                    this.resolveReadScore(data[1]);
+                    break;
                 case "ResetResult":
                     this.message_callback("[" + window.performance.now() + " Received ResetResult.]\n");
                     this.resolveReset();
@@ -78,6 +82,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.CompileOrcPromise = null;
         this.StopPromise = null;
         this.CleanupPromise = null;
+        this.ReadScorePromise = null;
         this.ResetPromise = null;
         this.port.onmessage = this.onMessage.bind(this);
         this.port.start();
@@ -208,8 +213,16 @@ class CsoundAudioNode extends AudioWorkletNode {
     PerformOrc(options, orc, sco) {
         this.port.postMessage(["PerformOrc", options, orc, sco]);
     }
-    ReadScore(score) {
-        this.port.postMessage(["ReadScore", score]);
+    async ReadScore(score) {
+        this.message_callback("[" + window.performance.now() + " ReadScore.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveReadScore = resolve;
+            this.port.postMessage(["ReadScore", score]);
+        });
+        let result = await promise;
+        this.message_callback("[" + window.performance.now() + " ReadScore resolved with: " + result + ".]\n");
+        return result;
     };
     async Reset() {
         this.message_callback("[" + window.performance.now() + " Reset.]\n");
