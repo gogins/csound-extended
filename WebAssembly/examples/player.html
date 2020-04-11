@@ -2,10 +2,15 @@
 <html>
 <head>
 <title>Csound Player</title>
+<!-- This script loads the entire Csound library compiled for WebAssembly 
+     and based on AudioWorklet. -->
+<script src="CsoundAudioNode.js"></script>
+<!-- This script tests the environment and attempts to Csound, if available, 
+     from each environment, preferring native (injected) Csound as found in 
+     CsoundQt oe Android, then csound.node, then Csound for WebAssembly. -->
+<script src="csound_loader.js"></script>
 </head>
 <body style="background-color:LightGrey;">
-<script src="CsoundAudioNode.js"></script>
-<script src="csound_loader.js"></script>
 <script>
 var csd = null;
 var csound_message_callback = function(message) {
@@ -14,6 +19,9 @@ var csound_message_callback = function(message) {
     messages_textarea.value = existing + message;
     messages_textarea.scrollTop = messages_textarea.scrollHeight;        
 };
+// Csound must be invoked from an async function because the 
+// functions called herein are async but must be called with 
+// await to enforce the correct order of execution.
 var onPlayClick = async function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
@@ -24,8 +32,11 @@ var onPlayClick = async function() {
     csd = document.getElementById('csd').value;
     await csound.CompileCsdText(csd);
     await csound.Start();
-    csound.Perform();
+    await csound.Perform();
 };
+// Csound must be invoked from an async function because the 
+// functions called herein are async but must be called with 
+// await to enforce the correct order of execution.
 var onPlayStop = async function() {
     let csound = get_csound(csound_message_callback);
     await csound.Stop();
@@ -35,7 +46,7 @@ var onPlayStop = async function() {
 </script>
 <h2>Csound Player</h2>
 <p>
-Any self-contained Csound piece (.csd file) can be performed by pasting it into the text area below, and clicking on the <b>Play</b> button. Click on the <b>Stop</b> button to end the performance. The second text area will show Csound's runtime messages. You can edit the .csd file in the text area, but you must select it all and copy it out somewhere else in order to save it.
+Any self-contained Csound piece (.csd file) can be performed by pasting it into the text area below, and clicking on the <b>Play</b> button. Click on the <b>Stop</b> button to end the performance. The second text area will show Csound's runtime messages. You can edit the .csd file in the text area, but you must select it all and copy it out somewhere else in order to save it. The .csd should (and sometimes must) set sr (probably 48000), ksmps = 128, nchnls, nchnls_i, and sample word format to be consistent with the host.
 </p>
 <p>
 <input id="play" type="button" value="Play" onclick="onPlayClick()">

@@ -2,17 +2,25 @@
 <html>
 <head>
 <title>Minimal Example using Csound for WebAssembly</title>
+<!-- This script loads the entire Csound library. -->
 <script src="CsoundAudioNode.js"></script>
 </head>
 <body>
 <script>
+// Csound is globally declared as null to indicate that the Csound library 
+// should be loaded.
 var csound = null;
+// A Csound callback is _required_ to initialize the library, but console.log 
+// can be used.
 var csound_message_callback = function(message) {
     let messages_textarea = document.getElementById("console");
     let existing = messages_textarea.value;
     messages_textarea.value = existing + message;
     messages_textarea.scrollTop = messages_textarea.scrollHeight;        
 };
+// Csound must be invoked from an async function because the 
+// functions called herein are async but must be called with 
+// await to enforce the correct order of execution.
 var onPlayClick = async function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
@@ -23,6 +31,8 @@ var onPlayClick = async function() {
             var audioContext = new AudioContext();
             audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
                 csound_message_callback("Creating CsoundAudioNode...\n");
+                // Once the library has been loaded, the global instance of 
+                // Csound is used for all performances.
                 csound = new CsoundAudioNode(audioContext, csound_message_callback);
                 csound_message_callback("CsoundAudioNode (AudioWorklet) is available in this JavaScript context.\n");
             }, function(error) {
@@ -37,13 +47,16 @@ var onPlayClick = async function() {
         csd = document.getElementById('csd').value;
         await csound.CompileCsdText(csd);
         await csound.Start();
-        csound.Perform();
-        }
-    };
+        await csound.Perform();
+    }
+};
+// Csound must be invoked from an async function because the 
+// functions called herein are async but must be called with 
+// await to enforce the correct order of execution.
 var onPlayStop = async function() {
     await csound.Stop();
     await csound.Cleanup();
-    csound.Reset();
+    await csound.Reset();
 };
 </script>
 <h1>Minimal Example using csound-extended for WebAssembly</h1>
@@ -56,10 +69,12 @@ the AudioWorklet implementation of WebAudio defined in CsoundAudioNode.js.
 </textarea>
 <p><input id="play" type="button" value="Play" onclick="onPlayClick()">
 <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
-<p>The complete CSD file of the <i>Xanadu</i> example from the Csound 
+<p>The complete .csd file of the <i>Xanadu</i> example from the Csound 
 repository is stored in the text area below. Clicking on the <b>Play</b> 
-button performs this CSD. Clicking on the <b>Stop</b> button ends the 
-performance.</p>
+button performs this file. Clicking on the <b>Stop</b> button ends the 
+performance. The .csd should (and sometimes must) set sr (probably 48000), 
+ksmps = 128, nchnls, nchnls_i, and sample word format to be consistent with 
+the host.</p>
 <textarea id='csd' cols=80 rows=25>
 <CsoundSynthesizer>
 <CsOptions>
