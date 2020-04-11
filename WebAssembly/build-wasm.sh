@@ -31,13 +31,13 @@ echo "Making csound-static..."
 
 emmake make csound-static -j6
 
-echo "Compiling FileList..."
+#~ echo "Compiling FileList..."
 
-emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 -c ../src/FileList.c -Iinclude -o FileList.bc
+#~ emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 -c ../src/FileList.c -Iinclude -o FileList.bc
 
-echo "Compiling CsoundObj..."
+#~ echo "Compiling CsoundObj..."
 
-emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 -c ../src/CsoundObj.c -iquote ../src -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
+#~ emcc -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 -DINIT_STATIC_MODULES=1 -c ../src/CsoundObj.c -iquote ../src -I../../dependencies/csound/include -Iinclude -o CsoundObj.bc
 
 echo "Compiling csound_embind..."
 
@@ -47,9 +47,9 @@ em++ -std=c++11 -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODUL
 # 1024 * 64 = 65536 is 64 KB
 # 65536 * 1024 * 4 is 268435456
 
-echo "Compiling csound_extended..."
+#~ echo "Compiling csound_extended..."
 
-em++ -s SAFE_HEAP=0 -std=c++11 --source-map-base . --bind --pre-js ../src/CsoundWebAudio.js --embed-file ../../dependencies/csound/samples@/ -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0  -s FORCE_FILESYSTEM=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s "EXPORT_NAME='csound_extended_module'" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s FORCE_FILESYSTEM=1 CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a  ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o csound_extended.js
+#~ em++ -s SAFE_HEAP=0 -std=c++11 --source-map-base . --bind --pre-js ../src/CsoundWebAudio.js --embed-file ../../dependencies/csound/samples@/ -v -O2 -g4 -DINIT_STATIC_MODULES=1 -s WASM=1 -s ASSERTIONS=0  -s FORCE_FILESYSTEM=1 -s "BINARYEN_METHOD='native-wasm'" -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s "EXPORT_NAME='csound_extended_module'" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s FORCE_FILESYSTEM=1 CsoundObj.bc FileList.bc csound_web_audio.bc libcsound.a  ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o csound_extended.js
 
 echo "Compiling CsoundAudioProcessor..."
 

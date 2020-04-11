@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Minimal Example using Csound for WebAssembly</title>
-<script src="csound_extended.js"></script>
+<script src="CsoundAudioNode.js"></script>
 </head>
 <body>
 <script>
@@ -17,21 +17,29 @@ var onPlayClick = async function() {
     let messages_textarea = document.getElementById("console");
     messages_textarea.value = "";
     if (csound == null) {
-        csound_extended_module().then(function(module) {
-            csound_extended = module;
-            csound = new csound_extended.CsoundWebAudio();
-            csound.SetMessageCallback(csound_message_callback)
-            console.log("csound_extended_module has been loaded...\n");
-            console.log("Csound class name: " + csound.constructor.name + "\n");
-            return null;
-        });
+        try {
+            csound_message_callback("Trying to load CsoundAudioNode...\n");
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            var audioContext = new AudioContext();
+            audioContext.audioWorklet.addModule('CsoundAudioProcessor.js').then(function() {
+                csound_message_callback("Creating CsoundAudioNode...\n");
+                csound = new CsoundAudioNode(audioContext, csound_message_callback);
+                csound_message_callback("CsoundAudioNode (AudioWorklet) is available in this JavaScript context.\n");
+            }, function(error) {
+               csound_message_callback(error + '\n');
+            });
+        } catch (e) {
+            csound_message_callback(e + '\n');
+        } 
     } else {
-        let csd = document.getElementById('csd').value;
+        let messages_textarea = document.getElementById("console");
+        messages_textarea.value = "";
+        csd = document.getElementById('csd').value;
         await csound.CompileCsdText(csd);
         await csound.Start();
         csound.Perform();
+        }
     };
-};
 var onPlayStop = async function() {
     await csound.Stop();
     await csound.Cleanup();
@@ -42,14 +50,8 @@ var onPlayStop = async function() {
 <p>This is a completely self-contained example, all in one file, and 
 without any unnecessary features, showing how to play a Csound piece in a 
 Web browser using csound-extended for WebAssembly. This example uses 
-the AudioWorklet implementation of WebAudio defined in csound_extended.js. 
-When the JavaScript function  <b>csound_extended_module</b> is called, 
-it asynchronously loads the WebAssembly Csound code, and creates a 
-<b>csound</b> object with selected methods of the Csound API.
-The WebAssembly Csound library prints its regular messages to 
-<b>window.console.log</b>. The function 
-<b>csound_message_callback</b>, which appends all Csound messages to a text area, 
-is assigned to <b>console.log.</b></p>
+the AudioWorklet implementation of WebAudio defined in CsoundAudioNode.js. 
+</p>
 <textarea id='console' cols=80 rows=15>
 </textarea>
 <p><input id="play" type="button" value="Play" onclick="onPlayClick()">
@@ -57,7 +59,6 @@ is assigned to <b>console.log.</b></p>
 <p>The complete CSD file of the <i>Xanadu</i> example from the Csound 
 repository is stored in the text area below. Clicking on the <b>Play</b> 
 button performs this CSD. Clicking on the <b>Stop</b> button ends the 
-performance and deletes Csound. Csound is created anew for each 
 performance.</p>
 <textarea id='csd' cols=80 rows=25>
 <CsoundSynthesizer>
@@ -65,9 +66,11 @@ performance.</p>
 -odac -d -m195
 </CsOptions>
 <CsInstruments> 
-sr          =           44100
+; These must all match the host as printed when Csound starts.
+sr          =           48000
 ksmps       =           128
 nchnls      =           2
+nchnls_i    =           1
 
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and

@@ -240,7 +240,8 @@ class CsoundAudioNode extends AudioWorkletNode {
     SetOption(option) {
         if (option.startsWith("-odac")) {
             this.output = option.substr(2);
-        } else if (option.startsWith("-iadc")) {
+        }
+        if (option.startsWith("-iadc")) {
             this.input = option.substr(2);
         }
         this.port.postMessage(["SetOption", option]);
@@ -258,59 +259,46 @@ class CsoundAudioNode extends AudioWorkletNode {
     SetStringChannel(name, value) {
         this.port.postMessage(["SetStringChannel", name, value]);
     };
-    // Wiring into Web Audio graph here in the upper half, 
-    // wiring within Csound down in the lower half.
-    Start() {
+    // Wiring into Web Audio graph is up here in the upper half, 
+    // wiring within Csound is down in the lower half.
+    async Start() {
         this.message_callback("[" + window.performance.now() + " Start.]\n");
         try {
+            let device_list = await navigator.mediaDevices.enumerateDevices();
+            var message_callback_ = this.message_callback;
+            var print_device = function(device) {
+                message_callback_(device.kind + ": " + device.label + "\n");
+            };     
+            device_list.forEach(print_device);
             this.message_callback("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
             this.message_callback("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
             this.connect(this.context.destination);
-            let onMidiEvent = function(event) {
-                this.port.postMessage(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
-            };
-            let midiSuccess = function(midiInterface) {
-                let inputs = midiInterface.inputs.values();
-                this.message_callback("MIDI input initialized...\n");
-                for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-                    input = input.value;
-                    this.message_callback("Input: " + input.name + "\n");
-                    input.onmidimessage = onMidiEvent;
-                }
-            };
-            let midiFail = function(error) {
-                this.message_callback("MIDI failed to start, error:" + error);
-            };
-            if (navigator.requestMIDIAccess) {
-                navigator.requestMIDIAccess().then(midiSuccess, midiFail);
-            } else {
-                this.message_callback("MIDI not supported in this context.\n");
+            let midi_access = await navigator.requestMIDIAccess();
+            const inputs = midi_access.inputs.values();
+            var post_message = this.postMessage;
+            for (let entry of midi_access.inputs) {
+                var port_ = entry[1];
+                message_callback_("MIDI port: type: " + port_.type + "  manufacturer: " + port_.manufacturer + " name: " + port_.name +
+                    " version: " + port_.version + "\n");
+                // Using the MessagePort for this is probably not good enough.
+                port_.onmidimessage = function(event) {
+                    post_message(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
+                };
             }
-            if (this.input !== null) {
-                window.navigator = window.navigator || {};
-                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || null;
-                if (navigator.getUserMedia === null) {
-                    this.message_callback("Audio input not supported in this context.");
-                } else {
-                    navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
-                        this.microphoneNode = audioContext.createMediaStreamSource(stream);
-                        this.message_callback("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
-                        if (this.microphoneNode !== null) {
-                            if (inputChannelN != this.microphoneNode.numberOfInputs) {
-                                this.microphoneNode.connect(this);
-                                this.message_callback("Audio input initialized.\n");
-                            } else {
-                                this.message_callback("Csound nchnls_i does not match microphoneNode.numberOfInputs.\n");
-                            }
-                        }       
-                    }).catch ((e) => {
-                        this.message_callback("Microphone: " + e.name + ". " + e.message + "\n");
-                        ///throw "Microphone: " + e.name + ". " + e.message;
-                    })
-                }
+            for (let entry of midi_access.outputs) {
+                var port_ = entry[1];
+                message_callback_( "MIDI port: type: " + port_.type + " manufacturer: " + port_.manufacturer + " name: " + port_.name +
+                  " version: " + port_.version + "\n");
             }
-            //this.start();
-            //this.disconnect();
+            try {
+                let stream = await navigator.mediaDevices.getUserMedia({audio: true});
+                this.microphoneNode = this.context.createMediaStreamSource(stream);
+                this.message_callback("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
+                this.microphoneNode.connect(this);
+                this.message_callback("Audio input initialized.\n");
+            } catch (e) {
+                this.message_callback(e);
+            }
             this.port.postMessage(["Start"]);
             this.is_playing = true;
         } catch (e) {
@@ -324,7 +312,7 @@ class CsoundAudioNode extends AudioWorkletNode {
             this.resolveStop = resolve;
             this.port.postMessage(["Stop"]);
             if (this.microphoneNode !== null) {
-                this.microphoneNode.stop();
+                ///this.microphoneNode.stop();
                 this.microphoneNode.disconnect(this);
             }
             this.disconnect();

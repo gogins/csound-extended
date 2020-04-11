@@ -6,9 +6,9 @@ export RELEASE_DIR=csound-extended-wasm-${CSOUND_EXTENDED_VERSION}
 find . -name "*~" -exec rm {} \;
 rm -rf dist-wasm
 mkdir dist-wasm
-cp build-wasm/libcsound.js dist-wasm/
+###cp build-wasm/libcsound.js dist-wasm/
 cp src/*.js dist-wasm/
-cp build-wasm/csound_extended.* dist-wasm/
+###cp build-wasm/csound_extended.* dist-wasm/
 cp build-wasm/CsoundAudio*.* dist-wasm/
 cp build-wasm/csound_samples.* dist-wasm/
 rm -rf $RELEASE_DIR
