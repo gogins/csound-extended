@@ -279,8 +279,11 @@ class CsoundAudioNode extends AudioWorkletNode {
         try {
             let device_list = await navigator.mediaDevices.enumerateDevices();
             var message_callback_ = this.message_callback;
+            var index = 0;
+            var input_connected = false;
             var print_device = function(device) {
-                message_callback_(device.kind + ": " + device.label + "\n");
+                message_callback_(index + " " + device.kind + ": " + device.label + "\n");
+                index++;
             };     
             device_list.forEach(print_device);
             this.message_callback("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
@@ -303,10 +306,13 @@ class CsoundAudioNode extends AudioWorkletNode {
                 message_callback_( "MIDI port: type: " + port_.type + " manufacturer: " + port_.manufacturer + " name: " + port_.name +
                   " version: " + port_.version + "\n");
             }
+            // Try to obtain the Web browser microphone input, if it has one.
+            // Not to be confused with any other audio input interfaces on the 
+            // computer, which are inputs in the device list above!
             try {
                 let stream = await navigator.mediaDevices.getUserMedia({audio: true});
                 this.microphoneNode = this.context.createMediaStreamSource(stream);
-                this.message_callback("WebAudio input channels:            " +  this.microphoneNode.numberOfInputs + "\n");
+                this.message_callback("WebAudio UserMedia outputs:         " +  this.microphoneNode.numberOfOutputs + "\n");
                 this.microphoneNode.connect(this);
                 this.message_callback("Audio input initialized.\n");
             } catch (e) {

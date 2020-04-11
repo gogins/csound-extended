@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Duplex Audio</title>
-    <script src="csound_extended.js"></script>
     <script src="CsoundAudioNode.js"></script>
     <script src="csound_loader.js"></script>
     <style type="text/css">
@@ -146,16 +145,16 @@
     <p>
     <textarea id='csound_console' cols=80 rows=25>
     </textarea>
-    <textarea id='csd' cols=80 rows=25 style="visibility:hidden;">
+    <textarea id='csd' cols=80 rows=25">
 <CsoundSynthesizer>
 <CsOptions>
--odac -iadc 
+-odac5 -iadc5 
 </CsOptions>
 <CsInstruments>
-sr = 44100
+sr = 48000
 ksmps = 128
 nchnls = 2 
-nchnls_i = 1
+nchnls_i = 2
 0dbfs  = 1
 
                             instr 1
@@ -203,19 +202,23 @@ $(document).ready(function() {
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
-    $('#play').on('click', function() {
-        get_csound(handleMessage);
+    $('#play').on('click', async function() {
+        let csound = get_csound(handleMessage);
+        if (csound == null) {
+            return;
+        }
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        console.log = handleMessage;
-        csound.CompileCsdText(csd);
+        await csound.CompileCsdText(csd);
         $('#restore').trigger('click');
-        csound.Start();
-        csound.Perform();
+        await csound.Start();
+        await csound.Perform();
     });
-    $('#stop').on('click', function() {
-        csound.Stop();
-        csound.Reset();
+    $('#stop').on('click', async function() {
+        let csound = get_csound(handleMessage);
+        await csound.Stop();
+        await csound.Cleanup()
+        await csound.Reset();
     });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
