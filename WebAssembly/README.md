@@ -9,8 +9,8 @@ http://michaelgogins.tumblr.com
 THis directory builds, packages, and tests csound-extended for WebAssembly.
 This build replaces `CsoundObj.js` from the core Csound repository with a 
 WebAssembly build of Csound, compiled using the Emscripten LLVM toolchain.
-This build uses the new AudioWorklet for superior performance with fewer 
-audio issues.
+This build uses the new WebAudio AudioWorklet for superior performance with 
+fewer audio issues.
 
 * A number of C++ plugin opcodes (here, statically linked).
 

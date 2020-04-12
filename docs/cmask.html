@@ -1,101 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minimal Example using Csound for WebAssembly OR csound.node</title>
-    <script src="cmask.js"></script>
-    <script>
-        var csoundMessageCallback = function(message) {
-            var messages_textarea = document.getElementById("console");
-            var existing = messages_textarea.value;
-            messages_textarea.value = existing + message;
-            messages_textarea.scrollTop = messages_textarea.scrollHeight;        
-        };
-        console.log("Convince the WASM 'Module' code that we are actually running in Node.js.");
-        var module = {};
-        module["ENVIRONMENT"] = "NODE";
-        module["print"] = csoundMessageCallback;
-        cmask_module(module).then(function(module) {
-            cmask = module;
-            csoundMessageCallback("\nModule: cmask.js has been loaded.\n");
-        }, function(error) {
-           alert(error);
-        });
-    </script>
-    <script src="csound_extended.js"></script> 
-    <script src="CsoundAudioNode.js"></script>
-    <script src="csound_loader.js"></script>
-    <script>
-        try {
-            nw_window.on('close', function() {
-                console.log('Closing down...');
-                this.close(true);
-            });
-        } catch(e) {
-            console.log(e);
-        }
-    </script>
- </head>
-<body>
-    <h1>Minimal Example using <a href="http://www.bartetzki.de/en/software.html" target="_blank">CMask</a> with csound-extended for WebAssembly</h1>
-    <script>
-    var onPlayClick = function() {
-        get_csound(csoundMessageCallback);
-        if (document.getElementById("csound_node").checked === true) {
-            csound = csound_node;
-            csound.setMessageCallback(csoundMessageCallback);
-            csound.Message("\nUsing csound.node...\n");
-        } 
-        if (document.getElementById("csound_web_audio").checked === true) {
-            csound = csound_web_audio;
-            console.log = console.warn = csoundMessageCallback;
-            csound.Message("\nUsing Csound ScriptProcessor...\n");
-        } 
-        if (document.getElementById("csound_audio_node").checked === true) {
-            csound = csound_audio_node;
-            console.log = console.warn = csoundMessageCallback;
-            csound.Message("\nUsing Csound AudioWorklet...\n");
-        } 
-        var orc = document.getElementById('orc').value;
-        csound.Stop();
-        csound.Reset();
-        csound.CompileOrc(orc);
-        csound.SetOption("-odac");
-        csound.SetOption("--nchnls=2");
-        csound.SetOption("--nchnls_i=1");
-        csound.SetOption("-m35");
-        csound.SetOption("-d");
-        var parameters = document.getElementById("cmask_parameters").value;
-        var score = cmask.cmask(parameters);
-        var score_text = document.getElementById("cmask_score");
-        score_text.value = score;
-        csound.ReadScore(score);
-        csound.Start();
-        csound.Perform();
-    };
-    var onPlayStop = function() {
-         
-        csound.Stop();
-        csound.Reset();
-    };
-    </script>
-    <p>This page shows how to combine csound.node with WebAssembly. The user selects which build of Csound to use.</p>
-    <p>
-    <form>
-    <input id="csound_node" name="csound" type="radio"> csound.node 
-    <input id="csound_web_audio" name="csound" type="radio" > ScriptProcessor 
-    <input id="csound_audio_node" name="csound" type="radio"> AudioWorklet
-    </form>
-    </p>
-    <input id="play" type="button" value="Play" onclick="onPlayClick()">
-    <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
-    <textarea id='console' cols=80 rows=10>
+<title>CMask Demo</title>
+<!-- This script loads the entire Csound library compiled for WebAssembly 
+     and based on AudioWorklet. -->
+<script src="CsoundAudioNode.js"></script>
+<!-- This script tests the environment and attempts to Csound, if available, 
+     from each environment, preferring native (injected) Csound as found in 
+     CsoundQt oe Android, then csound.node, then Csound for WebAssembly. -->
+<script src="csound_loader.js"></script>
+<script src="cmask.js"></script>
+</head>
+<body style="background-color:LightGrey;">
+<script>
+var csd = null;
+var cmask = cmask_module();
+var csound_message_callback = function(message) {
+    let messages_textarea = document.getElementById("console");
+    let existing = messages_textarea.value;
+    messages_textarea.value = existing + message;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+};
+// Csound must be invoked from an async function because the 
+// functions called herein are async but must be called with 
+// await to enforce the correct order of execution.
+var onPlayClick = async function() {
+    let messages_textarea = document.getElementById("console");
+    messages_textarea.value = "";
+    let csound = get_csound(csound_message_callback);
+    if (csound == null) {
+        return;
+    }
+    var orc = document.getElementById('orc').value;
+    await csound.CompileOrc(orc);
+    csound.SetOption("-odac");
+    csound.SetOption("--nchnls=2");
+    csound.SetOption("--nchnls_i=1");
+    csound.SetOption("-m35");
+    csound.SetOption("-d");
+    var parameters = document.getElementById("cmask_parameters").value;
+    var score = cmask.cmask(parameters);
+    var score_text = document.getElementById("cmask_score");
+    score_text.value = score;
+    await csound.ReadScore(score);
+    await csound.Start();
+    await csound.Perform();
+};
+// Csound must be invoked from an async function because the 
+// functions called herein are async but must be called with 
+// await to enforce the correct order of execution.
+var onPlayStop = async function() {
+    let csound = get_csound(csound_message_callback);
+    await csound.Stop();
+    await csound.Cleanup();
+    await csound.Reset();
+};
+</script>
+<h2>CMask Demo</h2>
+<p>
+<input id="play" type="button" value="Play" onclick="onPlayClick()">
+<input id="stop" type="button" value="Stop" onclick="onPlayStop()">
+</p>
+    <textarea id='console' style="width:98vw;height:15vh;font-family:monospace;background-color:DarkSlateGrey;color:LawnGreen;">
     </textarea>
-    <h2>Orchestra</h2>
-    <textarea id='orc' cols=80 rows=15>
+    <h2>Csound Orchestra</h2>
+    <textarea id='orc' style="width:98vw;height:30vh;font-family:monospace;background-color:MidnightBlue;color:NavajoWhite;">
 sr          =           48000
 ksmps       =           128
-; nchnls_i    =           1
 nchnls      =           2
+; nchnls_i    =           1
 0dbfs       =           32768
 
 instr 1
@@ -113,7 +86,7 @@ a1	foscil	kenv*10000,p4,1,1.143,kindx,1
 endin	
     </textarea>
     <h2>CMask Parameters</h2>
-    <textarea id="cmask_parameters" cols=80 rows=10>
+    <textarea id="cmask_parameters" style="width:98vw;height:40vh;font-family:monospace;background-color:MidnightBlue;color:NavajoWhite;">
 {
 f1 0 65536 10 1            ;sine wave for foscil
 }
@@ -140,7 +113,7 @@ p5 seg [1 5]              ;increasing FM index
 p6 range .3 .7 prec 2     ;only in the middle
         </textarea>
     <h2>Generated Score</h2>
-    <textarea id="cmask_score" cols=80 rows=10>
+    <textarea id="cmask_score" style="width:98vw;height:40vh;font-family:monospace;background-color:MidnightBlue;color:Gold;">
     </textarea>
 </body>
 </html>

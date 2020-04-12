@@ -71,7 +71,10 @@ the AudioWorklet implementation of WebAudio defined in CsoundAudioNode.js.
 <input id="stop" type="button" value="Stop" onclick="onPlayStop()"></p>
 <p>The complete .csd file of the <i>Xanadu</i> example from the Csound 
 repository is stored in the text area below. Clicking on the <b>Play</b> 
-button performs this file. Clicking on the <b>Stop</b> button ends the 
+button performs this file. Note that due to restrictions in the WebAudio 
+API, the user must click this button before the library can be loaded, so 
+you most likely will have to click again once the library is loaded to 
+actually play the piece. Clicking on the <b>Stop</b> button ends the 
 performance. The .csd should (and sometimes must) set sr (probably 48000), 
 ksmps = 128, nchnls, nchnls_i, and sample word format to be consistent with 
 the host.</p>

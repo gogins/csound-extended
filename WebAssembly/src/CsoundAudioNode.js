@@ -90,7 +90,7 @@ class CsoundAudioNode extends AudioWorkletNode {
     reset_() {
         this.is_playing = false;
         this.is_realtime = false;
-        this.microphoneNode = null;
+        this.userMediaAudioInputNode = null;
         this.input = null;
         this.output = null;
     }
@@ -99,7 +99,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveCleanup = resolve;
-            this.port.postMessage(["Cleanup", csd]);
+            this.port.postMessage(["Cleanup"]);
         });
         let result = await promise;
         this.message_callback("[" + window.performance.now() + " Cleanup resolved with: " + result + ".]\n");
@@ -306,17 +306,18 @@ class CsoundAudioNode extends AudioWorkletNode {
                 message_callback_( "MIDI port: type: " + port_.type + " manufacturer: " + port_.manufacturer + " name: " + port_.name +
                   " version: " + port_.version + "\n");
             }
-            // Try to obtain the Web browser microphone input, if it has one.
+            // Try to obtain the Web browser audio input, if available.
             // Not to be confused with any other audio input interfaces on the 
             // computer, which are inputs in the device list above!
             try {
+                this.message_callback("Trying to open browser audio input...\n")
                 let stream = await navigator.mediaDevices.getUserMedia({audio: true});
-                this.microphoneNode = this.context.createMediaStreamSource(stream);
-                this.message_callback("WebAudio UserMedia outputs:         " +  this.microphoneNode.numberOfOutputs + "\n");
-                this.microphoneNode.connect(this);
+                this.userMediaAudioInputNode = this.context.createMediaStreamSource(stream);
+                this.message_callback("WebAudio UserMedia outputs:         " +  this.userMediaAudioInputNode.numberOfOutputs + "\n");
+                this.userMediaAudioInputNode.connect(this);
                 this.message_callback("Audio input initialized.\n");
             } catch (e) {
-                this.message_callback(e);
+                this.message_callback(e + "\n");
             }
             this.port.postMessage(["Start"]);
             this.is_playing = true;
@@ -325,14 +326,14 @@ class CsoundAudioNode extends AudioWorkletNode {
         }
     }
     async Stop() {
-       this.message_callback("[" + window.performance.now() + " Stop.]\n");
+        this.message_callback("[" + window.performance.now() + " Stop.]\n");
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveStop = resolve;
             this.port.postMessage(["Stop"]);
-            if (this.microphoneNode !== null) {
-                ///this.microphoneNode.stop();
-                this.microphoneNode.disconnect(this);
+            if (this.userMediaAudioInputNode !== null) {
+                ///this.userMediaAudioInputNode.stop();
+                this.userMediaAudioInputNode.disconnect(this);
             }
             this.disconnect();
             this.reset_();

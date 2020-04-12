@@ -29,6 +29,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         var shim = function(text) {
             port_.postMessage(["Message", text]);
         };
+        this.has_audio_input = false;
         this.csound.SetMessageCallback(shim);
     }
     onMessage(event) {
@@ -251,6 +252,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.outputChannelN = 2;
         this.is_playing = false;
         this.format_validated = false;
+        this.has_audio_input = false;
     }
     Start() {
         this.is_playing = true;
@@ -260,7 +262,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.output_name = this.csound.GetOutputName();
         if (this.output_name.startsWith("dac") || this.input_name.startsWith("adc")) {
             this.is_realtime = true;                        
-            this.csound.SetHostImplementedAudioIO(1, 128);
+            this.csound.SetHostImplementedAudioIO(1, 0);
             this.csound.InitializeHostMidi();
             result = this.csound.Start();
             this.spinBuffer = this.csound.GetSpin();
@@ -268,11 +270,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             this.zerodBFS = this.csound.Get0dBFS();                                    
             this.ksmps = this.csound.GetKsmps();
             this.inputChannelN = this.csound.GetNchnlsInput();
-            this.outputChannelN = this.csound.GetNchnls();
             if (this.input_name.startsWith("adc")) {
-                this.has_input = true;
+                this.has_audio_input = true;  
+                this.csound.Message("CsoundAudioProcessor uses audio input:          " + this.input_name + "\n");
             } else {
-                this.has_input = false;
+                this.has_audio_input = false;
             }
             this.csound.Message("CsoundAudioProcessor is rendering in real time: " + this.output_name + "\n");
         } else {
@@ -292,13 +294,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                         this.csound.Stop();
                         this.csound.Cleanup();
                         this.csound.Reset();
-                        this.csound.Message("CsoundAudioProcessor returns 'false'.");
+                        this.csound.Message("CsoundAudioProcessor returns 'false'.\n");
                         return true;
                     }
                 }
             } 
-            /// Get the parameter values array. Here we do not use, and ignore, them.
-            /// let myParamValues = parameters.myParam;
             // The processor may have multiple inputs and outputs. 
             // Each input or output may have multiple channels. 
             let inputBuffer = inputs[0];
@@ -308,50 +308,48 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             let inputChannelN = inputBuffer.length;
             let outputChannelN = outputBuffer.length;
             let hostFrameN = outputChannel0.length;
-            // The audio stream buffer shape must match between Csound and the host.
+            // The audio stream buffer shape(s) must match between Csound and the host.
             if (this.format_validated == false) {
                 this.csound.Message("CsoundAudioProcessor frames per quantum:        " +  hostFrameN + "\n");
                 this.csound.Message("CsoundAudioProcessor output channels:           " +  outputChannelN + "\n");
                 this.csound.Message("CsoundAudioProcessor input channels:            " +  inputChannelN + "\n");
                 if (this.ksmps !== hostFrameN) {
-                    this.csound.Message("Csound ksmps doesn't match host ksmps!");
+                    this.csound.Message("Csound ksmps doesn't match host ksmps!\n");
                     return false;
                 } 
                 if (this.inputChannelN > inputChannelN) {
-                    this.csound.Message("Csound nchnl_i doesn't match host input channel count of " + inputChannelN);
+                    this.csound.Message("Csound nchnls_i doesn't match host input channel count of " + inputChannelN + "!\n");
                     return false;
                 }
                 if (this.outputChannelN != outputChannelN) {
-                    this.csound.Message("Csound nchnls doesn't match host output channel count of " + outputChannelN);
+                    this.csound.Message("Csound nchnls doesn't match host output channel count of " + outputChannelN + "!\n");
                     return false;
                 }
             }
             this.format_validated = true;
-            let csoundFrameI = 0;
-            let result = 0;
-            for (let hostFrameI = 0; hostFrameI < hostFrameN; hostFrameI++) {
-                if (this.has_input === true) {
-                    for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
-                        let inputChannelBuffer = inputBuffer[inputChannelI];
-                        this.spinBuffer[(csoundFrameI * inputChannelN) + inputChannelI] = inputChannelBuffer[hostFrameI] * this.zerodBFS;
+            // These loops require Csound's ksmps to equal the length of the 
+            // WebAudio input and output buffers (should ALWAYS be 128).
+            if (this.has_audio_input === true) {
+                // WebAudio spreads 1 input channel across 2 channels...
+                for (let inputChannelI = 0; inputChannelI < this.inputChannelN; inputChannelI++) {
+                    let inputChannelBuffer = inputBuffer[inputChannelI];
+                    for (let sampleFrameI = 0; sampleFrameI < hostFrameN; sampleFrameI++) {
+                        this.spinBuffer[(sampleFrameI * inputChannelN) + inputChannelI] = (inputChannelBuffer[sampleFrameI] * this.zerodBFS);
                     }
                 }
-                for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
-                    let outputChannelBuffer = outputBuffer[outputChannelI];
-                    outputChannelBuffer[hostFrameI] = this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] / this.zerodBFS;
-                    this.spoutBuffer[(csoundFrameI * outputChannelN) + outputChannelI] = 0.0;
-                }
-                csoundFrameI++
-                if (csoundFrameI === hostFrameN) {
-                    csoundFrameI = 0;
-                    result = this.csound.PerformKsmps();
-                    if (result !== 0) {
-                        this.csound.Stop();
-                        this.csound.Cleanup();
-                        this.csound.Reset();
-                        this.csound.Message("CsoundAudioProcessor returns 'false'.");
-                        this.is_playing = false;
-                    }
+            }
+            let result = this.csound.PerformKsmps();
+            if (result !== 0) {
+                this.csound.Stop();
+                this.csound.Cleanup();
+                this.csound.Reset();
+                this.csound.Message("Csound has finished playing.\n");
+                this.is_playing = false;
+            }
+            for (let outputChannelI = 0; outputChannelI < outputChannelN; outputChannelI++) {
+                let outputChannelBuffer = outputBuffer[outputChannelI];
+                for (let sampleFrameI = 0; sampleFrameI < hostFrameN; sampleFrameI++) {
+                    outputChannelBuffer[sampleFrameI] = (this.spoutBuffer[(sampleFrameI * outputChannelN) + outputChannelI] / this.zerodBFS);
                 }
             }
         }

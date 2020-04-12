@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Duplex Audio</title>
-    <script src="csound_extended.js"></script>
     <script src="CsoundAudioNode.js"></script>
     <script src="csound_loader.js"></script>
     <style type="text/css">
@@ -122,7 +121,7 @@
     </tr>
     <tr>
     <td>
-    <label for=kclip>Squinewave clipping)</label>
+    <label for=kclip>Squinewave (clipping)</label>
     <td>
     <input class=persistent-element type=range min=0 max=1 value=0 id=kclip step=.001>
     <td>
@@ -146,37 +145,36 @@
     <p>
     <textarea id='csound_console' cols=80 rows=25>
     </textarea>
-    <textarea id='csd' cols=80 rows=25 style="visibility:hidden;">
+    <textarea id='csd' cols=80 rows=25">
 <CsoundSynthesizer>
 <CsOptions>
--odac -iadc 
+-m195 -odac:plughw:1,0 -iadc:plughw:1,0  -f -+RtAudio=PortAudio --0dbfs=1
 </CsOptions>
 <CsInstruments>
-sr = 44100
-ksmps = 128
-nchnls = 2 
-nchnls_i = 1
-0dbfs  = 1
-
+sr                          =           48000
+ksmps                       =           128
+nchnls                      =           2 
+nchnls_i                    =           1
+0dbfs                       =           1
                             instr 1
-                            prints "Sing or play into the microphone..."
-ainput                      in	
+                            prints "Sing or play into the microphone...\n"
+ainput                      inch        1	
 imaximum_delay_milliseconds init        4000
 amodulation_hz              init        35
 amodulation_depth           init        0.125
 aclip                       init        0.5
 askew                       init        0.5
-asyncin                     init        0
-kdelay                      chnget      "slider1"
-                            printks2    "kdelay:            %9.4\n", kdelay
-kmodulation_hz              chnget      "slider2"
-                            printks2    "kmodulation_hz:    %9.4\n", kmodulation_hz
-kmodulation_depth           chnget      "slider2"
-                            printks2    "kmodulation_depth: %9.4\n", kmodulation_depth
-kclip                       chnget      "slider3"
-                            printks2    "kclip:             %9.4\n", kclip
-kskew                       chnget      "slider4"
-                            printks2    "kskew:             %9.4\n", kskew
+                            
+kdelay                      chnget      "kdelay"
+                            printks2    "kdelay:            %9.4f\n", kdelay
+kmodulation_hz              chnget      "kmodulation_hz"
+                            printks2    "kmodulation_hz:    %9.4f\n", kmodulation_hz
+kmodulation_depth           chnget      "kmodulation_depth"
+                            printks2    "kmodulation_depth: %9.4f\n", kmodulation_depth
+kclip                       chnget      "kclip"
+                            printks2    "kclip:             %9.4f\n", kclip
+kskew                       chnget      "kskew"
+                            printks2    "kskew:             %9.4f\n", kskew
 akmodulation_hz             =           a(kmodulation_hz)
 akclip                      =           a(kclip)
 akskew                      =           a(kskew)
@@ -185,14 +183,15 @@ amodulator                  =           amodulator * kmodulation_depth + .5
 adelay                      =           kdelay * amodulator
 aoutput                     vdelay3     ainput, adelay, imaximum_delay_milliseconds
                             outs        aoutput, aoutput
-                            printks     "ain: %9.4f aout: %9.4f\n", .5, ainput, aoutput
-                            outs        aoutput, aoutput
+                            printks     "ain: %9.4f aout: %9.4f\n", .5, dbamp(rms(ainput)), dbamp(rms(aoutput))
+                            outs        ainput, aoutput
                             endin
 </CsInstruments>
 <CsScore>
 i 1 0 200
 </CsScore>
-</CsoundSynthesizer></textarea>
+</CsoundSynthesizer>
+</textarea>
 <script src="https://code.jquery.com/jquery-3.3.1.js">
 </script>
 <script>    
@@ -203,19 +202,23 @@ $(document).ready(function() {
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
-    $('#play').on('click', function() {
-        get_csound(handleMessage);
+    $('#play').on('click', async function() {
+        let csound = get_csound(handleMessage);
+        if (csound == null) {
+            return;
+        }
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        console.log = handleMessage;
-        csound.CompileCsdText(csd);
+        await csound.CompileCsdText(csd);
         $('#restore').trigger('click');
-        csound.Start();
-        csound.Perform();
+        await csound.Start();
+        await csound.Perform();
     });
-    $('#stop').on('click', function() {
-        csound.Stop();
-        csound.Reset();
+    $('#stop').on('click', async function() {
+        let csound = get_csound(handleMessage);
+        await csound.Stop();
+        await csound.Cleanup()
+        await csound.Reset();
     });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
