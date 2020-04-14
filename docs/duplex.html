@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>Duplex Audio</title>
-    <script src="CsoundAudioNode.js"></script>
-    <script src="csound_loader.js"></script>
     <style type="text/css">
     input[type='range'] {
         -webkit-appearance: none;
@@ -87,6 +85,8 @@
     </script>
 </head>
 <body style="background-color:CadetBlue">
+    <script src="CsoundAudioNode.js"></script>
+    <script src="csound_loader.js"></script>
     </script>
     <h1>Duplex Audio</h1>
     <p>Use headphones and a microphone. Listen for modulation of the input audio.
@@ -148,7 +148,8 @@
     <textarea id='csd' cols=80 rows=25">
 <CsoundSynthesizer>
 <CsOptions>
--m195 -odac:plughw:1,0 -iadc:plughw:1,0  -f -+rtaudio=alsa
+; Needed to work with csound.node:
+-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 -iadc:plughw:1,0 
 </CsOptions>
 <CsInstruments>
 sr                          =           48000

@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>CMask Demo</title>
+</head>
+<body style="background-color:LightGrey;">
 <!-- This script loads the entire Csound library compiled for WebAssembly 
      and based on AudioWorklet. -->
 <script src="CsoundAudioNode.js"></script>
@@ -10,8 +12,6 @@
      CsoundQt oe Android, then csound.node, then Csound for WebAssembly. -->
 <script src="csound_loader.js"></script>
 <script src="cmask.js"></script>
-</head>
-<body style="background-color:LightGrey;">
 <script>
 var csd = null;
 var cmask = cmask_module();

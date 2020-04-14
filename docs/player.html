@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Csound Player</title>
+<body style="background-color:LightGrey;">
 <!-- This script loads the entire Csound library compiled for WebAssembly 
      and based on AudioWorklet. -->
 <script src="CsoundAudioNode.js"></script>
@@ -10,7 +11,6 @@
      CsoundQt oe Android, then csound.node, then Csound for WebAssembly. -->
 <script src="csound_loader.js"></script>
 </head>
-<body style="background-color:LightGrey;">
 <script>
 var csd = null;
 var csound_message_callback = function(message) {

@@ -76,17 +76,14 @@ var get_csound = function(csound_message_callback_) {
     }
     if (csound_injected != null) {
         csound = csound_injected;
-        csound_message_callback_("Using injected csound...\n");
         return csound_injected;
     } else if (csound_node != null) {
         csound = csound_node;
         csound.SetMessageCallback(csound_message_callback_);
-        csound_message_callback_("Using csound.node..\n");
        return csound_node;
     } else if (csound_audio_node != null) {
         csound = csound_audio_node;
         csound.SetMessageCallback(csound_message_callback_);
-        csound_message_callback_("Using CsoundAudioNode (WebAssembly AudioWorklet)...\n");
         return csound_audio_node;
      } else {
         csound_message_callback_("Csound is still loading, wait a bit...\n");

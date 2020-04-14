@@ -258,7 +258,7 @@ $(document).ready(function() {
     $('input').on('input', function(event) {
         let csound = get_csound(csound_message_callback);
         var slider_value = parseFloat(event.target.value);
-        csound.setControlChannel(event.target.id, slider_value);
+        csound.SetControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
@@ -266,16 +266,16 @@ $(document).ready(function() {
         let csound = get_csound(csound_message_callback);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        await csound.compileCsdText(csd);
+        await csound.CompileCsdText(csd);
         $('#restore').trigger('click');
-        await csound.start();
-        csound.perform();
+        await csound.Start();
+        csound.Perform();
     });
     $('#stop').on('click', async function() {
         let csound = get_csound(csound_message_callback);
-        await csound.stop();
-        await csound.cleanup();
-        csound.reset();
+        await csound.Stop();
+        await csound.Cleanup();
+        csound.Reset();
     });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
@@ -286,7 +286,7 @@ $(document).ready(function() {
         let csound = get_csound(csound_message_callback);
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
-            csound.setControlChannel(this.id, parseFloat(this.value));
+            csound.SetControlChannel(this.id, parseFloat(this.value));
             var output_selector = '#' + this.id + '_output';
             $(output_selector).val(this.value);
         });
