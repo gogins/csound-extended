@@ -148,13 +148,13 @@
     <textarea id='csd' cols=80 rows=25">
 <CsoundSynthesizer>
 <CsOptions>
--m195 -odac:plughw:1,0 -iadc:plughw:1,0  -f -+RtAudio=PortAudio --0dbfs=1
+-m195 -odac:plughw:1,0 -iadc:plughw:1,0  -f -+rtaudio=alsa
 </CsOptions>
 <CsInstruments>
 sr                          =           48000
 ksmps                       =           128
 nchnls                      =           2 
-nchnls_i                    =           1
+nchnls_i                    =           2
 0dbfs                       =           1
                             instr 1
                             prints "Sing or play into the microphone...\n"
