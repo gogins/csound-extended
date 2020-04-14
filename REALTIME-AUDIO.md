@@ -1,6 +1,6 @@
 # How to Configure Linux for Optimal Real-Time Audio
 
-On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It is desirable to disable PulseAudio, and then to make Csound use ALSA with the _native_ audio frame rate and sample size, which depends on the operating system audio driver and the audio interface device. This avoids unnecessary overhead caused by sample rate and format conversions, and by audio mixing and routing. In theory, this overhead should be very small, but in practice, it is not always small.
+On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It is desirable to disable PulseAudio, and then to make Csound and all other audio software on the computer use ALSA.
 
 ## Disable PulseAudio
 
