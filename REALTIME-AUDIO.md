@@ -1,6 +1,6 @@
 # How to Configure Linux for Optimal Real-Time Audio
 
-On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It is desirable to disable PulseAudio, and then to make Csound and all other audio software on the computer use ALSA.
+On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It may be desirable to disable PulseAudio, and then to make Csound and all other audio software on the computer use ALSA alone.
 
 ## Disable PulseAudio
 
@@ -66,7 +66,7 @@ In the browser, there is only 1 input channel, outside the browser there are 2 i
 
 It is vital to understand that with plain ALSA, only one audio stream can be active at a time. Hence, in the browser, only one tab can use audio at a time. Other audio tabs should be closed before running a WebAssembly piece.
 
-The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`. Normally, Chromium uses PulseAudio. The script implies that the browser audio configuration can be overridden to use plain ALAS in an initialization file or in an environment variable, but I could not get that to work. However, adding these flags to the final invocation of the command in the startup script _does_ work (although this will break Chromium for anybody who uses PulseAudio or a different ALSA device):
+The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`. Normally, Chromium uses PulseAudio. The script implies that the browser audio configuration can be overridden to use plain ALSA in an initialization file or in an environment variable, but I could not get that to work. However, adding these flags to the final invocation of the command in the startup script _does_ work (although this will break Chromium for anybody who uses PulseAudio or a different ALSA device):
 ```
 else
   if [ $want_temp_profile -eq 0 ] ; then
