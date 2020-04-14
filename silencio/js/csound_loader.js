@@ -29,6 +29,7 @@ var load_csound = function(csound_message_callback_) {
         csound_injected = csound;
         csound_is_loaded = true;
         csound_message_callback_("Csound already exists in this JavaScript context.\n");
+        return;
     }
     csound = null;
     try {
@@ -42,6 +43,7 @@ var load_csound = function(csound_message_callback_) {
         });
         csound_is_loaded = true;
         csound_message_callback_("csound.node is available in this JavaScript context.\n");
+        return;
     } catch (e) {
         csound_message_callback_(e + '\n');
     }

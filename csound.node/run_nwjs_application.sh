@@ -33,5 +33,5 @@ read -r -d '' json_format << EOM
 EOM
 printf -v json_text "$json_format" $1 $2 $2
 echo "$json_text" | tee package.json
-# Change this if necessary to your nw pathname.
-~/nwjs/nw --context-mixed --experimental-modules $3
+# Change this if necessary to your nw pathname, and omit or modify the ALSA flags.
+~/nwjs/nw --context-mixed --experimental-modules  $3

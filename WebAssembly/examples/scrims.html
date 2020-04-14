@@ -81,14 +81,15 @@
         <textarea class="code" id="csd" hidden rows=24 cols=80>
 <CsoundSynthesizer>
 <CsOptions>
--m195 -f -odac:plughw:1,0 -iadc:plughw:1,0 -+rtaudio=alsa
+; Needed to work with csound.node:
+-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 -iadc:plughw:1,0 
 </CsOptions>
 <CsInstruments>
 
 sr = 48000
 ksmps = 128
 nchnls = 2
-nchnls_i = 1
+nchnls_i = 2
 0dbfs = 1500000
 
 connect "FM_Clang", "outleft", "ReverbSC", "inleft"

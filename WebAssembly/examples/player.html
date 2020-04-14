@@ -56,7 +56,7 @@ Any self-contained Csound piece (.csd file) can be performed by pasting it into 
 <CsoundSynthesizer>
 <CsOptions>
 ; Needed to work with csound.node:
--d -f -m195 -odac:plughw:1,0 -iadc:plughw:1,0 -+rtaudio=alsa 
+-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 -iadc:plughw:1,0 
 </CsOptions>
 <CsInstruments>
 ; The value of sr must match the host.

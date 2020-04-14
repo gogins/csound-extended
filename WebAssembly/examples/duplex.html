@@ -148,7 +148,8 @@
     <textarea id='csd' cols=80 rows=25">
 <CsoundSynthesizer>
 <CsOptions>
--m195 -odac:plughw:1,0 -iadc:plughw:1,0  -f -+rtaudio=alsa
+; Needed to work with csound.node:
+-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 -iadc:plughw:1,0 
 </CsOptions>
 <CsInstruments>
 sr                          =           48000
