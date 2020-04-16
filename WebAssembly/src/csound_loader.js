@@ -14,7 +14,7 @@
  * matching the host platform. 
  *
  * On Linux, PulseAudio may cause problems. It is better to disable PulseAudio
- * and use the lowest-level possible ALSA configuration.
+ * and use a low-level ALSA configuration.
  */
  
 // These are globals:
