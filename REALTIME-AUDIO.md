@@ -2,18 +2,6 @@
 
 On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It may be desirable to disable PulseAudio, and then to make Csound and all other audio software on the computer use low-level ALSA alone.
 
-## Prioritize Audio
-
-In either case, configure Linux to prioritize audio processing. It is no longer necessary on most Linuxes to use a real-time kernel in order to obtain decent audio latency and performance. However, you should add yourself to the `audio` user group and edit the global `limits.conf` file to contain something like this:
-```
-@audio - rtprio 95
-@audio - memlock unlimited
-#@audio - nice -20
-```
-Also, configure your storage partitions to provide a swap partition that is the size of your RAM plus the square root of the size of your RAM.
-
-There is more -- too much more! -- but that's probably sufficient.
-
 ## Disable PulseAudio
 
 Edit `/etc/pulse/client.conf` and reconfigure `autospawn` (turn it off):
@@ -70,8 +58,9 @@ hdmi:CARD=PCH,DEV=0
 ```
 The difference between `hw` and `plughw` is important; `hw` identifies a device that can use only its native sample rate and format, `plughw` identifies the same device, but with the addition of a plugin that automatically handles sample rate and format conversions. For our purposes `plughw` should always be used. The audio format conversions in ALSA behave as though they are considerably more efficient than those in PulseAudio.
 
-For most Csound pieces, the Csound options should be:
-.-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 [ -iadc:plughw:1,0 ]
+For most pieces, the Csound options should be:
+```
+-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 [ -iadc:plughw:1,0 ]
 ```
 In the browser, there is only 1 input channel, outside the browser there are probably 2 input channels.
 
