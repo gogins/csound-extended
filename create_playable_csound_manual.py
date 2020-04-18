@@ -84,7 +84,7 @@ def format_playable_example(filename, text):
         fout.write(html_filename)
         chunk = '''</h1>
 <p>
-This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit and replay the code. 
+This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit this code and replay it. 
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
@@ -92,17 +92,20 @@ This should play if your Web browser has WebAssembly enabled (most do). Most exa
 <p>
 <textarea id="csd" style="width:98vw;height:45vh;font-family:monospace;background-color:#050570;color:#F0F090;">'''
         fout.write(chunk)
-        # Try to catch and fix all cases...
-        text = text.replace('\nsr ',     '\nsr =     48000 ; Changed for WebAssembly from: ')
-        text = text.replace('\nsr=',     '\nsr =     48000 ; Changed for WebAssembly from: ')
-        text = text.replace('\nkr ',     '\n; kr ; Changed for WebAssembly from: ')
-        text = text.replace('\nkr=',     '\n; kr=     48000 ; Changed for WebAssembly from: ')
-        text = text.replace('ksmps ',  'ksmps =  128 ; Changed for WebAssembly from: ')
-        text = text.replace('ksmps=',  'ksmps =  128 ; Changed for WebAssembly from: ')
-        text = text.replace('nchnls ', 'nchnls = 2 ; Changed for WebAssembly from: ')
-        text = text.replace('nchnls=', 'nchnls = 2 ; Changed for WebAssembly from: ')
-        text = text.replace('nchnls_i ', 'nchnls_i = 1 ; Changed for WebAssembly from: ')
-        text = text.replace('nchnls_i=', 'nchnls_i = 1 ; Changed for WebAssembly from: ')
+        # All examples MUST have sr = 48000; ksmps = 128; nchnls = 2; nchnls_i=1.
+        # First we comment out ANY original settings.
+        text = text.replace('sr ',       '; sr ', 1)
+        text = text.replace('kr ',       '; kr ', 1)
+        text = text.replace('ksmps ',    '; ksmps ', 1)
+        text = text.replace('nchnls ',   '; nchnls ', 1)
+        text = text.replace('nchnls_i ', '; nchnls_i ', 1)
+        text = text.replace('sr=',       '; sr=', 1)
+        text = text.replace('kr=',       '; kr=', 1)
+        text = text.replace('ksmps=',    '; ksmps=', 1)
+        text = text.replace('nchnls=',   '; nchnls=', 1)
+        text = text.replace('nchnls_i=', '; nchnls_i=', 1)
+        # Then we insert ALL correct settings.
+        text = text.replace('<CsInstruments>\n', '<CsInstruments>\n\n; Required settings for WebAudio:\n\nsr = 48000\nksmps = 128\nnchnls = 2\nnchnls_i = 1\n')
         fout.write(text)
         chunk = '''</textarea>
 <textarea id="console" readonly style="width:98vw;height:40vh;font-family:monospace;background-color:DarkSlateGrey;color:LawnGreen;">

@@ -29,7 +29,7 @@
   </script>
 <h1 style="font-family:sans-serif;">grain3</h1>
 <p>
-This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit and replay the code. 
+This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit this code and replay it. 
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
@@ -45,9 +45,16 @@ This should play if your Web browser has WebAssembly enabled (most do). Most exa
 </CsOptions>
 <CsInstruments>
 
+; Required settings for WebAudio:
+
+sr = 48000
+ksmps = 128
+nchnls = 2
+nchnls_i = 1
+
 sr	=  48000
 kr	=  1000
-ksmps =  128 ; Changed for WebAssembly from:   =  48
+; ksmps   =  48
 nchnls	=  1
 
 /* Bartlett window */
@@ -64,7 +71,7 @@ icnt	=  0
 loop01:
 ; 100 tables for 8 octaves from 30 Hz
 ifrq	=  30 * exp(log(2) * 8 * icnt / 100)
-itmp	ftgen icnt + 100, 0, 4096, -30, 3, 1, sr / (2 * ifrq)
+itmp	ftgen icnt + 100, 0, 4096, -30, 3, 1, ; sr / (2 * ifrq)
 icnt	=  icnt + 1
 	if (icnt < 99.5) igoto loop01
 /* convert frequency to table number */
