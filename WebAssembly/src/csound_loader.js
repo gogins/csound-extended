@@ -15,6 +15,9 @@
  *
  * On Linux, PulseAudio may cause problems. It is better to disable PulseAudio
  * and use a low-level ALSA configuration.
+ * 
+ * On Android, csound.SetMessageCallback does not work. Instead, assign the 
+ * message callback function to console.log.
  */
  
 // These are globals:

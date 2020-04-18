@@ -124,7 +124,7 @@ these files to your home directory or other places.
 
 ## Building
 
-Currently, the supported platforms are Linux, Android, and WebAssembly.
+Currently, the supported platforms are Linux and WebAssembly.
 The code is generally "cross-platform" in nature and this build system could
 be adapted to build for Windows or OS X.
 
@@ -132,14 +132,8 @@ be adapted to build for Windows or OS X.
 
 The system packages for Csound are out of date, so you must perform a local 
 build and installation of Csound. Clone the Csound Git repository from 
-`https://github.com/csound/csound`, and build Csound according to the 
-instructions there. However, when running CMake, change the value of the 
-default CMake install prefix from `/usr/local` to `/usr`, like this:
-```
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-```
-After that of course do the usual `make -j6` and `sudo make install` for 
-Csound.
+`https://github.com/csound/csound`, and build and install Csound according to 
+the instructions there. 
 
 ### Build, Package, and Install csound-extended
 

@@ -238,7 +238,7 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-node csound-cmask csound-luajit csound-bformdec2 csound-mverb csound-stk)
+set(CPACK_COMPONENTS_ALL csound-base csound-node csound-cmask csound-bformdec2 csound-mverb csound-stk)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
@@ -344,6 +344,8 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/tests-and-examples/
 # And all the README.md files, renamed to not conflict...
 
 install(FILES "README.md"
+    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
+install(FILES "REALTIME-AUDIO.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
 install(FILES "tests-and-examples/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}

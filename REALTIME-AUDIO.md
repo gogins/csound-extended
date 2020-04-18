@@ -1,6 +1,6 @@
 # How to Configure Linux for Optimal Real-Time Audio
 
-On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It may be desirable to disable PulseAudio, and then to make Csound and all other audio software on the computer use ALSA alone.
+On my NUC and perhaps on other Linux computers, configuring the system for efficient, dropout-free, low-latency real-time audio can be tricky. It may be desirable to disable PulseAudio, and then to make Csound and all other audio software on the computer use low-level ALSA alone.
 
 ## Disable PulseAudio
 
@@ -58,11 +58,11 @@ hdmi:CARD=PCH,DEV=0
 ```
 The difference between `hw` and `plughw` is important; `hw` identifies a device that can use only its native sample rate and format, `plughw` identifies the same device, but with the addition of a plugin that automatically handles sample rate and format conversions. For our purposes `plughw` should always be used. The audio format conversions in ALSA behave as though they are considerably more efficient than those in PulseAudio.
 
-For the pieces in this issue, the Csound options should usually be:
+For most pieces, the Csound options should usually be:
 ```
 -d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 [ -iadc:plughw:1,0 ]
 ```
-In the browser, there is only 1 input channel, outside the browser there are 2 input channels.
+In the browser, there is only 1 input channel, outside the browser there are probably 2 input channels.
 
 It is vital to understand that with plain ALSA, only one audio stream can be active at a time. Hence, in the browser, only one tab can use audio at a time. Other audio tabs should be closed before running a WebAssembly piece.
 
