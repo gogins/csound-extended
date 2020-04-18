@@ -29,7 +29,7 @@
   </script>
 <h1 style="font-family:sans-serif;">padsynth_gen</h1>
 <p>
-This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit and replay the code. 
+This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit this code and replay it. 
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
@@ -40,9 +40,9 @@ This should play if your Web browser has WebAssembly enabled (most do). Most exa
 -odac
 </CsOptions>
 <CsInstruments>
-sr =     48000 ; Changed for WebAssembly from: 44100
-ksmps =  128 ; Changed for WebAssembly from: 1
-nchnls = 2 ; Changed for WebAssembly from: 2
+; sr=44100
+; ksmps=1
+; nchnls=2
 0dbfs=2000
 
 	gispec_len init 2^18
@@ -54,7 +54,7 @@ nchnls = 2 ; Changed for WebAssembly from: 2
     idecay = 0.1
     isustain = 0.25
     irelease = 0.2
-    aenv madsr iattack, idecay, isustain, irelease
+    aenv mad; sr iattack, idecay, isustain, irelease
     ifreq cpsmidinn p4
     iamp ampdb p5
     ibasefreq = 440 ; can be lower or higher frequency; close to played frequency is said to be best

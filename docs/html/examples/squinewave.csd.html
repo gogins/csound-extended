@@ -29,7 +29,7 @@
   </script>
 <h1 style="font-family:sans-serif;">squinewave</h1>
 <p>
-This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit and replay the code. 
+This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit this code and replay it. 
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
@@ -45,10 +45,17 @@ This should play if your Web browser has WebAssembly enabled (most do). Most exa
 </CsOptions>
 <CsInstruments>
 
+; Required settings for WebAudio:
+
+sr = 48000
+ksmps = 128
+nchnls = 2
+nchnls_i = 1
+
 ;#################################################
 0dbfs = 1.1
-nchnls = 2 ; Changed for WebAssembly from: = 2
-ksmps =  128 ; Changed for WebAssembly from: = 100
+; nchnls = 2
+; ksmps = 100
 
 ; aSyncin, FMod for instr 2
 gafmod init 0
