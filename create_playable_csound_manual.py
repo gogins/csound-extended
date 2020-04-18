@@ -24,7 +24,7 @@ import shutil
 import traceback
 
 '''
-The usr must customize these variables. No additional configuration should be
+The user must customize these variables. No additional configuration should be
 required. The manual must already have been cloned and built in the usual way.
 '''
 source_home = r'''/home/mkg/manual'''
@@ -84,7 +84,7 @@ def format_playable_example(filename, text):
         fout.write(html_filename)
         chunk = '''</h1>
 <p>
-This should play if your Web browser has WebAssembly enabled (most do). You can edit and replay the code. At this time, most examples will play in WebAssembly unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play.
+This should play if your Web browser has WebAssembly enabled (most do). Most examples will play unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play. You can edit and replay the code. 
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
@@ -92,6 +92,7 @@ This should play if your Web browser has WebAssembly enabled (most do). You can 
 <p>
 <textarea id="csd" style="width:98vw;height:45vh;font-family:monospace;background-color:#050570;color:#F0F090;">'''
         fout.write(chunk)
+        # Try to catch and fix all cases...
         text = text.replace('\nsr ',     '\nsr =     48000 ; Changed for WebAssembly from: ')
         text = text.replace('\nsr=',     '\nsr =     48000 ; Changed for WebAssembly from: ')
         text = text.replace('\nkr ',     '\n; kr ; Changed for WebAssembly from: ')
@@ -128,7 +129,9 @@ for filename in source_pages:
             print 'Rewriting:', source_pathname, 'to:', target_pathname
             with open(source_pathname, 'r') as source_file:
                 source_page = source_file.read()
-                source_page = source_page.replace('.csd" target="_top">', '.csd.html" target="_top"> (click here to play) ')
+                source_page = source_page.replace("It uses the file ", "Click to play: ")
+                # Imitate a button.
+                source_page = source_page.replace('.csd" target="_top">', '.csd.html" target="_top" style="background-color:LightGray;color:Black;padding:.4em;text-decoration:none;font-family:sans-serif;">')
                 with open(target_pathname, 'w') as target_file:
                     target_file.write(source_page)
         else:
