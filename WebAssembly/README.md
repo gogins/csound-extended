@@ -57,7 +57,7 @@ The `csound_loader.js` script is provided as a convenient method of
 detecting and using available implementations of Csound that run in HTML5
 environments, including, in decreasing order of preference:
 
-1, Android (using the CsoundAndroid library).
+1. Android (using the CsoundAndroid library).
 2. CsoundQt (using the built-in JavaScript wrapper).
 3. NW.js (using `csound.node`).
 4. Current Web browsers (using `CsoundAudioNode.js`).

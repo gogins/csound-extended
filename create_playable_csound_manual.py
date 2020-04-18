@@ -52,9 +52,10 @@ def format_playable_example(filename, text):
         chunk = '''<html>
 <head>
     <title>Minimal Example using Csound for WebAssembly</title>
-    <script src="csound.js"></script>
  </head>
 <body>
+    <script src="CsoundAudioNode.js"></script>
+    <script src="csound_loader.js"></script>
     <script>
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
@@ -62,18 +63,19 @@ def format_playable_example(filename, text):
         messages_textarea.value = existing + '\\n' + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;
     }
-    var moduleDidLoad = function() {
-        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
-        console.warn = handleMessage;
-    }
     var onPlayClick = function() {
         var csd = document.getElementById('csd').value;
-        csound.compileCsdText(csd);
-        csound.start();
-        csound.perform();
+        csound = get_csound(handleMessage);
+        if (csound == null) {
+            handleMessage("Still loading, try again in a bit...");
+        }
+        csound.CompileCsdText(csd);
+        csound.Start();
+        csound.Perform();
     }
     var onPlayStop = function() {
-        csound.stop();
+        csound = get_csound(handleMessage);
+        csound.Stop();
     }
   </script>
 <h1>'''
